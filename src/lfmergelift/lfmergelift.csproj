@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LfSynchronicMerger.cs" />
     <Compile Include="FolderScanner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectUpdateFolder.cs" />

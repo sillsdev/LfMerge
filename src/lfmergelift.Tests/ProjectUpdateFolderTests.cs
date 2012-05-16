@@ -48,7 +48,7 @@ namespace lfmergelift.Tests
 
 			private static string Extension
 			{
-				get { return SynchronicMerger.ExtensionOfIncrementalFiles; }
+				get { return SynchronicMerger .ExtensionOfIncrementalFiles; }
 			}
 
 			private string ContentLiftOneEntry()
@@ -93,7 +93,7 @@ namespace lfmergelift.Tests
 			{
 				// env needs to create directories
 				// env needs to set the work dir in the test env on the ProjectUpdateFolder
-				var project = e.CreateProjectUpdateFolder();
+				//var project = e.CreateProjectUpdateFolder();
 
 			}
 		}
