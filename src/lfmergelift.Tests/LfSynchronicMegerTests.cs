@@ -40,199 +40,197 @@ namespace lfmergelift.Tests
 		}
 
 		static private readonly string[] s_LiftMainFile = new[]
-															{
-																"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-																"<lift producer=\"SIL.FLEx 7.3.0.41038\" version=\"0.13\">",
-																"<header>",
-																"<ranges>",
-																"<range id=\"dialect\" href=\"file://C:/Users/maclean/Documents/aa Work/LIFToutput/LIFToutput.lift-ranges\"/>",
-																"</ranges>",
-																"<fields>",
-																"<field tag=\"summary-definition\">",
-																"<form lang=\"en\"><text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text></form>",
-																"</field>",
+		{
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+			"<lift producer=\"SIL.FLEx 7.3.0.41038\" version=\"0.13\">",
+			"<header>",
+			"<ranges>",
+			"<range id=\"dialect\" href=\"file://C:/Users/maclean/Documents/aa Work/LIFToutput/LIFToutput.lift-ranges\"/>",
+			"</ranges>",
+			"<fields>",
+			"<field tag=\"summary-definition\">",
+			"<form lang=\"en\"><text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text></form>",
+			"</field>",
 
-																"<field tag=\"scientific-name\">",
-																"<form lang=\"en\"><text>This field stores the scientific name pertinent to the current sense.</text></form>",
-																"</field>",
-																"</fields>",
-																"</header>",
+			"<field tag=\"scientific-name\">",
+			"<form lang=\"en\"><text>This field stores the scientific name pertinent to the current sense.</text></form>",
+			"</field>",
+			"</fields>",
+			"</header>",
 
-																//entry 1
-																"<entry dateCreated=\"2012-04-27T20:03:06Z\" dateModified=\"2012-05-09T06:56:33Z\" id=\"chair_22db1bfd-aa70-488d-adad-ac3932e6a708\" guid=\"22db1bfd-aa70-488d-adad-ac3932e6a708\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>chair</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"d5fd85b6-24cf-4a20-9156-9b1ee3959714\" order=\"0\">",
-																"<gloss lang=\"en\"><text>seat</text></gloss>",
-																"<definition>",
-																"<form lang=\"en\"><text>Furniture people sit on which has four legs</text></form>",
-																"</definition>",
-																"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
-																"</sense>",
+			//entry 1
+			"<entry dateCreated=\"2012-04-27T20:03:06Z\" dateModified=\"2012-05-09T06:56:33Z\" id=\"chair_22db1bfd-aa70-488d-adad-ac3932e6a708\" guid=\"22db1bfd-aa70-488d-adad-ac3932e6a708\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>chair</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"d5fd85b6-24cf-4a20-9156-9b1ee3959714\" order=\"0\">",
+			"<gloss lang=\"en\"><text>seat</text></gloss>",
+			"<definition>",
+			"<form lang=\"en\"><text>Furniture people sit on which has four legs</text></form>",
+			"</definition>",
+			"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
+			"</sense>",
 
-																"<sense id=\"db1e3397-befd-46f6-bdf5-f9039cf5030e\" order=\"1\">",
-																"<gloss lang=\"en\"><text>stool</text></gloss>",
-																"<definition>",
-																"<form lang=\"en\"><text>Furniture that people sit on in a somewhat stading position and can have 3 or 4 legs</text></form>",
-																"</definition>",
-																"</sense>",
-																"</entry>",
+			"<sense id=\"db1e3397-befd-46f6-bdf5-f9039cf5030e\" order=\"1\">",
+			"<gloss lang=\"en\"><text>stool</text></gloss>",
+			"<definition>",
+			"<form lang=\"en\"><text>Furniture that people sit on in a somewhat stading position and can have 3 or 4 legs</text></form>",
+			"</definition>",
+			"</sense>",
+			"</entry>",
 
-																//entry 2
-																"<entry dateCreated=\"2012-04-23T16:50:57Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"dog_25a9e770-8298-4547-9f8b-147ea70cb42a\" guid=\"25a9e770-8298-4547-9f8b-147ea70cb42a\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>dog</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"1b33697f-91e1-4b57-bab7-824b74d04f86\">",
-																"<gloss lang=\"en\"><text>doggy</text></gloss>",
-																"<definition>",
-																"<form lang=\"en\"><text>doggy that is a pet</text></form>",
-																"</definition>",
-																"<relation type=\"Part\" ref=\"6d20a75d-0c74-432e-a169-7042fcd6f026\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 2
+			"<entry dateCreated=\"2012-04-23T16:50:57Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"dog_25a9e770-8298-4547-9f8b-147ea70cb42a\" guid=\"25a9e770-8298-4547-9f8b-147ea70cb42a\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>dog</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"1b33697f-91e1-4b57-bab7-824b74d04f86\">",
+			"<gloss lang=\"en\"><text>doggy</text></gloss>",
+			"<definition>",
+			"<form lang=\"en\"><text>doggy that is a pet</text></form>",
+			"</definition>",
+			"<relation type=\"Part\" ref=\"6d20a75d-0c74-432e-a169-7042fcd6f026\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 3
-																"<entry dateCreated=\"2012-04-27T16:49:14Z\" dateModified=\"2012-05-04T03:05:38Z\" id=\"pike_316611bc-df2b-4e4a-9bf6-d240c3ce31db\" guid=\"316611bc-df2b-4e4a-9bf6-d240c3ce31db\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>pike</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\">",
-																"<gloss lang=\"en\"><text>one awsome catch</text></gloss>",
-																"<relation type=\"Whole\" ref=\"7ddb62da-fa55-404f-b944-46b71b00c8c8\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 3
+			"<entry dateCreated=\"2012-04-27T16:49:14Z\" dateModified=\"2012-05-04T03:05:38Z\" id=\"pike_316611bc-df2b-4e4a-9bf6-d240c3ce31db\" guid=\"316611bc-df2b-4e4a-9bf6-d240c3ce31db\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>pike</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\">",
+			"<gloss lang=\"en\"><text>one awsome catch</text></gloss>",
+			"<relation type=\"Whole\" ref=\"7ddb62da-fa55-404f-b944-46b71b00c8c8\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 4
-																"<entry dateCreated=\"2012-05-04T03:05:03Z\" dateModified=\"2012-05-04T03:05:50Z\" id=\"fish_7026c804-799b-4cd2-861f-c8f71cfa9f93\" guid=\"7026c804-799b-4cd2-861f-c8f71cfa9f93\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>fish</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
-																"<grammatical-info value=\"Noun\">",
-																"</grammatical-info>",
-																"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
-																"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 4
+			"<entry dateCreated=\"2012-05-04T03:05:03Z\" dateModified=\"2012-05-04T03:05:50Z\" id=\"fish_7026c804-799b-4cd2-861f-c8f71cfa9f93\" guid=\"7026c804-799b-4cd2-861f-c8f71cfa9f93\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>fish</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
+			"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 5
-																"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>cat</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\">",
-																"<gloss lang=\"en\"><text>meuwer</text></gloss>",
-																"<gloss lang=\"es\"><text>cataeouw</text></gloss>",
-																"<example source=\"dsd reference for Example\">",
-																"<form lang=\"fr\"><text>ExampleSentence </text></form>",
-																"<form lang=\"frc\"><text>Another ws example sentence</text></form>",
-																"<translation type=\"Free translation\">",
-																"<form lang=\"en\"><text>This is a translation of example sentences</text></form>",
-																"<form lang=\"es\"><text>In another ws this is a translation of exSentences</text></form>",
-																"</translation>",
-																"<note type=\"reference\">",
-																"<form lang=\"en\"><text>dsd reference for Example</text></form>",
-																"</note>",
-																"</example>",
-																"<example source=\"reference for second translation\">",
-																"<form lang=\"fr\"><text>Second example sentence.</text></form>",
-																"<form lang=\"frc\"><text>Other lang second example.</text></form>",
-																"<translation type=\"Back translation\">",
-																"<form lang=\"en\"><text>Second example translation</text></form>",
-																"</translation>",
-																"<note type=\"reference\">",
-																"<form lang=\"en\"><text>reference for second translation</text></form>",
-																"</note>",
-																"</example>",
-																"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 5
+			"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>cat</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\">",
+			"<gloss lang=\"en\"><text>meuwer</text></gloss>",
+			"<gloss lang=\"es\"><text>cataeouw</text></gloss>",
+			"<example source=\"dsd reference for Example\">",
+			"<form lang=\"fr\"><text>ExampleSentence </text></form>",
+			"<form lang=\"frc\"><text>Another ws example sentence</text></form>",
+			"<translation type=\"Free translation\">",
+			"<form lang=\"en\"><text>This is a translation of example sentences</text></form>",
+			"<form lang=\"es\"><text>In another ws this is a translation of exSentences</text></form>",
+			"</translation>",
+			"<note type=\"reference\">",
+			"<form lang=\"en\"><text>dsd reference for Example</text></form>",
+			"</note>",
+			"</example>",
+			"<example source=\"reference for second translation\">",
+			"<form lang=\"fr\"><text>Second example sentence.</text></form>",
+			"<form lang=\"frc\"><text>Other lang second example.</text></form>",
+			"<translation type=\"Back translation\">",
+			"<form lang=\"en\"><text>Second example translation</text></form>",
+			"</translation>",
+			"<note type=\"reference\">",
+			"<form lang=\"en\"><text>reference for second translation</text></form>",
+			"</note>",
+			"</example>",
+			"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 6
-																"<entry dateCreated=\"2012-05-09T06:51:52Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"tail_98c54484-08a6-4136-abab-b936ddc6ad25\" guid=\"98c54484-08a6-4136-abab-b936ddc6ad25\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>tail</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"6d20a75d-0c74-432e-a169-7042fcd6f026\">",
-																"<grammatical-info value=\"Noun\">",
-																"</grammatical-info>",
-																"<gloss lang=\"en\"><text>wagger</text></gloss>",
-																"<relation type=\"Whole\" ref=\"1b33697f-91e1-4b57-bab7-824b74d04f86\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 6
+			"<entry dateCreated=\"2012-05-09T06:51:52Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"tail_98c54484-08a6-4136-abab-b936ddc6ad25\" guid=\"98c54484-08a6-4136-abab-b936ddc6ad25\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>tail</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"6d20a75d-0c74-432e-a169-7042fcd6f026\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>wagger</text></gloss>",
+			"<relation type=\"Whole\" ref=\"1b33697f-91e1-4b57-bab7-824b74d04f86\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 7
-																"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2011-03-01T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
-																"<lexical-unit>",
-																"<form lang=\"es\"><text>hombre</text></form>",
-																"<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
-																"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS</text></form>",
-																"</lexical-unit>",
-																"<trait name=\"morph-type\" value=\"root\"></trait>",
-																"<pronunciation>",
-																"<form lang=\"fr\"><text>ombre</text></form>",
-																"<media href=\"Sleep Away.mp3\">",
-																"</media>",
-																"</pronunciation>",
-																"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
-																"<grammatical-info value=\"Noun\">",
-																"</grammatical-info>",
-																"<gloss lang=\"en\"><text>man</text></gloss>",
-																"<definition>",
-																"<form lang=\"en\"><text>male adult human <span href=\"file://others/SomeFile.txt\" class=\"Hyperlink\">link</span></text></form>",
-																"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
-																"</definition>",
-																"<illustration href=\"Desert.jpg\">",
-																"<label>",
-																"<form lang=\"fr\"><text>Desert</text></form>",
-																"</label>",
-																"</illustration>",
-																"<illustration href=\"subfolder/MyPic.jpg\">",
-																"<label>",
-																"<form lang=\"fr\"><text>My picture</text></form>",
-																"</label>",
-																"</illustration>",
-																"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
-																"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
-																"</sense>",
-																"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
-																"<grammatical-info value=\"Noun\">",
-																"</grammatical-info>",
-																"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
-																"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 7
+			"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2011-03-01T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
+			"<lexical-unit>",
+			"<form lang=\"es\"><text>hombre</text></form>",
+			"<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
+			"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS</text></form>",
+			"</lexical-unit>",
+			"<trait name=\"morph-type\" value=\"root\"></trait>",
+			"<pronunciation>",
+			"<form lang=\"fr\"><text>ombre</text></form>",
+			"<media href=\"Sleep Away.mp3\">",
+			"</media>",
+			"</pronunciation>",
+			"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>man</text></gloss>",
+			"<definition>",
+			"<form lang=\"en\"><text>male adult human <span href=\"file://others/SomeFile.txt\" class=\"Hyperlink\">link</span></text></form>",
+			"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
+			"</definition>",
+			"<illustration href=\"Desert.jpg\">",
+			"<label>",
+			"<form lang=\"fr\"><text>Desert</text></form>",
+			"</label>",
+			"</illustration>",
+			"<illustration href=\"subfolder/MyPic.jpg\">",
+			"<label>",
+			"<form lang=\"fr\"><text>My picture</text></form>",
+			"</label>",
+			"</illustration>",
+			"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
+			"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
+			"</sense>",
+			"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
+			"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
+			"</sense>",
+			"</entry>",
 
-																//entry 8
-																"<entry dateCreated=\"2012-05-09T06:53:05Z\" dateModified=\"2012-05-09T06:53:53Z\" id=\"leg_d6b29be3-a278-4c5f-9c43-2de7cc820e4f\" guid=\"d6b29be3-a278-4c5f-9c43-2de7cc820e4f\">",
-																"<lexical-unit>",
-																"<form lang=\"fr\"><text>leg</text></form>",
-																"</lexical-unit>",
-																"<trait  name=\"morph-type\" value=\"stem\"/>",
-																"<sense id=\"9a3b501a-b487-47c1-b77b-41975c7147d2\">",
-																"<grammatical-info value=\"Noun\">",
-																"</grammatical-info>",
-																"<gloss lang=\"en\"><text>leg</text></gloss>",
-																"<definition>",
-																"<form lang=\"en\"><text>Part of chair or table or animal</text></form>",
-																"</definition>",
-																"<relation type=\"Whole\" ref=\"d5fd85b6-24cf-4a20-9156-9b1ee3959714\"/>",
-																"<relation type=\"Whole\" ref=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\"/>",
-																"</sense>",
-																"</entry>",
+			//entry 8
+			"<entry dateCreated=\"2012-05-09T06:53:05Z\" dateModified=\"2012-05-09T06:53:53Z\" id=\"leg_d6b29be3-a278-4c5f-9c43-2de7cc820e4f\" guid=\"d6b29be3-a278-4c5f-9c43-2de7cc820e4f\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>leg</text></form>",
+			"</lexical-unit>",
+			"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"9a3b501a-b487-47c1-b77b-41975c7147d2\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>leg</text></gloss>",
+			"<definition>",
+			"<form lang=\"en\"><text>Part of chair or table or animal</text></form>",
+			"</definition>",
+			"<relation type=\"Whole\" ref=\"d5fd85b6-24cf-4a20-9156-9b1ee3959714\"/>",
+			"<relation type=\"Whole\" ref=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\"/>",
+			"</sense>",
+			"</entry>",
 
-
-
-																"</lift>"
-															};
+			"</lift>"
+		};
 
 		[Test]
 		public void TestAddSenseAndRemoveSense()
@@ -279,53 +277,50 @@ namespace lfmergelift.Tests
 			untouchedNode = doc.SelectNodes("//entry[@id='leg_d6b29be3-a278-4c5f-9c43-2de7cc820e4f']");
 			Assert.IsNotNull(untouchedNode); Assert.AreEqual(1, untouchedNode.Count);
 		}
-		private static readonly string[]
-			s_LiftUpdateAddSenseAndRemoveSense = new[]
-													{
-														"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">"
-														,
-														"<lexical-unit>",
-														"<form lang=\"es\"><text>hombre</text></form>"
-														,
-														// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
-														"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS BUT STILL CHANGED</text></form>", //changed
-														"</lexical-unit>",
-														//"<trait name=\"morph-type\" value=\"root\"></trait>",
-														//"<pronunciation>",
-														//"<form lang=\"fr\"><text>ombre</text></form>",
-														//"<media href=\"Sleep Away.mp3\">",
-														//"</media>",
-														//"</pronunciation>",
-														"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
-														"<grammatical-info value=\"Noun-CHANGED\">",
-														"</grammatical-info>",
-														"<gloss lang=\"en\"><text>man</text></gloss>",
-														"<definition>",
-														"<form lang=\"en\"><text>male adult human SPAN WAS REMOVED</text></form>",
-														"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
-														"</definition>",
-														//"<illustration href=\"Desert.jpg\">",
-														//"<label>",
-														//"<form lang=\"fr\"><text>Desert</text></form>",
-														//"</label>",
-														//"</illustration>",
-														//"<illustration href=\"subfolder/MyPic.jpg\">",
-														//"<label>",
-														//"<form lang=\"fr\"><text>My picture</text></form>",
-														//"</label>",
-														//"</illustration>",
-														//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
-														//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
+		private static readonly string[] s_LiftUpdateAddSenseAndRemoveSense = new[]
+		{
+			"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
+			"<lexical-unit>",
+			"<form lang=\"es\"><text>hombre</text></form>",
+			// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
+			"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS BUT STILL CHANGED</text></form>", //changed
+			"</lexical-unit>",
+			//"<trait name=\"morph-type\" value=\"root\"></trait>",
+			//"<pronunciation>",
+			//"<form lang=\"fr\"><text>ombre</text></form>",
+			//"<media href=\"Sleep Away.mp3\">",
+			//"</media>",
+			//"</pronunciation>",
+			"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
+				"<grammatical-info value=\"Noun-CHANGED\">",
+				"</grammatical-info>",
+				"<gloss lang=\"en\"><text>man</text></gloss>",
+					"<definition>",
+					"<form lang=\"en\"><text>male adult human SPAN WAS REMOVED</text></form>",
+					"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
+					"</definition>",
+				//"<illustration href=\"Desert.jpg\">",
+				//"<label>",
+				//"<form lang=\"fr\"><text>Desert</text></form>",
+				//"</label>",
+				//"</illustration>",
+				//"<illustration href=\"subfolder/MyPic.jpg\">",
+				//"<label>",
+				//"<form lang=\"fr\"><text>My picture</text></form>",
+				//"</label>",
+				//"</illustration>",
+				//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
+				//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
+			"</sense>",
 
-														"</sense>",
-														"<sense id=\"stool3397-befd-46f6-bdf5-f9039cf5030e\" order=\"1\">",
-														"<gloss lang=\"en\"><text>stool</text></gloss>",
-														"<definition>",
-														"<form lang=\"en\"><text>SEE that THIS SENSE WAS ADDED into this ENTRY</text></form>",
-														"</definition>",
-														"</sense>",
-														"</entry>"
-													};
+			"<sense id=\"stool3397-befd-46f6-bdf5-f9039cf5030e\" order=\"1\">",
+				"<gloss lang=\"en\"><text>stool</text></gloss>",
+					"<definition>",
+					"<form lang=\"en\"><text>SEE that THIS SENSE WAS ADDED into this ENTRY</text></form>",
+					"</definition>",
+			"</sense>",
+			"</entry>"
+		};
 
 
 		[Test]
@@ -349,11 +344,10 @@ namespace lfmergelift.Tests
 		}
 
 		private static readonly string[] s_LiftUpdateEntryDeleted = new[]
-																		{
-																			"<entry dateCreated=\"2012-05-04T03:05:03Z\" dateModified=\"2012-05-04T03:05:50Z\" id=\"fish_7026c804-799b-4cd2-861f-c8f71cfa9f93\" guid=\"7026c804-799b-4cd2-861f-c8f71cfa9f93\" dateDeleted=\"2012-05-08T06:40:44Z\">"
-																			,
-																			"</entry>"
-																		};
+		{
+			"<entry dateCreated=\"2012-05-04T03:05:03Z\" dateModified=\"2012-05-04T03:05:50Z\" id=\"fish_7026c804-799b-4cd2-861f-c8f71cfa9f93\" guid=\"7026c804-799b-4cd2-861f-c8f71cfa9f93\" dateDeleted=\"2012-05-08T06:40:44Z\">",
+			"</entry>"
+		};
 
 		[Test]
 		public void TestChangeDateAndLexicalUnit()
@@ -388,56 +382,57 @@ namespace lfmergelift.Tests
 		}
 
 		static private readonly string[] s_LiftUpdateDateAndLexicalUnitChanged = new[]
-																					{
-																						//entry7
-																						//changed dateModified=\"2012-05-12T18:30:07Z\"
-																						"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
-																						"<lexical-unit>",
-																						"<form lang=\"es\"><text>hombre</text></form>",
-																						// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
-																						"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS BUT STILL CHANGED</text></form>",  //changed
-																						"</lexical-unit>",
-																						//"<trait name=\"morph-type\" value=\"root\"></trait>",
-																						//"<pronunciation>",
-																						//"<form lang=\"fr\"><text>ombre</text></form>",
-																						//"<media href=\"Sleep Away.mp3\">",
-																						//"</media>",
-																						//"</pronunciation>",
-																						"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
-																						"<grammatical-info value=\"Noun\">",
-																						"</grammatical-info>",
-																						"<gloss lang=\"en\"><text>man</text></gloss>",
-																						"<definition>",
-																						"<form lang=\"en\"><text>male adult human <span href=\"file://others/SomeFile.txt\" class=\"Hyperlink\">link</span></text></form>",
-																						"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
-																						"</definition>",
-																						//"<illustration href=\"Desert.jpg\">",
-																						//"<label>",
-																						//"<form lang=\"fr\"><text>Desert</text></form>",
-																						//"</label>",
-																						//"</illustration>",
-																						//"<illustration href=\"subfolder/MyPic.jpg\">",
-																						//"<label>",
-																						//"<form lang=\"fr\"><text>My picture</text></form>",
-																						//"</label>",
-																						//"</illustration>",
-																						//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
-																						//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
-																						"</sense>",
-																						"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
-																						"<grammatical-info value=\"Noun\">",
-																						"</grammatical-info>",
-																						"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
-																						//"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
-																						"</sense>",
-																						"</entry>"
+		{
+			//entry7
+			//changed dateModified=\"2012-05-12T18:30:07Z\"
+			"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
+				"<lexical-unit>",
+				"<form lang=\"es\"><text>hombre</text></form>",
+				// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
+				"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS BUT STILL CHANGED</text></form>",  //changed
+				"</lexical-unit>",
+				//"<trait name=\"morph-type\" value=\"root\"></trait>",
+				//"<pronunciation>",
+				//"<form lang=\"fr\"><text>ombre</text></form>",
+				//"<media href=\"Sleep Away.mp3\">",
+				//"</media>",
+				//"</pronunciation>",
+					"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
+						"<grammatical-info value=\"Noun\">",
+						"</grammatical-info>",
+						"<gloss lang=\"en\"><text>man</text></gloss>",
+							"<definition>",
+							"<form lang=\"en\"><text>male adult human <span href=\"file://others/SomeFile.txt\" class=\"Hyperlink\">link</span></text></form>",
+							"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
+							"</definition>",
+						//"<illustration href=\"Desert.jpg\">",
+						//"<label>",
+						//"<form lang=\"fr\"><text>Desert</text></form>",
+						//"</label>",
+						//"</illustration>",
+						//"<illustration href=\"subfolder/MyPic.jpg\">",
+						//"<label>",
+						//"<form lang=\"fr\"><text>My picture</text></form>",
+						//"</label>",
+						//"</illustration>",
+						//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
+						//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
+					"</sense>",
 
-																						//***traits, custom option list
-																						//fields,custom  multitext
-																						//***relation
-																						//notes
-																						//
-																					};
+					"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
+						"<grammatical-info value=\"Noun\">",
+						"</grammatical-info>",
+						"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
+						//"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
+					"</sense>",
+			"</entry>"
+
+			//***traits, custom option list
+			//fields,custom  multitext
+			//***relation
+			//notes
+			//
+		};
 
 		[Test]
 		public void TestChangePOS_Gloss_Definition()
@@ -499,56 +494,58 @@ namespace lfmergelift.Tests
 		}
 
 		static private readonly string[] s_LiftUpdatePOS_Gloss_Definition_Changed = new[]
-																						{
-																							//entry7
-																							//changed dateModified=\"2012-05-12T18:30:07Z\"
-																							"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
-																							"<lexical-unit>",
-																							"<form lang=\"es\"><text>hombre</text></form>",
-																							// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
-																							"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS</text></form>",
-																							"</lexical-unit>",
-																							//"<trait name=\"morph-type\" value=\"root\"></trait>",
-																							//"<pronunciation>",
-																							//"<form lang=\"fr\"><text>ombre</text></form>",
-																							//"<media href=\"Sleep Away.mp3\">",
-																							//"</media>",
-																							//"</pronunciation>",
-																							"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
-																							"<grammatical-info value=\"Noun-CHANGED\">",     //changed
-																							"</grammatical-info>",
-																							"<gloss lang=\"en\"><text>man-CHANGED</text></gloss>",   //changed
-																							"<definition>",
-																							"<form lang=\"en\"><text>male adult human SPAN WAS REMOVED</text></form>",               //changed
-																							"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
-																							"</definition>",
-																							//"<illustration href=\"Desert.jpg\">",
-																							//"<label>",
-																							//"<form lang=\"fr\"><text>Desert</text></form>",
-																							//"</label>",
-																							//"</illustration>",
-																							//"<illustration href=\"subfolder/MyPic.jpg\">",
-																							//"<label>",
-																							//"<form lang=\"fr\"><text>My picture</text></form>",
-																							//"</label>",
-																							//"</illustration>",
-																							//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
-																							//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
-																							"</sense>",
-																							"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
-																							"<grammatical-info value=\"Noun\">",
-																							"</grammatical-info>",
-																							"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
-																							"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
-																							"</sense>",
-																							"</entry>"
+		{
+			//entry7
+			//changed dateModified=\"2012-05-12T18:30:07Z\"
+			"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
+				"<lexical-unit>",
+				"<form lang=\"es\"><text>hombre</text></form>",
+				// removed "<form lang=\"fr-Zxxx-x-AUDIO\"><text>hombre634407358826681759.wav</text></form>",
+				"<form lang=\"Fr-Tech 30Oct\"><text>form in bad WS</text></form>",
+				"</lexical-unit>",
+				//"<trait name=\"morph-type\" value=\"root\"></trait>",
+				//"<pronunciation>",
+				//"<form lang=\"fr\"><text>ombre</text></form>",
+				//"<media href=\"Sleep Away.mp3\">",
+				//"</media>",
+				//"</pronunciation>",
 
-																							//***traits, custom option list
-																							//fields,custom  multitext
-																							//***relation
-																							//notes
-																							//
-																						};
+				"<sense id=\"hombre_f63f1ccf-3d50-417e-8024-035d999d48bc\">",
+					"<grammatical-info value=\"Noun-CHANGED\">",     //changed
+					"</grammatical-info>",
+					"<gloss lang=\"en\"><text>man-CHANGED</text></gloss>",   //changed
+						"<definition>",
+						"<form lang=\"en\"><text>male adult human SPAN WAS REMOVED</text></form>",               //changed
+						"<form lang=\"fr-Zxxx-x-AUDIO\"><text>male adult634407358826681760.wav</text></form>",
+						"</definition>",
+					//"<illustration href=\"Desert.jpg\">",
+					//"<label>",
+					//"<form lang=\"fr\"><text>Desert</text></form>",
+					//"</label>",
+					//"</illustration>",
+					//"<illustration href=\"subfolder/MyPic.jpg\">",
+					//"<label>",
+					//"<form lang=\"fr\"><text>My picture</text></form>",
+					//"</label>",
+					//"</illustration>",
+					//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.5.1 Man\"></trait>",
+					//"<trait name=\"semantic-domain-ddp4\" value=\"2.6.4.4 Adult\"></trait>",
+				"</sense>",
+
+				"<sense id=\"creature7ddb62da-fa55-404f-b944-46b71b00c8c8\">",
+					"<grammatical-info value=\"Noun\">",
+					"</grammatical-info>",
+					"<gloss lang=\"en\"><text>swimming creature</text></gloss>",
+					"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
+				"</sense>",
+			"</entry>"
+
+			//***traits, custom option list
+			//fields,custom  multitext
+			//***relation
+			//notes
+			//
+		};
 
 
 		[Test]
@@ -593,82 +590,238 @@ namespace lfmergelift.Tests
 			Assert.IsNotNull(examples);
 			Assert.AreEqual(3, examples.Count);
 
-			XmlNode example0 = examples[0];
-
 			//the order of the examples is different since some were removed
-			XmlNode example1 = examples[0];
-			XmlAttribute sourceAttr = example1.Attributes["source"];
+			XmlNode example1notChanged = examples[0];
+			XmlAttribute sourceAttr = example1notChanged.Attributes["source"];
 			Assert.IsNotNull(sourceAttr);
 			Assert.AreEqual("reference for second translation", sourceAttr.Value);
-			XmlNodeList sentences = example1.SelectNodes("form");
+			XmlNodeList sentences = example1notChanged.SelectNodes("form");
 			Assert.IsNotNull(sentences);
 			Assert.AreEqual("Second example sentence.", sentences[0].InnerText);
 			Assert.AreEqual("Other lang second example.", sentences[1].InnerText);
-			XmlNodeList translations = example1.SelectNodes("translation/form");
+			XmlNodeList translations = example1notChanged.SelectNodes("translation/form");
 			Assert.IsNotNull(translations);
 			Assert.AreEqual(1, translations.Count);
 			Assert.AreEqual("Second example translation", translations[0].InnerText);
-			XmlNode note = example1.SelectSingleNode("note");
+			XmlNode note = example1notChanged.SelectSingleNode("note");
 			Assert.IsNotNull(note);
 			Assert.AreEqual("reference for second translation", note.InnerText);
 			XmlAttribute referenceType = note.Attributes["type"];
 			Assert.AreEqual("reference", referenceType.Value);
 
+			//The original first example was modified so now it appears in the second position since it was first removed
+			//and the one in the LiftUpdate file was added.
+			XmlNode example0WasChanged = examples[1];
+			sourceAttr = example0WasChanged.Attributes["source"];
+			Assert.IsNull(sourceAttr);
+			sentences = example0WasChanged.SelectNodes("form");
+			Assert.IsNotNull(sentences);
+			Assert.AreEqual(2, sentences.Count);
+			Assert.AreEqual("ExampleSentence ", sentences[0].InnerText);
+			Assert.AreEqual("Another ws example sentence-CHANGED", sentences[1].InnerText);
+			translations = example0WasChanged.SelectNodes("translation/form");
+			Assert.IsNotNull(translations);
+			Assert.AreEqual(2, translations.Count);
+			Assert.AreEqual("This is a translation of example sentences-CHANGED", translations[0].InnerText);
+			Assert.AreEqual("In another ws this is a translation of exSentences", translations[1].InnerText);
+			note = example0WasChanged.SelectSingleNode("note");
+			Assert.IsNull(note);
 
-			XmlNode example2 = examples[2];
 
+			XmlNode exampleWasAdded = examples[2];
+			sourceAttr = exampleWasAdded.Attributes["source"];
+			Assert.IsNull(sourceAttr);
+			sentences = exampleWasAdded.SelectNodes("form");
+			Assert.IsNotNull(sentences);
+			Assert.AreEqual("Third example sentence.", sentences[0].InnerText);
+			Assert.AreEqual("Third other lang example.", sentences[1].InnerText);
+			translations = exampleWasAdded.SelectNodes("translation/form");
+			Assert.IsNotNull(translations);
+			Assert.AreEqual(1, translations.Count);
+			Assert.AreEqual("Third example translation", translations[0].InnerText);
+			note = exampleWasAdded.SelectSingleNode("note");
+			Assert.IsNull(note);
 		}
 		static private readonly string[] s_LiftUpdateChangeExamples = new[]
-																		{
-																			//entry 5
-																			"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
-																			"<lexical-unit>",
-																			"<form lang=\"fr\"><text>cat</text></form>",
-																			"</lexical-unit>",
-																			//"<trait  name=\"morph-type\" value=\"stem\"/>",
-																			"<sense id=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\">",
-																			"<gloss lang=\"en\"><text>meuwer</text></gloss>",
-																			"<gloss lang=\"es\"><text>cataeouw</text></gloss>",
+		{
+			//entry 5
+			"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>cat</text></form>",
+			"</lexical-unit>",
+			//"<trait  name=\"morph-type\" value=\"stem\"/>",
+			"<sense id=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\">",
+			"<gloss lang=\"en\"><text>meuwer</text></gloss>",
+			"<gloss lang=\"es\"><text>cataeouw</text></gloss>",
 
-																			//The LfSynchronicMerger should replace this example because some internal text is changed.
-																			"<example>",
-																			"<form lang=\"fr\"><text>ExampleSentence </text></form>",
-																			"<form lang=\"frc\"><text>Another ws example sentence-CHANGED</text></form>",               //change
-																			"<translation type=\"Free translation\">",
-																			"<form lang=\"en\"><text>This is a translation of example sentences-CHANGED</text></form>",    //change
-																			"<form lang=\"es\"><text>In another ws this is a translation of exSentences</text></form>",
-																			"</translation>",
-																			//"<note type=\"reference\">",
-																			//"<form lang=\"en\"><text>dsd reference for Example</text></form>",
-																			//"</note>",
-																			"</example>",
+				//The LfSynchronicMerger should replace this example because some internal text is changed.
+				"<example>",
+				"<form lang=\"fr\"><text>ExampleSentence </text></form>",
+				"<form lang=\"frc\"><text>Another ws example sentence-CHANGED</text></form>",               //change
+					"<translation type=\"Free translation\">",
+					"<form lang=\"en\"><text>This is a translation of example sentences-CHANGED</text></form>",    //change
+					"<form lang=\"es\"><text>In another ws this is a translation of exSentences</text></form>",
+					"</translation>",
+				//"<note type=\"reference\">",
+				//"<form lang=\"en\"><text>dsd reference for Example</text></form>",
+				//"</note>",
+				"</example>",
 
-																			//The LfSynchronicMerger should not replace this second example.
-																			"<example>",//no text change in this example but the 'source' attribute is missing
-																			"<form lang=\"fr\"><text>Second example sentence.</text></form>",
-																			"<form lang=\"frc\"><text>Other lang second example.</text></form>",
-																			"<translation>",
-																			"<form lang=\"en\"><text>Second example translation</text></form>",
-																			"</translation>",
-																			//"<note type=\"reference\">",
-																			//"<form lang=\"en\"><text>reference for second translation</text></form>",
-																			//"</note>",
-																			"</example>",
+				//The LfSynchronicMerger should not replace this second example.
+				"<example>",//no text change in this example but the 'source' attribute is missing
+				"<form lang=\"fr\"><text>Second example sentence.</text></form>",
+				"<form lang=\"frc\"><text>Other lang second example.</text></form>",
+					"<translation>",
+					"<form lang=\"en\"><text>Second example translation</text></form>",
+					"</translation>",
+				//"<note type=\"reference\">",
+				//"<form lang=\"en\"><text>reference for second translation</text></form>",
+				//"</note>",
+				"</example>",
 
-																			//This is a third example which was added in Language Forge so it should be added to the entry
-																			"<example>",
-																			"<form lang=\"fr\"><text>Third example sentence.</text></form>",
-																			"<form lang=\"frc\"><text>Third other lang example.</text></form>",
-																			"<translation>",
-																			"<form lang=\"en\"><text>Third example translation</text></form>",
-																			"</translation>",
-																			"</example>",
+				//This is a third example which was added in Language Forge so it should be added to the entry
+				"<example>",
+				"<form lang=\"fr\"><text>Third example sentence.</text></form>",
+				"<form lang=\"frc\"><text>Third other lang example.</text></form>",
+					"<translation>",
+					"<form lang=\"en\"><text>Third example translation</text></form>",
+					"</translation>",
+				"</example>",
 
-																			//"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
-																			"</sense>",
-																			"</entry>"
-																		};
+			//"<relation type=\"Part\" ref=\"9a3b501a-b487-47c1-b77b-41975c7147d2\"/>",
+			"</sense>",
+			"</entry>"
+		};
 
+		[Test]
+		public void TestExamples_AddExamplesToEntryWithoutAny()
+		{
+			CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
+			CreateLiftUpdateFile(s_LiftUpdateAddExamples,
+								 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
+			FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+
+			XmlDocument doc = MergeAndGetResult(true, _directory, files);
+			var numberOfEntries = doc.SelectNodes("//entry").Count;
+			Assert.AreEqual(8, numberOfEntries);
+
+			XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='tail_98c54484-08a6-4136-abab-b936ddc6ad25']");
+			Assert.IsNotNull(changedEntries);
+			Assert.AreEqual(1, changedEntries.Count);
+			XmlNode changedEntry = changedEntries[0];
+
+			XmlNodeList senses = changedEntry.SelectNodes("sense");
+			Assert.IsNotNull(senses);
+			Assert.AreEqual(1, senses.Count);
+			XmlNode sense0 = senses[0];
+
+			//Examine the results of the examples
+			XmlNodeList examples = sense0.SelectNodes("example");
+			Assert.IsNotNull(examples);
+			Assert.AreEqual(2, examples.Count);
+
+			//the order of the examples is different since some were removed
+			XmlNode example0 = examples[0];
+			XmlAttribute sourceAttr = example0.Attributes["source"];
+			Assert.IsNull(sourceAttr);
+			XmlNodeList sentences = example0.SelectNodes("form");
+			Assert.IsNotNull(sentences);
+			Assert.AreEqual("Example sentence 1", sentences[0].InnerText);
+			Assert.AreEqual("Another ws example sentence", sentences[1].InnerText);
+			XmlNodeList translations = example0.SelectNodes("translation/form");
+			Assert.IsNotNull(translations);
+			Assert.AreEqual(1, translations.Count);
+			Assert.AreEqual("This is a translation of example sentences", translations[0].InnerText);
+
+			//The original first example was modified so now it appears in the second position since it was first removed
+			//and the one in the LiftUpdate file was added.
+			XmlNode example1 = examples[1];
+			sentences = example1.SelectNodes("form");
+			Assert.IsNotNull(sentences);
+			Assert.AreEqual(1, sentences.Count);
+			Assert.AreEqual("OneExampleSentence", sentences[0].InnerText);
+			XmlNode translationNode = example1.SelectSingleNode("translation");
+			Assert.IsNull(translationNode);
+		}
+
+		static private readonly string[] s_LiftUpdateAddExamples = new[]
+		{
+
+			//entry 6
+			"<entry dateCreated=\"2012-05-09T06:51:52Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"tail_98c54484-08a6-4136-abab-b936ddc6ad25\" guid=\"98c54484-08a6-4136-abab-b936ddc6ad25\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>tail</text></form>",
+			"</lexical-unit>",
+			"<sense id=\"6d20a75d-0c74-432e-a169-7042fcd6f026\">",
+			"<grammatical-info value=\"Noun\">",
+			"</grammatical-info>",
+			"<gloss lang=\"en\"><text>wagger</text></gloss>",
+				"<example>",
+				"<form lang=\"fr\"><text>Example sentence 1</text></form>",
+				"<form lang=\"frc\"><text>Another ws example sentence</text></form>",
+					"<translation>",
+					"<form lang=\"en\"><text>This is a translation of example sentences</text></form>",
+					"</translation>",
+				"</example>",
+
+				//The LfSynchronicMerger should not replace this second example.
+				"<example>",
+				"<form lang=\"fr\"><text>OneExampleSentence</text></form>",
+					//"<translation>",                                                        //no translation element
+					//"<form lang=\"en\"><text>Second example translation</text></form>",
+					//"</translation>",
+				"</example>",
+			"<relation type=\"Whole\" ref=\"1b33697f-91e1-4b57-bab7-824b74d04f86\"/>",
+			"</sense>",
+			"</entry>"
+		};
+
+		[Test]
+		public void TestExamples_RemoveAllExamples()
+		{
+			CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
+			CreateLiftUpdateFile(s_LiftUpdateRemoveExamples,
+								 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
+			FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+
+			XmlDocument doc = MergeAndGetResult(true, _directory, files);
+			var numberOfEntries = doc.SelectNodes("//entry").Count;
+			Assert.AreEqual(8, numberOfEntries);
+
+			XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8']");
+			Assert.IsNotNull(changedEntries);
+			Assert.AreEqual(1, changedEntries.Count);
+			XmlNode changedEntry = changedEntries[0];
+
+			XmlNodeList senses = changedEntry.SelectNodes("sense");
+			Assert.IsNotNull(senses);
+			Assert.AreEqual(1, senses.Count);
+			XmlNode sense0 = senses[0];
+
+			var senseId = sense0.Attributes["id"].Value;
+			Assert.AreEqual("9aaf4b46-f2b5-452f-981f-8517e64e6dc2", senseId);
+
+
+			//Examine the results of the examples
+			XmlNodeList examples = sense0.SelectNodes("example");
+			Assert.IsNotNull(examples);
+			Assert.AreEqual(0, examples.Count);
+		}
+
+		static private readonly string[] s_LiftUpdateRemoveExamples = new[]
+		{
+			//entry 5
+			"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
+			"<lexical-unit>",
+			"<form lang=\"fr\"><text>cat</text></form>",
+			"</lexical-unit>",
+			"<sense id=\"9aaf4b46-f2b5-452f-981f-8517e64e6dc2\">",
+				"<gloss lang=\"en\"><text>meuwer</text></gloss>",
+				"<gloss lang=\"es\"><text>cataeouw</text></gloss>",
+
+			"</sense>",
+			"</entry>"
+		};
 		[Test]
 		public void TestNewEntriesAdded_MultipleFilesSucessiveChanges()
 		{
