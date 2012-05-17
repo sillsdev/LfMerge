@@ -61,15 +61,9 @@ namespace lfmergelift
 			//Always replace all the attributes for an entry with the modified entry from the liftUpdate file.
 			SwapOutAllAttributes(xnEntryModify, xnEntryLiftUpdate);
 
-			MergeEntryLexicalUnit(xnEntryLiftUpdate, xnEntryModify);
+			ReplaceChildNodeIfFoundInLiftUpdateNode(xnEntryModify, xnEntryLiftUpdate, "lexical-unit");
 
 			ModifySenses(xnEntryModify, xnEntryLiftUpdate);
-		}
-
-		private static void SwapOutEntireElement(XmlNode nodeToModify, XmlNode nodefromLiftUpdate)
-		{
-			nodeToModify.InnerXml = nodefromLiftUpdate.InnerXml;
-			SwapOutAllAttributes(nodeToModify, nodefromLiftUpdate);
 		}
 
 		private static void ModifySenses(XmlNode entryToModify, XmlNode entryFromLiftUpdate)
@@ -232,32 +226,6 @@ namespace lfmergelift
 		}
 
 		/// <summary>
-		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
-		/// to the new target child node.
-		/// </summary>
-		/// <param name="nodeToModify"></param>
-		/// <param name="childNodeName"></param>
-		/// <param name="nodeFromLiftUpdate"></param>
-		private static void CopyChildNode(XmlNode nodeToModify, string childNodeName, XmlNode nodeFromLiftUpdate)
-		{
-			XmlNode newNode = AddXmlElement(nodeToModify, childNodeName);
-			SwapOutEntireElement(newNode, nodeFromLiftUpdate.SelectSingleNode(childNodeName));
-		}
-
-		/// <summary>
-		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
-		/// to the new target child node.
-		/// </summary>
-		/// <param name="nodeToModify"></param>
-		/// <param name="childNodeName"></param>
-		/// <param name="nodeFromLiftUpdate"></param>
-		private static void AddChildNode(XmlNode nodeToModify, string childNodeName, XmlNode nodeToCopyContentsFrom)
-		{
-			XmlNode newNode = AddXmlElement(nodeToModify, childNodeName);
-			SwapOutEntireElement(newNode, nodeToCopyContentsFrom);
-		}
-
-		/// <summary>
 		/// Changes nodeToModify so that it's child node 'childNodeName', will match what is found in nodeFromLiftUpdate. Cange the  attributes and innerXml. Remove or add the node as
 		/// needed.
 		/// </summary>
@@ -280,32 +248,19 @@ namespace lfmergelift
 			}
 		}
 
-		private static void SwapOutAllAttributes(XmlNode targetNode, XmlNode sourceNode)
+		private static void ReplaceChildNodeIfFoundInLiftUpdateNode(XmlNode nodeToModify, XmlNode nodeFromLiftUpdate, String childNodeName)
 		{
-			targetNode.Attributes.RemoveAll();
-			foreach (XmlAttribute attr in sourceNode.Attributes)
+			if (ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				AddXmlAttribute(targetNode, attr.Name, attr.Value);
+				SwapOutEntireElement(nodeToModify.SelectSingleNode(childNodeName), nodeFromLiftUpdate.SelectSingleNode(childNodeName));
 			}
-		}
-
-		private static void MergeEntryLexicalUnit(XmlNode xnEntryLiftUpdate, XmlNode xnEntryModify)
-		{
-			//Swap out the lexican-unit with that found in the LiftUpdate entry
-			//<lexical-unit>
-			if (ElementHasChildElement(xnEntryModify, "lexical-unit") && ElementHasChildElement(xnEntryLiftUpdate, "lexical-unit"))
+			else if (!ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				xnEntryModify.SelectSingleNode("lexical-unit").InnerXml = xnEntryLiftUpdate.SelectSingleNode("lexical-unit").InnerXml;
+				//do not modify anything since the LiftUpdate does not contain this element.
 			}
-			else if (!ElementHasChildElement(xnEntryLiftUpdate, "lexical-unit"))
+			else if (!ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				//do not modify anything since the LiftUpdate has not lexical unit in it.
-			}
-			else if (!ElementHasChildElement(xnEntryModify, "lexical-unit") && ElementHasChildElement(xnEntryLiftUpdate, "lexical-unit"))
-			{
-				//The entry has not lexical unit but the update has one so add it. Then merge in the contents from the liftUpdate entry.
-				AddXmlElement(xnEntryModify, "lexical-unit");
-				xnEntryModify.SelectSingleNode("lexical-unit").InnerXml = xnEntryLiftUpdate.SelectSingleNode("lexical-unit").InnerXml;
+				CopyChildNode(nodeToModify, childNodeName, nodeFromLiftUpdate);
 			}
 		}
 
@@ -333,6 +288,47 @@ namespace lfmergelift
 			{
 				var senseId = node.Attributes["id"];
 				mainEntrySenses.Add(senseId.Value, node);
+			}
+		}
+
+		/// <summary>
+		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
+		/// to the new target child node.
+		/// </summary>
+		/// <param name="nodeToModify"></param>
+		/// <param name="childNodeName"></param>
+		/// <param name="nodeFromLiftUpdate"></param>
+		private static void CopyChildNode(XmlNode nodeToModify, string childNodeName, XmlNode nodeFromLiftUpdate)
+		{
+			XmlNode newNode = AddXmlElement(nodeToModify, childNodeName);
+			SwapOutEntireElement(newNode, nodeFromLiftUpdate.SelectSingleNode(childNodeName));
+		}
+
+		/// <summary>
+		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
+		/// to the new target child node.
+		/// </summary>
+		/// <param name="nodeToModify"></param>
+		/// <param name="childNodeName"></param>
+		/// <param name="nodeFromLiftUpdate"></param>
+		private static void AddChildNode(XmlNode nodeToModify, string childNodeName, XmlNode nodeToCopyContentsFrom)
+		{
+			XmlNode newNode = AddXmlElement(nodeToModify, childNodeName);
+			SwapOutEntireElement(newNode, nodeToCopyContentsFrom);
+		}
+
+		private static void SwapOutEntireElement(XmlNode nodeToModify, XmlNode nodefromLiftUpdate)
+		{
+			nodeToModify.InnerXml = nodefromLiftUpdate.InnerXml;
+			SwapOutAllAttributes(nodeToModify, nodefromLiftUpdate);
+		}
+
+		private static void SwapOutAllAttributes(XmlNode targetNode, XmlNode sourceNode)
+		{
+			targetNode.Attributes.RemoveAll();
+			foreach (XmlAttribute attr in sourceNode.Attributes)
+			{
+				AddXmlAttribute(targetNode, attr.Name, attr.Value);
 			}
 		}
 

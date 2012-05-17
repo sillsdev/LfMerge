@@ -426,12 +426,6 @@ namespace lfmergelift.Tests
 						//"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
 					"</sense>",
 			"</entry>"
-
-			//***traits, custom option list
-			//fields,custom  multitext
-			//***relation
-			//notes
-			//
 		};
 
 		[Test]
@@ -539,12 +533,6 @@ namespace lfmergelift.Tests
 					"<relation type=\"Part\" ref=\"a3f48811-e5e4-43d0-9ce3-dcd6af3ee07d\"/>",
 				"</sense>",
 			"</entry>"
-
-			//***traits, custom option list
-			//fields,custom  multitext
-			//***relation
-			//notes
-			//
 		};
 
 
@@ -822,6 +810,8 @@ namespace lfmergelift.Tests
 			"</sense>",
 			"</entry>"
 		};
+
+
 		[Test]
 		public void TestNewEntriesAdded_MultipleFilesSucessiveChanges()
 		{
@@ -849,7 +839,7 @@ namespace lfmergelift.Tests
 
 		private static readonly string s_LiftData1 =
 			"<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
-			+ "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'></entry>"
+			+ "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>"
 			+ "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
 
 		private static readonly string s_LiftUpdate1 =
@@ -863,10 +853,10 @@ namespace lfmergelift.Tests
 
 
 		[Test]
-		public void TestEntryDeleted_DeletionDate()
+		public void TestEntryDeleted_DeletionDateAdded()
 		{
 			//This test demonstrates that a deletion of an entry is applied to a LIFT file.
-			//Now 'tomb stoning' is done.  The entry is not actally
+			//Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted attribute is added
 
 			//Create a LIFT file with 3 entries which will have updates applied to it.
 			WriteFile(_baseLiftFileName, s_LiftData1, _directory);
@@ -876,13 +866,16 @@ namespace lfmergelift.Tests
 			XmlDocument doc = MergeAndGetResult(true, _directory, files);
 			Assert.AreEqual(4, doc.SelectNodes("//entry").Count);
 			Assert.AreEqual(1, doc.SelectNodes("//entry[@id='one']").Count);
-			Assert.AreEqual(1, doc.SelectNodes("//entry[@id='twoDeleted' and @dateDeleted='2012-05-08T06:40:44Z' and @guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']").Count);
-			Assert.AreEqual(0, doc.SelectNodes("//entry[@id='two' and @dateDeleted='2012-05-08T06:40:44Z' and @guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']").Count);
-			Assert.AreEqual(1, doc.SelectNodes("//entry[@id='six']").Count);
+			XmlNodeList nodesDeleted = doc.SelectNodes("//entry[@id='two' and @guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']");
+			Assert.AreEqual(1, nodesDeleted.Count);   //ensure there is only one entry with this guid
+			XmlNode nodeDeleted = nodesDeleted[0];
+			//Make sure the contents of the node was changed to match the deleted entry from the .lift.update file
+			Assert.AreEqual("2012-05-08T06:40:44Z", nodeDeleted.Attributes["dateDeleted"].Value);
+			Assert.IsNullOrEmpty(nodeDeleted.InnerXml);
 		}
 
 		private static readonly string s_LiftUpdateDeleteEntry =
-			"<entry id='twoDeleted' dateCreated='2012-05-04T04:19:57Z' dateModified='2012-05-04T04:19:57Z' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' dateDeleted='2012-05-08T06:40:44Z'></entry>"
+			"<entry id='two' dateCreated='2012-05-04T04:19:57Z' dateModified='2012-05-04T04:19:57Z' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' dateDeleted='2012-05-08T06:40:44Z'></entry>"
 			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
 
