@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="FolderScannerTests.cs" />
     <Compile Include="LfSynchronicMegerTests.cs" />
+    <Compile Include="LiftUpdatesScannerTests.cs" />
     <Compile Include="ProjectUpdateFolderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

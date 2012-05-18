@@ -9,25 +9,28 @@ using Palaso.TestUtilities;
 namespace lfmergelift.Tests
 {
 	[TestFixture]
-	public class FolderScannerTests
+	public class LiftUpdatesScannerTests
 	{
 		class TestEnvironment : IDisposable
 		{
-			private readonly TemporaryFolder _folder = new TemporaryFolder("FolderScannerTests");
+			private readonly TemporaryFolder _folder = new TemporaryFolder("MergeWork");
+			private const String _updatesFolder = "liftUpdates";
+
 
 			public string Path
 			{
 				get { return _folder.Path; }
 			}
 
-			public string ProjectPath(string projectName)
+
+			public string LiftUpdatesPath()
 			{
-				return System.IO.Path.Combine(Path, projectName);
+				return System.IO.Path.Combine(Path, _updatesFolder);
 			}
 
-			public void CreateProjectUpdateFolder(string ProjectName)
+			public void CreateUpdateFolder()
 			{
-				Directory.CreateDirectory(ProjectPath(ProjectName));
+				Directory.CreateDirectory(LiftUpdatesPath());
 			}
 
 			public void Dispose()
@@ -37,61 +40,7 @@ namespace lfmergelift.Tests
 
 		}
 
-		[Test]
-		public void FindProjectFolders_ZeroProjects_FindsZero()
-		{
-			using (var e = new TestEnvironment())
-			{
-				var scanner = new FolderScanner(e.Path);
-				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
-				Assert.That(updateFoldersList.Count, Is.EqualTo(0));
-			}
-		}
-
-		[Test]
-		public void FindProjectFolders_OneProject_FindsOne()
-		{
-			using (var e = new TestEnvironment())
-			{
-				e.CreateProjectUpdateFolder("1");
-				var scanner = new FolderScanner(e.Path);
-				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
-				Assert.That(updateFoldersList.Count, Is.EqualTo(1));
-			}
-
-		}
-
-		[Test]
-		public void FindProjectFolders_OneProject_ProjectUpdateFolderHasCorrectFilePath()
-		{
-			using (var e = new TestEnvironment())
-			{
-				e.CreateProjectUpdateFolder("1");
-				var scanner = new FolderScanner(e.Path);
-				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
-				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("1")));
-			}
-		}
-
-		[Test]
-		public void FindProjectFolders_OneProject_TwoUpdateFolders()
-		{
-			//create update folders so that the alphabetical ordering on the folders differs from the time stamps.
-			//we want to see if the FolderScanner returns the folders in the correct order from time stamps
-			using (var e = new TestEnvironment())
-			{
-				e.CreateProjectUpdateFolder("2FirstFolderCreated");
-				Thread.Sleep(100);
-				e.CreateProjectUpdateFolder("1SecondFolderCreated");
-				var scanner = new FolderScanner(e.Path);
-				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
-				Assert.That(updateFoldersList.Count, Is.EqualTo(2));
-				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("2FirstFolderCreated")));
-				Assert.That(updateFoldersList[1].Path, Is.EqualTo(e.ProjectPath("1SecondFolderCreated")));
-			}
-		}
-
-
+		private const string _baseLiftFileName = "base.lift";
 
 		static private readonly string[] s_LiftMainFile = new[]
 		{
@@ -190,31 +139,23 @@ namespace lfmergelift.Tests
 			"<entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>"
 			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
-		private const string _baseLiftFileName = "base.lift";
+
 
 		[Test]
 		public void FindProjectFolders_OneProject_TwoUpdateFolders_OneWithTwoLiftUpdateFiles()
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.CreateProjectUpdateFolder("2FirstFolderCreated");
-				Thread.Sleep(100);
-				e.CreateProjectUpdateFolder("1SecondFolderCreated");
-
-				var scanner = new FolderScanner(e.Path);
-				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
-				Assert.That(updateFoldersList.Count, Is.EqualTo(2));
-				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("2FirstFolderCreated")));
-				Assert.That(updateFoldersList[1].Path, Is.EqualTo(e.ProjectPath("1SecondFolderCreated")));
+				e.CreateUpdateFolder();
 
 				////Create a LIFT file with 3 entries which will have updates applied to it.
-				LfSynchronicMergerTests.WriteFile(_baseLiftFileName, s_LiftData1, e.ProjectPath("1SecondFolderCreated"));
+				LfSynchronicMergerTests.WriteFile(_baseLiftFileName, s_LiftData1, e.LiftUpdatesPath());
 				//Create a .lift.update file with three entries.  One to replace the second entry in the original LIFT file.
 				//The other two are new and should be appended to the original LIFT file.
-				LfSynchronicMergerTests.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, e.ProjectPath("1SecondFolderCreated"));
+				LfSynchronicMergerTests.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, e.LiftUpdatesPath());
 				//Create a .lift.update file with two entries.  One to replace one of the changes from the first LiftUpdate file and one new entry.
-				LfSynchronicMergerTests.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.ProjectPath("1SecondFolderCreated"));
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(e.ProjectPath("1SecondFolderCreated"), _baseLiftFileName));
+				LfSynchronicMergerTests.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.LiftUpdatesPath());
+				FileInfo[] files = LiftUpdatesScanner.GetPendingUpdateFiles(e.LiftUpdatesPath());
 				Assert.That(files.Length, Is.EqualTo(2));
 				Assert.That(files[0].Name, Is.EqualTo("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles));
 				Assert.That(files[1].Name, Is.EqualTo("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles));

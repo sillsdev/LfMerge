@@ -914,7 +914,7 @@ namespace lfmergelift.Tests
 			Assert.AreEqual(count, files.Length, fileList.ToString());
 		}
 
-		private static void CreateLiftInputFile(IList<string> data, string fileName, string directory)
+		internal static void CreateLiftInputFile(IList<string> data, string fileName, string directory)
 		{
 			var path = Path.Combine(directory, fileName);
 			if (File.Exists(path))
@@ -929,7 +929,7 @@ namespace lfmergelift.Tests
 			//pause so they don't all have the same time
 			Thread.Sleep(100);
 		}
-		private static void CreateLiftUpdateFile(IList<string> data, string fileName, string directory)
+		internal static void CreateLiftUpdateFile(IList<string> data, string fileName, string directory)
 		{
 			string path = Path.Combine(directory, fileName);
 			if (File.Exists(path))
@@ -950,7 +950,7 @@ namespace lfmergelift.Tests
 			Thread.Sleep(100);
 		}
 
-		static private string WriteFile(string fileName, string xmlForEntries, string directory)
+		static internal string WriteFile(string fileName, string xmlForEntries, string directory)
 		{
 			StreamWriter writer = File.CreateText(Path.Combine(directory, fileName));
 			string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -968,60 +968,5 @@ namespace lfmergelift.Tests
 
 			return content;
 		}
-
-		//=================================================================================================================================
-		//=================================================================================================================================
-		//=================================================================================================================================
-		//=================================================================================================================================
-		//=================================================================================================================================
-
-		private string ReadFileContentIntoString(string FileName)
-		{
-			StreamReader sr = null;
-			string FileContents = null;
-
-			try
-			{
-				FileStream fs = new FileStream(FileName, FileMode.Open,
-											   FileAccess.Read);
-				sr = new StreamReader(fs);
-				FileContents = sr.ReadToEnd();
-			}
-			finally
-			{
-				if (sr != null)
-					sr.Close();
-			}
-
-			return FileContents;
-		}
-
-		private string FormattedXml3entries
-		{
-			get
-			{
-				return
-					"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<lift\r\n\tversion=\"0.13\"\r\n\tproducer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">\r\n\t<entry\r\n\t\tid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef7\"\r\n\t\tdateCreated=\"2009-10-07T04:07:54Z\"\r\n\t\tdateModified=\"2009-10-07T04:10:34Z\"\r\n\t\tguid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef7\">\r\n\t\t<lexical-unit>\r\n\t\t\t<form\r\n\t\t\t\tlang=\"nan\">\r\n\t\t\t\t<text>test</text>\r\n\t\t\t</form>\r\n\t\t</lexical-unit>\r\n\t\t<sense\r\n\t\t\tid=\"e6f93a8d-7883-4c1c-877e-e34db9f06cdc\">\r\n\t\t\t<definition>\r\n\t\t\t\t<form\r\n\t\t\t\t\tlang=\"en\">\r\n\t\t\t\t\t<text>difficult; slow</text>\r\n\t\t\t\t</form>\r\n\t\t\t</definition>\r\n\t\t</sense>\r\n\t</entry>\r\n\t<entry\r\n\t\tid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef8\"\r\n\t\tdateCreated=\"2009-10-07T04:07:54Z\"\r\n\t\tdateModified=\"2009-10-07T04:10:34Z\"\r\n\t\tguid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef8\">\r\n\t\t<lexical-unit>\r\n\t\t\t<form\r\n\t\t\t\tlang=\"nan\">\r\n\t\t\t\t<text>test</text>\r\n\t\t\t</form>\r\n\t\t</lexical-unit>\r\n\t\t<sense\r\n\t\t\tid=\"e6f93a8d-7883-4c1c-877e-e34db9f06cdd\">\r\n\t\t\t<definition>\r\n\t\t\t\t<form\r\n\t\t\t\t\tlang=\"en\">\r\n\t\t\t\t\t<text>difficult; slow</text>\r\n\t\t\t\t</form>\r\n\t\t\t</definition>\r\n\t\t</sense>\r\n\t</entry>\r\n\t<entry\r\n\t\tid=\"Xtest3_92f0c58a-9ad6-4715-ad9b-d56597217ac3\"\r\n\t\tdateCreated=\"2010-02-04T03:58:33Z\"\r\n\t\tdateModified=\"2010-02-04T03:58:40Z\"\r\n\t\tguid=\"92f0c58a-9ad6-4715-ad9b-d56597217ac3\">\r\n\t\t<lexical-unit>\r\n\t\t\t<form\r\n\t\t\t\tlang=\"v\">\r\n\t\t\t\t<text>Xtest3</text>\r\n\t\t\t</form>\r\n\t\t</lexical-unit>\r\n\t\t<sense\r\n\t\t\tid=\"4bc90f1e-1d4a-418f-a6e0-a4191b3e04f3\">\r\n\t\t\t<definition>\r\n\t\t\t\t<form\r\n\t\t\t\t\tlang=\"en\">\r\n\t\t\t\t\t<text>test3</text>\r\n\t\t\t\t</form>\r\n\t\t\t</definition>\r\n\t\t</sense>\r\n\t</entry>\r\n</lift>";
-			}
-		}
-
-		private string FormattedXml2entries
-		{
-			get
-			{
-				return
-					"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<lift\r\n\tversion=\"0.13\"\r\n\tproducer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">\r\n\t<entry\r\n\t\tid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef7\"\r\n\t\tdateCreated=\"2009-10-07T04:07:54Z\"\r\n\t\tdateModified=\"2009-10-07T04:10:34Z\"\r\n\t\tguid=\"03d4b59a-9673-4f16-964e-4ea9f0636ef7\">\r\n\t\t<lexical-unit>\r\n\t\t\t<form\r\n\t\t\t\tlang=\"nan\">\r\n\t\t\t\t<text>test</text>\r\n\t\t\t</form>\r\n\t\t</lexical-unit>\r\n\t\t<sense\r\n\t\t\tid=\"e6f93a8d-7883-4c1c-877e-e34db9f06cdc\">\r\n\t\t\t<definition>\r\n\t\t\t\t<form\r\n\t\t\t\t\tlang=\"en\">\r\n\t\t\t\t\t<text>difficult; slow</text>\r\n\t\t\t\t</form>\r\n\t\t\t</definition>\r\n\t\t</sense>\r\n\t</entry>\r\n\t<entry\r\n\t\tid=\"Xtest3_92f0c58a-9ad6-4715-ad9b-d56597217ac3\"\r\n\t\tdateCreated=\"2010-02-04T03:58:33Z\"\r\n\t\tdateModified=\"2010-02-04T03:58:40Z\"\r\n\t\tguid=\"92f0c58a-9ad6-4715-ad9b-d56597217ac3\">\r\n\t\t<lexical-unit>\r\n\t\t\t<form\r\n\t\t\t\tlang=\"v\">\r\n\t\t\t\t<text>Xtest3</text>\r\n\t\t\t</form>\r\n\t\t</lexical-unit>\r\n\t\t<sense\r\n\t\t\tid=\"4bc90f1e-1d4a-418f-a6e0-a4191b3e04f3\">\r\n\t\t\t<definition>\r\n\t\t\t\t<form\r\n\t\t\t\t\tlang=\"en\">\r\n\t\t\t\t\t<text>test3</text>\r\n\t\t\t\t</form>\r\n\t\t\t</definition>\r\n\t\t</sense>\r\n\t</entry>\r\n</lift>";
-			}
-		}
-
-
-		private void WriteLongSingleLineBaseFileWithWhiteSpaceAfterEntryOpenElement()
-		{
-			WriteFile(_baseLiftFileName,
-					  @"<entry id=""03d4b59a-9673-4f16-964e-4ea9f0636ef7"" dateCreated=""2009-10-07T04:07:54Z"" dateModified=""2009-10-07T04:10:34Z"" guid=""03d4b59a-9673-4f16-964e-4ea9f0636ef7"">
-<lexical-unit><form lang=""nan""><text>test</text></form></lexical-unit><sense id=""e6f93a8d-7883-4c1c-877e-e34db9f06cdc""><definition><form lang=""en""><text>difficult; slow</text></form></definition></sense></entry>", _directory);
-		}
-
-
 	}
 }
