@@ -106,8 +106,6 @@ namespace lfmergelift
 		{
 			foreach (FileInfo file in _liftUpdateFiles)
 			{
-				var filePath = file.FullName;
-				var fileName = file.Name;
 				//verify fileName has correct format  ProjX_Sha#_LastPart
 				//if not then do something useful with the file
 				//if ok then
@@ -115,7 +113,7 @@ namespace lfmergelift
 				//   get sha part
 				//   save full file path
 				//   save fileInfo so that can be used to sort the order to process files.
-				_fileNameParts = fileName.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+				_fileNameParts = file.Name.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
 				if (_fileNameParts.Length < 3)
 				{
 					//fileName does not have at least 3 parts so is in the wrong format. Assumption that last part can also contain underscores so this
@@ -131,7 +129,6 @@ namespace lfmergelift
 					var updateFileInfo = new UpdateInfo();
 					updateFileInfo.Project = GetProjectName(_fileNameParts);
 					updateFileInfo.Sha = GetSha(_fileNameParts);
-					updateFileInfo.UpdateFilePath = filePath;
 					updateFileInfo.SystemFileInfo = file;
 					_updateFilesInfo.Add(updateFileInfo);
 				}
@@ -183,7 +180,6 @@ namespace lfmergelift
 	{
 		public string Project { get; set; }
 		public string Sha { get; set; }
-		public string UpdateFilePath { get; set; }
 		public FileInfo SystemFileInfo { get; set; }
 	}
 

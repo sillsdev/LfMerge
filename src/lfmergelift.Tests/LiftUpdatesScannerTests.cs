@@ -124,7 +124,7 @@ namespace lfmergelift.Tests
 		{
 			Assert.That(updateInfoRecord.Project, Is.EqualTo(proj));
 			Assert.That(updateInfoRecord.Sha, Is.EqualTo(sha));
-			Assert.That(updateInfoRecord.UpdateFilePath, Is.EqualTo(Path.Combine(liftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles)));
+			Assert.That(updateInfoRecord.SystemFileInfo.FullName, Is.EqualTo(Path.Combine(liftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles)));
 		}
 
 		[Test]
