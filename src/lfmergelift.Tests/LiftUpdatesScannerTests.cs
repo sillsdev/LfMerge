@@ -248,5 +248,73 @@ namespace lfmergelift.Tests
 				Assert.That(shasForProjectName.ElementAt(0), Is.EqualTo("sha0123"));
 			}
 		}
+
+
+		[Test]
+		public void GetFullFilePathsForAProjectAndShaInTimeStampOrder()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.CreateUpdateFolder();
+
+				//Create a .lift.update file
+				LfSynchronicMergerTests.WriteFile("ProjB_sha3456_time11" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_D" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate1, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_A" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_C" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0124_uniqffdflurp9" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0125_uniqsdsdlurp9" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+
+
+				LfSynchronicMergerTests.WriteFile("ProjC_sha45863_extraB" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjC_sha0123_time587" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjK_sha0123_time114587" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjC_sha45863_extraA" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+
+				var updatesScanner = new LiftUpdatesScanner(e.LiftUpdatesPath);
+				var projectNames = updatesScanner.GetProjectsNamesToUpdate();
+				Assert.IsNotNull(projectNames);
+				Assert.That(projectNames.Count(), Is.EqualTo(4));
+				Assert.That(projectNames.ElementAt(0), Is.EqualTo("ProjA"));
+				Assert.That(projectNames.ElementAt(1), Is.EqualTo("ProjB"));
+				Assert.That(projectNames.ElementAt(2), Is.EqualTo("ProjC"));
+				Assert.That(projectNames.ElementAt(3), Is.EqualTo("ProjK"));
+
+				var liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0123");
+				Assert.IsNotNull(liftUpdateFilesToApply);
+				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(3));
+				Assert.That(liftUpdateFilesToApply.ElementAt(0), Is.EqualTo(LiftUpdateFileFullPath("ProjA_sha0123_D", e)));
+				Assert.That(liftUpdateFilesToApply.ElementAt(1), Is.EqualTo(LiftUpdateFileFullPath("ProjA_sha0123_A", e)));
+				Assert.That(liftUpdateFilesToApply.ElementAt(2), Is.EqualTo(LiftUpdateFileFullPath("ProjA_sha0123_C", e)));
+
+				liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0124");
+				Assert.IsNotNull(liftUpdateFilesToApply);
+				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(1));
+				Assert.That(liftUpdateFilesToApply.ElementAt(0), Is.EqualTo(LiftUpdateFileFullPath("ProjA_sha0124_uniqffdflurp9", e)));
+
+				liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0125");
+				Assert.IsNotNull(liftUpdateFilesToApply);
+				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(1));
+				Assert.That(liftUpdateFilesToApply.ElementAt(0), Is.EqualTo(LiftUpdateFileFullPath("ProjA_sha0125_uniqsdsdlurp9", e)));
+
+
+			}
+		}
+
+		private string LiftUpdateFileFullPath(String filename, TestEnvironment e)
+		{
+			return Path.Combine(e.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
+		}
 	}
 }

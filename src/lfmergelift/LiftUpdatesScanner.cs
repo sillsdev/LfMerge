@@ -78,7 +78,29 @@ namespace lfmergelift
 		}
 
 		//Get the .lift.update files for a particular project name and sha. Sort by file timeStamp
-
+		public IEnumerable<String> GetUpdateFilesForProjectAndSha(String proj, String sha)
+		{
+			var liftUpdateFileGroup = new List<FileInfo>();
+			//Get all the fileRecords for this particular Project and Sha
+			var updateInfoRecordsForProjectAndSha = from updateInfo in _updateFilesInfo
+											 where (updateInfo.Project == proj && updateInfo.Sha == sha)
+											 select updateInfo;
+			//Put them in a list of FileInfo so they can be sorted by the last time stamp
+			foreach (var fileInfoRecord in updateInfoRecordsForProjectAndSha)
+			{
+				if (!liftUpdateFileGroup.Contains(fileInfoRecord.SystemFileInfo))
+				{
+					liftUpdateFileGroup.Add(fileInfoRecord.SystemFileInfo);
+				}
+			}
+			liftUpdateFileGroup.Sort(new FileInfoLastWriteTimeComparer());
+			var liftUpdateFileToApply = new List<string>();
+			foreach (FileInfo fileInfo in liftUpdateFileGroup)
+			{
+				liftUpdateFileToApply.Add(fileInfo.FullName);
+			}
+			return liftUpdateFileToApply;
+		}
 
 		private void GetUpdateInfoForEachLiftUpdateFile()
 		{
