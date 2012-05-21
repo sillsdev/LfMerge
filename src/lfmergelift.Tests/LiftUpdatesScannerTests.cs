@@ -19,7 +19,7 @@ namespace lfmergelift.Tests
 			private const String _updatesFolder = "liftUpdates";
 
 
-			public string Path
+			public string MergeWorkFolder
 			{
 				get { return _folder.Path; }
 			}
@@ -27,7 +27,7 @@ namespace lfmergelift.Tests
 
 			public string LiftUpdatesPath
 			{
-				get { return System.IO.Path.Combine(Path, _updatesFolder); }
+				get { return System.IO.Path.Combine(MergeWorkFolder, _updatesFolder); }
 			}
 
 			public void CreateUpdateFolder()
