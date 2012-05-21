@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Chorus.VcsDrivers.Mercurial;
 using Palaso.Lift.Merging;
@@ -59,7 +60,22 @@ namespace lfmergelift
 		}
 
 		//Get All Sha's for a particular Project based on the .lift.update files currently in the liftUpdates folder
-
+		public IEnumerable<String> GetShasForAProjectName(String proj)
+		{
+			var projectShas = new List<String>();
+			var updateInfoRecordsForProject = from updateInfo in _updateFilesInfo
+									where updateInfo.Project == proj
+									select updateInfo;
+			foreach (var fileInfoRecord in updateInfoRecordsForProject)
+			{
+				if (!projectShas.Contains(fileInfoRecord.Sha))
+				{
+					projectShas.Add(fileInfoRecord.Sha);
+				}
+			}
+			projectShas.Sort();
+			return projectShas;
+		}
 
 		//Get the .lift.update files for a particular project name and sha. Sort by file timeStamp
 

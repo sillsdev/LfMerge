@@ -100,7 +100,6 @@ namespace lfmergelift.Tests
 				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra1" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, e.LiftUpdatesPath);
 				//Create a second .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra2" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.LiftUpdatesPath);
-				//Create a third .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjB_sha3456_time11" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.LiftUpdatesPath);
 
 				var updatesScanner = new LiftUpdatesScanner(e.LiftUpdatesPath);
@@ -138,16 +137,12 @@ namespace lfmergelift.Tests
 				//Create a .lift.update file
 				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra4578" + SynchronicMerger.ExtensionOfIncrementalFiles,
 												  s_LiftUpdate1, e.LiftUpdatesPath);
-				//Create a second .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra2459" + SynchronicMerger.ExtensionOfIncrementalFiles,
 												  s_LiftUpdate2, e.LiftUpdatesPath);
-				//Create a third .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjB_sha3456_time11" + SynchronicMerger.ExtensionOfIncrementalFiles,
 												  s_LiftUpdate2, e.LiftUpdatesPath);
-				//Create a fourth .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjK_sha45874563_time114587" + SynchronicMerger.ExtensionOfIncrementalFiles,
 												  s_LiftUpdate2, e.LiftUpdatesPath);
-				//Create a fourth .lift.update file.
 				LfSynchronicMergerTests.WriteFile("ProjC_sha45863_time587" + SynchronicMerger.ExtensionOfIncrementalFiles,
 												  s_LiftUpdate2, e.LiftUpdatesPath);
 
@@ -189,6 +184,68 @@ namespace lfmergelift.Tests
 				VerifyUpdateInfoRecord(liftUpdateFilesInfo.ElementAt(0), "ProjA", "sha0123", "ProjA_sha0123_uniqueExtra4578", e.LiftUpdatesPath);
 				VerifyUpdateInfoRecord(liftUpdateFilesInfo.ElementAt(1), "ProjC", "sha45863", "ProjC_sha45863_time587", e.LiftUpdatesPath);
 				VerifyUpdateInfoRecord(liftUpdateFilesInfo.ElementAt(2), "ProjC", "sha45", "ProjC_sha45_four_partsToName", e.LiftUpdatesPath);
+			}
+		}
+
+		[Test]
+		public void FindAllShasForParticularProjects()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.CreateUpdateFolder();
+
+				//Create a .lift.update file
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra4578" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate1, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_uniqueExtra2459" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0123_unique_blurp9" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0124_uniqffdflurp9" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_sha0125_uniqsdsdlurp9" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjB_sha3456_time11" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjK_sha0123_time114587" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjC_sha45863_time587" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjC_sha0123_time587" + SynchronicMerger.ExtensionOfIncrementalFiles,
+												  s_LiftUpdate2, e.LiftUpdatesPath);
+
+				var updatesScanner = new LiftUpdatesScanner(e.LiftUpdatesPath);
+				var projectNames = updatesScanner.GetProjectsNamesToUpdate();
+				Assert.IsNotNull(projectNames);
+				Assert.That(projectNames.Count(), Is.EqualTo(4));
+				Assert.That(projectNames.ElementAt(0), Is.EqualTo("ProjA"));
+				Assert.That(projectNames.ElementAt(1), Is.EqualTo("ProjB"));
+				Assert.That(projectNames.ElementAt(2), Is.EqualTo("ProjC"));
+				Assert.That(projectNames.ElementAt(3), Is.EqualTo("ProjK"));
+
+				var shasForProjectName = updatesScanner.GetShasForAProjectName("ProjA");
+				Assert.IsNotNull(shasForProjectName);
+				Assert.That(shasForProjectName.Count(), Is.EqualTo(3));
+				Assert.That(shasForProjectName.ElementAt(0), Is.EqualTo("sha0123"));
+				Assert.That(shasForProjectName.ElementAt(1), Is.EqualTo("sha0124"));
+				Assert.That(shasForProjectName.ElementAt(2), Is.EqualTo("sha0125"));
+
+				shasForProjectName = updatesScanner.GetShasForAProjectName("ProjB");
+				Assert.IsNotNull(shasForProjectName);
+				Assert.That(shasForProjectName.Count(), Is.EqualTo(1));
+				Assert.That(shasForProjectName.ElementAt(0), Is.EqualTo("sha3456"));
+
+				shasForProjectName = updatesScanner.GetShasForAProjectName("ProjC");
+				Assert.IsNotNull(shasForProjectName);
+				Assert.That(shasForProjectName.Count(), Is.EqualTo(2));
+				Assert.That(shasForProjectName.ElementAt(0), Is.EqualTo("sha0123"));
+				Assert.That(shasForProjectName.ElementAt(1), Is.EqualTo("sha45863"));
+
+
+				shasForProjectName = updatesScanner.GetShasForAProjectName("ProjK");
+				Assert.IsNotNull(shasForProjectName);
+				Assert.That(shasForProjectName.Count(), Is.EqualTo(1));
+				Assert.That(shasForProjectName.ElementAt(0), Is.EqualTo("sha0123"));
 			}
 		}
 	}
