@@ -18,8 +18,7 @@ namespace lfmergelift
 	/// </summary>
 	internal class LiftUpdatesScanner
 	{
-		private HgRepository _hgRepo;
-		private List<UpdateInfo> _updateFilesInfo =new List<UpdateInfo>();
+		private List<UpdateInfo> _updateFilesInfo = new List<UpdateInfo>();
 		private String _updatesDirectory;
 		private FileInfo[] _liftUpdateFiles;
 		private String[] _fileNameParts;
@@ -36,10 +35,12 @@ namespace lfmergelift
 				return;
 			}
 
-			//We will need to sort files by time stamp but maybe not here
-			//Array.Sort(_liftUpdateFiles, new FileInfoLastWriteTimeComparer());
-			int count = _liftUpdateFiles.Length;
 			GetUpdateInfoForEachLiftUpdateFile();
+		}
+
+		public bool ScannerHasListOfLiftUpdates
+		{
+			get { return _liftUpdateFiles.Length > 0; }
 		}
 
 
@@ -116,6 +117,7 @@ namespace lfmergelift
 				_fileNameParts = file.Name.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
 				if (_fileNameParts.Length < 3)
 				{
+					// Todo:  We need to remember to add functionality for .lift.update files what have wrong names.
 					//fileName does not have at least 3 parts so is in the wrong format. Assumption that last part can also contain underscores so this
 					//number can be greater than 3
 					//Do something with this file to report an error.

@@ -47,6 +47,14 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibChorus, Version=1.1.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Debug\LibChorus.dll</HintPath>
+    </Reference>
+    <Reference Include="LibChorus.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Debug\LibChorus.Tests.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Common\nunit.framework.dll</HintPath>
@@ -73,6 +81,7 @@
   <ItemGroup>
     <Compile Include="FolderScannerTests.cs" />
     <Compile Include="LfSynchronicMegerTests.cs" />
+    <Compile Include="LiftUpdateProcessorTests.cs" />
     <Compile Include="LiftUpdatesScannerTests.cs" />
     <Compile Include="ProjectUpdateFolderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

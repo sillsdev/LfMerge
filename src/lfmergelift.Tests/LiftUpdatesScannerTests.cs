@@ -83,6 +83,30 @@ namespace lfmergelift.Tests
 				Assert.That(updatesScanner.LiftUpdateFiles.Length, Is.EqualTo(2));
 				Assert.That(updatesScanner.LiftUpdateFiles[0].Name, Is.EqualTo("Proj_Sha_extraA" + SynchronicMerger.ExtensionOfIncrementalFiles));
 				Assert.That(updatesScanner.LiftUpdateFiles[1].Name, Is.EqualTo("Proj_Sha_extraB" + SynchronicMerger.ExtensionOfIncrementalFiles));
+
+				Assert.That(updatesScanner.ScannerHasListOfLiftUpdates, Is.True);
+			}
+		}
+
+		[Test]
+		public void FindLiftUpdateFiles_NoneExist()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.CreateUpdateFolder();
+
+				////Create a file that is not a .lift.update file
+				LfSynchronicMergerTests.WriteFile("fileOne.notLiftUPdate", s_LiftData1, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("fileTwo.whatever", s_LiftData1, e.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("fileTwo.LIFT", s_LiftData1, e.LiftUpdatesPath);
+
+				FileInfo[] files = LiftUpdatesScanner.GetPendingUpdateFiles(e.LiftUpdatesPath);
+				Assert.That(files.Length, Is.EqualTo(0));
+
+				var updatesScanner = new LiftUpdatesScanner(e.LiftUpdatesPath);
+				Assert.That(updatesScanner.LiftUpdateFiles.Length, Is.EqualTo(0));
+
+				Assert.That(updatesScanner.ScannerHasListOfLiftUpdates, Is.False);
 			}
 		}
 
