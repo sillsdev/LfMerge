@@ -233,9 +233,15 @@ namespace lfmergelift.Tests
 			using (var e = new LangForgeTestEnvironment())
 			{
 				e.CreateWebWorkProjectFolder("ProjA");
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftData1, e.GetProjWebWorkPath("ProjA"));
+				var projAWorkRepo = (new HgTestSetup(e.GetProjWebWorkPath("ProjA"))).Repository;
+				projAWorkRepo.AddAndCheckinFile();
+
 				e.CreateMergeWorkProjectFolder("ProjA");
+				projAWorkRepo.CloneLocal(e.GetProjMergeWorkPath("ProjA"));
+				var projAMergeRepo = new HgRepository(e.GetProjMergeWorkPath("ProjA"), new NullProgress());
 				////Create a file a LIFT file for a project.
-				LfSynchronicMergerTests.WriteFile("ProjA", s_LiftData1, e.GetProjMergeWorkPath("ProjA"));
+
 				//HgRepository _hgRepo = new HgRepository();
 
 
@@ -258,7 +264,11 @@ namespace lfmergelift.Tests
 			}
 		}
 
-
+		public const string ExtensionOfLiftFiles = ".lift";
+		private string LiftFileFullPath(String path, String filename)
+		{
+			return Path.Combine(path, filename + ExtensionOfLiftFiles);
+		}
 
 		private string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment e)
 		{
@@ -335,7 +345,7 @@ namespace lfmergelift.Tests
 
 	}
 
-	public class HgTestSetup : IDisposable
+	public class HgTestSetup
 	{
 		public HgRepository Repository;
 		private Palaso.Progress.LogBox.ConsoleProgress _progress;
@@ -352,49 +362,5 @@ namespace lfmergelift.Tests
 			Repository = new HgRepository(_HgRootPath, new NullProgress());
 		}
 
-		public void Dispose()
-		{
-
-		}
-		//public IDisposable GetWLock()
-		//{
-		//    return TempFileFromFolder.CreateAt(Root.Combine(".hg", "wlock"), "blah");
-		//}
-		//public IDisposable GetLock()
-		//{
-		//    return TempFileFromFolder.CreateAt(Root.Combine(".hg", "store", "lock"), "blah");
-		//}
-
-
-		public void AssertLocalNumberOfTip(string number)
-		{
-			Assert.AreEqual(number, Repository.GetTip().Number.LocalRevisionNumber);
-		}
-
-		public void AssertHeadOfWorkingDirNumber(string localNumber)
-		{
-			Assert.AreEqual(localNumber, Repository.GetRevisionWorkingSetIsBasedOn().Number.LocalRevisionNumber);
-		}
-
-		public void AssertHeadCount(int expectedCount)
-		{
-			Assert.AreEqual(expectedCount, Repository.GetHeads().Count);
-		}
-
-		public void AssertCommitMessageOfRevision(string localNumber, string expectedCommitMessage)
-		{
-			Assert.AreEqual(expectedCommitMessage, Repository.GetRevision(localNumber).Summary);
-		}
-
-		public void ChangeAndCheckinFile(string path, string contents)
-		{
-			File.WriteAllText(path, contents);
-			Repository.Commit(false, "{0}-->{1}", Path.GetFileName(path), contents);
-		}
-
-		public void WriteLogToConsole()
-		{
-			Debug.WriteLine(Repository.GetLog(-1));
-		}
 	}
 }
