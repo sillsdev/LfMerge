@@ -27,6 +27,12 @@ namespace lfmergelift
 		public LiftUpdatesScanner(String updatesDirectory)
 		{
 			_updatesDirectory = updatesDirectory;
+
+			SetupScannerBasedOnRemainingUpdateFiles();
+		}
+
+		public void SetupScannerBasedOnRemainingUpdateFiles()
+		{
 			_liftUpdateFiles = GetPendingUpdateFiles(_updatesDirectory);
 
 			//????  not sure what I should do if there are no files.

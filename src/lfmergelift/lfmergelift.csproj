@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LangForgeDirectories.cs" />
     <Compile Include="LfSynchronicMerger.cs" />
     <Compile Include="FolderScanner.cs" />
     <Compile Include="LiftUpdateProcessor.cs" />

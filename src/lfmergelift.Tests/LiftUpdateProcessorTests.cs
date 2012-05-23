@@ -235,22 +235,50 @@ namespace lfmergelift.Tests
 			//Verify that only the .lift.updates files are returned from the call to GetPendingUpdateFiles
 			using (var testEnv = new LangForgeTestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.CreateWebWorkProjectFolder("ProjA");
+				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
 				//Make the webWork ProjA.LIFT file
 				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftData1, projAWebWorkPath);
 				//Create HgTestSetup and get the repo for this project so we can start adding files to it.
 				var projAHgTestWeb = new HgTestSetup(projAWebWorkPath);
 				HgRepository projARepo = projAHgTestWeb.Repository;
-
 				//Add the .lift file to the repo
 				projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
 
-				//Create a .lift.update file.
-				LfSynchronicMergerTests.WriteFile("ProjA_123_extraB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, testEnv.LangForgeDirs.LiftUpdatesPath);
+				var currentRevision = projARepo.GetRevisionWorkingSetIsBasedOn();
+				var allRevs = projARepo.GetAllRevisions();
+
+				//var projAMergeWorkPath = testEnv.CreateMergeWorkProjectFolder("ProjA");
+				//projARepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
+				//HgRepository projAMergeRepo = HgRepository.CreateOrLocate(projAMergeWorkPath, new NullProgress());
+				//currentRevision = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+				//allRevs = projAMergeRepo.GetAllRevisions();
+
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraA");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
 				//Create another .lift.update file
-				LfSynchronicMergerTests.WriteFile("ProjA_123_extraA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, testEnv.LangForgeDirs.LiftUpdatesPath);
+				liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraB");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+
+				//Run LiftUpdaeProcessor
+				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
+				//folder.
+				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				lfProcessor.ProcessLiftUpdates();
+
+				var projAMergeWorkPath = testEnv.LangForgeDirFinder.GetProjMergeWorkPath("ProjA");
+				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
+				var mergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+				Assert.That(mergeRepo, Is.Not.Null);
+				var projLiftFileInMergeArea = LiftFileFullPath(projAMergeWorkPath, "ProjA");
+				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
 
 			}
+		}
+
+		private String GetLiftUpdateFileName(String projName, Revision rev, String differentiation)
+		{
+			return projName + "_" + rev.Number.Hash + "_" + differentiation + SynchronicMerger.ExtensionOfIncrementalFiles;
 		}
 
 		[Test]
@@ -268,9 +296,9 @@ namespace lfmergelift.Tests
 			return Path.Combine(path, projName + ExtensionOfLiftFiles);
 		}
 
-		private string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment e)
+		private string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment testEnv)
 		{
-			return Path.Combine(e.LangForgeDirs.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
+			return Path.Combine(testEnv.LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
 		}
 	}
 
@@ -282,61 +310,26 @@ namespace lfmergelift.Tests
 			get { return _languageForgeServerFolder.Path; }
 		}
 
-		public readonly LangForgeDirectories LangForgeDirs;
+		public LangForgeDirectories LangForgeDirFinder
+		{
+			get { return _langForgeDirFinder; }
+		}
+
+		private readonly LangForgeDirectories _langForgeDirFinder;
 
 		public LangForgeTestEnvironment()
 		{
-			LangForgeDirs = new LangForgeDirectories(LanguageForgeFolder);
+			_langForgeDirFinder = new LangForgeDirectories(LanguageForgeFolder);
 			CreateAllTestFolders();
 		}
 
 		private void CreateAllTestFolders()
 		{
-			CreateWebWorkFolder();
-			CreateMergeWorkFolder();
-			CreateMergeWorkProjectsFolder();
-			CreateLiftUpdatesFolder();
+			LangForgeDirFinder.CreateWebWorkFolder();
+			LangForgeDirFinder.CreateMergeWorkFolder();
+			LangForgeDirFinder.CreateMergeWorkProjectsFolder();
+			LangForgeDirFinder.CreateLiftUpdatesFolder();
 		}
-
-		private void CreateWebWorkFolder()
-		{
-			Directory.CreateDirectory(LangForgeDirs.WebWorkPath);
-		}
-		public String CreateWebWorkProjectFolder(String projectName)
-		{
-			Directory.CreateDirectory(GetProjWebWorkPath(projectName));
-			return GetProjWebWorkPath(projectName);
-		}
-
-
-		private void CreateMergeWorkFolder()
-		{
-			Directory.CreateDirectory(LangForgeDirs.MergeWorkPath);
-		}
-		private void CreateLiftUpdatesFolder()
-		{
-			Directory.CreateDirectory(LangForgeDirs.LiftUpdatesPath);
-		}
-		private void CreateMergeWorkProjectsFolder()
-		{
-			Directory.CreateDirectory(LangForgeDirs.MergeWorkProjects);
-		}
-		public String CreateMergeWorkProjectFolder(String projectName)
-		{
-			Directory.CreateDirectory(GetProjMergeWorkPath(projectName));
-			return GetProjMergeWorkPath(projectName);
-		}
-
-		public String GetProjWebWorkPath(String projectName)
-		{
-			return Path.Combine(LangForgeDirs.WebWorkPath, projectName);
-		}
-
-		public String GetProjMergeWorkPath(String projectName)
-		{
-			return Path.Combine(LangForgeDirs.MergeWorkProjects, projectName);
-		}
-
 
 		public void Dispose()
 		{
