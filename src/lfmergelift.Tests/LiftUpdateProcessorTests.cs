@@ -225,32 +225,30 @@ namespace lfmergelift.Tests
 			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
 
+		/// <summary>
+		/// Test_s the one project_ two update files.
+		/// </summary>
 		[Test]
 		public void Test_OneProject_TwoUpdateFiles()
 		{
 			//This test puts 3 files in the mergerWork/liftUpdates folder.  Two are .lift.updates files and one is not.
 			//Verify that only the .lift.updates files are returned from the call to GetPendingUpdateFiles
-			using (var e = new LangForgeTestEnvironment())
+			using (var testEnv = new LangForgeTestEnvironment())
 			{
-				e.CreateWebWorkProjectFolder("ProjA");
-				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftData1, e.GetProjWebWorkPath("ProjA"));
-				var projAWorkRepo = (new HgTestSetup(e.GetProjWebWorkPath("ProjA"))).Repository;
-				projAWorkRepo.AddAndCheckinFile();
+				var projAWebWorkPath = testEnv.CreateWebWorkProjectFolder("ProjA");
+				//Make the webWork ProjA.LIFT file
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftData1, projAWebWorkPath);
+				//Create HgTestSetup and get the repo for this project so we can start adding files to it.
+				var projAHgTestWeb = new HgTestSetup(projAWebWorkPath);
+				HgRepository projARepo = projAHgTestWeb.Repository;
 
-				e.CreateMergeWorkProjectFolder("ProjA");
-				projAWorkRepo.CloneLocal(e.GetProjMergeWorkPath("ProjA"));
-				var projAMergeRepo = new HgRepository(e.GetProjMergeWorkPath("ProjA"), new NullProgress());
-				////Create a file a LIFT file for a project.
-
-				//HgRepository _hgRepo = new HgRepository();
-
+				//Add the .lift file to the repo
+				projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
 
 				//Create a .lift.update file.
-				LfSynchronicMergerTests.WriteFile("ProjA_123_extraB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, e.LangForgeDirs.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile("ProjA_123_extraB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, testEnv.LangForgeDirs.LiftUpdatesPath);
 				//Create another .lift.update file
-				LfSynchronicMergerTests.WriteFile("ProjA_123_extraA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.LangForgeDirs.LiftUpdatesPath);
-
-
+				LfSynchronicMergerTests.WriteFile("ProjA_123_extraA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, testEnv.LangForgeDirs.LiftUpdatesPath);
 
 			}
 		}
@@ -265,9 +263,9 @@ namespace lfmergelift.Tests
 		}
 
 		public const string ExtensionOfLiftFiles = ".lift";
-		private string LiftFileFullPath(String path, String filename)
+		private string LiftFileFullPath(String path, String projName)
 		{
-			return Path.Combine(path, filename + ExtensionOfLiftFiles);
+			return Path.Combine(path, projName + ExtensionOfLiftFiles);
 		}
 
 		private string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment e)
@@ -304,9 +302,10 @@ namespace lfmergelift.Tests
 		{
 			Directory.CreateDirectory(LangForgeDirs.WebWorkPath);
 		}
-		public void CreateWebWorkProjectFolder(String projectName)
+		public String CreateWebWorkProjectFolder(String projectName)
 		{
 			Directory.CreateDirectory(GetProjWebWorkPath(projectName));
+			return GetProjWebWorkPath(projectName);
 		}
 
 
@@ -322,9 +321,10 @@ namespace lfmergelift.Tests
 		{
 			Directory.CreateDirectory(LangForgeDirs.MergeWorkProjects);
 		}
-		public void CreateMergeWorkProjectFolder(String projectName)
+		public String CreateMergeWorkProjectFolder(String projectName)
 		{
 			Directory.CreateDirectory(GetProjMergeWorkPath(projectName));
+			return GetProjMergeWorkPath(projectName);
 		}
 
 		public String GetProjWebWorkPath(String projectName)
@@ -356,9 +356,7 @@ namespace lfmergelift.Tests
 		{
 			_HgRootPath = HgRootPath;
 			_progress = new ConsoleProgress();
-			//HgRepository.CreateRepositoryInExistingDir(_HgRootPath, _progress);
-			HgRepository.CreateRepositoryInExistingDir(_HgRootPath, new NullProgress());
-			//Repository = new HgRepository(_HgRootPath, new NullProgress() as IProgress);
+			HgRepository.CreateRepositoryInExistingDir(_HgRootPath, _progress);
 			Repository = new HgRepository(_HgRootPath, new NullProgress());
 		}
 

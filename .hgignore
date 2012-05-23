@@ -4,5 +4,6 @@ output
 _ReSharper.LFMerge
 *.suo
 *.user
-syntax: glob
 *.pdb
+MercurialExtensions/
+Mercurial/
