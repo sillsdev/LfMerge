@@ -69,8 +69,8 @@ namespace lfmergelift
 
 		public String CreateWebWorkProjectFolder(String projectName)
 		{
-			Directory.CreateDirectory(GetProjWebWorkPath(projectName));
-			return GetProjWebWorkPath(projectName);
+			Directory.CreateDirectory(GetProjWebPath(projectName));
+			return GetProjWebPath(projectName);
 		}
 
 
@@ -91,16 +91,16 @@ namespace lfmergelift
 
 		public String CreateMergeWorkProjectFolder(String projectName)
 		{
-			Directory.CreateDirectory(GetProjMergeWorkPath(projectName));
-			return GetProjMergeWorkPath(projectName);
+			Directory.CreateDirectory(GetProjMergePath(projectName));
+			return GetProjMergePath(projectName);
 		}
 
-		public String GetProjWebWorkPath(String projectName)
+		public String GetProjWebPath(String projectName)
 		{
 			return Path.Combine(WebWorkPath, projectName);
 		}
 
-		public String GetProjMergeWorkPath(String projectName)
+		public String GetProjMergePath(String projectName)
 		{
 			return Path.Combine(MergeWorkProjects, projectName);
 		}

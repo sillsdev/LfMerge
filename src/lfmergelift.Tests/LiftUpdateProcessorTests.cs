@@ -210,9 +210,14 @@ namespace lfmergelift.Tests
 			"</lift>"
 		};
 
-		private static readonly string s_LiftData1 =
+		private static readonly string s_LiftDataSha0 =
 		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
 		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>"
+		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
+
+		private static readonly string s_LiftDataSha1 =
+		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
+		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>"
 		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
 
 		private static readonly string s_LiftUpdate1 =
@@ -226,10 +231,17 @@ namespace lfmergelift.Tests
 
 
 		/// <summary>
-		/// Test_s the one project_ two update files.
+		/// 1) Create a lift project and repo in the webWork area
+		/// 2) Make a clone of it in the mergeWork area
+		/// 3) Make a change to the .lift file in the mergeWork area and commit it to the repo
+		/// 4) create a .lift.update file so that the UpdateProcesser will take action
+		/// 5) get the sha's for each stage
+		/// 5) run ProcessUpdates
+		/// CHECK:
+		/// make sure the repo in the mergeWork area was not overwritten by the one in the webWork area.
 		/// </summary>
 		[Test]
-		public void Test_OneProject_TwoUpdateFiles()
+		public void Test_OneProject_TwoUpdateFiles_CloneFromWebWorkFolder()
 		{
 			//This test puts 3 files in the mergerWork/liftUpdates folder.  Two are .lift.updates files and one is not.
 			//Verify that only the .lift.updates files are returned from the call to GetPendingUpdateFiles
@@ -237,7 +249,7 @@ namespace lfmergelift.Tests
 			{
 				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
 				//Make the webWork ProjA.LIFT file
-				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftData1, projAWebWorkPath);
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha0, projAWebWorkPath);
 				//Create HgTestSetup and get the repo for this project so we can start adding files to it.
 				var projAHgTestWeb = new HgTestSetup(projAWebWorkPath);
 				HgRepository projARepo = projAHgTestWeb.Repository;
@@ -246,12 +258,6 @@ namespace lfmergelift.Tests
 
 				var currentRevision = projARepo.GetRevisionWorkingSetIsBasedOn();
 				var allRevs = projARepo.GetAllRevisions();
-
-				//var projAMergeWorkPath = testEnv.CreateMergeWorkProjectFolder("ProjA");
-				//projARepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
-				//HgRepository projAMergeRepo = HgRepository.CreateOrLocate(projAMergeWorkPath, new NullProgress());
-				//currentRevision = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
-				//allRevs = projAMergeRepo.GetAllRevisions();
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraA");
@@ -266,12 +272,69 @@ namespace lfmergelift.Tests
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.GetProjMergeWorkPath("ProjA");
+				var projAMergeWorkPath = testEnv.LangForgeDirFinder.GetProjMergePath("ProjA");
 				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
 				var mergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+				var mergeRepoRevision = mergeRepo.GetRevisionWorkingSetIsBasedOn();
+				Assert.That(mergeRepoRevision.Number.Hash, Is.EqualTo(currentRevision.Number.Hash));
 				Assert.That(mergeRepo, Is.Not.Null);
 				var projLiftFileInMergeArea = LiftFileFullPath(projAMergeWorkPath, "ProjA");
 				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
+			}
+		}
+
+		/// <summary>
+		/// This test has the following setup.
+		/// 1) Create the master .Lift file in WebWork
+		/// 2) Clone it to the MergeWork location
+		/// 3) Modify the MergerWork/Projects/ProjA/ProjA.lift file, then commit it so the .hg file will have changed.
+		/// 4) Create a .lift.update file for this project so that LiftUpdateProcessor will take action on this project.
+		/// 5) run ProcessUpdates
+		/// CHECK
+		/// Make sure the repo was not replaced by the one in WebWork (look at the sha)
+		/// </summary>
+		[Test]
+		public void Test_OneProject_MakeSureMergeWorkCopyIsNotOverWritten()
+		{
+			//This test puts 3 files in the mergerWork/liftUpdates folder.  Two are .lift.updates files and one is not.
+			//Verify that only the .lift.updates files are returned from the call to GetPendingUpdateFiles
+			using (var testEnv = new LangForgeTestEnvironment())
+			{
+				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				//Make the webWork ProjA.LIFT file
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha0, projAWebWorkPath);
+				//Create HgTestSetup and get the repo for this project so we can start adding files to it.
+				var projAHgTestWeb = new HgTestSetup(projAWebWorkPath);
+				HgRepository projARepo = projAHgTestWeb.Repository;
+				//Add the .lift file to the repo
+				projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
+
+				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
+				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
+				projARepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
+				var projAMergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+				Assert.That(projAMergeRepo, Is.Not.Null);
+				var mergeRepoRevisionBeforeChange = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha1, projAMergeWorkPath);
+				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
+				var mergeRepoRevisionAfterChange = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoRevisionAfterChange, "extraA");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+
+				//Run LiftUpdaeProcessor
+				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				lfProcessor.ProcessLiftUpdates();
+
+				var mergeRepoRevisionAfterProcessLiftUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				var projAWebRevision = projARepo.GetRevisionWorkingSetIsBasedOn();
+				Assert.That(mergeRepoRevisionBeforeChange.Number.Hash, Is.EqualTo(projAWebRevision.Number.Hash));
+				Assert.That(mergeRepoRevisionAfterChange.Number.Hash, Is.EqualTo(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash));
+				Assert.That(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash, Is.Not.EqualTo(projAWebRevision.Number.Hash));
 
 			}
 		}
