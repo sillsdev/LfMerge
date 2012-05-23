@@ -339,18 +339,39 @@ namespace lfmergelift.Tests
 			}
 		}
 
-		private String GetLiftUpdateFileName(String projName, Revision rev, String differentiation)
+		[Test]
+		public void Test_OneProject_TwoUpdateFiles_VerifyUpdatesWereApplied()
 		{
-			return projName + "_" + rev.Number.Hash + "_" + differentiation + SynchronicMerger.ExtensionOfIncrementalFiles;
+
 		}
 
 		[Test]
-		public void Test_TwoProjects_TwoUpdateFiles()
+		public void Test_OneProject2Revisions_TwoUpdateFilesForDifferentShas_VerifyUpdatesWereApplied()
 		{
-			using (var e = new LangForgeTestEnvironment())
-			{
 
-			}
+		}
+
+		[Test]
+		public void Test_TwoProjects_UpdatesAppliedToOnlyOneProject()
+		{
+
+		}
+
+		[Test]
+		public void Test_TwoProjects_UpdatesAppliedToBothProjects()
+		{
+
+		}
+
+		[Test]
+		public void Test_OneProjectWithShaAandShaB_UpdatesRequireShaChangeToHappen()
+		{
+
+		}
+
+		private String GetLiftUpdateFileName(String projName, Revision rev, String differentiation)
+		{
+			return projName + "_" + rev.Number.Hash + "_" + differentiation + SynchronicMerger.ExtensionOfIncrementalFiles;
 		}
 
 		public const string ExtensionOfLiftFiles = ".lift";
