@@ -15,7 +15,8 @@ namespace lfmergelift
 		private HgRepository _hgRepo;
 		private LiftUpdatesScanner _liftUpdateScanner;
 		private LfSynchronicMerger _lfSynchMerger;
-		private LangForgeDirectories _lfDirectories;
+		private LfDirectoriesAndFiles _lfDirectories;
+		private String LangForgeVersion = "1.0";
 
 		/// <summary>
 		///
@@ -23,7 +24,7 @@ namespace lfmergelift
 		/// <param name="languageForgeServerFolder">This must be the path to the Language Forge folder on the server.</param>
 		public LiftUpdateProcessor(String languageForgeServerFolder)
 		{
-			_lfDirectories = new LangForgeDirectories(languageForgeServerFolder);
+			_lfDirectories = new LfDirectoriesAndFiles(languageForgeServerFolder);
 			_liftUpdateScanner = new LiftUpdatesScanner(_lfDirectories.LiftUpdatesPath);
 			_lfSynchMerger = new LfSynchronicMerger();
 		}
@@ -48,20 +49,28 @@ namespace lfmergelift
 					//Get path for the repository then clone it to the webWork location
 					var projWebFolder = _lfDirectories.GetProjWebPath(project);
 					HgRepository.Clone(projWebFolder, projMergeFolder, new NullProgress());
-
-					//Note: should there be checking done to verify that the .Lift file exists in the new location??
 				}
 
+				var repo = new HgRepository(projMergeFolder, new NullProgress());  //
+				String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 				var shas = _liftUpdateScanner.GetShasForAProjectName(project);
 				//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
 				//before doing the lfSynchronicMerger
-				foreach (var sha in shas)
+				foreach (String sha in shas)
 				{
-
+					if (!(currentSha.Equals(sha)))
+					{
+						//We are not at the right revision to apply the .lift.update files, so save any changes on the
+						//current revision (this only commits if the .lift file has changed)
+						repo.Commit(false, String.Format("Language Forge version {0} commit", LangForgeVersion));
+						//next change to the correct sha so that the .lift.update fies are applied to the correct version
+						repo.Update(sha);
+						currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+					}
+					var updatefilesForThisSha = _liftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, sha);
+					_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
 				}
 			}
-
 		}
-
 	}
 }

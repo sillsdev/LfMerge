@@ -3,7 +3,7 @@ using System.IO;
 
 namespace lfmergelift
 {
-	class LangForgeDirectories
+	class LfDirectoriesAndFiles
 	{
 		private String _languageForgeServerFolder;
 		//These are the folder names for the location of the repositories for the Language Forge projects
@@ -13,7 +13,7 @@ namespace lfmergelift
 		internal const String LiftUpdatesFolder = "LiftUpdates";
 		internal const String MergeWorkProjectsFolder = "Projects";
 
-		public LangForgeDirectories(String languageForgeServerFolder)
+		public LfDirectoriesAndFiles(String languageForgeServerFolder)
 		{
 			if (!languageForgeServerFolder.Contains(Path.DirectorySeparatorChar.ToString()))
 			{
@@ -103,6 +103,12 @@ namespace lfmergelift
 		public String GetProjMergePath(String projectName)
 		{
 			return Path.Combine(MergeWorkProjects, projectName);
+		}
+
+		public const string ExtensionOfLiftFiles = ".lift";
+		public string LiftFileMergePath(String projName)
+		{
+			return Path.Combine(GetProjMergePath(projName), projName + ExtensionOfLiftFiles);
 		}
 	}
 }

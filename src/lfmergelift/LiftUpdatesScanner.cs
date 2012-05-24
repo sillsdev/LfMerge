@@ -84,14 +84,20 @@ namespace lfmergelift
 			return projectShas;
 		}
 
-		//Get the .lift.update files for a particular project name and sha. Sort by file timeStamp
-		public IEnumerable<String> GetUpdateFilesForProjectAndSha(String proj, String sha)
+		/// <summary>
+		/// Get the .lift.update files for a particular project name and sha. Do not need to sort by timeStamp
+		/// since lfSynchronicMerger does that.
+		/// </summary>
+		/// <param name="proj"></param>
+		/// <param name="sha"></param>
+		/// <returns></returns>
+		internal IEnumerable<FileInfo> GetUpdateFilesForProjectAndSha(String proj, String sha)
 		{
 			var liftUpdateFileGroup = new List<FileInfo>();
 			//Get all the fileRecords for this particular Project and Sha
 			var updateInfoRecordsForProjectAndSha = from updateInfo in _updateFilesInfo
-											 where (updateInfo.Project == proj && updateInfo.Sha == sha)
-											 select updateInfo;
+													where (updateInfo.Project == proj && updateInfo.Sha == sha)
+													select updateInfo;
 			//Put them in a list of FileInfo so they can be sorted by the last time stamp
 			foreach (var fileInfoRecord in updateInfoRecordsForProjectAndSha)
 			{
@@ -101,12 +107,23 @@ namespace lfmergelift
 				}
 			}
 			liftUpdateFileGroup.Sort(new FileInfoLastWriteTimeComparer());
-			var liftUpdateFileToApply = new List<string>();
-			foreach (FileInfo fileInfo in liftUpdateFileGroup)
-			{
-				liftUpdateFileToApply.Add(fileInfo.FullName);
-			}
-			return liftUpdateFileToApply;
+			return liftUpdateFileGroup;
+		}
+
+		/// <summary>
+		/// Get the .lift.update files for a particular project name and sha. Do not need to sort by timeStamp
+		/// since lfSynchronicMerger does that.
+		/// </summary>
+		/// <param name="proj"></param>
+		/// <param name="sha"></param>
+		/// <returns></returns>
+		public FileInfo[] GetUpdateFilesArrayForProjectAndSha(String proj, String sha)
+		{
+			var liftUpdateFileGroup = GetUpdateFilesForProjectAndSha(proj, sha);
+			var fileInfoArray = new FileInfo[liftUpdateFileGroup.Count()];
+			for (int i = 0; i < fileInfoArray.Length; i++)
+				fileInfoArray[i] = liftUpdateFileGroup.ElementAt(i);
+			return fileInfoArray;
 		}
 
 		private void GetUpdateInfoForEachLiftUpdateFile()
@@ -142,6 +159,8 @@ namespace lfmergelift
 				}
 			}
 		}
+
+
 
 		private static string GetSha(String[] fileNameParts)
 		{
