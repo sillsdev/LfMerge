@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Chorus.VcsDrivers.Mercurial;
 using System.Windows.Forms;
+using Chorus.sync;
 using Palaso.Progress.LogBox;
 
 namespace lfmergelift
@@ -39,38 +40,89 @@ namespace lfmergelift
 			var projects = _liftUpdateScanner.GetProjectsNamesToUpdate();
 			foreach (var project in projects)
 			{
-				//first check if the project has been cloned to the mergeWork folder. If not then clone it.
-				var projMergeFolder = _lfDirectories.GetProjMergePath(project);
-				if (!Directory.Exists(projMergeFolder))
-				{
-					//Create the folder to clone the project into.
-					_lfDirectories.CreateMergeWorkProjectFolder(project);
-					Debug.Assert(Directory.Exists(projMergeFolder));
-					//Get path for the repository then clone it to the webWork location
-					var projWebFolder = _lfDirectories.GetProjWebPath(project);
-					HgRepository.Clone(projWebFolder, projMergeFolder, new NullProgress());
-				}
-
-				var repo = new HgRepository(projMergeFolder, new NullProgress());  //
-				String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
-				var shas = _liftUpdateScanner.GetShasForAProjectName(project);
-				//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
-				//before doing the lfSynchronicMerger
-				foreach (String sha in shas)
-				{
-					if (!(currentSha.Equals(sha)))
-					{
-						//We are not at the right revision to apply the .lift.update files, so save any changes on the
-						//current revision (this only commits if the .lift file has changed)
-						repo.Commit(false, String.Format("Language Forge version {0} commit", LangForgeVersion));
-						//next change to the correct sha so that the .lift.update fies are applied to the correct version
-						repo.Update(sha);
-						currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
-					}
-					var updatefilesForThisSha = _liftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, sha);
-					_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
-				}
+				ProcessLiftUpdatesForProject(project);
 			}
+		}
+
+		//make internal for tests.
+		internal void ProcessLiftUpdatesForProject(string project)
+		{
+			var projMergeFolder = _lfDirectories.GetProjMergePath(project);
+			//first check if the project has been cloned to the mergeWork folder. If not then clone it.
+			if (!Directory.Exists(projMergeFolder))
+			{
+				CloneProjectToMergerWorkFolder(project, projMergeFolder);
+			}
+
+			var repo = new HgRepository(projMergeFolder, new NullProgress()); //
+			String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+			var shas = _liftUpdateScanner.GetShasForAProjectName(project);
+			//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
+			//before doing the lfSynchronicMerger
+			foreach (String sha in shas)
+			{
+				currentSha = ProcessUpdatesForAParticularSha(project, repo, currentSha, sha);
+			}
+		}
+
+		//make internal for tests.
+		internal string ProcessUpdatesForAParticularSha(string project, HgRepository repo, string currentSha, string shaOfUpdateFiles)
+		{
+			var allShas = repo.GetAllRevisions();
+			if (!(currentSha.Equals(shaOfUpdateFiles)))
+			{
+				//We are not at the right revision to apply the .lift.update files, so save any changes on the
+				//current revision (this only commits if the .lift file has changed)
+				repo.Commit(false, String.Format("Language Forge version {0} commit", LangForgeVersion));
+				allShas = repo.GetAllRevisions();
+				var shaAfterCommit = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+				//next change to the correct sha so that the .lift.update fies are applied to the correct version
+				var heads = repo.GetHeads();
+				//This will give us the heads that now exist and if there are more than 1 (should not be more than 2) we need to merge them.
+				if (heads.Count > 1)
+				{
+					//Some lift.update were applied to an older revision(sha) so the commit that was just done resulted in another head.
+					//Therefore, merge in this head with the other one before applying any .lift.updates the other head.
+
+					//repo.Merge(repo.PathToRepo, sha);
+					//repo.Merge(projMergeFolder, sha);
+
+
+					Synchronizer synch = new Synchronizer(repo.PathToRepo,
+														  new ProjectFolderConfiguration(repo.PathToRepo),
+														  new NullProgress());
+					SyncOptions options = new SyncOptions();
+					options.DoPullFromOthers = false;
+					options.DoMergeWithOthers = true;
+					options.CheckinDescription = "Merge by Language Forge LiftUpdateProcessor";
+					options.DoSendToOthers = false;
+
+					SyncResults syncResults = synch.SyncNow(options);
+					allShas = repo.GetAllRevisions();
+				}
+				repo.Update(shaOfUpdateFiles);
+				currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+			}
+			var updatefilesForThisSha = _liftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
+			_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
+			return currentSha;
+		}
+
+		private void CloneProjectToMergerWorkFolder(string project, string projMergeFolder)
+		{
+//Create the folder to clone the project into.
+			_lfDirectories.CreateMergeWorkProjectFolder(project);
+			Debug.Assert(Directory.Exists(projMergeFolder));
+			//Get path for the repository then clone it to the webWork location
+			var projWebFolder = _lfDirectories.GetProjWebPath(project);
+
+			//Note: Why did this option get removed from HgRepository???
+			//HgRepository.Clone(projWebFolder, projMergeFolder, new NullProgress());
+
+			var sourceRepo = new HgRepository(projWebFolder, new NullProgress());
+			sourceRepo.CloneLocalWithoutUpdate(projMergeFolder);
+			var clonedRepoInMergeWork = new HgRepository(projMergeFolder, new NullProgress());
+			clonedRepoInMergeWork.Update();
 		}
 	}
 }

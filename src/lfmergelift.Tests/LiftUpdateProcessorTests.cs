@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Chorus.VcsDrivers;
 using NUnit.Framework;
 using Palaso.Lift.Merging;
 using Palaso.Progress.LogBox;
@@ -138,8 +139,15 @@ namespace lfmergelift.Tests
 		private HgRepository GetProjAMergeRepoCloned(HgRepository projAWebRepo, string projAMergeWorkPath)
 		{
 			HgRepository projAMergeRepo;
-			projAWebRepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
+
+			var repoSourceAddress = RepositoryAddress.Create("LangForge WebWork Repo Location", projAWebRepo.PathToRepo);
+			HgRepository.Clone(repoSourceAddress, projAMergeWorkPath, new NullProgress());
+
+			//Note: why was CloneLocal removed????
+			//projAWebRepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
+			//projAWebRepo.CloneLocalWithoutUpdate(projAMergeWorkPath);
 			projAMergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+			//projAMergeRepo.Update();
 			Assert.That(projAMergeRepo, Is.Not.Null);
 			return projAMergeRepo;
 		}
@@ -148,9 +156,10 @@ namespace lfmergelift.Tests
 		{
 			HgRepository projARepo;
 			LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha0, projAWebWorkPath);
-			//Create HgTestSetup and get the repo for this project so we can start adding files to it.
-			var projAHgTestWeb = new HgTestSetup(projAWebWorkPath);
-			projARepo = projAHgTestWeb.Repository;
+			var _progress = new ConsoleProgress();
+			HgRepository.CreateRepositoryInExistingDir(projAWebWorkPath, _progress);
+			projARepo = new HgRepository(projAWebWorkPath, new NullProgress());
+
 			//Add the .lift file to the repo
 			projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
 			return projARepo;
@@ -357,23 +366,5 @@ namespace lfmergelift.Tests
 		{
 			_languageForgeServerFolder.Dispose();
 		}
-
-	}
-
-	public class HgTestSetup
-	{
-		public HgRepository Repository;
-		private Palaso.Progress.LogBox.ConsoleProgress _progress;
-		private String _HgRootPath;
-
-
-		public HgTestSetup(String HgRootPath)
-		{
-			_HgRootPath = HgRootPath;
-			_progress = new ConsoleProgress();
-			HgRepository.CreateRepositoryInExistingDir(_HgRootPath, _progress);
-			Repository = new HgRepository(_HgRootPath, new NullProgress());
-		}
-
 	}
 }
