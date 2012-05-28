@@ -39,16 +39,20 @@ namespace lfmergelift.Tests
 			+               "<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>"
 			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
+		private static readonly string s_LiftUpdate3 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
+			+ "<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if Merge works on same record.</text></form></lexical-unit></entry>"
+			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
+
 
 		/// <summary>
 		/// 1) Create a lift project and repo in the webWork area
-		/// 2) Make a clone of it in the mergeWork area
-		/// 3) Make a change to the .lift file in the mergeWork area and commit it to the repo
-		/// 4) create a .lift.update file so that the UpdateProcesser will take action
+		/// 2) create a couple .lift.update files so that the UpdateProcesser will take action
 		/// 5) get the sha's for each stage
 		/// 5) run ProcessUpdates
 		/// CHECK:
-		/// make sure the repo in the mergeWork area was not overwritten by the one in the webWork area.
+		/// make sure the repo was cloned to the MergeWork folder.
+		/// The sha's should match.
 		/// </summary>
 		[Test]
 		public void Test_OneProject_TwoUpdateFiles_CloneFromWebWorkFolder()
@@ -69,17 +73,17 @@ namespace lfmergelift.Tests
 				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
 
 				//Run LiftUpdaeProcessor
-				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
-				//folder.
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
+				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
+				//folder.
 				var projAMergeWorkPath = testEnv.LangForgeDirFinder.GetProjMergePath("ProjA");
 				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
 				var mergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+				Assert.That(mergeRepo, Is.Not.Null);
 				var mergeRepoRevision = mergeRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevision.Number.Hash, Is.EqualTo(currentRevision.Number.Hash));
-				Assert.That(mergeRepo, Is.Not.Null);
 				var projLiftFileInMergeArea = LiftFileFullPath(projAMergeWorkPath, "ProjA");
 				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
 			}
@@ -89,11 +93,12 @@ namespace lfmergelift.Tests
 		/// This test has the following setup.
 		/// 1) Create the master .Lift file in WebWork
 		/// 2) Clone it to the MergeWork location
-		/// 3) Modify the MergerWork/Projects/ProjA/ProjA.lift file, then commit it so the .hg file will have changed.
+		/// 3) Modify the MergeWork/Projects/ProjA/ProjA.lift file, then commit it so the .hg file will have changed.
 		/// 4) Create a .lift.update file for this project so that LiftUpdateProcessor will take action on this project.
 		/// 5) run ProcessUpdates
 		/// CHECK
-		/// Make sure the repo was not replaced by the one in WebWork (look at the sha)
+		/// Make sure the repo was not replaced by the one in WebWork (look at the sha). The point is the repo should
+		/// only be cloned if it does not exist in the MergeWork folder.
 		/// </summary>
 		[Test]
 		public void Test_OneProject_MakeSureMergeWorkCopyIsNotOverWritten()
@@ -206,15 +211,14 @@ namespace lfmergelift.Tests
 				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
 
 				//Run LiftUpdaeProcessor
-				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
-				//folder.
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
-				// .lift.update files are deleted
+				// .lift.update files are deleted when they are processed. Make sure this happens so they are not processed again.
 				Assert.That(File.Exists(liftUpdateFile1), Is.False);
 				Assert.That(File.Exists(liftUpdateFile2), Is.False);
 
+				//No commits should have been done.
 				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevisionBeforeUpdates.Number.Hash, Is.EqualTo(mergeRepoRevisionAfterUpdates.Number.Hash));
 
@@ -232,17 +236,17 @@ namespace lfmergelift.Tests
 		/// 3) Make a change to the .lift file and do a commit
 		/// 3) Create two update files; one for each sha
 		///
-		/// 4) ProcessUpdates
+		/// 4) ProcessUpdates one at a time call ProcessUpdatesForAParticularSha
+		///         Process updates first for sha0 then for sha1
 		///
 		/// CHECK
-		/// 5) There should be two revisions (sha's) which match what was there before.
-		///  OR mabye there should be 3 depending on the order the sha's were applied.
-		/// 6) revision number should be changed because we do a commit if .lift.update files exist for multiple sha's
-		/// 7)
-		/// 8) We do not want to check the content of the .lift file since those tests should be done in lfSynchonicMergerTests
+		/// 5) There should be 4 revisions (sha's).
+		///
+		/// Do not check the content of the .lift file since those tests should be done in lfSynchonicMergerTests
+		/// Note:  what else can be checked.
 		/// </summary>
 		[Test]
-		public void Test_OneProject2Revisions_TwoUpdateFilesForDifferentShas_VerifyUpdatesWereApplied()
+		public void Test_OneProject2Revisions_TwoUpdateFilesForDifferentShas_ApplyUpdate0ThenUpdate1()
 		{
 			using (var testEnv = new LangForgeTestEnvironment())
 			{
@@ -271,51 +275,129 @@ namespace lfmergelift.Tests
 				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
 
 				//Run LiftUpdaeProcessor
-				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
-				//folder.
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
-				lfProcessor.ProcessLiftUpdates();
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 
 				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
-				//We cannot know revision number after updates since updates could be applied in either order
-				//since Sha numbers can be anything
-				//Assert.That(mergeRepoSha0.Number.Hash, Is.EqualTo(mergeRepoRevisionAfterUpdates.Number.Hash));
+				//We cannot know sha after updates since updates could be applied in either order
+				//since Sha numbers can be anything but we should be at local revision 3
+				Assert.That(mergeRepoRevisionAfterUpdates.Number.Hash, Is.EqualTo(mergeRepoSha1.Number.Hash));
 
-				//We started with one revision so we should still have just one revision since no commits should have
-				//been applied yet.
 				var allRevisions = projAMergeRepo.GetAllRevisions();
-				//Assert.That(allRevisions.Count, Is.EqualTo(3) || Is.EqualTo(4));
-				var rev0 = from rev in allRevisions
-						   where (rev.Number.Hash == mergeRepoSha0.Number.Hash)
-						   select rev;
-				Assert.That(rev0.ElementAt(0), Is.Not.Null);
-				Assert.That(rev0.ElementAt(0).Number.Hash, Is.EqualTo(mergeRepoSha0.Number.Hash));
-				var rev1 = from rev in allRevisions
-						   where (rev.Number.Hash == mergeRepoSha1.Number.Hash)
-						   select rev;
-				Assert.That(rev1.ElementAt(0), Is.Not.Null);
-				Assert.That(rev1.ElementAt(0).Number.Hash, Is.EqualTo(mergeRepoSha1.Number.Hash));
+				Assert.That(allRevisions.Count, Is.EqualTo(4));
 
+				//There should only be one head after any application of a set of updates.
+				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
+			}
+		}
 
+		/// <summary>
+		/// After setup we have sha0 and sha1
+		/// Process updates  sha1 then sha0
+		///
+		/// CHECK
+		/// There should be 3 revisions (sha's).
+		///
+		/// </summary>
+		[Test]
+		public void Test_OneProject2Revisions_TwoUpdateFilesForDifferentShas_ApplyUpdate1ThenUpdate0()
+		{
+			using (var testEnv = new LangForgeTestEnvironment())
+			{
+				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				//Make the webWork ProjA.LIFT file
+				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
+
+				//Make clone of repo in MergeWorkFolder
+				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
+				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+
+				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//We want to make sure the commit happened.
+				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
+
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				//Create another .lift.update file  for the second sha
+				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+
+				//Run LiftUpdaeProcessor
+				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
+
+				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+				//We cannot know sha after updates since updates could be applied in either order
+				//since Sha numbers can be anything but we should be at local revision 3
+				Assert.That(mergeRepoRevisionAfterUpdates.Number.Hash, Is.EqualTo(mergeRepoSha0.Number.Hash));
+
+				var allRevisions = projAMergeRepo.GetAllRevisions();
+				Assert.That(allRevisions.Count, Is.EqualTo(3));
+
+				//There should only be one head after any application of a set of updates.
+				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
 			}
 		}
 
 		[Test]
-		public void Test_TwoProjects_UpdatesAppliedToOnlyOneProject()
+		public void Test_OneProject2Revisions_TwoUpdateFilesForDifferentShas_ApplyUpdate1ThenUpdate0_ThenAnotherUpdate1()
 		{
+			using (var testEnv = new LangForgeTestEnvironment())
+			{
+				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				//Make the webWork ProjA.LIFT file
+				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
 
-		}
+				//Make clone of repo in MergeWorkFolder
+				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
+				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
 
-		[Test]
-		public void Test_TwoProjects_UpdatesAppliedToBothProjects()
-		{
+				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
-		}
+				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
-		[Test]
-		public void Test_OneProjectWithShaAandShaB_UpdatesRequireShaChangeToHappen()
-		{
+				//We want to make sure the commit happened.
+				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
 
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				//Create another .lift.update file  for the second sha
+				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+
+				//Run LiftUpdaeProcessor
+				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
+
+				//Create another .lift.update file  for the second sha
+				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate3, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+
+				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
+
+				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+				//We cannot know sha after updates since updates could be applied in either order
+				//since Sha numbers can be anything but we should be at local revision 3
+				Assert.That(mergeRepoRevisionAfterUpdates.Number.Hash, Is.EqualTo(mergeRepoSha1.Number.Hash));
+
+				var allRevisions = projAMergeRepo.GetAllRevisions();
+				Assert.That(allRevisions.Count, Is.EqualTo(5));
+
+				//There should only be one head after any application of a set of updates.
+				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
+			}
 		}
 
 		private String GetLiftUpdateFileName(String projName, Revision rev, String differentiation)

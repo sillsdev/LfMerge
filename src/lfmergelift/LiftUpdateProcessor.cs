@@ -84,10 +84,6 @@ namespace lfmergelift
 					//Some lift.update were applied to an older revision(sha) so the commit that was just done resulted in another head.
 					//Therefore, merge in this head with the other one before applying any .lift.updates the other head.
 
-					//repo.Merge(repo.PathToRepo, shaOfUpdateFiles);
-					//repo.Merge(projMergeFolder, sha);
-
-
 					Synchronizer synch = new Synchronizer(repo.PathToRepo,
 														  new ProjectFolderConfiguration(repo.PathToRepo),
 														  new NullProgress());
