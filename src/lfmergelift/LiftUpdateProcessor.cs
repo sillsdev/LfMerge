@@ -55,19 +55,19 @@ namespace lfmergelift
 			}
 
 			var repo = new HgRepository(projMergeFolder, new NullProgress()); //
-			String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			var shas = _liftUpdateScanner.GetShasForAProjectName(project);
 			//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
 			//before doing the lfSynchronicMerger
 			foreach (String sha in shas)
 			{
-				currentSha = ProcessUpdatesForAParticularSha(project, repo, currentSha, sha);
+				ProcessUpdatesForAParticularSha(project, repo, sha);
 			}
 		}
 
 		//make internal for tests.
-		internal string ProcessUpdatesForAParticularSha(string project, HgRepository repo, string currentSha, string shaOfUpdateFiles)
+		internal void ProcessUpdatesForAParticularSha(string project, HgRepository repo, string shaOfUpdateFiles)
 		{
+			String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			var allShas = repo.GetAllRevisions();
 			if (!(currentSha.Equals(shaOfUpdateFiles)))
 			{
@@ -84,7 +84,7 @@ namespace lfmergelift
 					//Some lift.update were applied to an older revision(sha) so the commit that was just done resulted in another head.
 					//Therefore, merge in this head with the other one before applying any .lift.updates the other head.
 
-					//repo.Merge(repo.PathToRepo, sha);
+					//repo.Merge(repo.PathToRepo, shaOfUpdateFiles);
 					//repo.Merge(projMergeFolder, sha);
 
 
@@ -98,6 +98,8 @@ namespace lfmergelift
 					options.DoSendToOthers = false;
 
 					SyncResults syncResults = synch.SyncNow(options);
+					if (!syncResults.Succeeded)
+						MessageBox.Show(syncResults.ErrorEncountered.Message, "synch.SyncNow failed");
 					allShas = repo.GetAllRevisions();
 				}
 				repo.Update(shaOfUpdateFiles);
@@ -105,12 +107,11 @@ namespace lfmergelift
 			}
 			var updatefilesForThisSha = _liftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
 			_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
-			return currentSha;
 		}
 
 		private void CloneProjectToMergerWorkFolder(string project, string projMergeFolder)
 		{
-//Create the folder to clone the project into.
+			//Create the folder to clone the project into.
 			_lfDirectories.CreateMergeWorkProjectFolder(project);
 			Debug.Assert(Directory.Exists(projMergeFolder));
 			//Get path for the repository then clone it to the webWork location
