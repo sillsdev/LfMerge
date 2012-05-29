@@ -878,6 +878,43 @@ namespace lfmergelift.Tests
 			"<entry id='two' dateCreated='2012-05-04T04:19:57Z' dateModified='2012-05-04T04:19:57Z' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' dateDeleted='2012-05-08T06:40:44Z'></entry>"
 			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
+		[Test]
+		public void TestSha1_applyUp1_applyUp2()
+		{
+			//This test demonstrates that a deletion of an entry is applied to a LIFT file.
+			//Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted attribute is added
+
+			//Create a LIFT file with 3 entries which will have updates applied to it.
+			WriteFile(_baseLiftFileName, s_LiftDataSha1, _directory);
+			//Create a .lift.update file with and entry which is indicating that an entry was deleted (tombstone).
+			WriteFile("LiftUpdate1" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUp1ToSha1, _directory);
+			WriteFile("LiftUpdate2" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUp2ToSha1, _directory);
+			FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+			XmlDocument doc = MergeAndGetResult(true, _directory, files);
+			Assert.AreEqual(5, doc.SelectNodes("//entry").Count);
+			Assert.AreEqual(1, doc.SelectNodes("//entry[@id='one']").Count);
+			VerifyEntryInnerText(doc, "//entry[@id='one']", "");
+			VerifyEntryInnerText(doc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+			VerifyEntryInnerText(doc, "//entry[@id='three']", "");
+			VerifyEntryInnerText(doc, "//entry[@id='six']", "");
+			VerifyEntryDoesNotExist(doc, "//entry[@id='five']");
+			VerifyEntryInnerText(doc, "//entry[@id='four']", "change ENTRY FOUR again to see if Merge works on same record.");
+		}
+		private static readonly string s_LiftDataSha1 =
+		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
+		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>"
+		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
+
+		private static readonly string s_LiftUp1ToSha1 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
+			+ "<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>"
+			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
+
+		private static readonly string s_LiftUp2ToSha1 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
+			+ "<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if Merge works on same record.</text></form></lexical-unit></entry>"
+			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
+
 
 		private XmlDocument MergeAndGetResult(bool isBackupFileExpected, string directory, FileInfo[] files)
 		{
@@ -912,6 +949,29 @@ namespace lfmergelift.Tests
 				fileList.Append('\n');
 			}
 			Assert.AreEqual(count, files.Length, fileList.ToString());
+		}
+
+		private static void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
+		{
+			var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
+			XmlNode entry = selectedEntries[0];
+			Assert.AreEqual(innerText, entry.InnerText, String.Format("Text for entry is wrong"));
+		}
+
+		private static XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
+		{
+			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+			Assert.IsNotNull(selectedEntries);
+			Assert.AreEqual(1, selectedEntries.Count, String.Format("An entry with the following criteria should exist:{0}", xPath));
+			return selectedEntries;
+		}
+
+		private static void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
+		{
+			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+			Assert.IsNotNull(selectedEntries);
+			Assert.AreEqual(0, selectedEntries.Count,
+							String.Format("An entry with the following criteria should not exist:{0}", xPath));
 		}
 
 		internal static void CreateLiftInputFile(IList<string> data, string fileName, string directory)
