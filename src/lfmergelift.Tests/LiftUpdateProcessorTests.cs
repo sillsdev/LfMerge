@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Xml;
 using Chorus.VcsDrivers;
 using NUnit.Framework;
 using Palaso.Lift.Merging;
@@ -121,7 +118,8 @@ namespace lfmergelift.Tests
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoRevisionAfterChange, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1,
+												  testEnv.LangForgeDirFinder.LiftUpdatesPath);
 
 				//Run LiftUpdaeProcessor
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
@@ -131,10 +129,38 @@ namespace lfmergelift.Tests
 
 				var projAWebRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevisionBeforeChange.Number.Hash, Is.EqualTo(projAWebRevision.Number.Hash));
-				Assert.That(mergeRepoRevisionAfterChange.Number.Hash, Is.EqualTo(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash));
-				Assert.That(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash, Is.Not.EqualTo(projAWebRevision.Number.Hash));
+				Assert.That(mergeRepoRevisionAfterChange.Number.Hash,
+							Is.EqualTo(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash));
+				Assert.That(mergeRepoRevisionAfterProcessLiftUpdates.Number.Hash,
+							Is.Not.EqualTo(projAWebRevision.Number.Hash));
 
+				//Check the contents of the .lift file
+				var xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
 			}
+		}
+
+		private static void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
+		{
+			var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
+			XmlNode entry = selectedEntries[0];
+			Assert.AreEqual(innerText, entry.InnerText, "Text for entry 'two' is wrong.");
+		}
+
+		private static XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
+		{
+			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+			Assert.IsNotNull(selectedEntries);
+			Assert.AreEqual(1, selectedEntries.Count, String.Format("An entry with the following criteria should exist:{0}", xPath));
+			return selectedEntries;
+		}
+
+		private static void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
+		{
+			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+			Assert.IsNotNull(selectedEntries);
+			Assert.AreEqual(0, selectedEntries.Count,
+							String.Format("An entry with the following criteria should not exist:{0}", xPath));
 		}
 
 		private void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
@@ -226,6 +252,13 @@ namespace lfmergelift.Tests
 				//been applied yet.
 				var allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(1));
+
+				//Check the contents of the .lift file
+				var xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryExists(xmlDoc, "//entry[@id='five']");
+				VerifyEntryExists(xmlDoc, "//entry[@id='six']");
 			}
 		}
 
@@ -289,6 +322,48 @@ namespace lfmergelift.Tests
 
 				//There should only be one head after any application of a set of updates.
 				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
+
+				//Check the contents of the .lift file
+				// Here are the steps we would expect to have been followed.
+				// Before any updates applied
+				// sha0 and sha1 and on sha1
+				//
+				// Applying updates:
+				// apply .lift.update to sha0
+				//    switch to sha0: commit does nothing
+				//    apply .lift.update
+				// apply .lift.update to sha1
+				//    switch back to sha1: commit produces new sha2 from sha0 and new head
+				//       two heads triggers Synchronizer synch.Sych() to Merge sha2 with sha1
+				//          result is sha0, sha1, sha2 and sha3 (where sha3 is the merge of sha1 & sha2)
+				//    apply .lift.update to sha1
+				//        switch to sha1 and apply the changes in .lift.update
+				//
+				// results:
+				// sha2 should have the changes from the first update.
+				// sha3 should have the merge of sha1 & sha2 with other .lift.update applied to it.
+
+				//At this point we should be at sha1 and changes to the .lift file applied to the file but should not be committed yet.
+				XmlDocument xmlDoc;
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+
+				//Now change to sha2 which was produced after the update to sha0 was committed.
+				projAMergeRepo.Update("2");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+
+				//Now check sha3 to see if the merge operation produced the results we would expect.
 			}
 		}
 
@@ -344,6 +419,26 @@ namespace lfmergelift.Tests
 
 				//There should only be one head after any application of a set of updates.
 				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
+
+				//Check the contents of the .lift file
+				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				var xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+
+				//Now change to sha2 which was produced after the update to sha1 was committed.
+				projAMergeRepo.Update("2");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 			}
 		}
 
@@ -414,6 +509,15 @@ namespace lfmergelift.Tests
 		private static string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment testEnv)
 		{
 			return Path.Combine(testEnv.LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
+		}
+
+		private static XmlDocument GetResult(string directory, string projectName)
+		{
+			XmlDocument doc = new XmlDocument();
+			string outputPath = Path.Combine(directory, projectName + ".lift");
+			doc.Load(outputPath);
+			Console.WriteLine(File.ReadAllText(outputPath));
+			return doc;
 		}
 	}
 
