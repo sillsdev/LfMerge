@@ -16,33 +16,6 @@ namespace lfmergelift.Tests
 	[TestFixture]
 	public class LiftUpdateProcessorTests
 	{
-		private static readonly string s_LiftDataSha0 =
-		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
-		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>TEST</text></form></lexical-unit></entry>"
-		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
-
-		private static readonly string s_LiftDataSha1 =
-		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
-		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>"
-		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
-
-		private static readonly string s_LiftUpdate1 =
-			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>"
-			+ "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>"
-			+                       "<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>"
-			+ "<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>";
-
-		private static readonly string s_LiftUpdate2 =
-			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
-			+               "<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>"
-			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
-
-		private static readonly string s_LiftUpdate3 =
-			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
-			+               "<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if works on same record.</text></form></lexical-unit></entry>"
-			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
-
-
 		/// <summary>
 		/// 1) Create a lift project and repo in the webWork area
 		/// 2) create a couple .lift.update files so that the UpdateProcesser will take action
@@ -452,6 +425,32 @@ namespace lfmergelift.Tests
 			}
 		}
 
+		private static readonly string s_LiftDataSha0 =
+		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
+		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>TEST</text></form></lexical-unit></entry>"
+		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
+
+		private static readonly string s_LiftDataSha1 =
+		   "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
+		   + "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>"
+		   + "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
+
+		private static readonly string s_LiftUpdate1 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>"
+			+ "<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>"
+			+ "<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>"
+			+ "<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>";
+
+		private static readonly string s_LiftUpdate2 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
+			+ "<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>"
+			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
+
+		private static readonly string s_LiftUpdate3 =
+			"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>"
+			+ "<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if works on same record.</text></form></lexical-unit></entry>"
+			+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
+
 		[Test]
 		public void Test_ProjA2Shas_ApplyUpdate2ToSha1ThenUpdate1ToSha0_ThenUpdate3ToSha2()
 		{
@@ -474,6 +473,26 @@ namespace lfmergelift.Tests
 				//We want to make sure the commit happened.
 				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
 
+				XmlDocument xmlDoc;
+				//Sha0
+				projAMergeRepo.Update("0");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				//Sha1
+				projAMergeRepo.Update("1");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
 				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
@@ -485,8 +504,25 @@ namespace lfmergelift.Tests
 				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 						//Sha1-->Sha2 when an update is applied to another sha
+				//Sha1 plus update2
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 						//Sha0-->Sha3 when another update is applied to another sha
+				//Sha0 plus update1
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				List<Revision> allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(3));
@@ -511,7 +547,6 @@ namespace lfmergelift.Tests
 				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
 
 				//Check the contents of the .lift file
-				XmlDocument xmlDoc;
 				//At this point we should be at sha1-->sha2(up2)-->up3 applied
 				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
@@ -519,8 +554,35 @@ namespace lfmergelift.Tests
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
 				//VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "change ENTRY FOUR again to see if works on same record.");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+
+				//Sha0
+				projAMergeRepo.Update("0");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+
+				//Sha1
+				projAMergeRepo.Update("1");
+				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Result of Sha1-->Sha2 (update2 applied)
 				projAMergeRepo.Update("2");
@@ -529,8 +591,8 @@ namespace lfmergelift.Tests
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
 				//Result of Sha0-->Sha3 (update1 applied)
 				projAMergeRepo.Update("3");
@@ -545,14 +607,13 @@ namespace lfmergelift.Tests
 				//Result of Sha2&Sha3 merger-->Sha4
 				projAMergeRepo.Update("4");
 				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file"); //???? could be either???
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");      //""  &  "ENTRY ONE ADDS lexical unit"
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");      //"SLIGHT CHANGE in .LIFT file"  &  "TEST"
 				//VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST"); //???? could be either???  uses later sha?
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				//VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", ""); //Uses the later change (later sha?)
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", ""); //I would expect six to live from sha2
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");                               //""  &  ""
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");                                //"ENTRY FOUR adds a lexical unit" & ""
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");                                // no node  & ""
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");                                 // "" & no node
 				//VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");  //Uses later state sha3 over sha2
 			}
 		}
