@@ -30,14 +30,19 @@ namespace lfmergelift
 			_lfSynchMerger = new LfSynchronicMerger();
 		}
 
+		public LiftUpdatesScanner LiftUpdateScanner
+		{
+			get { return _liftUpdateScanner; }
+		}
+
 		public void ProcessLiftUpdates()
 		{
 			//If there are .lift.update files to be processed then do nothing
-			if (!_liftUpdateScanner.ScannerHasListOfLiftUpdates)
+			if (!LiftUpdateScanner.ScannerHasListOfLiftUpdates)
 				return;
 
 			//Get the projects which need to have .lift.updates applied to them
-			var projects = _liftUpdateScanner.GetProjectsNamesToUpdate();
+			var projects = LiftUpdateScanner.GetProjectsNamesToUpdate();
 			foreach (var project in projects)
 			{
 				ProcessLiftUpdatesForProject(project);
@@ -55,7 +60,7 @@ namespace lfmergelift
 			}
 
 			var repo = new HgRepository(projMergeFolder, new NullProgress()); //
-			var shas = _liftUpdateScanner.GetShasForAProjectName(project);
+			var shas = LiftUpdateScanner.GetShasForAProjectName(project);
 			//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
 			//before doing the lfSynchronicMerger
 			foreach (String sha in shas)
@@ -101,7 +106,7 @@ namespace lfmergelift
 				repo.Update(shaOfUpdateFiles);
 				currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			}
-			var updatefilesForThisSha = _liftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
+			var updatefilesForThisSha = LiftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
 			_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
 		}
 

@@ -28,10 +28,10 @@ namespace lfmergelift
 		{
 			_updatesDirectory = updatesDirectory;
 
-			SetupScannerBasedOnRemainingUpdateFiles();
+			CheckForMoreLiftUpdateFiles();
 		}
 
-		public void SetupScannerBasedOnRemainingUpdateFiles()
+		public void CheckForMoreLiftUpdateFiles()
 		{
 			_liftUpdateFiles = GetPendingUpdateFiles(_updatesDirectory);
 

@@ -531,6 +531,8 @@ namespace lfmergelift.Tests
 				// Now apply Update3ToSha2  which was Sha1-->Sha2
 				liftUpdateFileName = GetLiftUpdateFileName("ProjA", Sha2, "extraB");
 				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate3, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				//The .lift.update file was just added so the scanner does not know about it yet.
+				lfProcessor.LiftUpdateScanner.CheckForMoreLiftUpdateFiles();
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, Sha2.Number.Hash);
 					   //this is cause a commit to Sha0--Sha3 (two heads so a merge needed Sha2&Sha3-->Sha4)
 					   //result will be   Sha2-->Sha5 (not committed yet)
@@ -552,15 +554,7 @@ namespace lfmergelift.Tests
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				//VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "change ENTRY FOUR again to see if works on same record.");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
-
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "change ENTRY FOUR again to see if works on same record.");
 				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
