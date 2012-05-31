@@ -39,7 +39,7 @@
 
 	<Target Name="Compile" DependsOnTargets="">
 		<MSBuild
-			Projects="$(RootDir)\src\$(Solution)"
+			Projects="$(RootDir)\$(Solution)"
 			Targets="Build"
 			Properties="Configuration=$(Configuration)" />
 	</Target>
