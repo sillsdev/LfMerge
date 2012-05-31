@@ -35,7 +35,6 @@
 
 	<Target Name="Clean">
 		<Delete Files="@(ExistingObjectFiles)" />
-		<CallTarget Targets="CleanInstaller" />
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="">
