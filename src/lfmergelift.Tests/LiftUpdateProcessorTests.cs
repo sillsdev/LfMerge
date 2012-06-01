@@ -16,6 +16,147 @@ namespace lfmergelift.Tests
 	[TestFixture]
 	public class LiftUpdateProcessorTests
 	{
+		class TestEnvironment : IDisposable
+		{
+			private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge");
+			public String LanguageForgeFolder
+			{
+				get { return _languageForgeServerFolder.Path; }
+			}
+
+			public LfDirectoriesAndFiles LangForgeDirFinder
+			{
+				get { return _langForgeDirFinder; }
+			}
+
+			private readonly LfDirectoriesAndFiles _langForgeDirFinder;
+
+			public TestEnvironment()
+			{
+				_langForgeDirFinder = new LfDirectoriesAndFiles(LanguageForgeFolder);
+				CreateAllTestFolders();
+			}
+
+			private void CreateAllTestFolders()
+			{
+				LangForgeDirFinder.CreateWebWorkFolder();
+				LangForgeDirFinder.CreateMergeWorkFolder();
+				LangForgeDirFinder.CreateMergeWorkProjectsFolder();
+				LangForgeDirFinder.CreateLiftUpdatesFolder();
+			}
+
+			internal HgRepository CreateProjAWebRepo()
+			{
+				var projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				//Make the webWork ProjA.LIFT file
+				HgRepository projAWebRepo = CreateWebWorkRepoProjA(projAWebWorkPath);
+				return projAWebRepo;
+			}
+
+			internal HgRepository CloneProjAWebRepo(HgRepository projAWebRepo, out String projAMergeWorkPath)
+			{
+				//Make clone of repo in MergeWorkFolder
+				projAMergeWorkPath = LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
+				var repoSourceAddress = RepositoryAddress.Create("LangForge WebWork Repo Location", projAWebRepo.PathToRepo);
+				HgRepository.Clone(repoSourceAddress, projAMergeWorkPath, new NullProgress());
+
+				HgRepository projAMergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
+				Assert.That(projAMergeRepo, Is.Not.Null);
+				return projAMergeRepo;
+			}
+
+			internal HgRepository CreateWebWorkRepoProjA(string projAWebWorkPath)
+			{
+				HgRepository projARepo;
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha0, projAWebWorkPath);
+				var _progress = new ConsoleProgress();
+				HgRepository.CreateRepositoryInExistingDir(projAWebWorkPath, _progress);
+				projARepo = new HgRepository(projAWebWorkPath, new NullProgress());
+
+				//Add the .lift file to the repo
+				projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
+				return projARepo;
+			}
+
+			internal void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
+			{
+				LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha1, projAMergeWorkPath);
+				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
+			}
+
+			internal String CreateLiftUpdateFile(String proj, Revision currentRevision, String sLiftUpdateXml)
+			{
+				var liftUpdateFileName = GetLiftUpdateFileName(proj, currentRevision);
+				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, sLiftUpdateXml, LangForgeDirFinder.LiftUpdatesPath);
+				return LiftUpdateFileFullPath(liftUpdateFileName);
+			}
+
+			private String GetLiftUpdateFileName(String projName, Revision rev)
+			{
+				String fileEnding = Path.GetRandomFileName();
+
+				return projName + "_" + rev.Number.Hash + "_" + fileEnding + SynchronicMerger.ExtensionOfIncrementalFiles;
+			}
+
+			private string LiftUpdateFileFullPath(String filename)
+			{
+				return Path.Combine(LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
+			}
+
+			private const string ExtensionOfLiftFiles = ".lift";
+			internal string LiftFileFullPath(String path, String projName)
+			{
+				return Path.Combine(path, projName + ExtensionOfLiftFiles);
+			}
+
+			internal string LiftFileInMergeWorkPath(String projName)
+			{
+				var path = LangForgeDirFinder.GetProjMergePath(projName);
+				return LiftFileFullPath(path, projName);
+			}
+
+			internal XmlDocument GetResult(string projectName)
+			{
+				string directory = LangForgeDirFinder.GetProjMergePath("ProjA");
+				XmlDocument doc = new XmlDocument();
+				string outputPath = Path.Combine(directory, projectName + ExtensionOfLiftFiles);
+				doc.Load(outputPath);
+				Console.WriteLine(File.ReadAllText(outputPath));
+				return doc;
+			}
+
+			internal void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
+			{
+				var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
+				XmlNode entry = selectedEntries[0];
+				Assert.AreEqual(innerText, entry.InnerText, String.Format("Text for entry is wrong"));
+			}
+
+			internal XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
+			{
+				XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+				Assert.IsNotNull(selectedEntries);
+				Assert.AreEqual(1, selectedEntries.Count, String.Format("An entry with the following criteria should exist:{0}", xPath));
+				return selectedEntries;
+			}
+
+			internal void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
+			{
+				XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+				Assert.IsNotNull(selectedEntries);
+				Assert.AreEqual(0, selectedEntries.Count,
+								String.Format("An entry with the following criteria should not exist:{0}", xPath));
+			}
+
+
+			public void Dispose()
+			{
+				_languageForgeServerFolder.Dispose();
+			}
+		}  //END class TestEnvironment
+		//=============================================================================================================================
+
+
 		/// <summary>
 		/// 1) Create a lift project and repo in the webWork area
 		/// 2) create a couple .lift.update files so that the UpdateProcesser will take action
@@ -28,34 +169,29 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_OneProject_TwoUpdateFiles_CloneFromWebWorkFolder()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
-
+				var projAWebRepo = env.CreateProjAWebRepo();
 				var currentRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", currentRevision, s_LiftUpdate1);
 				//Create another .lift.update file
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraB");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", currentRevision, s_LiftUpdate2);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
 				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
 				//folder.
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.GetProjMergePath("ProjA");
+				var projAMergeWorkPath = env.LangForgeDirFinder.GetProjMergePath("ProjA");
 				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
 				var mergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
 				Assert.That(mergeRepo, Is.Not.Null);
 				var mergeRepoRevision = mergeRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevision.Number.Hash, Is.EqualTo(currentRevision.Number.Hash));
-				var projLiftFileInMergeArea = LiftFileFullPath(projAMergeWorkPath, "ProjA");
+				var projLiftFileInMergeArea = env.LiftFileFullPath(projAMergeWorkPath, "ProjA");
 				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
 			}
 		}
@@ -74,29 +210,25 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_OneProject_MakeSureMergeWorkCopyIsNotOverWritten()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
+				var projAWebRepo = env.CreateProjAWebRepo();
 
-				//Make clone of repo in MergeWorkFolder
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
-				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoRevisionBeforeChange = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
-				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
 				var mergeRepoRevisionAfterChange = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoRevisionAfterChange, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1,
-												  testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				env.CreateLiftUpdateFile("ProjA", mergeRepoRevisionAfterChange, s_LiftUpdate1);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
 				var mergeRepoRevisionAfterProcessLiftUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
@@ -109,67 +241,14 @@ namespace lfmergelift.Tests
 							Is.Not.EqualTo(projAWebRevision.Number.Hash));
 
 				//Check the contents of the .lift file
-				var xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
+				var xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
+
+				//env.AddAndCommitSmallChangeTo(file, "/lift/entry[id='']/lexical-unit/form/test[0]");
+				//env.CreateNewUpdateWithEntry("<entry>");
+				//AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA")).HasAtLeastOneMatchForXpath("//entry[@id='one']/lexical-unit/form/text/value()=='SLIGHT CHANGE in .LIFT file'");
+
 			}
-		}
-
-		private static void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
-		{
-			var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
-			XmlNode entry = selectedEntries[0];
-			Assert.AreEqual(innerText, entry.InnerText, String.Format("Text for entry is wrong"));
-		}
-
-		private static XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
-		{
-			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
-			Assert.IsNotNull(selectedEntries);
-			Assert.AreEqual(1, selectedEntries.Count, String.Format("An entry with the following criteria should exist:{0}", xPath));
-			return selectedEntries;
-		}
-
-		private static void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
-		{
-			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
-			Assert.IsNotNull(selectedEntries);
-			Assert.AreEqual(0, selectedEntries.Count,
-							String.Format("An entry with the following criteria should not exist:{0}", xPath));
-		}
-
-		private void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
-		{
-			LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha1, projAMergeWorkPath);
-			projAMergeRepo.Commit(true, "change made to ProjA.lift file");
-		}
-
-		private HgRepository GetProjAMergeRepoCloned(HgRepository projAWebRepo, string projAMergeWorkPath)
-		{
-			HgRepository projAMergeRepo;
-
-			var repoSourceAddress = RepositoryAddress.Create("LangForge WebWork Repo Location", projAWebRepo.PathToRepo);
-			HgRepository.Clone(repoSourceAddress, projAMergeWorkPath, new NullProgress());
-
-			//Note: why was CloneLocal removed????
-			//projAWebRepo.CloneLocal(projAMergeWorkPath);   //This copies the .hg file and the ProjA.LIFT file.
-			//projAWebRepo.CloneLocalWithoutUpdate(projAMergeWorkPath);
-			projAMergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
-			//projAMergeRepo.Update();
-			Assert.That(projAMergeRepo, Is.Not.Null);
-			return projAMergeRepo;
-		}
-
-		private HgRepository GetProjAWebRepo(string projAWebWorkPath)
-		{
-			HgRepository projARepo;
-			LfSynchronicMergerTests.WriteFile("ProjA.Lift", s_LiftDataSha0, projAWebWorkPath);
-			var _progress = new ConsoleProgress();
-			HgRepository.CreateRepositoryInExistingDir(projAWebWorkPath, _progress);
-			projARepo = new HgRepository(projAWebWorkPath, new NullProgress());
-
-			//Add the .lift file to the repo
-			projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
-			return projARepo;
 		}
 
 		/// <summary>
@@ -187,31 +266,26 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_OneProject_TwoUpdateFiles_VerifyUpdatesWereApplied()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
-
+				var projAWebRepo = env.CreateProjAWebRepo();
 				var currentRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Make clone of repo in MergeWorkFolder
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
-				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoRevisionBeforeUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraA");
-				var liftUpdateFile1 = LiftUpdateFileFullPath(liftUpdateFileName, testEnv);   //check this is deleted after updates are applied
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				var liftUpdateFile1 = env.CreateLiftUpdateFile("ProjA", currentRevision, s_LiftUpdate1);
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+
 				//Create another .lift.update file
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", currentRevision, "extraB");
-				var liftUpdateFile2 = LiftUpdateFileFullPath(liftUpdateFileName, testEnv); //check this is deleted after updates are applied
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				var liftUpdateFile2 = env.CreateLiftUpdateFile("ProjA", currentRevision, s_LiftUpdate2);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
 				// .lift.update files are deleted when they are processed. Make sure this happens so they are not processed again.
@@ -228,14 +302,13 @@ namespace lfmergelift.Tests
 				Assert.That(allRevisions.Count, Is.EqualTo(1));
 
 				//Check the contents of the .lift file
-				var xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryExists(xmlDoc, "//entry[@id='five']");
-				VerifyEntryExists(xmlDoc, "//entry[@id='six']");
+				var xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				env.VerifyEntryExists(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryExists(xmlDoc, "//entry[@id='six']");
 			}
 		}
-
 
 		/// <summary>
 		/// 1) Create the ProjA.lift file in the webWork folder
@@ -255,34 +328,30 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_ProjA2Shas_Update1ToSha0ThenApplyUpdate2ToSha1()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
+				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
-				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
-				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
 				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//We want to make sure the commit happened.
 				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, s_LiftUpdate1);
 				//Create another .lift.update file  for the second sha
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha1, s_LiftUpdate2);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 
@@ -319,33 +388,33 @@ namespace lfmergelift.Tests
 
 				//At this point we should be at sha1 and changes to the .lift file applied to the file but should not be committed yet.
 				XmlDocument xmlDoc;
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 
 				//Now change to sha2 which was produced after the update to sha0 was committed.
 				projAMergeRepo.Update("2");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Now check sha3 to see if the merge operation produced the results we would expect.
 				projAMergeRepo.Update("3");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 			}
 		}
 
@@ -360,34 +429,30 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_ProjA2Shas_ApplyUpdate2ToSha1ThenUpdate1ToSha0()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
+				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
-				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
-				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
 				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//We want to make sure the commit happened.
 				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, s_LiftUpdate1);
 				//Create another .lift.update file  for the second sha
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha1, s_LiftUpdate2);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 
@@ -405,23 +470,23 @@ namespace lfmergelift.Tests
 				//Check the contents of the .lift file
 				XmlDocument xmlDoc;
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Now change to sha2 which was produced after the update to sha1 was committed.
 				projAMergeRepo.Update("2");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 			}
 		}
 
@@ -454,20 +519,18 @@ namespace lfmergelift.Tests
 		[Test]
 		public void Test_ProjA2Shas_ApplyUpdate2ToSha1ThenUpdate1ToSha0_ThenUpdate3ToSha2()
 		{
-			using (var testEnv = new LangForgeTestEnvironment())
+			using (var env = new TestEnvironment())
 			{
-				var projAWebWorkPath = testEnv.LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
-				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = GetProjAWebRepo(projAWebWorkPath);
+				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				var projAMergeWorkPath = testEnv.LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
-				HgRepository projAMergeRepo = GetProjAMergeRepoCloned(projAWebRepo, projAMergeWorkPath);
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
-				MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
 				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//We want to make sure the commit happened.
@@ -476,61 +539,59 @@ namespace lfmergelift.Tests
 				XmlDocument xmlDoc;
 				//Sha0
 				projAMergeRepo.Update("0");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 				//Sha1
 				projAMergeRepo.Update("1");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
-				var liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha0, "extraA");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate1, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, s_LiftUpdate1);
 				//Create another .lift.update file  for the second sha
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", mergeRepoSha1, "extraB");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate2, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha1, s_LiftUpdate2);
 
 				//Run LiftUpdaeProcessor
-				var lfProcessor = new LiftUpdateProcessor(testEnv.LanguageForgeFolder);
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 						//Sha1-->Sha2 when an update is applied to another sha
 				//Sha1 plus update2
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 						//Sha0-->Sha3 when another update is applied to another sha
 				//Sha0 plus update1
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				List<Revision> allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(3));
 				Revision Sha2 = allRevisions[0]; //It seems that GetAllRevisions lists them from newest to oldest.
 
 				// Now apply Update3ToSha2  which was Sha1-->Sha2
-				liftUpdateFileName = GetLiftUpdateFileName("ProjA", Sha2, "extraB");
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, s_LiftUpdate3, testEnv.LangForgeDirFinder.LiftUpdatesPath);
+				env.CreateLiftUpdateFile("ProjA", Sha2, s_LiftUpdate3);
+
 				//The .lift.update file was just added so the scanner does not know about it yet.
 				lfProcessor.LiftUpdateScanner.CheckForMoreLiftUpdateFiles();
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, Sha2.Number.Hash);
@@ -550,126 +611,66 @@ namespace lfmergelift.Tests
 
 				//Check the contents of the .lift file
 				//At this point we should be at sha1-->sha2(up2)-->up3 applied
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "change ENTRY FOUR again to see if works on same record.");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "change ENTRY FOUR again to see if works on same record.");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
 				//Sha0
 				projAMergeRepo.Update("0");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Sha1
 				projAMergeRepo.Update("1");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Result of Sha1-->Sha2 (update2 applied)
 				projAMergeRepo.Update("2");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
 				//Result of Sha0-->Sha3 (update1 applied)
 				projAMergeRepo.Update("3");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
-				VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
+				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Result of Sha2&Sha3 merger-->Sha4
 				projAMergeRepo.Update("4");
-				xmlDoc = GetResult(testEnv.LangForgeDirFinder.GetProjMergePath("ProjA"), "ProjA");
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");      //""  &  "ENTRY ONE ADDS lexical unit"
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");      //"SLIGHT CHANGE in .LIFT file"  &  "TEST"
-				//VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST"); //???? could be either???  uses later sha?
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");                               //""  &  ""
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");                                //"ENTRY FOUR adds a lexical unit" & ""
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");                                // no node  & ""
-				VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");                                 // "" & no node
-				//VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");  //Uses later state sha3 over sha2
+				xmlDoc = env.GetResult("ProjA");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");      //""  &  "ENTRY ONE ADDS lexical unit"
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");      //"SLIGHT CHANGE in .LIFT file"  &  "TEST"
+				//env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST"); //???? could be either???  uses later sha?
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");                               //""  &  ""
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");                                //"ENTRY FOUR adds a lexical unit" & ""
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");                                // no node  & ""
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");                                 // "" & no node
 			}
 		}
 
-		private String GetLiftUpdateFileName(String projName, Revision rev, String differentiation)
-		{
-			return projName + "_" + rev.Number.Hash + "_" + differentiation + SynchronicMerger.ExtensionOfIncrementalFiles;
-		}
-
-		public const string ExtensionOfLiftFiles = ".lift";
-		private static string LiftFileFullPath(String path, String projName)
-		{
-			return Path.Combine(path, projName + ExtensionOfLiftFiles);
-		}
-
-		private static string LiftUpdateFileFullPath(String filename, LangForgeTestEnvironment testEnv)
-		{
-			return Path.Combine(testEnv.LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
-		}
-
-		private static XmlDocument GetResult(string directory, string projectName)
-		{
-			XmlDocument doc = new XmlDocument();
-			string outputPath = Path.Combine(directory, projectName + ".lift");
-			doc.Load(outputPath);
-			Console.WriteLine(File.ReadAllText(outputPath));
-			return doc;
-		}
-	}
-
-	class LangForgeTestEnvironment : IDisposable
-	{
-		private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge");
-		public String LanguageForgeFolder
-		{
-			get { return _languageForgeServerFolder.Path; }
-		}
-
-		public LfDirectoriesAndFiles LangForgeDirFinder
-		{
-			get { return _langForgeDirFinder; }
-		}
-
-		private readonly LfDirectoriesAndFiles _langForgeDirFinder;
-
-		public LangForgeTestEnvironment()
-		{
-			_langForgeDirFinder = new LfDirectoriesAndFiles(LanguageForgeFolder);
-			CreateAllTestFolders();
-		}
-
-		private void CreateAllTestFolders()
-		{
-			LangForgeDirFinder.CreateWebWorkFolder();
-			LangForgeDirFinder.CreateMergeWorkFolder();
-			LangForgeDirFinder.CreateMergeWorkProjectsFolder();
-			LangForgeDirFinder.CreateLiftUpdatesFolder();
-		}
-
-		public void Dispose()
-		{
-			_languageForgeServerFolder.Dispose();
-		}
 	}
 }

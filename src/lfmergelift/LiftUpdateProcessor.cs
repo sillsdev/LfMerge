@@ -100,7 +100,9 @@ namespace lfmergelift
 
 					SyncResults syncResults = synch.SyncNow(options);
 					if (!syncResults.Succeeded)
-						MessageBox.Show(syncResults.ErrorEncountered.Message, "synch.SyncNow failed");
+					{
+						throw new ApplicationException(String.Format("Merge failure while processing updates on Project:{0} and Sha:{1}", project, shaOfUpdateFiles));
+					}
 					allShas = repo.GetAllRevisions();
 				}
 				repo.Update(shaOfUpdateFiles);
