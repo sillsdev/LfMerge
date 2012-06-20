@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Xml;
 using Chorus.VcsDrivers;
 using NUnit.Framework;
 using Palaso.Lift.Merging;
+using Palaso.Lift.Validation;
 using Palaso.Progress.LogBox;
 using Palaso.TestUtilities;
 using Chorus.VcsDrivers.Mercurial;
@@ -19,6 +21,11 @@ namespace lfmergelift.Tests
 		class TestEnvironment : IDisposable
 		{
 			private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge");
+			public void Dispose()
+			{
+				_languageForgeServerFolder.Dispose();
+			}
+
 			public String LanguageForgeFolder
 			{
 				get { return _languageForgeServerFolder.Path; }
@@ -65,10 +72,29 @@ namespace lfmergelift.Tests
 				return projAMergeRepo;
 			}
 
+			static internal string WriteFile(string fileName, string xmlForEntries, string directory)
+			{
+				StreamWriter writer = File.CreateText(Path.Combine(directory, fileName));
+				string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+								 + "<lift version =\""
+								 + Validator.LiftVersion
+								 + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">"
+								 + xmlForEntries
+								 + "</lift>";
+				writer.Write(content);
+				writer.Close();
+				writer.Dispose();
+
+				//pause so they don't all have the same time
+				Thread.Sleep(100);
+
+				return content;
+			}
+
 			internal HgRepository CreateWebWorkRepoProjA(string projAWebWorkPath)
 			{
 				HgRepository projARepo;
-				LfSynchronicMergerTests.WriteFile("ProjA.Lift", rev0, projAWebWorkPath);
+				WriteFile("ProjA.Lift", rev0, projAWebWorkPath);
 				var _progress = new ConsoleProgress();
 				HgRepository.CreateRepositoryInExistingDir(projAWebWorkPath, _progress);
 				projARepo = new HgRepository(projAWebWorkPath, new NullProgress());
@@ -80,14 +106,14 @@ namespace lfmergelift.Tests
 
 			internal void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
 			{
-				LfSynchronicMergerTests.WriteFile("ProjA.Lift", rev1, projAMergeWorkPath);
+				WriteFile("ProjA.Lift", rev1, projAMergeWorkPath);
 				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
 			}
 
 			internal String CreateLiftUpdateFile(String proj, Revision currentRevision, String sLiftUpdateXml)
 			{
 				var liftUpdateFileName = GetLiftUpdateFileName(proj, currentRevision);
-				LfSynchronicMergerTests.WriteFile(liftUpdateFileName, sLiftUpdateXml, LangForgeDirFinder.LiftUpdatesPath);
+				WriteFile(liftUpdateFileName, sLiftUpdateXml, LangForgeDirFinder.LiftUpdatesPath);
 				return LiftUpdateFileFullPath(liftUpdateFileName);
 			}
 
@@ -146,12 +172,6 @@ namespace lfmergelift.Tests
 				Assert.IsNotNull(selectedEntries);
 				Assert.AreEqual(0, selectedEntries.Count,
 								String.Format("An entry with the following criteria should not exist:{0}", xPath));
-			}
-
-
-			public void Dispose()
-			{
-				_languageForgeServerFolder.Dispose();
 			}
 		}  //END class TestEnvironment
 		//=============================================================================================================================
