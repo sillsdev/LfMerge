@@ -162,9 +162,27 @@ namespace lfmergelift.Tests
 				return LiftFileFullPath(path, projName);
 			}
 
-			internal XmlDocument GetResult(string projectName)
+			internal string LiftFileInWebWorkPath(String projName)
+			{
+				var path = LangForgeDirFinder.GetProjWebPath(projName);
+				return LiftFileFullPath(path, projName);
+			}
+
+
+			internal XmlDocument GetMergeFolderResult(string projectName)
 			{
 				string directory = LangForgeDirFinder.GetProjMergePath("ProjA");
+				return GetLiftFile(projectName, directory);
+			}
+
+			internal XmlDocument GetWebWorkFolderResult(string projectName)
+			{
+				string directory = LangForgeDirFinder.GetProjWebPath("ProjA");
+				return GetLiftFile(projectName, directory);
+			}
+
+			private static XmlDocument GetLiftFile(string projectName, string directory)
+			{
 				XmlDocument doc = new XmlDocument();
 				string outputPath = Path.Combine(directory, projectName + ExtensionOfLiftFiles);
 				doc.Load(outputPath);
@@ -177,6 +195,16 @@ namespace lfmergelift.Tests
 				var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
 				XmlNode entry = selectedEntries[0];
 				Assert.AreEqual(innerText, entry.InnerText, String.Format("Text for entry is wrong"));
+			}
+
+			internal void VerifyOuterXmlAreEqual(XmlDocument xmlDoc, XmlDocument xmlDoc2)
+			{
+				Assert.AreEqual(xmlDoc.OuterXml, xmlDoc2.OuterXml, String.Format("Lift files should be the same."));
+			}
+
+			internal void VerifyOuterXmlAreNotEqual(XmlDocument xmlDoc, XmlDocument xmlDoc2)
+			{
+				Assert.AreNotEqual(xmlDoc.OuterXml, xmlDoc2.OuterXml, String.Format("Lift files should NOT be the same."));
 			}
 
 			internal XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
@@ -308,7 +336,7 @@ namespace lfmergelift.Tests
 							Is.Not.EqualTo(projAWebRevision.Number.Hash));
 
 				//Check the contents of the .lift file
-				var xmlDoc = env.GetResult("ProjA");
+				var xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
 
 				AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA")).HasAtLeastOneMatchForXpath("//entry[@id='two']/lexical-unit/form/text[text()='SLIGHT CHANGE in .LIFT file']");
@@ -376,7 +404,7 @@ namespace lfmergelift.Tests
 				Assert.That(allRevisions.Count, Is.EqualTo(1));
 
 				//Check the contents of the .lift file
-				var xmlDoc = env.GetResult("ProjA");
+				var xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "ENTRY FOUR adds a lexical unit");
 				env.VerifyEntryExists(xmlDoc, "//entry[@id='five']");
@@ -473,7 +501,7 @@ namespace lfmergelift.Tests
 
 				//At this point we should be at sha1 and changes to the .lift file applied to the file but should not be committed yet.
 				XmlDocument xmlDoc;
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -483,7 +511,7 @@ namespace lfmergelift.Tests
 
 				//Now change to sha2 which was produced after the update to sha0 was committed.
 				projAMergeRepo.Update("2");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -493,7 +521,7 @@ namespace lfmergelift.Tests
 
 				//Now check sha3 to see if the merge operation produced the results we would expect.
 				projAMergeRepo.Update("3");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -566,7 +594,7 @@ namespace lfmergelift.Tests
 				//Check the contents of the .lift file
 				XmlDocument xmlDoc;
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -576,7 +604,7 @@ namespace lfmergelift.Tests
 
 				//Now change to sha2 which was produced after the update to sha1 was committed.
 				projAMergeRepo.Update("2");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -625,7 +653,7 @@ namespace lfmergelift.Tests
 				XmlDocument xmlDoc;
 				//Sha0
 				projAMergeRepo.Update("0");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -634,7 +662,7 @@ namespace lfmergelift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 				//Sha1
 				projAMergeRepo.Update("1");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -652,7 +680,7 @@ namespace lfmergelift.Tests
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 						//Sha1-->Sha2 when an update is applied to another sha
 				//Sha1 plus update2
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -663,7 +691,7 @@ namespace lfmergelift.Tests
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 						//Sha0-->Sha3 when another update is applied to another sha
 				//Sha0 plus update1
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -697,7 +725,7 @@ namespace lfmergelift.Tests
 
 				//Check the contents of the .lift file
 				//At this point we should be at sha1-->sha2(up2)-->up3 applied
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -707,7 +735,7 @@ namespace lfmergelift.Tests
 
 				//Sha0
 				projAMergeRepo.Update("0");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -717,7 +745,7 @@ namespace lfmergelift.Tests
 
 				//Sha1
 				projAMergeRepo.Update("1");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -727,7 +755,7 @@ namespace lfmergelift.Tests
 
 				//Result of Sha1-->Sha2 (update2 applied)
 				projAMergeRepo.Update("2");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -737,7 +765,7 @@ namespace lfmergelift.Tests
 
 				//Result of Sha0-->Sha3 (update1 applied)
 				projAMergeRepo.Update("3");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -747,7 +775,7 @@ namespace lfmergelift.Tests
 
 				//Result of Sha2&Sha3 merger-->Sha4
 				projAMergeRepo.Update("4");
-				xmlDoc = env.GetResult("ProjA");
+				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");      //""  &  "ENTRY ONE ADDS lexical unit"
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");      //"SLIGHT CHANGE in .LIFT file"  &  "TEST"
 				//env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST"); //???? could be either???  uses later sha?
@@ -763,7 +791,7 @@ namespace lfmergelift.Tests
 		///
 		/// </summary>
 		[Test]
-		public void ProcessLiftUpdates_ProjAMasterRepo_UpdatesCausePushPull_to_MasterAndWebRepos()
+		public void ProcessLiftUpdates_ProjAMasterRepoTwoUpdates_LiftFileCopiedToWebWorkFolder()
 		{
 			const string update1 = @"
 <entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
@@ -786,8 +814,35 @@ namespace lfmergelift.Tests
 				String projAMergeWorkPath;
 				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
+				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
+				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+				//Check the contents of the .lift file
+				XmlDocument xmlDoc;
+				XmlDocument xmlDocWebWork;
+				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				xmlDoc = env.GetMergeFolderResult("ProjA");
+				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
+				env.VerifyOuterXmlAreNotEqual(xmlDoc, xmlDocWebWork);
+
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);
+				//Create another .lift.update file  for the second sha
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update2);
 				//Make changes to the MergeRepo  .lift file so that a Pull/Push is done with the master repo and webWork repo.
+
+				//Run LiftUpdaeProcessor
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
+				lfProcessor.ProcessLiftUpdates();
+
+
+				//Check the contents of the .lift file
+				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				xmlDoc = env.GetMergeFolderResult("ProjA");
+				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
+				env.VerifyOuterXmlAreEqual(xmlDoc, xmlDocWebWork);
 
 			}
 		}
