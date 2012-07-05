@@ -9,9 +9,10 @@ namespace lfmergelift
 		//These are the folder names for the location of the repositories for the Language Forge projects
 		internal const String WebWorkFolder = "WebWork";
 		internal const String MergeWorkFolder = "MergeWork";
+		internal const String MasterReposFolder = "MasterRepos";
 		//This is the subfolder of the MergeWork foler where the .lift.update files are found.
 		internal const String LiftUpdatesFolder = "LiftUpdates";
-		internal const String MergeWorkProjectsFolder = "Projects";
+		internal const String ProjectsFolder = "Projects";
 
 		public LfDirectoriesAndFiles(String languageForgeServerFolder)
 		{
@@ -34,6 +35,15 @@ namespace lfmergelift
 		}
 
 		/// <summary>
+		/// This folder contains a subfolder for each language project's repository and LIFT file.
+		/// e.g .../LangForge/MasterRepos/ProjA     .../LangForge/MasterRepos/ProjB
+		/// </summary>
+		public string MasterReposPath
+		{
+			get { return Path.Combine(_languageForgeServerFolder, MasterReposFolder); }
+		}
+
+		/// <summary>
 		/// This is the location where the updates from language forge clients are done
 		/// e.g.  .../LangForge/MergeWork/
 		/// </summary>
@@ -49,7 +59,7 @@ namespace lfmergelift
 		/// </summary>
 		public string MergeWorkProjects
 		{
-			get { return Path.Combine(MergeWorkPath, MergeWorkProjectsFolder); }
+			get { return Path.Combine(MergeWorkPath, ProjectsFolder); }
 		}
 
 		/// <summary>
@@ -67,12 +77,28 @@ namespace lfmergelift
 			Directory.CreateDirectory(WebWorkPath);
 		}
 
+		public void CreateMasterReposFolder()
+		{
+			Directory.CreateDirectory(MasterReposPath);
+		}
+
+		public String CreateMasterReposProjectFolder(String projectName)
+		{
+			Directory.CreateDirectory(GetProjMasterRepoPath(projectName));
+			return GetProjMasterRepoPath(projectName);
+		}
+
 		public String CreateWebWorkProjectFolder(String projectName)
 		{
 			Directory.CreateDirectory(GetProjWebPath(projectName));
 			return GetProjWebPath(projectName);
 		}
 
+		public String CreateMergeWorkProjectFolder(String projectName)
+		{
+			Directory.CreateDirectory(GetProjMergePath(projectName));
+			return GetProjMergePath(projectName);
+		}
 
 		public void CreateMergeWorkFolder()
 		{
@@ -89,15 +115,14 @@ namespace lfmergelift
 			Directory.CreateDirectory(MergeWorkProjects);
 		}
 
-		public String CreateMergeWorkProjectFolder(String projectName)
-		{
-			Directory.CreateDirectory(GetProjMergePath(projectName));
-			return GetProjMergePath(projectName);
-		}
-
 		public String GetProjWebPath(String projectName)
 		{
 			return Path.Combine(WebWorkPath, projectName);
+		}
+
+		public String GetProjMasterRepoPath(String projectName)
+		{
+			return Path.Combine(MasterReposPath, projectName);
 		}
 
 		public String GetProjMergePath(String projectName)
@@ -109,6 +134,16 @@ namespace lfmergelift
 		public string LiftFileMergePath(String projName)
 		{
 			return Path.Combine(GetProjMergePath(projName), projName + ExtensionOfLiftFiles);
+		}
+
+		public string LiftFileWebWorkPath(String projName)
+		{
+			return Path.Combine(GetProjWebPath(projName), projName + ExtensionOfLiftFiles);
+		}
+
+		public string LiftFileMasterRepoPath(String projName)
+		{
+			return Path.Combine(GetProjMasterRepoPath(projName), projName + ExtensionOfLiftFiles);
 		}
 	}
 }

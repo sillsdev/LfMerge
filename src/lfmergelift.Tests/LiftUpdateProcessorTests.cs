@@ -50,14 +50,23 @@ namespace lfmergelift.Tests
 				LangForgeDirFinder.CreateMergeWorkFolder();
 				LangForgeDirFinder.CreateMergeWorkProjectsFolder();
 				LangForgeDirFinder.CreateLiftUpdatesFolder();
+				LangForgeDirFinder.CreateMasterReposFolder();
 			}
 
 			internal HgRepository CreateProjAWebRepo()
 			{
 				var projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
 				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = CreateWebWorkRepoProjA(projAWebWorkPath);
+				HgRepository projAWebRepo = CreateRepoProjA(projAWebWorkPath);
 				return projAWebRepo;
+			}
+
+			internal HgRepository CreateProjAMasterRepo()
+			{
+				var projAMasterRepoPath = LangForgeDirFinder.CreateMasterReposProjectFolder("ProjA");
+				//Make the masterRepo ProjA.LIFT file
+				HgRepository projAMasterRepo = CreateRepoProjA(projAMasterRepoPath);
+				return projAMasterRepo;
 			}
 
 			internal HgRepository CloneProjAWebRepo(HgRepository projAWebRepo, out String projAMergeWorkPath)
@@ -70,6 +79,18 @@ namespace lfmergelift.Tests
 				HgRepository projAMergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
 				Assert.That(projAMergeRepo, Is.Not.Null);
 				return projAMergeRepo;
+			}
+
+			internal HgRepository CloneProjAMasterRepo(HgRepository projAMasterRepo, out String projAWebWorkPath)
+			{
+				//Make clone of repo in MergeWorkFolder
+				projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				var repoSourceAddress = RepositoryAddress.Create("LangForge WebWork Repo Location", projAMasterRepo.PathToRepo);
+				HgRepository.Clone(repoSourceAddress, projAWebWorkPath, new NullProgress());
+
+				HgRepository projAWebWorkRepo = new HgRepository(projAWebWorkPath, new NullProgress());
+				Assert.That(projAWebWorkRepo, Is.Not.Null);
+				return projAWebWorkRepo;
 			}
 
 			static internal string WriteFile(string fileName, string xmlForEntries, string directory)
@@ -91,16 +112,16 @@ namespace lfmergelift.Tests
 				return content;
 			}
 
-			internal HgRepository CreateWebWorkRepoProjA(string projAWebWorkPath)
+			internal HgRepository CreateRepoProjA(string projAPath)
 			{
 				HgRepository projARepo;
-				WriteFile("ProjA.Lift", rev0, projAWebWorkPath);
+				WriteFile("ProjA.Lift", rev0, projAPath);
 				var _progress = new ConsoleProgress();
-				HgRepository.CreateRepositoryInExistingDir(projAWebWorkPath, _progress);
-				projARepo = new HgRepository(projAWebWorkPath, new NullProgress());
+				HgRepository.CreateRepositoryInExistingDir(projAPath, _progress);
+				projARepo = new HgRepository(projAPath, new NullProgress());
 
 				//Add the .lift file to the repo
-				projARepo.AddAndCheckinFile(LiftFileFullPath(projAWebWorkPath, "ProjA"));
+				projARepo.AddAndCheckinFile(LiftFileFullPath(projAPath, "ProjA"));
 				return projARepo;
 			}
 
@@ -290,10 +311,7 @@ namespace lfmergelift.Tests
 				var xmlDoc = env.GetResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
 
-				//env.AddAndCommitSmallChangeTo(file, "/lift/entry[id='']/lexical-unit/form/test[0]");
-				//env.CreateNewUpdateWithEntry("<entry>");
-				//AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA")).HasAtLeastOneMatchForXpath("//entry[@id='one']/lexical-unit/form/text/value()=='SLIGHT CHANGE in .LIFT file'");
-
+				AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA")).HasAtLeastOneMatchForXpath("//entry[@id='two']/lexical-unit/form/text[text()='SLIGHT CHANGE in .LIFT file']");
 			}
 		}
 
@@ -738,6 +756,39 @@ namespace lfmergelift.Tests
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");                                //"ENTRY FOUR adds a lexical unit" & ""
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");                                // no node  & ""
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");                                 // "" & no node
+			}
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		[Test]
+		public void ProcessLiftUpdates_ProjAMasterRepo_UpdatesCausePushPull_to_MasterAndWebRepos()
+		{
+			const string update1 = @"
+<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
+<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
+<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+			";
+			const string update2 = @"
+<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
+<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+			";
+			using (var env = new TestEnvironment())
+			{
+				var projAMasterRepo = env.CreateProjAMasterRepo();
+				//now clone to the WebRepo location
+				String projAWebWorkPath;
+				HgRepository projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
+				//Make clone of repo in MergeWorkFolder
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+
+
+				//Make changes to the MergeRepo  .lift file so that a Pull/Push is done with the master repo and webWork repo.
+
 			}
 		}
 

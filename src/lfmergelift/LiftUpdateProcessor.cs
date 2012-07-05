@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Chorus.VcsDrivers;
 using Chorus.VcsDrivers.Mercurial;
 using System.Windows.Forms;
 using Chorus.sync;
@@ -11,6 +12,13 @@ using Palaso.Progress.LogBox;
 
 namespace lfmergelift
 {
+	/// <summary>
+	/// Changes made by Language Forge users will cause .lift.update files to be stored in the /mergeWork/updates folder on the server.
+	/// This class ensures that these .lift.update files are merged into the .lift file for the correct sha and also does Mercurial operations
+	/// to do synchronizations and commits when needed.
+	///
+	/// Lift Update files from Language Forge have the following format:    ProjX_sha_timeStamp.lift.update
+	/// </summary>
 	class LiftUpdateProcessor
 	{
 		private HgRepository _hgRepo;
@@ -18,6 +26,9 @@ namespace lfmergelift
 		private LfSynchronicMerger _lfSynchMerger;
 		private LfDirectoriesAndFiles _lfDirectories;
 		private String LangForgeVersion = "1.0";
+
+		private bool _commitWasDoneForProject;
+		private bool _liftUpdatesWereAppliedToProject;
 
 		/// <summary>
 		///
@@ -33,6 +44,16 @@ namespace lfmergelift
 		public LiftUpdatesScanner LiftUpdateScanner
 		{
 			get { return _liftUpdateScanner; }
+		}
+
+		public bool CommitWasDone
+		{
+			get { return _commitWasDoneForProject; }
+		}
+
+		public bool LiftUpdatesWereApplied
+		{
+			get { return _liftUpdatesWereAppliedToProject; }
 		}
 
 		public void ProcessLiftUpdates()
@@ -52,6 +73,8 @@ namespace lfmergelift
 		//make internal for tests.
 		internal void ProcessLiftUpdatesForProject(string project)
 		{
+			_commitWasDoneForProject = false;
+			_liftUpdatesWereAppliedToProject = false;
 			var projMergeFolder = _lfDirectories.GetProjMergePath(project);
 			//first check if the project has been cloned to the mergeWork folder. If not then clone it.
 			if (!Directory.Exists(projMergeFolder))
@@ -67,6 +90,22 @@ namespace lfmergelift
 			{
 				ProcessUpdatesForAParticularSha(project, repo, sha);
 			}
+			if (_liftUpdatesWereAppliedToProject)
+			{
+				//Then copy the project .lift file to the webwork folder location
+				File.Copy(_lfDirectories.LiftFileMergePath(project), _lfDirectories.LiftFileWebWorkPath(project), true);
+			}
+			if (_commitWasDoneForProject)
+			{
+				//Then do a send/receive with the webwork Mercurial repo and the master repo too.
+				var webWorkRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjWebPath(project));
+				repo.Pull(webWorkRepoAddress, "");
+				repo.Push(webWorkRepoAddress, "");
+
+				var masterRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjMasterRepoPath(project));
+				repo.Pull(masterRepoAddress, "");
+				repo.Push(masterRepoAddress, "");
+			}
 		}
 
 		//make internal for tests.
@@ -76,6 +115,7 @@ namespace lfmergelift
 			var allShas = repo.GetAllRevisions();
 			if (!(currentSha.Equals(shaOfUpdateFiles)))
 			{
+				_commitWasDoneForProject = true;
 				//We are not at the right revision to apply the .lift.update files, so save any changes on the
 				//current revision (this only commits if the .lift file has changed)
 				repo.Commit(false, String.Format("Language Forge version {0} commit", LangForgeVersion));
@@ -109,6 +149,8 @@ namespace lfmergelift
 				currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			}
 			var updatefilesForThisSha = LiftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
+			if (updatefilesForThisSha.Count() > 0)
+				_liftUpdatesWereAppliedToProject = true;
 			_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
 		}
 
