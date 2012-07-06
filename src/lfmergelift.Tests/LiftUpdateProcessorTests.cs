@@ -171,13 +171,19 @@ namespace lfmergelift.Tests
 
 			internal XmlDocument GetMergeFolderResult(string projectName)
 			{
-				string directory = LangForgeDirFinder.GetProjMergePath("ProjA");
+				string directory = LangForgeDirFinder.GetProjMergePath(projectName);
+				return GetLiftFile(projectName, directory);
+			}
+
+			internal XmlDocument GetMasterFolderResult(string projectName)
+			{
+				string directory = LangForgeDirFinder.GetProjMasterRepoPath(projectName);
 				return GetLiftFile(projectName, directory);
 			}
 
 			internal XmlDocument GetWebWorkFolderResult(string projectName)
 			{
-				string directory = LangForgeDirFinder.GetProjWebPath("ProjA");
+				string directory = LangForgeDirFinder.GetProjWebPath(projectName);
 				return GetLiftFile(projectName, directory);
 			}
 
@@ -818,7 +824,7 @@ namespace lfmergelift.Tests
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
 				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
-				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
 				//Check the contents of the .lift file
 				XmlDocument xmlDoc;
 				XmlDocument xmlDocWebWork;
@@ -827,16 +833,13 @@ namespace lfmergelift.Tests
 				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
 				env.VerifyOuterXmlAreNotEqual(xmlDoc, xmlDocWebWork);
 
-				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				//Create a couple .lift.update files. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);
-				//Create another .lift.update file  for the second sha
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update2);
-				//Make changes to the MergeRepo  .lift file so that a Pull/Push is done with the master repo and webWork repo.
 
 				//Run LiftUpdaeProcessor
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
-
 
 				//Check the contents of the .lift file
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
@@ -847,5 +850,83 @@ namespace lfmergelift.Tests
 			}
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		[Test]
+		public void ProcessLiftUpdates_ProjAMasterRepoUpdatesCauseCommit_HgSynchDoneToWebWorkAndMasterRepo()
+		{
+			const string update1 = @"
+<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
+<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
+<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+			";
+			const string update2 = @"
+<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
+<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+			";
+			using (var env = new TestEnvironment())
+			{
+				var projAMasterRepo = env.CreateProjAMasterRepo();
+				//now clone to the WebRepo location
+				String projAWebWorkPath;
+				HgRepository projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
+				//Make clone of repo in MergeWorkFolder
+				String projAMergeWorkPath;
+				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+
+				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
+				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+
+				//Check the contents of the .lift file
+				XmlDocument xmlDocMergeFolder;
+				XmlDocument xmlDocWebWork;
+				XmlDocument xmlDocMasterFolder;
+				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				xmlDocMergeFolder = env.GetMergeFolderResult("ProjA");
+				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
+				env.VerifyOuterXmlAreNotEqual(xmlDocMergeFolder, xmlDocWebWork);
+
+				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);  //when this is applied the repo should be at sha0
+				//and a commit should have been done so synchronization with the webWork and Master repos should have been done too.
+
+				//get Sha's for repos before updates are applied so that after the state of those repos can be compared
+				var webWorkRepo = new HgRepository(env.LangForgeDirFinder.GetProjWebPath("ProjA"), new NullProgress());
+				var webShaBeforeUpdate = webWorkRepo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+				var masterWorkRepo = new HgRepository(env.LangForgeDirFinder.GetProjMasterRepoPath("ProjA"), new NullProgress());
+				var MasterShaBeforeUpdate = masterWorkRepo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+				Assert.AreEqual(webShaBeforeUpdate, mergeRepoSha0.Number.Hash, "web repo should be at sha0");
+				Assert.AreEqual(MasterShaBeforeUpdate, mergeRepoSha0.Number.Hash, "master repo should be at sha0");
+
+				//Run LiftUpdaeProcessor
+				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
+				lfProcessor.ProcessLiftUpdates();
+
+				var shaAfterUpdateApplied = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
+				Assert.AreEqual(shaAfterUpdateApplied.Number.Hash, mergeRepoSha1.Number.Hash, "Repo should be at sha1");
+
+				//veryfy that changes to the MergeRepo  .lift file caused a Pull/Push to be done with the master repo and webWork repo.
+				var webShaAfterUpdate = webWorkRepo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+				var MasterShaAfterUpdate = masterWorkRepo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+				Assert.AreEqual(webShaAfterUpdate, mergeRepoSha1.Number.Hash, "web repo should be at sha1");
+				Assert.AreEqual(MasterShaAfterUpdate, mergeRepoSha1.Number.Hash, "master repo should be at sha1");
+
+				//Check the contents of the .lift file
+				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				xmlDocMergeFolder = env.GetMergeFolderResult("ProjA");
+				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
+				env.VerifyOuterXmlAreEqual(xmlDocMergeFolder, xmlDocWebWork);
+
+				xmlDocMasterFolder = env.GetMasterFolderResult("ProjA");
+				env.VerifyOuterXmlAreEqual(xmlDocMergeFolder, xmlDocMasterFolder);
+
+			}
+		}
 	}
 }
