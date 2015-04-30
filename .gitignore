@@ -1,0 +1,9 @@
+
+obj/
+output/
+_ReSharper.LFMerge
+*.suo
+*.user
+*.pdb
+MercurialExtensions/
+Mercurial/
