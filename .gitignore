@@ -5,5 +5,6 @@ _ReSharper.LFMerge
 *.suo
 *.user
 *.pdb
+*.userprefs
 MercurialExtensions/
 Mercurial/
