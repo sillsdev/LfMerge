@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Chorus.sync;
 using Palaso.Progress.LogBox;
 
-namespace lfmergelift
+namespace LfMergeLift
 {
 	/// <summary>
 	/// Changes made by Language Forge users will cause .lift.update files to be stored in the /mergeWork/updates folder on the server.

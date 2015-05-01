@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Palaso.Lift.Merging;
 using Palaso.TestUtilities;
 
-namespace lfmergelift.Tests
+namespace LfMergeLift.Tests
 {
 	[TestFixture]
 	public class ProjectUpdateFolderTests

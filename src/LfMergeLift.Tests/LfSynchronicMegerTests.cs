@@ -9,7 +9,7 @@ using Palaso.Lift.Validation;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 
-namespace lfmergelift.Tests
+namespace LfMergeLift.Tests
 {
 	[TestFixture]
 	public class LfSynchronicMergerTests

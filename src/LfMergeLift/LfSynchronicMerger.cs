@@ -5,7 +5,7 @@ using System.Xml;
 using Palaso.Lift.Merging;
 using Palaso.Xml;
 
-namespace lfmergelift
+namespace LfMergeLift
 {
 	/// <summary>
 	/// This class overrides MergeLiftUpdateEntryIntoLiftFile. Language Forge will produce .lift.update files with incomplete <entry></entry> elements.

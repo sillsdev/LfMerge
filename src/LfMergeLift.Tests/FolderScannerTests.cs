@@ -7,7 +7,7 @@ using Palaso.Lift.Merging;
 using Palaso.Lift.Validation;
 using Palaso.TestUtilities;
 
-namespace lfmergelift.Tests
+namespace LfMergeLift.Tests
 {
 	[TestFixture]
 	public class FolderScannerTests

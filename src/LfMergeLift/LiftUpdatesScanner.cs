@@ -8,7 +8,7 @@ using System.Text;
 using Chorus.VcsDrivers.Mercurial;
 using Palaso.Lift.Merging;
 
-namespace lfmergelift
+namespace LfMergeLift
 {
 	/// <summary>
 	/// Changes made by Language Forge users will cause .lift.update files to be stored in the /mergeWork/updates folder on the server.

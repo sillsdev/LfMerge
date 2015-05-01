@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace lfmergelift
+namespace LfMergeLift
 {
 	class LfDirectoriesAndFiles
 	{

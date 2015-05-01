@@ -13,7 +13,7 @@ using Chorus.VcsDrivers.Mercurial;
 using NullProgress=Palaso.Progress.LogBox.NullProgress;
 
 
-namespace lfmergelift.Tests
+namespace LfMergeLift.Tests
 {
 	[TestFixture]
 	public class LiftUpdateProcessorTests
