@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EE3EF392-3876-4E08-8E9A-DA2F94002D13}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{1C24E287-6A99-4138-AB33-F7400596A459}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lfmergelift.Tests</RootNamespace>
-    <AssemblyName>lfmergelift.Tests</AssemblyName>
+    <RootNamespace>LfMergeLift</RootNamespace>
+    <AssemblyName>LfMergeLift</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -51,10 +51,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Common\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
@@ -63,30 +59,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.TestUtilities.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FolderScannerTests.cs" />
-    <Compile Include="LfSynchronicMegerTests.cs" />
-    <Compile Include="LiftUpdateProcessorTests.cs" />
-    <Compile Include="LiftUpdatesScannerTests.cs" />
-    <Compile Include="ProjectUpdateFolderTests.cs" />
+    <Compile Include="LfDirectoriesAndFiles.cs" />
+    <Compile Include="LfSynchronicMerger.cs" />
+    <Compile Include="FolderScanner.cs" />
+    <Compile Include="LiftUpdateProcessor.cs" />
+    <Compile Include="LiftUpdatesScanner.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectUpdateFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\lfmergelift\lfmergelift.csproj">
-      <Project>{1C24E287-6A99-4138-AB33-F7400596A459}</Project>
-      <Name>lfmergelift</Name>
-    </ProjectReference>
+    <Compile Include="UpdateFolder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

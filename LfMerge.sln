@@ -1,9 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lfmergelift.Tests", "src\lfmergelift.Tests\lfmergelift.Tests.csproj", "{EE3EF392-3876-4E08-8E9A-DA2F94002D13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfMergeLift.Tests", "src\LfMergeLift.Tests\LfMergeLift.Tests.csproj", "{EE3EF392-3876-4E08-8E9A-DA2F94002D13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lfmergelift", "src\lfmergelift\lfmergelift.csproj", "{1C24E287-6A99-4138-AB33-F7400596A459}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfMergeLift", "src\LfMergeLift\LfMergeLift.csproj", "{1C24E287-6A99-4138-AB33-F7400596A459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,20 +17,6 @@ Global
 		ReleaseMono|x86 = ReleaseMono|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|x86.ActiveCfg = Debug|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|x86.Build.0 = Debug|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|Any CPU.ActiveCfg = Debug|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|x86.ActiveCfg = Debug|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|x86.Build.0 = Debug|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|x86.ActiveCfg = Release|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|x86.Build.0 = Release|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.ActiveCfg = Release|x86
-		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.Build.0 = Release|x86
 		{1C24E287-6A99-4138-AB33-F7400596A459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1C24E287-6A99-4138-AB33-F7400596A459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C24E287-6A99-4138-AB33-F7400596A459}.Debug|x86.ActiveCfg = Debug|x86
@@ -45,6 +31,26 @@ Global
 		{1C24E287-6A99-4138-AB33-F7400596A459}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
 		{1C24E287-6A99-4138-AB33-F7400596A459}.ReleaseMono|x86.ActiveCfg = Release|x86
 		{1C24E287-6A99-4138-AB33-F7400596A459}.ReleaseMono|x86.Build.0 = Release|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|x86.ActiveCfg = Debug|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Debug|x86.Build.0 = Debug|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|Any CPU.ActiveCfg = Debug|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|x86.ActiveCfg = Debug|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.DebugMono|x86.Build.0 = Debug|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|x86.ActiveCfg = Release|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.Release|x86.Build.0 = Release|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.ActiveCfg = Release|x86
+		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.StandardHeader = $1
+		$1.Text = @Copyright (c) 2011-${Year} SIL International\nThis software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+		$1.IncludeInNewFiles = True
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
