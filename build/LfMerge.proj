@@ -61,7 +61,9 @@
 
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
+		<!-- SetAssemblyVersion has problems on TC with mono 4.0.
 		<CallTarget Targets="SetAssemblyVersion"/>
+		-->
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
 	</Target>
