@@ -104,7 +104,7 @@ namespace LfMergeLift.Tests
 			using (var e = new TestEnvironment())
 			{
 				e.CreateProjectUpdateFolder("2FirstFolderCreated");
-				Thread.Sleep(100);
+				Thread.Sleep(1000);
 				e.CreateProjectUpdateFolder("1SecondFolderCreated");
 				var scanner = new FolderScanner(e.Path);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
@@ -136,7 +136,7 @@ namespace LfMergeLift.Tests
 			using (var e = new TestEnvironment())
 			{
 				e.CreateProjectUpdateFolder("2FirstFolderCreated");
-				Thread.Sleep(100);
+				Thread.Sleep(1000);
 				e.CreateProjectUpdateFolder("1SecondFolderCreated");
 
 				var scanner = new FolderScanner(e.Path);
