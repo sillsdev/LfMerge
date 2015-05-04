@@ -32,6 +32,7 @@
 
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
+		<Message Text="RootDir=$(RootDir)"/>
 
 		<Split Input="$(BUILD_NUMBER)" Delimiter="." OutputSubString="2">
 			<Output TaskParameter="ReturnValue" PropertyName="BuildCounter" />
