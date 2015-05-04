@@ -1,9 +1,14 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfMergeLift.Tests", "src\LfMergeLift.Tests\LfMergeLift.Tests.csproj", "{EE3EF392-3876-4E08-8E9A-DA2F94002D13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfMergeLift", "src\LfMergeLift\LfMergeLift.csproj", "{1C24E287-6A99-4138-AB33-F7400596A459}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D9087DE-A03C-4B46-AE3A-CEB3F5A5D146}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +50,8 @@ Global
 		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
 		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.ActiveCfg = Release|x86
 		{EE3EF392-3876-4E08-8E9A-DA2F94002D13}.ReleaseMono|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

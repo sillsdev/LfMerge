@@ -1,10 +1,12 @@
-
+build/NuGet.exe
+packages/
 obj/
 output/
-_ReSharper.LFMerge
+MercurialExtensions/
+Mercurial/
+_ReSharper.LfMerge
 *.suo
 *.user
 *.pdb
 *.userprefs
-MercurialExtensions/
-Mercurial/
+*~
