@@ -88,7 +88,7 @@
 		<Delete Files="build/LfMerge.files" />
 	</Target>
 
-	<Target Name="DownloadDependencies">
+	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages">
 		<Dependencies DependencyFile="LfMerge.dep" UseDependencyFile="true" KeepJobsFile="true"
 			WorkingDir="$(RootDir)" />
 	</Target>
