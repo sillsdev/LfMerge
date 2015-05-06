@@ -10,7 +10,7 @@ using Chorus.VcsDrivers;
 using Chorus.VcsDrivers.Mercurial;
 using System.Windows.Forms;
 using Chorus.sync;
-using Palaso.Progress.LogBox;
+using Palaso.Progress;
 
 namespace LfMergeLift
 {

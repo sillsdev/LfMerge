@@ -9,10 +9,10 @@ using Chorus.VcsDrivers;
 using NUnit.Framework;
 using Palaso.Lift.Merging;
 using Palaso.Lift.Validation;
-using Palaso.Progress.LogBox;
+using Palaso.Progress;
 using Palaso.TestUtilities;
 using Chorus.VcsDrivers.Mercurial;
-using NullProgress=Palaso.Progress.LogBox.NullProgress;
+using NullProgress=Palaso.Progress.NullProgress;
 
 
 namespace LfMergeLift.Tests

@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D9087DE-A03C-4B46-AE3A-CEB3F5A5D146}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
+		build\LfMerge.proj = build\LfMerge.proj
 	EndProjectSection
 EndProject
 Global

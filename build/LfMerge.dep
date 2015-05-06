@@ -1,0 +1,41 @@
+[[TC]]
+Type=TeamCity
+Url=http://build.palaso.org
+
+[TC::bt323]
+Name=chorus-precise64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=All
+Path=Chorus.exe* => lib/
+ChorusMerge.exe* => lib/
+LibChorus.dll* => lib/
+MercurialExtensions/**/*=>MercurialExtensions
+
+
+[TC::bt323]
+Name=chorus-precise64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux32
+Path=Mercurial-i686.zip!**=>.
+
+
+[TC::bt323]
+Name=chorus-precise64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux64
+Path=Mercurial-x86_64.zip!**=>.
+
+
+[TC::bt322]
+Name=palaso-precise64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=All
+Path=Palaso.dll*=>lib/
+Palaso.Lift.dll*=>lib/
+Palaso.TestUtilities.dll*=>lib/
+
+

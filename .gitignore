@@ -4,9 +4,13 @@ obj/
 output/
 MercurialExtensions/
 Mercurial/
+Downloads/
+lib/
+build/LfMerge.files
 _ReSharper.LfMerge
 *.suo
 *.user
 *.pdb
 *.userprefs
+*.swp
 *~
