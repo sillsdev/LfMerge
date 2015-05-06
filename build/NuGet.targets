@@ -55,7 +55,7 @@
 	</Target>
 
 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
-		<Exec Command='$(NuGetCommand) -NoCache restore "$(SolutionPath)"'/>
+		<Exec Command='$(NuGetCommand) restore -NoCache "$(SolutionPath)"'/>
 	</Target>
 
 	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
