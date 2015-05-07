@@ -6,7 +6,7 @@ Url=http://build.palaso.org
 Name=chorus-precise64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
-Condition=All
+Condition=Linux
 Path=Chorus.exe* => lib/
 ChorusMerge.exe* => lib/
 LibChorus.dll* => lib/
@@ -33,9 +33,35 @@ Path=Mercurial-x86_64.zip!**=>.
 Name=palaso-precise64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
-Condition=All
+Condition=Linux
 Path=Palaso.dll*=>lib/
 Palaso.Lift.dll*=>lib/
 Palaso.TestUtilities.dll*=>lib/
 
+
+[TC::bt2]
+Name=chorus-win32-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Windows
+Path=Chorus.exe => lib/
+Chorus.pdb => lib/
+ChorusMerge.exe => lib/
+ChorusMerge.pdb => lib/
+LibChorus.dll => lib/
+LibChorus.pdb => lib/
+MercurialExtensions/**/*=>MercurialExtensions/
+Merurial.zip!**=>.
+
+[TC::bt223]
+Name=palaso-win32-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Windows
+Path=Palaso.dll=>lib/
+Palaso.pdb=>lib/
+Palaso.Lift.dll=>lib/
+Palaso.Lift.pdb=>lib/
+Palaso.TestUtilities.dll=>lib/
+Palaso.TestUtilities.pdb=>lib/
 
