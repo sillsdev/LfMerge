@@ -58,7 +58,7 @@ namespace LfMergeLift.Tests
 			}
 
 		} //END class TestEnvironment
-		//=============================================================================================================================
+		//========================================================================================
 
 		[Test]
 		public void FindProjectFolders_ZeroProjects_FindsZero()
@@ -99,8 +99,9 @@ namespace LfMergeLift.Tests
 		[Test]
 		public void FindProjectFolders_OneProject_TwoUpdateFolders()
 		{
-			//create update folders so that the alphabetical ordering on the folders differs from the time stamps.
-			//we want to see if the FolderScanner returns the folders in the correct order from time stamps
+			// Create update folders so that the alphabetical ordering on the folders differs from
+			// the time stamps. We want to see if the FolderScanner returns the folders in the
+			// correct order from time stamps
 			using (var e = new TestEnvironment())
 			{
 				e.CreateProjectUpdateFolder("2FirstFolderCreated");
@@ -121,7 +122,8 @@ namespace LfMergeLift.Tests
 		{
 			string s_LiftData1 =
 				"<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
-				+ "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>"
+				+ "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'>"
+				+ "<lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>"
 				+ "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
 
 			string s_LiftUpdate1 =
@@ -145,17 +147,24 @@ namespace LfMergeLift.Tests
 				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("2FirstFolderCreated")));
 				Assert.That(updateFoldersList[1].Path, Is.EqualTo(e.ProjectPath("1SecondFolderCreated")));
 
-				////Create a LIFT file with 3 entries which will have updates applied to it.
+				// Create a LIFT file with 3 entries which will have updates applied to it.
 				e.WriteFile(_baseLiftFileName, s_LiftData1, e.ProjectPath("1SecondFolderCreated"));
-				//Create a .lift.update file with three entries.  One to replace the second entry in the original LIFT file.
-				//The other two are new and should be appended to the original LIFT file.
-				e.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate1, e.ProjectPath("1SecondFolderCreated"));
-				//Create a .lift.update file with two entries.  One to replace one of the changes from the first LiftUpdate file and one new entry.
-				e.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, e.ProjectPath("1SecondFolderCreated"));
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(e.ProjectPath("1SecondFolderCreated"), _baseLiftFileName));
+				// Create a .lift.update file with three entries.  One to replace the second entry
+				// in the original LIFT file.
+				// The other two are new and should be appended to the original LIFT file.
+				e.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					s_LiftUpdate1, e.ProjectPath("1SecondFolderCreated"));
+				// Create a .lift.update file with two entries.  One to replace one of the changes
+				// from the first LiftUpdate file and one new entry.
+				e.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					s_LiftUpdate2, e.ProjectPath("1SecondFolderCreated"));
+				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(
+					Path.Combine(e.ProjectPath("1SecondFolderCreated"), _baseLiftFileName));
 				Assert.That(files.Length, Is.EqualTo(2));
-				Assert.That(files[0].Name, Is.EqualTo("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles));
-				Assert.That(files[1].Name, Is.EqualTo("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles));
+				Assert.That(files[0].Name, Is.EqualTo("LiftChangeFileA" +
+					SynchronicMerger.ExtensionOfIncrementalFiles));
+				Assert.That(files[1].Name, Is.EqualTo("LiftChangeFileB" +
+					SynchronicMerger.ExtensionOfIncrementalFiles));
 			}
 		}
 	}
