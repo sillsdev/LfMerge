@@ -51,7 +51,7 @@ ChorusMerge.pdb => lib/
 LibChorus.dll => lib/
 LibChorus.pdb => lib/
 MercurialExtensions/**/*=>MercurialExtensions/
-Merurial.zip!**=>.
+Mercurial.zip!**=>.
 
 [TC::bt223]
 Name=palaso-win32-master Continuous

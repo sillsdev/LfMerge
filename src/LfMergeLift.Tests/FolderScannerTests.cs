@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using Palaso.Lift.Merging;
@@ -158,13 +159,11 @@ namespace LfMergeLift.Tests
 				// from the first LiftUpdate file and one new entry.
 				e.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles,
 					s_LiftUpdate2, e.ProjectPath("1SecondFolderCreated"));
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(
+				var files = SynchronicMerger.GetPendingUpdateFiles(
 					Path.Combine(e.ProjectPath("1SecondFolderCreated"), _baseLiftFileName));
-				Assert.That(files.Length, Is.EqualTo(2));
-				Assert.That(files[0].Name, Is.EqualTo("LiftChangeFileA" +
-					SynchronicMerger.ExtensionOfIncrementalFiles));
-				Assert.That(files[1].Name, Is.EqualTo("LiftChangeFileB" +
-					SynchronicMerger.ExtensionOfIncrementalFiles));
+				Assert.That(files.Select(s => s.Name), Is.EquivalentTo(new[] {
+					"LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					"LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles }));
 			}
 		}
 	}

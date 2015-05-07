@@ -415,33 +415,33 @@ namespace LfMergeLift.Tests
 				var liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0123");
 				//Verify Results
 				Assert.IsNotNull(liftUpdateFilesToApply);
-				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(3));
-				Assert.That(liftUpdateFilesToApply.ElementAt(0).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_A")));
-				Assert.That(liftUpdateFilesToApply.ElementAt(1).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_C")));
-				Assert.That(liftUpdateFilesToApply.ElementAt(2).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_D")));
+				Assert.That(liftUpdateFilesToApply.Select(s => s.FullName), Is.EquivalentTo(new[] {
+					env.LiftUpdateFileFullPath("ProjA_sha0123_A"),
+					env.LiftUpdateFileFullPath("ProjA_sha0123_C"),
+					env.LiftUpdateFileFullPath("ProjA_sha0123_D") }));
 
 				//Run LiftUpdatesScanner
 				var liftUpdateFilesArrayToApply = updatesScanner.GetUpdateFilesArrayForProjectAndSha("ProjA", "sha0123");
 				//Verify Results
 				Assert.IsNotNull(liftUpdateFilesToApply);
-				Assert.That(liftUpdateFilesArrayToApply.Count(), Is.EqualTo(3));
-				Assert.That(liftUpdateFilesArrayToApply.ElementAt(0).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_A")));
-				Assert.That(liftUpdateFilesArrayToApply.ElementAt(1).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_C")));
-				Assert.That(liftUpdateFilesArrayToApply.ElementAt(2).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0123_D")));
+				Assert.That(liftUpdateFilesArrayToApply.Select(s => s.FullName), Is.EquivalentTo(new[] {
+					env.LiftUpdateFileFullPath("ProjA_sha0123_A"),
+					env.LiftUpdateFileFullPath("ProjA_sha0123_C"),
+					env.LiftUpdateFileFullPath("ProjA_sha0123_D") }));
 
 				//Run LiftUpdatesScanner
 				liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0124");
 				//Verify Results
 				Assert.IsNotNull(liftUpdateFilesToApply);
-				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(1));
-				Assert.That(liftUpdateFilesToApply.ElementAt(0).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0124_uniqffdflurp9")));
+				Assert.That(liftUpdateFilesToApply.Select(s => s.FullName), Is.EquivalentTo(new[] {
+					env.LiftUpdateFileFullPath("ProjA_sha0124_uniqffdflurp9") }));
 
 				//Run LiftUpdatesScanner
 				liftUpdateFilesToApply = updatesScanner.GetUpdateFilesForProjectAndSha("ProjA", "sha0125");
 				//Verify Results
 				Assert.IsNotNull(liftUpdateFilesToApply);
-				Assert.That(liftUpdateFilesToApply.Count(), Is.EqualTo(1));
-				Assert.That(liftUpdateFilesToApply.ElementAt(0).FullName, Is.EqualTo(env.LiftUpdateFileFullPath("ProjA_sha0125_uniqsdsdlurp9")));
+				Assert.That(liftUpdateFilesToApply.Select(s => s.FullName), Is.EquivalentTo(new[] {
+					env.LiftUpdateFileFullPath("ProjA_sha0125_uniqsdsdlurp9") }));
 			}
 		}
 	}

@@ -22,7 +22,7 @@ namespace LfMergeLift.Tests
 	{
 		class TestEnvironment : IDisposable
 		{
-			private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge");
+			private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge" + Path.GetRandomFileName());
 			public void Dispose()
 			{
 				_languageForgeServerFolder.Dispose();
@@ -117,7 +117,7 @@ namespace LfMergeLift.Tests
 			internal HgRepository CreateRepoProjA(string projAPath)
 			{
 				HgRepository projARepo;
-				WriteFile("ProjA.Lift", rev0, projAPath);
+				WriteFile("ProjA.Lift", Rev0, projAPath);
 				var _progress = new ConsoleProgress();
 				HgRepository.CreateRepositoryInExistingDir(projAPath, _progress);
 				projARepo = new HgRepository(projAPath, new NullProgress());
@@ -129,7 +129,7 @@ namespace LfMergeLift.Tests
 
 			internal void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
 			{
-				WriteFile("ProjA.Lift", rev1, projAMergeWorkPath);
+				WriteFile("ProjA.Lift", Rev1, projAMergeWorkPath);
 				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
 			}
 
@@ -191,7 +191,7 @@ namespace LfMergeLift.Tests
 
 			private static XmlDocument GetLiftFile(string projectName, string directory)
 			{
-				XmlDocument doc = new XmlDocument();
+				var doc = new XmlDocument();
 				string outputPath = Path.Combine(directory, projectName + ExtensionOfLiftFiles);
 				doc.Load(outputPath);
 				Console.WriteLine(File.ReadAllText(outputPath));
@@ -201,44 +201,35 @@ namespace LfMergeLift.Tests
 			internal void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
 			{
 				var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
-				XmlNode entry = selectedEntries[0];
-				Assert.AreEqual(innerText, entry.InnerText, String.Format("Text for entry is wrong"));
-			}
-
-			internal void VerifyOuterXmlAreEqual(XmlDocument xmlDoc, XmlDocument xmlDoc2)
-			{
-				Assert.AreEqual(xmlDoc.OuterXml, xmlDoc2.OuterXml, String.Format("Lift files should be the same."));
-			}
-
-			internal void VerifyOuterXmlAreNotEqual(XmlDocument xmlDoc, XmlDocument xmlDoc2)
-			{
-				Assert.AreNotEqual(xmlDoc.OuterXml, xmlDoc2.OuterXml, String.Format("Lift files should NOT be the same."));
+				var entry = selectedEntries[0];
+				Assert.AreEqual(innerText, entry.InnerText, "Text for entry is wrong");
 			}
 
 			internal XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
 			{
-				XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+				var selectedEntries = xmlDoc.SelectNodes(xPath);
 				Assert.IsNotNull(selectedEntries);
-				Assert.AreEqual(1, selectedEntries.Count, String.Format("An entry with the following criteria should exist:{0}", xPath));
+				Assert.AreEqual(1, selectedEntries.Count,
+					"An entry with the following criteria should exist:{0}", xPath);
 				return selectedEntries;
 			}
 
 			internal void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
 			{
-				XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
+				var selectedEntries = xmlDoc.SelectNodes(xPath);
 				Assert.IsNotNull(selectedEntries);
 				Assert.AreEqual(0, selectedEntries.Count,
-								String.Format("An entry with the following criteria should not exist:{0}", xPath));
+					"An entry with the following criteria should not exist:{0}", xPath);
 			}
 		}  //END class TestEnvironment
 		//=============================================================================================================================
-		const string rev0 = @"
+		const string Rev0 = @"
 <entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>TEST</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
 ";
 
-		const string rev1 = @"
+		const string Rev1 = @"
 <entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
@@ -833,13 +824,13 @@ namespace LfMergeLift.Tests
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
 				xmlDoc = env.GetMergeFolderResult("ProjA");
 				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
-				env.VerifyOuterXmlAreNotEqual(xmlDoc, xmlDocWebWork);
+				Assert.That(xmlDoc.OuterXml, Is.Not.EqualTo(xmlDocWebWork.OuterXml), "Lift files should NOT be the same.");
 
 				//Create a couple .lift.update files. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update2);
 
-				//Run LiftUpdaeProcessor
+				//Run LiftUpdateProcessor
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
@@ -847,8 +838,7 @@ namespace LfMergeLift.Tests
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
 				xmlDoc = env.GetMergeFolderResult("ProjA");
 				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
-				env.VerifyOuterXmlAreEqual(xmlDoc, xmlDocWebWork);
-
+				Assert.That(xmlDoc.OuterXml, Is.EqualTo(xmlDocWebWork.OuterXml), "Lift files should be the same.");
 			}
 		}
 
@@ -892,7 +882,7 @@ namespace LfMergeLift.Tests
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
 				xmlDocMergeFolder = env.GetMergeFolderResult("ProjA");
 				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
-				env.VerifyOuterXmlAreNotEqual(xmlDocMergeFolder, xmlDocWebWork);
+				Assert.That(xmlDocMergeFolder.OuterXml, Is.Not.EqualTo(xmlDocWebWork.OuterXml), "Lift files should NOT be the same.");
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);  //when this is applied the repo should be at sha0
@@ -923,11 +913,10 @@ namespace LfMergeLift.Tests
 				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
 				xmlDocMergeFolder = env.GetMergeFolderResult("ProjA");
 				xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
-				env.VerifyOuterXmlAreEqual(xmlDocMergeFolder, xmlDocWebWork);
+				Assert.That(xmlDocMergeFolder.OuterXml, Is.EqualTo(xmlDocWebWork.OuterXml), "Lift files should be the same.");
 
 				xmlDocMasterFolder = env.GetMasterFolderResult("ProjA");
-				env.VerifyOuterXmlAreEqual(xmlDocMergeFolder, xmlDocMasterFolder);
-
+				Assert.That(xmlDocMergeFolder.OuterXml, Is.EqualTo(xmlDocMasterFolder.OuterXml), "Lift files should be the same.");
 			}
 		}
 	}
