@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.nuget\packages.config = .nuget\packages.config
 		build\LfMerge.proj = build\LfMerge.proj
 		build\NuGet.targets = build\NuGet.targets
+		build\LfMerge-DownloadDeps.xml = build\LfMerge-DownloadDeps.xml
 	EndProjectSection
 EndProject
 Global
