@@ -21,12 +21,12 @@ namespace LfMergeLift
 	internal class LiftUpdatesScanner
 	{
 		private List<UpdateInfo> _updateFilesInfo = new List<UpdateInfo>();
-		private String _updatesDirectory;
+		private string _updatesDirectory;
 		private FileInfo[] _liftUpdateFiles;
-		private String[] _fileNameParts;
-		private List<String> _updateFilesWithWrongNameFormat = new List<String>();
+		private string[] _fileNameParts;
+		private List<string> _updateFilesWithWrongNameFormat = new List<string>();
 
-		public LiftUpdatesScanner(String updatesDirectory)
+		public LiftUpdatesScanner(string updatesDirectory)
 		{
 			_updatesDirectory = updatesDirectory;
 
@@ -54,9 +54,9 @@ namespace LfMergeLift
 
 		//Get All Project Names that need updating based on the .lift.update files currently in the liftUpdates folder
 		//sorted alphabetically
-		public IEnumerable<String> GetProjectsNamesToUpdate()
+		public IEnumerable<string> GetProjectsNamesToUpdate()
 		{
-			var projectNames = new List<String>();
+			var projectNames = new List<string>();
 			foreach (var fileInfoRecord in _updateFilesInfo)
 			{
 				if (!projectNames.Contains(fileInfoRecord.Project))
@@ -69,9 +69,9 @@ namespace LfMergeLift
 		}
 
 		//Get All Sha's for a particular Project based on the .lift.update files currently in the liftUpdates folder
-		public IEnumerable<String> GetShasForAProjectName(String proj)
+		public IEnumerable<string> GetShasForAProjectName(string proj)
 		{
-			var projectShas = new List<String>();
+			var projectShas = new List<string>();
 			var updateInfoRecordsForProject = from updateInfo in _updateFilesInfo
 									where updateInfo.Project == proj
 									select updateInfo;
@@ -93,7 +93,7 @@ namespace LfMergeLift
 		/// <param name="proj"></param>
 		/// <param name="sha"></param>
 		/// <returns></returns>
-		internal IEnumerable<FileInfo> GetUpdateFilesForProjectAndSha(String proj, String sha)
+		public FileInfo[] GetUpdateFilesForProjectAndSha(string proj, string sha)
 		{
 			var liftUpdateFileGroup = new List<FileInfo>();
 			//Get all the fileRecords for this particular Project and Sha
@@ -109,28 +109,12 @@ namespace LfMergeLift
 				}
 			}
 			liftUpdateFileGroup.Sort(new FileInfoLastWriteTimeComparer());
-			return liftUpdateFileGroup;
-		}
-
-		/// <summary>
-		/// Get the .lift.update files for a particular project name and sha. Do not need to sort by timeStamp
-		/// since lfSynchronicMerger does that.
-		/// </summary>
-		/// <param name="proj"></param>
-		/// <param name="sha"></param>
-		/// <returns></returns>
-		public FileInfo[] GetUpdateFilesArrayForProjectAndSha(String proj, String sha)
-		{
-			var liftUpdateFileGroup = GetUpdateFilesForProjectAndSha(proj, sha);
-			var fileInfoArray = new FileInfo[liftUpdateFileGroup.Count()];
-			for (int i = 0; i < fileInfoArray.Length; i++)
-				fileInfoArray[i] = liftUpdateFileGroup.ElementAt(i);
-			return fileInfoArray;
+			return liftUpdateFileGroup.ToArray();
 		}
 
 		private void GetUpdateInfoForEachLiftUpdateFile()
 		{
-			foreach (FileInfo file in _liftUpdateFiles)
+			foreach (var file in _liftUpdateFiles)
 			{
 				//verify fileName has correct format  ProjX_Sha#_LastPart
 				//if not then do something useful with the file
@@ -146,7 +130,7 @@ namespace LfMergeLift
 					//fileName does not have at least 3 parts so is in the wrong format. Assumption that last part can also contain underscores so this
 					//number can be greater than 3
 					//Do something with this file to report an error.
-					//Debug.Assert(_fileNameParts.Length >= 3, String.Format("Lift update files should must have the following format ProjX_Sha#_timeStamp: file found with name {0}", fileName));
+					//Debug.Assert(_fileNameParts.Length >= 3, string.Format("Lift update files should must have the following format ProjX_Sha#_timeStamp: file found with name {0}", fileName));
 
 					if (!_updateFilesWithWrongNameFormat.Contains(file.FullName))
 						_updateFilesWithWrongNameFormat.Add(file.FullName);
@@ -164,12 +148,12 @@ namespace LfMergeLift
 
 
 
-		private static string GetSha(String[] fileNameParts)
+		private static string GetSha(string[] fileNameParts)
 		{
 			return fileNameParts[1];
 		}
 
-		private static string GetProjectName(String[] fileNameParts)
+		private static string GetProjectName(string[] fileNameParts)
 		{
 			return fileNameParts[0];
 		}

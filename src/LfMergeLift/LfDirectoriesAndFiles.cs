@@ -7,16 +7,17 @@ namespace LfMergeLift
 {
 	class LfDirectoriesAndFiles
 	{
-		private String _languageForgeServerFolder;
-		//These are the folder names for the location of the repositories for the Language Forge projects
-		internal const String WebWorkFolder = "WebWork";
-		internal const String MergeWorkFolder = "MergeWork";
-		internal const String MasterReposFolder = "MasterRepos";
-		//This is the subfolder of the MergeWork foler where the .lift.update files are found.
-		internal const String LiftUpdatesFolder = "LiftUpdates";
-		internal const String ProjectsFolder = "Projects";
+		private readonly string _languageForgeServerFolder;
 
-		public LfDirectoriesAndFiles(String languageForgeServerFolder)
+		//These are the folder names for the location of the repositories for the Language Forge projects
+		internal const string WebWorkFolder = "WebWork";
+		internal const string MergeWorkFolder = "MergeWork";
+		internal const string MasterReposFolder = "MasterRepos";
+		//This is the subfolder of the MergeWork foler where the .lift.update files are found.
+		internal const string LiftUpdatesFolder = "LiftUpdates";
+		internal const string ProjectsFolder = "Projects";
+
+		public LfDirectoriesAndFiles(string languageForgeServerFolder)
 		{
 			if (!languageForgeServerFolder.Contains(Path.DirectorySeparatorChar.ToString()))
 			{
@@ -27,8 +28,8 @@ namespace LfMergeLift
 		}
 
 		/// <summary>
-		/// This folder contains a subfolder for each language project's repository and LIFT that the the Language Forge
-		/// clients are reading from.
+		/// This folder contains a subfolder for each language project's repository and LIFT that
+		/// the Language Forge clients are reading from.
 		/// e.g .../LangForge/WebWork/ProjA     .../LangForge/WebWork/ProjB
 		/// </summary>
 		public string WebWorkPath
@@ -84,19 +85,19 @@ namespace LfMergeLift
 			Directory.CreateDirectory(MasterReposPath);
 		}
 
-		public String CreateMasterReposProjectFolder(String projectName)
+		public string CreateMasterReposProjectFolder(string projectName)
 		{
 			Directory.CreateDirectory(GetProjMasterRepoPath(projectName));
 			return GetProjMasterRepoPath(projectName);
 		}
 
-		public String CreateWebWorkProjectFolder(String projectName)
+		public string CreateWebWorkProjectFolder(string projectName)
 		{
 			Directory.CreateDirectory(GetProjWebPath(projectName));
 			return GetProjWebPath(projectName);
 		}
 
-		public String CreateMergeWorkProjectFolder(String projectName)
+		public string CreateMergeWorkProjectFolder(string projectName)
 		{
 			Directory.CreateDirectory(GetProjMergePath(projectName));
 			return GetProjMergePath(projectName);
@@ -117,33 +118,34 @@ namespace LfMergeLift
 			Directory.CreateDirectory(MergeWorkProjects);
 		}
 
-		public String GetProjWebPath(String projectName)
+		public string GetProjWebPath(string projectName)
 		{
 			return Path.Combine(WebWorkPath, projectName);
 		}
 
-		public String GetProjMasterRepoPath(String projectName)
+		public string GetProjMasterRepoPath(string projectName)
 		{
 			return Path.Combine(MasterReposPath, projectName);
 		}
 
-		public String GetProjMergePath(String projectName)
+		public string GetProjMergePath(string projectName)
 		{
 			return Path.Combine(MergeWorkProjects, projectName);
 		}
 
 		public const string ExtensionOfLiftFiles = ".lift";
-		public string LiftFileMergePath(String projName)
+
+		public string LiftFileMergePath(string projName)
 		{
 			return Path.Combine(GetProjMergePath(projName), projName + ExtensionOfLiftFiles);
 		}
 
-		public string LiftFileWebWorkPath(String projName)
+		public string LiftFileWebWorkPath(string projName)
 		{
 			return Path.Combine(GetProjWebPath(projName), projName + ExtensionOfLiftFiles);
 		}
 
-		public string LiftFileMasterRepoPath(String projName)
+		public string LiftFileMasterRepoPath(string projName)
 		{
 			return Path.Combine(GetProjMasterRepoPath(projName), projName + ExtensionOfLiftFiles);
 		}

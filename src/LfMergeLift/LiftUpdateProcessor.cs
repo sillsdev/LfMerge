@@ -1,15 +1,12 @@
 // Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Chorus.sync;
 using Chorus.VcsDrivers;
 using Chorus.VcsDrivers.Mercurial;
-using System.Windows.Forms;
-using Chorus.sync;
 using Palaso.Progress;
 
 namespace LfMergeLift
@@ -23,20 +20,16 @@ namespace LfMergeLift
 	/// </summary>
 	class LiftUpdateProcessor
 	{
-		private HgRepository _hgRepo;
-		private LiftUpdatesScanner _liftUpdateScanner;
-		private LfSynchronicMerger _lfSynchMerger;
-		private LfDirectoriesAndFiles _lfDirectories;
-		private String LangForgeVersion = "1.0";
-
-		private bool _commitWasDoneForProject;
-		private bool _liftUpdatesWereAppliedToProject;
+		private readonly LiftUpdatesScanner _liftUpdateScanner;
+		private readonly LfSynchronicMerger _lfSynchMerger;
+		private readonly LfDirectoriesAndFiles _lfDirectories;
+		private const string LangForgeVersion = "1.0";
 
 		/// <summary>
 		///
 		/// </summary>
 		/// <param name="languageForgeServerFolder">This must be the path to the Language Forge folder on the server.</param>
-		public LiftUpdateProcessor(String languageForgeServerFolder)
+		public LiftUpdateProcessor(string languageForgeServerFolder)
 		{
 			_lfDirectories = new LfDirectoriesAndFiles(languageForgeServerFolder);
 			_liftUpdateScanner = new LiftUpdatesScanner(_lfDirectories.LiftUpdatesPath);
@@ -48,19 +41,12 @@ namespace LfMergeLift
 			get { return _liftUpdateScanner; }
 		}
 
-		public bool CommitWasDone
-		{
-			get { return _commitWasDoneForProject; }
-		}
-
-		public bool LiftUpdatesWereApplied
-		{
-			get { return _liftUpdatesWereAppliedToProject; }
-		}
+		public bool CommitWasDone { get; private set; }
+		public bool LiftUpdatesWereApplied { get; private set; }
 
 		public void ProcessLiftUpdates()
 		{
-			//If there are .lift.update files to be processed then do nothing
+			//If there are no .lift.update files to be processed then do nothing
 			if (!LiftUpdateScanner.ScannerHasListOfLiftUpdates)
 				return;
 
@@ -75,8 +61,8 @@ namespace LfMergeLift
 		//make internal for tests.
 		internal void ProcessLiftUpdatesForProject(string project)
 		{
-			_commitWasDoneForProject = false;
-			_liftUpdatesWereAppliedToProject = false;
+			CommitWasDone = false;
+			LiftUpdatesWereApplied = false;
 			var projMergeFolder = _lfDirectories.GetProjMergePath(project);
 			//first check if the project has been cloned to the mergeWork folder. If not then clone it.
 			if (!Directory.Exists(projMergeFolder))
@@ -88,39 +74,50 @@ namespace LfMergeLift
 			var shas = LiftUpdateScanner.GetShasForAProjectName(project);
 			//foreach sha, apply all the updates. We may need to change to that sha on the repo so check for this
 			//before doing the lfSynchronicMerger
-			foreach (String sha in shas)
+			foreach (var sha in shas)
 			{
 				ProcessUpdatesForAParticularSha(project, repo, sha);
 			}
-			if (_liftUpdatesWereAppliedToProject)
+			if (LiftUpdatesWereApplied)
 			{
 				//Then copy the project .lift file to the webwork folder location
 				File.Copy(_lfDirectories.LiftFileMergePath(project), _lfDirectories.LiftFileWebWorkPath(project), true);
 			}
-			if (_commitWasDoneForProject)
-			{
-				//Then do a send/receive with the webwork Mercurial repo and the master repo too.
-				var webWorkRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjWebPath(project));
-				repo.Pull(webWorkRepoAddress, "");
-				repo.Push(webWorkRepoAddress, "");
 
-				var masterRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjMasterRepoPath(project));
-				repo.Pull(masterRepoAddress, "");
-				repo.Push(masterRepoAddress, "");
-			}
+			//CommitWasDone |= Commit(repo);
+
+			if (!CommitWasDone)
+				return;
+
+			//Then do a send/receive with the webwork Mercurial repo and the master repo too.
+			var webWorkRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjWebPath(project));
+			repo.Pull(webWorkRepoAddress, "");
+			repo.Push(webWorkRepoAddress, "");
+
+			var masterRepoAddress = RepositoryAddress.Create(project, _lfDirectories.GetProjMasterRepoPath(project));
+			repo.Pull(masterRepoAddress, "");
+			repo.Push(masterRepoAddress, "");
+		}
+
+		private bool Commit(HgRepository repo)
+		{
+			var prevSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+			repo.Commit(false, string.Format("Language Forge version {0} commit", LangForgeVersion));
+			var newSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+			return prevSha != newSha;
 		}
 
 		//make internal for tests.
 		internal void ProcessUpdatesForAParticularSha(string project, HgRepository repo, string shaOfUpdateFiles)
 		{
-			String currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
+			var currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			var allShas = repo.GetAllRevisions();
 			if (!(currentSha.Equals(shaOfUpdateFiles)))
 			{
-				_commitWasDoneForProject = true;
 				//We are not at the right revision to apply the .lift.update files, so save any changes on the
 				//current revision (this only commits if the .lift file has changed)
-				repo.Commit(false, String.Format("Language Forge version {0} commit", LangForgeVersion));
+				CommitWasDone |= Commit(repo);
+				CommitWasDone = true;
 				allShas = repo.GetAllRevisions();
 				var shaAfterCommit = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 				//next change to the correct sha so that the .lift.update fies are applied to the correct version
@@ -130,30 +127,34 @@ namespace LfMergeLift
 				{
 					//Some lift.update were applied to an older revision(sha) so the commit that was just done resulted in another head.
 					//Therefore, merge in this head with the other one before applying any .lift.updates the other head.
+					var synch = new Synchronizer(repo.PathToRepo,
+						new ProjectFolderConfiguration(repo.PathToRepo), new NullProgress());
+					var options = new SyncOptions
+					{
+						DoPullFromOthers = false,
+						DoMergeWithOthers = true,
+						CheckinDescription = "Merge by Language Forge LiftUpdateProcessor",
+						DoSendToOthers = false
+					};
 
-					Synchronizer synch = new Synchronizer(repo.PathToRepo,
-														  new ProjectFolderConfiguration(repo.PathToRepo),
-														  new NullProgress());
-					SyncOptions options = new SyncOptions();
-					options.DoPullFromOthers = false;
-					options.DoMergeWithOthers = true;
-					options.CheckinDescription = "Merge by Language Forge LiftUpdateProcessor";
-					options.DoSendToOthers = false;
-
-					SyncResults syncResults = synch.SyncNow(options);
+					var syncResults = synch.SyncNow(options);
 					if (!syncResults.Succeeded)
 					{
-						throw new ApplicationException(String.Format("Merge failure while processing updates on Project:{0} and Sha:{1}", project, shaOfUpdateFiles));
+						throw new ApplicationException(
+							string.Format("Merge failure while processing updates on Project:{0} and Sha:{1}",
+							project, shaOfUpdateFiles));
 					}
 					allShas = repo.GetAllRevisions();
 				}
 				repo.Update(shaOfUpdateFiles);
 				currentSha = repo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 			}
-			var updatefilesForThisSha = LiftUpdateScanner.GetUpdateFilesArrayForProjectAndSha(project, shaOfUpdateFiles);
-			if (updatefilesForThisSha.Count() > 0)
-				_liftUpdatesWereAppliedToProject = true;
-			_lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project), updatefilesForThisSha);
+			var updatefilesForThisSha = LiftUpdateScanner.GetUpdateFilesForProjectAndSha(project, shaOfUpdateFiles);
+			if (updatefilesForThisSha.Length > 0)
+			{
+				LiftUpdatesWereApplied = _lfSynchMerger.MergeUpdatesIntoFile(_lfDirectories.LiftFileMergePath(project),
+					updatefilesForThisSha);
+			}
 		}
 
 		private void CloneProjectToMergerWorkFolder(string project, string projMergeFolder)

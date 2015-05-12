@@ -30,7 +30,7 @@ namespace LfMergeLift.Tests
 				_languageForgeServerFolder.Dispose();
 			}
 
-			public String LanguageForgeFolder
+			public string LanguageForgeFolder
 			{
 				get { return _languageForgeServerFolder.Path; }
 			}
@@ -61,7 +61,7 @@ namespace LfMergeLift.Tests
 			{
 				var projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
 				//Make the webWork ProjA.LIFT file
-				HgRepository projAWebRepo = CreateRepoProjA(projAWebWorkPath);
+				var projAWebRepo = CreateRepoProjA(projAWebWorkPath);
 				return projAWebRepo;
 			}
 
@@ -69,11 +69,11 @@ namespace LfMergeLift.Tests
 			{
 				var projAMasterRepoPath = LangForgeDirFinder.CreateMasterReposProjectFolder("ProjA");
 				//Make the masterRepo ProjA.LIFT file
-				HgRepository projAMasterRepo = CreateRepoProjA(projAMasterRepoPath);
+				var projAMasterRepo = CreateRepoProjA(projAMasterRepoPath);
 				return projAMasterRepo;
 			}
 
-			internal HgRepository CloneProjAWebRepo(HgRepository projAWebRepo, out String projAMergeWorkPath)
+			internal HgRepository CloneProjAWebRepo(HgRepository projAWebRepo, out string projAMergeWorkPath)
 			{
 				//Make clone of repo in MergeWorkFolder
 				projAMergeWorkPath = LangForgeDirFinder.CreateMergeWorkProjectFolder("ProjA");
@@ -85,7 +85,7 @@ namespace LfMergeLift.Tests
 				return projAMergeRepo;
 			}
 
-			internal HgRepository CloneProjAMasterRepo(HgRepository projAMasterRepo, out String projAWebWorkPath)
+			internal HgRepository CloneProjAMasterRepo(HgRepository projAMasterRepo, out string projAWebWorkPath)
 			{
 				//Make clone of repo in MergeWorkFolder
 				projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
@@ -99,11 +99,11 @@ namespace LfMergeLift.Tests
 
 			private static void WriteFile(string fileName, string xmlForEntries, string directory)
 			{
-				StreamWriter writer = File.CreateText(Path.Combine(directory, fileName));
-				string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-								 + "<lift version =\""
+				var writer = File.CreateText(Path.Combine(directory, fileName));
+				var content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+								 + "<lift producer=\"WeSay.1Pt0Alpha\" version =\""
 								 + Validator.LiftVersion
-								 + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">"
+								 + "\" xmlns:flex=\"http://fieldworks.sil.org\">"
 								 + xmlForEntries
 								 + "</lift>";
 				writer.Write(content);
@@ -132,32 +132,31 @@ namespace LfMergeLift.Tests
 				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
 			}
 
-			internal String CreateLiftUpdateFile(String proj, Revision currentRevision, String sLiftUpdateXml)
+			internal string CreateLiftUpdateFile(string proj, Revision currentRevision, string sLiftUpdateXml)
 			{
 				var liftUpdateFileName = GetLiftUpdateFileName(proj, currentRevision);
 				WriteFile(liftUpdateFileName, sLiftUpdateXml, LangForgeDirFinder.LiftUpdatesPath);
 				return LiftUpdateFileFullPath(liftUpdateFileName);
 			}
 
-			private String GetLiftUpdateFileName(String projName, Revision rev)
+			private string GetLiftUpdateFileName(string projName, Revision rev)
 			{
-				String fileEnding = Path.GetRandomFileName();
+				var fileEnding = Path.GetRandomFileName();
 
 				return projName + "_" + rev.Number.Hash + "_" + fileEnding + SynchronicMerger.ExtensionOfIncrementalFiles;
 			}
 
-			private string LiftUpdateFileFullPath(String filename)
+			private string LiftUpdateFileFullPath(string filename)
 			{
 				return Path.Combine(LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
 			}
 
-			private const string ExtensionOfLiftFiles = ".lift";
-			internal string LiftFileFullPath(String path, String projName)
+			internal static string LiftFileFullPath(string path, string projName)
 			{
-				return Path.Combine(path, projName + ExtensionOfLiftFiles);
+				return Path.Combine(path, projName + LfDirectoriesAndFiles.ExtensionOfLiftFiles);
 			}
 
-			internal string LiftFileInMergeWorkPath(String projName)
+			internal string LiftFileInMergeWorkPath(string projName)
 			{
 				var path = LangForgeDirFinder.GetProjMergePath(projName);
 				return LiftFileFullPath(path, projName);
@@ -165,26 +164,26 @@ namespace LfMergeLift.Tests
 
 			internal XmlDocument GetMergeFolderResult(string projectName)
 			{
-				string directory = LangForgeDirFinder.GetProjMergePath(projectName);
+				var directory = LangForgeDirFinder.GetProjMergePath(projectName);
 				return GetLiftFile(projectName, directory);
 			}
 
 			internal XmlDocument GetMasterFolderResult(string projectName)
 			{
-				string directory = LangForgeDirFinder.GetProjMasterRepoPath(projectName);
+				var directory = LangForgeDirFinder.GetProjMasterRepoPath(projectName);
 				return GetLiftFile(projectName, directory);
 			}
 
 			internal XmlDocument GetWebWorkFolderResult(string projectName)
 			{
-				string directory = LangForgeDirFinder.GetProjWebPath(projectName);
+				var directory = LangForgeDirFinder.GetProjWebPath(projectName);
 				return GetLiftFile(projectName, directory);
 			}
 
 			private static XmlDocument GetLiftFile(string projectName, string directory)
 			{
 				var doc = new XmlDocument();
-				string outputPath = Path.Combine(directory, projectName + ExtensionOfLiftFiles);
+				var outputPath = Path.Combine(directory, projectName + LfDirectoriesAndFiles.ExtensionOfLiftFiles);
 				doc.Load(outputPath);
 				Console.WriteLine(File.ReadAllText(outputPath));
 				return doc;
@@ -202,7 +201,7 @@ namespace LfMergeLift.Tests
 				var selectedEntries = xmlDoc.SelectNodes(xPath);
 				Assert.IsNotNull(selectedEntries);
 				Assert.AreEqual(1, selectedEntries.Count,
-					"An entry with the following criteria should exist:{0}", xPath);
+					"An entry with the following criteria should exist: {0}", xPath);
 				return selectedEntries;
 			}
 
@@ -211,7 +210,7 @@ namespace LfMergeLift.Tests
 				var selectedEntries = xmlDoc.SelectNodes(xPath);
 				Assert.IsNotNull(selectedEntries);
 				Assert.AreEqual(0, selectedEntries.Count,
-					"An entry with the following criteria should not exist:{0}", xPath);
+					"An entry with the following criteria should not exist: {0}", xPath);
 			}
 		}
 		#endregion //END class TestEnvironment
@@ -219,24 +218,24 @@ namespace LfMergeLift.Tests
 		//=======================================================================================
 
 		const string Rev0 = @"
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
-<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' id='two'>
 	<lexical-unit><form lang='nan'><text>TEST</text></form></lexical-unit></entry>
-<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
+<entry guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69' id='three'></entry>
 ";
 
 		const string Rev1 = @"
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
-<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' id='two'>
 	<lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>
-<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
+<entry guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69' id='three'></entry>
 ";
 
 		/// <summary>
 		/// 1) Create a lift project and repo in the webWork area
 		/// 2) create a couple .lift.update files so that the UpdateProcesser will take action
-		/// 5) get the sha's for each stage
-		/// 5) run ProcessUpdates
+		/// 3) get the sha's for each stage
+		/// 4) run ProcessUpdates
 		/// CHECK:
 		/// make sure the repo was cloned to the MergeWork folder.
 		/// The sha's should match.
@@ -245,15 +244,15 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_OneProjectWithTwoUpdateFiles_CloneFromWebWorkFolder()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'>
 	<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
@@ -277,7 +276,7 @@ namespace LfMergeLift.Tests
 				Assert.That(mergeRepo, Is.Not.Null);
 				var mergeRepoRevision = mergeRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevision.Number.Hash, Is.EqualTo(currentRevision.Number.Hash));
-				var projLiftFileInMergeArea = env.LiftFileFullPath(projAMergeWorkPath, "ProjA");
+				var projLiftFileInMergeArea = TestEnvironment.LiftFileFullPath(projAMergeWorkPath, "ProjA");
 				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
 			}
 		}
@@ -297,17 +296,17 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_OneProjectWithOneUpdateFile_MakeSureMergeWorkCopyIsNotOverWritten()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoRevisionBeforeChange = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
@@ -318,7 +317,7 @@ namespace LfMergeLift.Tests
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoRevisionAfterChange, update1);
 
-				//Run LiftUpdaeProcessor
+				//Run LiftUpdateProcessor
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
@@ -335,7 +334,8 @@ namespace LfMergeLift.Tests
 				var xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
 
-				AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA")).HasAtLeastOneMatchForXpath("//entry[@id='two']/lexical-unit/form/text[text()='SLIGHT CHANGE in .LIFT file']");
+				AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA"))
+					.HasAtLeastOneMatchForXpath("//entry[@id='two']/lexical-unit/form/text[text()='SLIGHT CHANGE in .LIFT file']");
 			}
 		}
 
@@ -343,7 +343,6 @@ namespace LfMergeLift.Tests
 		/// 1) Create the ProjA.lift file in the webWork folder
 		/// 2) Clone it to the mergeWork folder
 		/// 3) Create two update files for the current sha
-		///
 		/// 4) ProcessUpdates
 		///
 		/// CHECK
@@ -354,15 +353,15 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_OneProjectWithTwoUpdateFiles_VerifyShaNotChangedAndUpdateFilesDeleted()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'>
 	<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
@@ -370,19 +369,18 @@ namespace LfMergeLift.Tests
 				var currentRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoRevisionBeforeUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
-				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				//Create a .lift.update file. Make sure it has ProjA and the correct Sha(Hash) in the name.
 				var liftUpdateFile1 = env.CreateLiftUpdateFile("ProjA", currentRevision, update1);
-				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 
 				//Create another .lift.update file
 				var liftUpdateFile2 = env.CreateLiftUpdateFile("ProjA", currentRevision, update2);
 
-				//Run LiftUpdaeProcessor
+				//Run LiftUpdateProcessor
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
@@ -427,23 +425,23 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_ProjAWithTwoUpdateFiles_Update1ToSha0ThenApplyUpdate2ToSha1()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<entry guid='EB567582-BA84-49CD-BB83-E339561071C2' id='forty'>
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
@@ -538,23 +536,23 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_ProjAWithTwoUpdateFiles_ApplyUpdate2ToSha1ThenUpdate1ToSha0()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<entry guid='EB567582-BA84-49CD-BB83-E339561071C2' id='forty'>
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
@@ -612,28 +610,28 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_ProjAWith3UpdateFiles_ApplyUpdate2ToSha1ThenUpdate1ToSha0_ThenUpdate3ToSha2()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<entry guid='EB567582-BA84-49CD-BB83-E339561071C2' id='forty'>
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 					const string update3 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'>
 	<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if works on same record.</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 ";
 			using (var env = new TestEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
@@ -692,9 +690,9 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
-				List<Revision> allRevisions = projAMergeRepo.GetAllRevisions();
+				var allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(3));
-				Revision sha2 = allRevisions[0]; //It seems that GetAllRevisions lists them from newest to oldest.
+				var sha2 = allRevisions[0]; //It seems that GetAllRevisions lists them from newest to oldest.
 
 				// Now apply Update3ToSha2  which was Sha1-->Sha2
 				env.CreateLiftUpdateFile("ProjA", sha2, update3);
@@ -787,25 +785,25 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_ProjAMasterRepoTwoUpdates_LiftFileCopiedToWebWorkFolder()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			const string update2 = @"
-<entry id='forty' guid='EB567582-BA84-49CD-BB83-E339561071C2'>
+<entry guid='EB567582-BA84-49CD-BB83-E339561071C2' id='forty'>
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
-<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
+<entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
 				var projAMasterRepo = env.CreateProjAMasterRepo();
 				//now clone to the WebRepo location
-				String projAWebWorkPath;
-				HgRepository projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
+				string projAWebWorkPath;
+				var projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
@@ -843,39 +841,41 @@ namespace LfMergeLift.Tests
 		public void ProcessLiftUpdates_ProjAMasterRepoUpdatesCauseCommit_HgSynchDoneToWebWorkAndMasterRepo()
 		{
 			const string update1 = @"
-<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
-<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'>
+<entry guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A' id='four'></entry>
+<entry guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1' id='one'>
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
-<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
+<entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
 			using (var env = new TestEnvironment())
 			{
 				var projAMasterRepo = env.CreateProjAMasterRepo();
 				//now clone to the WebRepo location
-				String projAWebWorkPath;
-				HgRepository projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
+				string projAWebWorkPath;
+				var projAWebRepo = env.CloneProjAMasterRepo(projAMasterRepo, out projAWebWorkPath);
 				//Make clone of repo in MergeWorkFolder
-				String projAMergeWorkPath;
-				HgRepository projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
+				string projAMergeWorkPath;
+				var projAMergeRepo = env.CloneProjAWebRepo(projAWebRepo, out projAMergeWorkPath);
 
 				var mergeRepoSha0 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//overwrite the .lift file in the MergeWork folder with this data: s_LiftDataSha1
+				// This simulates a different user making some changes in LanguageDepot
 				env.MakeProjASha1(projAMergeWorkPath, projAMergeRepo);
 				var mergeRepoSha1 = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 
 				//Check the contents of the .lift file
-				//At this point we should be at sha0 and changes to the .lift file should not be committed yet.
+				//At this point we should be at sha0 and changes to the .lift file should not be pushed yet
 				var xmlDocMergeFolder = env.GetMergeFolderResult("ProjA");
 				var xmlDocWebWork = env.GetWebWorkFolderResult("ProjA");
 				Assert.That(xmlDocMergeFolder.OuterXml, Is.Not.EqualTo(xmlDocWebWork.OuterXml),
 					"Lift files should NOT be the same.");
 
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
+				// This simulates the user making some changes.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);  //when this is applied the repo should be at sha0
 				//and a commit should have been done so synchronization with the webWork and Master repos should have been done too.
 
-				//get Sha's for repos before updates are applied so that after the state of those repos can be compared
+				//get Sha's for repos before updates are applied so that after processing the state of those repos can be compared
 				var webWorkRepo = new HgRepository(env.LangForgeDirFinder.GetProjWebPath("ProjA"), new NullProgress());
 				var webShaBeforeUpdate = webWorkRepo.GetRevisionWorkingSetIsBasedOn().Number.Hash;
 				var masterWorkRepo = new HgRepository(env.LangForgeDirFinder.GetProjMasterRepoPath("ProjA"), new NullProgress());
