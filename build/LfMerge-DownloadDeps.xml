@@ -8,5 +8,6 @@
 	<Target Name="DownloadDependencies">
 		<Dependencies DependencyFile="LfMerge.dep" UseDependencyFile="true" KeepJobsFile="true"
 			WorkingDir="$(RootDir)" />
+		<Exec Command="chmod +x $(RootDir)/Mercurial/hg" />
 	</Target>
 </Project>
