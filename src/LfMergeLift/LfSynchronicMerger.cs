@@ -81,17 +81,20 @@ namespace LfMergeLift
 			PoplulateSenseDictionary(xnlSensesUpdate, liftUpdateEntrySensesDic);
 
 			//if a sense is found missing/removed in the LiftUpdate entry then remove it from the main entry.
+			var nodesToRemove = new List<XmlNode>();
 			foreach (XmlNode xnSense in xnlSenses)
 			{
 				var senseId = xnSense.Attributes["id"].Value;
 				//if this sense is not found in the LiftUpdate entry then remove it from the entry we are modifying.
 				if (!String.IsNullOrEmpty(senseId) && !liftUpdateEntrySensesDic.ContainsKey(senseId))
 				{
-					entryToModify.RemoveChild(xnSense);
+					nodesToRemove.Add(xnSense);
 					//also remove it from the dictionary since we should not reference it again.
 					mainEntrySensesDic.Remove(senseId);
 				}
 			}
+			foreach (var node in nodesToRemove)
+				entryToModify.RemoveChild(node);
 
 			foreach (XmlNode xnSenseLiftUpdate in xnlSensesUpdate)
 			{
@@ -127,10 +130,13 @@ namespace LfMergeLift
 			XmlNodeList glossesToAdd = senseFromLiftUpdate.SelectNodes("gloss");
 			if (glossesToRemove != null)
 			{
+				var nodesToRemove = new List<XmlNode>();
 				foreach (XmlNode gloss in glossesToRemove)
 				{
-					senseToModify.RemoveChild(gloss);
+					nodesToRemove.Add(gloss);
 				}
+				foreach (var node in nodesToRemove)
+					senseToModify.RemoveChild(node);
 			}
 			if (glossesToAdd != null)
 			{
@@ -163,6 +169,7 @@ namespace LfMergeLift
 			}
 
 			//next step:
+			var nodesToRemove = new List<XmlNode>();
 			foreach (XmlNode exampleFromLift in examplesFromLift)
 			{
 				string keyForExample = GetKeyForExample(exampleFromLift);
@@ -174,11 +181,14 @@ namespace LfMergeLift
 				}
 				else
 				{
-					//assumption: Language Forge either made changes to this example or removed it so remove it from the senseToModify
-					//if changes were made it will be added in the next step when we add all the example nodes from the dictionary
-					senseToModify.RemoveChild(exampleFromLift);
+					// assumption: Language Forge either made changes to this example or removed it
+					// so remove it from the senseToModify if changes were made it will be added
+					// in the next step when we add all the example nodes from the dictionary
+					nodesToRemove.Add(exampleFromLift);
 				}
 			}
+			foreach (var node in nodesToRemove)
+				senseToModify.RemoveChild(node);
 
 			//next step:  add all  the remaining nodes in the dictionary
 			foreach (var dict in examplesDict)
