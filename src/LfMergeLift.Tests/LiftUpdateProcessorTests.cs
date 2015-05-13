@@ -116,7 +116,7 @@ namespace LfMergeLift.Tests
 
 			private HgRepository CreateRepoProjA(string projAPath)
 			{
-				WriteFile("ProjA.Lift", Rev0, projAPath);
+				WriteFile("ProjA.lift", Rev0, projAPath);
 				var progress = new ConsoleProgress();
 				HgRepository.CreateRepositoryInExistingDir(projAPath, progress);
 				var projARepo = new HgRepository(projAPath, new NullProgress());
@@ -128,8 +128,8 @@ namespace LfMergeLift.Tests
 
 			internal void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
 			{
-				WriteFile("ProjA.Lift", Rev1, projAMergeWorkPath);
-				projAMergeRepo.Commit(true, "change made to ProjA.lift file");
+				WriteFile("ProjA.lift", Rev1, projAMergeWorkPath);
+				projAMergeRepo.AddAndCheckinFile(LiftFileFullPath(projAMergeWorkPath, "ProjA"));
 			}
 
 			internal string CreateLiftUpdateFile(string proj, Revision currentRevision, string sLiftUpdateXml)
