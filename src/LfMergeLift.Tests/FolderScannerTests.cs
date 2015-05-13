@@ -121,18 +121,18 @@ namespace LfMergeLift.Tests
 		[Test]
 		public void FindProjectFolders_OneProject_TwoUpdateFolders_OneWithTwoLiftUpdateFiles()
 		{
-			string s_LiftData1 =
+			const string liftData1 =
 				"<entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>"
 				+ "<entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'>"
 				+ "<lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>"
 				+ "<entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>";
 
-			string s_LiftUpdate1 =
+			const string liftUpdate1 =
 				"<entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>"
 				+ "<entry id='twoblatblat' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'></entry>"
 				+ "<entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>";
 
-			string s_LiftUpdate2 =
+			const string liftUpdate2 =
 				"<entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>"
 				+ "<entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>";
 
@@ -149,16 +149,16 @@ namespace LfMergeLift.Tests
 				Assert.That(updateFoldersList[1].Path, Is.EqualTo(e.ProjectPath("1SecondFolderCreated")));
 
 				// Create a LIFT file with 3 entries which will have updates applied to it.
-				e.WriteFile(_baseLiftFileName, s_LiftData1, e.ProjectPath("1SecondFolderCreated"));
+				e.WriteFile(_baseLiftFileName, liftData1, e.ProjectPath("1SecondFolderCreated"));
 				// Create a .lift.update file with three entries.  One to replace the second entry
 				// in the original LIFT file.
 				// The other two are new and should be appended to the original LIFT file.
 				e.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles,
-					s_LiftUpdate1, e.ProjectPath("1SecondFolderCreated"));
+					liftUpdate1, e.ProjectPath("1SecondFolderCreated"));
 				// Create a .lift.update file with two entries.  One to replace one of the changes
 				// from the first LiftUpdate file and one new entry.
 				e.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles,
-					s_LiftUpdate2, e.ProjectPath("1SecondFolderCreated"));
+					liftUpdate2, e.ProjectPath("1SecondFolderCreated"));
 				var files = SynchronicMerger.GetPendingUpdateFiles(
 					Path.Combine(e.ProjectPath("1SecondFolderCreated"), _baseLiftFileName));
 				Assert.That(files.Select(s => s.Name), Is.EquivalentTo(new[] {

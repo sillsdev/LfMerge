@@ -5,43 +5,46 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using Palaso.Lift.Merging;
-using Palaso.Xml;
 
 namespace LfMergeLift
 {
 	/// <summary>
-	/// This class overrides MergeLiftUpdateEntryIntoLiftFile. Language Forge will produce .lift.update files with incomplete <entry></entry> elements.
-	/// This languageForgeSynchronicMerger needs to be smart enough to know how to merge in this incomplete entry element into the entry found
-	/// in the base LIFT file.  The incomplete entry element contains only the things which were actually changed in the lexical entry.
+	/// This class overrides MergeLiftUpdateEntryIntoLiftFile. Language Forge will produce
+	/// .lift.update files with incomplete <entry></entry> elements.
+	/// This LfSynchronicMerger needs to be smart enough to know how to merge in this incomplete
+	/// entry element into the entry found in the base LIFT file.  The incomplete entry element
+	/// contains only the things which were actually changed in the lexical entry.
 	/// </summary>
 	internal class LfSynchronicMerger : SynchronicMerger
 	{
-		protected override void MergeLiftUpdateEntryIntoLiftFile(XmlReader olderReader, XmlWriter writer, XmlDocument newerDoc)
+		protected override void MergeLiftUpdateEntryIntoLiftFile(XmlReader olderReader,
+			XmlWriter writer, XmlDocument newerDoc)
 		{
 			var oldId = olderReader.GetAttribute("guid");
 			if (String.IsNullOrEmpty(oldId))
 			{
-				throw new ApplicationException("All entries must have guid attributes in order for merging to work. " + olderReader.Value);
+				throw new ApplicationException("All entries must have guid attributes in order for merging to work. "
+					+ olderReader.Value);
 			}
 			//Search the lift.update file for an entry that matches the guid of the current entry being processed.
-			XmlNode match = newerDoc.SelectSingleNode("//entry[@guid='" + oldId + "']");
-
+			var match = newerDoc.SelectSingleNode("//entry[@guid='" + oldId + "']");
 
 			//XmlNode oldEntry
 			if (match != null)
 			{
 				var oldEntry = olderReader.ReadOuterXml();
 				//string xmlContent = "<foo></foo>";
-				XmlDocument doc = new XmlDocument();
+				var doc = new XmlDocument();
 				doc.LoadXml(oldEntry);
-				XmlNode modifyNode = doc.DocumentElement;
+				var modifyNode = doc.DocumentElement;
 				ModifyAnEntry(modifyNode, match);
-				//If a matching entry was found in the lift.update file then replace the one in the original Lift file with it.
+				// If a matching entry was found in the lift.update file then replace the one in
+				// the original Lift file with it.
 				//olderReader.Skip(); //skip the old one
 				writer.WriteNode(modifyNode.CreateNavigator(), true); //REVIEW CreateNavigator
 				if (match.ParentNode != null)
-					match.ParentNode.RemoveChild(match); //remove the matching entry from the lift.update file now that the change has
-				//been merged into the main file.
+					match.ParentNode.RemoveChild(match); //remove the matching entry from the
+					// lift.update file now that the change has been merged into the main file.
 			}
 			else
 			{
@@ -165,8 +168,8 @@ namespace LfMergeLift
 				string keyForExample = GetKeyForExample(exampleFromLift);
 				if (examplesDict.ContainsKey(keyForExample))
 				{
-					//assumption: Language Forge did not make any changes to this example so keep it and remove it from the dictionary
-					//since we do not need to add it later.
+					// assumption: Language Forge did not make any changes to this example so keep
+					// it and remove it from the dictionary since we do not need to add it later.
 					examplesDict.Remove(keyForExample);
 				}
 				else
@@ -202,65 +205,81 @@ namespace LfMergeLift
 		}
 
 		/// <summary>
-		/// Changes nodeToModify so that it's child node 'childNodeName', will match what is found in nodeFromLiftUpdate. Only change the innerXml. Remove or add the node as
-		/// needed.
+		/// Changes nodeToModify so that it's child node 'childNodeName', will match what is found
+		/// in nodeFromLiftUpdate. Only change the innerXml. Remove or add the node as needed.
 		/// </summary>
 		/// <param name="nodeToModify"></param>
 		/// <param name="nodeFromLiftUpdate"></param>
 		/// <param name="childNodeName"></param>
-		private static void MakeChildNodeInnerXmlSameAsThatInLiftUpdate(XmlNode nodeToModify, XmlNode nodeFromLiftUpdate, String childNodeName)
+		private static void MakeChildNodeInnerXmlSameAsThatInLiftUpdate(XmlNode nodeToModify,
+			XmlNode nodeFromLiftUpdate, String childNodeName)
 		{
-			if (ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			if (ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				nodeToModify.SelectSingleNode(childNodeName).InnerXml = nodeFromLiftUpdate.SelectSingleNode(childNodeName).InnerXml;
+				nodeToModify.SelectSingleNode(childNodeName).InnerXml =
+					nodeFromLiftUpdate.SelectSingleNode(childNodeName).InnerXml;
 			}
-			else if (ElementHasChildElement(nodeToModify, childNodeName) && !ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			else if (ElementHasChildElement(nodeToModify, childNodeName) &&
+				!ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				//Language Forge should always have a definition element but if for some odd reason it does not then assume we are deleting
-				//the definition element
+				// Language Forge should always have a definition element but if for some odd reason
+				// it does not then assume we are deleting the definition element
 				nodeToModify.RemoveChild(nodeToModify.SelectSingleNode(childNodeName));
 			}
-			else if (!ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			else if (!ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
 				AddXmlElement(nodeToModify, childNodeName);
-				nodeToModify.SelectSingleNode(childNodeName).InnerXml = nodeFromLiftUpdate.SelectSingleNode(childNodeName).InnerXml;
+				nodeToModify.SelectSingleNode(childNodeName).InnerXml =
+					nodeFromLiftUpdate.SelectSingleNode(childNodeName).InnerXml;
 			}
 		}
 
 		/// <summary>
-		/// Changes nodeToModify so that it's child node 'childNodeName', will match what is found in nodeFromLiftUpdate. Cange the  attributes and innerXml. Remove or add the node as
+		/// Changes nodeToModify so that it's child node 'childNodeName', will match what is found
+		/// in nodeFromLiftUpdate. Cange the  attributes and innerXml. Remove or add the node as
 		/// needed.
 		/// </summary>
 		/// <param name="nodeToModify"></param>
 		/// <param name="nodeFromLiftUpdate"></param>
 		/// <param name="childNodeName"></param>
-		private static void MakeChildNodeSameAsThatInLiftUpdate(XmlNode nodeToModify, XmlNode nodeFromLiftUpdate, String childNodeName)
+		private static void MakeChildNodeSameAsThatInLiftUpdate(XmlNode nodeToModify,
+			XmlNode nodeFromLiftUpdate, String childNodeName)
 		{
-			if (ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			if (ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				SwapOutEntireElement(nodeToModify.SelectSingleNode(childNodeName), nodeFromLiftUpdate.SelectSingleNode(childNodeName));
+				SwapOutEntireElement(nodeToModify.SelectSingleNode(childNodeName),
+					nodeFromLiftUpdate.SelectSingleNode(childNodeName));
 			}
-			else if (ElementHasChildElement(nodeToModify, childNodeName) && !ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			else if (ElementHasChildElement(nodeToModify, childNodeName) &&
+				!ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
 				nodeToModify.RemoveChild(nodeToModify.SelectSingleNode(childNodeName));
 			}
-			else if (!ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			else if (!ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
 				CopyChildNode(nodeToModify, childNodeName, nodeFromLiftUpdate);
 			}
 		}
 
-		private static void ReplaceChildNodeIfFoundInLiftUpdateNode(XmlNode nodeToModify, XmlNode nodeFromLiftUpdate, String childNodeName)
+		private static void ReplaceChildNodeIfFoundInLiftUpdateNode(XmlNode nodeToModify,
+			XmlNode nodeFromLiftUpdate, String childNodeName)
 		{
-			if (ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			if (ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
-				SwapOutEntireElement(nodeToModify.SelectSingleNode(childNodeName), nodeFromLiftUpdate.SelectSingleNode(childNodeName));
+				SwapOutEntireElement(nodeToModify.SelectSingleNode(childNodeName),
+					nodeFromLiftUpdate.SelectSingleNode(childNodeName));
 			}
 			else if (!ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
 				//do not modify anything since the LiftUpdate does not contain this element.
 			}
-			else if (!ElementHasChildElement(nodeToModify, childNodeName) && ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
+			else if (!ElementHasChildElement(nodeToModify, childNodeName) &&
+				ElementHasChildElement(nodeFromLiftUpdate, childNodeName))
 			{
 				CopyChildNode(nodeToModify, childNodeName, nodeFromLiftUpdate);
 			}
@@ -269,22 +288,17 @@ namespace LfMergeLift
 		private static bool ElementHasAttribute(XmlNode node, String attribute)
 		{
 			XmlAttribute attr = node.Attributes[attribute];
-			if (attr == null)
-				return false;
-			else
-				return true;
+			return attr != null;
 		}
 
 		private static bool ElementHasChildElement(XmlNode node, String elementName)
 		{
 			XmlNode element = node.SelectSingleNode(elementName);
-			if (element == null)
-				return false;
-			else
-				return true;
+			return element != null;
 		}
 
-		private static void PoplulateSenseDictionary(XmlNodeList xnlSenses, Dictionary<string, XmlNode> mainEntrySenses)
+		private static void PoplulateSenseDictionary(XmlNodeList xnlSenses,
+			IDictionary<string, XmlNode> mainEntrySenses)
 		{
 			foreach (XmlNode node in xnlSenses)
 			{
@@ -294,8 +308,8 @@ namespace LfMergeLift
 		}
 
 		/// <summary>
-		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
-		/// to the new target child node.
+		/// Copy a child node. This requires first creating the child node then copying the contents
+		/// of the source child node to the new target child node.
 		/// </summary>
 		/// <param name="nodeToModify"></param>
 		/// <param name="childNodeName"></param>
@@ -307,13 +321,14 @@ namespace LfMergeLift
 		}
 
 		/// <summary>
-		/// Copy a child node. This requires first creating the child node then copying the contents of the source child node
-		/// to the new target child node.
+		/// Copy a child node. This requires first creating the child node then copying the contents
+		/// of the source child node to the new target child node.
 		/// </summary>
 		/// <param name="nodeToModify"></param>
 		/// <param name="childNodeName"></param>
-		/// <param name="nodeFromLiftUpdate"></param>
-		private static void AddChildNode(XmlNode nodeToModify, string childNodeName, XmlNode nodeToCopyContentsFrom)
+		/// <param name="nodeToCopyContentsFrom"></param>
+		private static void AddChildNode(XmlNode nodeToModify, string childNodeName,
+			XmlNode nodeToCopyContentsFrom)
 		{
 			XmlNode newNode = AddXmlElement(nodeToModify, childNodeName);
 			SwapOutEntireElement(newNode, nodeToCopyContentsFrom);

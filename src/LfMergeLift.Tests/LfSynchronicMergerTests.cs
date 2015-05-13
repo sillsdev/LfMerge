@@ -3,12 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using NUnit.Framework;
 using Palaso.Lift.Merging;
 using Palaso.Lift.Validation;
-using NUnit.Framework;
 using Palaso.TestUtilities;
 
 namespace LfMergeLift.Tests
@@ -16,9 +17,11 @@ namespace LfMergeLift.Tests
 	[TestFixture]
 	public class LfSynchronicMergerTests
 	{
+		#region TestEnvironment
 		private class TestEnvironment : IDisposable
 		{
-			private readonly TemporaryFolder _languageForgeServerFolder = new TemporaryFolder("LangForge");
+			private readonly TemporaryFolder _languageForgeServerFolder =
+				new TemporaryFolder("LangForge" + Path.GetRandomFileName());
 
 			public void Dispose()
 			{
@@ -48,9 +51,8 @@ namespace LfMergeLift.Tests
 				using (var wrtr = File.CreateText(path))
 				{
 					wrtr.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-					wrtr.WriteLine("<lift version =\""
-								   + Validator.LiftVersion
-								   + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">");
+					wrtr.WriteLine("<lift version =\"{0}\" producer=\"WeSay.1Pt0Alpha\" " +
+						"xmlns:flex=\"http://fieldworks.sil.org\">", Validator.LiftVersion);
 					for (var i = 0; i < data.Count; ++i)
 						wrtr.WriteLine(data[i]);
 					wrtr.WriteLine("</lift>");
@@ -63,17 +65,17 @@ namespace LfMergeLift.Tests
 
 			internal string WriteFile(string fileName, string xmlForEntries, string directory)
 			{
-				StreamWriter writer = File.CreateText(Path.Combine(directory, fileName));
-				string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-								 + "<lift version =\""
-								 + Validator.LiftVersion
-								 + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">"
-								 + xmlForEntries
-								 + "</lift>";
-				writer.Write(content);
-				writer.Close();
-				writer.Dispose();
+				string content;
+				using (var writer = File.CreateText(Path.Combine(directory, fileName)))
+				{
+					content = string.Format("<?xml version=\"1.0\" encoding=\"utf-8\"?> " +
+						"<lift version =\"{0}\" producer=\"WeSay.1Pt0Alpha\" " +
+						"xmlns:flex=\"http://fieldworks.sil.org\">{1}" +
+						"</lift>", Validator.LiftVersion, xmlForEntries);
+					writer.Write(content);
+				}
 
+				new FileInfo(Path.Combine(directory, fileName)).LastWriteTime = DateTime.Now.AddSeconds(1);
 				//pause so they don't all have the same time
 				Thread.Sleep(100);
 
@@ -103,12 +105,18 @@ namespace LfMergeLift.Tests
 								String.Format("An entry with the following criteria should not exist:{0}", xPath));
 			}
 		} //END class TestEnvironment
+		#endregion
 		//=============================================================================================================================
 
 		private const string _baseLiftFileName = "base.lift";
 
 		private string _directory;
 		private LfSynchronicMerger _merger;
+
+		private string LiftFilePath
+		{
+			get { return Path.Combine(_directory, _baseLiftFileName); }
+		}
 
 		[SetUp]
 		public void Setup()
@@ -119,9 +127,8 @@ namespace LfMergeLift.Tests
 		}
 
 		[TearDown]
-		public void TearDOwn()
+		public void TearDown()
 		{
-			//            DirectoryInfo di = new DirectoryInfo(_directory);
 			Directory.Delete(_directory, true);
 		}
 
@@ -319,9 +326,9 @@ namespace LfMergeLift.Tests
 		};
 
 		[Test]
-		public void TestAddSenseAndRemoveSense()
+		public void AddSenseAndRemoveSense()
 		{
-			var s_LiftUpdateAddSenseAndRemoveSense = new[]
+			var liftUpdateAddSenseAndRemoveSense = new[]
 			{
 				"<entry dateCreated=\"2011-03-01T18:09:46Z\" dateModified=\"2012-05-12T18:30:07Z\" guid=\"ecfbe958-36a1-4b82-bb69-ca5210355400\" id=\"hombre_ecfbe958-36a1-4b82-bb69-ca5210355400\">",
 				"<lexical-unit>",
@@ -369,7 +376,7 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateAddSenseAndRemoveSense,
+				env.CreateLiftUpdateFile(liftUpdateAddSenseAndRemoveSense,
 									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
 
 				//Run SynchronicMerger
@@ -377,7 +384,7 @@ namespace LfMergeLift.Tests
 
 				XmlDocument doc = MergeAndGetResult(true, _directory, files);
 				var howmany = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, doc.SelectNodes("//entry").Count);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
 				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='hombre_ecfbe958-36a1-4b82-bb69-ca5210355400']");
 				Assert.IsNotNull(changedEntries);
 				Assert.AreEqual(1, changedEntries.Count);
@@ -415,9 +422,9 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestDeleteEntry()
+		public void DeleteEntry()
 		{
-			var s_LiftUpdateEntryDeleted = new[]
+			var liftUpdateEntryDeleted = new[]
 			{
 				"<entry dateCreated=\"2012-05-04T03:05:03Z\" dateModified=\"2012-05-04T03:05:50Z\" id=\"fish_7026c804-799b-4cd2-861f-c8f71cfa9f93\" guid=\"7026c804-799b-4cd2-861f-c8f71cfa9f93\" dateDeleted=\"2012-05-08T06:40:44Z\">",
 				"</entry>"
@@ -425,14 +432,14 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateEntryDeleted,
+				env.CreateLiftUpdateFile(liftUpdateEntryDeleted,
 									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
 
 				XmlDocument doc = MergeAndGetResult(true, _directory, files);
 				var numberOfEntries = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, doc.SelectNodes("//entry").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='fish_7026c804-799b-4cd2-861f-c8f71cfa9f93']").Count);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
+				Assert.That(doc.SelectNodes("//entry[@id='fish_7026c804-799b-4cd2-861f-c8f71cfa9f93']"), Has.Count.EqualTo(1));
 
 				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='fish_7026c804-799b-4cd2-861f-c8f71cfa9f93']");
 				XmlNode deletedNode = changedEntries[0];
@@ -443,9 +450,9 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestChangeDateAndLexicalUnit()
+		public void ChangeDateAndLexicalUnit()
 		{
-			var s_LiftUpdateDateAndLexicalUnitChanged = new[]
+			var liftUpdateDateAndLexicalUnitChanged = new[]
 			{
 				//entry7
 				//changed dateModified=\"2012-05-12T18:30:07Z\"
@@ -494,13 +501,13 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateDateAndLexicalUnitChanged,
+				env.CreateLiftUpdateFile(liftUpdateDateAndLexicalUnitChanged,
 									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
 
 				XmlDocument doc = MergeAndGetResult(true, _directory, files);
 				var numberOfEntries = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, doc.SelectNodes("//entry").Count);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
 
 				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='hombre_ecfbe958-36a1-4b82-bb69-ca5210355400']");
 				Assert.IsNotNull(changedEntries);
@@ -524,9 +531,9 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestChangePOS_Gloss_Definition()
+		public void ChangePOS_Gloss_Definition()
 		{
-			var s_LiftUpdatePOS_Gloss_Definition_Changed = new[]
+			var liftUpdatePOS_Gloss_Definition_Changed = new[]
 			{
 				//entry7
 				//changed dateModified=\"2012-05-12T18:30:07Z\"
@@ -576,18 +583,16 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdatePOS_Gloss_Definition_Changed,
+				env.CreateLiftUpdateFile(liftUpdatePOS_Gloss_Definition_Changed,
 									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
 
 				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				var numberOfEntries = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, doc.SelectNodes("//entry").Count);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
 
 				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='hombre_ecfbe958-36a1-4b82-bb69-ca5210355400']");
 				Assert.IsNotNull(changedEntries);
 				Assert.AreEqual(1, changedEntries.Count);
-				XmlNode changedEntry = changedEntries[0];
 
 				XmlNodeList senses = changedEntries[0].SelectNodes("sense");
 				Assert.IsNotNull(senses);
@@ -633,9 +638,9 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestChangeOneExampleChanged_AnotherNotChanged_OneAdded()
+		public void ChangeOneExampleChanged_AnotherNotChanged_OneAdded()
 		{
-			var s_LiftUpdateChangeExamples = new[]
+			var liftUpdateChangeExamples = new[]
 			{
 				//entry 5
 				"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
@@ -687,103 +692,99 @@ namespace LfMergeLift.Tests
 			};
 			using (var env = new TestEnvironment())
 			{
+				// Setup
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateChangeExamples,
-									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+				env.CreateLiftUpdateFile(liftUpdateChangeExamples,
+					"LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
+				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(
+					Path.Combine(_directory, _baseLiftFileName));
 
-				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				var numberOfEntries = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, numberOfEntries);
+				// Exercise
+				_merger.MergeUpdatesIntoFile(LiftFilePath, files);
 
-				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8']");
-				Assert.IsNotNull(changedEntries);
-				Assert.AreEqual(1, changedEntries.Count);
-				XmlNode changedEntry = changedEntries[0];
+				// Verify
+				var doc = GetResult();
+				Assert.That(Directory.GetFiles(_directory), Has.Length.EqualTo(2));
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
 
-				XmlNodeList senses = changedEntry.SelectNodes("sense");
-				Assert.IsNotNull(senses);
-				Assert.AreEqual(1, senses.Count);
-				XmlNode sense0 = senses[0];
+				var changedEntries = doc.SelectNodes("//entry[@id='cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8']");
+				Assert.That(changedEntries, Has.Count.EqualTo(1));
+				var changedEntry = changedEntries[0];
 
-				var senseId = sense0.Attributes["id"].Value;
-				Assert.AreEqual("9aaf4b46-f2b5-452f-981f-8517e64e6dc2", senseId);
+				var senses = changedEntry.SelectNodes("sense");
+				Assert.That(senses, Has.Count.EqualTo(1));
+				var sense0 = senses[0];
 
+				Assert.That(sense0.Attributes["id"].Value, Is.EqualTo("9aaf4b46-f2b5-452f-981f-8517e64e6dc2"));
+				Assert.That(sense0.SelectSingleNode("grammatical-info"), Is.Null);
 
-				var gramInfo = sense0.SelectSingleNode("grammatical-info");
-				Assert.IsNull(gramInfo);
-
-				XmlNodeList glosses = sense0.SelectNodes("gloss");
-				Assert.IsNotNull(glosses);
-				Assert.AreEqual(2, glosses.Count);
-				String glossText = glosses[0].InnerText;
-				Assert.AreEqual("meuwer", glossText);
-				glossText = glosses[1].InnerText;
-				Assert.AreEqual("cataeouw", glossText);
+				var glosses = sense0.SelectNodes("gloss");
+				Assert.That(glosses, Is.Not.Null);
+				Assert.That(glosses.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "meuwer", "cataeouw" }));
 
 				//Examine the results of the examples
-				XmlNodeList examples = sense0.SelectNodes("example");
-				Assert.IsNotNull(examples);
-				Assert.AreEqual(3, examples.Count);
+				var examples = sense0.SelectNodes("example");
+				Assert.That(examples, Is.Not.Null);
+				Assert.That(examples.Count, Is.EqualTo(3));
 
 				//the order of the examples is different since some were removed
-				XmlNode example1notChanged = examples[0];
-				XmlAttribute sourceAttr = example1notChanged.Attributes["source"];
-				Assert.IsNotNull(sourceAttr);
-				Assert.AreEqual("reference for second translation", sourceAttr.Value);
-				XmlNodeList sentences = example1notChanged.SelectNodes("form");
-				Assert.IsNotNull(sentences);
-				Assert.AreEqual("Second example sentence.", sentences[0].InnerText);
-				Assert.AreEqual("Other lang second example.", sentences[1].InnerText);
-				XmlNodeList translations = example1notChanged.SelectNodes("translation/form");
-				Assert.IsNotNull(translations);
-				Assert.AreEqual(1, translations.Count);
-				Assert.AreEqual("Second example translation", translations[0].InnerText);
-				XmlNode note = example1notChanged.SelectSingleNode("note");
-				Assert.IsNotNull(note);
-				Assert.AreEqual("reference for second translation", note.InnerText);
-				XmlAttribute referenceType = note.Attributes["type"];
-				Assert.AreEqual("reference", referenceType.Value);
+				var example1notChanged = examples[0];
+				var sourceAttr = example1notChanged.Attributes["source"];
+				Assert.That(sourceAttr, Is.Not.Null);
+				Assert.That(sourceAttr.Value, Is.EqualTo("reference for second translation"));
+				var sentences = example1notChanged.SelectNodes("form");
+				Assert.That(sentences, Is.Not.Null);
+				Assert.That(sentences.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "Second example sentence.", "Other lang second example." }));
+				var translations = example1notChanged.SelectNodes("translation/form");
+				Assert.That(translations, Is.Not.Null);
+				Assert.That(translations.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "Second example translation" }));
+				var note = example1notChanged.SelectSingleNode("note");
+				Assert.That(note, Is.Not.Null);
+				Assert.That(note.InnerText, Is.EqualTo("reference for second translation"));
+				Assert.That(note.Attributes["type"].Value, Is.EquivalentTo("reference"));
 
-				//The original first example was modified so now it appears in the second position since it was first removed
-				//and the one in the LiftUpdate file was added.
-				XmlNode example0WasChanged = examples[1];
+				// The original first example was modified so now it appears in the second position
+				// since it was first removed and the one in the LiftUpdate file was added.
+				var example0WasChanged = examples[1];
 				sourceAttr = example0WasChanged.Attributes["source"];
-				Assert.IsNull(sourceAttr);
+				Assert.That(sourceAttr, Is.Null);
 				sentences = example0WasChanged.SelectNodes("form");
-				Assert.IsNotNull(sentences);
-				Assert.AreEqual(2, sentences.Count);
-				Assert.AreEqual("ExampleSentence ", sentences[0].InnerText);
-				Assert.AreEqual("Another ws example sentence-CHANGED", sentences[1].InnerText);
+				Assert.That(sentences, Is.Not.Null);
+				Assert.That(sentences.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "ExampleSentence ",  "Another ws example sentence-CHANGED" }));
 				translations = example0WasChanged.SelectNodes("translation/form");
-				Assert.IsNotNull(translations);
-				Assert.AreEqual(2, translations.Count);
-				Assert.AreEqual("This is a translation of example sentences-CHANGED", translations[0].InnerText);
-				Assert.AreEqual("In another ws this is a translation of exSentences", translations[1].InnerText);
+				Assert.That(translations, Is.Not.Null);
+				Assert.That(translations.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "This is a translation of example sentences-CHANGED",
+						"In another ws this is a translation of exSentences"
+					}));
 				note = example0WasChanged.SelectSingleNode("note");
-				Assert.IsNull(note);
+				Assert.That(note, Is.Null);
 
-
-				XmlNode exampleWasAdded = examples[2];
+				var exampleWasAdded = examples[2];
 				sourceAttr = exampleWasAdded.Attributes["source"];
-				Assert.IsNull(sourceAttr);
+				Assert.That(sourceAttr, Is.Null);
 				sentences = exampleWasAdded.SelectNodes("form");
-				Assert.IsNotNull(sentences);
-				Assert.AreEqual("Third example sentence.", sentences[0].InnerText);
-				Assert.AreEqual("Third other lang example.", sentences[1].InnerText);
+				Assert.That(sentences, Is.Not.Null);
+				Assert.That(sentences.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "Third example sentence.", "Third other lang example." }));
 				translations = exampleWasAdded.SelectNodes("translation/form");
 				Assert.IsNotNull(translations);
-				Assert.AreEqual(1, translations.Count);
-				Assert.AreEqual("Third example translation", translations[0].InnerText);
+				Assert.That(translations, Is.Not.Null);
+				Assert.That(translations.Cast<XmlNode>().Select(n => n.InnerText).ToArray(),
+					Is.EqualTo(new[] { "Third example translation" }));
 				note = exampleWasAdded.SelectSingleNode("note");
-				Assert.IsNull(note);
+				Assert.That(note, Is.Null);
 			}
 		}
 
 		[Test]
-		public void TestExamples_AddExamplesToEntryWithoutAny()
+		public void Examples_AddExamplesToEntryWithoutAny()
 		{
-			var s_LiftUpdateAddExamples = new[]
+			var liftUpdateAddExamples = new[]
 			{
 				//entry 6
 				"<entry dateCreated=\"2012-05-09T06:51:52Z\" dateModified=\"2012-05-09T06:52:16Z\" id=\"tail_98c54484-08a6-4136-abab-b936ddc6ad25\" guid=\"98c54484-08a6-4136-abab-b936ddc6ad25\">",
@@ -817,7 +818,7 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateAddExamples,
+				env.CreateLiftUpdateFile(liftUpdateAddExamples,
 									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
 
@@ -867,9 +868,9 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestExamples_RemoveAllExamples()
+		public void Examples_RemoveAllExamples()
 		{
-			string[] s_LiftUpdateRemoveExamples = new[]
+			string[] liftUpdateRemoveExamples = new[]
 			{
 				//entry 5
 				"<entry dateCreated=\"2012-04-23T16:50:51Z\" dateModified=\"2012-05-09T06:54:13Z\" id=\"cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8\" guid=\"8338bdd5-c1c2-46b2-93d1-2328cbb749c8\">",
@@ -885,55 +886,49 @@ namespace LfMergeLift.Tests
 			};
 			using (var env = new TestEnvironment())
 			{
+				// Setup
 				env.CreateLiftInputFile(s_LiftMainFile, _baseLiftFileName, _directory);
-				env.CreateLiftUpdateFile(s_LiftUpdateRemoveExamples,
-									 "LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+				env.CreateLiftUpdateFile(liftUpdateRemoveExamples,
+					"LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles, _directory);
+				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(LiftFilePath);
 
-				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				var numberOfEntries = doc.SelectNodes("//entry").Count;
-				Assert.AreEqual(8, numberOfEntries);
+				// Exercise
+				_merger.MergeUpdatesIntoFile(LiftFilePath, files);
 
-				XmlNodeList changedEntries = doc.SelectNodes("//entry[@id='cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8']");
-				Assert.IsNotNull(changedEntries);
-				Assert.AreEqual(1, changedEntries.Count);
+				// Verify
+				var doc = GetResult();
+				Assert.That(Directory.GetFiles(_directory), Has.Length.EqualTo(2));
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(8));
+
+				var changedEntries = doc.SelectNodes(
+					"//entry[@id='cat_8338bdd5-c1c2-46b2-93d1-2328cbb749c8']");
+				Assert.That(changedEntries, Has.Count.EqualTo(1));
 				XmlNode changedEntry = changedEntries[0];
 
-				XmlNodeList senses = changedEntry.SelectNodes("sense");
-				Assert.IsNotNull(senses);
-				Assert.AreEqual(1, senses.Count);
-				XmlNode sense0 = senses[0];
+				var senses = changedEntry.SelectNodes("sense");
+				Assert.That(senses, Has.Count.EqualTo(1));
+				var sense0 = senses[0];
 
-				var senseId = sense0.Attributes["id"].Value;
-				Assert.AreEqual("9aaf4b46-f2b5-452f-981f-8517e64e6dc2", senseId);
-
-
-				//Examine the results of the examples
-				XmlNodeList examples = sense0.SelectNodes("example");
-				Assert.IsNotNull(examples);
-				Assert.AreEqual(0, examples.Count);
+				Assert.That(sense0.Attributes["id"].Value,
+					Is.EqualTo("9aaf4b46-f2b5-452f-981f-8517e64e6dc2"));
+				Assert.That(sense0.SelectNodes("example"), Has.Count.EqualTo(0));
 			}
-
-
 		}
 
-
-
-
 		[Test]
-		public void TestNewEntriesAdded_MultipleFilesSucessiveChanges()
+		public void NewEntriesAdded_MultipleFilesSucessiveChanges()
 		{
-			const string s_LiftData1 = @"
+			const string liftData1 = @"
 <entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
 ";
-			const string s_LiftUpdate1 = @"
+			const string liftUpdate1 = @"
 <entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='twoblatblat' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'></entry>
 <entry id='five' guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6'></entry>
 ";
-			const string s_LiftUpdate2 = @"
+			const string liftUpdate2 = @"
 <entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
@@ -951,47 +946,57 @@ namespace LfMergeLift.Tests
 				env.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdate2, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
 
-				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				Assert.AreEqual(6, doc.SelectNodes("//entry").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='one']").Count);
-				Assert.AreEqual(0, doc.SelectNodes("//entry[@id='two']").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='twoblatblat']").Count);
-				Assert.AreEqual(0, doc.SelectNodes("//entry[@id='four']").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='fourChangedFirstAddition']").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='six']").Count);
+				// Exercise
+				_merger.MergeUpdatesIntoFile(LiftFilePath, files);
+
+				// Verify
+				var doc = GetResult();
+				Assert.That(Directory.GetFiles(_directory), Has.Length.EqualTo(2));
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(6));
+
+				Assert.That(doc.SelectNodes("//entry[@id='one']"), Has.Count.EqualTo(1));
+				Assert.That(doc.SelectNodes("//entry[@id='two']"), Has.Count.EqualTo(0));
+				Assert.That(doc.SelectNodes("//entry[@id='twoblatblat']"), Has.Count.EqualTo(1));
+				Assert.That(doc.SelectNodes("//entry[@id='four']"), Has.Count.EqualTo(0));
+				Assert.That(doc.SelectNodes("//entry[@id='fourChangedFirstAddition']"), Has.Count.EqualTo(1));
+				Assert.That(doc.SelectNodes("//entry[@id='six']"), Has.Count.EqualTo(1));
 			}
 
 		}
 
 		[Test]
-		public void TestEntryDeleted_DeletionDateAdded()
+		public void EntryDeleted_DeletionDateAdded()
 		{
-			const string s_LiftData1 = @"
+			const string liftData1 = @"
 <entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
 ";
-			const string s_LiftUpdateDeleteEntry = @"
+			const string liftUpdateDeleteEntry = @"
 <entry id='two' dateCreated='2012-05-04T04:19:57Z' dateModified='2012-05-04T04:19:57Z' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22' dateDeleted='2012-05-08T06:40:44Z'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
 			using (var env = new TestEnvironment())
 			{
-				//This test demonstrates that a deletion of an entry is applied to a LIFT file.
-				//Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted attribute is added
+				// This test demonstrates that a deletion of an entry is applied to a LIFT file.
+				// Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted
+				// attribute is added
 
-				//Create a LIFT file with 3 entries which will have updates applied to it.
-				env.WriteFile(_baseLiftFileName, s_LiftData1, _directory);
-				//Create a .lift.update file with and entry which is indicating that an entry was deleted (tombstone).
-				env.WriteFile("LiftChangeFile" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUpdateDeleteEntry, _directory);
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
-				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				Assert.AreEqual(4, doc.SelectNodes("//entry").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='one']").Count);
-				XmlNodeList nodesDeleted = doc.SelectNodes("//entry[@id='two' and @guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']");
+				// Create a LIFT file with 3 entries which will have updates applied to it.
+				env.WriteFile(_baseLiftFileName, liftData1, _directory);
+				// Create a .lift.update file with and entry which is indicating that an entry was
+				// deleted (tombstone).
+				env.WriteFile("LiftChangeFile" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					liftUpdateDeleteEntry, _directory);
+				var files = SynchronicMerger.GetPendingUpdateFiles(LiftFilePath);
+				var doc = MergeAndGetResult(true, _directory, files);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(4));
+				Assert.That(doc.SelectNodes("//entry[@id='one']"), Has.Count.EqualTo(1));
+				var nodesDeleted = doc.SelectNodes("//entry[@id='two' and @guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']");
 				Assert.AreEqual(1, nodesDeleted.Count);   //ensure there is only one entry with this guid
-				XmlNode nodeDeleted = nodesDeleted[0];
-				//Make sure the contents of the node was changed to match the deleted entry from the .lift.update file
+				var nodeDeleted = nodesDeleted[0];
+				// Make sure the contents of the node was changed to match the deleted entry from
+				// the .lift.update file
 				Assert.AreEqual("2012-05-08T06:40:44Z", nodeDeleted.Attributes["dateDeleted"].Value);
 				Assert.IsNullOrEmpty(nodeDeleted.InnerXml);
 			}
@@ -999,19 +1004,19 @@ namespace LfMergeLift.Tests
 		}
 
 		[Test]
-		public void TestSha1_applyUp1_applyUp2()
+		public void Sha1_ApplyUp1_ApplyUp2()
 		{
-			const string s_LiftDataSha1 = @"
+			const string liftDataSha1 = @"
 <entry id='one' guid='0ae89610-fc01-4bfd-a0d6-1125b7281dd1'></entry>
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>SLIGHT CHANGE in .LIFT file</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
 ";
-			const string s_LiftUp1ToSha1 = @"
+			const string liftUp1ToSha1 = @"
 <entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>
 <lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
-			const string s_LiftUp2ToSha1 = @"
+			const string liftUp2ToSha1 = @"
 <entry id='four' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'>
 <lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if Merge works on same record.</text></form></lexical-unit></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
@@ -1019,17 +1024,22 @@ namespace LfMergeLift.Tests
 			using (var env = new TestEnvironment())
 			{
 				//This test demonstrates that a deletion of an entry is applied to a LIFT file.
-				//Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted attribute is added
+				//Now 'tomb stoning' is done.  The entry is not actually deleted, but a dateDeleted
+				// attribute is added
 
 				//Create a LIFT file with 3 entries which will have updates applied to it.
-				env.WriteFile(_baseLiftFileName, s_LiftDataSha1, _directory);
-				//Create a .lift.update file with and entry which is indicating that an entry was deleted (tombstone).
-				env.WriteFile("LiftUpdate1" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUp1ToSha1, _directory);
-				env.WriteFile("LiftUpdate2" + SynchronicMerger.ExtensionOfIncrementalFiles, s_LiftUp2ToSha1, _directory);
-				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(Path.Combine(_directory, _baseLiftFileName));
+				env.WriteFile(_baseLiftFileName, liftDataSha1, _directory);
+				// Create a .lift.update file with and entry which is indicating that an entry was
+				// deleted (tombstone).
+				env.WriteFile("LiftUpdate1" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					liftUp1ToSha1, _directory);
+				env.WriteFile("LiftUpdate2" + SynchronicMerger.ExtensionOfIncrementalFiles,
+					liftUp2ToSha1, _directory);
+				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(
+					Path.Combine(_directory, _baseLiftFileName));
 				XmlDocument doc = MergeAndGetResult(true, _directory, files);
-				Assert.AreEqual(5, doc.SelectNodes("//entry").Count);
-				Assert.AreEqual(1, doc.SelectNodes("//entry[@id='one']").Count);
+				Assert.That(doc.SelectNodes("//entry"), Has.Count.EqualTo(5));
+				Assert.That(doc.SelectNodes("//entry[@id='one']"), Has.Count.EqualTo(1));
 				env.VerifyEntryInnerText(doc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(doc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(doc, "//entry[@id='three']", "");
@@ -1041,31 +1051,25 @@ namespace LfMergeLift.Tests
 
 		private XmlDocument MergeAndGetResult(bool isBackupFileExpected, string directory, FileInfo[] files)
 		{
-			Merge(directory, files);
+			_merger.MergeUpdatesIntoFile(LiftFilePath, files);
 			ExpectFileCount(isBackupFileExpected ? 2 : 1, directory);
 
-			return GetResult(directory);
+			return GetResult();
 		}
 
-		private static XmlDocument GetResult(string directory)
+		private XmlDocument GetResult()
 		{
-			XmlDocument doc = new XmlDocument();
-			string outputPath = Path.Combine(directory, _baseLiftFileName);
-			doc.Load(outputPath);
-			Console.WriteLine(File.ReadAllText(outputPath));
+			var doc = new XmlDocument();
+			doc.Load(LiftFilePath);
+			Console.WriteLine(File.ReadAllText(LiftFilePath));
 			return doc;
-		}
-
-		private void Merge(string directory, FileInfo[] files)
-		{
-			this._merger.MergeUpdatesIntoFile(Path.Combine(directory, _baseLiftFileName), files);
 		}
 
 		static private void ExpectFileCount(int count, string directory)
 		{
 			string[] files = Directory.GetFiles(directory);
 
-			StringBuilder fileList = new StringBuilder();
+			var fileList = new StringBuilder();
 			foreach (string s in files)
 			{
 				fileList.Append(s);
