@@ -60,6 +60,10 @@ namespace LfMergeLift.Tests
 			internal HgRepository CreateProjAWebRepo()
 			{
 				var projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
+				var hgdir = Path.Combine(projAWebWorkPath, ".hg");
+				Console.WriteLine("projAWebWorkPath={0}; exists: {1},\n{2} exists: {3}", projAWebWorkPath,
+					Directory.Exists(projAWebWorkPath), hgdir, Directory.Exists(hgdir));
+
 				//Make the webWork ProjA.LIFT file
 				var projAWebRepo = CreateRepoProjA(projAWebWorkPath);
 				return projAWebRepo;
