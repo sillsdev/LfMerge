@@ -87,20 +87,23 @@ namespace LfMergeLift
 
 		public string CreateMasterReposProjectFolder(string projectName)
 		{
-			Directory.CreateDirectory(GetProjMasterRepoPath(projectName));
-			return GetProjMasterRepoPath(projectName);
+			var dir = GetProjMasterRepoPath(projectName);
+			Directory.CreateDirectory(dir);
+			return dir;
 		}
 
 		public string CreateWebWorkProjectFolder(string projectName)
 		{
-			Directory.CreateDirectory(GetProjWebPath(projectName));
-			return GetProjWebPath(projectName);
+			var dir = GetProjWebPath(projectName);
+			Directory.CreateDirectory(dir);
+			return dir;
 		}
 
 		public string CreateMergeWorkProjectFolder(string projectName)
 		{
-			Directory.CreateDirectory(GetProjMergePath(projectName));
-			return GetProjMergePath(projectName);
+			var dir = GetProjMergePath(projectName);
+			Directory.CreateDirectory(dir);
+			return dir;
 		}
 
 		public void CreateMergeWorkFolder()
