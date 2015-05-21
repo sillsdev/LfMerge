@@ -52,9 +52,6 @@ namespace LfMergeLift.Tests
 				writer.Close();
 				writer.Dispose();
 
-				//pause so they don't all have the same time
-				Thread.Sleep(100);
-
 				return content;
 			}
 

@@ -28,8 +28,7 @@ namespace LfMergeLift.Tests
 				_languageForgeServerFolder.Dispose();
 			}
 
-			internal void CreateLiftInputFile(IList<string> data, string fileName,
-				string directory, bool differentTimeStamps = false)
+			internal void CreateLiftInputFile(IList<string> data, string fileName, string directory)
 			{
 				// NOTE: if the parameter differentTimeStamps is true we wait a second before
 				// creating the next file. This allows the files to have different timestamps.
@@ -47,14 +46,10 @@ namespace LfMergeLift.Tests
 						wrtr.WriteLine(data[i]);
 					wrtr.Close();
 				}
-
-				if (differentTimeStamps)
-					//pause so they don't all have the same time
-					Thread.Sleep(1000);
 			}
 
 			internal void CreateLiftUpdateFile(IList<string> data, string fileName,
-				string directory, bool differentTimeStamps = false)
+				string directory)
 			{
 				string path = Path.Combine(directory, fileName);
 				if (File.Exists(path))
@@ -69,14 +64,9 @@ namespace LfMergeLift.Tests
 					wrtr.WriteLine("</lift>");
 					wrtr.Close();
 				}
-
-				if (differentTimeStamps)
-					//pause so they don't all have the same time
-					Thread.Sleep(1000);
 			}
 
-			internal string WriteFile(string fileName, string xmlForEntries, string directory,
-				bool differentTimeStamps = false)
+			internal string WriteFile(string fileName, string xmlForEntries, string directory)
 			{
 				string content;
 				using (var writer = File.CreateText(Path.Combine(directory, fileName)))
@@ -89,9 +79,6 @@ namespace LfMergeLift.Tests
 				}
 
 				new FileInfo(Path.Combine(directory, fileName)).LastWriteTime = DateTime.Now.AddSeconds(1);
-				if (differentTimeStamps)
-					//pause so they don't all have the same time
-					Thread.Sleep(1000);
 
 				return content;
 			}
@@ -954,16 +941,17 @@ namespace LfMergeLift.Tests
 				// that the alphabetical ordering does not match the time stamp ordering.
 
 				// Create a LIFT file with 3 entries which will have updates applied to it.
-				env.WriteFile(_baseLiftFileName, liftData1, _directory, true);
+				env.WriteFile(_baseLiftFileName, liftData1, _directory);
 				// Create a .lift.update file with three entries.  One to replace the second entry
 				// in the original LIFT file.
 				// The other two are new and should be appended to the original LIFT file.
 				env.WriteFile("LiftChangeFileB" + SynchronicMerger.ExtensionOfIncrementalFiles,
-					liftUpdate1, _directory, true);
+					liftUpdate1, _directory);
+				Thread.Sleep(1000);
 				// Create a .lift.update file with two entries.  One to replace one of the changes
 				// from the first LiftUpdate file and one new entry.
 				env.WriteFile("LiftChangeFileA" + SynchronicMerger.ExtensionOfIncrementalFiles,
-					liftUpdate2, _directory, true);
+					liftUpdate2, _directory);
 				FileInfo[] files = SynchronicMerger.GetPendingUpdateFiles(
 					Path.Combine(_directory, _baseLiftFileName));
 

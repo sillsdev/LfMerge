@@ -109,9 +109,6 @@ namespace LfMergeLift.Tests
 				writer.Write(content);
 				writer.Close();
 				writer.Dispose();
-
-				//pause so they don't all have the same time
-				Thread.Sleep(100);
 			}
 
 			private HgRepository CreateRepoProjA(string projAPath)
