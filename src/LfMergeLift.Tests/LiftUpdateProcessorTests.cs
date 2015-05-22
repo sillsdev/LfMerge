@@ -20,31 +20,10 @@ namespace LfMergeLift.Tests
 	public class LiftUpdateProcessorTests
 	{
 		#region TestEnvironment
-		class TestEnvironment : IDisposable
+		class LiftUpdateProcessorTestsEnvironment : TestEnvironment
 		{
-			private readonly TemporaryFolder _languageForgeServerFolder =
-				new TemporaryFolder("LangForge" + Path.GetRandomFileName());
-
-			public void Dispose()
+			public LiftUpdateProcessorTestsEnvironment()
 			{
-				_languageForgeServerFolder.Dispose();
-			}
-
-			public string LanguageForgeFolder
-			{
-				get { return _languageForgeServerFolder.Path; }
-			}
-
-			public LfDirectoriesAndFiles LangForgeDirFinder
-			{
-				get { return _langForgeDirFinder; }
-			}
-
-			private readonly LfDirectoriesAndFiles _langForgeDirFinder;
-
-			public TestEnvironment()
-			{
-				_langForgeDirFinder = new LfDirectoriesAndFiles(LanguageForgeFolder);
 				CreateAllTestFolders();
 			}
 
@@ -95,22 +74,6 @@ namespace LfMergeLift.Tests
 				var projAWebWorkRepo = new HgRepository(projAWebWorkPath, new NullProgress());
 				Assert.That(projAWebWorkRepo, Is.Not.Null);
 				return projAWebWorkRepo;
-			}
-
-			private static void WriteFile(string fileName, string xmlForEntries, string directory)
-			{
-				var writer = File.CreateText(Path.Combine(directory, fileName));
-				var content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-								 + "<lift producer=\"WeSay.1Pt0Alpha\" version =\""
-								 + Validator.LiftVersion
-								 + "\" xmlns:flex=\"http://fieldworks.sil.org\">"
-								 + xmlForEntries
-								 + "</lift>";
-				writer.Write(content);
-				writer.Close();
-				writer.Dispose();
-
-				Thread.Sleep(100);
 			}
 
 			private HgRepository CreateRepoProjA(string projAPath)
@@ -191,30 +154,6 @@ namespace LfMergeLift.Tests
 				Console.WriteLine(File.ReadAllText(outputPath));
 				return doc;
 			}
-
-			internal void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
-			{
-				var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
-				var entry = selectedEntries[0];
-				Assert.AreEqual(innerText, entry.InnerText, "Text for entry is wrong");
-			}
-
-			internal XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
-			{
-				var selectedEntries = xmlDoc.SelectNodes(xPath);
-				Assert.IsNotNull(selectedEntries);
-				Assert.AreEqual(1, selectedEntries.Count,
-					"An entry with the following criteria should exist: {0}", xPath);
-				return selectedEntries;
-			}
-
-			internal void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
-			{
-				var selectedEntries = xmlDoc.SelectNodes(xPath);
-				Assert.IsNotNull(selectedEntries);
-				Assert.AreEqual(0, selectedEntries.Count,
-					"An entry with the following criteria should not exist: {0}", xPath);
-			}
 		}
 		#endregion //END class TestEnvironment
 
@@ -257,7 +196,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 				var currentRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
@@ -279,7 +218,7 @@ namespace LfMergeLift.Tests
 				Assert.That(mergeRepo, Is.Not.Null);
 				var mergeRepoRevision = mergeRepo.GetRevisionWorkingSetIsBasedOn();
 				Assert.That(mergeRepoRevision.Number.Hash, Is.EqualTo(currentRevision.Number.Hash));
-				var projLiftFileInMergeArea = TestEnvironment.LiftFileFullPath(projAMergeWorkPath, "ProjA");
+				var projLiftFileInMergeArea = LiftUpdateProcessorTestsEnvironment.LiftFileFullPath(projAMergeWorkPath, "ProjA");
 				Assert.That(File.Exists(projLiftFileInMergeArea), Is.True);
 			}
 		}
@@ -306,7 +245,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
 <entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
@@ -370,7 +309,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY FOUR adds a lexical unit</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 				var currentRevision = projAWebRepo.GetRevisionWorkingSetIsBasedOn();
@@ -445,7 +384,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
@@ -557,7 +496,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
@@ -637,7 +576,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>change ENTRY FOUR again to see if works on same record.</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 ";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAWebRepo = env.CreateProjAWebRepo();
 
@@ -832,7 +771,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY FORTY adds a lexical unit</text></form></lexical-unit></entry>
 <entry guid='107136D0-5108-4b6b-9846-8590F28937E8' id='six'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAMasterRepo = env.CreateProjAMasterRepo();
 				//now clone to the WebRepo location
@@ -884,7 +823,7 @@ namespace LfMergeLift.Tests
 	<lexical-unit><form lang='nan'><text>ENTRY ONE ADDS lexical unit</text></form></lexical-unit></entry>
 <entry guid='6D2EC48D-C3B5-4812-B130-5551DC4F13B6' id='five'></entry>
 			";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUpdateProcessorTestsEnvironment())
 			{
 				var projAMasterRepo = env.CreateProjAMasterRepo();
 				//now clone to the WebRepo location

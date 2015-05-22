@@ -15,55 +15,12 @@ namespace LfMergeLift.Tests
 	[TestFixture]
 	public class FolderScannerTests
 	{
-		class TestEnvironment : IDisposable
-		{
-			private readonly TemporaryFolder _folder = new TemporaryFolder("FolderScannerTests");
-
-			public void Dispose()
-			{
-				_folder.Dispose();
-			}
-
-			public string Path
-			{
-				get { return _folder.Path; }
-			}
-
-			public string ProjectPath(string projectName)
-			{
-				return System.IO.Path.Combine(Path, projectName);
-			}
-
-			public void CreateProjectUpdateFolder(string ProjectName)
-			{
-				Directory.CreateDirectory(ProjectPath(ProjectName));
-			}
-
-			internal string WriteFile(string fileName, string xmlForEntries, string directory)
-			{
-				StreamWriter writer = File.CreateText(System.IO.Path.Combine(directory, fileName));
-				string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-								 + "<lift version =\""
-								 + Validator.LiftVersion
-								 + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">"
-								 + xmlForEntries
-								 + "</lift>";
-				writer.Write(content);
-				writer.Close();
-				writer.Dispose();
-
-				return content;
-			}
-
-		} //END class TestEnvironment
-		//========================================================================================
-
 		[Test]
 		public void FindProjectFolders_ZeroProjects_FindsZero()
 		{
 			using (var e = new TestEnvironment())
 			{
-				var scanner = new FolderScanner(e.Path);
+				var scanner = new FolderScanner(e.LanguageForgeFolder);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
 				Assert.That(updateFoldersList.Count, Is.EqualTo(0));
 			}
@@ -75,7 +32,7 @@ namespace LfMergeLift.Tests
 			using (var e = new TestEnvironment())
 			{
 				e.CreateProjectUpdateFolder("1");
-				var scanner = new FolderScanner(e.Path);
+				var scanner = new FolderScanner(e.LanguageForgeFolder);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
 				Assert.That(updateFoldersList.Count, Is.EqualTo(1));
 			}
@@ -88,7 +45,7 @@ namespace LfMergeLift.Tests
 			using (var e = new TestEnvironment())
 			{
 				e.CreateProjectUpdateFolder("1");
-				var scanner = new FolderScanner(e.Path);
+				var scanner = new FolderScanner(e.LanguageForgeFolder);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
 				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("1")));
 			}
@@ -105,7 +62,7 @@ namespace LfMergeLift.Tests
 				e.CreateProjectUpdateFolder("2FirstFolderCreated");
 				Thread.Sleep(1000);
 				e.CreateProjectUpdateFolder("1SecondFolderCreated");
-				var scanner = new FolderScanner(e.Path);
+				var scanner = new FolderScanner(e.LanguageForgeFolder);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
 				Assert.That(updateFoldersList.Count, Is.EqualTo(2));
 				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("2FirstFolderCreated")));
@@ -139,7 +96,7 @@ namespace LfMergeLift.Tests
 				Thread.Sleep(1000);
 				e.CreateProjectUpdateFolder("1SecondFolderCreated");
 
-				var scanner = new FolderScanner(e.Path);
+				var scanner = new FolderScanner(e.LanguageForgeFolder);
 				var updateFoldersList = new List<ProjectUpdateFolder>(scanner.FindProjectFolders());
 				Assert.That(updateFoldersList.Count, Is.EqualTo(2));
 				Assert.That(updateFoldersList[0].Path, Is.EqualTo(e.ProjectPath("2FirstFolderCreated")));

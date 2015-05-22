@@ -14,23 +14,11 @@ namespace LfMergeLift.Tests
 	[TestFixture]
 	public class ProjectUpdateFolderTests
 	{
-		class TestEnvironment : IDisposable
+		class ProjectUpdateFolderTestsEnvironment : TestEnvironment
 		{
-			private readonly TemporaryFolder _folder = new TemporaryFolder("ProjectUpdateFolderTests");
-
-			public void CreateUpdateFile(string projectName, string sha, string updateFileNameWithoutExtension)
-			{
-
-			}
-
-			public string BasePath
-			{
-				get { return _folder.Path; }
-			}
-
 			public string UpdateRoot
 			{
-				get { return Path.Combine(BasePath, "updates"); }
+				get { return Path.Combine(LanguageForgeFolder, "updates"); }
 			}
 
 			public string ProjectUpdatePath(string projectName)
@@ -80,18 +68,12 @@ namespace LfMergeLift.Tests
 			{
 				File.WriteAllText(UpdateFilePath(projectName, sha, fileNameWithoutExtension), content);
 			}
-
-			public void Dispose()
-			{
-				_folder.Dispose();
-			}
-
 		}
 
 		[Test]
 		public void Path_Correct()
 		{
-			using (var e = new TestEnvironment())
+			using (var e = new ProjectUpdateFolderTestsEnvironment())
 			{
 				// env needs to create directories
 				// env needs to set the work dir in the test env on the ProjectUpdateFolder

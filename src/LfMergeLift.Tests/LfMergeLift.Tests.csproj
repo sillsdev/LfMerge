@@ -58,6 +58,7 @@
     <Compile Include="LiftUpdatesScannerTests.cs" />
     <Compile Include="ProjectUpdateFolderTests.cs" />
     <Compile Include="LfSynchronicMergerTests.cs" />
+    <Compile Include="TestEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LfMergeLift\LfMergeLift.csproj">

@@ -15,43 +15,18 @@ namespace LfMergeLift.Tests
 	[TestFixture]
 	public class LiftUpdatesScannerTests
 	{
-		class TestEnvironment : IDisposable
+		class LiftUdpatesScannerTestsEnvironment : TestEnvironment
 		{
-			private readonly TemporaryFolder _folder = new TemporaryFolder("MergeWork");
 			private const string UpdatesFolder = "liftUpdates";
-
-			public void Dispose()
-			{
-				_folder.Dispose();
-			}
-
-			private string MergeWorkFolder
-			{
-				get { return _folder.Path; }
-			}
 
 			public string LiftUpdatesPath
 			{
-				get { return Path.Combine(MergeWorkFolder, UpdatesFolder); }
+				get { return Path.Combine(LanguageForgeFolder, UpdatesFolder); }
 			}
 
 			public void CreateUpdateFolder()
 			{
 				Directory.CreateDirectory(LiftUpdatesPath);
-			}
-
-			internal void WriteFile(string fileName, string xmlForEntries, string directory)
-			{
-				StreamWriter writer = File.CreateText(Path.Combine(directory, fileName));
-				string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-								 + "<lift version =\""
-								 + Validator.LiftVersion
-								 + "\" producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\">"
-								 + xmlForEntries
-								 + "</lift>";
-				writer.Write(content);
-				writer.Close();
-				writer.Dispose();
 			}
 
 			internal string LiftUpdateFileFullPath(String filename)
@@ -90,7 +65,7 @@ namespace LfMergeLift.Tests
 ";
 			//This test puts 3 files in the mergerWork/liftUpdates folder.  Two are .lift.updates files and one is not.
 			//Verify that only the .lift.updates files are returned from the call to GetPendingUpdateFiles
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
@@ -127,7 +102,7 @@ namespace LfMergeLift.Tests
 <entry id='two' guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22'><lexical-unit><form lang='nan'><text>test</text></form></lexical-unit></entry>
 <entry id='three' guid='80677C8E-9641-486e-ADA1-9D20ED2F5B69'></entry>
 ";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
@@ -167,7 +142,7 @@ namespace LfMergeLift.Tests
 			//This test gets a number of .lift.update files and verifies that the UpdateInfo structure was correctly built
 			//Each .lift.update file will have the following format.
 			// projX_sha#_timeStamp.lift.update
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
@@ -210,7 +185,7 @@ namespace LfMergeLift.Tests
 <entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
@@ -247,7 +222,7 @@ namespace LfMergeLift.Tests
 <entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
-			using (var testEnv = new TestEnvironment())
+			using (var testEnv = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				testEnv.CreateUpdateFolder();
@@ -292,7 +267,7 @@ namespace LfMergeLift.Tests
 <entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
@@ -349,7 +324,7 @@ namespace LfMergeLift.Tests
 <entry id='fourChangedFirstAddition' guid='6216074D-AD4F-4dae-BE5F-8E5E748EF68A'></entry>
 <entry id='six' guid='107136D0-5108-4b6b-9846-8590F28937E8'></entry>
 ";
-			using (var env = new TestEnvironment())
+			using (var env = new LiftUdpatesScannerTestsEnvironment())
 			{
 				//Setup for tests
 				env.CreateUpdateFolder();
