@@ -639,6 +639,7 @@ namespace LfMergeLift.Tests
 				//We want to make sure the commit happened.
 				Assert.That(mergeRepoSha0.Number.Hash, Is.Not.EqualTo(mergeRepoSha1.Number.Hash));
 
+				Console.WriteLine("Checkpoint 1");
 				//Sha0
 				projAMergeRepo.Update("0");
 				var xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -648,6 +649,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='four']");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
+				Console.WriteLine("Checkpoint 2");
 				//Sha1
 				projAMergeRepo.Update("1");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -658,17 +660,21 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
+				Console.WriteLine("Checkpoint 3");
 				//Create a .lift.update file. Make sure is has ProjA and the correct Sha(Hash) in the name.
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha0, update1);
 				//Create another .lift.update file  for the second sha
 				env.CreateLiftUpdateFile("ProjA", mergeRepoSha1, update2);
 
+				Console.WriteLine("Checkpoint 4");
 				//Run LiftUpdaeProcessor
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha1.Number.Hash);
 						//Sha1-->Sha2 when an update is applied to another sha
 				//Sha1 plus update2
+				Console.WriteLine("Checkpoint 5");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
+				Console.WriteLine("Checkpoint 6");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -676,10 +682,13 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
+				Console.WriteLine("Checkpoint 7");
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, mergeRepoSha0.Number.Hash);
 						//Sha0-->Sha3 when another update is applied to another sha
 				//Sha0 plus update1
+				Console.WriteLine("Checkpoint 8");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
+				Console.WriteLine("Checkpoint 9");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "TEST");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='three']", "");
@@ -687,30 +696,38 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
+				Console.WriteLine("Checkpoint 10");
 				var allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(3));
 				var sha2 = allRevisions[0]; //It seems that GetAllRevisions lists them from newest to oldest.
 
+				Console.WriteLine("Checkpoint 11");
 				// Now apply Update3ToSha2  which was Sha1-->Sha2
 				env.CreateLiftUpdateFile("ProjA", sha2, update3);
 
+				Console.WriteLine("Checkpoint 12");
 				//The .lift.update file was just added so the scanner does not know about it yet.
 				lfProcessor.LiftUpdateScanner.CheckForMoreLiftUpdateFiles();
+				Console.WriteLine("Checkpoint 13");
 				lfProcessor.ProcessUpdatesForAParticularSha("ProjA", projAMergeRepo, sha2.Number.Hash);
 					   //this is cause a commit to Sha0--Sha3 (two heads so a merge needed Sha2&Sha3-->Sha4)
 					   //result will be   Sha2-->Sha5 (not committed yet)
 
+				Console.WriteLine("Checkpoint 14");
 				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
 				//We cannot know sha after updates since updates could be applied in either order
 				//since Sha numbers can be anything but we should be at local revision 3
 				Assert.That(mergeRepoRevisionAfterUpdates.Number.Hash, Is.EqualTo(sha2.Number.Hash));
 
+				Console.WriteLine("Checkpoint 15");
 				allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(5));
 
+				Console.WriteLine("Checkpoint 16");
 				//There should only be one head after any application of a set of updates.
 				Assert.That(projAMergeRepo.GetHeads().Count, Is.EqualTo(1));
 
+				Console.WriteLine("Checkpoint 17");
 				//Check the contents of the .lift file
 				//At this point we should be at sha1-->sha2(up2)-->up3 applied
 				xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -721,6 +738,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
+				Console.WriteLine("Checkpoint 18");
 				//Sha0
 				projAMergeRepo.Update("0");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -732,6 +750,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
 				//Sha1
+				Console.WriteLine("Checkpoint 19");
 				projAMergeRepo.Update("1");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
@@ -741,6 +760,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
+				Console.WriteLine("Checkpoint 20");
 				//Result of Sha1-->Sha2 (update2 applied)
 				projAMergeRepo.Update("2");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -751,6 +771,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='five']");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");
 
+				Console.WriteLine("Checkpoint 21");
 				//Result of Sha0-->Sha3 (update1 applied)
 				projAMergeRepo.Update("3");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
@@ -761,8 +782,10 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");
 				env.VerifyEntryDoesNotExist(xmlDoc, "//entry[@id='six']");
 
+				Console.WriteLine("Checkpoint 22");
 				//Result of Sha2&Sha3 merger-->Sha4
 				projAMergeRepo.Update("4");
+				Console.WriteLine("Checkpoint 23");
 				xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "ENTRY ONE ADDS lexical unit");      //""  &  "ENTRY ONE ADDS lexical unit"
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");      //"SLIGHT CHANGE in .LIFT file"  &  "TEST"
@@ -772,6 +795,7 @@ namespace LfMergeLift.Tests
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='four']", "");                                //"ENTRY FOUR adds a lexical unit" & ""
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='five']", "");                                // no node  & ""
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='six']", "");                                 // "" & no node
+				Console.WriteLine("Checkpoint 24");
 			}
 		}
 
