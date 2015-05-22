@@ -16,6 +16,7 @@ namespace LfMergeLift
 		//This is the subfolder of the MergeWork foler where the .lift.update files are found.
 		internal const string LiftUpdatesFolder = "LiftUpdates";
 		internal const string ProjectsFolder = "Projects";
+		internal const string StateFolder = "state";
 
 		public LfDirectoriesAndFiles(string languageForgeServerFolder)
 		{
@@ -45,6 +46,15 @@ namespace LfMergeLift
 		{
 			get { return Path.Combine(_languageForgeServerFolder, MasterReposFolder); }
 		}
+
+		/// <summary>
+		/// This folder contains the .state files
+		/// </summary>
+		public string StatePath
+		{
+			get { return Path.Combine(_languageForgeServerFolder, StateFolder); }
+		}
+
 
 		/// <summary>
 		/// This is the location where the updates from language forge clients are done
@@ -137,6 +147,7 @@ namespace LfMergeLift
 		}
 
 		public const string ExtensionOfLiftFiles = ".lift";
+		public const string ExtensionOfStateFiles = ".state";
 
 		public string LiftFileMergePath(string projName)
 		{
@@ -151,6 +162,11 @@ namespace LfMergeLift
 		public string LiftFileMasterRepoPath(string projName)
 		{
 			return Path.Combine(GetProjMasterRepoPath(projName), projName + ExtensionOfLiftFiles);
+		}
+
+		public string LfMergeStateFile(string projName)
+		{
+			return Path.Combine(StatePath, projName + ExtensionOfStateFiles);
 		}
 	}
 }
