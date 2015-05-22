@@ -109,18 +109,22 @@ namespace LfMergeLift.Tests
 				writer.Write(content);
 				writer.Close();
 				writer.Dispose();
+
+				Thread.Sleep(100);
 			}
 
 			private HgRepository CreateRepoProjA(string projAPath)
 			{
 				WriteFile("ProjA.lift", Rev0, projAPath);
-				var progress = new ConsoleProgress();
-				HgRepository.CreateRepositoryInExistingDir(projAPath, progress);
-				var projARepo = new HgRepository(projAPath, new NullProgress());
+				using (var progress = new ConsoleProgress())
+				{
+					HgRepository.CreateRepositoryInExistingDir(projAPath, progress);
+					var projARepo = new HgRepository(projAPath, new NullProgress());
 
-				//Add the .lift file to the repo
-				projARepo.AddAndCheckinFile(LiftFileFullPath(projAPath, "ProjA"));
-				return projARepo;
+					//Add the .lift file to the repo
+					projARepo.AddAndCheckinFile(LiftFileFullPath(projAPath, "ProjA"));
+					return projARepo;
+				}
 			}
 
 			internal void MakeProjASha1(string projAMergeWorkPath, HgRepository projAMergeRepo)
@@ -139,13 +143,14 @@ namespace LfMergeLift.Tests
 			private string GetLiftUpdateFileName(string projName, Revision rev)
 			{
 				var fileEnding = Path.GetRandomFileName();
-
-				return projName + "_" + rev.Number.Hash + "_" + fileEnding + SynchronicMerger.ExtensionOfIncrementalFiles;
+				return projName + "_" + rev.Number.Hash + "_" + fileEnding +
+					SynchronicMerger.ExtensionOfIncrementalFiles;
 			}
 
 			private string LiftUpdateFileFullPath(string filename)
 			{
-				return Path.Combine(LangForgeDirFinder.LiftUpdatesPath, filename + SynchronicMerger.ExtensionOfIncrementalFiles);
+				return Path.Combine(LangForgeDirFinder.LiftUpdatesPath, filename +
+					SynchronicMerger.ExtensionOfIncrementalFiles);
 			}
 
 			internal static string LiftFileFullPath(string path, string projName)
@@ -180,7 +185,8 @@ namespace LfMergeLift.Tests
 			private static XmlDocument GetLiftFile(string projectName, string directory)
 			{
 				var doc = new XmlDocument();
-				var outputPath = Path.Combine(directory, projectName + LfDirectoriesAndFiles.ExtensionOfLiftFiles);
+				var outputPath = Path.Combine(directory, projectName +
+					LfDirectoriesAndFiles.ExtensionOfLiftFiles);
 				doc.Load(outputPath);
 				Console.WriteLine(File.ReadAllText(outputPath));
 				return doc;
@@ -265,8 +271,8 @@ namespace LfMergeLift.Tests
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
-				//Verify that if there are updates for a project that the project is Cloned into the MergeWork/Projects
-				//folder.
+				// Verify that if there are updates for a project that the project is Cloned into
+				// the MergeWork/Projects folder.
 				var projAMergeWorkPath = env.LangForgeDirFinder.GetProjMergePath("ProjA");
 				Assert.That(Directory.Exists(projAMergeWorkPath), Is.True);
 				var mergeRepo = new HgRepository(projAMergeWorkPath, new NullProgress());
@@ -282,12 +288,14 @@ namespace LfMergeLift.Tests
 		/// This test has the following setup.
 		/// 1) Create the master .Lift file in WebWork
 		/// 2) Clone it to the MergeWork location
-		/// 3) Modify the MergeWork/Projects/ProjA/ProjA.lift file, then commit it so the .hg file will have changed.
-		/// 4) Create a .lift.update file for this project so that LiftUpdateProcessor will take action on this project.
+		/// 3) Modify the MergeWork/Projects/ProjA/ProjA.lift file, then commit it so the .hg file
+		///    will have changed.
+		/// 4) Create a .lift.update file for this project so that LiftUpdateProcessor will take
+		///    action on this project.
 		/// 5) run ProcessUpdates
 		/// CHECK
-		/// Make sure the repo was not replaced by the one in WebWork (look at the sha). The point is the repo should
-		/// only be cloned if it does not exist in the MergeWork folder.
+		/// Make sure the repo was not replaced by the one in WebWork (look at the sha). The point
+		/// is the repo should only be cloned if it does not exist in the MergeWork folder.
 		/// </summary>
 		[Test]
 		public void ProcessLiftUpdates_OneProjectWithOneUpdateFile_MakeSureMergeWorkCopyIsNotOverWritten()
@@ -329,7 +337,8 @@ namespace LfMergeLift.Tests
 
 				//Check the contents of the .lift file
 				var xmlDoc = env.GetMergeFolderResult("ProjA");
-				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']", "SLIGHT CHANGE in .LIFT file");
+				env.VerifyEntryInnerText(xmlDoc, "//entry[@guid='0ae89610-fc01-4bfd-a0d6-1125b7281d22']",
+					"SLIGHT CHANGE in .LIFT file");
 
 				AssertThatXmlIn.File(env.LiftFileInMergeWorkPath("ProjA"))
 					.HasAtLeastOneMatchForXpath("//entry[@id='two']/lexical-unit/form/text[text()='SLIGHT CHANGE in .LIFT file']");
@@ -344,7 +353,8 @@ namespace LfMergeLift.Tests
 		///
 		/// CHECK
 		/// 5) .lift.update files are deleted
-		/// 6) revision number should not be changed because we only do a commit if .lift.update files exist for multiple sha's
+		/// 6) revision number should not be changed because we only do a commit if .lift.update
+		///    files exist for multiple sha's
 		/// </summary>
 		[Test]
 		public void ProcessLiftUpdates_OneProjectWithTwoUpdateFiles_VerifyShaNotChangedAndUpdateFilesDeleted()
@@ -381,16 +391,18 @@ namespace LfMergeLift.Tests
 				var lfProcessor = new LiftUpdateProcessor(env.LanguageForgeFolder);
 				lfProcessor.ProcessLiftUpdates();
 
-				// .lift.update files are deleted when they are processed. Make sure this happens so they are not processed again.
+				// .lift.update files are deleted when they are processed. Make sure this happens
+				// so they are not processed again.
 				Assert.That(File.Exists(liftUpdateFile1), Is.False);
 				Assert.That(File.Exists(liftUpdateFile2), Is.False);
 
 				//No commits should have been done.
 				var mergeRepoRevisionAfterUpdates = projAMergeRepo.GetRevisionWorkingSetIsBasedOn();
-				Assert.That(mergeRepoRevisionBeforeUpdates.Number.Hash, Is.EqualTo(mergeRepoRevisionAfterUpdates.Number.Hash));
+				Assert.That(mergeRepoRevisionBeforeUpdates.Number.Hash,
+					Is.EqualTo(mergeRepoRevisionAfterUpdates.Number.Hash));
 
-				//We started with one revision so we should still have just one revision since no commits should have
-				//been applied yet.
+				// We started with one revision so we should still have just one revision since no
+				// commits should have been applied yet.
 				var allRevisions = projAMergeRepo.GetAllRevisions();
 				Assert.That(allRevisions.Count, Is.EqualTo(1));
 
@@ -490,7 +502,8 @@ namespace LfMergeLift.Tests
 				// sha2 should have the changes from the first update.
 				// sha3 should have the merge of sha1 & sha2 with other .lift.update applied to it.
 
-				//At this point we should be at sha1 and changes to the .lift file applied to the file but should not be committed yet.
+				// At this point we should be at sha1 and changes to the .lift file applied to the
+				// file but should not be committed yet.
 				var xmlDoc = env.GetMergeFolderResult("ProjA");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='one']", "");
 				env.VerifyEntryInnerText(xmlDoc, "//entry[@id='two']", "SLIGHT CHANGE in .LIFT file");
