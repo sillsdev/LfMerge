@@ -13,6 +13,7 @@ using Palaso.Lift.Validation;
 using Palaso.Progress;
 using Palaso.TestUtilities;
 using NullProgress = Palaso.Progress.NullProgress;
+using System.Diagnostics;
 
 namespace LfMergeLift.Tests
 {
@@ -57,12 +58,35 @@ namespace LfMergeLift.Tests
 				LangForgeDirFinder.CreateMasterReposFolder();
 			}
 
+			private void RunCommand(string command)
+			{
+				using (var process = new Process())
+				{
+					var args = string.Format("-c \"{0}\"", command);
+					Console.WriteLine("/bin/bash {0}:", args);
+					process.StartInfo = new ProcessStartInfo {
+						FileName = "/bin/bash",
+						Arguments = args,
+						UseShellExecute = false,
+						RedirectStandardOutput = true,
+						CreateNoWindow = true
+					};
+					process.Start();
+					var output = process.StandardOutput.ReadToEnd();
+					process.WaitForExit(2000);
+					Console.WriteLine(output);
+				}
+			}
+
 			internal HgRepository CreateProjAWebRepo()
 			{
 				var projAWebWorkPath = LangForgeDirFinder.CreateWebWorkProjectFolder("ProjA");
 				var hgdir = Path.Combine(projAWebWorkPath, ".hg");
 				Console.WriteLine("projAWebWorkPath={0}; exists: {1},\n{2} exists: {3}", projAWebWorkPath,
 					Directory.Exists(projAWebWorkPath), hgdir, Directory.Exists(hgdir));
+				RunCommand("echo $PATH");
+				RunCommand("which hg");
+
 
 				//Make the webWork ProjA.LIFT file
 				var projAWebRepo = CreateRepoProjA(projAWebWorkPath);
