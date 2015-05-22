@@ -143,6 +143,7 @@ namespace LfMergeLift.Tests
 			{
 				WriteFile("ProjA.lift", Rev0, projAPath);
 				var progress = new ConsoleProgress();
+				progress.ShowVerbose = true;
 				HgRepository.CreateRepositoryInExistingDir(projAPath, progress);
 				var projARepo = new HgRepository(projAPath, new NullProgress());
 
