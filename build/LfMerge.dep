@@ -10,7 +10,7 @@ Condition=Linux
 Path=Chorus.exe* => lib/
 ChorusMerge.exe* => lib/
 LibChorus.dll* => lib/
-MercurialExtensions/**/*=>MercurialExtensions
+MercurialExtensions/**/*.py=>MercurialExtensions
 
 
 [TC::bt323]
@@ -50,7 +50,7 @@ ChorusMerge.exe => lib/
 ChorusMerge.pdb => lib/
 LibChorus.dll => lib/
 LibChorus.pdb => lib/
-MercurialExtensions/**/*=>MercurialExtensions/
+MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 [TC::bt223]
