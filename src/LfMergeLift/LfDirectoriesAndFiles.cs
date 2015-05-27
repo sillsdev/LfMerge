@@ -7,6 +7,8 @@ namespace LfMergeLift
 {
 	class LfDirectoriesAndFiles
 	{
+		public static LfDirectoriesAndFiles Current { get; private set; }
+
 		private readonly string _languageForgeServerFolder;
 
 		//These are the folder names for the location of the repositories for the Language Forge projects
@@ -26,6 +28,7 @@ namespace LfMergeLift
 			}
 			_languageForgeServerFolder = languageForgeServerFolder;
 
+			Current = this;
 		}
 
 		/// <summary>
@@ -105,6 +108,13 @@ namespace LfMergeLift
 		public string CreateWebWorkProjectFolder(string projectName)
 		{
 			var dir = GetProjWebPath(projectName);
+			Directory.CreateDirectory(dir);
+			return dir;
+		}
+
+		public string CreateStateFolder()
+		{
+			var dir = StatePath;
 			Directory.CreateDirectory(dir);
 			return dir;
 		}
