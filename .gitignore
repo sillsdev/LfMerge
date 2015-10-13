@@ -1,5 +1,6 @@
 build/NuGet.exe
 packages/
+bin/
 obj/
 output/
 MercurialExtensions/
@@ -11,6 +12,7 @@ _ReSharper.LfMerge
 *.suo
 *.user
 *.pdb
+*.mdb
 *.userprefs
 *.swp
 *~
