@@ -10,7 +10,9 @@ namespace LfMerge
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			var database = args != null && args.Length > 1 ? args[0] : "Sena 3";
+			// TODO: define and process program arguments
+			var database = args.Length > 1 ? args[0] : "Sena 3";
+
 			// TODO: read settings from config instead of hard coding them here
 			var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			var fdoDirs = new FdoDirectories(baseDir, "ReleaseData", "Templates");
