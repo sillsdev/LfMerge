@@ -15,7 +15,7 @@ namespace LfMerge
 
 			// TODO: read settings from config instead of hard coding them here
 			var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
-			var fdoDirs = new FdoDirectories(baseDir, "ReleaseData", "Templates");
+			var fdoDirs = new LfMergeDirectories(baseDir, "ReleaseData", "Templates");
 			var proj = new ProjectIdentifier(fdoDirs, database);
 
 			using (var fw = new FwAccess(proj))
