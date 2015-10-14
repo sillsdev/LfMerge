@@ -10,7 +10,10 @@ namespace LfMerge
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			// TODO: define and process program arguments
+			var options = Options.ParseCommandLineArgs(args);
+			if (options == null)
+				return;
+
 			var database = args.Length > 1 ? args[0] : "Sena 3";
 
 			// TODO: read settings from config instead of hard coding them here
