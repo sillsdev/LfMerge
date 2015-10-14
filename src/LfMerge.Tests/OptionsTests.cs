@@ -9,26 +9,26 @@ namespace LfMerge.Tests
 	public class OptionsTests
 	{
 		[TestCase(new string[0],
-			"all", Options.QueueNames.None, null, Options.QueueNames.None, TestName = "No arguments")]
+			"all", QueueNames.None, null, QueueNames.None, TestName = "No arguments")]
 		[TestCase(new[] { "--priority-project", "ProjA" },
-			"ProjA", Options.QueueNames.None, null, Options.QueueNames.None, TestName = "Prio project specified")]
+			"ProjA", QueueNames.None, null, QueueNames.None, TestName = "Prio project specified")]
 		[TestCase(new[] { "-p", "ProjA" },
-			"all", Options.QueueNames.None, "ProjA", Options.QueueNames.None, TestName = "Single project specified")]
+			"all", QueueNames.None, "ProjA", QueueNames.None, TestName = "Single project specified")]
 		[TestCase(new[] { "--priority-queue", "Commit" },
-			"all", Options.QueueNames.Commit, null, Options.QueueNames.None, TestName = "Prio queue specified")]
+			"all", QueueNames.Commit, null, QueueNames.None, TestName = "Prio queue specified")]
 		[TestCase(new[] { "-q", "Receive" },
-			"all", Options.QueueNames.None, null, Options.QueueNames.Receive, TestName = "single queue specified")]
+			"all", QueueNames.None, null, QueueNames.Receive, TestName = "single queue specified")]
 		[TestCase(new[] { "--priority-project", "ProjA", "--priority-queue", "Send" },
-			"ProjA", Options.QueueNames.Send, null, Options.QueueNames.None, TestName = "Prio project+queue specified")]
+			"ProjA", QueueNames.Send, null, QueueNames.None, TestName = "Prio project+queue specified")]
 		[TestCase(new[] { "-p", "ProjA", "-q", "Merge" },
-			"all", Options.QueueNames.None, "ProjA", Options.QueueNames.Merge, TestName = "Single project+queue specified")]
+			"all", QueueNames.None, "ProjA", QueueNames.Merge, TestName = "Single project+queue specified")]
 		[TestCase(new[] { "--priority-project", "ProjA", "-q", "Send" },
-			"ProjA", Options.QueueNames.None, null, Options.QueueNames.Send, TestName = "Prio project + single queue specified")]
+			"ProjA", QueueNames.None, null, QueueNames.Send, TestName = "Prio project + single queue specified")]
 		[TestCase(new[] { "-p", "ProjA", "--priority-queue", "Merge" },
-			"all", Options.QueueNames.Merge, "ProjA", Options.QueueNames.None, TestName = "Single project + prio queue specified")]
+			"all", QueueNames.Merge, "ProjA", QueueNames.None, TestName = "Single project + prio queue specified")]
 		public void ParseArgs(string[] args, string expectedPrioProj,
-			Options.QueueNames expectedPrioQueue, string expectedSingleProj,
-			Options.QueueNames expectedSingleQueue)
+			QueueNames expectedPrioQueue, string expectedSingleProj,
+			QueueNames expectedSingleQueue)
 		{
 			// SUT
 			var options = Options.ParseCommandLineArgs(args);
@@ -71,21 +71,70 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(new string[0],
-			Options.QueueNames.Merge, false, TestName = "No arguments")]
+			Actions.UpdateFdoFromMongoDb, false, TestName = "No arguments")]
 		[TestCase(new[] { "--priority-queue", "commit" },
-			Options.QueueNames.Commit, false, TestName = "Prio queue specified")]
+			Actions.Commit, false, TestName = "Prio queue specified")]
 		[TestCase(new[] { "-q", "receive" },
-			Options.QueueNames.Receive, true, TestName = "Single queue specified")]
-		public void FirstQueueAndStopAfterFirstQueue(string[] args,
-			Options.QueueNames expectedFirstQueue, bool expectedStop)
+			Actions.Receive, true, TestName = "Single queue specified")]
+		public void FirstActionAndStopAfterFirstAction(string[] args,
+			Actions expectedFirstAction, bool expectedStop)
 		{
 			// SUT
 			var options = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(options.FirstQueue, Is.EqualTo(expectedFirstQueue));
-			Assert.That(options.StopAfterFirstQueue, Is.EqualTo(expectedStop));
+			Assert.That(options.FirstAction, Is.EqualTo(expectedFirstAction));
+			Assert.That(options.StopAfterFirstAction, Is.EqualTo(expectedStop));
 		}
+
+		[TestCase(QueueNames.None, Actions.None)]
+		[TestCase(QueueNames.Commit, Actions.Commit)]
+		[TestCase(QueueNames.Merge, Actions.UpdateFdoFromMongoDb)]
+		[TestCase(QueueNames.Receive, Actions.Receive)]
+		[TestCase(QueueNames.Send, Actions.Send)]
+		public void GetActionFromQueue(QueueNames queue, Actions expectedAction)
+		{
+			Assert.That(Options.GetActionForQueue(queue), Is.EqualTo(expectedAction));
+		}
+
+		[TestCase(Actions.None, QueueNames.None)]
+		[TestCase(Actions.UpdateFdoFromMongoDb, QueueNames.Merge)]
+		[TestCase(Actions.Commit, QueueNames.Commit)]
+		[TestCase(Actions.Receive, QueueNames.Receive)]
+		[TestCase(Actions.Merge, QueueNames.None)]
+		[TestCase(Actions.Send, QueueNames.Send)]
+		[TestCase(Actions.UpdateMongoDbFromFdo, QueueNames.None)]
+		public void GetQueueFromAction(Actions action, QueueNames expectedQueue)
+		{
+			Assert.That(Options.GetQueueForAction(action), Is.EqualTo(expectedQueue));
+		}
+
+		[TestCase(Actions.None, Actions.UpdateFdoFromMongoDb)]
+		[TestCase(Actions.UpdateFdoFromMongoDb, Actions.Commit)]
+		[TestCase(Actions.Commit, Actions.Receive)]
+		[TestCase(Actions.Receive, Actions.Merge)]
+		[TestCase(Actions.Merge, Actions.Send)]
+		[TestCase(Actions.Send, Actions.UpdateMongoDbFromFdo)]
+		[TestCase(Actions.UpdateMongoDbFromFdo, Actions.None)]
+		public void GetNextAction(Actions currentAction, Actions expectedAction)
+		{
+			var option = new Options();
+			Assert.That(option.GetNextAction(currentAction), Is.EqualTo(expectedAction));
+		}
+
+		[TestCase(Actions.None)]
+		[TestCase(Actions.UpdateFdoFromMongoDb)]
+		[TestCase(Actions.Commit)]
+		[TestCase(Actions.Receive)]
+		[TestCase(Actions.Merge)]
+		[TestCase(Actions.Send)]
+		[TestCase(Actions.UpdateMongoDbFromFdo)]
+		public void GetNextActionIfStopAfterFirstAction_ReturnsNone(Actions currentAction)
+		{
+			var option = Options.ParseCommandLineArgs(new[] { "-q", "merge" });
+			Assert.That(option.GetNextAction(currentAction), Is.EqualTo(Actions.None));
+		}
+
 	}
 }
 

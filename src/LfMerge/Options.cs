@@ -8,15 +8,6 @@ namespace LfMerge
 {
 	public class Options
 	{
-		public enum QueueNames
-		{
-			None,
-			Merge,
-			Send,
-			Receive,
-			Commit
-		}
-
 		[Option("priority-queue", HelpText = "Queue to process first (merge|send|receive|commit)")]
 		public QueueNames PriorityQueue { get; set; }
 
@@ -55,7 +46,7 @@ namespace LfMerge
 			get { return !string.IsNullOrEmpty(SingleProject); }
 		}
 
-		public QueueNames FirstQueue
+		private QueueNames FirstQueue
 		{
 			get
 			{
@@ -64,7 +55,12 @@ namespace LfMerge
 			}
 		}
 
-		public bool StopAfterFirstQueue
+		public Actions FirstAction
+		{
+			get { return GetActionForQueue(FirstQueue); }
+		}
+
+		public bool StopAfterFirstAction
 		{
 			get { return SingleQueue != QueueNames.None; }
 		}
@@ -74,8 +70,57 @@ namespace LfMerge
 			get
 			{
 				return ((PriorityProject == "all" || string.IsNullOrEmpty(SingleProject)) &&
-					(PriorityQueue == QueueNames.None || SingleQueue == QueueNames.None));
+				(PriorityQueue == QueueNames.None || SingleQueue == QueueNames.None));
 			}
+		}
+
+		public Actions GetNextAction(Actions currentAction)
+		{
+			int nextAction = 0;
+			if (!StopAfterFirstAction)
+				nextAction = ((int)currentAction) + 1;
+
+			if (nextAction > (int)Actions.UpdateMongoDbFromFdo)
+				nextAction = 0;
+			return (Actions)nextAction;
+		}
+
+		public static Actions GetActionForQueue(QueueNames queue)
+		{
+			switch (queue)
+			{
+				case QueueNames.Commit:
+					return Actions.Commit;
+				case QueueNames.Merge:
+					return Actions.UpdateFdoFromMongoDb;
+				case QueueNames.None:
+					break;
+				case QueueNames.Receive:
+					return Actions.Receive;
+				case QueueNames.Send:
+					return Actions.Send;
+			}
+			return Actions.None;
+		}
+
+		public static QueueNames GetQueueForAction(Actions action)
+		{
+			switch (action)
+			{
+				case Actions.UpdateFdoFromMongoDb:
+					return QueueNames.Merge;
+				case Actions.Commit:
+					return QueueNames.Commit;
+				case Actions.Receive:
+					return QueueNames.Receive;
+				case Actions.Send:
+					return QueueNames.Send;
+				case Actions.None:
+				case Actions.Merge:
+				case Actions.UpdateMongoDbFromFdo:
+					break;
+			}
+			return QueueNames.None;
 		}
 
 		public static Options ParseCommandLineArgs(string[] args)
