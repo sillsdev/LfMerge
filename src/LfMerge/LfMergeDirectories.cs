@@ -3,21 +3,28 @@
 using System;
 using System.IO;
 using SIL.FieldWorks.FDO;
+using LfMerge.Queues;
 
 namespace LfMerge
 {
 	public class LfMergeDirectories: IFdoDirectories
 	{
+		private string[] _queueDirectories;
+
 		public LfMergeDirectories(string baseDir, string releaseDataDir = "ReleaseData",
 			string templatesDir = "Templates")
 		{
 			ProjectsDirectory = Path.IsPathRooted(releaseDataDir) ? releaseDataDir : Path.Combine(baseDir, releaseDataDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
 			StateDirectory = Path.Combine(baseDir, "state");
-			MergeQueueDirectory = Path.Combine(baseDir, "mergequeue");
-			CommitQueueDirectory = Path.Combine(baseDir, "commitqueue");
-			ReceiveQueueDirectory = Path.Combine(baseDir, "receivequeue");
-			SendQueueDirectory = Path.Combine(baseDir, "sendqueue");
+
+			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
+			_queueDirectories = new string[queueCount];
+			_queueDirectories[(int)QueueNames.None] = null;
+			_queueDirectories[(int)QueueNames.Merge] = Path.Combine(baseDir, "mergequeue");
+			_queueDirectories[(int)QueueNames.Commit] = Path.Combine(baseDir, "commitqueue");
+			_queueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
+			_queueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
 
 			ConfigFile = "/etc/languageforge/conf/sendreceive.conf";
 
@@ -41,13 +48,10 @@ namespace LfMerge
 
 		public string StateDirectory { get; private set; }
 
-		public string MergeQueueDirectory { get; private set; }
-
-		public string CommitQueueDirectory { get; private set; }
-
-		public string ReceiveQueueDirectory { get; private set; }
-
-		public string SendQueueDirectory { get; private set; }
+		public string GetQueueDirectory(QueueNames queue)
+		{
+			return _queueDirectories[(int)queue];
+		}
 
 		public string ConfigFile { get; private set; }
 

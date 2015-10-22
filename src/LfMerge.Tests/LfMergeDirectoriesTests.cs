@@ -5,6 +5,7 @@ using System.IO;
 using LfMerge;
 using NUnit.Framework;
 using Palaso.TestUtilities;
+using LfMerge.Queues;
 
 namespace LfMerge.Tests
 {
@@ -55,6 +56,26 @@ namespace LfMerge.Tests
 				Assert.That(stateFile, Is.EqualTo(Path.Combine(temp.Path, "state/ProjA.state")));
 				Assert.That(Directory.Exists(Path.GetDirectoryName(stateFile)), Is.True,
 					"State directory didn't get created");
+			}
+		}
+
+		[TestCase(QueueNames.Commit, "commitqueue")]
+		[TestCase(QueueNames.Merge, "mergequeue")]
+		[TestCase(QueueNames.Receive, "receivequeue")]
+		[TestCase(QueueNames.Send, "sendqueue")]
+		[TestCase(QueueNames.None, null)]
+		public void GetQueueDirectory_Correct(QueueNames queue, string expectedDir)
+		{
+			// Setup
+			using (var temp = new TemporaryFolder("QueueDirectory"))
+			{
+				var dirs = new LfMergeDirectories(temp.Path);
+
+				// SUT
+				var queueDir = dirs.GetQueueDirectory(queue);
+
+				// Verify
+				Assert.That(Path.GetFileName(queueDir), Is.EqualTo(expectedDir));
 			}
 		}
 	}

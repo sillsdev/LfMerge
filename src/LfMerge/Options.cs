@@ -3,11 +3,19 @@
 using System;
 using CommandLine;
 using CommandLine.Text;
+using LfMerge.Queues;
 
 namespace LfMerge
 {
 	public class Options
 	{
+		public static Options Current;
+
+		public Options()
+		{
+			Current = this;
+		}
+
 		[Option("priority-queue", HelpText = "Queue to process first (merge|send|receive|commit)")]
 		public QueueNames PriorityQueue { get; set; }
 
@@ -129,7 +137,10 @@ namespace LfMerge
 			if (Parser.Default.ParseArguments(args, options))
 			{
 				if (options.AllArgumentsValid && !options.ShowHelp)
+				{
+					Current = options;
 					return options;
+				}
 			}
 			// Display the default usage information
 			Console.WriteLine(options.GetUsage());
