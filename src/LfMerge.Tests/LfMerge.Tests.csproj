@@ -34,7 +34,7 @@
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
-      <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\FDO.dll</HintPath>
+      <HintPath>..\..\..\..\fwrepo\fw\Output\Debug\FDO.dll</HintPath>
     </Reference>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
