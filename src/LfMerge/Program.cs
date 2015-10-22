@@ -4,6 +4,12 @@ using System;
 using System.IO;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using MongoDB.Driver;
+using MongoDB.Driver.Core;
+using MongoDB.Bson;
 
 namespace LfMerge
 {
@@ -12,6 +18,13 @@ namespace LfMerge
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			Console.WriteLine("Starting");
+			Task dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
+			Console.WriteLine(dbTask.GetType());
+			dbTask.Wait(); // Don't forget to wait, or the asynchronous Mongo calls won't have time to run
+			Console.WriteLine("Stopping");
+			return;
+			/*
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return;
@@ -51,7 +64,29 @@ namespace LfMerge
 						t.Title.BestVernacularAlternative.Text,
 						t.Comment.BestVernacularAnalysisAlternative.Text);
 				}
-			}
+			}*/
 		}
+
+		public async static Task<bool> GetListOfMongoDatabases()
+		{
+			// TODO: Get connection string from config, not hardcoded
+			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
+			var client = new MongoClient(HardcodedMongoConnectionString);
+			IAsyncCursor<BsonDocument> dbs = await client.ListDatabasesAsync();
+			// TODO: Figure out if the second "await" is truly necessary.
+			// Perhaps we can chain this together with Task.ContinueWith or something.
+			await dbs.ForEachAsync(ProcessOneDbDocument);
+			return true;
+		}
+
+		public static void ProcessOneDbDocument(BsonDocument doc) {
+			var d = doc.ToDictionary();
+			foreach (var kv in d)
+			{
+				// Console.WriteLine("{0}: {1}", kv.Key, kv.Value);
+			}
+			Console.WriteLine("Database name: {0}", doc.GetElement("name").Value);
+		}
+
 	}
 }
