@@ -3,6 +3,7 @@
 using System;
 using NUnit.Framework;
 using LfMerge.Queues;
+using LfMerge.Actions;
 
 namespace LfMerge.Tests
 {
@@ -69,13 +70,13 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(new string[0],
-			Actions.UpdateFdoFromMongoDb, false, TestName = "No arguments")]
+			ActionNames.UpdateFdoFromMongoDb, false, TestName = "No arguments")]
 		[TestCase(new[] { "--priority-queue", "commit" },
-			Actions.Commit, false, TestName = "Prio queue specified")]
+			ActionNames.Commit, false, TestName = "Prio queue specified")]
 		[TestCase(new[] { "-q", "receive" },
-			Actions.Receive, true, TestName = "Single queue specified")]
+			ActionNames.Receive, true, TestName = "Single queue specified")]
 		public void FirstActionAndStopAfterFirstAction(string[] args,
-			Actions expectedFirstAction, bool expectedStop)
+			ActionNames expectedFirstAction, bool expectedStop)
 		{
 			var sut = Options.ParseCommandLineArgs(args);
 
@@ -84,52 +85,52 @@ namespace LfMerge.Tests
 			Assert.That(sut.StopAfterFirstAction, Is.EqualTo(expectedStop));
 		}
 
-		[TestCase(QueueNames.None, Actions.None)]
-		[TestCase(QueueNames.Commit, Actions.Commit)]
-		[TestCase(QueueNames.Merge, Actions.UpdateFdoFromMongoDb)]
-		[TestCase(QueueNames.Receive, Actions.Receive)]
-		[TestCase(QueueNames.Send, Actions.Send)]
-		public void GetActionFromQueue(QueueNames queue, Actions expectedAction)
+		[TestCase(QueueNames.None, ActionNames.None)]
+		[TestCase(QueueNames.Commit, ActionNames.Commit)]
+		[TestCase(QueueNames.Merge, ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(QueueNames.Receive, ActionNames.Receive)]
+		[TestCase(QueueNames.Send, ActionNames.Send)]
+		public void GetActionFromQueue(QueueNames queue, ActionNames expectedAction)
 		{
 			Assert.That(Options.GetActionForQueue(queue), Is.EqualTo(expectedAction));
 		}
 
-		[TestCase(Actions.None, QueueNames.None)]
-		[TestCase(Actions.UpdateFdoFromMongoDb, QueueNames.Merge)]
-		[TestCase(Actions.Commit, QueueNames.Commit)]
-		[TestCase(Actions.Receive, QueueNames.Receive)]
-		[TestCase(Actions.Merge, QueueNames.None)]
-		[TestCase(Actions.Send, QueueNames.Send)]
-		[TestCase(Actions.UpdateMongoDbFromFdo, QueueNames.None)]
-		public void GetQueueFromAction(Actions action, QueueNames expectedQueue)
+		[TestCase(ActionNames.None, QueueNames.None)]
+		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Merge)]
+		[TestCase(ActionNames.Commit, QueueNames.Commit)]
+		[TestCase(ActionNames.Receive, QueueNames.Receive)]
+		[TestCase(ActionNames.Merge, QueueNames.None)]
+		[TestCase(ActionNames.Send, QueueNames.Send)]
+		[TestCase(ActionNames.UpdateMongoDbFromFdo, QueueNames.None)]
+		public void GetQueueFromAction(ActionNames action, QueueNames expectedQueue)
 		{
 			Assert.That(Options.GetQueueForAction(action), Is.EqualTo(expectedQueue));
 		}
 
-		[TestCase(Actions.None, Actions.UpdateFdoFromMongoDb)]
-		[TestCase(Actions.UpdateFdoFromMongoDb, Actions.Commit)]
-		[TestCase(Actions.Commit, Actions.Receive)]
-		[TestCase(Actions.Receive, Actions.Merge)]
-		[TestCase(Actions.Merge, Actions.Send)]
-		[TestCase(Actions.Send, Actions.UpdateMongoDbFromFdo)]
-		[TestCase(Actions.UpdateMongoDbFromFdo, Actions.None)]
-		public void GetNextAction(Actions currentAction, Actions expectedAction)
+		[TestCase(ActionNames.None, ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(ActionNames.UpdateFdoFromMongoDb, ActionNames.Commit)]
+		[TestCase(ActionNames.Commit, ActionNames.Receive)]
+		[TestCase(ActionNames.Receive, ActionNames.Merge)]
+		[TestCase(ActionNames.Merge, ActionNames.Send)]
+		[TestCase(ActionNames.Send, ActionNames.UpdateMongoDbFromFdo)]
+		[TestCase(ActionNames.UpdateMongoDbFromFdo, ActionNames.None)]
+		public void GetNextAction(ActionNames currentAction, ActionNames expectedAction)
 		{
 			var option = new Options();
 			Assert.That(option.GetNextAction(currentAction), Is.EqualTo(expectedAction));
 		}
 
-		[TestCase(Actions.None)]
-		[TestCase(Actions.UpdateFdoFromMongoDb)]
-		[TestCase(Actions.Commit)]
-		[TestCase(Actions.Receive)]
-		[TestCase(Actions.Merge)]
-		[TestCase(Actions.Send)]
-		[TestCase(Actions.UpdateMongoDbFromFdo)]
-		public void GetNextActionIfStopAfterFirstAction_ReturnsNone(Actions currentAction)
+		[TestCase(ActionNames.None)]
+		[TestCase(ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(ActionNames.Commit)]
+		[TestCase(ActionNames.Receive)]
+		[TestCase(ActionNames.Merge)]
+		[TestCase(ActionNames.Send)]
+		[TestCase(ActionNames.UpdateMongoDbFromFdo)]
+		public void GetNextActionIfStopAfterFirstAction_ReturnsNone(ActionNames currentAction)
 		{
 			var sut = Options.ParseCommandLineArgs(new[] { "-q", "merge" });
-			Assert.That(sut.GetNextAction(currentAction), Is.EqualTo(Actions.None));
+			Assert.That(sut.GetNextAction(currentAction), Is.EqualTo(ActionNames.None));
 		}
 
 	}

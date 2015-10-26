@@ -4,6 +4,7 @@ using System;
 using CommandLine;
 using CommandLine.Text;
 using LfMerge.Queues;
+using LfMerge.Actions;
 
 namespace LfMerge
 {
@@ -63,7 +64,7 @@ namespace LfMerge
 			}
 		}
 
-		public Actions FirstAction
+		public ActionNames FirstAction
 		{
 			get { return GetActionForQueue(FirstQueue); }
 		}
@@ -82,50 +83,50 @@ namespace LfMerge
 			}
 		}
 
-		public Actions GetNextAction(Actions currentAction)
+		public ActionNames GetNextAction(ActionNames currentAction)
 		{
 			int nextAction = 0;
 			if (!StopAfterFirstAction)
 				nextAction = ((int)currentAction) + 1;
 
-			if (nextAction > (int)Actions.UpdateMongoDbFromFdo)
+			if (nextAction > (int)ActionNames.UpdateMongoDbFromFdo)
 				nextAction = 0;
-			return (Actions)nextAction;
+			return (ActionNames)nextAction;
 		}
 
-		public static Actions GetActionForQueue(QueueNames queue)
+		public static ActionNames GetActionForQueue(QueueNames queue)
 		{
 			switch (queue)
 			{
 				case QueueNames.Commit:
-					return Actions.Commit;
+					return ActionNames.Commit;
 				case QueueNames.Merge:
-					return Actions.UpdateFdoFromMongoDb;
+					return ActionNames.UpdateFdoFromMongoDb;
 				case QueueNames.None:
 					break;
 				case QueueNames.Receive:
-					return Actions.Receive;
+					return ActionNames.Receive;
 				case QueueNames.Send:
-					return Actions.Send;
+					return ActionNames.Send;
 			}
-			return Actions.None;
+			return ActionNames.None;
 		}
 
-		public static QueueNames GetQueueForAction(Actions action)
+		public static QueueNames GetQueueForAction(ActionNames action)
 		{
 			switch (action)
 			{
-				case Actions.UpdateFdoFromMongoDb:
+				case ActionNames.UpdateFdoFromMongoDb:
 					return QueueNames.Merge;
-				case Actions.Commit:
+				case ActionNames.Commit:
 					return QueueNames.Commit;
-				case Actions.Receive:
+				case ActionNames.Receive:
 					return QueueNames.Receive;
-				case Actions.Send:
+				case ActionNames.Send:
 					return QueueNames.Send;
-				case Actions.None:
-				case Actions.Merge:
-				case Actions.UpdateMongoDbFromFdo:
+				case ActionNames.None:
+				case ActionNames.Merge:
+				case ActionNames.UpdateMongoDbFromFdo:
 					break;
 			}
 			return QueueNames.None;

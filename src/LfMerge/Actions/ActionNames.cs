@@ -1,10 +1,10 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 
-namespace LfMerge
+namespace LfMerge.Actions
 {
-	public enum Actions
+	public enum ActionNames
 	{
 		None,
 		UpdateFdoFromMongoDb,

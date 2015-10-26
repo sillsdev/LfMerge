@@ -6,6 +6,7 @@ using System.IO;
 using LfMerge.Queues;
 using NUnit.Framework;
 using System.Threading;
+using LfMerge.Actions;
 
 namespace LfMerge.Tests.Queues
 {
@@ -177,7 +178,7 @@ namespace LfMerge.Tests.Queues
 				Queue.CreateQueueDirectories();
 
 				// Exercise
-				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Null);
@@ -197,7 +198,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -219,7 +220,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.GetNextQueueWithWork(Actions.Send);
+				var sut = Queue.GetNextQueueWithWork(ActionNames.Send);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -241,7 +242,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(mergeQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -265,7 +266,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.GetNextQueueWithWork(Actions.Send);
+				var sut = Queue.GetNextQueueWithWork(ActionNames.Send);
 
 				// Verify
 				Assert.That(sut, Is.Null);
@@ -372,6 +373,17 @@ namespace LfMerge.Tests.Queues
 				// Exercise/Verify
 				Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
 			}
+		}
+
+		[TestCase(QueueNames.Merge, typeof(UpdateFdoFromMongoDbAction))]
+		[TestCase(QueueNames.Commit, typeof(CommitAction))]
+		[TestCase(QueueNames.Receive, typeof(ReceiveAction))]
+		[TestCase(QueueNames.Send, typeof(SendAction))]
+		public void CurrentAction_Works(QueueNames queueName, Type expectedType)
+		{
+			var sut = Queue.GetQueue(queueName);
+
+			Assert.That(sut.CurrentAction, Is.TypeOf(expectedType));
 		}
 	}
 }

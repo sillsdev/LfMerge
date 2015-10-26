@@ -24,17 +24,17 @@ namespace LfMerge
 				queue != null;
 				queue = queue.NextQueueWithWork)
 			{
-				foreach (var projectName in queue.QueuedProjects)
+				foreach (var project in queue.QueuedProjects)
 				{
-//					var project = new LanguageForgeProject(projectName);
-//					for (var action = queue.CurrentAction;
-//						action != null;
-//						action = action.NextAction)
-//					{
-//						action.Run(project);
-//					}
+					for (var action = queue.CurrentAction;
+					action != null;
+					action = action.NextAction)
+					{
+						//action.Run(project);
+					}
 				}
 			}
+
 			var database = args.Length > 1 ? args[0] : "Sena 3";
 
 			using (var fw = new FwProject(database))

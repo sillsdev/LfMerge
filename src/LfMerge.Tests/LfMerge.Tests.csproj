@@ -56,6 +56,7 @@
     <Compile Include="LfMergeDirectoriesTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Queues\QueueTests.cs" />
+    <Compile Include="Actions\ActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -69,5 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Queues\" />
+    <Folder Include="Actions\" />
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using LfMerge.Actions;
 
 namespace LfMerge.Queues
 {
@@ -27,7 +28,7 @@ namespace LfMerge.Queues
 			get { return GetNextQueueWithWork(Options.Current.FirstAction); }
 		}
 
-		public static IQueue GetNextQueueWithWork(Actions currentAction)
+		public static IQueue GetNextQueueWithWork(ActionNames currentAction)
 		{
 			bool firstLoop = true;
 			var action = currentAction;
@@ -97,6 +98,11 @@ namespace LfMerge.Queues
 		public IQueue NextQueueWithWork
 		{
 			get { return GetNextQueueWithWork(Options.GetActionForQueue(Name)); }
+		}
+
+		public IAction CurrentAction
+		{
+			get { return LfMerge.Actions.Action.GetAction(Options.GetActionForQueue(Name)); }
 		}
 		#endregion
 
