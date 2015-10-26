@@ -12,6 +12,25 @@ namespace LfMerge.Tests.Queues
 	[TestFixture]
 	public class QueueTests
 	{
+		/// <summary>
+		/// Test double for Queue class. This test double allows to set the list of projects.
+		/// This simulates getting the list of files sorted by time and saves the time we'd have
+		/// to wait between creating the different files.
+		/// </summary>
+		private class QueueDouble: Queue
+		{
+			public QueueDouble(QueueNames name): base(name)
+			{
+			}
+
+			protected override string[] RawQueuedProjects
+			{
+				get { return ProjectsForTesting; }
+			}
+
+			public string[] ProjectsForTesting { get; set; }
+		}
+
 		[SetUp]
 		public void FixtureSetup()
 		{
@@ -30,8 +49,8 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				var mergequeueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				var sut = new Queue(QueueNames.Merge);
 
@@ -48,8 +67,8 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				var mergequeueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
 				var sut = new Queue(QueueNames.Merge);
@@ -67,8 +86,8 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("QueuedProjects"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				var mergequeueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "projb"), string.Empty);
 
@@ -89,14 +108,63 @@ namespace LfMerge.Tests.Queues
 			}
 		}
 
-		private static void CreateQueueDirectories(LfMergeDirectories lfDirs)
+		[TestCase("proja", new[] { "proja", "projd", "projc", "projb"})]
+		[TestCase("projb", new[] { "projb", "proja", "projd", "projc"})]
+		[TestCase("projc", new[] { "projc", "projb", "proja", "projd"})]
+		[TestCase("projd", new[] { "projd", "projc", "projb", "proja"})]
+		public void QueuedProjects_PriorityProjectReturnsPriorityBeforeNext(string prioProj,
+			string[] expectedProjects)
 		{
-			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
-			{
-				var queueDir = lfDirs.GetQueueDirectory(queueName);
-				if (queueDir != null)
-					Directory.CreateDirectory(queueDir);
-			}
+			// Setup
+			Options.ParseCommandLineArgs(new[] { "--priority-project", prioProj });
+
+			// we use the test double here so that we don't have to wait between creating files
+			var sut = new QueueDouble(QueueNames.Merge);
+			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
+
+			// Exercise
+			var queuedProjects = sut.QueuedProjects;
+
+			// Verify
+			Assert.That(queuedProjects, Is.EquivalentTo(expectedProjects));
+		}
+
+		[TestCase("proja")]
+		[TestCase("projb")]
+		[TestCase("projc")]
+		[TestCase("projd")]
+		public void QueuedProjects_SingleProjectReturnsOnlySingleProj(string singleProj)
+		{
+			// Setup
+			Options.ParseCommandLineArgs(new[] { "--project", singleProj });
+
+			// we use the test double here so that we don't have to wait between creating files
+			var sut = new QueueDouble(QueueNames.Merge);
+			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
+
+			// Exercise
+			var queuedProjects = sut.QueuedProjects;
+
+			// Verify
+			Assert.That(queuedProjects, Is.EquivalentTo(new[] { singleProj }));
+		}
+
+		// test single project if that project has nothing in queue
+		[Test]
+		public void QueuedProjects_SingleProjectEmptyReturnsEmpty()
+		{
+			// Setup
+			Options.ParseCommandLineArgs(new[] { "--project", "proja" });
+
+			// we use the test double here so that we don't have to wait between creating files
+			var sut = new QueueDouble(QueueNames.Merge);
+			sut.ProjectsForTesting = new[] { "projc", "projb", "projd" };
+
+			// Exercise
+			var queuedProjects = sut.QueuedProjects;
+
+			// Verify
+			Assert.That(queuedProjects, Is.EquivalentTo(new string[] { }));
 		}
 
 		[Test]
@@ -105,11 +173,11 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				CreateQueueDirectories(lfDirs);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
 
 				// Exercise
-				var sut = Queue.NextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Null);
@@ -122,14 +190,14 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				CreateQueueDirectories(lfDirs);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
 
-				var sendQueueDir = lfDirs.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.NextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -144,14 +212,14 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				CreateQueueDirectories(lfDirs);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
 
-				var sendQueueDir = lfDirs.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.NextQueueWithWork(Actions.Send);
+				var sut = Queue.GetNextQueueWithWork(Actions.Send);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -166,14 +234,14 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				CreateQueueDirectories(lfDirs);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
 
-				var mergeQueueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
+				var mergeQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Merge);
 				File.WriteAllText(Path.Combine(mergeQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.NextQueueWithWork(Actions.Commit);
+				var sut = Queue.GetNextQueueWithWork(Actions.Commit);
 
 				// Verify
 				Assert.That(sut, Is.Not.Null);
@@ -190,20 +258,121 @@ namespace LfMerge.Tests.Queues
 
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				var lfDirs = new LfMergeDirectories(tempDir.Path);
-				CreateQueueDirectories(lfDirs);
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
 
-				var commitQueueDir = lfDirs.GetQueueDirectory(QueueNames.Commit);
+				var commitQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Commit);
 				File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
 
 				// Exercise
-				var sut = Queue.NextQueueWithWork(Actions.Send);
+				var sut = Queue.GetNextQueueWithWork(Actions.Send);
 
 				// Verify
 				Assert.That(sut, Is.Null);
 			}
 		}
 
+		[Test]
+		public void FirstQueueWithWork_AllQueuesEmptyReturnsNull()
+		{
+			// Setup
+			using (var tempDir = new TemporaryFolder("FirsttQueueWithWork"))
+			{
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
+
+				// Exercise
+				var sut = Queue.FirstQueueWithWork;
+
+				// Verify
+				Assert.That(sut, Is.Null);
+			}
+		}
+
+		[Test]
+		public void FirstQueueWithWork_ReturnsNonEmptyQueue()
+		{
+			// Setup
+			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
+			{
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
+
+				var sendQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Send);
+				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
+
+				// Exercise
+				var sut = Queue.FirstQueueWithWork;
+
+				// Verify
+				Assert.That(sut, Is.Not.Null);
+				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
+			}
+		}
+
+		[Test]
+		public void EnqueueProject_Works()
+		{
+			// Setup
+			using (var tempDir = new TemporaryFolder("EnqueueProject"))
+			{
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
+				var sut = Queue.GetQueue(QueueNames.Commit);
+
+				// Exercise
+				sut.EnqueueProject("foo");
+
+				// Verify
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
+
+				var queueWithWork = Queue.FirstQueueWithWork;
+				Assert.That(queueWithWork, Is.Not.Null);
+				Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Commit));
+				Assert.That(queueWithWork.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
+				var queuedProjectFile = Path.Combine(LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Commit), "foo");
+				Assert.That(File.Exists(queuedProjectFile), Is.True);
+			}
+		}
+
+		[Test]
+		public void DequeueProject_Works()
+		{
+			// Setup
+			using (var tempDir = new TemporaryFolder("DequeueProject"))
+			{
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
+
+				var sendQueueDir = LfMergeDirectories.Current.GetQueueDirectory(QueueNames.Send);
+				File.WriteAllText(Path.Combine(sendQueueDir, "foo"), string.Empty);
+				var sut = Queue.GetQueue(QueueNames.Send);
+
+				// Exercise
+				sut.DequeueProject("foo");
+
+				// Verify
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new string[] { }));
+				Assert.That(File.Exists(Path.Combine(sendQueueDir, "foo")), Is.False);
+			}
+		}
+
+		[Test]
+		public void DequeueProject_NonExistingProjectIgnored()
+		{
+			// Setup
+			using (var tempDir = new TemporaryFolder("DequeueProject"))
+			{
+				LfMergeDirectories.Initialize(tempDir.Path);
+				Queue.CreateQueueDirectories();
+
+				var sut = Queue.GetQueue(QueueNames.Receive);
+
+				// Exercise/Verify
+				Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
+			}
+		}
 	}
 }
 

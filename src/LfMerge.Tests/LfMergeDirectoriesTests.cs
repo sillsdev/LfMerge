@@ -15,7 +15,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void FdoDirs_RelativePathsAreSubdirsOfBasedir()
 		{
-			var sut = new LfMergeDirectories(Path.GetTempPath(), "projects", "templates");
+			LfMergeDirectories.Initialize(Path.GetTempPath(), "projects", "templates");
+			var sut = LfMergeDirectories.Current;
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
@@ -25,7 +26,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void FdoDirs_AbsolutePathsRemainAbsolute()
 		{
-			var sut = new LfMergeDirectories(Path.GetTempPath(), "/projects", "/foo/templates");
+			LfMergeDirectories.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
+			var sut = LfMergeDirectories.Current;
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo("/projects"));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo("/projects"));
@@ -35,7 +37,9 @@ namespace LfMerge.Tests
 		[Test]
 		public void StateDirectory_Correct()
 		{
-			var sut = new LfMergeDirectories(Path.GetTempPath());
+			LfMergeDirectories.Initialize(Path.GetTempPath());
+			var sut = LfMergeDirectories.Current;
+
 			Assert.That(sut.StateDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "state")));
 		}
 
@@ -45,7 +49,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("StateFile"))
 			{
-				var sut = new LfMergeDirectories(temp.Path);
+				LfMergeDirectories.Initialize(temp.Path);
+				var sut = LfMergeDirectories.Current;
 
 				// Exercise
 				var stateFile = sut.GetStateFileName("ProjA");
@@ -67,7 +72,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("QueueDirectory"))
 			{
-				var sut = new LfMergeDirectories(temp.Path);
+				LfMergeDirectories.Initialize(temp.Path);
+				var sut = LfMergeDirectories.Current;
 
 				// Exercise
 				var queueDir = sut.GetQueueDirectory(queue);

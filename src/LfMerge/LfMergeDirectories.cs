@@ -11,8 +11,7 @@ namespace LfMerge
 	{
 		private string[] _queueDirectories;
 
-		public LfMergeDirectories(string baseDir, string releaseDataDir = "ReleaseData",
-			string templatesDir = "Templates")
+		private LfMergeDirectories(string baseDir, string releaseDataDir, string templatesDir)
 		{
 			ProjectsDirectory = Path.IsPathRooted(releaseDataDir) ? releaseDataDir : Path.Combine(baseDir, releaseDataDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
@@ -27,8 +26,14 @@ namespace LfMerge
 			_queueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
 
 			ConfigFile = "/etc/languageforge/conf/sendreceive.conf";
+		}
 
-			Current = this;
+		public static void Initialize(string baseDir, string releaseDataDir = "ReleaseData",
+			string templatesDir = "Templates")
+		{
+			Current = new LfMergeDirectories(baseDir, releaseDataDir, templatesDir);
+
+			Queue.CreateQueueDirectories();
 		}
 
 		public static LfMergeDirectories Current { get; private set; }

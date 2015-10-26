@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace LfMerge.Queues
 {
@@ -21,7 +22,12 @@ namespace LfMerge.Queues
 			}
 		}
 
-		public static IQueue NextQueueWithWork(Actions currentAction)
+		public static IQueue FirstQueueWithWork
+		{
+			get { return GetNextQueueWithWork(Options.Current.FirstAction); }
+		}
+
+		public static IQueue GetNextQueueWithWork(Actions currentAction)
 		{
 			bool firstLoop = true;
 			var action = currentAction;
@@ -31,7 +37,7 @@ namespace LfMerge.Queues
 				var queueName = Options.GetQueueForAction(action);
 				if (queueName != QueueNames.None)
 				{
-					var queue = _queues[(int)queueName];
+					var queue = GetQueue(queueName);
 					if (!queue.IsEmpty)
 						return queue;
 				}
@@ -39,6 +45,22 @@ namespace LfMerge.Queues
 			}
 			return null;
 		}
+
+		public static IQueue GetQueue(QueueNames name)
+		{
+			return _queues[(int)name];
+		}
+
+		public static void CreateQueueDirectories()
+		{
+			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
+			{
+				var queueDir = LfMergeDirectories.Current.GetQueueDirectory(queueName);
+				if (queueDir != null)
+					Directory.CreateDirectory(queueDir);
+			}
+		}
+
 		#endregion
 
 		public Queue(QueueNames name)
@@ -59,6 +81,27 @@ namespace LfMerge.Queues
 
 		public string[] QueuedProjects
 		{
+			get { return QueuedProjectsEnumerable().ToArray(); }
+		}
+
+		public void EnqueueProject(string projectName)
+		{
+			File.WriteAllText(Path.Combine(QueueDirectory, projectName), string.Empty);
+		}
+
+		public void DequeueProject(string projectName)
+		{
+			File.Delete(Path.Combine(QueueDirectory, projectName));
+		}
+
+		public IQueue NextQueueWithWork
+		{
+			get { return GetNextQueueWithWork(Options.GetActionForQueue(Name)); }
+		}
+		#endregion
+
+		protected virtual string[] RawQueuedProjects
+		{
 			get
 			{
 				return new DirectoryInfo(QueueDirectory).GetFiles()
@@ -66,7 +109,44 @@ namespace LfMerge.Queues
 					.Select(f => f.Name).ToArray();
 			}
 		}
-		#endregion
+
+		private IEnumerable<string> QueuedProjectsEnumerable()
+		{
+			var projects = RawQueuedProjects.ToList();
+			if (Options.Current.StopAfterFirstProject)
+			{
+				// returns only single project (if it is queued)
+				var singleProject = Options.Current.SingleProject;
+				if (projects.Contains(singleProject))
+					yield return singleProject;
+				yield break;
+			}
+
+			var prioProj = Options.Current.PriorityProject;
+			if (!string.IsNullOrEmpty(prioProj) &&
+				projects.Contains(prioProj))
+			{
+				// return priority project first, then loop around for the other projects
+				var firstProjIndex = projects.IndexOf(prioProj);
+				for (int i = 0; i < projects.Count; i++)
+				{
+					if (i >= firstProjIndex)
+						yield return projects[i];
+				}
+				for (int i = 0; i < firstProjIndex; i++)
+				{
+					yield return projects[i];
+				}
+			}
+			else
+			{
+				// return all projects, starting with oldest
+				foreach (var proj in projects)
+				{
+					yield return proj;
+				}
+			}
+		}
 
 		private string QueueDirectory
 		{

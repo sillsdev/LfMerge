@@ -13,13 +13,12 @@ namespace LfMerge.Tests
 	class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
-		private readonly LfMergeDirectories _langForgeDirFinder;
 
 		public TestEnvironment()
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
-			_langForgeDirFinder = new LfMergeDirectories(LanguageForgeFolder);
+			LfMergeDirectories.Initialize(LanguageForgeFolder);
 		}
 
 		public void Dispose()
@@ -34,7 +33,7 @@ namespace LfMerge.Tests
 
 		public LfMergeDirectories LangForgeDirFinder
 		{
-			get { return _langForgeDirFinder; }
+			get { return LfMergeDirectories.Current; }
 		}
 
 		public string ProjectPath(string projectName)
