@@ -112,18 +112,42 @@ namespace LfMerge.FieldWorks
 			Console.WriteLine("Starting UpdateFdoFromMongoDb");
 			// TODO: Get connection string from config, not hardcoded
 			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
+			string HardcodedProjectCode = "thai_food";
+			string HardcodedDatabasePrefix = "sf_"; // TODO: Is there a better way to get the prefix?
+			//string DatabaseName = "sf_" + HardcodedProjectCode;
 			var client = new MongoClient(HardcodedMongoConnectionString);
-			// TODO: Just for testing, we'll get a list of database names and collections in each one
-			IEnumerable<string> dbTask = GetListOfMongoDatabases(client);
-			Console.WriteLine(dbTask.GetType());
-			foreach (string dbName in dbTask)
+			var sf = client.GetDatabase("scriptureforge");
+			var projects = sf.GetCollection<BsonDocument>("projects");
+			var F = Builders<BsonDocument>.Filter; // Make the next line shorter to read
+			var filter = F.Eq("appName", "lexicon") & F.Eq("projectCode", HardcodedProjectCode);
+			var project = projects.Find(filter).Limit(1).FirstOrDefaultAsync().Result; // Filter on server
+			//var project = projects.Find(doc => doc["appName"] == "lexicon" && doc["projectCode"] == HardcodedProjectCode)
+			//	.Limit(1).ToListAsync().Result.FirstOrDefault(); // Filter on client
+			if (project != null)
 			{
-				Console.WriteLine("Database named {0}", dbName);
-				IMongoDatabase db = client.GetDatabase(dbName);
-				foreach (string collName in GetListOfCollections(db))
+				Console.WriteLine("Project \"{0}\" has code {1}", project["projectName"], project["projectCode"]);
+				var config = project["config"];
+				var fields = config["entry"]["fieldOrder"] as BsonArray;
+				foreach (var field in fields)
+					Console.WriteLine("  and has field: {0}", field);
+				string dbName = HardcodedDatabasePrefix + project["projectCode"];
+				var db = client.GetDatabase(dbName);
+				var collection = db.GetCollection<BsonDocument>("lexicon");
+				var bar = collection.Find(_ => true).ToListAsync().Result; // Without the Result, we would have to use await
+				foreach (var item in bar)
 				{
-					Console.WriteLine("    has collection {0}", collName);
+					// To do this properly, we should get the inputSystems from the config["entry"]["fields"]["lexeme"] list
+					// For now, we hardcode the two th-fonipa and th writing system names
+					string th_fonipa;
+					try {
+						th_fonipa = item["lexeme"]["th-fonipa"]["value"].AsString;
+						Console.WriteLine("Item: {0}", th_fonipa);
+					}
+					catch(KeyNotFoundException) {
+						Console.WriteLine("No fonipa for {0}", item["lexeme"]["th"]["value"]);
+					}
 				}
+
 			}
 			Console.WriteLine("Stopping UpdateFdoFromMongoDb");
 
