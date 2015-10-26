@@ -119,23 +119,19 @@ namespace LfMerge.FieldWorks
 			// TODO: Get connection string from config, not hardcoded
 			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
 			var client = new MongoClient(HardcodedMongoConnectionString);
-			IAsyncCursor<BsonDocument> dbs = await client.ListDatabasesAsync();
-			// TODO: Figure out if the second "await" is truly necessary.
-			// Perhaps we can chain this together with Task.ContinueWith or something.
-			await dbs.ForEachAsync(doc => ProcessOneDbDocument(doc));
+			await client.ListDatabasesAsync().ContinueWith(task =>
+				task.Result.ForEachAsync(doc => ProcessOneDbDocument(doc)));
 			return true;
 		}
 
-		private static Task<bool> ProcessOneDbDocument(BsonDocument doc) {
+		private static void ProcessOneDbDocument(BsonDocument doc) {
 			var d = doc.ToDictionary();
 			foreach (var kv in d)
 			{
 				// Console.WriteLine("{0}: {1}", kv.Key, kv.Value);
 			}
 			Console.WriteLine("Database name: {0}", doc.GetElement("name").Value);
-			return Task.FromResult(true);
 		}
-
 
 	}
 }
