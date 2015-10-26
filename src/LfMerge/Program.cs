@@ -19,14 +19,9 @@ namespace LfMerge
 			// TODO: read settings from config instead of hard coding them here
 			var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			LfMergeDirectories.Initialize(baseDir);
-			var proj = new ProjectIdentifier(LfMergeDirectories.Current, database);
 
-			using (var fw = new FwAccess(proj))
+			using (var fw = new FwProject(LfMergeDirectories.Current, database))
 			{
-				fw.UpdateFdoFromMongoDb();
-				fw.RunSendReceive();
-				fw.UpdateMongoDbFromFdo();
-
 				// just some test output
 				var fdoCache = fw.Cache;
 				Console.WriteLine("Ethnologue Code: {0}", fdoCache.LangProject.EthnologueCode);

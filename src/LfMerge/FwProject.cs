@@ -9,15 +9,18 @@ using SIL.Utils;
 
 namespace LfMerge
 {
-	public class FwAccess: IDisposable
+	/// <summary>
+	/// A FieldWorks project
+	/// </summary>
+	public class FwProject: IDisposable
 	{
 		private readonly IThreadedProgress _progress = new ThreadedProgress();
 		private readonly IFdoUI _fdoUi;
 		private readonly ProjectIdentifier _project;
 
-		public FwAccess(ProjectIdentifier proj)
+		public FwProject(LfMergeDirectories lfMergeDirs, string database)
 		{
-			_project = proj;
+			_project = new ProjectIdentifier(lfMergeDirs, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
 		}
@@ -26,7 +29,7 @@ namespace LfMerge
 
 		#if DEBUG
 		/// <summary/>
-		~FwAccess()
+		~FwProject()
 		{
 			Dispose(false);
 		}
@@ -99,21 +102,6 @@ namespace LfMerge
 			}
 
 			return fdoCache;
-		}
-
-		public void UpdateFdoFromMongoDb()
-		{
-
-		}
-
-		public void RunSendReceive()
-		{
-
-		}
-
-		public void UpdateMongoDbFromFdo()
-		{
-
 		}
 	}
 }
