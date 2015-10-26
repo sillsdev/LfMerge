@@ -12,7 +12,7 @@ namespace LfMerge.Tests.Queues
 	[TestFixture]
 	public class QueueTests
 	{
-		[TestFixtureSetUp]
+		[SetUp]
 		public void FixtureSetup()
 		{
 			// Force setting of Options.Current
@@ -33,10 +33,10 @@ namespace LfMerge.Tests.Queues
 				var lfDirs = new LfMergeDirectories(tempDir.Path);
 				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
-				var queue = new Queue(QueueNames.Merge);
+				var sut = new Queue(QueueNames.Merge);
 
-				// SUT
-				var isEmpty = queue.IsEmpty;
+				// Exercise
+				var isEmpty = sut.IsEmpty;
 
 				// Verify
 				Assert.That(isEmpty, Is.True, "Queue doesn't report it is empty");
@@ -52,10 +52,10 @@ namespace LfMerge.Tests.Queues
 				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
-				var queue = new Queue(QueueNames.Merge);
+				var sut = new Queue(QueueNames.Merge);
 
-				// SUT
-				var isEmpty = queue.IsEmpty;
+				// Exercise
+				var isEmpty = sut.IsEmpty;
 
 				// Verify
 				Assert.That(isEmpty, Is.False, "Queue reports it is empty");
@@ -71,12 +71,16 @@ namespace LfMerge.Tests.Queues
 				var mergequeueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "projb"), string.Empty);
+
+				// wait 1s so that we get a different timestamp on the file
 				Thread.Sleep(1000);
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
-				var queue = new Queue(QueueNames.Merge);
 
-				// SUT
-				var queuedProjects = queue.QueuedProjects;
+				// don't use test double here - we want to test the sorting by date/time
+				var sut = new Queue(QueueNames.Merge);
+
+				// Exercise
+				var queuedProjects = sut.QueuedProjects;
 
 				// Verify
 				Assert.That(queuedProjects.Length, Is.EqualTo(2));
@@ -104,11 +108,11 @@ namespace LfMerge.Tests.Queues
 				var lfDirs = new LfMergeDirectories(tempDir.Path);
 				CreateQueueDirectories(lfDirs);
 
-				// SUT
-				var queue = Queue.NextQueueWithWork(Actions.Commit);
+				// Exercise
+				var sut = Queue.NextQueueWithWork(Actions.Commit);
 
 				// Verify
-				Assert.That(queue, Is.Null);
+				Assert.That(sut, Is.Null);
 			}
 		}
 
@@ -124,13 +128,13 @@ namespace LfMerge.Tests.Queues
 				var sendQueueDir = lfDirs.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
-				// SUT
-				var queue = Queue.NextQueueWithWork(Actions.Commit);
+				// Exercise
+				var sut = Queue.NextQueueWithWork(Actions.Commit);
 
 				// Verify
-				Assert.That(queue, Is.Not.Null);
-				Assert.That(queue.Name, Is.EqualTo(QueueNames.Send));
-				Assert.That(queue.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
+				Assert.That(sut, Is.Not.Null);
+				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 			}
 		}
 
@@ -146,13 +150,13 @@ namespace LfMerge.Tests.Queues
 				var sendQueueDir = lfDirs.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
-				// SUT
-				var queue = Queue.NextQueueWithWork(Actions.Send);
+				// Exercise
+				var sut = Queue.NextQueueWithWork(Actions.Send);
 
 				// Verify
-				Assert.That(queue, Is.Not.Null);
-				Assert.That(queue.Name, Is.EqualTo(QueueNames.Send));
-				Assert.That(queue.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
+				Assert.That(sut, Is.Not.Null);
+				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 			}
 		}
 
@@ -168,13 +172,13 @@ namespace LfMerge.Tests.Queues
 				var mergeQueueDir = lfDirs.GetQueueDirectory(QueueNames.Merge);
 				File.WriteAllText(Path.Combine(mergeQueueDir, "projz"), string.Empty);
 
-				// SUT
-				var queue = Queue.NextQueueWithWork(Actions.Commit);
+				// Exercise
+				var sut = Queue.NextQueueWithWork(Actions.Commit);
 
 				// Verify
-				Assert.That(queue, Is.Not.Null);
-				Assert.That(queue.Name, Is.EqualTo(QueueNames.Merge));
-				Assert.That(queue.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
+				Assert.That(sut, Is.Not.Null);
+				Assert.That(sut.Name, Is.EqualTo(QueueNames.Merge));
+				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 			}
 		}
 
@@ -192,11 +196,11 @@ namespace LfMerge.Tests.Queues
 				var commitQueueDir = lfDirs.GetQueueDirectory(QueueNames.Commit);
 				File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
 
-				// SUT
-				var queue = Queue.NextQueueWithWork(Actions.Send);
+				// Exercise
+				var sut = Queue.NextQueueWithWork(Actions.Send);
 
 				// Verify
-				Assert.That(queue, Is.Null);
+				Assert.That(sut, Is.Null);
 			}
 		}
 

@@ -31,14 +31,13 @@ namespace LfMerge.Tests
 			QueueNames expectedPrioQueue, string expectedSingleProj,
 			QueueNames expectedSingleQueue)
 		{
-			// SUT
-			var options = Options.ParseCommandLineArgs(args);
+			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(options.PriorityProject, Is.EqualTo(expectedPrioProj));
-			Assert.That(options.PriorityQueue, Is.EqualTo(expectedPrioQueue));
-			Assert.That(options.SingleProject, Is.EqualTo(expectedSingleProj));
-			Assert.That(options.SingleQueue, Is.EqualTo(expectedSingleQueue));
+			Assert.That(sut.PriorityProject, Is.EqualTo(expectedPrioProj));
+			Assert.That(sut.PriorityQueue, Is.EqualTo(expectedPrioQueue));
+			Assert.That(sut.SingleProject, Is.EqualTo(expectedSingleProj));
+			Assert.That(sut.SingleQueue, Is.EqualTo(expectedSingleQueue));
 		}
 
 		// The dummy parameter in the method below is necessary to work around a presumable
@@ -47,11 +46,10 @@ namespace LfMerge.Tests
 		[TestCase(new[] { "--priority-queue", "Commit", "-q", "Merge" }, "", TestName = "Prio + single queue specified")]
 		public void ParseArgs_InvalidCombinations(string[] args, string dummy /* see comment above */)
 		{
-			// SUT
-			var options = Options.ParseCommandLineArgs(args);
+			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(options, Is.Null);
+			Assert.That(sut, Is.Null);
 		}
 
 		[TestCase(new string[0],
@@ -63,12 +61,11 @@ namespace LfMerge.Tests
 		public void FirstProjectAndStopAfterFirstProject(string[] args,
 			string expectedFirstProject, bool expectedStop)
 		{
-			// SUT
-			var options = Options.ParseCommandLineArgs(args);
+			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(options.FirstProject, Is.EqualTo(expectedFirstProject));
-			Assert.That(options.StopAfterFirstProject, Is.EqualTo(expectedStop));
+			Assert.That(sut.FirstProject, Is.EqualTo(expectedFirstProject));
+			Assert.That(sut.StopAfterFirstProject, Is.EqualTo(expectedStop));
 		}
 
 		[TestCase(new string[0],
@@ -80,12 +77,11 @@ namespace LfMerge.Tests
 		public void FirstActionAndStopAfterFirstAction(string[] args,
 			Actions expectedFirstAction, bool expectedStop)
 		{
-			// SUT
-			var options = Options.ParseCommandLineArgs(args);
+			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(options.FirstAction, Is.EqualTo(expectedFirstAction));
-			Assert.That(options.StopAfterFirstAction, Is.EqualTo(expectedStop));
+			Assert.That(sut.FirstAction, Is.EqualTo(expectedFirstAction));
+			Assert.That(sut.StopAfterFirstAction, Is.EqualTo(expectedStop));
 		}
 
 		[TestCase(QueueNames.None, Actions.None)]
@@ -132,8 +128,8 @@ namespace LfMerge.Tests
 		[TestCase(Actions.UpdateMongoDbFromFdo)]
 		public void GetNextActionIfStopAfterFirstAction_ReturnsNone(Actions currentAction)
 		{
-			var option = Options.ParseCommandLineArgs(new[] { "-q", "merge" });
-			Assert.That(option.GetNextAction(currentAction), Is.EqualTo(Actions.None));
+			var sut = Options.ParseCommandLineArgs(new[] { "-q", "merge" });
+			Assert.That(sut.GetNextAction(currentAction), Is.EqualTo(Actions.None));
 		}
 
 	}
