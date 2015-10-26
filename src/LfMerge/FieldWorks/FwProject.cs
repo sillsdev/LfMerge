@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Linq;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using System.Threading.Tasks;
@@ -126,16 +127,8 @@ namespace LfMerge.FieldWorks
 			var client = new MongoClient(HardcodedMongoConnectionString);
 			IAsyncCursor<BsonDocument> foo = await client.ListDatabasesAsync();
 			List<BsonDocument> l = await foo.ToListAsync();
-			List<string> result = new List<string>();
-			foreach (var doc in l)
-			{
-				result.Add(ProcessOneDbDocument(doc));
-			}
+			IEnumerable<string> result = l.Select(doc => doc.GetElement("name").Value.AsString);
 			return result;
-		}
-
-		private static string ProcessOneDbDocument(BsonDocument doc) {
-			return doc.GetElement("name").Value.AsString;
 		}
 
 	}
