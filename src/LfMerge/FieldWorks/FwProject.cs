@@ -6,6 +6,7 @@ using System.Threading;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using SIL.Utils;
 using MongoDB.Driver;
 using MongoDB.Driver.Core;
@@ -108,29 +109,33 @@ namespace LfMerge.FieldWorks
 			return fdoCache;
 		}
 			Console.WriteLine("Starting UpdateFdoFromMongoDb");
-			Task dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
+			Task<IEnumerable<string>> dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
 			Console.WriteLine(dbTask.GetType());
-			dbTask.Wait(); // Don't forget to wait, or the asynchronous Mongo calls won't have time to run
+			Console.WriteLine(dbTask.Result); // Using the Task.Result property automatically waits for it to be available
+			foreach (string dbName in dbTask.Result)
+			{
+				Console.WriteLine("Database named {0}", dbName);
+			}
 			Console.WriteLine("Stopping UpdateFdoFromMongoDb");
 			return;
 
-		private async static Task<bool> GetListOfMongoDatabases()
+		private async static Task<IEnumerable<string>> GetListOfMongoDatabases()
 		{
 			// TODO: Get connection string from config, not hardcoded
 			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
 			var client = new MongoClient(HardcodedMongoConnectionString);
-			await client.ListDatabasesAsync().ContinueWith(task =>
-				task.Result.ForEachAsync(doc => ProcessOneDbDocument(doc)));
-			return true;
+			IAsyncCursor<BsonDocument> foo = await client.ListDatabasesAsync();
+			List<BsonDocument> l = await foo.ToListAsync();
+			List<string> result = new List<string>();
+			foreach (var doc in l)
+			{
+				result.Add(ProcessOneDbDocument(doc));
+			}
+			return result;
 		}
 
-		private static void ProcessOneDbDocument(BsonDocument doc) {
-			var d = doc.ToDictionary();
-			foreach (var kv in d)
-			{
-				// Console.WriteLine("{0}: {1}", kv.Key, kv.Value);
-			}
-			Console.WriteLine("Database name: {0}", doc.GetElement("name").Value);
+		private static string ProcessOneDbDocument(BsonDocument doc) {
+			return doc.GetElement("name").Value.AsString;
 		}
 
 	}
