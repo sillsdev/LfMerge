@@ -5,7 +5,11 @@ using System.IO;
 using System.Threading;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
+using System.Threading.Tasks;
 using SIL.Utils;
+using MongoDB.Driver;
+using MongoDB.Driver.Core;
+using MongoDB.Bson;
 
 namespace LfMerge.FieldWorks
 {
@@ -103,6 +107,36 @@ namespace LfMerge.FieldWorks
 
 			return fdoCache;
 		}
+			Console.WriteLine("Starting UpdateFdoFromMongoDb");
+			Task dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
+			Console.WriteLine(dbTask.GetType());
+			dbTask.Wait(); // Don't forget to wait, or the asynchronous Mongo calls won't have time to run
+			Console.WriteLine("Stopping UpdateFdoFromMongoDb");
+			return;
+
+		private async static Task<bool> GetListOfMongoDatabases()
+		{
+			// TODO: Get connection string from config, not hardcoded
+			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
+			var client = new MongoClient(HardcodedMongoConnectionString);
+			IAsyncCursor<BsonDocument> dbs = await client.ListDatabasesAsync();
+			// TODO: Figure out if the second "await" is truly necessary.
+			// Perhaps we can chain this together with Task.ContinueWith or something.
+			await dbs.ForEachAsync(doc => ProcessOneDbDocument(doc));
+			return true;
+		}
+
+		private static Task<bool> ProcessOneDbDocument(BsonDocument doc) {
+			var d = doc.ToDictionary();
+			foreach (var kv in d)
+			{
+				// Console.WriteLine("{0}: {1}", kv.Key, kv.Value);
+			}
+			Console.WriteLine("Database name: {0}", doc.GetElement("name").Value);
+			return Task.FromResult(true);
+		}
+
+
 	}
 }
 
