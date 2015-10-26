@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using LfMerge.Queues;
 using LfMerge.FieldWorks;
 
 namespace LfMerge
@@ -15,13 +16,28 @@ namespace LfMerge
 			if (options == null)
 				return;
 
-			var database = args.Length > 1 ? args[0] : "Sena 3";
-
 			// TODO: read settings from config instead of hard coding them here
 			var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			LfMergeDirectories.Initialize(baseDir);
 
-			using (var fw = new FwProject(LfMergeDirectories.Current, database))
+			for (var queue = Queue.FirstQueueWithWork;
+				queue != null;
+				queue = queue.NextQueueWithWork)
+			{
+				foreach (var projectName in queue.QueuedProjects)
+				{
+//					var project = new LanguageForgeProject(projectName);
+//					for (var action = queue.CurrentAction;
+//						action != null;
+//						action = action.NextAction)
+//					{
+//						action.Run(project);
+//					}
+				}
+			}
+			var database = args.Length > 1 ? args[0] : "Sena 3";
+
+			using (var fw = new FwProject(database))
 			{
 				// just some test output
 				var fdoCache = fw.Cache;
