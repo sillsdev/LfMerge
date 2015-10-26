@@ -18,10 +18,22 @@ namespace LfMerge
 			HOLD,
 		}
 
+		private SendReceiveStates _state;
+		private long _lastStateChangeTicks;
+		private int _percentComplete;
+		private long _elapsedTimeSeconds;
+		private long _timeRemainingSeconds;
+		private int _totalSteps;
+		private int _currentStep;
+		private int _retryCounter;
+		private int _uncommittedEditCounter;
+		private string _errorMessage;
+		private int _errorCode;
+
 		protected ProcessingState()
 		{
-			SRState = SendReceiveStates.QUEUED;
-			LastStateChangeTicks = DateTime.Now.ToUniversalTime().Ticks;
+			_state = SendReceiveStates.QUEUED;
+			_lastStateChangeTicks = DateTime.Now.ToUniversalTime().Ticks;
 			ProjectCode = string.Empty;
 		}
 
@@ -30,19 +42,69 @@ namespace LfMerge
 			ProjectCode = projectCode;
 		}
 
-		public SendReceiveStates SRState { get; set; }
-		public long LastStateChangeTicks { get; set; }
-		public int PercentComplete { get; set; }
-		public long ElapsedTimeSeconds { get; set; }
-		public long TimeRemainingSeconds { get; set; }
-		public int TotalSteps { get; set; }
-		public int CurrentStep { get; set; }
-		public int RetryCounter { get; set; }
-		public int UncommittedEditCounter { get; set; }
-		public string ErrorMessage { get; set; }
-		public int ErrorCode { get; set; }
+		private void SetProperty<T>(ref T property, T value)
+		{
+			property = value;
+			Serialize(this);
+		}
 
-		public string ProjectCode { get; set; }
+		public SendReceiveStates SRState
+		{
+			get { return _state; }
+			set { SetProperty(ref _state, value); }
+		}
+		public long LastStateChangeTicks
+		{
+			get { return _lastStateChangeTicks; }
+			set { SetProperty(ref _lastStateChangeTicks, value); }
+		}
+		public int PercentComplete
+		{
+			get { return _percentComplete; }
+			set { SetProperty(ref _percentComplete, value); }
+		}
+		public long ElapsedTimeSeconds
+		{
+			get { return _elapsedTimeSeconds; }
+			set { SetProperty(ref _elapsedTimeSeconds, value); }
+		}
+		public long TimeRemainingSeconds
+		{
+			get { return _timeRemainingSeconds; }
+			set { SetProperty(ref _timeRemainingSeconds, value); }
+		}
+		public int TotalSteps
+		{
+			get { return _totalSteps; }
+			set { SetProperty(ref _totalSteps, value); }
+		}
+		public int CurrentStep
+		{
+			get { return _currentStep; }
+			set { SetProperty(ref _currentStep, value); }
+		}
+		public int RetryCounter
+		{
+			get { return _retryCounter; }
+			set { SetProperty(ref _retryCounter, value); }
+		}
+		public int UncommittedEditCounter
+		{
+			get { return _uncommittedEditCounter; }
+			set { SetProperty(ref _uncommittedEditCounter, value); }
+		}
+		public string ErrorMessage
+		{
+			get { return _errorMessage; }
+			set { SetProperty(ref _errorMessage, value); }
+		}
+		public int ErrorCode
+		{
+			get { return _errorCode; }
+			set { SetProperty(ref _errorCode, value); }
+		}
+
+		public string ProjectCode { get; private set; }
 
 		public override bool Equals(object obj)
 		{

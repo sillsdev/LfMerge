@@ -77,6 +77,38 @@ namespace LfMerge.Tests
 			var state = ProcessingState.Deserialize("ProjC");
 			Assert.That(state, Is.EqualTo(expectedState));
 		}
+
+		[Test]
+		public void State_SettingPropertySerializesState()
+		{
+			// Setup
+			var ticks = DateTime.Now.Ticks;
+			var sut = new ProcessingState("proja") {
+				SRState = ProcessingState.SendReceiveStates.QUEUED,
+				LastStateChangeTicks = ticks,
+				PercentComplete = 50,
+				ElapsedTimeSeconds = 10,
+				TimeRemainingSeconds = 20,
+				TotalSteps = 5,
+				CurrentStep = 1,
+				RetryCounter = 2,
+				UncommittedEditCounter = 0
+			};
+			var expectedJson = string.Format("{{\"SRState\":{0},\"LastStateChangeTicks\":{1}," +
+				"\"PercentComplete\":50,\"ElapsedTimeSeconds\":10,\"TimeRemainingSeconds\":20," +
+				"\"TotalSteps\":5,\"CurrentStep\":1,\"RetryCounter\":2,\"UncommittedEditCounter\":0," +
+				"\"ErrorMessage\":null,\"ErrorCode\":0,\"ProjectCode\":\"proja\"}}",
+				(int)ProcessingState.SendReceiveStates.MERGING, ticks);
+
+			// Exercise
+			sut.SRState = ProcessingState.SendReceiveStates.MERGING;
+
+			// Verify
+			Directory.CreateDirectory(LfMergeDirectories.Current.StateDirectory);
+			var filename = LfMergeDirectories.Current.GetStateFileName("proja");
+			Assert.That(File.ReadAllText(filename), Is.EqualTo(expectedJson));
+		}
+
 	}
 }
 
