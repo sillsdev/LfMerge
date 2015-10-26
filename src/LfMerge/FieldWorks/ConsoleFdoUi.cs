@@ -4,9 +4,9 @@ using System;
 using System.ComponentModel;
 using SIL.FieldWorks.FDO;
 
-namespace LfMerge
+namespace LfMerge.FieldWorks
 {
-	public class ConsoleFdoUi: IFdoUI
+	class ConsoleFdoUi: IFdoUI
 	{
 		private ISynchronizeInvoke _synchronizeInvoke;
 

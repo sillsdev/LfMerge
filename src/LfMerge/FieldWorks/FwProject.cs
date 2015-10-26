@@ -7,7 +7,7 @@ using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.Utils;
 
-namespace LfMerge
+namespace LfMerge.FieldWorks
 {
 	/// <summary>
 	/// A FieldWorks project

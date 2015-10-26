@@ -4,9 +4,9 @@ using System;
 using System.ComponentModel;
 using SIL.Utils;
 
-namespace LfMerge
+namespace LfMerge.FieldWorks
 {
-	public class ThreadedProgress: IThreadedProgress
+	class ThreadedProgress: IThreadedProgress
 	{
 		private SingleThreadedSynchronizeInvoke _synchronizeInvoke = new SingleThreadedSynchronizeInvoke();
 

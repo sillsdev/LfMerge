@@ -52,9 +52,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConsoleFdoUi.cs" />
-    <Compile Include="ProjectIdentifier.cs" />
-    <Compile Include="ThreadedProgress.cs" />
     <Compile Include="ProcessingState.cs" />
     <Compile Include="LfMergeDirectories.cs" />
     <Compile Include="Options.cs" />
@@ -62,7 +59,10 @@
     <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\Queue.cs" />
     <Compile Include="Queues\QueueNames.cs" />
-    <Compile Include="FwProject.cs" />
+    <Compile Include="FieldWorks\FwProject.cs" />
+    <Compile Include="FieldWorks\ProjectIdentifier.cs" />
+    <Compile Include="FieldWorks\ThreadedProgress.cs" />
+    <Compile Include="FieldWorks\ConsoleFdoUi.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5604.35298\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5604.35298\build\BuildDependencyTasks.targets')" />
@@ -71,5 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Queues\" />
+    <Folder Include="FieldWorks\" />
   </ItemGroup>
 </Project>

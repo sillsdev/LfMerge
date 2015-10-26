@@ -3,9 +3,9 @@
 using System;
 using SIL.FieldWorks.FDO;
 
-namespace LfMerge
+namespace LfMerge.FieldWorks
 {
-	public class ProjectIdentifier: IProjectIdentifier
+	class ProjectIdentifier: IProjectIdentifier
 	{
 		public ProjectIdentifier(IFdoDirectories fdoDirs, string database)
 		{

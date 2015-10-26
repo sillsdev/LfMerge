@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using LfMerge.FieldWorks;
 
 namespace LfMerge
 {
