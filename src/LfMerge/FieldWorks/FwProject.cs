@@ -110,23 +110,22 @@ namespace LfMerge.FieldWorks
 			return fdoCache;
 		}
 			Console.WriteLine("Starting UpdateFdoFromMongoDb");
-			Task<IEnumerable<string>> dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
+			IEnumerable<string> dbTask = GetListOfMongoDatabases(); // TODO: Just for testing, for now.
 			Console.WriteLine(dbTask.GetType());
-			Console.WriteLine(dbTask.Result); // Using the Task.Result property automatically waits for it to be available
-			foreach (string dbName in dbTask.Result)
+			foreach (string dbName in dbTask)
 			{
 				Console.WriteLine("Database named {0}", dbName);
 			}
 			Console.WriteLine("Stopping UpdateFdoFromMongoDb");
 			return;
 
-		private async static Task<IEnumerable<string>> GetListOfMongoDatabases()
+		private static IEnumerable<string> GetListOfMongoDatabases()
 		{
 			// TODO: Get connection string from config, not hardcoded
 			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
 			var client = new MongoClient(HardcodedMongoConnectionString);
-			IAsyncCursor<BsonDocument> foo = await client.ListDatabasesAsync();
-			List<BsonDocument> l = await foo.ToListAsync();
+			IAsyncCursor<BsonDocument> foo = client.ListDatabasesAsync().Result;
+			List<BsonDocument> l = foo.ToListAsync().Result;
 			IEnumerable<string> result = l.Select(doc => doc.GetElement("name").Value.AsString);
 			return result;
 		}
