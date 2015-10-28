@@ -3,14 +3,69 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using LfMerge;
 using LfMerge.Queues;
 using LfMerge.Actions;
+using LfMerge.FieldWorks;
 
 namespace LfMerge.Tests.Actions
 {
 	[TestFixture]
 	public class ActionTests
 	{
+		class ProcessingStateDouble: ProcessingState
+		{
+			public List<ProcessingState.SendReceiveStates> SavedStates;
+
+			public ProcessingStateDouble(string projectName) : base(projectName)
+			{
+				SavedStates = new List<ProcessingState.SendReceiveStates>();
+			}
+
+			protected override void SetProperty<T>(ref T property, T value)
+			{
+				property = value;
+
+				if (SavedStates.Count == 0 || SavedStates[SavedStates.Count - 1] != SRState)
+					SavedStates.Add(SRState);
+			}
+
+			public void ResetSavedStates()
+			{
+				SavedStates.Clear();
+			}
+		}
+
+		class LfProjectDouble: ILfProject
+		{
+			private ProcessingState _state;
+
+			public LfProjectDouble(string projectName, ProcessingStateDouble state)
+			{
+				LfProjectName = projectName;
+				_state = state;
+			}
+
+			#region ILfProject implementation
+
+			public string LfProjectName { get; private set; }
+
+			public FwProject FieldWorksProject
+			{
+				get
+				{
+					throw new NotImplementedException();
+				}
+			}
+
+			public ProcessingState State
+			{
+				get { return _state; }
+			}
+
+			#endregion
+		}
+
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
@@ -33,6 +88,50 @@ namespace LfMerge.Tests.Actions
 			}
 
 			Assert.That(actions, Is.EquivalentTo(expectedActionNames));
+		}
+
+		[TestCase(ActionNames.UpdateFdoFromMongoDb, ProcessingState.SendReceiveStates.QUEUED)]
+		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.QUEUED)]
+		[TestCase(ActionNames.Receive, ProcessingState.SendReceiveStates.RECEIVING)]
+		[TestCase(ActionNames.Merge, ProcessingState.SendReceiveStates.MERGING)]
+		[TestCase(ActionNames.Send, ProcessingState.SendReceiveStates.SENDING)]
+		[TestCase(ActionNames.UpdateMongoDbFromFdo, ProcessingState.SendReceiveStates.UPDATING)]
+		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
+		{
+			// Setup
+			var state = new ProcessingStateDouble("proja");
+			var lfProj = new LfProjectDouble("proja", state);
+			var sut = LfMerge.Actions.Action.GetAction(actionName);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			Assert.That(state.SavedStates, Is.EqualTo(new[] {
+				expectedState, ProcessingState.SendReceiveStates.IDLE }));
+			Assert.That(lfProj.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.IDLE));
+		}
+
+		[TestCase(ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(ActionNames.Commit)]
+		[TestCase(ActionNames.Receive)]
+		[TestCase(ActionNames.Merge)]
+		[TestCase(ActionNames.Send)]
+		[TestCase(ActionNames.UpdateMongoDbFromFdo)]
+		public void State_SkipsHoldState(ActionNames actionName)
+		{
+			// Setup
+			var state = new ProcessingStateDouble("proja");
+			var lfProj = new LfProjectDouble("proja", state);
+			state.SRState = ProcessingState.SendReceiveStates.HOLD;
+			state.ResetSavedStates();
+			var sut = LfMerge.Actions.Action.GetAction(actionName);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			Assert.That(state.SavedStates, Is.Empty);
 		}
 	}
 }

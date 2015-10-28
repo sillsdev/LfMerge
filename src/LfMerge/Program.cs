@@ -24,13 +24,15 @@ namespace LfMerge
 				queue != null;
 				queue = queue.NextQueueWithWork)
 			{
-				foreach (var project in queue.QueuedProjects)
+				foreach (var projectName in queue.QueuedProjects)
 				{
+					var project = LanguageForgeProject.Create(projectName);
+
 					for (var action = queue.CurrentAction;
-					action != null;
-					action = action.NextAction)
+						action != null;
+						action = action.NextAction)
 					{
-						//action.Run(project);
+						action.Run(project);
 					}
 				}
 			}

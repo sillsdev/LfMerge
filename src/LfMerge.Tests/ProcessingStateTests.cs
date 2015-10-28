@@ -37,7 +37,7 @@ namespace LfMerge.Tests
 				RetryCounter = 2,
 				UncommittedEditCounter = 0
 			};
-			ProcessingState.Serialize(expectedState);
+			expectedState.Serialize();
 			var state = ProcessingState.Deserialize("ProjA");
 
 			Assert.That(state, Is.EqualTo(expectedState));

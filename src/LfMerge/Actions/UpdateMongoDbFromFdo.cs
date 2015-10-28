@@ -6,7 +6,12 @@ namespace LfMerge.Actions
 {
 	public class UpdateMongoDbFromFdo: Action
 	{
-		public override void Run(ILfProject project)
+		protected override ProcessingState.SendReceiveStates StateForCurrentAction
+		{
+			get { return ProcessingState.SendReceiveStates.UPDATING; }
+		}
+
+		protected override void DoRun(ILfProject project)
 		{
 		}
 

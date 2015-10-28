@@ -7,6 +7,7 @@ namespace LfMerge.Actions
 	public abstract class Action: IAction
 	{
 		#region Action handling
+
 		private static IAction[] Actions { get; set; }
 
 		static Action()
@@ -50,13 +51,18 @@ namespace LfMerge.Actions
 		{
 			return Actions[(int)actionName];
 		}
+
 		#endregion
 
 		protected Action()
 		{
 		}
 
+		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }
+
 		protected abstract ActionNames NextActionName { get; }
+
+		protected abstract void DoRun(ILfProject project);
 
 		#region IAction implementation
 
@@ -70,7 +76,21 @@ namespace LfMerge.Actions
 			}
 		}
 
-		public abstract void Run(ILfProject project);
+		public void Run(ILfProject project)
+		{
+			if (project.State.SRState == ProcessingState.SendReceiveStates.HOLD)
+				return;
+
+			project.State.SRState = StateForCurrentAction;
+			try
+			{
+				DoRun(project);
+			}
+			finally
+			{
+				project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+			}
+		}
 
 		#endregion
 	}

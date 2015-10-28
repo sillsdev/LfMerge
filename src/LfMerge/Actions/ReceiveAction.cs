@@ -6,7 +6,12 @@ namespace LfMerge.Actions
 {
 	public class ReceiveAction: Action
 	{
-		public override void Run(ILfProject project)
+		protected override ProcessingState.SendReceiveStates StateForCurrentAction
+		{
+			get { return ProcessingState.SendReceiveStates.RECEIVING; }
+		}
+
+		protected override void DoRun(ILfProject project)
 		{
 		}
 

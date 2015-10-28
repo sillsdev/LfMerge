@@ -15,6 +15,7 @@ namespace LfMerge
 			MERGING,
 			SENDING,
 			RECEIVING,
+			UPDATING,
 			HOLD,
 		}
 
@@ -42,10 +43,10 @@ namespace LfMerge
 			ProjectCode = projectCode;
 		}
 
-		private void SetProperty<T>(ref T property, T value)
+		protected virtual void SetProperty<T>(ref T property, T value)
 		{
 			property = value;
-			Serialize(this);
+			Serialize();
 		}
 
 		public SendReceiveStates SRState
@@ -134,11 +135,11 @@ namespace LfMerge
 			return hash;
 		}
 
-		public static void Serialize(ProcessingState state)
+		public void Serialize()
 		{
-			var json = JsonConvert.SerializeObject(state);
+			var json = JsonConvert.SerializeObject(this);
 
-			var fileName = LfMergeDirectories.Current.GetStateFileName(state.ProjectCode);
+			var fileName = LfMergeDirectories.Current.GetStateFileName(ProjectCode);
 			File.WriteAllText(fileName, json);
 		}
 
