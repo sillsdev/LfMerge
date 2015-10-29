@@ -70,8 +70,8 @@ namespace LfMerge.Tests
 				"\"TotalSteps\":3,\"CurrentStep\":2,\"RetryCounter\":1,\"UncommittedEditCounter\":0," +
 				"\"ErrorMessage\":null,\"ErrorCode\":0,\"ProjectCode\":\"ProjC\"}";
 
-			Directory.CreateDirectory(LfMergeDirectories.Current.StateDirectory);
-			var filename = LfMergeDirectories.Current.GetStateFileName("ProjC");
+			Directory.CreateDirectory(LfMergeSettings.Current.StateDirectory);
+			var filename = LfMergeSettings.Current.GetStateFileName("ProjC");
 			File.WriteAllText(filename, json);
 
 			var state = ProcessingState.Deserialize("ProjC");
@@ -104,8 +104,8 @@ namespace LfMerge.Tests
 			sut.SRState = ProcessingState.SendReceiveStates.MERGING;
 
 			// Verify
-			Directory.CreateDirectory(LfMergeDirectories.Current.StateDirectory);
-			var filename = LfMergeDirectories.Current.GetStateFileName("proja");
+			Directory.CreateDirectory(LfMergeSettings.Current.StateDirectory);
+			var filename = LfMergeSettings.Current.GetStateFileName("proja");
 			Assert.That(File.ReadAllText(filename), Is.EqualTo(expectedJson));
 		}
 

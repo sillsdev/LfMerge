@@ -7,11 +7,11 @@ using LfMerge.Queues;
 
 namespace LfMerge
 {
-	public class LfMergeDirectories: IFdoDirectories
+	public class LfMergeSettings: IFdoDirectories
 	{
 		private string[] _queueDirectories;
 
-		private LfMergeDirectories(string baseDir, string releaseDataDir, string templatesDir)
+		private LfMergeSettings(string baseDir, string releaseDataDir, string templatesDir)
 		{
 			ProjectsDirectory = Path.IsPathRooted(releaseDataDir) ? releaseDataDir : Path.Combine(baseDir, releaseDataDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
@@ -31,12 +31,12 @@ namespace LfMerge
 		public static void Initialize(string baseDir, string releaseDataDir = "ReleaseData",
 			string templatesDir = "Templates")
 		{
-			Current = new LfMergeDirectories(baseDir, releaseDataDir, templatesDir);
+			Current = new LfMergeSettings(baseDir, releaseDataDir, templatesDir);
 
 			Queue.CreateQueueDirectories();
 		}
 
-		public static LfMergeDirectories Current { get; private set; }
+		public static LfMergeSettings Current { get; private set; }
 
 		#region IFdoDirectories implementation
 
@@ -71,6 +71,11 @@ namespace LfMerge
 		{
 			Directory.CreateDirectory(StateDirectory);
 			return Path.Combine(StateDirectory, projectCode + ".state");
+		}
+
+		public string MongoDbHostNameAndPort
+		{
+			get { return "localhost:27017"; }
 		}
 	}
 }

@@ -139,13 +139,13 @@ namespace LfMerge
 		{
 			var json = JsonConvert.SerializeObject(this);
 
-			var fileName = LfMergeDirectories.Current.GetStateFileName(ProjectCode);
+			var fileName = LfMergeSettings.Current.GetStateFileName(ProjectCode);
 			File.WriteAllText(fileName, json);
 		}
 
 		public static ProcessingState Deserialize(string projectCode)
 		{
-			var fileName = LfMergeDirectories.Current.GetStateFileName(projectCode);
+			var fileName = LfMergeSettings.Current.GetStateFileName(projectCode);
 			if (File.Exists(fileName))
 			{
 				var json = File.ReadAllText(fileName);

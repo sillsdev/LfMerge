@@ -18,7 +18,7 @@ namespace LfMerge
 
 			// TODO: read settings from config instead of hard coding them here
 			var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
-			LfMergeDirectories.Initialize(baseDir);
+			LfMergeSettings.Initialize(baseDir);
 
 			for (var queue = Queue.FirstQueueWithWork;
 				queue != null;

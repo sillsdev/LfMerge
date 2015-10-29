@@ -56,7 +56,7 @@ namespace LfMerge.Queues
 		{
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
-				var queueDir = LfMergeDirectories.Current.GetQueueDirectory(queueName);
+				var queueDir = LfMergeSettings.Current.GetQueueDirectory(queueName);
 				if (queueDir != null)
 					Directory.CreateDirectory(queueDir);
 			}
@@ -156,7 +156,7 @@ namespace LfMerge.Queues
 
 		private string QueueDirectory
 		{
-			get { return LfMergeDirectories.Current.GetQueueDirectory(Name); }
+			get { return LfMergeSettings.Current.GetQueueDirectory(Name); }
 		}
 	}
 }

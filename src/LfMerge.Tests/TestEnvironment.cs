@@ -18,7 +18,7 @@ namespace LfMerge.Tests
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
-			LfMergeDirectories.Initialize(LanguageForgeFolder);
+			LfMergeSettings.Initialize(LanguageForgeFolder);
 		}
 
 		public void Dispose()
@@ -31,9 +31,9 @@ namespace LfMerge.Tests
 			get { return _languageForgeServerFolder.Path; }
 		}
 
-		public LfMergeDirectories LangForgeDirFinder
+		public LfMergeSettings LangForgeDirFinder
 		{
-			get { return LfMergeDirectories.Current; }
+			get { return LfMergeSettings.Current; }
 		}
 
 		public string ProjectPath(string projectName)

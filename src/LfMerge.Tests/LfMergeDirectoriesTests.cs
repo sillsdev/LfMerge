@@ -15,8 +15,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void FdoDirs_RelativePathsAreSubdirsOfBasedir()
 		{
-			LfMergeDirectories.Initialize(Path.GetTempPath(), "projects", "templates");
-			var sut = LfMergeDirectories.Current;
+			LfMergeSettings.Initialize(Path.GetTempPath(), "projects", "templates");
+			var sut = LfMergeSettings.Current;
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
@@ -26,8 +26,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void FdoDirs_AbsolutePathsRemainAbsolute()
 		{
-			LfMergeDirectories.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
-			var sut = LfMergeDirectories.Current;
+			LfMergeSettings.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
+			var sut = LfMergeSettings.Current;
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo("/projects"));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo("/projects"));
@@ -37,8 +37,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void StateDirectory_Correct()
 		{
-			LfMergeDirectories.Initialize(Path.GetTempPath());
-			var sut = LfMergeDirectories.Current;
+			LfMergeSettings.Initialize(Path.GetTempPath());
+			var sut = LfMergeSettings.Current;
 
 			Assert.That(sut.StateDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "state")));
 		}
@@ -49,8 +49,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("StateFile"))
 			{
-				LfMergeDirectories.Initialize(temp.Path);
-				var sut = LfMergeDirectories.Current;
+				LfMergeSettings.Initialize(temp.Path);
+				var sut = LfMergeSettings.Current;
 
 				// Exercise
 				var stateFile = sut.GetStateFileName("ProjA");
@@ -72,8 +72,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("QueueDirectory"))
 			{
-				LfMergeDirectories.Initialize(temp.Path);
-				var sut = LfMergeDirectories.Current;
+				LfMergeSettings.Initialize(temp.Path);
+				var sut = LfMergeSettings.Current;
 
 				// Exercise
 				var queueDir = sut.GetQueueDirectory(queue);
