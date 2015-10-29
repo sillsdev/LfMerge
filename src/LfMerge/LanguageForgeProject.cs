@@ -13,29 +13,29 @@ namespace LfMerge
 
 		private FwProject _fieldWorksProject;
 		private readonly ProcessingState _state;
-		private readonly string _projectName;
+		private readonly string _projectCode;
 		private LanguageDepotProject _languageDepotProject;
 
-		public static LanguageForgeProject Create(string projectName)
+		public static LanguageForgeProject Create(string projectCode)
 		{
 			LanguageForgeProject project;
-			if (CachedProjects.TryGetValue(projectName, out project))
+			if (CachedProjects.TryGetValue(projectCode, out project))
 				return project;
 
-			project = new LanguageForgeProject(projectName);
-			CachedProjects.Add(projectName, project);
+			project = new LanguageForgeProject(projectCode);
+			CachedProjects.Add(projectCode, project);
 			return project;
 		}
 
-		private LanguageForgeProject(string projectName)
+		private LanguageForgeProject(string projectCode)
 		{
-			_projectName = projectName;
-			_state = ProcessingState.Deserialize(projectName);
+			_projectCode = projectCode;
+			_state = ProcessingState.Deserialize(projectCode);
 		}
 
 		#region ILfProject implementation
 
-		public string LfProjectName { get { return _projectName; } }
+		public string LfProjectCode { get { return _projectCode; } }
 
 		public FwProject FieldWorksProject
 		{
@@ -43,8 +43,8 @@ namespace LfMerge
 			{
 				if (_fieldWorksProject == null)
 				{
-					// for now we simply use the language forge project name as name for the fwdata file
-					_fieldWorksProject = new FwProject(LfProjectName);
+					// for now we simply use the language forge project code as name for the fwdata file
+					_fieldWorksProject = new FwProject(LfProjectCode);
 				}
 				return _fieldWorksProject;
 			}

@@ -13,9 +13,9 @@ namespace LfMerge.Queues
 
 		string[] QueuedProjects { get; }
 
-		void EnqueueProject(string projectName);
+		void EnqueueProject(string projectCode);
 
-		void DequeueProject(string projectName);
+		void DequeueProject(string projectCode);
 
 		IQueue NextQueueWithWork { get; }
 

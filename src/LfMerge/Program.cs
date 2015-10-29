@@ -26,9 +26,9 @@ namespace LfMerge
 				queue != null;
 				queue = queue.NextQueueWithWork)
 			{
-				foreach (var projectName in queue.QueuedProjects)
+				foreach (var projectCode in queue.QueuedProjects)
 				{
-					var project = LanguageForgeProject.Create(projectName);
+					var project = LanguageForgeProject.Create(projectCode);
 
 					for (var action = queue.CurrentAction;
 						action != null;

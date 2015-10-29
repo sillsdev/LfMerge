@@ -36,14 +36,14 @@ namespace LfMerge.Tests
 			get { return LfMergeSettings.Current; }
 		}
 
-		public string ProjectPath(string projectName)
+		public string ProjectPath(string projectCode)
 		{
-			return Path.Combine(LanguageForgeFolder, projectName);
+			return Path.Combine(LanguageForgeFolder, projectCode);
 		}
 
-		public void CreateProjectUpdateFolder(string projectName)
+		public void CreateProjectUpdateFolder(string projectCode)
 		{
-			Directory.CreateDirectory(ProjectPath(projectName));
+			Directory.CreateDirectory(ProjectPath(projectCode));
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)

@@ -7,7 +7,7 @@ namespace LfMerge
 {
 	public interface ILfProject
 	{
-		string LfProjectName { get; }
+		string LfProjectCode { get; }
 		FwProject FieldWorksProject { get; }
 		ProcessingState State { get; }
 		LanguageDepotProject LanguageDepotProject { get; }

@@ -85,14 +85,14 @@ namespace LfMerge.Queues
 			get { return QueuedProjectsEnumerable().ToArray(); }
 		}
 
-		public void EnqueueProject(string projectName)
+		public void EnqueueProject(string projectCode)
 		{
-			File.WriteAllText(Path.Combine(QueueDirectory, projectName), string.Empty);
+			File.WriteAllText(Path.Combine(QueueDirectory, projectCode), string.Empty);
 		}
 
-		public void DequeueProject(string projectName)
+		public void DequeueProject(string projectCode)
 		{
-			File.Delete(Path.Combine(QueueDirectory, projectName));
+			File.Delete(Path.Combine(QueueDirectory, projectCode));
 		}
 
 		public IQueue NextQueueWithWork

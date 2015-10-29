@@ -17,7 +17,7 @@ namespace LfMerge.Tests.Actions
 		{
 			public List<ProcessingState.SendReceiveStates> SavedStates;
 
-			public ProcessingStateDouble(string projectName) : base(projectName)
+			public ProcessingStateDouble(string projectCode) : base(projectCode)
 			{
 				SavedStates = new List<ProcessingState.SendReceiveStates>();
 			}
@@ -40,15 +40,15 @@ namespace LfMerge.Tests.Actions
 		{
 			private ProcessingState _state;
 
-			public LfProjectDouble(string projectName, ProcessingStateDouble state)
+			public LfProjectDouble(string projectCode, ProcessingStateDouble state)
 			{
-				LfProjectName = projectName;
+				LfProjectCode = projectCode;
 				_state = state;
 			}
 
 			#region ILfProject implementation
 
-			public string LfProjectName { get; private set; }
+			public string LfProjectCode { get; private set; }
 
 			public FwProject FieldWorksProject
 			{
