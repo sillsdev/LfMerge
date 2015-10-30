@@ -57,6 +57,7 @@
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Queues\QueueTests.cs" />
     <Compile Include="Actions\ActionTests.cs" />
+    <Compile Include="LanguageDepotProjectTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

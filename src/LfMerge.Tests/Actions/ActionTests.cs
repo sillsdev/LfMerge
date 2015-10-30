@@ -63,6 +63,14 @@ namespace LfMerge.Tests.Actions
 				get { return _state; }
 			}
 
+
+			public LanguageDepotProject LanguageDepotProject
+			{
+				get
+				{
+					throw new NotImplementedException();
+				}
+			}
 			#endregion
 		}
 

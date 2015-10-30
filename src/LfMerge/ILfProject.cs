@@ -10,6 +10,7 @@ namespace LfMerge
 		string LfProjectName { get; }
 		FwProject FieldWorksProject { get; }
 		ProcessingState State { get; }
+		LanguageDepotProject LanguageDepotProject { get; }
 	}
 }
 
