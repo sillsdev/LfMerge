@@ -88,12 +88,12 @@ namespace LfMerge.FieldWorks
 			}
 			catch (FdoDataMigrationForbiddenException)
 			{
-				Console.WriteLine("Error: Incompatible version");
+				Console.WriteLine("Error: Incompatible version (can't migrate data)");
 				return null;
 			}
 			catch (FdoNewerVersionException)
 			{
-				Console.WriteLine("Error: Incompatible version");
+				Console.WriteLine("Error: Incompatible version (version number newer than expected)");
 				return null;
 			}
 			catch (FdoFileLockedException)
@@ -109,6 +109,8 @@ namespace LfMerge.FieldWorks
 
 			return fdoCache;
 		}
+
+		private void DelMe() {
 			Console.WriteLine("Starting UpdateFdoFromMongoDb");
 			// TODO: Get connection string from config, not hardcoded
 			string HardcodedMongoConnectionString = "mongodb://languageforge.local/scriptureforge";
@@ -152,6 +154,7 @@ namespace LfMerge.FieldWorks
 			Console.WriteLine("Stopping UpdateFdoFromMongoDb");
 
 			return;
+		}
 
 		private static IEnumerable<string> GetListOfMongoDatabases(MongoClient client)
 		{

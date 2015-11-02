@@ -50,6 +50,8 @@ namespace LfMerge.Tests.Actions
 
 			public string LfProjectCode { get; private set; }
 
+			public string MongoDatabaseName { get { return LanguageForgeProject.MongoDatabaseNamePrefix + LfProjectCode; } }
+
 			public FwProject FieldWorksProject
 			{
 				get

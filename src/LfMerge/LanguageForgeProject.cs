@@ -11,6 +11,11 @@ namespace LfMerge
 		private static Dictionary<string, LanguageForgeProject> CachedProjects =
 			new Dictionary<string, LanguageForgeProject>();
 
+		/// <summary>
+		/// The prefix prepended to project codes to get the Mongo database name.
+		/// </summary>
+		public const string MongoDatabaseNamePrefix = "sf_"; // TODO: Should this be in the config?
+
 		private FwProject _fieldWorksProject;
 		private readonly ProcessingState _state;
 		private readonly string _projectCode;
@@ -36,6 +41,8 @@ namespace LfMerge
 		#region ILfProject implementation
 
 		public string LfProjectCode { get { return _projectCode; } }
+
+		public string MongoDatabaseName { get { return MongoDatabaseNamePrefix + LfProjectCode; } }
 
 		public FwProject FieldWorksProject
 		{
