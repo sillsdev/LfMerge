@@ -21,6 +21,11 @@ namespace LfMerge
 
 		public void Add(TFirst first, TSecond second)
 		{
+			// If either dictionary contains the keys, throw before modifying either one
+			if (ContainsKey(first))
+				throw new ArgumentException("An item with the same key has already been added");
+			if (ContainsValue(second))
+				throw new ArgumentException("An item with the same value has already been added");
 			forwardDict.Add(first, second);
 			reverseDict.Add(second, first);
 		}
@@ -93,9 +98,9 @@ namespace LfMerge
 			return RemoveByFirst(key);
 		}
 
-		public bool Remove(KeyValuePair<TFirst, TSecond> item)
+		bool ICollection<KeyValuePair<TFirst, TSecond>>.Remove(KeyValuePair<TFirst, TSecond> item)
 		{
-			if (!forwardDict.Contains(item))
+			if (!Contains(item))
 				return false;
 			KeyValuePair<TSecond, TFirst> reversedItem = new KeyValuePair<TSecond, TFirst>(item.Value, item.Key);
 			bool result1 = forwardDict.Remove(item);
