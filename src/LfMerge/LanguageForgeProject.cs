@@ -68,7 +68,7 @@ namespace LfMerge
 			{
 				if (_languageDepotProject == null)
 				{
-					_languageDepotProject = new LanguageDepotProject(LfProjectName);
+					_languageDepotProject = new LanguageDepotProject(LfProjectCode);
 				}
 				return _languageDepotProject;
 			}
