@@ -2,13 +2,14 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
 	public class LfExample : LfFieldBase
 	{
-		[MongoDB.Bson.Serialization.Attributes.BsonElement("id")]
-		public string StringId { get; set; }
+		[BsonElement("id")]
+		public string ExampleId { get; set; }
 		public string LiftId { get; set; }
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public LfMultiText Sentence { get; set; }
