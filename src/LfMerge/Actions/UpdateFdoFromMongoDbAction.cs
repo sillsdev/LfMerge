@@ -22,29 +22,32 @@ namespace LfMerge.Actions
 			ILfProjectConfig config = GetConfigForTesting(project);
 			if (config == null)
 				return;
-			GetLexiconForTesting(project, config);
+			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, config);
+			foreach (LfLexEntry entry in lexicon)
+			{
+				if (entry.Lexeme != null && entry.Lexeme.Values != null)
+					Console.WriteLine(String.Join(", ", entry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value)));
+				if (entry.Senses != null) // Beware: the Senses field might not exist
+				{
+					foreach(LfSense sense in entry.Senses)
+					{
+						if (sense.PartOfSpeech != null)
+						{
+							if (sense.PartOfSpeech.Value != null)
+								Console.Write(" - " + sense.PartOfSpeech.Value);
+						}
+						Console.WriteLine();
+					}
+				}
+			}
 		}
 
-		private void GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
+		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
 		{
 			var db = MongoConnection.Default.GetProjectDatabase(project);
 			var collection = db.GetCollection<LfLexEntry>("lexicon");
-
-			// Can't use LINQ here as that requires Mongo server version 2.2 or higher
-
-			List<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToListAsync().Result;
-			foreach (LfLexEntry item in result)
-			{
-				Console.WriteLine(String.Join(", ", item.Lexeme.Values.Select(x => x.Value)));
-			}
-			// 56332f680f8709ed0fd92d6c is ObjectId for test data. TODO: Actually find by lexicon value
-
-			Console.WriteLine("Now trying an enumerable:");
 			IAsyncCursor<LfLexEntry> result2 = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
-			foreach (LfLexEntry item in result2.AsEnumerable())
-			{
-				Console.WriteLine(String.Join(", ", item.Lexeme.Values.Select(x => x.Value)));
-			}
+			return result2.AsEnumerable();
 		}
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
