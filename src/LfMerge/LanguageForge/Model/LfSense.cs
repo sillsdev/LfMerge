@@ -10,7 +10,7 @@ namespace LfMerge.LanguageForge.Model
 	{
 		// Metadata properties
 		[BsonElement("id")]
-		public string SenseId { get; set; }
+		public string SenseId { get; set; } // Can't call this field "Id", or Mongo thinks it should be an ObjectId
 		public string LiftId { get; set; }
 
 		// Data properties

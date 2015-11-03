@@ -8,9 +8,12 @@ namespace LfMerge.LanguageForge.Model
 {
 	public class LfExample : LfFieldBase
 	{
+		// Metadata properties
 		[BsonElement("id")]
-		public string ExampleId { get; set; }
+		public string ExampleId { get; set; } // Can't call this field "Id", or Mongo thinks it should be an ObjectId
 		public string LiftId { get; set; }
+
+		// Data properties
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public LfMultiText Sentence { get; set; }
 		public LfMultiText Translation { get; set; }
