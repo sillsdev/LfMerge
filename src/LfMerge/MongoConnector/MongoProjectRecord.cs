@@ -17,6 +17,8 @@ namespace LfMerge
 		/// <param name="project">LfProject instance whose data should be fetched from MongoDB.</param>
 		public static MongoProjectRecord Create(ILfProject project)
 		{
+			if (project == null) return null;
+			if (MongoConnection.Default == null) return null; // TODO: Figure out better way to deal with MongoConnections during unit testing
 			var code = project.LfProjectCode;
 			IMongoDatabase db = MongoConnection.Default.GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> coll = db.GetCollection<MongoProjectRecord>(ProjectsCollectionName);
