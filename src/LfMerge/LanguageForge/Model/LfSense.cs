@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfSense : LfFieldBase
+	public class LfSense : LfFieldBase, System.ComponentModel.ISupportInitialize
 	{
 		// Metadata properties
 		[BsonElement("id")]
@@ -43,6 +43,18 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField SensePublishIn { get; set; }
 		public LfStringArrayField AnthropologyCategories { get; set; }
 		public LfStringArrayField Status { get; set; }
+
+		public void BeginInit() { }
+
+		public void EndInit()
+		{
+			// Ensure array fields are arrays no matter what
+			if (Examples == null)
+				Examples = new LfExample[0];
+			if (Pictures == null)
+				Pictures = new LfPicture[0];
+		}
+
 	}
 }
 

@@ -27,17 +27,14 @@ namespace LfMerge.Actions
 			{
 				if (entry.Lexeme != null && entry.Lexeme.Values != null)
 					Console.WriteLine(String.Join(", ", entry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value)));
-				if (entry.Senses != null) // Beware: the Senses field might not exist
+				foreach(LfSense sense in entry.Senses)
 				{
-					foreach(LfSense sense in entry.Senses)
+					if (sense.PartOfSpeech != null)
 					{
-						if (sense.PartOfSpeech != null)
-						{
-							if (sense.PartOfSpeech.Value != null)
-								Console.Write(" - " + sense.PartOfSpeech.Value);
-						}
-						Console.WriteLine();
+						if (sense.PartOfSpeech.Value != null)
+							Console.Write(" - " + sense.PartOfSpeech.Value);
 					}
+					Console.WriteLine();
 				}
 			}
 		}

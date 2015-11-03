@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfLexEntry : LfFieldBase
+	public class LfLexEntry : LfFieldBase, System.ComponentModel.ISupportInitialize
 	{
 		// Metadata properties
 		public ObjectId Id { get; set; }
@@ -36,6 +36,14 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText Pronunciation { get; set; }
 		public LfMultiText SummaryDefinition { get; set; }
 		public LfMultiText Tone { get; set; }
+
+		public void BeginInit() { }
+
+		public void EndInit()
+		{
+			// Ensure Senses is an array no matter what
+			if (Senses == null)
+				Senses = new LfSense[0];
+		}
 	}
 }
-

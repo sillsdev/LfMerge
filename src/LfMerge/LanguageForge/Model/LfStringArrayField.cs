@@ -4,9 +4,18 @@ using System;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfStringArrayField : LfFieldBase
+	public class LfStringArrayField : LfFieldBase, System.ComponentModel.ISupportInitialize
 	{
 		public string[] Values { get; set; }
+
+		public void BeginInit() { }
+
+		public void EndInit()
+		{
+			// Ensure Values is an array no matter what
+			if (Values == null)
+				Values = new string[0];
+		}
 	}
 }
 
