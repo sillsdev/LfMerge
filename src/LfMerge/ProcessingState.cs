@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using Autofac;
 using Newtonsoft.Json;
 
 namespace LfMerge
@@ -143,15 +144,27 @@ namespace LfMerge
 			File.WriteAllText(fileName, json);
 		}
 
+		public class Factory: IProcessingStateDeserialize
+		{
+			public ProcessingState Deserialize(string projectCode)
+			{
+				var fileName = LfMergeSettings.Current.GetStateFileName(projectCode);
+				if (File.Exists(fileName))
+				{
+					var json = File.ReadAllText(fileName);
+					return JsonConvert.DeserializeObject<ProcessingState>(json);
+				}
+				return new ProcessingState(projectCode);
+			}
+		}
+
 		public static ProcessingState Deserialize(string projectCode)
 		{
-			var fileName = LfMergeSettings.Current.GetStateFileName(projectCode);
-			if (File.Exists(fileName))
+			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
-				var json = File.ReadAllText(fileName);
-				return JsonConvert.DeserializeObject<ProcessingState>(json);
+				var factory = scope.Resolve<IProcessingStateDeserialize>();
+				return factory.Deserialize(projectCode);
 			}
-			return new ProcessingState(projectCode);
 		}
 	}
 }

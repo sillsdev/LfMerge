@@ -16,6 +16,7 @@ namespace LfMerge.Tests
 		public void FixtureSetup()
 		{
 			_env = new TestEnvironment();
+
 			var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
 			var uri = new Uri("mongodb://" + LfMergeSettings.Current.MongoDbHostNameAndPort);
 			if (ipGlobalProperties.GetActiveTcpListeners().Count(t => t.Port == uri.Port) == 0)
@@ -47,6 +48,7 @@ namespace LfMerge.Tests
 		[Test]
 		public void NonexistingProject()
 		{
+			// Exercise/Verify
 			Assert.That(() => new LanguageDepotProject("nonexisting"), Throws.ArgumentException);
 		}
 	}

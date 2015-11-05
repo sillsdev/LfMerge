@@ -7,6 +7,7 @@ using Palaso.TestUtilities;
 using System.Collections.Generic;
 //using System.Xml;
 using System.Text;
+using Autofac;
 
 namespace LfMerge.Tests
 {
@@ -14,16 +15,35 @@ namespace LfMerge.Tests
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
 
-		public TestEnvironment()
+		public TestEnvironment(bool registerSettingsModelDouble = true,
+			bool registerProcessingStateDouble = true)
 		{
+			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
+				registerProcessingStateDouble).Build();
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			LfMergeSettings.Initialize(LanguageForgeFolder);
 		}
 
+		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
+			bool registerProcessingStateDouble)
+		{
+			var containerBuilder = MainClass.RegisterTypes();
+
+			if (registerProcessingStateDouble)
+			{
+				containerBuilder.RegisterType<ProcessingStateFactoryDouble>()
+					.As<IProcessingStateDeserialize>().AsSelf().SingleInstance();
+			}
+			return containerBuilder;
+		}
+
 		public void Dispose()
 		{
 			_languageForgeServerFolder.Dispose();
+			MainClass.Container.Dispose();
+			MainClass.Container = null;
+			LanguageForgeProjectAccessor.Reset();
 		}
 
 		public string LanguageForgeFolder

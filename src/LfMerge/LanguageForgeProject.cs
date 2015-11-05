@@ -2,13 +2,14 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using Autofac;
 using LfMerge.FieldWorks;
 
 namespace LfMerge
 {
 	public class LanguageForgeProject: ILfProject
 	{
-		private static Dictionary<string, LanguageForgeProject> CachedProjects =
+		protected static Dictionary<string, LanguageForgeProject> CachedProjects =
 			new Dictionary<string, LanguageForgeProject>();
 
 		private FwProject _fieldWorksProject;
@@ -27,7 +28,7 @@ namespace LfMerge
 			return project;
 		}
 
-		private LanguageForgeProject(string projectName)
+		protected LanguageForgeProject(string projectName)
 		{
 			_projectName = projectName;
 			_state = ProcessingState.Deserialize(projectName);

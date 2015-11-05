@@ -57,6 +57,9 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\packages\MongoDB.Driver.2.1.0\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="LanguageDepotProject.cs" />
     <Compile Include="LfMergeSettings.cs" />
+    <Compile Include="IProcessingStateDeserialize.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5604.35298\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5604.35298\build\BuildDependencyTasks.targets')" />

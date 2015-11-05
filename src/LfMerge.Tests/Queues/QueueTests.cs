@@ -32,11 +32,20 @@ namespace LfMerge.Tests.Queues
 			public string[] ProjectsForTesting { get; set; }
 		}
 
+		private TestEnvironment _env;
+
 		[SetUp]
 		public void FixtureSetup()
 		{
 			// Force setting of Options.Current
 			new Options();
+			_env = new TestEnvironment();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_env.Dispose();
 		}
 
 		[Test]
