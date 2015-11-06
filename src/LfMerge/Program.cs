@@ -32,9 +32,7 @@ namespace LfMerge
 
 			try
 			{
-				// TODO: read settings from config instead of hard coding them here
-				var baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
-				LfMergeSettings.Initialize(baseDir);
+				LfMergeSettings.LoadSettings();
 
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

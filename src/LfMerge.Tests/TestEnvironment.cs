@@ -18,6 +18,7 @@ namespace LfMerge.Tests
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true)
 		{
+			LfMergeSettingsAccessor.ResetCurrent();
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble).Build();
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
@@ -44,6 +45,7 @@ namespace LfMerge.Tests
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
+			LfMergeSettingsAccessor.ResetCurrent();
 		}
 
 		public string LanguageForgeFolder

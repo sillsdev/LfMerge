@@ -55,5 +55,13 @@ namespace LfMerge.Tests
 		}
 	}
 
+	public class LfMergeSettingsAccessor: LfMergeSettings
+	{
+		public static void ResetCurrent()
+		{
+			Current = null;
+		}
+	}
+
 }
 

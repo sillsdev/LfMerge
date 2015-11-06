@@ -286,7 +286,7 @@ namespace LfMerge.Tests.Queues
 		public void FirstQueueWithWork_AllQueuesEmptyReturnsNull()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("FirsttQueueWithWork"))
+			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
 			{
 				LfMergeSettings.Initialize(tempDir.Path);
 				Queue.CreateQueueDirectories();
