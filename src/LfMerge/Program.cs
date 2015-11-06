@@ -63,6 +63,15 @@ namespace LfMerge
 				}
 			}
 			*/
+			Cleanup();
+		}
+
+		/// <summary>
+		/// Clean up anything needed before quitting, e.g. disposing of IDisposable objects.
+		/// </summary>
+		private static void Cleanup()
+		{
+			LanguageForgeProject.DisposeProjectCache();
 		}
 
 	}

@@ -38,6 +38,15 @@ namespace LfMerge
 			_state = ProcessingState.Deserialize(projectCode);
 		}
 
+		public static void DisposeProjectCache()
+		{
+			foreach (LanguageForgeProject project in CachedProjects.Values)
+			{
+				project._fieldWorksProject.Dispose();
+			}
+			CachedProjects = new Dictionary<string, LanguageForgeProject>();
+		}
+
 		#region ILfProject implementation
 
 		public string LfProjectCode { get { return _projectCode; } }
