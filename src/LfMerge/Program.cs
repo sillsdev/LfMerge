@@ -25,7 +25,7 @@ namespace LfMerge
 			MongoConnection.Initialize(hardCodedMongoDbHostName);
 
 			// TODO: Move this testing code where it belongs
-			var localProjectCode = "testlangproj";
+			var localProjectCode = "TestLangProj";
 			var thisProject = LanguageForgeProject.Create(localProjectCode);
 			var foo = new Actions.UpdateFdoFromMongoDbAction();
 			foo.Run(thisProject);

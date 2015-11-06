@@ -49,6 +49,7 @@ namespace LfMerge.Tests.Actions
 			#region ILfProject implementation
 
 			public string LfProjectCode { get; private set; }
+			public string FwProjectCode { get { return LfProjectCode; } }
 
 			public string MongoDatabaseName { get { return LanguageForgeProject.MongoDatabaseNamePrefix + LfProjectCode; } }
 

@@ -8,6 +8,7 @@ namespace LfMerge
 	public interface ILfProject
 	{
 		string LfProjectCode { get; }
+		string FwProjectCode { get; }
 		string MongoDatabaseName { get; }
 		FwProject FieldWorksProject { get; }
 		ProcessingState State { get; }

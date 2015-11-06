@@ -49,7 +49,9 @@ namespace LfMerge
 
 		#region ILfProject implementation
 
-		public string LfProjectCode { get { return _projectCode; } }
+		// TODO: ToLowerInvariant() won't necessarily be right in all cases. Find a better way.
+		public string LfProjectCode { get { return _projectCode.ToLowerInvariant(); } }
+		public string FwProjectCode { get { return _projectCode; } }
 
 		public string MongoDatabaseName { get { return MongoDatabaseNamePrefix + LfProjectCode; } }
 
@@ -60,7 +62,7 @@ namespace LfMerge
 				if (_fieldWorksProject == null)
 				{
 					// for now we simply use the language forge project code as name for the fwdata file
-					_fieldWorksProject = new FwProject(LfProjectCode);
+					_fieldWorksProject = new FwProject(FwProjectCode);
 				}
 				return _fieldWorksProject;
 			}
