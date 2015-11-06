@@ -9,7 +9,7 @@ namespace LfMerge.LanguageForge.Model
 	{
 		// Metadata properties
 		public ObjectId Id { get; set; }
-		public string Guid { get; set; }
+		public Guid Guid { get; set; }
 		public bool IsDeleted { get; set; }
 		public string MercurialSha { get; set; }
 		public DateTime DateCreated { get; set; }
