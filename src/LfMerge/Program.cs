@@ -2,13 +2,14 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using System.Linq;
+using Autofac;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
-using Autofac;
 
 namespace LfMerge
 {
-	class MainClass
+	public class MainClass
 	{
 		public static IContainer Container { get; internal set; }
 
@@ -38,8 +39,10 @@ namespace LfMerge
 					queue != null;
 					queue = queue.NextQueueWithWork)
 				{
-					foreach (var projectName in queue.QueuedProjects)
+					var clonedQueue = queue.QueuedProjects.ToList();
+					foreach (var projectName in clonedQueue)
 					{
+						queue.DequeueProject(projectName);
 						var project = LanguageForgeProject.Create(projectName);
 
 						for (var action = queue.CurrentAction;
@@ -48,22 +51,6 @@ namespace LfMerge
 						{
 							action.Run(project);
 						}
-					}
-				}
-
-				var database = args.Length > 1 ? args[0] : "Sena 3";
-
-				using (var fw = new FwProject(database))
-				{
-					// just some test output
-					var fdoCache = fw.Cache;
-					Console.WriteLine("Ethnologue Code: {0}", fdoCache.LangProject.EthnologueCode);
-					Console.WriteLine("Interlinear texts:");
-					foreach (var t in fdoCache.LangProject.InterlinearTexts)
-					{
-						Console.WriteLine("{0:D6}: title: {1} (comment: {2})", t.Hvo,
-							t.Title.BestVernacularAlternative.Text,
-							t.Comment.BestVernacularAnalysisAlternative.Text);
 					}
 				}
 			}
