@@ -46,7 +46,7 @@ namespace LfMerge
 					}
 				}
 			}
-
+			/*
 			var database = args.Length > 1 ? args[0] : "Sena 3";
 
 			using (var fw = new FwProject(database))
@@ -62,6 +62,7 @@ namespace LfMerge
 						t.Comment.BestVernacularAnalysisAlternative.Text);
 				}
 			}
+			*/
 		}
 
 	}
