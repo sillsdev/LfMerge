@@ -34,9 +34,9 @@ Name=palaso-precise64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
-Path=Palaso.dll*=>lib/
-Palaso.Lift.dll*=>lib/
-Palaso.TestUtilities.dll*=>lib/
+Path=SIL.Core.dll*=>lib/
+SIL.Lift.dll*=>lib/
+SIL.TestUtilities.dll*=>lib/
 
 
 [TC::bt2]
@@ -58,10 +58,10 @@ Name=palaso-win32-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
-Path=Palaso.dll=>lib/
-Palaso.pdb=>lib/
-Palaso.Lift.dll=>lib/
-Palaso.Lift.pdb=>lib/
-Palaso.TestUtilities.dll=>lib/
-Palaso.TestUtilities.pdb=>lib/
+Path=SIL.dll=>lib/
+SIL.pdb=>lib/
+SIL.Lift.dll=>lib/
+SIL.Lift.pdb=>lib/
+SIL.TestUtilities.dll=>lib/
+SIL.TestUtilities.pdb=>lib/
 

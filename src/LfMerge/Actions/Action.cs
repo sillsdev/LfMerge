@@ -1,55 +1,30 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using Autofac;
 
 namespace LfMerge.Actions
 {
 	public abstract class Action: IAction
 	{
 		#region Action handling
-
-		private static IAction[] Actions { get; set; }
-
-		static Action()
-		{
-			var values = Enum.GetValues(typeof(ActionNames));
-			Actions = new IAction[values.Length];
-			foreach (ActionNames actionName in values)
-			{
-				Type actionType = null;
-				switch (actionName)
-				{
-					case ActionNames.None:
-						Actions[(int)actionName] = null;
-						continue;
-					case ActionNames.UpdateFdoFromMongoDb:
-						actionType = typeof(UpdateFdoFromMongoDbAction);
-						break;
-					case ActionNames.Commit:
-						actionType = typeof(CommitAction);
-						break;
-					case ActionNames.Receive:
-						actionType = typeof(ReceiveAction);
-						break;
-					case ActionNames.Merge:
-						actionType = typeof(MergeAction);
-						break;
-					case ActionNames.Send:
-						actionType = typeof(SendAction);
-						break;
-					case ActionNames.UpdateMongoDbFromFdo:
-						actionType = typeof(UpdateMongoDbFromFdo);
-						break;
-				}
-				var action = Activator.CreateInstance(actionType) as Action;
-				action.Name = actionName;
-				Actions[(int)actionName] = action;
-			}
-		}
-
 		internal static IAction GetAction(ActionNames actionName)
 		{
-			return Actions[(int)actionName];
+			var action = MainClass.Container.ResolveKeyed<IAction>(actionName);
+			var actionAsAction = action as Action;
+			if (actionAsAction != null)
+				actionAsAction.Name = actionName;
+			return action;
+		}
+
+		internal static void Register(ContainerBuilder containerBuilder)
+		{
+			containerBuilder.RegisterType<CommitAction>().Keyed<IAction>(ActionNames.Commit).SingleInstance();
+			containerBuilder.RegisterType<MergeAction>().Keyed<IAction>(ActionNames.Merge).SingleInstance();
+			containerBuilder.RegisterType<ReceiveAction>().Keyed<IAction>(ActionNames.Receive).SingleInstance();
+			containerBuilder.RegisterType<SendAction>().Keyed<IAction>(ActionNames.Send).SingleInstance();
+			containerBuilder.RegisterType<UpdateFdoFromMongoDbAction>().Keyed<IAction>(ActionNames.UpdateFdoFromMongoDb).SingleInstance();
+			containerBuilder.RegisterType<UpdateMongoDbFromFdo>().Keyed<IAction>(ActionNames.UpdateMongoDbFromFdo).SingleInstance();
 		}
 
 		#endregion

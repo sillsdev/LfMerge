@@ -4,12 +4,46 @@ using System;
 using System.IO;
 using SIL.FieldWorks.FDO;
 using LfMerge.Queues;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Reflection;
 
 namespace LfMerge
 {
 	public class LfMergeSettings: IFdoDirectories
 	{
-		private string[] _queueDirectories;
+		public static string ConfigDir { get; set; }
+		public static string ConfigFile { get; private set; }
+
+		public static LfMergeSettings Current { get; protected set; }
+
+		static LfMergeSettings()
+		{
+			ConfigDir = "/etc/languageforge/conf/";
+			ConfigFile = Path.Combine(ConfigDir, "sendreceive.conf");
+		}
+
+		public static void Initialize(string baseDir = null, string releaseDataDir = "ReleaseData",
+			string templatesDir = "Templates")
+		{
+			if (Current != null)
+				return;
+
+			if (string.IsNullOrEmpty(baseDir))
+			{
+				baseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
+			}
+			Current = new LfMergeSettings(baseDir, releaseDataDir, templatesDir);
+
+			Queue.CreateQueueDirectories();
+		}
+
+		[JsonProperty]
+		private string[] QueueDirectories { get; set; }
+
+		protected LfMergeSettings()
+		{
+		}
 
 		private LfMergeSettings(string baseDir, string releaseDataDir, string templatesDir)
 		{
@@ -18,25 +52,51 @@ namespace LfMerge
 			StateDirectory = Path.Combine(baseDir, "state");
 
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
-			_queueDirectories = new string[queueCount];
-			_queueDirectories[(int)QueueNames.None] = null;
-			_queueDirectories[(int)QueueNames.Merge] = Path.Combine(baseDir, "mergequeue");
-			_queueDirectories[(int)QueueNames.Commit] = Path.Combine(baseDir, "commitqueue");
-			_queueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
-			_queueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
+			QueueDirectories = new string[queueCount];
+			QueueDirectories[(int)QueueNames.None] = null;
+			QueueDirectories[(int)QueueNames.Merge] = Path.Combine(baseDir, "mergequeue");
+			QueueDirectories[(int)QueueNames.Commit] = Path.Combine(baseDir, "commitqueue");
+			QueueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
+			QueueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
 
-			ConfigFile = "/etc/languageforge/conf/sendreceive.conf";
+			MongoDbHostNameAndPort = "localhost:27017";
 		}
 
-		public static void Initialize(string baseDir, string releaseDataDir = "ReleaseData",
-			string templatesDir = "Templates")
+		#region Equality and GetHashCode
+		public override bool Equals(object obj)
 		{
-			Current = new LfMergeSettings(baseDir, releaseDataDir, templatesDir);
-
-			Queue.CreateQueueDirectories();
+			var other = obj as LfMergeSettings;
+			if (other == null)
+				return false;
+			bool ret =
+				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
+				other.ProjectsDirectory == ProjectsDirectory &&
+				other.StateDirectory == StateDirectory &&
+				other.TemplateDirectory == TemplateDirectory &&
+				other.WebWorkDirectory == WebWorkDirectory;
+			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
+			{
+				ret = ret && other.GetQueueDirectory(queueName) == GetQueueDirectory(queueName);
+			}
+			return ret;
 		}
 
-		public static LfMergeSettings Current { get; private set; }
+		public override int GetHashCode()
+		{
+			var hash = ConfigFile.GetHashCode() ^ DefaultProjectsDirectory.GetHashCode() ^
+				MongoDbHostNameAndPort.GetHashCode() ^ ProjectsDirectory.GetHashCode() ^
+				StateDirectory.GetHashCode() ^ TemplateDirectory.GetHashCode() ^
+				WebWorkDirectory.GetHashCode();
+			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
+			{
+				var dir = GetQueueDirectory(queueName);
+				if (dir != null)
+					hash ^= dir.GetHashCode();
+			}
+			return hash;
+		}
+		#endregion
 
 		#region IFdoDirectories implementation
 
@@ -55,10 +115,8 @@ namespace LfMerge
 
 		public string GetQueueDirectory(QueueNames queue)
 		{
-			return _queueDirectories[(int)queue];
+			return QueueDirectories[(int)queue];
 		}
-
-		public string ConfigFile { get; private set; }
 
 		public string WebWorkDirectory { get { return ProjectsDirectory; } }
 
@@ -73,10 +131,56 @@ namespace LfMerge
 			return Path.Combine(StateDirectory, projectCode + ".state");
 		}
 
-		public string MongoDbHostNameAndPort
+		public string MongoDbHostNameAndPort { get; private set; }
+
+		#region Serialization/Deserialization
+
+		// see http://stackoverflow.com/a/31617183
+		public class NonPublicPropertiesResolver : DefaultContractResolver
 		{
-			get { return "localhost:27017"; }
+			protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+			{
+				var property = base.CreateProperty(member, memberSerialization);
+				var propertyInfo = member as PropertyInfo;
+				if (propertyInfo != null)
+				{
+					property.Readable = (propertyInfo.GetMethod != null);
+					property.Writable = (propertyInfo.SetMethod != null);
+				}
+				return property;
+			}
 		}
+
+		// we don't call this method from our production code since LfMerge doesn't directly
+		// change the option.
+		public void SaveSettings()
+		{
+			JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+				ContractResolver = new NonPublicPropertiesResolver()
+			};
+			var json = JsonConvert.SerializeObject(this);
+
+			File.WriteAllText(LfMergeSettings.ConfigFile, json);
+		}
+
+		public static LfMergeSettings LoadSettings()
+		{
+			var fileName = LfMergeSettings.ConfigFile;
+			LfMergeSettings.Current = null;
+			string json = File.Exists(fileName) ? File.ReadAllText(fileName) : "";
+			if (!String.IsNullOrWhiteSpace(json))
+			{
+				JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+					ContractResolver = new NonPublicPropertiesResolver()
+				};
+				LfMergeSettings.Current = JsonConvert.DeserializeObject<LfMergeSettings>(json);
+				return LfMergeSettings.Current;
+			}
+			LfMergeSettings.Initialize();
+			return LfMergeSettings.Current;
+		}
+		#endregion
+
 	}
 }
 

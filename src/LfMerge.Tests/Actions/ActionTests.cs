@@ -2,86 +2,53 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using Autofac;
 using NUnit.Framework;
 using LfMerge;
-using LfMerge.Queues;
 using LfMerge.Actions;
-using LfMerge.FieldWorks;
+using LfMerge.Queues;
 
 namespace LfMerge.Tests.Actions
 {
 	[TestFixture]
 	public class ActionTests
 	{
-		class ProcessingStateDouble: ProcessingState
-		{
-			public List<ProcessingState.SendReceiveStates> SavedStates;
-
-			public ProcessingStateDouble(string projectCode) : base(projectCode)
-			{
-				SavedStates = new List<ProcessingState.SendReceiveStates>();
-			}
-
-			protected override void SetProperty<T>(ref T property, T value)
-			{
-				property = value;
-
-				if (SavedStates.Count == 0 || SavedStates[SavedStates.Count - 1] != SRState)
-					SavedStates.Add(SRState);
-			}
-
-			public void ResetSavedStates()
-			{
-				SavedStates.Clear();
-			}
-		}
-
-		class LfProjectDouble: ILfProject
-		{
-			private ProcessingState _state;
-
-			public LfProjectDouble(string projectCode, ProcessingStateDouble state)
-			{
-				LfProjectCode = projectCode;
-				_state = state;
-			}
-
-			#region ILfProject implementation
-
-			public string LfProjectCode { get; private set; }
-			public string FwProjectCode { get { return LfProjectCode; } }
-
-			public string MongoDatabaseName { get { return LanguageForgeProject.MongoDatabaseNamePrefix + LfProjectCode; } }
-
-			public FwProject FieldWorksProject
-			{
-				get
-				{
-					throw new NotImplementedException();
-				}
-			}
-
-			public ProcessingState State
-			{
-				get { return _state; }
-			}
-
-
-			public LanguageDepotProject LanguageDepotProject
-			{
-				get
-				{
-					throw new NotImplementedException();
-				}
-			}
-			#endregion
-		}
+		private TestEnvironment _env;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
 			// Force setting of Options.Current
 			new Options();
+		}
+
+		private ProcessingStateDouble ProcessState
+		{
+			get
+			{
+				var factory = MainClass.Container.Resolve<ProcessingStateFactoryDouble>();
+				return factory.State;
+			}
+		}
+
+		private ProcessingStateFactoryDouble Factory
+		{
+			get
+			{
+				return MainClass.Container.Resolve<ProcessingStateFactoryDouble>();
+			}
+		}
+
+		[SetUp]
+		public void Setup()
+		{
+			_env = new TestEnvironment();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_env.Dispose();
 		}
 
 		[TestCase(QueueNames.Merge, new[] { ActionNames.UpdateFdoFromMongoDb })]
@@ -110,15 +77,14 @@ namespace LfMerge.Tests.Actions
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
-			var state = new ProcessingStateDouble("proja");
-			var lfProj = new LfProjectDouble("proja", state);
+			var lfProj = LanguageForgeProject.Create("proja");
 			var sut = LfMerge.Actions.Action.GetAction(actionName);
 
 			// Exercise
 			sut.Run(lfProj);
 
 			// Verify
-			Assert.That(state.SavedStates, Is.EqualTo(new[] {
+			Assert.That(ProcessState.SavedStates, Is.EqualTo(new[] {
 				expectedState, ProcessingState.SendReceiveStates.IDLE }));
 			Assert.That(lfProj.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.IDLE));
 		}
@@ -132,17 +98,18 @@ namespace LfMerge.Tests.Actions
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup
-			var state = new ProcessingStateDouble("proja");
-			var lfProj = new LfProjectDouble("proja", state);
+			var lfProj = LanguageForgeProject.Create("proja");
+			var state = Factory.Deserialize("proja") as ProcessingStateDouble;
 			state.SRState = ProcessingState.SendReceiveStates.HOLD;
 			state.ResetSavedStates();
+			Factory.State = state;
 			var sut = LfMerge.Actions.Action.GetAction(actionName);
 
 			// Exercise
 			sut.Run(lfProj);
 
 			// Verify
-			Assert.That(state.SavedStates, Is.Empty);
+			Assert.That(ProcessState.SavedStates, Is.Empty);
 		}
 	}
 }

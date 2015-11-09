@@ -32,11 +32,20 @@ namespace LfMerge.Tests.Queues
 			public string[] ProjectsForTesting { get; set; }
 		}
 
+		private TestEnvironment _env;
+
 		[SetUp]
 		public void FixtureSetup()
 		{
 			// Force setting of Options.Current
 			new Options();
+			_env = new TestEnvironment();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_env.Dispose();
 		}
 
 		[Test]
@@ -277,7 +286,7 @@ namespace LfMerge.Tests.Queues
 		public void FirstQueueWithWork_AllQueuesEmptyReturnsNull()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("FirsttQueueWithWork"))
+			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
 			{
 				LfMergeSettings.Initialize(tempDir.Path);
 				Queue.CreateQueueDirectories();

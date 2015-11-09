@@ -14,7 +14,7 @@ namespace LfMerge.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_env = new TestEnvironment();
+			_env = new TestEnvironment(registerProcessingStateDouble: false);
 		}
 
 		[TearDown]

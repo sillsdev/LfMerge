@@ -12,6 +12,18 @@ namespace LfMerge.Tests
 	[TestFixture]
 	public class LfMergeDirectoriesTests
 	{
+		[SetUp]
+		public void Setup()
+		{
+			LfMergeSettingsAccessor.ResetCurrent();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			LfMergeSettingsAccessor.ResetCurrent();
+		}
+
 		[Test]
 		public void FdoDirs_RelativePathsAreSubdirsOfBasedir()
 		{

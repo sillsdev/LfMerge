@@ -2,6 +2,8 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using System.Linq;
+using Autofac;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
 using System.Threading;
@@ -9,8 +11,19 @@ using System.Collections.Generic;
 
 namespace LfMerge
 {
-	class MainClass
+	public class MainClass
 	{
+		public static IContainer Container { get; internal set; }
+
+		internal static ContainerBuilder RegisterTypes()
+		{
+			var containerBuilder = new ContainerBuilder();
+			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
+			LfMerge.Actions.Action.Register(containerBuilder);
+			Queue.Register(containerBuilder);
+			return containerBuilder;
+		}
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -18,52 +31,39 @@ namespace LfMerge
 			if (options == null)
 				return;
 
-			// TODO: read settings from config instead of hard coding them here
-			string hardCodedBaseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
+			Container = RegisterTypes().Build();
+			//string hardCodedBaseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			string hardCodedMongoDbHostName = "languageforge.local";
-			LfMergeSettings.Initialize(hardCodedBaseDir);
+			//LfMergeSettings.Initialize(hardCodedBaseDir);
 			MongoConnection.Initialize(hardCodedMongoDbHostName);
 
-			// TODO: Move this testing code where it belongs
-			var localProjectCode = "TestLangProj";
-			var thisProject = LanguageForgeProject.Create(localProjectCode);
-			var foo = new Actions.UpdateFdoFromMongoDbAction();
-			foo.Run(thisProject);
-
-			for (var queue = Queue.FirstQueueWithWork;
-				queue != null;
-				queue = queue.NextQueueWithWork)
+			try
 			{
-				foreach (var projectCode in queue.QueuedProjects)
+				LfMergeSettings.LoadSettings();
+				for (var queue = Queue.FirstQueueWithWork;
+					queue != null;
+					queue = queue.NextQueueWithWork)
 				{
-					var project = LanguageForgeProject.Create(projectCode);
-
-					for (var action = queue.CurrentAction;
-						action != null;
-						action = action.NextAction)
+					var clonedQueue = queue.QueuedProjects.ToList();
+					foreach (var projectCode in clonedQueue)
 					{
-						action.Run(project);
+						queue.DequeueProject(projectCode);
+						var project = LanguageForgeProject.Create(projectCode);
+
+						for (var action = queue.CurrentAction;
+							action != null;
+							action = action.NextAction)
+						{
+							action.Run(project);
+						}
 					}
 				}
 			}
-			/*
-			var database = args.Length > 1 ? args[0] : "Sena 3";
-
-			using (var fw = new FwProject(database))
+			finally
 			{
-				// just some test output
-				var fdoCache = fw.Cache;
-				Console.WriteLine("Ethnologue Code: {0}", fdoCache.LangProject.EthnologueCode);
-				Console.WriteLine("Interlinear texts:");
-				foreach (var t in fdoCache.LangProject.InterlinearTexts)
-				{
-					Console.WriteLine("{0:D6}: title: {1} (comment: {2})", t.Hvo,
-						t.Title.BestVernacularAlternative.Text,
-						t.Comment.BestVernacularAnalysisAlternative.Text);
-				}
+				Container.Dispose();
+				Cleanup();
 			}
-			*/
-			Cleanup();
 		}
 
 		/// <summary>

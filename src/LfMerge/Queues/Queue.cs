@@ -5,22 +5,28 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using LfMerge.Actions;
+using Autofac;
 
 namespace LfMerge.Queues
 {
 	public class Queue: IQueue
 	{
 		#region Queue handling
-		private static IQueue[] _queues;
-
-		static Queue()
+		internal static void Register(ContainerBuilder containerBuilder)
 		{
-			var values = Enum.GetValues(typeof(QueueNames));
-			_queues = new IQueue[values.Length];
-			foreach (QueueNames queueName in values)
+			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
-				_queues[(int)queueName] = (queueName == QueueNames.None) ? null : new Queue(queueName);
+				if (queueName == QueueNames.None)
+					continue;
+
+				containerBuilder.RegisterType<Queue>().Keyed<IQueue>(queueName)
+					.WithParameter(new TypedParameter(typeof(QueueNames), queueName));
 			}
+		}
+
+		public static IQueue GetQueue(QueueNames name)
+		{
+			return MainClass.Container.ResolveKeyed<IQueue>(name);
 		}
 
 		public static IQueue FirstQueueWithWork
@@ -45,11 +51,6 @@ namespace LfMerge.Queues
 				action = Options.Current.GetNextAction(action);
 			}
 			return null;
-		}
-
-		public static IQueue GetQueue(QueueNames name)
-		{
-			return _queues[(int)name];
 		}
 
 		public static void CreateQueueDirectories()
