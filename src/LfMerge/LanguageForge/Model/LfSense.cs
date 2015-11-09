@@ -1,12 +1,13 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfSense : LfFieldBase, System.ComponentModel.ISupportInitialize
+	public class LfSense : LfFieldBase
 	{
 		// Metadata properties
 		[BsonElement("id")]
@@ -16,10 +17,10 @@ namespace LfMerge.LanguageForge.Model
 		// Data properties
 		public LfStringField PartOfSpeech { get; set; }
 		public LfStringArrayField SemanticDomain { get; set; }
-		public LfExample[] Examples { get; set; }
+		public List<LfExample> Examples { get; set; }
 		public BsonDocument CustomFields { get; set; } // Mapped at runtime
 		public LfAuthorInfo AuthorInfo { get; set; }
-		public LfPicture[] Pictures { get; set; }
+		public List<LfPicture> Pictures { get; set; }
 		public LfMultiText Definition { get; set; }
 		public LfMultiText Gloss { get; set; }
 		public LfMultiText ScientificName { get; set; }
@@ -44,17 +45,11 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField AnthropologyCategories { get; set; }
 		public LfStringArrayField Status { get; set; }
 
-		public void BeginInit() { }
-
-		public void EndInit()
+		public LfSense()
 		{
-			// Ensure array fields are arrays no matter what
-			if (Examples == null)
-				Examples = new LfExample[0];
-			if (Pictures == null)
-				Pictures = new LfPicture[0];
+			Examples = new List<LfExample>();
+			Pictures = new List<LfPicture>();
 		}
-
 	}
 }
 

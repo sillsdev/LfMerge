@@ -1,20 +1,17 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfStringArrayField : LfFieldBase, System.ComponentModel.ISupportInitialize
+	public class LfStringArrayField : LfFieldBase
 	{
-		public string[] Values { get; set; }
+		public List<string> Values { get; set; }
 
-		public void BeginInit() { }
-
-		public void EndInit()
+		public LfStringArrayField()
 		{
-			// Ensure Values is an array no matter what
-			if (Values == null)
-				Values = new string[0];
+			Values = new List<string>();
 		}
 	}
 }

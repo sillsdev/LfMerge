@@ -1,11 +1,12 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfLexEntry : LfFieldBase, System.ComponentModel.ISupportInitialize
+	public class LfLexEntry : LfFieldBase
 	{
 		// Metadata properties
 		public ObjectId Id { get; set; }
@@ -17,7 +18,7 @@ namespace LfMerge.LanguageForge.Model
 
 		// Data properties
 		public LfMultiText Lexeme { get; set; }
-		public LfSense[] Senses { get; set; }
+		public List<LfSense> Senses { get; set; }
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public LfMultiText CitationForm { get; set; }
 		public BsonDocument CustomFields { get; set; }
@@ -37,13 +38,9 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText SummaryDefinition { get; set; }
 		public LfMultiText Tone { get; set; }
 
-		public void BeginInit() { }
-
-		public void EndInit()
+		public LfLexEntry()
 		{
-			// Ensure Senses is an array no matter what
-			if (Senses == null)
-				Senses = new LfSense[0];
+			Senses = new List<LfSense>();
 		}
 	}
 }
