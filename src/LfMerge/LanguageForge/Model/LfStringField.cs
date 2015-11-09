@@ -7,6 +7,12 @@ namespace LfMerge.LanguageForge.Model
 	public class LfStringField : LfFieldBase
 	{
 		public string Value { get; set; }
+
+		public override string ToString()
+		{
+			return Value;
+			// return string.Format("[LfStringField: Value={0}]", Value);
+		}
 	}
 }
 
