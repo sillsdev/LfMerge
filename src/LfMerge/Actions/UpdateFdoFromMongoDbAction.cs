@@ -67,19 +67,23 @@ namespace LfMerge.Actions
 				if (entry.Senses == null) continue;
 				foreach(LfSense sense in entry.Senses)
 				{
-					if (sense.Definition == null) continue;
+					if (sense.Definition == null)
+					{
+						Console.WriteLine("No definition found in LF entry");
+						continue;
+					}
 					string senseName = String.Join(", ", sense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
 					Console.WriteLine("Checking sense {0} in entry {1} in lexicon", senseName, entryName);
 					ILexSense fwSense = senseRepo.GetObject(sense.LiftId);
 					if (fwSense == null)
 					{
-						//Console.WriteLine("Didn't find sense {0} in FDO", sense.LiftId);
+						Console.WriteLine("Didn't find sense {0} in FDO", sense.LiftId);
 						continue;
 					}
 					IMultiString definition = fwSense.Definition;
 					if (definition == null)
 					{
-						//Console.WriteLine("Didn't find definition for {0} in FDO", sense.LiftId);
+						Console.WriteLine("Didn't find definition for {0} in FDO", sense.LiftId);
 						continue;
 					}
 
