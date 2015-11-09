@@ -68,13 +68,13 @@ namespace LfMerge.Tests
 				"\"DefaultProjectsDirectory\":\"/root/foo/boo/Dir3\"," +
 				"\"TemplateDirectory\":\"/root/foo/boo/Dir99\"," +
 				"\"StateDirectory\":\"/root/foo/boo/state\"," +
-				"\"ConfigFile\":\"/root/foo/boo/sendreceive.conf\"," +
+				"\"ConfigDir\":\"/root/foo/boo\"," +
 				"\"WebWorkDirectory\":\"/root/foo/boo/Dir3\"," +
 				"\"MongoDbHostNameAndPort\":\"www.example.com:7429\"}";
 
 			LfMergeSettings.Initialize();
 			Directory.CreateDirectory(LfMergeSettings.ConfigDir);
-			File.WriteAllText(LfMergeSettings.Current.ConfigFile, json);
+			File.WriteAllText(LfMergeSettings.ConfigFile, json);
 
 			// Exercise
 			var sut = LfMergeSettings.LoadSettings();
@@ -85,7 +85,7 @@ namespace LfMerge.Tests
 			Assert.That(sut.WebWorkDirectory, Is.EqualTo("/root/foo/boo/Dir3"));
 			Assert.That(sut.TemplateDirectory, Is.EqualTo("/root/foo/boo/Dir99"));
 			Assert.That(sut.StateDirectory, Is.EqualTo("/root/foo/boo/state"));
-			Assert.That(sut.ConfigFile, Is.EqualTo("/root/foo/boo/sendreceive.conf"));
+			Assert.That(LfMergeSettings.ConfigFile, Is.EqualTo("/root/foo/boo/sendreceive.conf"));
 			Assert.That(sut.MongoDbHostNameAndPort, Is.EqualTo("www.example.com:7429"));
 		}
 

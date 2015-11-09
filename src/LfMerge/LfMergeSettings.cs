@@ -12,8 +12,15 @@ namespace LfMerge
 {
 	public class LfMergeSettings: IFdoDirectories
 	{
-		public static string ConfigDir { get; set; }
 		public static LfMergeSettings Current { get; protected set; }
+
+		[JsonProperty]
+		public static string ConfigDir { get; set; }
+
+		public static string ConfigFile
+		{
+			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
+		}
 
 		static LfMergeSettings()
 		{
@@ -56,7 +63,6 @@ namespace LfMerge
 			QueueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
 			QueueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
 
-			ConfigFile = Path.Combine(ConfigDir, "sendreceive.conf");
 			MongoDbHostNameAndPort = "localhost:27017";
 		}
 
@@ -66,8 +72,7 @@ namespace LfMerge
 			var other = obj as LfMergeSettings;
 			if (other == null)
 				return false;
-			bool ret = other.ConfigFile == ConfigFile &&
-				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+			bool ret = other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
@@ -82,7 +87,7 @@ namespace LfMerge
 
 		public override int GetHashCode()
 		{
-			var hash = ConfigFile.GetHashCode() ^ DefaultProjectsDirectory.GetHashCode() ^
+			var hash = DefaultProjectsDirectory.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^ ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^ TemplateDirectory.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
@@ -115,8 +120,6 @@ namespace LfMerge
 		{
 			return QueueDirectories[(int)queue];
 		}
-
-		public string ConfigFile { get; private set; }
 
 		public string WebWorkDirectory { get { return ProjectsDirectory; } }
 
@@ -160,12 +163,12 @@ namespace LfMerge
 			};
 			var json = JsonConvert.SerializeObject(this);
 
-			File.WriteAllText(LfMergeSettings.Current.ConfigFile, json);
+			File.WriteAllText(ConfigFile, json);
 		}
 
 		public static LfMergeSettings LoadSettings()
 		{
-			var fileName = LfMergeSettings.Current.ConfigFile;
+			var fileName = ConfigFile;
 			LfMergeSettings.Current = null;
 			if (File.Exists(fileName))
 			{
