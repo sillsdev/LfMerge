@@ -12,15 +12,18 @@ namespace LfMerge
 {
 	public class LfMergeSettings: IFdoDirectories
 	{
-		public static string ConfigDir { get; set; }
-		public static string ConfigFile { get; private set; }
-
 		public static LfMergeSettings Current { get; protected set; }
+
+		[JsonProperty]
+		public static string ConfigDir { get; set; }
+		public static string ConfigFile
+		{
+			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
+		}
 
 		static LfMergeSettings()
 		{
 			ConfigDir = "/etc/languageforge/conf/";
-			ConfigFile = Path.Combine(ConfigDir, "sendreceive.conf");
 		}
 
 		public static void Initialize(string baseDir = null, string releaseDataDir = "ReleaseData",
@@ -84,7 +87,7 @@ namespace LfMerge
 
 		public override int GetHashCode()
 		{
-			var hash = ConfigFile.GetHashCode() ^ DefaultProjectsDirectory.GetHashCode() ^
+			var hash = DefaultProjectsDirectory.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^ ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^ TemplateDirectory.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
@@ -160,12 +163,12 @@ namespace LfMerge
 			};
 			var json = JsonConvert.SerializeObject(this);
 
-			File.WriteAllText(LfMergeSettings.ConfigFile, json);
+			File.WriteAllText(ConfigFile, json);
 		}
 
 		public static LfMergeSettings LoadSettings()
 		{
-			var fileName = LfMergeSettings.ConfigFile;
+			var fileName = ConfigFile;
 			LfMergeSettings.Current = null;
 			string json = File.Exists(fileName) ? File.ReadAllText(fileName) : "";
 			if (!String.IsNullOrWhiteSpace(json))

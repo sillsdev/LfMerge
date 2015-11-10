@@ -68,7 +68,7 @@ namespace LfMerge.Tests
 				"\"DefaultProjectsDirectory\":\"/root/foo/boo/Dir3\"," +
 				"\"TemplateDirectory\":\"/root/foo/boo/Dir99\"," +
 				"\"StateDirectory\":\"/root/foo/boo/state\"," +
-				"\"ConfigFile\":\"/root/foo/boo/sendreceive.conf\"," +
+				"\"ConfigDir\":\"/root/foo/boo\"," +
 				"\"WebWorkDirectory\":\"/root/foo/boo/Dir3\"," +
 				"\"MongoDbHostNameAndPort\":\"www.example.com:7429\"}";
 
