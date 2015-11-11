@@ -40,6 +40,11 @@ namespace LfMerge
 			try
 			{
 				LfMergeSettings.LoadSettings();
+				// TODO: Move this testing code where it belongs
+				var localProjectCode = "TestLangProj";
+				var thisProject = LanguageForgeProject.Create(localProjectCode);
+				var foo = new Actions.UpdateMongoDbFromFdo();
+				foo.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
 					queue = queue.NextQueueWithWork)

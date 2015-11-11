@@ -40,6 +40,16 @@ namespace LfMerge.LanguageForge.Model
 		{
 			return new LfMultiText { { key, new LfStringField { Value = value } } };
 		}
+
+		public Dictionary<string, string> AsStringDictionary()
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			foreach (KeyValuePair<string, LfStringField> kv in this)
+			{
+				result.Add(kv.Key, kv.Value.ToString());
+			}
+			return result;
+		}
 	}
 }
 

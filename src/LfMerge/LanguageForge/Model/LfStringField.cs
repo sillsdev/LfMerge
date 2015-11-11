@@ -13,6 +13,11 @@ namespace LfMerge.LanguageForge.Model
 			return Value;
 			// return string.Format("[LfStringField: Value={0}]", Value);
 		}
+
+		public static LfStringField FromString(string source)
+		{
+			return new LfStringField { Value = source };
+		}
 	}
 }
 
