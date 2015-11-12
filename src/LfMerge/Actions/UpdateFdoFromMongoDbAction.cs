@@ -74,7 +74,11 @@ namespace LfMerge.Actions
 					}
 					string senseName = String.Join(", ", sense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
 					Console.WriteLine("Checking sense {0} in entry {1} in lexicon", senseName, entryName);
-					ILexSense fwSense = senseRepo.GetObject(sense.LiftId);
+					Guid liftId;
+					ILexSense fwSense = null;
+					if (Guid.TryParse(sense.LiftId, out liftId))
+						fwSense = senseRepo.GetObject(liftId);
+					// TODO: Handle GUID parsing failures
 					if (fwSense == null)
 					{
 						Console.WriteLine("Didn't find sense {0} in FDO", sense.LiftId);

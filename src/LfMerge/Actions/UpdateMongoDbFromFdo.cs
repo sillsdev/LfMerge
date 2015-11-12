@@ -25,6 +25,8 @@ namespace LfMerge.Actions
 		private FdoCache cache;
 		private IFdoServiceLocator servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
+		private CustomFieldConverter converter;
+
 		//private List<int> customFieldIds;
 
 		protected override void DoRun(ILfProject project)
@@ -53,12 +55,13 @@ namespace LfMerge.Actions
 				Console.WriteLine("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
-
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			if (fdoMetaData == null)
 			{
 				Console.WriteLine("***WARNING:*** Don't have access to the FW metadata; custom fields may fail!");
 			}
+			converter = new CustomFieldConverter(cache);
+
 			//customFieldIds = new List<int>(((IFwMetaDataCacheManaged)fdoMetaData).GetFieldIds().Where((flid => cache.GetIsCustomField(flid))));
 			/*
 			foreach (int flid in customFieldIds)
@@ -125,9 +128,18 @@ namespace LfMerge.Actions
 			return LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
 		}
 
+		private string ToStringOrNull(ITsString iTsString)
+		{
+			if (iTsString == null) return null;
+			return iTsString.Text;
+		}
+
 		private LfSense FdoSenseToLfSense(ILexSense fdoSense)
 		{
 			var lfSense = new LfSense();
+
+			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
+			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
@@ -137,106 +149,104 @@ namespace LfMerge.Actions
 			DebugOut("Gloss", lfSense.Gloss);
 			DebugOut("Definition", lfSense.Definition);
 
-			// TODO: Need more fields here.
-			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
-			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
-
-			foreach (ICmPicture picture in fdoSense.PicturesOS)
-			{
-				Console.WriteLine("Next three lines describe a picture:");
-				Console.WriteLine(picture.Caption.BestAnalysisVernacularAlternative.Text);
-				Console.WriteLine(picture.Description.BestAnalysisVernacularAlternative.Text);
-				string layout = picture.LayoutPosAsString;
-				Console.WriteLine("Layout: {0}", layout);
-				Console.WriteLine(picture.GetTextRepOfPicture(true, "", null));
-			}
-
-			// fdoSense.AllOwnedObjects; // Not mapped
-			// fdoSense.AllSenses; // Not mapped
+			// Fields below in alphabetical order by ILexSense property, except for Gloss and Definition
 			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
 			lfSense.AnthropologyNote = ToMultiText(fdoSense.AnthroNote);
-			// fdoSense.AppendixesRC; // Not mapped
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
 			lfSense.AcademicDomains = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.DomainTypesRC);
-
+			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
-
-			foreach (ILexExampleSentence fdoExample in fdoSense.ExamplesOS)
+			if (fdoSense.ExamplesOS != null)
+				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(example => FdoExampleToLfExample(example)));
+			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
+			lfSense.GrammarNote = ToMultiText(fdoSense.GrammarNote);
+			lfSense.LiftId = fdoSense.LIFTid;
+			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
+			if (fdoSense.PicturesOS != null)
+				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(picture => FdoPictureToLfPicture(picture)));
+			foreach (LfPicture picture in lfSense.Pictures)
 			{
-				LfExample lfExample = new LfExample();
-				lfExample.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
-				lfExample.Sentence = ToMultiText(fdoExample.Example);
-				// TODO: Deal with custom fields, if any
-				lfSense.Examples.Add(lfExample);
+				// TODO: Remove this debugging foreach loop
+				Console.WriteLine("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
 			}
+			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
+			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
 
-			/* Not-mapped fields:
+			if (fdoSense.ReversalEntriesRC != null)
+			{
+				var reversalEntries = new List<string>();
+				foreach (IReversalIndexEntry fdoReversalEntry in fdoSense.ReversalEntriesRC)
+				{
+					reversalEntries.Add(fdoReversalEntry.LongName);
+				}
+				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
+			}
+			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoSense.ScientificName);
+			lfSense.SemanticDomain = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.SemanticDomainsRC);
+
+			DebugOut("Semantic domains", lfSense.SemanticDomain);
+
+			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
+			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
+			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
+			if (fdoSense.Source != null)
+			{
+				lfSense.Source = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem, fdoSense.Source);
+			}
+			lfSense.Status = LfStringArrayField.FromSinglePossibilityAbbrev(fdoSense.StatusRA);
+			lfSense.Usages = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.UsageTypesRC);
+
+			/* Fields not mapped because it doesn't make sense to map them (e.g., Hvo, backreferences, etc):
+			fdoSense.AllOwnedObjects;
+			fdoSense.AllSenses;
 			fdoSense.Cache;
 			fdoSense.CanDelete;
 			fdoSense.ChooserNameTS;
 			fdoSense.ClassID;
 			fdoSense.ClassName;
-			fdoSense.ComplexFormEntries;
-			fdoSense.ComplexFormsNotSubentries;
-			fdoSense.DoNotPublishInRC;
 			fdoSense.Entry;
 			fdoSense.EntryID;
-			*/
-
-			/* Yet to be decided fields:
-
-
 			fdoSense.FullReferenceName;
-			fdoSense.GeneralNote;
 			fdoSense.GetDesiredMsaType();
-			fdoSense.Gloss;
-			fdoSense.GrammarNote;
-			fdoSense.Guid;
+			fdoSense.Guid; // Using LIFTid instead. TODO: Verify whether that's correct.
 			fdoSense.Hvo;
 			fdoSense.Id;
 			fdoSense.ImportResidue;
 			fdoSense.IndexInOwner;
 			fdoSense.IsValidObject;
-			fdoSense.LexSenseOutline;
 			fdoSense.LexSenseReferences;
-			fdoSense.LIFTid;
-			fdoSense.LiftResidue;
 			fdoSense.LongNameTSS;
-			fdoSense.MorphoSyntaxAnalysisRA;
 			fdoSense.ObjectIdName;
 			fdoSense.OwnedObjects;
 			fdoSense.Owner;
 			fdoSense.OwningFlid;
 			fdoSense.OwnOrd;
-			fdoSense.PhonologyNote;
-			fdoSense.PicturesOS;
-			fdoSense.PublishIn;
 			fdoSense.ReferringObjects;
-			fdoSense.Restrictions;
-			fdoSense.ReversalEntriesRC;
 			fdoSense.ReversalNameForWs(wsVern);
-			// fdoSense.SandboxMSA; // Set-only property
-			fdoSense.ScientificName;
+			fdoSense.SandboxMSA; // Set-only property
 			fdoSense.Self;
-			fdoSense.SemanticDomainsRC;
-			fdoSense.SemanticsNote;
-			fdoSense.SensesOS;
-			fdoSense.SenseTypeRA;
 			fdoSense.Services;
 			fdoSense.ShortName;
 			fdoSense.ShortNameTSS;
-			fdoSense.SocioLinguisticsNote;
 			fdoSense.SortKey;
 			fdoSense.SortKey2;
 			fdoSense.SortKey2Alpha;
 			fdoSense.SortKeyWs;
-			fdoSense.Source;
-			fdoSense.StatusRA;
-			fdoSense.Subentries;
-			fdoSense.ThesaurusItemsRC;
-			fdoSense.UsageTypesRC;
 			fdoSense.VariantFormEntryBackRefs;
 			fdoSense.VisibleComplexFormBackRefs;
+			*/
+
+			/* Fields not mapped because LanguageForge doesn't handle that data:
+			fdoSense.AppendixesRC;
+			fdoSense.ComplexFormEntries;
+			fdoSense.ComplexFormsNotSubentries;
+			fdoSense.DoNotPublishInRC;
+			fdoSense.SenseTypeRA;
+			fdoSense.Subentries;
+			fdoSense.ThesaurusItemsRC;
+			fdoSense.MorphoSyntaxAnalysisRA;
+			fdoSense.LiftResidue;
+			fdoSense.LexSenseOutline;
 			*/
 
 			DebugOut("Sense bibliography", lfSense.SenseBibliography);
@@ -244,8 +254,53 @@ namespace LfMerge.Actions
 			DebugOut("Discourse note", lfSense.DiscourseNote);
 			DebugOut("Encyclopedic note", lfSense.EncyclopedicNote);
 			DebugOut("General note", lfSense.GeneralNote);
+			DebugOut("Usages", lfSense.Usages);
+
+			BsonDocument customFieldsBson = converter.CustomFieldsForThisCmObject(fdoSense);
+
+			lfSense.CustomFields = customFieldsBson;
+			Console.WriteLine("Custom fields for this sense:");
+			Console.WriteLine(lfSense.CustomFields);
 
 			return lfSense;
+		}
+
+		private LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample)
+		{
+			LfExample result = new LfExample();
+
+			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
+
+			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
+			result.Sentence = ToMultiText(fdoExample.Example);
+			result.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem, fdoExample.Reference);
+			// ILexExampleSentence fields we currently do not convert:
+			// fdoExample.DoNotPublishInRC;
+			// fdoExample.LiftResidue;
+			// fdoExample.TranslationsOC;
+
+			BsonDocument customFieldsBsonForExample = converter.CustomFieldsForThisCmObject(fdoExample);
+
+			result.CustomFields = customFieldsBsonForExample;
+			Console.WriteLine("Custom fields for this example:");
+			Console.WriteLine(result.CustomFields);
+
+			return result;
+		}
+
+		private LfPicture FdoPictureToLfPicture(ICmPicture fdoPicture)
+		{
+			var result = new LfPicture();
+			result.Caption = ToMultiText(fdoPicture.Caption);
+			result.FileName = fdoPicture.PictureFileRA.InternalPath;
+			// Unmapped ICmPicture fields include:
+			// fdoPicture.Description;
+			// fdoPicture.LayoutPos;
+			// fdoPicture.LocationMax;
+			// fdoPicture.LocationMin;
+			// fdoPicture.LocationRangeType;
+			// fdoPicture.ScaleFactor;
+			return result;
 		}
 
 		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
@@ -256,13 +311,11 @@ namespace LfMerge.Actions
 			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
 			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
 
-			var converter = new CustomFieldConverter(cache);
-
 			var lfEntry = new LfLexEntry();
 
-			var fdoHeadWord = fdoEntry.HeadWord;
+			var fdoHeadWord = ToStringOrNull(fdoEntry.HeadWord);
 			if (fdoHeadWord != null)
-				Console.WriteLine("Entry {0} from FW:", fdoHeadWord.Text);
+				Console.WriteLine("Entry {0} from FW:", fdoHeadWord);
 			else
 				Console.WriteLine("Huh... found an entry with no headword. This might fail.");
 
@@ -270,7 +323,7 @@ namespace LfMerge.Actions
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
 			if (fdoLexeme == null)
 			{
-				string headword = (fdoHeadWord != null) ? fdoHeadWord.Text : "";
+				string headword = fdoHeadWord ?? "";
 				Console.WriteLine("Entry {0} from FW had no lexeme form, using headword instead", headword);
 				lfEntry.Lexeme = LfMultiText.FromSingleStringMapping(VernacularWritingSystem, headword);
 			}
@@ -319,6 +372,11 @@ namespace LfMerge.Actions
 			DebugOut("Citation form", lfEntry.CitationForm);
 			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
 			DebugOut("Etymology Source", lfEntry.EtymologySource);
+
+			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
+			{
+				// Do nothing; LanguageForge doesn't handle allomorphs, so we don't convert them
+			}
 
 			BsonDocument customFieldsBson = converter.CustomFieldsForThisCmObject(fdoEntry);
 

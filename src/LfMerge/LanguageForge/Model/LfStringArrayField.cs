@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using SIL.FieldWorks.FDO;
+using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.LanguageForge.Model
 {
@@ -21,6 +22,17 @@ namespace LfMerge.LanguageForge.Model
 			return new LfStringArrayField { Values = new List<string>(source) };
 		}
 
+		public static LfStringArrayField FromSingleString(string source)
+		{
+			return new LfStringArrayField { Values = new List<string> { source } };
+		}
+
+		public static LfStringArrayField FromSingleITsString(ITsString source)
+		{
+			if (source == null || source.Text == null) return null;
+			return LfStringArrayField.FromSingleString(source.Text);
+		}
+
 		public static LfStringArrayField FromBestAnalysisVernaculars(IEnumerable<IMultiAccessorBase> source)
 		{
 			return new LfStringArrayField
@@ -35,6 +47,12 @@ namespace LfMerge.LanguageForge.Model
 				possibilities.Select(multiString => multiString.Abbreviation));
 		}
 
+		public static LfStringArrayField FromSinglePossibilityAbbrev(ICmPossibility possibility)
+		{
+			if (possibility == null) return null;
+			if (possibility.Abbreviation == null) return null;
+			return LfStringArrayField.FromSingleITsString(possibility.Abbreviation.BestAnalysisVernacularAlternative);
+		}
 	}
 }
 

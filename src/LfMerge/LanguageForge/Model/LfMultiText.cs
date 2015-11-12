@@ -41,6 +41,12 @@ namespace LfMerge.LanguageForge.Model
 			return new LfMultiText { { key, new LfStringField { Value = value } } };
 		}
 
+		public static LfMultiText FromSingleITsStringMapping(string key, ITsString value)
+		{
+			if (value == null || value.Text == null) return null;
+			return new LfMultiText { { key, new LfStringField { Value = value.Text } } };
+		}
+
 		public Dictionary<string, string> AsStringDictionary()
 		{
 			Dictionary<string, string> result = new Dictionary<string, string>();
