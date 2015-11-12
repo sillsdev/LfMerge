@@ -30,27 +30,22 @@ namespace LfMerge.FieldWorks
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 		}
 
-		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
+		public BsonDocument CustomFieldsForThisCmObject(ICmObject cmObj)
 		{
-			if (fdoMultiString == null) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
-		}
-
-		private BsonDocument CustomFieldsForLexEntry(ILexEntry fdoEntry)
-		{
-			if ((fdoEntry) == null) return null;
+			if ((cmObj) == null) return null;
 
 			List<int> customFieldIds = new List<int>(
-				fdoMetaData.GetFields(fdoEntry.ClassID, false, (int)CellarPropertyTypeFilter.All)
+				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
 				.Where(flid => cache.GetIsCustomField(flid)));
 
 			var result = new BsonDocument();
 
 			foreach (int flid in customFieldIds)
 			{
-				BsonValue bson = GetCustomFieldData(fdoEntry.Hvo, flid);
+				BsonValue bson = GetCustomFieldData(cmObj.Hvo, flid);
 				// TODO: Need to convert field name to, say, underscores instead of spaces and so on.
-				result.Add(fdoMetaData.GetFieldName(flid), bson);
+				if (bson != null)
+					result.Add(fdoMetaData.GetFieldName(flid), bson);
 			}
 
 			return result;
@@ -82,7 +77,8 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
-				return new BsonString(genDate.ToLongString());
+				string genDateStr = genDate.ToLongString();
+				return (String.IsNullOrEmpty(genDateStr)) ? null : new BsonString(genDateStr);
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
 			case CellarPropertyType.Guid:
@@ -93,8 +89,9 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.MultiString:
 			case CellarPropertyType.MultiUnicode:
-				LfMultiText multiTextValue = ToMultiText((IMultiAccessorBase)data.get_MultiStringProp(hvo, flid));
-				return (multiTextValue == null) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
+				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
+				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
+				return (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
 
 			case CellarPropertyType.Nil:
 				return null;
@@ -118,20 +115,21 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.String:
 				ITsString iTsValue = data.get_StringProp(hvo, flid);
-				if (iTsValue == null || iTsValue.Text == null)
+				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					return null;
 				else
 					return new BsonString(iTsValue.Text);
 
 			case CellarPropertyType.Unicode:
 				string UnicodeValue = data.get_UnicodeProp(hvo, flid);
-				return (UnicodeValue == null) ? null : new BsonString(UnicodeValue);
+				return (String.IsNullOrEmpty(UnicodeValue)) ? null : new BsonString(UnicodeValue);
 
 			case CellarPropertyType.Time:
 				return new BsonDateTime(data.get_DateTime(hvo, flid));
 
 			default:
 				return null;
+				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
 		}
 
@@ -143,6 +141,7 @@ namespace LfMerge.FieldWorks
 			IWritingSystemManager wsManager = cache.ServiceLocator.WritingSystemManager;
 			int fieldWs = cache.MetaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs); // TODO: Should this be cache.DefaultUserWs instead?
+			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs);
 			return new BsonDocument(wsStr, new BsonString(String.Join("", htmlParas)));
 		}
 
@@ -156,7 +155,7 @@ namespace LfMerge.FieldWorks
 		private BsonValue GetCustomReferencedObject(int hvo, int flid)
 		{
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
-			if (!data.get_IsValidObject(hvo)) return null;
+			if (hvo == 0 || !data.get_IsValidObject(hvo)) return null;
 			ICmObject referencedObject = cache.GetAtomicPropObject(hvo);
 			if (referencedObject is IStText)
 				return GetCustomStTextValues((IStText)referencedObject, flid);
