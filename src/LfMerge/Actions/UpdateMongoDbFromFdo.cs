@@ -316,6 +316,36 @@ namespace LfMerge.Actions
 					break;
 				case CellarPropertyType.OwningAtomic:
 					fieldValue = new BsonString("*** Unimplemented OwningAtomic ***");
+					int ownedHvo = data.get_ObjectProp(fdoEntry.Hvo, flid);
+					if (ownedHvo == 0)
+						fieldValue = null;
+					else
+					{
+						bool IsValid = data.get_IsValidObject(ownedHvo);
+						int destClsid = cache.GetDestinationClass(flid);
+						ICmObject foo = cache.GetAtomicPropObject(ownedHvo);
+						string className = foo.ClassName;
+						if (foo.ClassID == destClsid)
+							Console.WriteLine("Ah ha! I knew it!");
+						else
+							Console.WriteLine("Ah ha! I... wait, WHAT??!?");
+						if (IsValid)
+						{
+							Console.WriteLine("Should now do something with owned HVO {0} of class {1}, but what?", ownedHvo, className);
+							Console.WriteLine("Let's see if foo.Source works: {0}", ((IStText)foo).Source.BestVernacularAnalysisAlternative.Text);
+							IStText text = (IStText)foo;
+							var paras = text.ParagraphsOS;
+							var texts = paras.Select(p => (p as IStTxtPara).Contents.Text);
+							// TODO: Persist paragraphs and styles somehow. Figure it out.
+							// Also need to figure out how to get at the internal class StTxtPara, which is what
+							// this seems to be in TestLangProj, because I don't seem to be able to just get the text. How do I do it?
+							// TODO: The next line FAILS on an StText because we have a VirtualStringAccessor, which can't
+							// get a list of AvailableWritingSystemIDs. So we have to figure something out.
+							//LfMultiText conv = ToMultiText(((IStText)foo).Comment);
+							fieldValue = new BsonArray(texts);
+							Console.WriteLine("Field named {0} will have value {1}", fieldName, fieldValue);
+						}
+					}
 					break;
 				case CellarPropertyType.OwningCollection:
 					fieldValue = new BsonString("*** Unimplemented OwningCollection ***");
@@ -325,6 +355,20 @@ namespace LfMerge.Actions
 					break;
 				case CellarPropertyType.ReferenceAtomic:
 					fieldValue = new BsonString("*** Unimplemented ReferenceAtomic ***");
+					int referredHvo = data.get_ObjectProp(fdoEntry.Hvo, flid);
+					if (referredHvo == 0)
+						fieldValue = null;
+					else
+					{
+						bool IsValid = data.get_IsValidObject(referredHvo);
+						ICmObject foo = cache.GetAtomicPropObject(referredHvo);
+						string className = foo.ClassName;
+						if (IsValid)
+						{
+							Console.WriteLine("Should now do something with referred HVO {0} of class {1}, but what?", referredHvo, className);
+							//Console.WriteLine("Let's see if foo.Source works: {0}", ((IStText)foo).Source.BestVernacularAnalysisAlternative.Text);
+						}
+					}
 					break;
 				case CellarPropertyType.ReferenceCollection:
 					fieldValue = new BsonString("*** Unimplemented ReferenceCollection ***");
