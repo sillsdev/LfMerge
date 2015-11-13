@@ -309,48 +309,31 @@ namespace LfMerge.Actions
 			Console.WriteLine("Converting one entry");
 
 			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
-			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
+			// string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
 
 			var lfEntry = new LfLexEntry();
 
-			var fdoHeadWord = ToStringOrNull(fdoEntry.HeadWord);
-			if (fdoHeadWord != null)
-				Console.WriteLine("Entry {0} from FW:", fdoHeadWord);
-			else
-				Console.WriteLine("Huh... found an entry with no headword. This might fail.");
-
-			// TODO: Figure out if this is the right mapping for lexemes
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
 			if (fdoLexeme == null)
-			{
-				string headword = fdoHeadWord ?? "";
-				Console.WriteLine("Entry {0} from FW had no lexeme form, using headword instead", headword);
-				lfEntry.Lexeme = LfMultiText.FromSingleStringMapping(VernacularWritingSystem, headword);
-			}
+				lfEntry.Lexeme = null;
 			else
-			{
 				lfEntry.Lexeme = ToMultiText(fdoLexeme.Form);
-			}
+			// Other fields of fdoLexeme (AllomorphEnvironments, LiftResidue, MorphTypeRA, etc.) not mapped
 
 			DebugOut("Lexeme", lfEntry.Lexeme);
 
-			foreach (ILexSense fdoSense in fdoEntry.SensesOS)
+			// Fields below in alphabetical order by ILexSense property, except for Lexeme
+			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
 			{
-				LfSense lfSense = FdoSenseToLfSense(fdoSense);
-
-				if (lfEntry.Senses == null)
-					Console.WriteLine("Oops, lfEntry.Senses shouldn't be null!");
-				else
-					lfEntry.Senses.Add(lfSense);
+				// Do nothing; LanguageForge doesn't currently handle allomorphs, so we don't convert them
 			}
-
+			lfEntry.EntryBibliography = ToMultiText(fdoEntry.Bibliography);
 			lfEntry.CitationForm = ToMultiText(fdoEntry.CitationForm);
+			lfEntry.Note = ToMultiText(fdoEntry.Comment);
 
 			lfEntry.DateCreated = fdoEntry.DateCreated;
 			lfEntry.DateModified = fdoEntry.DateModified;
-
-			// TODO: Pretty sure this block is wrong. AuthorInfo.CreatedDate in Mongo doesn't match DateCreated. One of them is for something else.
-			// TODO: Figure out which one is for what.
+			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();
 			lfEntry.AuthorInfo.CreatedByUserRef = null;
@@ -358,8 +341,6 @@ namespace LfMerge.Actions
 			lfEntry.AuthorInfo.ModifiedByUserRef = null;
 			lfEntry.AuthorInfo.ModifiedDate = fdoEntry.DateModified;
 
-			lfEntry.EntryBibliography = ToMultiText(fdoEntry.Bibliography);
-			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
 			if (fdoEtymology != null)
 			{
@@ -367,16 +348,27 @@ namespace LfMerge.Actions
 				lfEntry.EtymologyComment = ToMultiText(fdoEtymology.Comment);
 				lfEntry.EtymologyGloss = ToMultiText(fdoEtymology.Gloss);
 				lfEntry.EtymologySource = LfMultiText.FromSingleStringMapping(AnalysisWritingSystem, fdoEtymology.Source);
+				// fdoEtymology.LiftResidue not mapped
 			}
+			lfEntry.Guid = fdoEntry.Guid;
+			lfEntry.LiftId = fdoEntry.LIFTid;
+			lfEntry.LiteralMeaning = ToMultiText(fdoEntry.LiteralMeaning);
+			if (fdoEntry.PrimaryMorphType != null)
+				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.AbbrAndName; // TODO: This might be wrong; double-check it.
+			foreach (ILexPronunciation pronunciation in fdoEntry.PronunciationsOS)
+			{
+				// Do nothing: LanguageForge doesn't currently handle multiple pronunciations, so we don't convert them
+				// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert this field.
+			}
+			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
+			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
+				lfEntry.Senses = new List<LfSense>();
+			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(fdoSense => FdoSenseToLfSense(fdoSense)));
+			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
 			DebugOut("Citation form", lfEntry.CitationForm);
 			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
 			DebugOut("Etymology Source", lfEntry.EtymologySource);
-
-			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
-			{
-				// Do nothing; LanguageForge doesn't handle allomorphs, so we don't convert them
-			}
 
 			BsonDocument customFieldsBson = converter.CustomFieldsForThisCmObject(fdoEntry);
 
@@ -385,6 +377,49 @@ namespace LfMerge.Actions
 			Console.WriteLine(lfEntry.CustomFields);
 
 			return lfEntry;
+
+			/* Fields not mapped because it doesn't make sense to map them (e.g., Hvo, backreferences, etc):
+			fdoEntry.ComplexFormEntries;
+			fdoEntry.ComplexFormEntryRefs;
+			fdoEntry.ComplexFormsNotSubentries;
+			fdoEntry.EntryRefsOS;
+			fdoEntry.HasMoreThanOneSense;
+			fdoEntry.HeadWord; // Read-only virtual property
+			fdoEntry.IsMorphTypesMixed; // Read-only property
+			fdoEntry.LexEntryReferences;
+			fdoEntry.MainEntriesOrSensesRS;
+			fdoEntry.MinimalLexReferences;
+			fdoEntry.MorphoSyntaxAnalysesOC;
+			fdoEntry.MorphTypes;
+			fdoEntry.NumberOfSensesForEntry;
+			fdoEntry.PicturesOfSenses;
+
+			*/
+
+			/* Fields that would make sense to map, but that we don't because LF doesn't handle them (e.g., allomorphs):
+			fdoEntry.AllAllomorphs; // LF doesn't handle allomorphs, so skip all allomorph-related fields
+			fdoEntry.AlternateFormsOS;
+			fdoEntry.CitationFormWithAffixType; // TODO: This one should maybe be mapped. Figure out how.
+			fdoEntry.DoNotPublishInRC;
+			fdoEntry.DoNotShowMainEntryInRC;
+			fdoEntry.DoNotUseForParsing;
+			fdoEntry.HomographForm;
+			fdoEntry.HomographFormKey;
+			fdoEntry.HomographNumber;
+			fdoEntry.ImportResidue;
+			fdoEntry.LiftResidue;
+			fdoEntry.PronunciationsOS
+			fdoEntry.PublishAsMinorEntry;
+			fdoEntry.PublishIn;
+			fdoEntry.ShowMainEntryIn;
+			fdoEntry.Subentries;
+			fdoEntry.VariantEntryRefs;
+			fdoEntry.VariantFormEntries;
+			fdoEntry.VisibleComplexFormBackRefs;
+			fdoEntry.VisibleComplexFormEntries;
+			fdoEntry.VisibleVariantEntryRefs;
+
+			*/
 		}
 
 		protected override ActionNames NextActionName
@@ -393,176 +428,3 @@ namespace LfMerge.Actions
 		}
 	}
 }
-
-/* Fields from an fdoEntry:
-				fdoEntry.AllAllomorphs;
-				fdoEntry.AllOwnedObjects;
-				fdoEntry.AllReferencedObjects(collector);
-				fdoEntry.AllSenses;
-				fdoEntry.AlternateFormsOS;
-				fdoEntry.Bibliography;
-				fdoEntry.Cache;
-				fdoEntry.CanDelete;
-				fdoEntry.ChooserNameTS;
-				fdoEntry.CitationForm;
-				fdoEntry.CitationFormWithAffixType;
-				fdoEntry.ClassID;
-				fdoEntry.ClassName;
-				fdoEntry.Comment;
-				fdoEntry.ComplexFormEntries;
-				fdoEntry.ComplexFormEntryRefs;
-				fdoEntry.ComplexFormsNotSubentries;
-				fdoEntry.DateCreated;
-				fdoEntry.DateModified;
-				fdoEntry.DeletionTextTSS;
-				fdoEntry.DoNotPublishInRC;
-				fdoEntry.DoNotShowMainEntryInRC;
-				fdoEntry.DoNotUseForParsing;
-				fdoEntry.EntryRefsOS;
-				fdoEntry.EtymologyOA;
-				fdoEntry.GetDefaultClassForNewAllomorph();
-				fdoEntry.Guid;
-				fdoEntry.HasMoreThanOneSense;
-				fdoEntry.HeadWord;
-				fdoEntry.HeadWordForWs(wsVern);
-				fdoEntry.HeadWordRefForWs(wsVern);
-				fdoEntry.HeadWordReversalForWs(wsVern);
-				fdoEntry.HomographForm;
-				fdoEntry.HomographFormKey;
-				fdoEntry.HomographNumber;
-				fdoEntry.Hvo;
-				fdoEntry.Id;
-				fdoEntry.ImportResidue;
-				fdoEntry.IndexInOwner;
-				fdoEntry.IsCircumfix;
-				fdoEntry.IsComponent;
-				fdoEntry.IsFieldRelevant;
-				fdoEntry.IsFieldRequired;
-				fdoEntry.IsMorphTypesMixed;
-				fdoEntry.IsOwnedBy(possibleOwner);;
-				fdoEntry.IsValidObject;
-				fdoEntry.IsVariantOfSenseOrOwnerEntry(senseTargetComponent, out matchinEntryRef);
-				fdoEntry.LexemeFormOA;
-				fdoEntry.LexEntryReferences;
-				fdoEntry.LIFTid;
-				fdoEntry.LiftResidue;
-				fdoEntry.LiteralMeaning;
-				fdoEntry.MainEntriesOrSensesRS;
-				fdoEntry.MinimalLexReferences;
-				fdoEntry.MorphoSyntaxAnalysesOC;
-				fdoEntry.MorphTypes;
-				fdoEntry.NumberOfSensesForEntry;
-				fdoEntry.ObjectIdName;
-				fdoEntry.OwnedObjects;
-				fdoEntry.Owner;
-				fdoEntry.OwningFlid;
-				fdoEntry.OwnOrd;
-				fdoEntry.PicturesOfSenses;
-				fdoEntry.PrimaryMorphType;
-				fdoEntry.PronunciationsOS;
-				fdoEntry.PublishAsMinorEntry;
-				fdoEntry.PublishIn;
-				fdoEntry.ReferenceTargetCandidates(flid);
-				fdoEntry.ReferenceTargetOwner(flid);
-				fdoEntry.ReferringObjects;
-				fdoEntry.Restrictions;
-				fdoEntry.Self;
-				fdoEntry.SensesOS;
-				fdoEntry.SenseWithMsa(MoMorphSynAnalysis);
-				fdoEntry.Services;
-				fdoEntry.ShortName;
-				fdoEntry.ShortNameTSS;
-				fdoEntry.ShowMainEntryIn;
-				fdoEntry.SortKey;
-				fdoEntry.SortKey2;
-				fdoEntry.SortKey2Alpha;
-				fdoEntry.SortKeyWs;
-				fdoEntry.Subentries;
-				fdoEntry.SummaryDefinition;
-				fdoEntry.SupportsInflectionClasses();
-				fdoEntry.VariantEntryRefs;
-				fdoEntry.VariantFormEntries;
-				fdoEntry.VariantFormEntryBackRefs;
-				fdoEntry.VisibleComplexFormBackRefs;
-				fdoEntry.VisibleComplexFormEntries;
-				fdoEntry.VisibleVariantEntryRefs;
-*/
-
-
-
-/* Fields from an fdoSense:
-fdoSense.AllOwnedObjects;
-fdoSense.AllSenses;
-fdoSense.AnthroCodesRC;
-fdoSense.AnthroNote;
-fdoSense.AppendixesRC;
-fdoSense.Bibliography;
-fdoSense.Cache;
-fdoSense.CanDelete;
-fdoSense.ChooserNameTS;
-fdoSense.ClassID;
-fdoSense.ClassName;
-fdoSense.ComplexFormEntries;
-fdoSense.ComplexFormsNotSubentries;
-fdoSense.Definition;
-fdoSense.DefinitionOrGloss;
-fdoSense.DeletionTextTSS;
-fdoSense.DiscourseNote;
-fdoSense.DomainTypesRC;
-fdoSense.DoNotPublishInRC;
-fdoSense.EncyclopedicInfo;
-fdoSense.Entry;
-fdoSense.EntryID;
-fdoSense.ExamplesOS;
-fdoSense.FullReferenceName;
-fdoSense.GeneralNote;
-fdoSense.GetDesiredMsaType();
-fdoSense.Gloss;
-fdoSense.GrammarNote;
-fdoSense.Guid;
-fdoSense.Hvo;
-fdoSense.Id;
-fdoSense.ImportResidue;
-fdoSense.IndexInOwner;
-fdoSense.IsValidObject;
-fdoSense.LexSenseOutline;
-fdoSense.LexSenseReferences;
-fdoSense.LIFTid;
-fdoSense.LiftResidue;
-fdoSense.LongNameTSS;
-fdoSense.MorphoSyntaxAnalysisRA;
-fdoSense.ObjectIdName;
-fdoSense.OwnedObjects;
-fdoSense.Owner;
-fdoSense.OwningFlid;
-fdoSense.OwnOrd;
-fdoSense.PhonologyNote;
-fdoSense.PicturesOS;
-fdoSense.PublishIn;
-fdoSense.ReferringObjects;
-fdoSense.Restrictions;
-fdoSense.ReversalEntriesRC;
-fdoSense.ReversalNameForWs(wsVern);
-// fdoSense.SandboxMSA; // Set-only property
-fdoSense.ScientificName;
-fdoSense.Self;
-fdoSense.SemanticDomainsRC;
-fdoSense.SemanticsNote;
-fdoSense.SensesOS;
-fdoSense.SenseTypeRA;
-fdoSense.Services;
-fdoSense.ShortName;
-fdoSense.ShortNameTSS;
-fdoSense.SocioLinguisticsNote;
-fdoSense.SortKey;
-fdoSense.SortKey2;
-fdoSense.SortKey2Alpha;
-fdoSense.SortKeyWs;
-fdoSense.Source;
-fdoSense.StatusRA;
-fdoSense.Subentries;
-fdoSense.ThesaurusItemsRC;
-fdoSense.UsageTypesRC;
-fdoSense.VariantFormEntryBackRefs;
-fdoSense.VisibleComplexFormBackRefs;
-*/
