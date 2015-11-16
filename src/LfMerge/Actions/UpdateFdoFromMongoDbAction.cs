@@ -155,22 +155,11 @@ namespace LfMerge.Actions
 
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
+			Guid guid = lfEntry.Guid;
+			ILexEntry fdoEntry = GetOrCreateCmObjectByGuid<ILexEntry>(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexEntry>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
-				var factory = cache.ServiceLocator.GetInstance<ILexEntryFactory>();
-				ILexEntry fdoEntry;
-				Guid guid = lfEntry.Guid;
-				if (guid == default(Guid))
-				{
-					fdoEntry = factory.Create();
-					Console.WriteLine("Created fdoEntry with GUID {0}", fdoEntry.Guid);
-				}
-				else
-				{
-					fdoEntry = repo.GetObject(guid);
-				}
-
+				// TODO: Set instance fields
 				return fdoEntry;
 			});
 			return result;
@@ -178,22 +167,11 @@ namespace LfMerge.Actions
 
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
 		{
+			Guid guid = GuidFromLiftId(lfExample.LiftId);
+			ILexExampleSentence fdoExample = GetOrCreateCmObjectByGuid<ILexExampleSentence>(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexExampleSentence>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<ILexExampleSentenceRepository>();
-				var factory = cache.ServiceLocator.GetInstance<ILexExampleSentenceFactory>();
-				ILexExampleSentence fdoExample;
-				Guid guid = GuidFromLiftId(lfExample.LiftId);
-				if (guid == default(Guid))
-				{
-					fdoExample = factory.Create();
-					Console.WriteLine("Created fdoExample with GUID {0}", fdoExample.Guid);
-				}
-				else
-				{
-					fdoExample = repo.GetObject(guid);
-				}
-
+				// TODO: Set instance fields
 				return fdoExample;
 			});
 			return result;
@@ -201,22 +179,11 @@ namespace LfMerge.Actions
 
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
 		{
+			Guid guid = lfPicture.Guid;
+			ICmPicture fdoPicture = GetOrCreateCmObjectByGuid<ICmPicture>(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ICmPicture>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<ICmPictureRepository>();
-				var factory = cache.ServiceLocator.GetInstance<ICmPictureFactory>();
-				ICmPicture fdoPicture;
-				Guid guid = lfPicture.Guid;
-				if (guid == default(Guid))
-				{
-					Console.WriteLine("About to create fdoPicture, will print GUID after creation");
-					fdoPicture = factory.Create();
-					Console.WriteLine("Created fdoPicture with GUID {0}", fdoPicture.Guid);
-				}
-				else
-				{
-					fdoPicture = repo.GetObject(guid);
-				}
+				// TODO: Set instance fields
 				return fdoPicture;
 			});
 			// cache.ActionHandlerAccessor.Commit(); // TODO: Consider whether this belongs here, or whether we should Commit() a lot of things at once.
@@ -225,23 +192,34 @@ namespace LfMerge.Actions
 
 		private ILexSense LfSenseToFdoSense(LfSense lfSense)
 		{
+			Guid guid = GuidFromLiftId(lfSense.LiftId);
+			ILexSense fdoSense = GetOrCreateCmObjectByGuid<ILexSense>(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexSense>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<ILexSenseRepository>();
-				var factory = cache.ServiceLocator.GetInstance<ILexSenseFactory>();
-				ILexSense fdoSense;
-				Guid guid = GuidFromLiftId(lfSense.LiftId);
+				// TODO: Set instance fields
+				return fdoSense;
+			});
+			return result;
+		}
+
+		private TObject GetOrCreateCmObjectByGuid<TObject>(Guid guid) where TObject : ICmObject
+		{
+			var result = NonUndoableUnitOfWorkHelper.Do<TObject>(cache.ActionHandlerAccessor, () =>
+			{
+				var repo = cache.ServiceLocator.GetInstance<IRepository<TObject>>();
+				var factory = cache.ServiceLocator.GetInstance<IFdoFactory<TObject>>();
+				TObject cmObject;
 				if (guid == default(Guid))
 				{
-					fdoSense = factory.Create();
-					Console.WriteLine("Created fdoSense with GUID {0}", fdoSense.Guid);
+					cmObject = factory.Create();
+					Console.WriteLine("Created CmObject with GUID {0}", cmObject.Guid);
 				}
 				else
 				{
-					fdoSense = repo.GetObject(guid);
+					cmObject = repo.GetObject(guid);
 				}
 
-				return fdoSense;
+				return cmObject;
 			});
 			return result;
 		}
