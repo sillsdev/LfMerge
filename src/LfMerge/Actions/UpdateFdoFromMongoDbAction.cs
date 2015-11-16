@@ -156,7 +156,7 @@ namespace LfMerge.Actions
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid;
-			ILexEntry fdoEntry = GetOrCreateCmObjectByGuid<ILexEntry>(guid);
+			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexEntry>(cache.ActionHandlerAccessor, () =>
 			{
 				// TODO: Set instance fields
@@ -168,7 +168,7 @@ namespace LfMerge.Actions
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
 		{
 			Guid guid = GuidFromLiftId(lfExample.LiftId);
-			ILexExampleSentence fdoExample = GetOrCreateCmObjectByGuid<ILexExampleSentence>(guid);
+			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexExampleSentence>(cache.ActionHandlerAccessor, () =>
 			{
 				// TODO: Set instance fields
@@ -180,7 +180,7 @@ namespace LfMerge.Actions
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
 		{
 			Guid guid = lfPicture.Guid;
-			ICmPicture fdoPicture = GetOrCreateCmObjectByGuid<ICmPicture>(guid);
+			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ICmPicture>(cache.ActionHandlerAccessor, () =>
 			{
 				// TODO: Set instance fields
@@ -193,7 +193,7 @@ namespace LfMerge.Actions
 		private ILexSense LfSenseToFdoSense(LfSense lfSense)
 		{
 			Guid guid = GuidFromLiftId(lfSense.LiftId);
-			ILexSense fdoSense = GetOrCreateCmObjectByGuid<ILexSense>(guid);
+			ILexSense fdoSense = GetOrCreateSenseByGuid(guid);
 			var result = NonUndoableUnitOfWorkHelper.Do<ILexSense>(cache.ActionHandlerAccessor, () =>
 			{
 				// TODO: Set instance fields
@@ -202,12 +202,15 @@ namespace LfMerge.Actions
 			return result;
 		}
 
-		private TObject GetOrCreateCmObjectByGuid<TObject>(Guid guid) where TObject : ICmObject
+		private TObject GetOrCreateCmObjectByGuid<TObject, TRepository, TFactory>(Guid guid)
+			where TObject : ICmObject
+			where TRepository : IRepository<TObject>
+			where TFactory : IFdoFactory<TObject>
 		{
 			var result = NonUndoableUnitOfWorkHelper.Do<TObject>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<IRepository<TObject>>();
-				var factory = cache.ServiceLocator.GetInstance<IFdoFactory<TObject>>();
+				var repo = cache.ServiceLocator.GetInstance<TRepository>();
+				var factory = cache.ServiceLocator.GetInstance<TFactory>();
 				TObject cmObject;
 				if (guid == default(Guid))
 				{
@@ -222,6 +225,26 @@ namespace LfMerge.Actions
 				return cmObject;
 			});
 			return result;
+		}
+
+		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
+		{
+			return GetOrCreateCmObjectByGuid<ILexEntry, ILexEntryRepository, ILexEntryFactory>(guid);
+		}
+
+		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid)
+		{
+			return GetOrCreateCmObjectByGuid<ILexExampleSentence, ILexExampleSentenceRepository, ILexExampleSentenceFactory>(guid);
+		}
+
+		private ICmPicture GetOrCreatePictureByGuid(Guid guid)
+		{
+			return GetOrCreateCmObjectByGuid<ICmPicture, ICmPictureRepository, ICmPictureFactory>(guid);
+		}
+
+		private ILexSense GetOrCreateSenseByGuid(Guid guid)
+		{
+			return GetOrCreateCmObjectByGuid<ILexSense, ILexSenseRepository, ILexSenseFactory>(guid);
 		}
 
 		protected override ActionNames NextActionName
