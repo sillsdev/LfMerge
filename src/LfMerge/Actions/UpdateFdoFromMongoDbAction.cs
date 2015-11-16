@@ -155,79 +155,95 @@ namespace LfMerge.Actions
 
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
-			var repo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
-			var factory = cache.ServiceLocator.GetInstance<ILexEntryFactory>();
-			ILexEntry fdoEntry;
-			Guid guid = lfEntry.Guid;
-			if (guid == default(Guid))
+			var result = NonUndoableUnitOfWorkHelper.Do<ILexEntry>(cache.ActionHandlerAccessor, () =>
 			{
-				fdoEntry = factory.Create();
-				Console.WriteLine("Created fdoEntry with GUID {0}", fdoEntry.Guid);
-			}
-			else
-			{
-				fdoEntry = repo.GetObject(guid);
-			}
+				var repo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+				var factory = cache.ServiceLocator.GetInstance<ILexEntryFactory>();
+				ILexEntry fdoEntry;
+				Guid guid = lfEntry.Guid;
+				if (guid == default(Guid))
+				{
+					fdoEntry = factory.Create();
+					Console.WriteLine("Created fdoEntry with GUID {0}", fdoEntry.Guid);
+				}
+				else
+				{
+					fdoEntry = repo.GetObject(guid);
+				}
 
-			return fdoEntry;
+				return fdoEntry;
+			});
+			return result;
 		}
 
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
 		{
-			var repo = cache.ServiceLocator.GetInstance<ILexExampleSentenceRepository>();
-			var factory = cache.ServiceLocator.GetInstance<ILexExampleSentenceFactory>();
-			ILexExampleSentence fdoExample;
-			Guid guid = GuidFromLiftId(lfExample.LiftId);
-			if (guid == default(Guid))
+			var result = NonUndoableUnitOfWorkHelper.Do<ILexExampleSentence>(cache.ActionHandlerAccessor, () =>
 			{
-				// TODO: Figure out how to create a new object.
-				fdoExample = factory.Create();
-				Console.WriteLine("Created fdoExample with GUID {0}", fdoExample.Guid);
-				return null;
-			}
-			fdoExample = repo.GetObject(guid);
+				var repo = cache.ServiceLocator.GetInstance<ILexExampleSentenceRepository>();
+				var factory = cache.ServiceLocator.GetInstance<ILexExampleSentenceFactory>();
+				ILexExampleSentence fdoExample;
+				Guid guid = GuidFromLiftId(lfExample.LiftId);
+				if (guid == default(Guid))
+				{
+					fdoExample = factory.Create();
+					Console.WriteLine("Created fdoExample with GUID {0}", fdoExample.Guid);
+				}
+				else
+				{
+					fdoExample = repo.GetObject(guid);
+				}
 
-			return fdoExample;
+				return fdoExample;
+			});
+			return result;
 		}
 
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
 		{
-			cache.ActionHandlerAccessor.BeginNonUndoableTask();
-			// Another way of doing it would be:
-			// using (var helper = NonUndoableUnitOfWorkHelper())
-			// ; // Rest of function would go here
-			var repo = cache.ServiceLocator.GetInstance<ICmPictureRepository>();
-			var factory = cache.ServiceLocator.GetInstance<ICmPictureFactory>();
-			ICmPicture fdoPicture;
-			Guid guid = lfPicture.Guid;
-			if (guid == default(Guid))
+			var result = NonUndoableUnitOfWorkHelper.Do<ICmPicture>(cache.ActionHandlerAccessor, () =>
 			{
-				Console.WriteLine("About to create fdoPicture, will print GUID after creation");
-				fdoPicture = factory.Create();
-				Console.WriteLine("Created fdoPicture with GUID {0}", fdoPicture.Guid);
-			}
-			else
-			{
-				fdoPicture = repo.GetObject(guid);
-			}
-			cache.ActionHandlerAccessor.EndNonUndoableTask();
-			cache.ActionHandlerAccessor.Commit();
-			return fdoPicture;
+				var repo = cache.ServiceLocator.GetInstance<ICmPictureRepository>();
+				var factory = cache.ServiceLocator.GetInstance<ICmPictureFactory>();
+				ICmPicture fdoPicture;
+				Guid guid = lfPicture.Guid;
+				if (guid == default(Guid))
+				{
+					Console.WriteLine("About to create fdoPicture, will print GUID after creation");
+					fdoPicture = factory.Create();
+					Console.WriteLine("Created fdoPicture with GUID {0}", fdoPicture.Guid);
+				}
+				else
+				{
+					fdoPicture = repo.GetObject(guid);
+				}
+				return fdoPicture;
+			});
+			// cache.ActionHandlerAccessor.Commit(); // TODO: Consider whether this belongs here, or whether we should Commit() a lot of things at once.
+			return result;
 		}
 
 		private ILexSense LfSenseToFdoSense(LfSense lfSense)
 		{
-			var repo = cache.ServiceLocator.GetInstance<ILexSenseRepository>();
-			var factory = cache.ServiceLocator.GetInstance<ILexSenseFactory>();
-			Guid guid = GuidFromLiftId(lfSense.LiftId);
-			if (guid == default(Guid))
+			var result = NonUndoableUnitOfWorkHelper.Do<ILexSense>(cache.ActionHandlerAccessor, () =>
 			{
-				// TODO: Try another approach for finding the object before giving up and returning null?
-				return null;
-			}
-			ILexSense fdoSense = repo.GetObject(guid);
+				var repo = cache.ServiceLocator.GetInstance<ILexSenseRepository>();
+				var factory = cache.ServiceLocator.GetInstance<ILexSenseFactory>();
+				ILexSense fdoSense;
+				Guid guid = GuidFromLiftId(lfSense.LiftId);
+				if (guid == default(Guid))
+				{
+					fdoSense = factory.Create();
+					Console.WriteLine("Created fdoSense with GUID {0}", fdoSense.Guid);
+				}
+				else
+				{
+					fdoSense = repo.GetObject(guid);
+				}
 
-			return fdoSense;
+				return fdoSense;
+			});
+			return result;
 		}
 
 		protected override ActionNames NextActionName
