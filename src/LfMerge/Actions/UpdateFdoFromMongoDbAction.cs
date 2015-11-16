@@ -7,12 +7,16 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
+using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
+using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.Actions
 {
 	public class UpdateFdoFromMongoDbAction: Action
 	{
+		private FdoCache cache;
+
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
 			get { return ProcessingState.SendReceiveStates.QUEUED; }
@@ -23,6 +27,8 @@ namespace LfMerge.Actions
 			ILfProjectConfig config = GetConfigForTesting(project);
 			if (config == null)
 				return;
+
+			// TODO: Remove this block of debugging output code soonish.
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, config);
 			foreach (LfLexEntry entry in lexicon)
 			{
@@ -45,7 +51,7 @@ namespace LfMerge.Actions
 				Console.WriteLine("Failed to find the corresponding FieldWorks project!");
 				return;
 			}
-			FdoCache cache = project.FieldWorksProject.Cache;
+			cache = project.FieldWorksProject.Cache;
 			if (cache == null)
 			{
 				Console.WriteLine("Failed to find the FDO cache!");
@@ -58,6 +64,12 @@ namespace LfMerge.Actions
 			Console.WriteLine("Got the service locator");
 			ILexSenseRepository senseRepo = servLoc.GetInstance<ILexSenseRepository>();
 			Console.WriteLine("Got the sense repository");
+
+			var emptyPicture = new LfPicture();
+			Console.WriteLine("Empty picture has GUID {0}", emptyPicture.Guid);
+			ICmPicture fdoPicture = LfPictureToFdoPicture(emptyPicture);
+			Console.WriteLine("FDO picture has GUID {0}", fdoPicture.Guid);
+			return; // Stop now for debugging purposes
 
 			lexicon = GetLexiconForTesting(project, config);
 			foreach (LfLexEntry entry in lexicon)
@@ -126,6 +138,90 @@ namespace LfMerge.Actions
 			Console.WriteLine(config.Entry.Fields["lexeme"].Type);
 			Console.WriteLine(config.Entry.Fields["lexeme"].GetType());
 			return config;
+		}
+
+		private Guid GuidFromLiftId(string LiftId)
+		{
+			Guid result;
+			if (String.IsNullOrEmpty(LiftId))
+				return default(Guid);
+			if (Guid.TryParse(LiftId, out result))
+				return result;
+			int pos = LiftId.LastIndexOf('_');
+			if (Guid.TryParse(LiftId.Substring(pos+1), out result))
+				return result;
+			return default(Guid);
+		}
+
+		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
+		{
+			var repo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			var factory = cache.ServiceLocator.GetInstance<ILexEntryFactory>();
+			ILexEntry fdoEntry;
+			Guid guid = lfEntry.Guid;
+			if (guid == default(Guid))
+			{
+				fdoEntry = factory.Create();
+				Console.WriteLine("Created fdoEntry with GUID {0}", fdoEntry.Guid);
+			}
+			else
+			{
+				fdoEntry = repo.GetObject(guid);
+			}
+
+			return fdoEntry;
+		}
+
+		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
+		{
+			var repo = cache.ServiceLocator.GetInstance<ILexExampleSentenceRepository>();
+			var factory = cache.ServiceLocator.GetInstance<ILexExampleSentenceFactory>();
+			ILexExampleSentence fdoExample;
+			Guid guid = GuidFromLiftId(lfExample.LiftId);
+			if (guid == default(Guid))
+			{
+				// TODO: Figure out how to create a new object.
+				fdoExample = factory.Create();
+				Console.WriteLine("Created fdoExample with GUID {0}", fdoExample.Guid);
+				return null;
+			}
+			fdoExample = repo.GetObject(guid);
+
+			return fdoExample;
+		}
+
+		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
+		{
+			var repo = cache.ServiceLocator.GetInstance<ICmPictureRepository>();
+			var factory = cache.ServiceLocator.GetInstance<ICmPictureFactory>();
+			ICmPicture fdoPicture;
+			Guid guid = lfPicture.Guid;
+			if (guid == default(Guid))
+			{
+				Console.WriteLine("About to create fdoPicture, will print GUID after creation");
+				fdoPicture = factory.Create();
+				Console.WriteLine("Created fdoPicture with GUID {0}", fdoPicture.Guid);
+			}
+			else
+			{
+				fdoPicture = repo.GetObject(guid);
+			}
+			return fdoPicture;
+		}
+
+		private ILexSense LfSenseToFdoSense(LfSense lfSense)
+		{
+			var repo = cache.ServiceLocator.GetInstance<ILexSenseRepository>();
+			var factory = cache.ServiceLocator.GetInstance<ILexSenseFactory>();
+			Guid guid = GuidFromLiftId(lfSense.LiftId);
+			if (guid == default(Guid))
+			{
+				// TODO: Try another approach for finding the object before giving up and returning null?
+				return null;
+			}
+			ILexSense fdoSense = repo.GetObject(guid);
+
+			return fdoSense;
 		}
 
 		protected override ActionNames NextActionName
