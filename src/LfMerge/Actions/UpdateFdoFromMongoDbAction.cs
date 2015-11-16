@@ -16,6 +16,8 @@ namespace LfMerge.Actions
 	public class UpdateFdoFromMongoDbAction: Action
 	{
 		private FdoCache cache;
+		private Dictionary<Type, object> repositories;
+		private Dictionary<Type, object> factories;
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
@@ -64,6 +66,18 @@ namespace LfMerge.Actions
 			Console.WriteLine("Got the service locator");
 			ILexSenseRepository senseRepo = servLoc.GetInstance<ILexSenseRepository>();
 			Console.WriteLine("Got the sense repository");
+
+			// For efficiency's sake, cache the four repositories and factories we'll need all the time
+			repositories = new Dictionary<Type, object>();
+			repositories.Add(typeof(ILexEntry), servLoc.GetInstance<ILexEntryRepository>());
+			repositories.Add(typeof(ILexExampleSentence), servLoc.GetInstance<ILexExampleSentenceRepository>());
+			repositories.Add(typeof(ICmPicture), servLoc.GetInstance<ICmPictureRepository>());
+			repositories.Add(typeof(ILexSense), servLoc.GetInstance<ILexSenseRepository>());
+			factories = new Dictionary<Type, object>();
+			factories.Add(typeof(ILexEntry), servLoc.GetInstance<ILexEntryFactory>());
+			factories.Add(typeof(ILexExampleSentence), servLoc.GetInstance<ILexExampleSentenceFactory>());
+			factories.Add(typeof(ICmPicture), servLoc.GetInstance<ICmPictureFactory>());
+			factories.Add(typeof(ILexSense), servLoc.GetInstance<ILexSenseFactory>());
 
 			var emptyPicture = new LfPicture();
 			Console.WriteLine("Empty picture has GUID {0}", emptyPicture.Guid);
@@ -202,15 +216,11 @@ namespace LfMerge.Actions
 			return result;
 		}
 
-		private TObject GetOrCreateCmObjectByGuid<TObject, TRepository, TFactory>(Guid guid)
+		private TObject GetOrCreateCmObjectByGuid<TObject>(Guid guid, IRepository<TObject> repo, IFdoFactory<TObject> factory)
 			where TObject : ICmObject
-			where TRepository : IRepository<TObject>
-			where TFactory : IFdoFactory<TObject>
 		{
 			var result = NonUndoableUnitOfWorkHelper.Do<TObject>(cache.ActionHandlerAccessor, () =>
 			{
-				var repo = cache.ServiceLocator.GetInstance<TRepository>();
-				var factory = cache.ServiceLocator.GetInstance<TFactory>();
 				TObject cmObject;
 				if (guid == default(Guid))
 				{
@@ -229,22 +239,22 @@ namespace LfMerge.Actions
 
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ILexEntry, ILexEntryRepository, ILexEntryFactory>(guid);
+			return GetOrCreateCmObjectByGuid<ILexEntry>(guid, (ILexEntryRepository)repositories[typeof(ILexEntry)], (ILexEntryFactory)factories[typeof(ILexEntry)]);
 		}
 
 		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ILexExampleSentence, ILexExampleSentenceRepository, ILexExampleSentenceFactory>(guid);
+			return GetOrCreateCmObjectByGuid<ILexExampleSentence>(guid, (ILexExampleSentenceRepository)repositories[typeof(ILexExampleSentence)], (ILexExampleSentenceFactory)factories[typeof(ILexExampleSentence)]);
 		}
 
 		private ICmPicture GetOrCreatePictureByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ICmPicture, ICmPictureRepository, ICmPictureFactory>(guid);
+			return GetOrCreateCmObjectByGuid<ICmPicture>(guid, (ICmPictureRepository)repositories[typeof(ICmPicture)], (ICmPictureFactory)factories[typeof(ICmPicture)]);
 		}
 
 		private ILexSense GetOrCreateSenseByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ILexSense, ILexSenseRepository, ILexSenseFactory>(guid);
+			return GetOrCreateCmObjectByGuid<ILexSense>(guid, (ILexSenseRepository)repositories[typeof(ILexSense)], (ILexSenseFactory)factories[typeof(ILexSense)]);
 		}
 
 		protected override ActionNames NextActionName
