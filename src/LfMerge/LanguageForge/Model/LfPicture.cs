@@ -8,6 +8,7 @@ namespace LfMerge.LanguageForge.Model
 	{
 		public string FileName { get; set; }
 		public LfMultiText Caption { get; set; }
+		public Guid Guid { get; set; }
 	}
 }
 
