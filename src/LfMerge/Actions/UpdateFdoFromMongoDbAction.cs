@@ -192,6 +192,10 @@ namespace LfMerge.Actions
 
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
 		{
+			cache.ActionHandlerAccessor.BeginNonUndoableTask();
+			// Another way of doing it would be:
+			// using (var helper = NonUndoableUnitOfWorkHelper())
+			// ; // Rest of function would go here
 			var repo = cache.ServiceLocator.GetInstance<ICmPictureRepository>();
 			var factory = cache.ServiceLocator.GetInstance<ICmPictureFactory>();
 			ICmPicture fdoPicture;
@@ -206,6 +210,8 @@ namespace LfMerge.Actions
 			{
 				fdoPicture = repo.GetObject(guid);
 			}
+			cache.ActionHandlerAccessor.EndNonUndoableTask();
+			cache.ActionHandlerAccessor.Commit();
 			return fdoPicture;
 		}
 
