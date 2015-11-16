@@ -62,44 +62,6 @@ namespace LfMerge.Actions
 			}
 			converter = new CustomFieldConverter(cache);
 
-			//customFieldIds = new List<int>(((IFwMetaDataCacheManaged)fdoMetaData).GetFieldIds().Where((flid => cache.GetIsCustomField(flid))));
-			/*
-			foreach (int flid in customFieldIds)
-			{
-				if (cache.GetIsCustomField(flid))
-				{
-					Console.WriteLine("Custom field with ID {0}", flid);
-					Console.WriteLine("  Field name: {0}", fdoMetaData.GetFieldName(flid));
-					Console.WriteLine("  Field label: {0}", fdoMetaData.GetFieldLabel(flid));
-					Console.WriteLine("  Field destination: {0}", fdoMetaData.GetDstClsName(flid));
-					//Console.WriteLine("  Field base class: {0}", fdoMetaData.GetBaseClsName(flid)); // Can't do this for custom fields
-					Console.WriteLine("  Field XML: {0}", fdoMetaData.GetFieldXml(flid));
-					Console.WriteLine("  Field type (int): {0}", fdoMetaData.GetFieldType(flid));
-					CellarPropertyType prop = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-					if (cache.IsReferenceProperty(flid))
-						Console.WriteLine("  Field is a reference.");
-
-					if (cache.IsVectorProperty(flid))
-						Console.WriteLine("  Field is a vector.");
-
-					Console.WriteLine("  Field type (str): {0}", prop);
-					var fieldInfo = new List<ClassAndPropInfo>();
-					cache.AddClassesForField(flid, false, fieldInfo);
-					foreach (ClassAndPropInfo info in fieldInfo)
-					{
-						Console.WriteLine("  Signature class: {0}", info.signatureClassName);
-						if ((CellarPropertyType)info.fieldType == CellarPropertyType.ReferenceAtom)
-							Console.WriteLine("Reference type!");
-					}
-				}
-			}
-			Console.WriteLine("Exiting for debugging...");
-			return; // Deliberately stop here
-			*/
-//			// Convenience closure
-//			Func<IMultiAccessorBase, LfMultiText> ToMultiText =
-//				(fdoMultiString => (fdoMultiString == null) ? null : LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager));
-
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
@@ -142,6 +104,8 @@ namespace LfMerge.Actions
 			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
+
+			lfSense.SenseId = fdoSense.Id.ToString(); // TODO: Is this right? This doesn't quite feel right.
 
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
@@ -210,7 +174,6 @@ namespace LfMerge.Actions
 			fdoSense.GetDesiredMsaType();
 			fdoSense.Guid; // Using LIFTid instead. TODO: Verify whether that's correct.
 			fdoSense.Hvo;
-			fdoSense.Id;
 			fdoSense.ImportResidue;
 			fdoSense.IndexInOwner;
 			fdoSense.IsValidObject;
@@ -293,6 +256,7 @@ namespace LfMerge.Actions
 			var result = new LfPicture();
 			result.Caption = ToMultiText(fdoPicture.Caption);
 			result.FileName = fdoPicture.PictureFileRA.InternalPath;
+			result.Guid = fdoPicture.Guid;
 			// Unmapped ICmPicture fields include:
 			// fdoPicture.Description;
 			// fdoPicture.LayoutPos;
