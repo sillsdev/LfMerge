@@ -221,42 +221,36 @@ namespace LfMerge.Actions
 			return fdoSense;
 		}
 
-		private TObject GetOrCreateCmObjectByGuid<TObject, TOwner>(Guid guid, TOwner owner, IRepository<TObject> repo, Func<TObject> factoryFuncNoOwner, Func<Guid, TOwner, TObject> factoryFuncWithOwner)
-			where TObject : ICmObject
-		{
-			TObject cmObject;
-			if (repo.TryGetObject(guid, out cmObject))
-			{
-				return cmObject;
-			}
-			else
-			{
-				if (owner == null)
-					cmObject = factoryFuncNoOwner();
-				else
-					cmObject = factoryFuncWithOwner(guid, owner);
-				return cmObject;
-			}
-		}
-
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ILexEntry, ICmObject>(guid, null, entryRepo, entryFactory.Create, null);
+			ILexEntry result;
+			if (!entryRepo.TryGetObject(guid, out result))
+				result = entryFactory.Create();
+			return result;
 		}
 
 		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid, ILexSense owner)
 		{
-			return GetOrCreateCmObjectByGuid<ILexExampleSentence, ILexSense>(guid, owner, exampleRepo, null, exampleFactory.Create);
+			ILexExampleSentence result;
+			if (!exampleRepo.TryGetObject(guid, out result))
+				result = exampleFactory.Create(guid, owner);
+			return result;
 		}
 
 		private ICmPicture GetOrCreatePictureByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ICmPicture, ICmObject>(guid, null, pictureRepo, pictureFactory.Create, null);
+			ICmPicture result;
+			if (!pictureRepo.TryGetObject(guid, out result))
+				result = pictureFactory.Create();
+			return result;
 		}
 
 		private ILexSense GetOrCreateSenseByGuid(Guid guid, ILexEntry owner)
 		{
-			return GetOrCreateCmObjectByGuid<ILexSense, ILexEntry>(guid, owner, senseRepo, null, senseFactory.Create);
+			ILexSense result;
+			if (!senseRepo.TryGetObject(guid, out result))
+				result = senseFactory.Create(guid, owner);
+			return result;
 		}
 
 		protected override ActionNames NextActionName
