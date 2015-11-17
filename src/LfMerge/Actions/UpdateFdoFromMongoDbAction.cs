@@ -225,22 +225,18 @@ namespace LfMerge.Actions
 			where TObject : ICmObject
 		{
 			TObject cmObject;
-			if (guid == default(Guid))
+			if (repo.TryGetObject(guid, out cmObject))
+			{
+				return cmObject;
+			}
+			else
 			{
 				if (owner == null)
 					cmObject = factoryFuncNoOwner();
 				else
 					cmObject = factoryFuncWithOwner(guid, owner);
-				Console.WriteLine("Created {0} with GUID {1} and {2}", cmObject.ClassName, cmObject.Guid,
-					owner == null ? "no owner" : String.Format("owner guid {0}", ((ICmObject)owner).Guid));
+				return cmObject;
 			}
-			else
-			{
-				cmObject = repo.GetObject(guid);
-				Console.WriteLine("Retrieved {0} with GUID {1}", cmObject.ClassName, cmObject.Guid);
-			}
-
-			return cmObject;
 		}
 
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
