@@ -141,9 +141,10 @@ namespace LfMerge.Actions
 			if (lfEntry.Senses != null) {
 				foreach(LfSense lfSense in lfEntry.Senses)
 				{
-					ILexSense fdoSense = LfSenseToFdoSense(lfSense);
+					ILexSense fdoSense = LfSenseToFdoSense(lfSense, fdoEntry);
 					if (fdoSense.Owner == null)
-						fdoEntry.SensesOS.Add(fdoSense); // TODO: Verify that this correctly sets up ownership
+						Console.WriteLine("Oh dear, created an fdoSense without an owner!");
+						// fdoEntry.SensesOS.Add(fdoSense); // TODO: Verify that this correctly sets up ownership
 
 					fdoEntry.DateCreated = lfEntry.AuthorInfo.CreatedDate;
 					fdoEntry.DateModified = lfEntry.AuthorInfo.ModifiedDate;
@@ -162,10 +163,10 @@ namespace LfMerge.Actions
 			return fdoEntry;
 		}
 
-		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
+		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
 			Guid guid = GuidFromLiftId(lfExample.LiftId);
-			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid);
+			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid, owner);
 			// TODO: Set instance fields
 			return fdoExample;
 		}
@@ -178,10 +179,10 @@ namespace LfMerge.Actions
 			return fdoPicture;
 		}
 
-		private ILexSense LfSenseToFdoSense(LfSense lfSense)
+		private ILexSense LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
 		{
 			Guid guid = GuidFromLiftId(lfSense.LiftId);
-			ILexSense fdoSense = GetOrCreateSenseByGuid(guid);
+			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
 			// TODO: Set instance fields
 			string senseName;
 			if (lfSense.Definition == null)
@@ -194,6 +195,13 @@ namespace LfMerge.Actions
 				senseName = String.Join(", ", lfSense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
 			}
 			Console.WriteLine("Checking sense {0}", senseName);
+
+			if (fdoSense.Cache == null)
+				Console.WriteLine("fdoSense.Cache is null. Might cause problems.");
+			if (fdoSense.Cache.TsStrFactory == null)
+				Console.WriteLine("fdoSense.Cache.TsStrFactory is null. Might cause problems.");
+			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
+
 			IMultiString definition = fdoSense.Definition;
 			// We check for Guid.Empty because a newly-created fdoSense has a Definition that isn't null, but
 			// that can't fetch a BestAnalysisVernacularAlternative property.
@@ -213,14 +221,18 @@ namespace LfMerge.Actions
 			return fdoSense;
 		}
 
-		private TObject GetOrCreateCmObjectByGuid<TObject>(Guid guid, IRepository<TObject> repo, IFdoFactory<TObject> factory)
+		private TObject GetOrCreateCmObjectByGuid<TObject, TOwner>(Guid guid, TOwner owner, IRepository<TObject> repo, Func<TObject> factoryFuncNoOwner, Func<Guid, TOwner, TObject> factoryFuncWithOwner)
 			where TObject : ICmObject
 		{
 			TObject cmObject;
 			if (guid == default(Guid))
 			{
-				cmObject = factory.Create();
-				Console.WriteLine("Created {0} with GUID {1}", cmObject.ClassName, cmObject.Guid);
+				if (owner == null)
+					cmObject = factoryFuncNoOwner();
+				else
+					cmObject = factoryFuncWithOwner(guid, owner);
+				Console.WriteLine("Created {0} with GUID {1} and {2}", cmObject.ClassName, cmObject.Guid,
+					owner == null ? "no owner" : String.Format("owner guid {0}", ((ICmObject)owner).Guid));
 			}
 			else
 			{
@@ -233,22 +245,22 @@ namespace LfMerge.Actions
 
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ILexEntry>(guid, entryRepo, entryFactory);
+			return GetOrCreateCmObjectByGuid<ILexEntry, ICmObject>(guid, null, entryRepo, entryFactory.Create, null);
 		}
 
-		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid)
+		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid, ILexSense owner)
 		{
-			return GetOrCreateCmObjectByGuid<ILexExampleSentence>(guid, exampleRepo, exampleFactory);
+			return GetOrCreateCmObjectByGuid<ILexExampleSentence, ILexSense>(guid, owner, exampleRepo, null, exampleFactory.Create);
 		}
 
 		private ICmPicture GetOrCreatePictureByGuid(Guid guid)
 		{
-			return GetOrCreateCmObjectByGuid<ICmPicture>(guid, pictureRepo, pictureFactory);
+			return GetOrCreateCmObjectByGuid<ICmPicture, ICmObject>(guid, null, pictureRepo, pictureFactory.Create, null);
 		}
 
-		private ILexSense GetOrCreateSenseByGuid(Guid guid)
+		private ILexSense GetOrCreateSenseByGuid(Guid guid, ILexEntry owner)
 		{
-			return GetOrCreateCmObjectByGuid<ILexSense>(guid, senseRepo, senseFactory);
+			return GetOrCreateCmObjectByGuid<ILexSense, ILexEntry>(guid, owner, senseRepo, null, senseFactory.Create);
 		}
 
 		protected override ActionNames NextActionName
