@@ -16,6 +16,7 @@ namespace LfMerge.Actions
 	public class UpdateFdoFromMongoDbAction: Action
 	{
 		private FdoCache cache;
+		private IFdoServiceLocator servLoc;
 		private ILexEntryRepository entryRepo;
 		private ILexExampleSentenceRepository exampleRepo;
 		private ICmPictureRepository pictureRepo;
@@ -36,42 +37,26 @@ namespace LfMerge.Actions
 			if (config == null)
 				return;
 
-			// TODO: Remove this block of debugging output code soonish.
-			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, config);
-			foreach (LfLexEntry entry in lexicon)
-			{
-				Console.Write("{0}: ", entry.Guid);
-				if (entry.Lexeme != null && entry.Lexeme.Values != null)
-					Console.WriteLine(String.Join(", ", entry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value)));
-				foreach(LfSense sense in entry.Senses)
-				{
-					if (sense.PartOfSpeech != null)
-					{
-						if (sense.PartOfSpeech.Value != null)
-							Console.Write(" - " + sense.PartOfSpeech.Value);
-					}
-					Console.WriteLine();
-				}
-			}
-
 			if (project.FieldWorksProject == null)
 			{
 				Console.WriteLine("Failed to find the corresponding FieldWorks project!");
 				return;
 			}
+			Console.WriteLine("Project {0} disposed", project.FieldWorksProject.IsDisposed ? "is" : "is not");
 			cache = project.FieldWorksProject.Cache;
 			if (cache == null)
 			{
 				Console.WriteLine("Failed to find the FDO cache!");
 				var fwProject = project.FieldWorksProject;
-				Console.WriteLine(fwProject.IsDisposed);
 				return;
 			}
 
-			IFdoServiceLocator servLoc = cache.ServiceLocator;
-			Console.WriteLine("Got the service locator");
-			ILexSenseRepository senseRepo = servLoc.GetInstance<ILexSenseRepository>();
-			Console.WriteLine("Got the sense repository");
+			servLoc = cache.ServiceLocator;
+			if (servLoc == null)
+			{
+				Console.WriteLine("Failed to find the service locator; giving up.");
+				return;
+			}
 
 			// For efficiency's sake, cache the four repositories and factories we'll need all the time
 			entryRepo = servLoc.GetInstance<ILexEntryRepository>();
@@ -83,53 +68,16 @@ namespace LfMerge.Actions
 			pictureFactory = servLoc.GetInstance<ICmPictureFactory>();
 			senseFactory = servLoc.GetInstance<ILexSenseFactory>();
 
-			var emptyPicture = new LfPicture();
-			Console.WriteLine("Empty picture has GUID {0}", emptyPicture.Guid);
-			ICmPicture fdoPicture = LfPictureToFdoPicture(emptyPicture);
-			Console.WriteLine("FDO picture has GUID {0}", fdoPicture.Guid);
-			return; // Stop now for debugging purposes
-
-			lexicon = GetLexiconForTesting(project, config);
-			foreach (LfLexEntry entry in lexicon)
+			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, config);
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
 			{
-				string entryName = String.Join(", ", entry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value));
-				Console.WriteLine("Checking entry {0} in lexicon", entryName);
-				if (entry.Senses == null) continue;
-				foreach(LfSense sense in entry.Senses)
+				foreach (LfLexEntry lfEntry in lexicon)
 				{
-					if (sense.Definition == null)
-					{
-						Console.WriteLine("No definition found in LF entry");
-						continue;
-					}
-					string senseName = String.Join(", ", sense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
-					Console.WriteLine("Checking sense {0} in entry {1} in lexicon", senseName, entryName);
-					Guid liftId;
-					ILexSense fwSense = null;
-					if (Guid.TryParse(sense.LiftId, out liftId))
-						fwSense = senseRepo.GetObject(liftId);
-					// TODO: Handle GUID parsing failures
-					if (fwSense == null)
-					{
-						Console.WriteLine("Didn't find sense {0} in FDO", sense.LiftId);
-						continue;
-					}
-					IMultiString definition = fwSense.Definition;
-					if (definition == null)
-					{
-						Console.WriteLine("Didn't find definition for {0} in FDO", sense.LiftId);
-						continue;
-					}
-
-					Console.WriteLine("Definition: {0}", definition.BestAnalysisVernacularAlternative.Text);
-					foreach (int wsid in definition.AvailableWritingSystemIds)
-					{
-						string wsid_str = servLoc.WritingSystemManager.GetStrFromWs(wsid);
-						var text = definition.get_String(wsid);
-						Console.WriteLine("{0}: {1}", wsid_str, text.Text);
-					}
+					#pragma warning disable 0219 // "Variable is assigned but its value is never used"
+					ILexEntry fdoEntry = LfLexEntryToFdoLexEntry(lfEntry);
+					#pragma warning restore 0219
 				}
-			}
+			});
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
@@ -171,74 +119,116 @@ namespace LfMerge.Actions
 			return default(Guid);
 		}
 
+		/// <summary>
+		/// Sets all writing systems in an FDO multi string from a LanguageForge MultiText field.
+		/// Destination is first parameter, like the order of an assignment statement.
+		/// </summary>
+		/// <param name="dest">FDO multi string whose values will be set.</param>
+		/// <param name="source">Source of multistring values.</param>
+		private void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
+		{
+			if (source != null)
+				source.WriteToFdoMultiString(dest, servLoc.WritingSystemManager);
+		}
+
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid;
 			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
-			var result = NonUndoableUnitOfWorkHelper.Do<ILexEntry>(cache.ActionHandlerAccessor, () =>
-			{
-				// TODO: Set instance fields
-				return fdoEntry;
-			});
-			return result;
+			// TODO: Set instance fields
+			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value));
+			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
+			if (lfEntry.Senses != null) {
+				foreach(LfSense lfSense in lfEntry.Senses)
+				{
+					ILexSense fdoSense = LfSenseToFdoSense(lfSense);
+					if (fdoSense.Owner == null)
+						fdoEntry.SensesOS.Add(fdoSense); // TODO: Verify that this correctly sets up ownership
+
+					fdoEntry.DateCreated = lfEntry.AuthorInfo.CreatedDate;
+					fdoEntry.DateModified = lfEntry.AuthorInfo.ModifiedDate;
+					// TODO: What about lfEntry.DateCreated and lfEntry.DateModified?
+
+					SetMultiStringFrom(fdoEntry.Bibliography, lfEntry.EntryBibliography);
+
+					/* LfLexEntry fields not mapped:
+					lfEntry.CitationForm // Read-only virtual field
+					lfEntry.CustomFields // TODO: Handle later
+					lfEntry.CvPattern // No FDO equivalent? That can't be right. TODO: Find FDO equivalent.
+
+					*/
+				}
+			}
+			return fdoEntry;
 		}
 
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample)
 		{
 			Guid guid = GuidFromLiftId(lfExample.LiftId);
 			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid);
-			var result = NonUndoableUnitOfWorkHelper.Do<ILexExampleSentence>(cache.ActionHandlerAccessor, () =>
-			{
-				// TODO: Set instance fields
-				return fdoExample;
-			});
-			return result;
+			// TODO: Set instance fields
+			return fdoExample;
 		}
 
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
 		{
 			Guid guid = lfPicture.Guid;
 			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid);
-			var result = NonUndoableUnitOfWorkHelper.Do<ICmPicture>(cache.ActionHandlerAccessor, () =>
-			{
-				// TODO: Set instance fields
-				return fdoPicture;
-			});
-			// cache.ActionHandlerAccessor.Commit(); // TODO: Consider whether this belongs here, or whether we should Commit() a lot of things at once.
-			return result;
+			// TODO: Set instance fields
+			return fdoPicture;
 		}
 
 		private ILexSense LfSenseToFdoSense(LfSense lfSense)
 		{
 			Guid guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid);
-			var result = NonUndoableUnitOfWorkHelper.Do<ILexSense>(cache.ActionHandlerAccessor, () =>
+			// TODO: Set instance fields
+			string senseName;
+			if (lfSense.Definition == null)
 			{
-				// TODO: Set instance fields
+				Console.WriteLine("No definition found in LF entry for {0}", lfSense.LiftId);
+				senseName = "(unknown definition)";
+			}
+			else
+			{
+				senseName = String.Join(", ", lfSense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
+			}
+			Console.WriteLine("Checking sense {0}", senseName);
+			IMultiString definition = fdoSense.Definition;
+			// We check for Guid.Empty because a newly-created fdoSense has a Definition that isn't null, but
+			// that can't fetch a BestAnalysisVernacularAlternative property.
+			if (definition == null || fdoSense.Guid == Guid.Empty || definition.BestAnalysisVernacularAlternative == null)
+			{
+				Console.WriteLine("Didn't find definition for {0} in FDO", lfSense.LiftId);
 				return fdoSense;
-			});
-			return result;
+			}
+
+			Console.WriteLine("Definition: {0}", definition.BestAnalysisVernacularAlternative.Text);
+			foreach (int wsid in definition.AvailableWritingSystemIds)
+			{
+				string wsid_str = servLoc.WritingSystemManager.GetStrFromWs(wsid);
+				var text = definition.get_String(wsid);
+				Console.WriteLine("{0}: {1}", wsid_str, text.Text);
+			}
+			return fdoSense;
 		}
 
 		private TObject GetOrCreateCmObjectByGuid<TObject>(Guid guid, IRepository<TObject> repo, IFdoFactory<TObject> factory)
 			where TObject : ICmObject
 		{
-			var result = NonUndoableUnitOfWorkHelper.Do<TObject>(cache.ActionHandlerAccessor, () =>
+			TObject cmObject;
+			if (guid == default(Guid))
 			{
-				TObject cmObject;
-				if (guid == default(Guid))
-				{
-					cmObject = factory.Create();
-					Console.WriteLine("Created CmObject with GUID {0}", cmObject.Guid);
-				}
-				else
-				{
-					cmObject = repo.GetObject(guid);
-				}
+				cmObject = factory.Create();
+				Console.WriteLine("Created {0} with GUID {1}", cmObject.ClassName, cmObject.Guid);
+			}
+			else
+			{
+				cmObject = repo.GetObject(guid);
+				Console.WriteLine("Retrieved {0} with GUID {1}", cmObject.ClassName, cmObject.Guid);
+			}
 
-				return cmObject;
-			});
-			return result;
+			return cmObject;
 		}
 
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)

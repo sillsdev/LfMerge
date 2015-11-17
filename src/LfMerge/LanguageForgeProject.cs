@@ -43,9 +43,10 @@ namespace LfMerge
 		{
 			foreach (LanguageForgeProject project in CachedProjects.Values)
 			{
-				project._fieldWorksProject.Dispose();
+				if (project._fieldWorksProject != null)
+					project._fieldWorksProject.Dispose();
 			}
-			CachedProjects = new Dictionary<string, LanguageForgeProject>();
+			CachedProjects.Clear();
 		}
 
 		#region ILfProject implementation

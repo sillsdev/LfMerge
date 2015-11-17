@@ -56,6 +56,32 @@ namespace LfMerge.LanguageForge.Model
 			}
 			return result;
 		}
+
+		public void WriteToFdoMultiString(IMultiAccessorBase dest, IWritingSystemManager wsManager)
+		{
+			/*
+			LfMultiText newInstance = new LfMultiText();
+			foreach (int wsid in dest.AvailableWritingSystemIds)
+			{
+				string wsstr = wsManager.GetStrFromWs(wsid);
+				ITsString value = dest.get_String(wsid);
+				newInstance.Add(wsstr, new LfStringField { Value = value.Text });
+			}
+			return newInstance;
+			*/
+			foreach (KeyValuePair<string, string> kv in this.AsStringDictionary())
+			{
+				int wsId = wsManager.GetWsFromStr(kv.Key);
+				if (wsId == 0)
+				{
+					// Skip any unidentified writing systems
+					continue;
+				}
+				string value = kv.Value;
+				dest.set_String(wsId, value);
+			}
+		}
+
 	}
 }
 
