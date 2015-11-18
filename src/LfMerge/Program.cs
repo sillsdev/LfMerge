@@ -1,11 +1,12 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.IO;
 using System.Linq;
 using Autofac;
+using Chorus.Model;
+using LibFLExBridgeChorusPlugin;
+using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
-using LfMerge.FieldWorks;
 
 namespace LfMerge
 {
@@ -16,7 +17,11 @@ namespace LfMerge
 		internal static ContainerBuilder RegisterTypes()
 		{
 			var containerBuilder = new ContainerBuilder();
+			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
+			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
+			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
+			containerBuilder.RegisterType<FLExProjectUnifier>().SingleInstance().As<IProjectUnifier>();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;

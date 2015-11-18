@@ -1,12 +1,12 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using Palaso.TestUtilities;
 using System.IO;
-using LfMerge.Queues;
-using NUnit.Framework;
 using System.Threading;
+using NUnit.Framework;
+using SIL.TestUtilities;
 using LfMerge.Actions;
+using LfMerge.Queues;
 
 namespace LfMerge.Tests.Queues
 {
