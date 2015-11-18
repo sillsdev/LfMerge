@@ -28,6 +28,10 @@ namespace LfMerge
 			// TODO: This isn't currently thread-safe. Should wrap the whole thing in a lock, just in case we want to use threads later on.
 			if (Default != null)
 				return;
+
+			// Serialize Boolean values permissively
+			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
+
 			// Use CamelCaseName conversions between Mongo and our mapping classes
 			var pack = new ConventionPack();
 			pack.Add(new CamelCaseElementNameConvention());
