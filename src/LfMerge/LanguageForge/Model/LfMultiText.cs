@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
@@ -55,6 +56,28 @@ namespace LfMerge.LanguageForge.Model
 				result.Add(kv.Key, kv.Value.ToString());
 			}
 			return result;
+		}
+
+		public string FirstNonEmptyString()
+		{
+			return this.AsStringDictionary().Values.Where(str => !String.IsNullOrEmpty(str)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+		}
+
+		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
+		public ITsString ToITsString(int wsId, FdoCache cache)
+		{
+			var wsm = cache.ServiceLocator.WritingSystemManager;
+			var wsStr = wsm.GetStrFromWs(wsId);
+			LfStringField valueField;
+			if (TryGetValue(wsStr, out valueField))
+				return TsStringUtils.MakeTss(valueField.Value, wsId);
+			else
+				return TsStringUtils.MakeTss(FirstNonEmptyString(), wsId);
+		}
+
+		public ITsString ToAnalysisITsString(FdoCache cache)
+		{
+			return ToITsString(cache.DefaultAnalWs, cache);
 		}
 
 		public void WriteToFdoMultiString(IMultiAccessorBase dest, IWritingSystemManager wsManager)

@@ -36,6 +36,7 @@ namespace LfMerge.LanguageForge.Model
 		public string MorphologyType { get; set; }
 		public LfMultiText Note { get; set; }
 		public LfMultiText Pronunciation { get; set; }
+		public Guid PronunciationGuid { get; set; }
 		public LfMultiText SummaryDefinition { get; set; }
 		public LfMultiText Tone { get; set; }
 

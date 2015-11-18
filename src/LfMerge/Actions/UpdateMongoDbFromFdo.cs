@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
+using LfMerge.DataConverters;
 using MongoDB.Bson;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
@@ -317,12 +318,22 @@ namespace LfMerge.Actions
 			lfEntry.Guid = fdoEntry.Guid;
 			lfEntry.LiftId = fdoEntry.LIFTid;
 			lfEntry.LiteralMeaning = ToMultiText(fdoEntry.LiteralMeaning);
-			if (fdoEntry.PrimaryMorphType != null)
-				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.AbbrAndName; // TODO: This might be wrong; double-check it.
-			foreach (ILexPronunciation pronunciation in fdoEntry.PronunciationsOS)
+			if (fdoEntry.PrimaryMorphType != null) {
+				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.Name.BestAnalysisVernacularAlternative.Text; // TODO: What if there are nulls in that long string of property accessors?
+				Console.WriteLine("Morphology type for {0} was {1}", fdoEntry.Guid, lfEntry.MorphologyType);
+			}
+			// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert all of the. E.g.,
+			//foreach (ILexPronunciation fdoPronunciation in fdoEntry.PronunciationsOS) { ... }
+			if (fdoEntry.PronunciationsOS.Count > 0)
 			{
-				// Do nothing: LanguageForge doesn't currently handle multiple pronunciations, so we don't convert them
-				// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert this field.
+				ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.First();
+				lfEntry.PronunciationGuid = fdoPronunciation.Guid;
+				lfEntry.Pronunciation = ToMultiText(fdoPronunciation.Form);
+				lfEntry.CvPattern = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoPronunciation.CVPattern);
+				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoPronunciation.Tone);
+				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
+				//lfEntry.Location = LfStringField.FromString(fdoPronunciation.LocationRA.AbbrAndName);
+				lfEntry.Location = LfStringField.FromString(PossibilityListConverter.BestStringFrom(fdoPronunciation.LocationRA));
 			}
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful

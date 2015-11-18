@@ -164,6 +164,12 @@ namespace LfMerge.FieldWorks
 			else
 				return null;
 		}
+
+		// TODO: Determine what return type we want. Maybe a Dictionary<string, ICmObject> would work.
+		public object ParseCustomFields(BsonDocument customFields)
+		{
+			throw new NotImplementedException(); // TODO: Implement this
+		}
 	}
 }
 
