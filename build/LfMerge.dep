@@ -53,6 +53,7 @@ LibChorus.pdb => lib/
 MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
+
 [TC::bt223]
 Name=palaso-win32-master Continuous
 RevisionName=lastSuccessful
@@ -64,4 +65,21 @@ SIL.Lift.dll=>lib/
 SIL.Lift.pdb=>lib/
 SIL.TestUtilities.dll=>lib/
 SIL.TestUtilities.pdb=>lib/
+
+
+[TC::bt435]
+Name=FLEx Bridge-master-Precise64-Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux
+Path=LibFLExBridge-ChorusPlugin.*=>lib/
+LibTriboroughBridge-ChorusPlugin.*=>lib/
+
+[TC::bt321]
+Name=FLEx Bridge-master-Win32-Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Windows
+Path=LibFLExBridge-ChorusPlugin.*=>lib/
+LibTriboroughBridge-ChorusPlugin.*=>lib/
 

@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using LfMerge;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using LfMerge.Queues;
 
 namespace LfMerge.Tests

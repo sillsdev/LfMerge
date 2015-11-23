@@ -15,7 +15,7 @@ namespace LfMerge
 		private FwProject _fieldWorksProject;
 		private readonly ProcessingState _state;
 		private readonly string _projectName;
-		private LanguageDepotProject _languageDepotProject;
+		private ILanguageDepotProject _languageDepotProject;
 
 		public static LanguageForgeProject Create(string projectName)
 		{
@@ -56,13 +56,14 @@ namespace LfMerge
 			get { return _state; }
 		}
 
-		public LanguageDepotProject LanguageDepotProject
+		public ILanguageDepotProject LanguageDepotProject
 		{
 			get
 			{
 				if (_languageDepotProject == null)
 				{
-					_languageDepotProject = new LanguageDepotProject(LfProjectName);
+					_languageDepotProject = MainClass.Container.Resolve<ILanguageDepotProject>();
+					_languageDepotProject.Initialize(LfProjectName);
 				}
 				return _languageDepotProject;
 			}

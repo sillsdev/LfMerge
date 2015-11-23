@@ -61,9 +61,12 @@ namespace LfMerge.Actions
 			{
 				DoRun(project);
 			}
+			// REVIEW: catch any exception and set state to hold?
+			// TODO: log exceptions
 			finally
 			{
-				project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 			}
 		}
 
