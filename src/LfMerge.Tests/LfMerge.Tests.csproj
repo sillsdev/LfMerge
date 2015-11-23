@@ -36,20 +36,29 @@
     <Reference Include="FDO">
       <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso">
-      <HintPath>..\..\lib\Palaso.dll</HintPath>
-    </Reference>
-    <Reference Include="Palaso.TestUtilities">
-      <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="LibChorus">
+      <HintPath>..\..\lib\LibChorus.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="LibFLExBridge-ChorusPlugin">
+      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Core">
+      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.TestUtilities">
+      <HintPath>..\..\lib\SIL.TestUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="LibTriboroughBridge-ChorusPlugin">
+      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,8 +70,10 @@
     <Compile Include="Queues\QueueTests.cs" />
     <Compile Include="Actions\ActionTests.cs" />
     <Compile Include="LanguageDepotProjectTests.cs" />
+    <Compile Include="Actions\ReceiveActionTests.cs" />
     <Compile Include="TestDoubles.cs" />
     <Compile Include="LfMergeSettingsTests.cs" />
+    <Compile Include="TestEnvironmentAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

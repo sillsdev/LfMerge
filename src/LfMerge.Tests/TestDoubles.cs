@@ -3,6 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Chorus.Model;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibFLExBridgeChorusPlugin;
+using SIL.Progress;
+using LibTriboroughBridgeChorusPlugin.Infrastructure;
+using LfMerge.FieldWorks;
 
 namespace LfMerge.Tests
 {
@@ -63,5 +69,45 @@ namespace LfMerge.Tests
 		}
 	}
 
+	class LanguageDepotProjectDouble: ILanguageDepotProject
+	{
+		#region ILanguageDepotProject implementation
+		public void Initialize(string lfProjectCode)
+		{
+			ProjectCode = lfProjectCode;
+		}
+
+		public string Username { get; set; }
+		public string Password { get; set; }
+		public string ProjectCode { get; set; }
+		#endregion
+	}
+
+	class InternetCloneSettingsModelDouble: InternetCloneSettingsModel
+	{
+		public override void DoClone()
+		{
+			Directory.CreateDirectory(TargetDestination);
+			Directory.CreateDirectory(Path.Combine(TargetDestination, ".hg"));
+			File.WriteAllText(Path.Combine(TargetDestination, ".hg", "hgrc"), "blablabla");
+		}
+	}
+
+	class UpdateBranchHelperFlexDouble: UpdateBranchHelperFlex
+	{
+		public override bool UpdateToTheCorrectBranchHeadIfPossible(string desiredBranchName,
+			ActualCloneResult cloneResult, string cloneLocation)
+		{
+			cloneResult.FinalCloneResult = FinalCloneResult.Cloned;
+			return true;
+		}
+	}
+
+	class FlexHelperDouble: FlexHelper
+	{
+		public override void PutHumptyTogetherAgain(IProgress progress, bool verbose, string mainFilePathname)
+		{
+		}
+	}
 }
 

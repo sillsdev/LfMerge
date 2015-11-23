@@ -3,11 +3,12 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using Palaso.TestUtilities;
-using System.Collections.Generic;
-//using System.Xml;
-using System.Text;
 using Autofac;
+using Chorus.Model;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using SIL.TestUtilities;
+using LibFLExBridgeChorusPlugin;
+using LfMerge.FieldWorks;
 
 namespace LfMerge.Tests
 {
@@ -30,6 +31,19 @@ namespace LfMerge.Tests
 			bool registerProcessingStateDouble)
 		{
 			var containerBuilder = MainClass.RegisterTypes();
+			if (registerSettingsModel)
+			{
+				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
+				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
+				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
+			}
+
+			var ldProj = new LanguageDepotProjectDouble {
+				Username = "foo",
+				Password = "secret"
+			};
+			containerBuilder.RegisterInstance(ldProj)
+				.As<ILanguageDepotProject>().AsSelf().SingleInstance();
 
 			if (registerProcessingStateDouble)
 			{
