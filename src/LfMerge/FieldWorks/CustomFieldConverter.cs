@@ -30,7 +30,8 @@ namespace LfMerge.FieldWorks
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 		}
 
-		public BsonDocument CustomFieldsForThisCmObject(ICmObject cmObj)
+		// Returns a tuple of (customFields value, customFieldGuids value)
+		public Tuple<BsonDocument, Dictionary<string, List<Guid>>> CustomFieldsForThisCmObject(ICmObject cmObj)
 		{
 			if ((cmObj) == null) return null;
 
@@ -38,24 +39,46 @@ namespace LfMerge.FieldWorks
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
 				.Where(flid => cache.GetIsCustomField(flid)));
 
-			var result = new BsonDocument();
+			var customFieldData = new BsonDocument();
+			var customFieldGuids = new Dictionary<string, List<Guid>>();
 
 			foreach (int flid in customFieldIds)
 			{
-				BsonValue bson = GetCustomFieldData(cmObj.Hvo, flid);
+				string fieldName;
+				List<Guid> fieldDataGuids;
+				BsonValue bson = GetCustomFieldData(cmObj.Hvo, flid, out fieldName, out fieldDataGuids);
 				// TODO: Need to convert field name to, say, underscores instead of spaces and so on.
 				if (bson != null)
-					result.Add(fdoMetaData.GetFieldName(flid), bson);
+				{
+					customFieldData.Add(fieldName, bson);
+					customFieldGuids.Add(fieldName, fieldDataGuids);
+				}
 			}
 
-			return result;
+			return Tuple.Create(customFieldData, customFieldGuids);
 		}
 
-		private BsonValue GetCustomFieldData(int hvo, int flid)
+		/// <summary>
+		/// Gets custom field data in a format suitable for .
+		/// </summary>
+		/// <returns>The custom field data.</returns>
+		/// <param name="hvo">HVO of object whose data should be retrieved.</param>
+		/// <param name="flid">Field ID of the custom field.</param>
+		/// <param name="dataGuid">If custom field data is an object with a GUID, store it here.</param>
+		private BsonValue GetCustomFieldData(int hvo, int flid, out string fieldName, out List<Guid> dataGuids)
 		{
+			// TODO: Actually, a single "out Guid" parameter probably won't work... how does the caller learn the field name?
+			// Either we store name and guid in a dict (passed in by reference?) or we use two out parameters, one Guid and one string (name).
+			//
+			// TODO: Or maybe we should return a struct from this function, with three fields:
+			// result.bsonValue (a BsonValue)
+			// result.fieldName (a string)
+			// result.dataGuids (a list of Guids)
+			// If result.dataGuids has length 1, 
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+			dataGuids = new List<Guid>();
+			fieldName = fdoMetaData.GetFieldNameOrNull(flid);
 			if (fieldName == null)
 				return null;
 
@@ -82,6 +105,7 @@ namespace LfMerge.FieldWorks
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
 			case CellarPropertyType.Guid:
+				// Note that we do NOT add anything to dataGuids here. That's only for objects (e.g., OwningAtomic or ReferenceAtomic data)
 				return new BsonString(data.get_GuidProp(hvo, flid).ToString());
 
 			case CellarPropertyType.Integer:
@@ -104,14 +128,24 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.OwningAtomic:
 			case CellarPropertyType.ReferenceAtomic:
 				int ownedHvo = data.get_ObjectProp(hvo, flid);
-				return GetCustomReferencedObject(ownedHvo, flid);
+				Guid dataGuid;
+				BsonValue atomBsonValue = GetCustomReferencedObject(ownedHvo, flid, out dataGuid);
+				dataGuids.Add(dataGuid);
+				return atomBsonValue;
 
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
 			case CellarPropertyType.ReferenceCollection:
 			case CellarPropertyType.ReferenceSequence:
-				int[] listHvos = data.VecProp(hvo, flid);
-				return new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid)));
+				int[] referencedObjectHvos = data.VecProp(hvo, flid);
+				List<BsonValue> values = new List<BsonValue>();
+				foreach (int thisHvo in referencedObjectHvos)
+				{
+					Guid thisGuid;
+					values.Add(GetCustomReferencedObject(thisHvo, flid, out thisGuid));
+					dataGuids.Add(thisGuid);
+				}
+				return new BsonArray(values);
 
 			case CellarPropertyType.String:
 				ITsString iTsValue = data.get_StringProp(hvo, flid);
@@ -152,11 +186,13 @@ namespace LfMerge.FieldWorks
 			return new BsonString(obj.Name.BestAnalysisVernacularAlternative.Text);
 		}
 
-		private BsonValue GetCustomReferencedObject(int hvo, int flid)
+		private BsonValue GetCustomReferencedObject(int hvo, int flid, out Guid referencedObjectGuid)
 		{
+			referencedObjectGuid = Guid.Empty;
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			if (hvo == 0 || !data.get_IsValidObject(hvo)) return null;
 			ICmObject referencedObject = cache.GetAtomicPropObject(hvo);
+			referencedObjectGuid = referencedObject.Guid;
 			if (referencedObject is IStText)
 				return GetCustomStTextValues((IStText)referencedObject, flid);
 			else if (referencedObject is ICmPossibility)
@@ -169,6 +205,128 @@ namespace LfMerge.FieldWorks
 		public object ParseCustomFields(BsonDocument customFields)
 		{
 			throw new NotImplementedException(); // TODO: Implement this
+		}
+
+		public bool SetCustomFieldData(int hvo, int flid, BsonValue value, List<Guid> dataGuids)
+		{
+			if (value == null)
+				return false;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
+			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+			if (fieldName == null)
+				return false;
+
+			switch (fieldType)
+			{
+			case CellarPropertyType.Binary:
+			case CellarPropertyType.Image: // Treat image fields as binary blobs
+				byte[] bytes = value.AsBsonBinaryData.Bytes;
+				data.SetBinary(hvo, flid, bytes, bytes.Length);
+				return true;
+
+			case CellarPropertyType.Boolean:
+				data.SetBoolean(hvo, flid, value.AsBoolean);
+				return true;
+
+			case CellarPropertyType.Float:
+				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
+				return false;
+				// TODO: Maybe issue a proper warning (or error) log message?
+
+			case CellarPropertyType.GenDate:
+				GenDate genDate; // = data.get_GenDateProp(hvo, flid);
+				if (GenDate.TryParse(value.AsString, out genDate))
+				{
+					data.SetGenDate(hvo, flid, genDate);
+					return true;
+				}
+				return false;
+				// When parsing, will use GenDate.TryParse(str, out genDate)
+
+			case CellarPropertyType.Guid:
+				Guid guid;
+				if (Guid.TryParse(value.AsString, out guid))
+				{
+					data.SetGuid(hvo, flid, guid);
+					return true;
+				}
+				return false;
+
+			case CellarPropertyType.Integer:
+				data.SetInt(hvo, flid, value.AsInt32);
+				return true;
+
+			case CellarPropertyType.MultiString: // TODO: Write this one
+			case CellarPropertyType.MultiUnicode:
+				// Step 1: deserialize BsonDocument value as an LfMultiText.
+				// Step 2: Use a bunch of data.SetMultiStringAlt calls?? TODO: Not sure that's right.
+				return false;
+				/*
+				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
+				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
+				return (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
+*/
+			case CellarPropertyType.Nil:
+				data.SetUnknown(hvo, flid, null);
+				return true;
+
+			case CellarPropertyType.Numeric:
+				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
+				return false;
+				// TODO: Maybe issue a proper warning (or error) log message?
+
+			case CellarPropertyType.OwningAtomic:
+				return false; // TODO: Need to implement this one
+
+			case CellarPropertyType.ReferenceAtomic:
+				// TODO: Use data.get_ObjFromGuid(guid) for this somehow;
+				return false;
+				// int ownedHvo = data.get_ObjectProp(hvo, flid);
+				// return GetCustomReferencedObject(ownedHvo, flid, out dataGuid);
+				/*
+			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
+			if (hvo == 0 || !data.get_IsValidObject(hvo)) return null;
+			ICmObject referencedObject = cache.GetAtomicPropObject(hvo);
+			if (referencedObject is IStText)
+				return GetCustomStTextValues((IStText)referencedObject, flid);
+			else if (referencedObject is ICmPossibility)
+				return GetCustomListValues((ICmPossibility)referencedObject, flid);
+			else
+				return null;
+				*/
+
+			case CellarPropertyType.OwningCollection:
+			case CellarPropertyType.OwningSequence:
+			case CellarPropertyType.ReferenceCollection:
+			case CellarPropertyType.ReferenceSequence:
+				int[] listHvos = data.VecProp(hvo, flid);
+				// return new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid)));
+				return false;
+
+			case CellarPropertyType.String:
+				// data.SetString(...)
+				return false; // TODO: Implement this. Make an ITsString somehow.
+//				ITsString iTsValue = data.get_StringProp(hvo, flid);
+//				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
+//					return null;
+//				else
+//					return new BsonString(iTsValue.Text);
+
+			case CellarPropertyType.Unicode:
+				string valueStr = value.AsString;
+				data.SetUnicode(hvo, flid, valueStr, valueStr.Length);
+				return true;
+
+			case CellarPropertyType.Time:
+				data.SetDateTime(hvo, flid, value.ToUniversalTime());
+				return true;
+
+			default:
+				return false;
+				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
+			}
+			return false;
 		}
 	}
 }

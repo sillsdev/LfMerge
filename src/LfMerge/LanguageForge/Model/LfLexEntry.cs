@@ -23,6 +23,7 @@ namespace LfMerge.LanguageForge.Model
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public LfMultiText CitationForm { get; set; }
 		public BsonDocument CustomFields { get; set; }
+		public Dictionary<string, List<Guid>> CustomFieldGuids { get; set; } // Or perhaps just a BsonDocument? TODO: Consider this
 		public LfMultiText CvPattern { get; set; }
 		public LfMultiText EntryBibliography { get; set; }
 		public LfMultiText EntryRestrictions { get; set; }
@@ -43,6 +44,7 @@ namespace LfMerge.LanguageForge.Model
 		public LfLexEntry()
 		{
 			Senses = new List<LfSense>();
+			CustomFieldGuids = new Dictionary<string, List<Guid>>();
 		}
 	}
 }

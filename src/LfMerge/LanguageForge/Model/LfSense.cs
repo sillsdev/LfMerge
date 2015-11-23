@@ -19,6 +19,7 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField SemanticDomain { get; set; }
 		public List<LfExample> Examples { get; set; }
 		public BsonDocument CustomFields { get; set; } // Mapped at runtime
+		public Dictionary<string, List<Guid>> CustomFieldGuids { get; set; } // Or perhaps just a BsonDocument? TODO: Consider this
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public List<LfPicture> Pictures { get; set; }
 		public LfMultiText Definition { get; set; }
@@ -47,6 +48,7 @@ namespace LfMerge.LanguageForge.Model
 
 		public LfSense()
 		{
+			CustomFieldGuids = new Dictionary<string, List<Guid>>();
 			Examples = new List<LfExample>();
 			Pictures = new List<LfPicture>();
 		}

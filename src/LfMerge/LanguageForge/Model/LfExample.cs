@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -20,6 +21,12 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText Reference { get; set; }
 		public LfStringArrayField ExamplePublishIn { get; set; }
 		public BsonDocument CustomFields { get; set; }
+		public Dictionary<string, List<Guid>> CustomFieldGuids { get; set; } // Or perhaps just a BsonDocument? TODO: Consider this
+
+		public LfExample()
+		{
+			CustomFieldGuids = new Dictionary<string, List<Guid>>();
+		}
 	}
 }
 

@@ -220,11 +220,16 @@ namespace LfMerge.Actions
 			DebugOut("General note", lfSense.GeneralNote);
 			DebugOut("Usages", lfSense.Usages);
 
-			BsonDocument customFieldsBson = converter.CustomFieldsForThisCmObject(fdoSense);
+			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoSense);
+			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
+			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
 
 			lfSense.CustomFields = customFieldsBson;
+			lfSense.CustomFieldGuids = customFieldGuids;
 			Console.WriteLine("Custom fields for this sense:");
 			Console.WriteLine(lfSense.CustomFields);
+			Console.WriteLine("Custom field GUIDs for this entry:");
+			Console.WriteLine(lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -243,11 +248,16 @@ namespace LfMerge.Actions
 			// fdoExample.LiftResidue;
 			// fdoExample.TranslationsOC;
 
-			BsonDocument customFieldsBsonForExample = converter.CustomFieldsForThisCmObject(fdoExample);
+			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoExample);
+			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
+			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
 
-			result.CustomFields = customFieldsBsonForExample;
+			result.CustomFields = customFieldsBson;
+			result.CustomFieldGuids = customFieldGuids;
 			Console.WriteLine("Custom fields for this example:");
 			Console.WriteLine(result.CustomFields);
+			Console.WriteLine("Custom field GUIDs for this entry:");
+			Console.WriteLine(result.CustomFieldGuids);
 
 			return result;
 		}
@@ -345,11 +355,17 @@ namespace LfMerge.Actions
 			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
 			DebugOut("Etymology Source", lfEntry.EtymologySource);
 
-			BsonDocument customFieldsBson = converter.CustomFieldsForThisCmObject(fdoEntry);
+			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoEntry);
+			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
+			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
 
 			lfEntry.CustomFields = customFieldsBson;
+			lfEntry.CustomFieldGuids = customFieldGuids;
 			Console.WriteLine("Custom fields for this entry:");
 			Console.WriteLine(lfEntry.CustomFields);
+			Console.WriteLine("Custom field GUIDs for this entry:");
+			Console.WriteLine(lfEntry.CustomFieldGuids);
+
 
 			return lfEntry;
 

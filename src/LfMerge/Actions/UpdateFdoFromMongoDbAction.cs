@@ -168,7 +168,11 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoEntry.Comment, lfEntry.Note);
 			SetPronunciation(fdoEntry, lfEntry);
 			SetMultiStringFrom(fdoEntry.SummaryDefinition, lfEntry.SummaryDefinition);
+			// TODO: Do something like the following line (can't do exactly that because PrimaryMorphType is read-only)
+			// fdoEntry.PrimaryMorphType = new PossibilityListConverter(fdoEntry.PrimaryMorphType.OwningList).GetByName(lfEntry.MorphologyType) as IMoMorphType;
 
+
+			// TODO: Handle custom fields.
 
 			/* TODO: Process the following fields too
 
@@ -179,7 +183,7 @@ namespace LfMerge.Actions
 			lfEntry.CustomFields // TODO: Handle later
 			lfEntry.Environments // Don't know how to handle this one. TODO: Research it.
 			lfEntry.LiftId // TODO: Figure out how to handle this one. In fdoEntry, it's a constructed value.
-			lfEntry.MercurialSha; // TODO: Figure out what this is for
+			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
 			lfEntry.MorphologyType; // TODO: Put this in fdoEntry.PrimaryMorphType
 
 			*/
@@ -194,6 +198,9 @@ namespace LfMerge.Actions
 
 				}
 			}
+
+			// TODO: Handle custom fields.
+
 			return fdoEntry;
 		}
 
@@ -286,15 +293,31 @@ namespace LfMerge.Actions
 		{
 			Guid guid = GuidFromLiftId(lfExample.LiftId);
 			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid, owner);
-			// TODO: Set instance fields
+			// Ignoring lfExample.AuthorInfo.CreatedDate;
+			// Ignoring lfExample.AuthorInfo.ModifiedDate;
+			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
+			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
+			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
+			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
+			// fdoExample.TranslationsOC = ToOwningCollection(lfExample.Translation); // TODO: Implement ToOwningCollection<ICmTranslation>(LfMultiText multi)
+			/*
+			ICmTranslation t;
+			t.AvailableWritingSystems;
+			t.Status;
+			t.Translation;
+			t.TypeRA; // Free, literal, etc.
+			*/
+			// lfExample.CustomFields; // TODO: Handle custom fields
 			return fdoExample;
 		}
 
-		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture)
+		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
 			Guid guid = lfPicture.Guid;
-			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid);
-			// TODO: Set instance fields
+			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner);
+			SetMultiStringFrom(fdoPicture.Caption, lfPicture.Caption);
+			// ICmFile f = fdoPicture.PictureFileRA; // TODO: Use a factory, and set from lfPicture.FileName
+			// TODO: Any other instance fields?
 			return fdoPicture;
 		}
 
@@ -303,40 +326,54 @@ namespace LfMerge.Actions
 			Guid guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
 			// TODO: Set instance fields
-			string senseName;
-			if (lfSense.Definition == null)
-			{
-				Console.WriteLine("No definition found in LF entry for {0}", lfSense.LiftId);
-				senseName = "(unknown definition)";
-			}
-			else
-			{
-				senseName = String.Join(", ", lfSense.Definition.Values.Select(x => (x.Value == null) ? "" : x.Value));
-			}
-			Console.WriteLine("Checking sense {0}", senseName);
 
-			if (fdoSense.Cache == null)
-				Console.WriteLine("fdoSense.Cache is null. Might cause problems.");
-			if (fdoSense.Cache.TsStrFactory == null)
-				Console.WriteLine("fdoSense.Cache.TsStrFactory is null. Might cause problems.");
+			// var converter = new PossibilityListConverter(cache.LanguageProject.LocationsOA);
+			// fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
+			// TODO: Check if the compiler is happy with the below (creating an object and throwing it away after calling one method)
+//			new PossibilityListConverter(cache.LanguageProject.SemanticDomainListOA)
+//				.UpdatePossibilitiesFromStringArray(fdoSense.DomainTypesRC, lfSense.AcademicDomains);
+//			new PossibilityListConverter(cache.LanguageProject.AnthroListOA)
+//				.UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
+			SetMultiStringFrom(fdoSense.AnthroNote, lfSense.AnthropologyNote);
+			// lfSense.AuthorInfo; // TODO: Figure out if this should be copied too
+			// lfSense.CustomFields; // TODO: Handle these last
 			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
-
-			IMultiString definition = fdoSense.Definition;
-			// We check for Guid.Empty because a newly-created fdoSense has a Definition that isn't null, but
-			// that can't fetch a BestAnalysisVernacularAlternative property.
-			if (definition == null || fdoSense.Guid == Guid.Empty || definition.BestAnalysisVernacularAlternative == null)
+			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
+			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
+			foreach (LfExample lfExample in lfSense.Examples)
 			{
-				Console.WriteLine("Didn't find definition for {0} in FDO", lfSense.LiftId);
-				return fdoSense;
-			}
-
-			Console.WriteLine("Definition: {0}", definition.BestAnalysisVernacularAlternative.Text);
-			foreach (int wsid in definition.AvailableWritingSystemIds)
+				ILexExampleSentence fdoExample = LfExampleToFdoExample(lfExample, fdoSense);
+				// TODO: Implement LfExampleToFdoExample function, then either add any necessary outside-the-function code here or delete this comment
+			};
+			SetMultiStringFrom(fdoSense.GeneralNote, lfSense.GeneralNote);
+			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
+			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
+			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
+			// lfSense.MorphologyType; // TODO: This is complex in FDO. Handle it.
+			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: More complex than that. Handle it correctly.
+			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
+			foreach (LfPicture lfPicture in lfSense.Pictures)
 			{
-				string wsid_str = servLoc.WritingSystemManager.GetStrFromWs(wsid);
-				var text = definition.get_String(wsid);
-				Console.WriteLine("{0}: {1}", wsid_str, text.Text);
+				ICmPicture fdoPicture = LfPictureToFdoPicture(lfPicture, fdoSense);
+				// TODO: Implement LfPictureToFdoPicture function, then either add any necessary outside-the-function code here or delete this comment
 			}
+			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
+			fdoSense.ScientificName = BestStringFromMultiText(lfSense.ScientificName);
+//			new PossibilityListConverter(cache.LanguageProject.SemanticDomainListOA)
+//				.UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
+			SetMultiStringFrom(fdoSense.SemanticsNote, lfSense.SemanticsNote);
+			SetMultiStringFrom(fdoSense.Bibliography, lfSense.SenseBibliography);
+
+			// lfSense.SenseId; // TODO: What do I do with this one?
+			fdoSense.ImportResidue = BestStringFromMultiText(lfSense.SenseImportResidue);
+			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
+			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
+			// fdoSense.SenseTypeRA = lfSense.SenseType; // TODO: More complex than that. Handle it correctly.
+			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
+			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
+			// fdoSense.StatusRA = new PossibilityListConverter(cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
+			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
+
 			return fdoSense;
 		}
 
@@ -410,11 +447,14 @@ namespace LfMerge.Actions
 			return result;
 		}
 
-		private ICmPicture GetOrCreatePictureByGuid(Guid guid)
+		private ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner)
 		{
 			ICmPicture result;
 			if (!pictureRepo.TryGetObject(guid, out result))
+			{
 				result = pictureFactory.Create();
+				owner.PicturesOS.Add(result);
+			}
 			return result;
 		}
 
