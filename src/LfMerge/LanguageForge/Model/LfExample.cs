@@ -21,11 +21,10 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText Reference { get; set; }
 		public LfStringArrayField ExamplePublishIn { get; set; }
 		public BsonDocument CustomFields { get; set; }
-		public Dictionary<string, List<Guid>> CustomFieldGuids { get; set; } // Or perhaps just a BsonDocument? TODO: Consider this
+		public BsonDocument CustomFieldGuids { get; set; }
 
 		public LfExample()
 		{
-			CustomFieldGuids = new Dictionary<string, List<Guid>>();
 		}
 	}
 }

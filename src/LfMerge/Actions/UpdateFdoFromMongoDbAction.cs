@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using LfMerge.DataConverters;
+using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using SIL.CoreImpl;
@@ -30,6 +31,8 @@ namespace LfMerge.Actions
 		private ICmPictureFactory pictureFactory;
 		private ILexPronunciationFactory pronunciationFactory;
 		private ILexSenseFactory senseFactory;
+
+		private CustomFieldConverter customFieldConverter;
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
@@ -62,6 +65,7 @@ namespace LfMerge.Actions
 				Console.WriteLine("Failed to find the service locator; giving up.");
 				return;
 			}
+			customFieldConverter = new CustomFieldConverter(cache);
 
 			// For efficiency's sake, cache the five repositories and five factories we'll need all the time,
 			entryRepo = servLoc.GetInstance<ILexEntryRepository>();
@@ -172,8 +176,6 @@ namespace LfMerge.Actions
 			// fdoEntry.PrimaryMorphType = new PossibilityListConverter(fdoEntry.PrimaryMorphType.OwningList).GetByName(lfEntry.MorphologyType) as IMoMorphType;
 
 
-			// TODO: Handle custom fields.
-
 			/* TODO: Process the following fields too
 
 					fdoEntry.PronunciationsOS.First();
@@ -199,7 +201,7 @@ namespace LfMerge.Actions
 				}
 			}
 
-			// TODO: Handle custom fields.
+			customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 
 			return fdoEntry;
 		}
@@ -307,7 +309,9 @@ namespace LfMerge.Actions
 			t.Translation;
 			t.TypeRA; // Free, literal, etc.
 			*/
-			// lfExample.CustomFields; // TODO: Handle custom fields
+
+			customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
+
 			return fdoExample;
 		}
 
@@ -373,6 +377,8 @@ namespace LfMerge.Actions
 			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
+
+			customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 
 			return fdoSense;
 		}

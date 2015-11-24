@@ -220,15 +220,15 @@ namespace LfMerge.Actions
 			DebugOut("General note", lfSense.GeneralNote);
 			DebugOut("Usages", lfSense.Usages);
 
-			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoSense);
-			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
-			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
+			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoSense, "senses");
+			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
+			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
 			Console.WriteLine("Custom fields for this sense:");
 			Console.WriteLine(lfSense.CustomFields);
-			Console.WriteLine("Custom field GUIDs for this entry:");
+			Console.WriteLine("Custom field GUIDs for this sense:");
 			Console.WriteLine(lfSense.CustomFieldGuids);
 
 			return lfSense;
@@ -248,15 +248,15 @@ namespace LfMerge.Actions
 			// fdoExample.LiftResidue;
 			// fdoExample.TranslationsOC;
 
-			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoExample);
-			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
-			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
+			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoExample, "examples");
+			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
+			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			result.CustomFields = customFieldsBson;
 			result.CustomFieldGuids = customFieldGuids;
 			Console.WriteLine("Custom fields for this example:");
 			Console.WriteLine(result.CustomFields);
-			Console.WriteLine("Custom field GUIDs for this entry:");
+			Console.WriteLine("Custom field GUIDs for this example:");
 			Console.WriteLine(result.CustomFieldGuids);
 
 			return result;
@@ -355,9 +355,9 @@ namespace LfMerge.Actions
 			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
 			DebugOut("Etymology Source", lfEntry.EtymologySource);
 
-			Tuple<BsonDocument, Dictionary<string, List<Guid>>> customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoEntry);
-			BsonDocument customFieldsBson = customFieldsAndGuids.Item1;
-			Dictionary<string, List<Guid>> customFieldGuids = customFieldsAndGuids.Item2;
+			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
+			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
+			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfEntry.CustomFields = customFieldsBson;
 			lfEntry.CustomFieldGuids = customFieldGuids;
