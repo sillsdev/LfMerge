@@ -4,13 +4,12 @@ using System;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Clusters;
 
 namespace LfMerge
 {
-	public class LanguageDepotProject
+	public class LanguageDepotProject: ILanguageDepotProject
 	{
-		public LanguageDepotProject(string lfProjectCode)
+		public void Initialize(string lfProjectCode)
 		{
 			var client = new MongoClient("mongodb://" + LfMergeSettings.Current.MongoDbHostNameAndPort);
 			var database = client.GetDatabase("scriptureforge");

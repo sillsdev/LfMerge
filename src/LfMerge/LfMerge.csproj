@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,8 +60,23 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\..\..\fwrepo\fw\Output\Debug\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="LibChorus">
+      <HintPath>..\..\lib\LibChorus.dll</HintPath>
+    </Reference>
+    <Reference Include="Chorus">
+      <HintPath>..\..\lib\Chorus.exe</HintPath>
+    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Core">
+      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="LibFLExBridge-ChorusPlugin">
+      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="LibTriboroughBridge-ChorusPlugin">
+      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +92,7 @@
     <Compile Include="FieldWorks\ThreadedProgress.cs" />
     <Compile Include="FieldWorks\ConsoleFdoUi.cs" />
     <Compile Include="LanguageForgeProject.cs" />
+    <Compile Include="LfMergeSettings.cs" />
     <Compile Include="ILfProject.cs" />
     <Compile Include="Actions\ActionNames.cs" />
     <Compile Include="Actions\IAction.cs" />
@@ -89,9 +105,10 @@
     <Compile Include="Actions\UpdateMongoDbFromFdo.cs" />
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="LanguageDepotProject.cs" />
-    <Compile Include="LfMergeSettings.cs" />
+    <Compile Include="ILanguageDepotProject.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IProcessingStateDeserialize.cs" />
+    <Compile Include="FieldWorks\FlexHelper.cs" />
     <Compile Include="MongoConnector\MongoConnection.cs" />
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
     <Compile Include="MongoConnector\MongoCursorEnumerableExtensions.cs" />

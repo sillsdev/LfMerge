@@ -36,8 +36,11 @@ namespace LfMerge.Tests
 		[Ignore("Currently we don't have the required fields in mongodb")]
 		public void ExistingProject()
 		{
+			// Setup
+			var sut = new LanguageDepotProject();
+
 			// Exercise
-			var sut = new LanguageDepotProject("proja");
+			sut.Initialize("proja");
 
 			// Verify
 			Assert.That(sut.Username, Is.EqualTo("proja-user"));
@@ -48,8 +51,11 @@ namespace LfMerge.Tests
 		[Test]
 		public void NonexistingProject()
 		{
+			// Setup
+			var sut = new LanguageDepotProject();
+
 			// Exercise/Verify
-			Assert.That(() => new LanguageDepotProject("nonexisting"), Throws.ArgumentException);
+			Assert.That(() => sut.Initialize("nonexisting"), Throws.ArgumentException);
 		}
 	}
 }

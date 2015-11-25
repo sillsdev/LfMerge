@@ -12,7 +12,7 @@ namespace LfMerge
 		string MongoDatabaseName { get; }
 		FwProject FieldWorksProject { get; }
 		ProcessingState State { get; }
-		LanguageDepotProject LanguageDepotProject { get; }
+		ILanguageDepotProject LanguageDepotProject { get; }
 	}
 }
 
