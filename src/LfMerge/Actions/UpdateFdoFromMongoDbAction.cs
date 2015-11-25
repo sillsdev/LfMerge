@@ -154,7 +154,6 @@ namespace LfMerge.Actions
 					// TODO: Figure out how to handle this situation
 					Console.WriteLine("Problem: need to delete an FDO entry, but its CanDelete flag is false.");
 			}
-			// TODO: Set instance fields
 			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value));
 			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
 
@@ -193,11 +192,9 @@ namespace LfMerge.Actions
 			if (lfEntry.Senses != null) {
 				foreach(LfSense lfSense in lfEntry.Senses)
 				{
+					#pragma warning disable 0219 // "Variable is assigned but its value is never used"
 					ILexSense fdoSense = LfSenseToFdoSense(lfSense, fdoEntry);
-					if (fdoSense.Owner == null)
-						Console.WriteLine("Oh dear, created an fdoSense without an owner!");
-						// fdoEntry.SensesOS.Add(fdoSense); // TODO: Verify that this correctly sets up ownership
-
+					#pragma warning restore 0219
 				}
 			}
 
@@ -346,7 +343,9 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
 			foreach (LfExample lfExample in lfSense.Examples)
 			{
+				#pragma warning disable 0219 // "Variable is assigned but its value is never used"
 				ILexExampleSentence fdoExample = LfExampleToFdoExample(lfExample, fdoSense);
+				#pragma warning restore 0219
 				// TODO: Implement LfExampleToFdoExample function, then either add any necessary outside-the-function code here or delete this comment
 			};
 			SetMultiStringFrom(fdoSense.GeneralNote, lfSense.GeneralNote);
@@ -358,7 +357,9 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
 			foreach (LfPicture lfPicture in lfSense.Pictures)
 			{
+				#pragma warning disable 0219 // "Variable is assigned but its value is never used"
 				ICmPicture fdoPicture = LfPictureToFdoPicture(lfPicture, fdoSense);
+				#pragma warning restore 0219
 				// TODO: Implement LfPictureToFdoPicture function, then either add any necessary outside-the-function code here or delete this comment
 			}
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.

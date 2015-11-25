@@ -63,6 +63,20 @@ namespace LfMerge.LanguageForge.Model
 			return this.AsStringDictionary().Values.Where(str => !String.IsNullOrEmpty(str)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
 		}
 
+		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(FdoCache cache)
+		{
+			KeyValuePair<string, string> kv = this.FirstNonEmptyKeyValue();
+			if (kv.Key == null) return new KeyValuePair<int, string>();
+			IWritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
+			int wsId = wsm.GetWsFromStr(kv.Key);
+			return new KeyValuePair<int, string>(wsId, kv.Value);
+		}
+
+		public KeyValuePair<string, string> FirstNonEmptyKeyValue()
+		{
+			return this.AsStringDictionary().Where(kv => !String.IsNullOrEmpty(kv.Value)).FirstOrDefault();
+		}
+
 		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
 		public ITsString ToITsString(int wsId, FdoCache cache)
 		{

@@ -32,7 +32,7 @@ namespace LfMerge.FieldWorks
 		}
 
 		/// <summary>
-		/// Customs the fields for this cm object.
+		/// Returns value of custom fields for this CmObject.
 		/// </summary>
 		/// <returns>A BsonDocument with the following structure: <br />
 		/// { <br />
@@ -63,13 +63,11 @@ namespace LfMerge.FieldWorks
 
 			foreach (int flid in customFieldIds)
 			{
-				List<Guid> fieldDataGuids;
 				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
 				if (fieldName == null)
 					return null;
 				fieldName = NormalizedFieldName(fieldName, objectType);
 				BsonDocument bsonForThisField = GetCustomFieldData(cmObj.Hvo, flid);
-				// TODO: Need to convert field name to, say, underscores instead of spaces and so on.
 				if (bsonForThisField != null)
 				{
 					customFieldData.Add(fieldName, bsonForThisField["value"]);
@@ -97,22 +95,18 @@ namespace LfMerge.FieldWorks
 		/// <returns>A BsonDocument with the following structure: <br />
 		/// { fieldName: { "value": BsonValue, "guid": "some-guid-as-a-string" } } <br />
 		/// -OR- <br />
-		/// { fieldName: { "value": BsonValue, "guids": ["guid1", "guid2", "guid3"] } } <br />
+		/// { fieldName: { "value": BsonValue, "guid": ["guid1", "guid2", "guid3"] } } <br />
 		/// The format of the fieldName key will be "customField_FOO_field_name_with_underscores",
 		/// where FOO is one of "entry", "senses", or "examples". <br />
-		/// The presense of either the "guid" or "guids" key will determine whether there is a string or array following it.
-		/// (TODO: Fix this documentation since now we always have the key "guid")
-		/// If there is neither "guid" nor "guids", that field has no need for a GUID. (E.g., a number).
+		/// The type of the "guid" value (array or string) will determine whether there is a single GUID,
+		/// or a list of GUIDs that happens to contain only one entry.
+		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
 		/// </returns>
 		/// <param name="hvo">Hvo of object we're getting the field for.</param>
 		/// <param name="flid">Flid for this field.</param>
 		/// <param name="fieldType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
 		{
-			// TODO: Rewrite this to return a BsonDocument instead of a BsonValue.
-			// Returned BsonDocument will contain two keys:
-			// "customFields": value is a BsonDocument with one key per field name, value depending on field type
-			// "customFieldGuids": same thing, but value is either one GUID, or a list of GUIDs. (Or a key can be omitted).
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
@@ -159,7 +153,7 @@ namespace LfMerge.FieldWorks
 				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
 				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
 				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
-				// TODO: Do we need to set fieldGuid here? Probably not, but research it.
+				// No need to save GUIDs for multistrings
 				break;
 
 			case CellarPropertyType.Nil:
@@ -226,16 +220,32 @@ namespace LfMerge.FieldWorks
 			List<string> htmlParas = paras.Where(para => para != null).Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
 			IWritingSystemManager wsManager = cache.ServiceLocator.WritingSystemManager;
 			int fieldWs = cache.MetaDataCacheAccessor.GetFieldWs(flid);
-			string wsStr = wsManager.GetStrFromWs(fieldWs); // TODO: Should this be cache.DefaultUserWs instead?
-			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs);
+			string wsStr = wsManager.GetStrFromWs(fieldWs);
+			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?
 			return new BsonDocument(wsStr, new BsonString(String.Join("", htmlParas)));
 		}
 
 		private BsonValue GetCustomListValues(ICmPossibility obj, int flid)
 		{
 			if (obj == null) return null;
-			// TODO: If obj.Name.BestAnalysisVernacularAlternative.Text fails, break it down in small parts will null checks.
+			// TODO: Consider using obj.NameHierarchyString instead of obj.Name.BestAnalysisVernacularAlternative.Text
 			return new BsonString(obj.Name.BestAnalysisVernacularAlternative.Text);
+		}
+
+		private List<string> ParseCustomStTextValuesFromBson(BsonDocument source, out int wsId)
+		{
+			var result = new List<string>();
+			wsId = 0;
+			if (source.ElementCount <= 0)
+				return result;
+			LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(source);
+			KeyValuePair<int, string> kv = valueAsMultiText.WsIdAndFirstNonEmptyString(cache);
+			wsId = kv.Key;
+			string htmlContents = kv.Value;
+			result.AddRange(htmlContents.Split(new string[] { "</p>" }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(para => (para.StartsWith("<p>") ? para.Substring(3) : para)));
+			// No need to trim trailing </p> as String.Split has already done that for us
+			return result;
 		}
 
 		/// <summary>
@@ -273,12 +283,6 @@ namespace LfMerge.FieldWorks
 				return null;
 		}
 
-		// TODO: Determine what return type we want. Maybe a Dictionary<string, ICmObject> would work.
-		public object ParseCustomFields(BsonDocument customFields)
-		{
-			throw new NotImplementedException(); // TODO: Implement this
-		}
-
 		public Guid ParseGuidOrDefault(string input)
 		{
 			Guid result = default(Guid);
@@ -286,6 +290,30 @@ namespace LfMerge.FieldWorks
 			return result;
 		}
 
+		public ICmPossibilityList GetParentListForField(int flid)
+		{
+			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+			if (parentListGuid == Guid.Empty)
+			{
+				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+				Console.WriteLine("No possibility list found for custom field {0}; giving up", fieldName);
+				return null;
+				// TODO: If this happens, we're probably importing a newly-created possibility list, so we should
+				// probably create it in FDO. Implementation needed.
+			}
+			return (ICmPossibilityList)servLoc.GetObject(parentListGuid);
+		}
+
+		/// <summary>
+		/// Set custom field data for one field (specified by owner HVO and field ID).
+		/// </summary>
+		/// <returns><c>true</c>, if custom field data was set, <c>false</c> otherwise
+		/// (e.g., if value was null, or field type was one not implemented in FDO, such as CellarPropertyType.Float).</returns>
+		/// <param name="hvo">HVO of object whose field we're setting.</param>
+		/// <param name="flid">Field ID of custom field to set.</param>
+		/// <param name="value">Field's new value (as returned by GetCustomFieldData).</param>
+		/// <param name="guidOrGuids">GUID or guids associated with new value (as returned by GetCustomFieldData).
+		/// May be null or BsonNull.Value if no GUIDs associated with this value.</param>
 		public bool SetCustomFieldData(int hvo, int flid, BsonValue value, BsonValue guidOrGuids)
 		{
 			if (value == null || value == BsonNull.Value)
@@ -304,6 +332,7 @@ namespace LfMerge.FieldWorks
 			}
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+			Console.WriteLine("This field type is {0}", fieldType.ToString());
 			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
 			if (fieldName == null)
 				return false;
@@ -348,20 +377,22 @@ namespace LfMerge.FieldWorks
 				data.SetInt(hvo, flid, value.AsInt32);
 				return true;
 
-			case CellarPropertyType.MultiString: // TODO: Write this one
+			case CellarPropertyType.MultiString:
 			case CellarPropertyType.MultiUnicode:
-				// Step 1: deserialize BsonDocument value as an LfMultiText.
-				LfMultiText bar = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-				Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
-				foreach (var kv in bar.AsStringDictionary())
-					Console.WriteLine("  {0}: {1}", kv.Key, kv.Value);
-				// Step 2: Use a bunch of data.SetMultiStringAlt calls?? TODO: Not sure that's right.
-				return false;
-				/*
-				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
-				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
-				return (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
-*/
+				{
+					LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
+					foreach (KeyValuePair<string, string> kv in valueAsMultiText.AsStringDictionary())
+					{
+						int wsId = servLoc.WritingSystemManager.GetWsFromStr(kv.Key);
+						if (wsId == 0)
+							continue;
+						Console.WriteLine("  {0}: {1}", kv.Key, kv.Value);
+						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(kv.Value, wsId));
+					}
+					return true;
+				}
+
 			case CellarPropertyType.Nil:
 				data.SetUnknown(hvo, flid, null);
 				return true;
@@ -372,33 +403,76 @@ namespace LfMerge.FieldWorks
 				// TODO: Maybe issue a proper warning (or error) log message?
 
 			case CellarPropertyType.OwningAtomic:
-				return false; // TODO: Need to implement this one
+				{
+					// Custom field is a MultiparagraphText
+					if (fieldGuids.First() != Guid.Empty)
+					{
+						// TODO: In the future, we should use this GUID to look up the current
+						// value of the field. Then instead of deleting and re-creating the field
+						// contents, we'll compare its contents to what's coming in, and only
+						// delete and re-create paragraphs that have *changed*. That will make for
+						// much less "churn" in Mercurial history.
+					}
+					// Delete and re-create field (TODO: Change this once we implement compare-to-current-value algorithm)
+					int currentFieldContentsHvo = data.get_ObjectProp(hvo, flid);
+					if (currentFieldContentsHvo != FdoCache.kNullHvo)
+						data.DeleteObjOwner(hvo, currentFieldContentsHvo, flid, 0);
+					// NOTE: I don't like the "magic" -2 number below, but FDO doesn't seem to have an enum for this. 2015-11 RM
+					int newStTextHvo = data.MakeNewObject(cache.GetDestinationClass(flid), hvo, flid, -2);
+
+					Console.WriteLine("Creating new StTxtPara for custom field {0} that has value {1}", fieldName, value.ToJson());
+
+					int wsId;
+					List<string> texts = ParseCustomStTextValuesFromBson(value.AsBsonDocument, out wsId);
+					// TODO: Right now the assumption is baked in that FDO custom fields of OwningAtomic are ONLY multiparagraph texts.
+					// But if this field's destination class is ever NOT StText, this cast will fail. If that happens, this code will
+					// need to be modified.
+					IStText newStText = (IStText)cache.GetAtomicPropObject(newStTextHvo);
+					// TODO: In the future when we don't create a new object but re-use the existing one, we'll need
+					// to compare paragraph contents and call newStText.AddNewTextPara() or newStText.DeleteParagraph() as many
+					// times as needed to have the right # of paras. Then set the contents of each paragraph to their new values.
+					//
+					// For now, though, we just add a number of paragraphs to the brand-new object.
+					foreach (string paraContents in texts)
+					{
+						IStTxtPara newPara = newStText.AddNewTextPara(null);
+						newPara.Contents = TsStringUtils.MakeTss(paraContents, wsId);
+						// TODO: Do we need to set anything else on the new paragraph object?
+						Console.WriteLine("New paragraph contents: {0}", paraContents);
+					}
+					return true;
+				}
 
 			case CellarPropertyType.ReferenceAtomic:
+				Console.WriteLine("ReferenceAtomic field named {0} with value {1}", fieldName, value.ToJson());
+				int log_fieldWs = fdoMetaData.GetFieldWs(flid);
+				string log_fieldWsStr = servLoc.WritingSystemManager.GetStrFromWs(log_fieldWs);
+				Console.WriteLine("Writing system for this field has ID {0} and name ({1})", log_fieldWs, log_fieldWsStr);
 				if (fieldGuids.First() != Guid.Empty)
 				{
 					int referencedHvo = data.get_ObjFromGuid(fieldGuids.First());
 					data.SetObjProp(hvo, flid, referencedHvo);
+					// TODO: What if the value of the referenced object has changed in LanguageForge? (E.g., change that possibility's text from "foo" to "bar")
+					// Need to implement that scenario.
 					return true;
 				}
 				else
 				{
-					// What do we do if the object isn't yet in FDO? TODO: Consider this case.
-					return false;
+					// It's a reference to an ICmPossibility instance: create a new entry in appropriate PossibilityList
+					LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
+					string nameHierarchy = valueAsLfStringField.Value;
+					if (nameHierarchy == null)
+						return false;
+					int fieldWs = fdoMetaData.GetFieldWs(flid);
+					// Oddly, this can return 0 for some custom fields. TODO: Find out why: that seems like it would be an error.
+					if (fieldWs == 0)
+						fieldWs = cache.DefaultUserWs;
+					ICmPossibilityList parentList = GetParentListForField(flid);
+					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
+
+					data.SetObjProp(hvo, flid, newPoss.Hvo);
+					return true;
 				}
-				// int ownedHvo = data.get_ObjectProp(hvo, flid);
-				// return GetCustomReferencedObject(ownedHvo, flid, out dataGuid);
-				/*
-			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
-			if (hvo == 0 || !data.get_IsValidObject(hvo)) return null;
-			ICmObject referencedObject = cache.GetAtomicPropObject(hvo);
-			if (referencedObject is IStText)
-				return GetCustomStTextValues((IStText)referencedObject, flid);
-			else if (referencedObject is ICmPossibility)
-				return GetCustomListValues((ICmPossibility)referencedObject, flid);
-			else
-				return null;
-				*/
 
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
@@ -412,13 +486,10 @@ namespace LfMerge.FieldWorks
 				{
 					if (value == null || value == BsonNull.Value) return false;
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
-					Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
-					if (parentListGuid == Guid.Empty)
-					{
-						Console.WriteLine("No possibility list found for custom field {0}; giving up", fieldName);
-						return false; // TODO: Is this really possible?? If not, remove this check
-					}
-					ICmPossibilityList parentList = (ICmPossibilityList)servLoc.GetObject(parentListGuid);
+					// TODO: Investigate why this is sometimes coming back as 0 instead of as a real writing system ID
+					if (fieldWs == 0)
+						fieldWs = cache.DefaultUserWs;
+					ICmPossibilityList parentList = GetParentListForField(flid);
 
 					LfStringArrayField valueAsStringArray = BsonSerializer.Deserialize<LfStringArrayField>(value.AsBsonDocument);
 
@@ -472,12 +543,14 @@ namespace LfMerge.FieldWorks
 				}
 
 			case CellarPropertyType.String:
-				Console.WriteLine("Got value {0} of type {1}", value, value.GetType());
-				Console.WriteLine("Writing system #{0} is \"{1}\" for this field", fdoMetaData.GetFieldWs(flid), servLoc.WritingSystemManager.GetStrFromWs(fdoMetaData.GetFieldWs(flid)));
-				var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-				data.SetString(hvo, flid, TsStringUtils.MakeTss(valueAsMultiText.FirstNonEmptyString(), cache.DefaultAnalWs));
-				// TODO: Somehow use WritingSystemServices.ActualWs to get the right writing system here, instead of just assuming analysis
-				return true;
+				{
+					Console.WriteLine("Got value {0} of type {1}", value, value.GetType());
+					Console.WriteLine("Writing system #{0} is \"{1}\" for this field", fdoMetaData.GetFieldWs(flid), servLoc.WritingSystemManager.GetStrFromWs(fdoMetaData.GetFieldWs(flid)));
+					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					data.SetString(hvo, flid, TsStringUtils.MakeTss(valueAsMultiText.FirstNonEmptyString(), cache.DefaultAnalWs));
+					// TODO: Somehow use WritingSystemServices.ActualWs to get the right writing system here, instead of just assuming analysis
+					return true;
+				}
 
 			case CellarPropertyType.Unicode:
 				{
@@ -494,7 +567,7 @@ namespace LfMerge.FieldWorks
 				return false;
 				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
-			return false; // If compiler complains about unreachable code, GOOD! We got the switch statement right. Otherwise this is our catch-all.
+			// return false; // If compiler complains about unreachable code, GOOD! We got the switch statement right. Otherwise this is our catch-all.
 		}
 
 		public void SetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType, BsonDocument customFieldValues, BsonDocument customFieldGuids)
@@ -507,9 +580,6 @@ namespace LfMerge.FieldWorks
 			var remainingFieldNames = new HashSet<string>(customFieldValues.Select(elem => elem.Name));
 			foreach (int flid in customFieldIds)
 			{
-				// TODO:
-				// To deal with that case, we'd need to store a list of field names we've gotten from Mongo, then compare to the
-				// field names we've gotten
 				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
 				if (fieldName == null)
 					return;
