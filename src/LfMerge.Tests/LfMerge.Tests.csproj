@@ -75,6 +75,7 @@
     <Compile Include="TestDoubles.cs" />
     <Compile Include="LfMergeSettingsTests.cs" />
     <Compile Include="TestEnvironmentAttribute.cs" />
+    <Compile Include="SampleData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
