@@ -54,16 +54,10 @@ namespace LfMerge.Tests
     },
     ""dateCreated"":  ISODate(""2015-10-30T08: 50: 48Z""),
     ""dateModified"":  ISODate(""2015-11-18T03: 56: 45Z""),
-    ""entryBibliography"": {
-
-    },
-    ""entryRestrictions"": {
-
-    },
+    ""entryBibliography"": { },
+    ""entryRestrictions"": { },
     ""environments"": {
-        ""values"": [
-
-        ]
+        ""values"": [ ]
     },
     ""etymology"": {
         ""qaa-x-kal"": {
@@ -83,9 +77,7 @@ namespace LfMerge.Tests
             ""value"": ""English gloss""
         }
     },
-    ""etymologySource"": {
-
-    },
+    ""etymologySource"": { },
     ""guid"": ""1a705846-a814-4289-8594-4b874faca6cc"",
     ""isDeleted"": false,
     ""lexeme"": {
@@ -208,50 +200,24 @@ namespace LfMerge.Tests
                     ""value"": """"
                 }
             },
-            ""pictures"": [
-
-            ],
+            ""pictures"": [ ],
             ""scientificName"": {
                 ""en"": {
                     ""value"": ""Scientific name""
                 }
             },
-            ""anthropologyNote"": {
-
-            },
-            ""senseBibliography"": {
-
-            },
-            ""discourseNote"": {
-
-            },
-            ""encyclopedicNote"": {
-
-            },
-            ""generalNote"": {
-
-            },
-            ""grammarNote"": {
-
-            },
-            ""phonologyNote"": {
-
-            },
-            ""senseRestrictions"": {
-
-            },
-            ""semanticsNote"": {
-
-            },
-            ""sociolinguisticsNote"": {
-
-            },
-            ""source"": {
-
-            },
-            ""senseImportResidue"": {
-
-            },
+            ""anthropologyNote"": { },
+            ""senseBibliography"": { },
+            ""discourseNote"": { },
+            ""encyclopedicNote"": { },
+            ""generalNote"": { },
+            ""grammarNote"": { },
+            ""phonologyNote"": { },
+            ""senseRestrictions"": { },
+            ""semanticsNote"": { },
+            ""sociolinguisticsNote"": { },
+            ""source"": { },
+            ""senseImportResidue"": { },
             ""usages"": {
                 ""values"": [
                     ""honorific"",
@@ -259,9 +225,7 @@ namespace LfMerge.Tests
                 ]
             },
             ""reversalEntries"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""senseType"": {
                 ""value"": ""figurative""
@@ -273,9 +237,7 @@ namespace LfMerge.Tests
                 ]
             },
             ""sensePublishIn"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""anthropologyCategories"": {
                 ""values"": [
@@ -296,13 +258,9 @@ namespace LfMerge.Tests
                 ""value"": null
             },
             ""semanticDomain"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
-            ""examples"": [
-
-            ],
+            ""examples"": [ ],
             ""definition"": {
                 ""en"": {
                     ""value"": ""This is the English definition for 2.""
@@ -325,82 +283,44 @@ namespace LfMerge.Tests
                     ""value"": """"
                 }
             },
-            ""pictures"": [
-
-            ],
+            ""pictures"": [ ],
             ""scientificName"": {
                 ""en"": {
                     ""value"": """"
                 }
             },
-            ""anthropologyNote"": {
-
-            },
-            ""senseBibliography"": {
-
-            },
-            ""discourseNote"": {
-
-            },
-            ""encyclopedicNote"": {
-
-            },
-            ""generalNote"": {
-
-            },
-            ""grammarNote"": {
-
-            },
-            ""phonologyNote"": {
-
-            },
-            ""senseRestrictions"": {
-
-            },
-            ""semanticsNote"": {
-
-            },
-            ""sociolinguisticsNote"": {
-
-            },
-            ""source"": {
-
-            },
-            ""senseImportResidue"": {
-
-            },
+            ""anthropologyNote"": { },
+            ""senseBibliography"": { },
+            ""discourseNote"": { },
+            ""encyclopedicNote"": { },
+            ""generalNote"": { },
+            ""grammarNote"": { },
+            ""phonologyNote"": { },
+            ""senseRestrictions"": { },
+            ""semanticsNote"": { },
+            ""sociolinguisticsNote"": { },
+            ""source"": { },
+            ""senseImportResidue"": { },
             ""usages"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""reversalEntries"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""senseType"": {
                 ""value"": null
             },
             ""academicDomains"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""sensePublishIn"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""anthropologyCategories"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             },
             ""status"": {
-                ""values"": [
-
-                ]
+                ""values"": [ ]
             }
         }
     ],
