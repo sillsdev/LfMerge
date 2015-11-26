@@ -3,7 +3,7 @@
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 	</PropertyGroup>
 
-	<Import Project="$(RootDir)/packages/BuildDependencyTasks.0.1.5604.35298/build/BuildDependencyTasks.targets"/>
+	<Import Project="$(RootDir)/packages/BuildDependencyTasks.0.1.5807.26101/build/BuildDependencyTasks.targets"/>
 
 	<Target Name="DownloadDependencies">
 		<Dependencies DependencyFile="LfMerge.dep" UseDependencyFile="true" KeepJobsFile="true"
