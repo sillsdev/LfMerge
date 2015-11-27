@@ -11,23 +11,6 @@ namespace LfMerge
 	{
 		public const string ProjectsCollectionName = "projects";
 
-		/// <summary>
-		/// Factory function to retrieve the corresponding project record from MongoDB and create a MongoProjectRecord instance.
-		/// </summary>
-		/// <param name="project">LfProject instance whose data should be fetched from MongoDB.</param>
-		public static MongoProjectRecord Create(ILfProject project)
-		{
-			if (project == null) return null;
-			if (MongoConnection.Default == null) return null; // TODO: Figure out better way to deal with MongoConnections during unit testing
-			var code = project.LfProjectCode;
-			IMongoDatabase db = MongoConnection.Default.GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> coll = db.GetCollection<MongoProjectRecord>(ProjectsCollectionName);
-			MongoProjectRecord record =
-				coll.Find(proj => proj.ProjectCode == project.LfProjectCode)
-				.Limit(1).FirstOrDefaultAsync().Result;
-			return record;
-		}
-
 		public ObjectId Id { get; set; }
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }

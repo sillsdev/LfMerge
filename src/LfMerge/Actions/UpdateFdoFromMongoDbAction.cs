@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Autofac;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using LfMerge.DataConverters;
@@ -20,6 +21,9 @@ namespace LfMerge.Actions
 	{
 		private FdoCache cache;
 		private IFdoServiceLocator servLoc;
+		private IMongoConnection connection;
+		private MongoProjectRecordFactory projectRecordFactory;
+
 
 		private ILexEntryRepository entryRepo;
 		private ILexExampleSentenceRepository exampleRepo;
@@ -33,6 +37,12 @@ namespace LfMerge.Actions
 		private ILexSenseFactory senseFactory;
 
 		private CustomFieldConverter customFieldConverter;
+
+		public UpdateFdoFromMongoDbAction(IMongoConnection conn, MongoProjectRecordFactory factory)
+		{
+			connection = conn;
+			projectRecordFactory = factory;
+		}
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
@@ -93,7 +103,7 @@ namespace LfMerge.Actions
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
 		{
-			var db = MongoConnection.Default.GetProjectDatabase(project);
+			var db = connection.GetProjectDatabase(project);
 			var collection = db.GetCollection<LfLexEntry>("lexicon");
 			IAsyncCursor<LfLexEntry> result2 = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
 			return result2.AsEnumerable();
@@ -101,7 +111,7 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
 		{
-			MongoProjectRecord projectRecord = MongoProjectRecord.Create(project);
+			MongoProjectRecord projectRecord = projectRecordFactory.Create(project);
 			if (projectRecord == null)
 			{
 				Console.WriteLine("No project named {0}", project.LfProjectCode);

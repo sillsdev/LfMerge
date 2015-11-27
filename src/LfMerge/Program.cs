@@ -8,6 +8,7 @@ using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
+using LfMerge.Actions;
 using System.Threading;
 using System.Collections.Generic;
 
@@ -25,6 +26,8 @@ namespace LfMerge
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
+			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
+			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
@@ -38,6 +41,7 @@ namespace LfMerge
 				return;
 
 			Container = RegisterTypes().Build();
+			// TODO: Get these from config instead of hard-coding
 			//string hardCodedBaseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			string hardCodedMongoDbHostName = "languageforge.local";
 			//LfMergeSettings.Initialize(hardCodedBaseDir);
@@ -49,7 +53,7 @@ namespace LfMerge
 				// TODO: Move this testing code where it belongs
 				var localProjectCode = "TestLangProj";
 				var thisProject = LanguageForgeProject.Create(localProjectCode);
-				var foo = new Actions.UpdateFdoFromMongoDbAction();
+				var foo = Container.ResolveKeyed<IAction>(ActionNames.UpdateFdoFromMongoDb);
 				foo.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

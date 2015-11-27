@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using Autofac;
 using MongoDB.Driver;
 // using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -13,21 +14,19 @@ using LfMerge.LanguageForge.Config;
 
 namespace LfMerge
 {
-	public class MongoConnection
+	public class MongoConnection : IMongoConnection
 	{
 		private string connectionString;
+		private Lazy<IMongoClient> client;
 
-		// TODO: Do we need a singleton? My gut says no, and that we should remove this. 2015-10 RM
-		// OTOH, it's useful to say MongoConnection.Default.GetConnection() everywhere... 2015-10 RM
-		public static MongoConnection Default { get; private set; }
-
-		// TODO: Get this from config instead of hard-coding
+		// TODO: Get these from config instead of hard-coding
 		public static string MainDatabaseName = "scriptureforge";
+		public static string HostName = "localhost";
 
-		public static void Initialize(string hostName = "localhost") {
-			// TODO: This isn't currently thread-safe. Should wrap the whole thing in a lock, just in case we want to use threads later on.
-			if (Default != null)
-				return;
+		public static void Initialize(string hostName = null, string mainDatabaseName = null)
+		{
+			if (hostName != null) HostName = hostName;
+			if (mainDatabaseName != null) MainDatabaseName = mainDatabaseName;
 
 			// Serialize Boolean values permissively
 			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
@@ -35,30 +34,30 @@ namespace LfMerge
 			// Use CamelCaseName conversions between Mongo and our mapping classes
 			var pack = new ConventionPack();
 			pack.Add(new CamelCaseElementNameConvention());
-
 			ConventionRegistry.Register(
 				"My Custom Conventions",
 				pack,
 				t => t.FullName.StartsWith("LfMerge."));
+
 			// Register class mappings before opening first connection
 			var registrar = new MongoRegistrarForLfConfig();
 			registrar.RegisterClassMappings();
-			// TODO: Should we register them manually here instead? Think about it.
-			Default = new MongoConnection(hostName);
 		}
 
-		public MongoConnection(string hostName = "localhost")
+		public MongoConnection(string hostName = null)
 		{
+			if (hostName == null) hostName = HostName;
 			connectionString = String.Format("mongodb://{0}", hostName);
+			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
 
-		public MongoClient GetConnection()
+		public MongoClient GetNewConnection()
 		{
 			return new MongoClient(connectionString);
 		}
 
 		public IMongoDatabase GetDatabase(string databaseName) {
-			return GetConnection().GetDatabase(databaseName);
+			return client.Value.GetDatabase(databaseName);
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project) {
