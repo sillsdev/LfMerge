@@ -21,11 +21,11 @@ namespace LfMerge
 
 		// TODO: Get these from config instead of hard-coding
 		public static string MainDatabaseName = "scriptureforge";
-		public static string HostName = "localhost";
+		public static string HostNameAndPort = "localhost:27017";
 
 		public static void Initialize(string hostName = null, string mainDatabaseName = null)
 		{
-			if (hostName != null) HostName = hostName;
+			if (hostName != null) HostNameAndPort = hostName;
 			if (mainDatabaseName != null) MainDatabaseName = mainDatabaseName;
 
 			// Serialize Boolean values permissively
@@ -44,10 +44,10 @@ namespace LfMerge
 			registrar.RegisterClassMappings();
 		}
 
-		public MongoConnection(string hostName = null)
+		public MongoConnection(string hostNameAndPort = null)
 		{
-			if (hostName == null) hostName = HostName;
-			connectionString = String.Format("mongodb://{0}", hostName);
+			if (hostNameAndPort == null) hostNameAndPort = HostNameAndPort;
+			connectionString = String.Format("mongodb://{0}", hostNameAndPort);
 			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
 

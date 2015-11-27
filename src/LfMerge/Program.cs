@@ -41,15 +41,11 @@ namespace LfMerge
 				return;
 
 			Container = RegisterTypes().Build();
-			// TODO: Get these from config instead of hard-coding
-			//string hardCodedBaseDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
-			string hardCodedMongoDbHostName = "languageforge.local";
-			//LfMergeSettings.Initialize(hardCodedBaseDir);
-			MongoConnection.Initialize(hardCodedMongoDbHostName);
 
 			try
 			{
 				LfMergeSettings.LoadSettings();
+				MongoConnection.Initialize(LfMergeSettings.Current.MongoDbHostNameAndPort);
 				// TODO: Move this testing code where it belongs
 				var localProjectCode = "TestLangProj";
 				var thisProject = LanguageForgeProject.Create(localProjectCode);
