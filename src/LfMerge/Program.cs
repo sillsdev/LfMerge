@@ -49,7 +49,7 @@ namespace LfMerge
 				// TODO: Move this testing code where it belongs
 				var localProjectCode = "TestLangProj";
 				var thisProject = LanguageForgeProject.Create(localProjectCode);
-				var foo = Container.ResolveKeyed<IAction>(ActionNames.UpdateFdoFromMongoDb);
+				var foo = Container.ResolveKeyed<IAction>(ActionNames.UpdateMongoDbFromFdo);
 				foo.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

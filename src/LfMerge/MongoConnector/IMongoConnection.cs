@@ -11,6 +11,7 @@ namespace LfMerge
 		IMongoDatabase GetDatabase(string databaseName);
 		IMongoDatabase GetProjectDatabase(ILfProject project);
 		IMongoDatabase GetMainDatabase(); // TODO: Maybe remove this one?
+		UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc);
 	}
 }
 

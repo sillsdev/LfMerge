@@ -67,6 +67,26 @@ namespace LfMerge
 		public IMongoDatabase GetMainDatabase() {
 			return GetDatabase(MainDatabaseName);
 		}
+
+		public UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
+			var builder = Builders<TDocument>.Update;
+			UpdateDefinition<TDocument> update = null;
+			foreach (PropertyInfo prop in typeof(TDocument).GetProperties())
+			{
+				if (prop.PropertyType == typeof(MongoDB.Bson.ObjectId))
+					continue; // Mongo doesn't allow changing Mongo IDs
+				//if (prop.GetValue(doc) == null) continue; // Maybe we *do* want null/empty values persisted... TODO: Think about it.
+				if (update == null)
+				{
+					update = builder.Set(prop.Name, prop.GetValue(doc));
+				}
+				else
+				{
+					update = update.Set(prop.Name, prop.GetValue(doc));
+				}
+			}
+			return update;
+		}
 	}
 }
 

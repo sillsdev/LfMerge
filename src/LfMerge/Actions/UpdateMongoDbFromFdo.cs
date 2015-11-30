@@ -8,6 +8,7 @@ using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.DataConverters;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
@@ -27,6 +28,12 @@ namespace LfMerge.Actions
 		private IFdoServiceLocator servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private CustomFieldConverter converter;
+		private IMongoConnection connection;
+
+		public UpdateMongoDbFromFdo(IMongoConnection conn)
+		{
+			connection = conn;
+		}
 
 		//private List<int> customFieldIds;
 
@@ -63,11 +70,24 @@ namespace LfMerge.Actions
 			}
 			converter = new CustomFieldConverter(cache);
 
+			IMongoDatabase mongoDb = connection.GetProjectDatabase(project);
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
 				Console.WriteLine("Populated LfEntry {0}", lfEntry.Guid);
 				// TODO: Write the lfEntry into Mongo in the right place
+				// TODO: Move this "update this document in this MongoDB collection" code to somewhere where it belongs, like on MongoConnection
+				var filterBuilder = new FilterDefinitionBuilder<LfLexEntry>();
+				var fb = Builders<LfLexEntry>.Filter;
+				var update = connection.BuildUpdate<LfLexEntry>(lfEntry);
+				var filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
+				var collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
+				Console.WriteLine("About to save LfEntry {0} which has morphologyType {1}", lfEntry.Guid, lfEntry.MorphologyType);
+				//var result = collection.FindOneAndReplaceAsync(filter, lfEntry).Result;
+				Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+				Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+				//var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // NOTE: Throwing away result on purpose.
+				Console.WriteLine("Done saving LfEntry {0} into Mongo DB {1}", lfEntry.Guid, mongoDb.DatabaseNamespace.DatabaseName);
 			}
 		}
 

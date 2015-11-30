@@ -98,6 +98,7 @@ namespace LfMerge.Actions
 					ILexEntry fdoEntry = LfLexEntryToFdoLexEntry(lfEntry);
 					#pragma warning restore 0219
 				}
+				// TODO: Use cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
 			});
 		}
 
