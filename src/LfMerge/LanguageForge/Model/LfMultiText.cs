@@ -12,6 +12,8 @@ namespace LfMerge.LanguageForge.Model
 {
 	public class LfMultiText : Dictionary<string, LfStringField> // Note: NOT derived from LfFieldBase
 	{
+		public bool IsEmpty { get { return Count <= 0; } }
+
 		public static LfMultiText FromFdoMultiString(IMultiAccessorBase other, IWritingSystemManager wsManager)
 		{
 			LfMultiText newInstance = new LfMultiText();

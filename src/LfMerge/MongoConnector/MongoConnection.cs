@@ -76,7 +76,8 @@ namespace LfMerge
 			{
 				if (prop.PropertyType == typeof(MongoDB.Bson.ObjectId))
 					continue; // Mongo doesn't allow changing Mongo IDs
-				//if (prop.GetValue(doc) == null) continue; // Maybe we *do* want null/empty values persisted... TODO: Think about it.
+				if (prop.GetValue(doc) == null)
+					continue; // Don't persist empty or null values
 				switch (prop.PropertyType.Name)
 				{
 				case "BsonDocument":
@@ -91,12 +92,18 @@ namespace LfMerge
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));
 					break;
 				case "LfMultiText":
+					if (((LfMultiText)prop.GetValue(doc)).IsEmpty)
+						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfMultiText)prop.GetValue(doc)));
 					break;
 				case "LfStringArrayField":
+					if (((LfStringArrayField)prop.GetValue(doc)).IsEmpty)
+						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfStringArrayField)prop.GetValue(doc)));
 					break;
 				case "LfStringField":
+					if (((LfStringField)prop.GetValue(doc)).IsEmpty)
+						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfStringField)prop.GetValue(doc)));
 					break;
 				case "List`1":

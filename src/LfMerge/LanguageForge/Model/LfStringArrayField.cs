@@ -12,6 +12,8 @@ namespace LfMerge.LanguageForge.Model
 	{
 		public List<string> Values { get; set; }
 
+		public bool IsEmpty { get { return Values.Count <= 0; } }
+
 		public LfStringArrayField()
 		{
 			Values = new List<string>();

@@ -8,6 +8,8 @@ namespace LfMerge.LanguageForge.Model
 	{
 		public string Value { get; set; }
 
+		public bool IsEmpty { get { return String.IsNullOrEmpty(Value); } }
+
 		public override string ToString()
 		{
 			return Value;
