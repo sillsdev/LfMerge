@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization;
 
 namespace LfMerge.LanguageForge.Config
 {
-	public class MongoRegistrarForLfConfig : MongoRegistrar
+	public class MongoRegistrarForLfConfig : LfMerge.MongoRegistrar
 	{
 		public MongoRegistrarForLfConfig() :
 			base(new LfConfigFieldTypeMapper())

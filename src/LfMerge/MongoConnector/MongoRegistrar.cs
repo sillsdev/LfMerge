@@ -4,11 +4,12 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using LfMerge.LanguageForge.Config;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 
-namespace LfMerge.LanguageForge.Config
+namespace LfMerge
 {
 	public class MongoRegistrar
 	{
@@ -34,7 +35,7 @@ namespace LfMerge.LanguageForge.Config
 		{
 			BsonClassMap cm = new BsonClassMap(type);
 			cm.AutoMap();
-			cm.SetIgnoreExtraElements(true); // Let's see if this is the default
+			//cm.SetIgnoreExtraElements(true); // Let's see if this is the default
 			BsonClassMap.RegisterClassMap(cm);
 			//BsonSerializer.RegisterDiscriminatorConvention(type, new ScalarDiscriminatorConvention("type"));
 		}
@@ -57,7 +58,7 @@ namespace LfMerge.LanguageForge.Config
 			// Current idea is to have an ExtraRegistrationSteps function that does extra steps based on
 			// what the type is, and derived classes like MongoRegistrarForLfConfig can override that function.
 			BsonSerializer.RegisterDiscriminatorConvention(baseClass, new ScalarDiscriminatorConvention("type"));
-			foreach (Type type in 
+			foreach (Type type in
 				Assembly.GetAssembly(baseClass).GetTypes()
 				.Where(thisType => thisType.IsClass && !thisType.IsAbstract && thisType.IsSubclassOf(baseClass)))
 			{
@@ -68,4 +69,3 @@ namespace LfMerge.LanguageForge.Config
 
 	}
 }
-

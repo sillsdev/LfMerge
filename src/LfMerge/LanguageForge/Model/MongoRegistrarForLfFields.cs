@@ -6,7 +6,7 @@ using LfMerge.LanguageForge.Config;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class MongoRegistrarForLfFields : MongoRegistrar
+	public class MongoRegistrarForLfFields : LfMerge.MongoRegistrar
 	{
 		public MongoRegistrarForLfFields() :
 		base(new LfConfigFieldTypeMapper())
