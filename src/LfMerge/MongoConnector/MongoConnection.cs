@@ -6,11 +6,12 @@ using System.Linq;
 using System.Collections.Generic;
 using Autofac;
 using MongoDB.Driver;
-// using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Model;
 
 namespace LfMerge
 {
@@ -70,22 +71,56 @@ namespace LfMerge
 
 		public UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
 			var builder = Builders<TDocument>.Update;
-			UpdateDefinition<TDocument> update = null;
+			var updates = new List<UpdateDefinition<TDocument>>();
 			foreach (PropertyInfo prop in typeof(TDocument).GetProperties())
 			{
 				if (prop.PropertyType == typeof(MongoDB.Bson.ObjectId))
 					continue; // Mongo doesn't allow changing Mongo IDs
 				//if (prop.GetValue(doc) == null) continue; // Maybe we *do* want null/empty values persisted... TODO: Think about it.
-				if (update == null)
+				switch (prop.PropertyType.Name)
 				{
-					update = builder.Set(prop.Name, prop.GetValue(doc));
-				}
-				else
-				{
-					update = update.Set(prop.Name, prop.GetValue(doc));
+				case "BsonDocument":
+					updates.Add(builder.Set(prop.Name, (BsonDocument)prop.GetValue(doc)));
+					break;
+				case "Guid":
+					if ((Guid)prop.GetValue(doc) == Guid.Empty)
+						continue; // Don't persist empty or null values
+					updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc)).ToString()));
+					break;
+				case "LfAuthorInfo":
+					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));
+					break;
+				case "LfMultiText":
+					updates.Add(builder.Set(prop.Name, (LfMultiText)prop.GetValue(doc)));
+					break;
+				case "LfStringArrayField":
+					updates.Add(builder.Set(prop.Name, (LfStringArrayField)prop.GetValue(doc)));
+					break;
+				case "LfStringField":
+					updates.Add(builder.Set(prop.Name, (LfStringField)prop.GetValue(doc)));
+					break;
+				case "List`1":
+					//Console.WriteLine("List of what? Apparently, {0}", prop.PropertyType.GenericTypeArguments[0].Name);
+					switch (prop.PropertyType.GenericTypeArguments[0].Name)
+					{
+					case "LfSense":
+						updates.Add(builder.Set(prop.Name, (List<LfSense>)prop.GetValue(doc)));
+						break;
+					case "LfExample":
+						updates.Add(builder.Set(prop.Name, (List<LfExample>)prop.GetValue(doc)));
+						break;
+					case "LfPicture":
+						updates.Add(builder.Set(prop.Name, (List<LfPicture>)prop.GetValue(doc)));
+						break;
+					}
+					break;
+				default:
+					//Console.WriteLine("Unknown type {0}", prop.PropertyType.Name);
+					updates.Add(builder.Set(prop.Name, prop.GetValue(doc)));
+					break;
 				}
 			}
-			return update;
+			return builder.Combine(updates);
 		}
 	}
 }
