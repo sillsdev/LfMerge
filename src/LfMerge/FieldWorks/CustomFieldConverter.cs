@@ -152,7 +152,7 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.MultiUnicode:
 				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
 				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
-				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsStringDictionary());
+				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsBsonDocument());
 				// No need to save GUIDs for multistrings
 				break;
 

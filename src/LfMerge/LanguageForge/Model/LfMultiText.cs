@@ -60,6 +60,16 @@ namespace LfMerge.LanguageForge.Model
 			return result;
 		}
 
+		public BsonDocument AsBsonDocument()
+		{
+			BsonDocument result = new BsonDocument();
+			foreach (KeyValuePair<string, LfStringField> kv in this)
+			{
+				result.Add(kv.Key, new BsonDocument(kv.Value.AsDictionary()));
+			}
+			return result;
+		}
+
 		public string FirstNonEmptyString()
 		{
 			return this.AsStringDictionary().Values.Where(str => !String.IsNullOrEmpty(str)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
