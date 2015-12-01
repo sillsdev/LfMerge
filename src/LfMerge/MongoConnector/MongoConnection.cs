@@ -103,35 +103,12 @@ namespace LfMerge
 					switch (prop.PropertyType.GenericTypeArguments[0].Name)
 					{
 					case "LfSense":
-						var senses = (List<LfSense>)prop.GetValue(doc);
-						foreach (LfSense sense in senses)
-						{
-							var subUpdate = BuildUpdate(sense);
-							// TODO: Now run through the subUpdate to turn it into an appropriate subdocument update
-							// See http://stackoverflow.com/a/13779557/2314532 for a good example of subdocument updates
-							var collection = GetMainDatabase().GetCollection<LfSense>("lexicon");
-							Console.WriteLine("Built a sense subupdate: {0}", subUpdate.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-						}
 						updates.Add(builder.Set(prop.Name, (List<LfSense>)prop.GetValue(doc)));
 						break;
 					case "LfExample":
-						var examples = (List<LfExample>)prop.GetValue(doc);
-						foreach (LfExample example in examples)
-						{
-							var subUpdate = BuildUpdate(example);
-							var collection = GetMainDatabase().GetCollection<LfExample>("lexicon");
-							Console.WriteLine("Built an example subupdate: {0}", subUpdate.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-						}
 						updates.Add(builder.Set(prop.Name, (List<LfExample>)prop.GetValue(doc)));
 						break;
 					case "LfPicture":
-						var pictures = (List<LfPicture>)prop.GetValue(doc);
-						foreach (LfPicture picture in pictures)
-						{
-							var subUpdate = BuildUpdate(picture);
-							var collection = GetMainDatabase().GetCollection<LfPicture>("lexicon");
-							Console.WriteLine("Built a picture subupdate: {0}", subUpdate.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-						}
 						updates.Add(builder.Set(prop.Name, (List<LfPicture>)prop.GetValue(doc)));
 						break;
 					default:
