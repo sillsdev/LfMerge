@@ -8,6 +8,7 @@ using Autofac;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
 
 using LfMerge.LanguageForge.Config;
@@ -76,6 +77,8 @@ namespace LfMerge
 			{
 				if (prop.PropertyType == typeof(MongoDB.Bson.ObjectId))
 					continue; // Mongo doesn't allow changing Mongo IDs
+				if (prop.GetCustomAttributes<BsonElementAttribute>().Any(attr => attr.ElementName == "id"))
+					continue; // Don't change Languageforge-internal IDs either
 				switch (prop.PropertyType.Name)
 				{
 				case "BsonDocument":
