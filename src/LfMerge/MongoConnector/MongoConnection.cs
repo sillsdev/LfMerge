@@ -76,38 +76,27 @@ namespace LfMerge
 			{
 				if (prop.PropertyType == typeof(MongoDB.Bson.ObjectId))
 					continue; // Mongo doesn't allow changing Mongo IDs
-				if (prop.GetValue(doc) == null)
-					continue; // Don't persist empty or null values
 				switch (prop.PropertyType.Name)
 				{
 				case "BsonDocument":
 					updates.Add(builder.Set(prop.Name, (BsonDocument)prop.GetValue(doc)));
 					break;
 				case "Guid":
-					if ((Guid)prop.GetValue(doc) == Guid.Empty)
-						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc))));
 					break;
 				case "LfAuthorInfo":
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));
 					break;
 				case "LfMultiText":
-					if (((LfMultiText)prop.GetValue(doc)).IsEmpty)
-						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfMultiText)prop.GetValue(doc)));
 					break;
 				case "LfStringArrayField":
-					if (((LfStringArrayField)prop.GetValue(doc)).IsEmpty)
-						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfStringArrayField)prop.GetValue(doc)));
 					break;
 				case "LfStringField":
-					if (((LfStringField)prop.GetValue(doc)).IsEmpty)
-						continue; // Don't persist empty or null values
 					updates.Add(builder.Set(prop.Name, (LfStringField)prop.GetValue(doc)));
 					break;
 				case "List`1":
-					//Console.WriteLine("List of what? Apparently, {0}", prop.PropertyType.GenericTypeArguments[0].Name);
 					switch (prop.PropertyType.GenericTypeArguments[0].Name)
 					{
 					case "LfSense":
@@ -122,7 +111,6 @@ namespace LfMerge
 					}
 					break;
 				default:
-					//Console.WriteLine("Unknown type {0}", prop.PropertyType.Name);
 					updates.Add(builder.Set(prop.Name, prop.GetValue(doc)));
 					break;
 				}
