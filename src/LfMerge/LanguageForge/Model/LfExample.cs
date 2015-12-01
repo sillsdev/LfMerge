@@ -20,6 +20,8 @@ namespace LfMerge.LanguageForge.Model
 		public LfAuthorInfo AuthorInfo { get; set; }
 		public LfMultiText Sentence { get; set; }
 		public LfMultiText Translation { get; set; }
+		[BsonRepresentation(BsonType.String)]
+		public Guid TranslationGuid { get; set; }
 		public LfMultiText Reference { get; set; }
 		public LfStringArrayField ExamplePublishIn { get; set; }
 		public BsonDocument CustomFields { get; set; }

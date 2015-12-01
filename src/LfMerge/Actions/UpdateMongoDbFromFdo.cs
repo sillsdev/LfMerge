@@ -265,7 +265,18 @@ namespace LfMerge.Actions
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
-			// fdoExample.TranslationsOC;
+
+			// NOTE: Currently, LanguageForge only stores one translation per example, whereas FDO can store
+			// multiple translations with (possibly) different statuses (as freeform strings, like "old", "updated",
+			// "needs fixing"...). Until LanguageForge acquires a data model where translations are stored in a list,
+			// we will save only the first translation (if any) to Mongo. We also save the GUID so that the Mongo->FDO
+			// direction will know which ICmTranslation object to update with any changes.
+			// TODO: Once LF improves its data model for translations, persist all of them instead of just the first.
+			foreach (ICmTranslation translation in fdoExample.TranslationsOC.Take(1))
+			{
+				result.Translation = ToMultiText(translation.Translation);
+				result.TranslationGuid = translation.Guid;
+			}
 
 			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoExample, "examples");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
