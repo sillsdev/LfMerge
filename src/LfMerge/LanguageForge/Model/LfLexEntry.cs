@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
@@ -11,6 +12,7 @@ namespace LfMerge.LanguageForge.Model
 		// Metadata properties
 		public ObjectId Id { get; set; }
 		public string LiftId { get; set; } // TODO Investigate why this seems to not be modeled in LF PHP code... should it be?
+		[BsonRepresentation(BsonType.String)]
 		public Guid Guid { get; set; }
 		public bool IsDeleted { get; set; }
 		public string MercurialSha { get; set; }
@@ -37,6 +39,7 @@ namespace LfMerge.LanguageForge.Model
 		public string MorphologyType { get; set; }
 		public LfMultiText Note { get; set; }
 		public LfMultiText Pronunciation { get; set; }
+		[BsonRepresentation(BsonType.String)]
 		public Guid PronunciationGuid { get; set; }
 		public LfMultiText SummaryDefinition { get; set; }
 		public LfMultiText Tone { get; set; }

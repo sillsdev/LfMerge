@@ -301,7 +301,9 @@ namespace LfMerge.Actions
 
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
-			Guid guid = GuidFromLiftId(lfExample.LiftId);
+			Guid guid = lfExample.Guid;
+			if (guid == Guid.Empty)
+				guid = GuidFromLiftId(lfExample.LiftId);
 			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid, owner);
 			// Ignoring lfExample.AuthorInfo.CreatedDate;
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
@@ -335,7 +337,9 @@ namespace LfMerge.Actions
 
 		private ILexSense LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
 		{
-			Guid guid = GuidFromLiftId(lfSense.LiftId);
+			Guid guid = lfSense.Guid;
+			if (guid == Guid.Empty)
+				guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
 			// TODO: Set instance fields
 

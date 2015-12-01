@@ -86,7 +86,7 @@ namespace LfMerge
 				case "Guid":
 					if ((Guid)prop.GetValue(doc) == Guid.Empty)
 						continue; // Don't persist empty or null values
-					updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc)).ToString()));
+					updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc))));
 					break;
 				case "LfAuthorInfo":
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));

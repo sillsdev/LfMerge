@@ -126,15 +126,14 @@ namespace LfMerge.Actions
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
-			lfSense.SenseId = fdoSense.Id.ToString(); // TODO: Is this right? This doesn't quite feel right.
-
+			lfSense.Guid = fdoSense.Guid;
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
 
 			DebugOut("Gloss", lfSense.Gloss);
 			DebugOut("Definition", lfSense.Definition);
 
-			// Fields below in alphabetical order by ILexSense property, except for Gloss and Definition
+			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
 			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
 			lfSense.AnthropologyNote = ToMultiText(fdoSense.AnthroNote);
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
@@ -385,7 +384,6 @@ namespace LfMerge.Actions
 			Console.WriteLine(lfEntry.CustomFields);
 			Console.WriteLine("Custom field GUIDs for this entry:");
 			Console.WriteLine(lfEntry.CustomFieldGuids);
-
 
 			return lfEntry;
 
