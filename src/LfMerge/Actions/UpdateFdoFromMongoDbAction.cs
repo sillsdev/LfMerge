@@ -367,7 +367,6 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
-			// lfSense.MorphologyType; // TODO: This is complex in FDO. Handle it.
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
 			foreach (LfPicture lfPicture in lfSense.Pictures)

@@ -36,7 +36,6 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText PhonologyNote { get; set; }
 		public LfMultiText SenseRestrictions { get; set; }
 		public LfMultiText SemanticsNote { get; set; }
-		public string MorphologyType { get; set; }
 		public LfMultiText SociolinguisticsNote { get; set; }
 		public LfMultiText Source { get; set; }
 		public LfMultiText SenseImportResidue { get; set; }
