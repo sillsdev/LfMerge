@@ -8,6 +8,7 @@ using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
+using SIL.IO.FileLock;
 
 namespace LfMerge
 {
@@ -37,8 +38,15 @@ namespace LfMerge
 
 			Container = RegisterTypes().Build();
 
+			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
 			try
 			{
+				if (!fileLock.TryAcquireLock())
+				{
+					Console.WriteLine("Can't acquire file lock - is another instance running?");
+					return;
+				}
+
 				LfMergeSettings.LoadSettings();
 
 				for (var queue = Queue.FirstQueueWithWork;
@@ -62,6 +70,9 @@ namespace LfMerge
 			}
 			finally
 			{
+				if (fileLock != null)
+					fileLock.ReleaseLock();
+
 				Container.Dispose();
 			}
 		}
