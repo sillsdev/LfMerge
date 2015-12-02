@@ -29,7 +29,7 @@ namespace LfMerge.LanguageForge.Model
 		public LfMultiText CvPattern { get; set; }
 		public LfMultiText EntryBibliography { get; set; }
 		public LfMultiText EntryRestrictions { get; set; }
-		public BsonDocument Environments { get; set; }
+		public LfStringArrayField Environments { get; set; }
 		public LfMultiText Etymology { get; set; }
 		public LfMultiText EtymologyGloss { get; set; }
 		public LfMultiText EtymologyComment { get; set; }
