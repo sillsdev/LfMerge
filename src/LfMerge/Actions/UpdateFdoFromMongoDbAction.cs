@@ -388,7 +388,8 @@ namespace LfMerge.Actions
 			fdoSense.ImportResidue = BestStringFromMultiText(lfSense.SenseImportResidue);
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
-			// fdoSense.SenseTypeRA = lfSense.SenseType; // TODO: More complex than that. Handle it correctly.
+			fdoSense.SenseTypeRA = new PossibilityListConverter(cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
+
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.

@@ -172,6 +172,8 @@ namespace LfMerge.Actions
 
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
+			if (fdoSense.SenseTypeRA != null)
+				lfSense.SenseType = LfStringField.FromString(fdoSense.SenseTypeRA.NameHierarchyString);
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
@@ -224,7 +226,6 @@ namespace LfMerge.Actions
 			fdoSense.ComplexFormEntries;
 			fdoSense.ComplexFormsNotSubentries;
 			fdoSense.DoNotPublishInRC;
-			fdoSense.SenseTypeRA;
 			fdoSense.Subentries;
 			fdoSense.ThesaurusItemsRC;
 			fdoSense.MorphoSyntaxAnalysisRA;

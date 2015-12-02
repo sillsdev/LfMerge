@@ -41,6 +41,12 @@ namespace LfMerge.DataConverters
 			return null;
 		}
 
+		public ICmPossibility GetByName(LfStringField nameField)
+		{
+			if (nameField == null) return null;
+			return GetByName(nameField.ToString());
+		}
+
 		/// <summary>
 		/// Updates a possibility collection from an LfStringArray.
 		/// The LfStringArray should contain keys from the ICmPossibilityList passed to this instance's constructor.
