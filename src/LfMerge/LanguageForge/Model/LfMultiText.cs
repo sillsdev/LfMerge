@@ -50,6 +50,14 @@ namespace LfMerge.LanguageForge.Model
 			return new LfMultiText { { key, new LfStringField { Value = value.Text } } };
 		}
 
+		public static LfMultiText FromSingleITsString(ITsString value, IWritingSystemManager wsm)
+		{
+			if (value == null || value.Text == null) return null;
+			int wsId = value.get_WritingSystem(0);
+			string wsStr = wsm.GetStrFromWs(wsId);
+			return new LfMultiText { { wsStr, new LfStringField { Value = value.Text } } };
+		}
+
 		public Dictionary<string, string> AsStringDictionary()
 		{
 			Dictionary<string, string> result = new Dictionary<string, string>();

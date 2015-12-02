@@ -170,6 +170,11 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.ReferenceAtomic:
 				int ownedHvo = data.get_ObjectProp(hvo, flid);
 				fieldValue = GetCustomReferencedObject(ownedHvo, flid, ref dataGuids);
+				if (fieldValue != null && fieldType == CellarPropertyType.ReferenceAtomic)
+				{
+					// Single CmPossiblity reference - LF expects format like { "value": "name of possibility" }
+					fieldValue = new BsonDocument("value", fieldValue);
+				}
 				fieldGuid = new BsonString(dataGuids.FirstOrDefault().ToString());
 				break;
 
@@ -178,7 +183,8 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.ReferenceCollection:
 			case CellarPropertyType.ReferenceSequence:
 				int[] listHvos = data.VecProp(hvo, flid);
-				fieldValue = new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid, ref dataGuids)).Where(x => x != null));
+				var innerValues = new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid, ref dataGuids)).Where(x => x != null));
+				fieldValue = new BsonDocument("values", innerValues);
 				fieldGuid = new BsonArray(dataGuids.Select(guid => guid.ToString()));
 				break;
 
@@ -187,7 +193,7 @@ namespace LfMerge.FieldWorks
 				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					fieldValue = null;
 				else
-					fieldValue = new BsonString(iTsValue.Text);
+					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
 				break;
 
 			case CellarPropertyType.Unicode:
@@ -222,7 +228,7 @@ namespace LfMerge.FieldWorks
 			int fieldWs = cache.MetaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
 			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?
-			return new BsonDocument(wsStr, new BsonString(String.Join("", htmlParas)));
+			return new BsonDocument(wsStr, new BsonDocument("value", new BsonString(String.Join("", htmlParas))));
 		}
 
 		private BsonValue GetCustomListValues(ICmPossibility obj, int flid)
