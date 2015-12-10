@@ -144,7 +144,6 @@
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\IMongoConnection.cs" />
     <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
-    <Compile Include="LanguageForge\Model\CustomMongoSerializerForGuid.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets')" />

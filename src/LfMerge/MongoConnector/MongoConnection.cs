@@ -16,7 +16,7 @@ using LfMerge.LanguageForge.Model;
 
 namespace LfMerge
 {
-	public class MongoConnection : IMongoConnection, IStartable
+	public class MongoConnection : IMongoConnection
 	{
 		private string connectionString;
 		private Lazy<IMongoClient> client;
@@ -32,7 +32,6 @@ namespace LfMerge
 
 			// Serialize Boolean values permissively
 			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
-			BsonSerializer.RegisterSerializationProvider(new GuidSerializationProvider());
 
 			// Use CamelCaseName conversions between Mongo and our mapping classes
 			var pack = new ConventionPack();
@@ -45,11 +44,6 @@ namespace LfMerge
 			// Register class mappings before opening first connection
 			new MongoRegistrarForLfConfig().RegisterClassMappings();
 			//new MongoRegistrarForLfFields().RegisterClassMappings();
-		}
-
-		void IStartable.Start()
-		{
-			Initialize();
 		}
 
 		public static void SetDefaultParameters(string hostName = null, string mainDatabaseName = null)
