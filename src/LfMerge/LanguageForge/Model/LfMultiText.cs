@@ -83,6 +83,11 @@ namespace LfMerge.LanguageForge.Model
 			return this.AsStringDictionary().Values.Where(str => !String.IsNullOrEmpty(str)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
 		}
 
+		public LfStringField FirstNonEmptyStringField()
+		{
+			return this.Values.Where(strFld => !String.IsNullOrEmpty(strFld.Value)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+		}
+
 		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(FdoCache cache)
 		{
 			KeyValuePair<string, string> kv = this.FirstNonEmptyKeyValue();

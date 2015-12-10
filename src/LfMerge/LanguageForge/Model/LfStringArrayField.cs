@@ -49,6 +49,24 @@ namespace LfMerge.LanguageForge.Model
 				possibilities.Select(multiString => multiString.Abbreviation));
 		}
 
+		public static LfStringArrayField FromPossibilityNames(IEnumerable<ICmPossibility> possibilities)
+		{
+			return LfStringArrayField.FromBestAnalysisVernaculars(
+				possibilities.Select(multiString => multiString.Name));
+		}
+
+		public static LfStringArrayField FromPossibilityAbbrevHierarchies(IEnumerable<ICmPossibility> possibilities)
+		{
+			return LfStringArrayField.FromStrings(
+				possibilities.Select(multiString => multiString.AbbrevHierarchyString));
+		}
+
+		public static LfStringArrayField FromPossibilityNameHierarchies(IEnumerable<ICmPossibility> possibilities)
+		{
+			return LfStringArrayField.FromStrings(
+				possibilities.Select(multiString => multiString.NameHierarchyString));
+		}
+
 		public static LfStringArrayField FromSinglePossibilityAbbrev(ICmPossibility possibility)
 		{
 			if (possibility == null) return null;

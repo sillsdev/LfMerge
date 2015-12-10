@@ -30,6 +30,7 @@ namespace LfMerge.Actions
 		private ICmPictureRepository pictureRepo;
 		private ILexPronunciationRepository pronunciationRepo;
 		private ILexSenseRepository senseRepo;
+		private IPartOfSpeechRepository posRepo;
 		private ILexEntryFactory entryFactory;
 		private ILexExampleSentenceFactory exampleFactory;
 		private ICmPictureFactory pictureFactory;
@@ -82,6 +83,7 @@ namespace LfMerge.Actions
 			exampleRepo = servLoc.GetInstance<ILexExampleSentenceRepository>();
 			pictureRepo = servLoc.GetInstance<ICmPictureRepository>();
 			pronunciationRepo = servLoc.GetInstance<ILexPronunciationRepository>();
+			posRepo = servLoc.GetInstance<IPartOfSpeechRepository>();
 			senseRepo = servLoc.GetInstance<ILexSenseRepository>();
 			entryFactory = servLoc.GetInstance<ILexEntryFactory>();
 			exampleFactory = servLoc.GetInstance<ILexExampleSentenceFactory>();
@@ -368,7 +370,16 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
-			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: More complex than that. Handle it correctly.
+			if (lfSense.PartOfSpeech != null)
+			{
+				IPartOfSpeech pos = PartOfSpeechConverter.FromName(lfSense.PartOfSpeech.ToString(), posRepo);
+				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
+				{
+					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
+					Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos.AbbrAndName);
+				}
+			}
+			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
 			foreach (LfPicture lfPicture in lfSense.Pictures)
 			{

@@ -145,6 +145,16 @@ namespace LfMerge.Actions
 			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
 			lfSense.GrammarNote = ToMultiText(fdoSense.GrammarNote);
 			lfSense.LiftId = fdoSense.LIFTid;
+			if (fdoSense.MorphoSyntaxAnalysisRA != null)
+			{
+				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA);
+				if (pos == null)
+					lfSense.PartOfSpeech = null;
+				else
+					lfSense.PartOfSpeech = LfStringField.FromString(pos.NameHierarchyString);
+					// Or: lfSense.PartOfSpeech = LfStringField.FromString(pos.Name.BestAnalysisVernacularAlternative.Text);
+				// TODO: Should we add a PartOfSpeech GUID here? Or the GUID of the MSA? Think about it.
+			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
 				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(picture => FdoPictureToLfPicture(picture)));
@@ -227,7 +237,6 @@ namespace LfMerge.Actions
 			fdoSense.DoNotPublishInRC;
 			fdoSense.Subentries;
 			fdoSense.ThesaurusItemsRC;
-			fdoSense.MorphoSyntaxAnalysisRA;
 			fdoSense.LiftResidue;
 			fdoSense.LexSenseOutline;
 			*/
@@ -359,8 +368,7 @@ namespace LfMerge.Actions
 			lfEntry.LiftId = fdoEntry.LIFTid;
 			lfEntry.LiteralMeaning = ToMultiText(fdoEntry.LiteralMeaning);
 			if (fdoEntry.PrimaryMorphType != null) {
-				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.Name.BestAnalysisVernacularAlternative.Text; // TODO: What if there are nulls in that long string of property accessors?
-				Console.WriteLine("Morphology type for {0} was {1}", fdoEntry.Guid, lfEntry.MorphologyType);
+				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.NameHierarchyString;
 			}
 			// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert all of the. E.g.,
 			//foreach (ILexPronunciation fdoPronunciation in fdoEntry.PronunciationsOS) { ... }
