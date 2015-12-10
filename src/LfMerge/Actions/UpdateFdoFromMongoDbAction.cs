@@ -162,8 +162,9 @@ namespace LfMerge.Actions
 				if (fdoEntry.CanDelete)
 					fdoEntry.Delete();
 				else
-					// TODO: Figure out how to handle this situation
-					Console.WriteLine("Problem: need to delete an FDO entry, but its CanDelete flag is false.");
+					// TODO: Log this properly
+					Console.WriteLine("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.", fdoEntry.Guid);
+				return null; // Don't set fields on a deleted entry
 			}
 			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value));
 			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
@@ -388,7 +389,6 @@ namespace LfMerge.Actions
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
 			fdoSense.SenseTypeRA = new PossibilityListConverter(cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
-
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
