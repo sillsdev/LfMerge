@@ -15,8 +15,10 @@ namespace LfMerge.LanguageForge.Model
 
 		public override void RegisterClassMappings()
 		{
-			// TODO: Actually not used. Can probably get rid of this class and just use automapping for LfFields.
-			RegisterClassMapsForDerivedClassesOf(typeof(LfFieldBase));
+			BsonClassMap.RegisterClassMap<LfLexEntry>(cm => {
+				cm.AutoMap();
+				cm.MapMember(c => c.Guid).SetDefaultValue(Guid.Empty);
+			});
 		}
 	}
 }

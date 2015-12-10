@@ -26,7 +26,7 @@ namespace LfMerge
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
-			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
+			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().As<IStartable>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
@@ -45,7 +45,8 @@ namespace LfMerge
 			try
 			{
 				LfMergeSettings.LoadSettings();
-				MongoConnection.Initialize(LfMergeSettings.Current.MongoDbHostNameAndPort);
+				MongoConnection.SetDefaultParameters(LfMergeSettings.Current.MongoDbHostNameAndPort);
+				//MongoConnection.Initialize();
 				// TODO: Move this testing code where it belongs
 				var localProjectCode = "TestLangProj";
 				var thisProject = LanguageForgeProject.Create(localProjectCode);
