@@ -3,10 +3,12 @@
 using System;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.LanguageForge.Config;
 
 namespace LfMerge
 {
+	[BsonIgnoreExtraElements]
 	public class MongoProjectRecord
 	{
 		public const string ProjectsCollectionName = "projects";
