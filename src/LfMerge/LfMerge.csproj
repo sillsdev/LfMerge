@@ -78,6 +78,7 @@
     <Reference Include="LibTriboroughBridge-ChorusPlugin">
       <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -145,6 +146,8 @@
     <Compile Include="MongoConnector\IMongoConnection.cs" />
     <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
     <Compile Include="DataConverters\PartOfSpeechConverter.cs" />
+    <Compile Include="DataConverters\GoldEticXmlParser.cs" />
+    <Compile Include="DataConverters\GoldEticItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets')" />
@@ -174,4 +177,9 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">
+      <Link>GOLDEtic.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

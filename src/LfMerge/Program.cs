@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.IO;
 using System.Linq;
 using Autofac;
 using Chorus.Model;
@@ -41,6 +42,13 @@ namespace LfMerge
 				return;
 
 			Container = RegisterTypes().Build();
+			Stream s = typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml");
+			var p = new GoldEticXmlParser();
+			foreach (GoldEticItem item in p.ParseXml(s))
+			{
+				foreach (GoldEticItem item2 in item.Subitems)
+					Console.WriteLine("Item {0} is called \"{1}\"", item2.Guid, item2.ORCDelimitedNameByWs("en"));
+			}
 
 			try
 			{
