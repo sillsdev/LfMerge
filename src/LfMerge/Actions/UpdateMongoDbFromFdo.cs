@@ -194,7 +194,6 @@ namespace LfMerge.Actions
 			fdoSense.EntryID;
 			fdoSense.FullReferenceName;
 			fdoSense.GetDesiredMsaType();
-			fdoSense.Guid; // Using LIFTid instead. TODO: Verify whether that's correct.
 			fdoSense.Hvo;
 			fdoSense.ImportResidue;
 			fdoSense.IndexInOwner;

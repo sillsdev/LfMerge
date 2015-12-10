@@ -13,7 +13,7 @@ namespace LfMerge.LanguageForge.Model
 		public ObjectId Id { get; set; }
 		public string LiftId { get; set; } // TODO Investigate why this seems to not be modeled in LF PHP code... should it be?
 		[BsonRepresentation(BsonType.String)]
-		public Guid Guid { get; set; }
+		public Guid? Guid { get; set; }
 		public bool IsDeleted { get; set; }
 		public string MercurialSha { get; set; }
 		public DateTime DateCreated { get; set; }

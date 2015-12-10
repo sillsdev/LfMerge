@@ -155,7 +155,7 @@ namespace LfMerge.Actions
 
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
-			Guid guid = lfEntry.Guid;
+			Guid guid = lfEntry.Guid ?? Guid.Empty;
 			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
 			if (lfEntry.IsDeleted)
 			{
