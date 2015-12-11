@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using SIL.FieldWorks.FDO;
 
@@ -27,17 +28,17 @@ namespace LfMerge
 			GoldEticXmlParser.ParseXml(GoldEticXml.Value)
 		);
 
-		private static IEnumerable<GoldEticItem> FlattenGoldEticItems(List<GoldEticItem> topLevel)
+		private static IEnumerable<GoldEticItem> FlattenGoldEticItems(IEnumerable<GoldEticItem> topLevel)
 		{
-			foreach (GoldEticItem item in GoldEticItems.Value)
+			foreach (GoldEticItem item in topLevel)
 			{
 				yield return item;
 				foreach (GoldEticItem subItem in FlattenGoldEticItems(item.Subitems))
 					yield return subItem;
 			}
 		}
-		public static Lazy<IEnumerable<GoldEticItem>> FlattenedGoldEticItems = new Lazy<IEnumerable<GoldEticItem>>(() =>
-			FlattenGoldEticItems(GoldEticItems.Value)
+		public static Lazy<GoldEticItem[]> FlattenedGoldEticItems = new Lazy<GoldEticItem[]>(() =>
+			FlattenGoldEticItems(GoldEticItems.Value).ToArray()
 		);
 
 		public static string FromGuid(Guid guid, bool flat=false)
@@ -115,6 +116,7 @@ namespace LfMerge
 			foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
 				if (item.ORCDelimitedNameByWs(wsToSearch) == searchTerm || item.NameByWs(wsToSearch) == searchTerm)
 					return item.Guid;
+			return null;
 		}
 
 		public IPartOfSpeech FromName(string name, string wsToSearch = "en", string fallbackWs = "en")
@@ -125,9 +127,9 @@ namespace LfMerge
 			if (guidStr == null)
 				PartOfSpeechMasterList.FlatPoSGuids.TryGetValue(name, out guidStr);
 			if (guidStr == null)
-				FindGuidInGoldEtic(name, wsToSearch);
+				guidStr = FindGuidInGoldEtic(name, wsToSearch);
 			if (guidStr == null)
-				FindGuidInGoldEtic(name, fallbackWs);
+				guidStr = FindGuidInGoldEtic(name, fallbackWs);
 			if (guidStr != null)
 				Guid.TryParse(guidStr, out guid);
 			if (guid != Guid.Empty)
