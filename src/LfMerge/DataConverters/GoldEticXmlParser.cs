@@ -8,13 +8,9 @@ using System.Xml;
 
 namespace LfMerge
 {
-	public class GoldEticXmlParser
+	public static class GoldEticXmlParser
 	{
-		public GoldEticXmlParser()
-		{
-		}
-
-		public List<GoldEticItem> ParseXml(Stream stream)
+		public static List<GoldEticItem> ParseXml(Stream stream)
 		{
 			var settings = new XmlReaderSettings
 			{
@@ -65,24 +61,23 @@ namespace LfMerge
 			return result;
 		}
 
-		public void AddAbbrev(GoldEticItem item, string ws, string data)
+		public static void AddAbbrev(GoldEticItem item, string ws, string data)
 		{
 			if (item == null) return;
 			item.AddAbbrev(ws, data);
 		}
 
-		public void AddTerm(GoldEticItem item, string ws, string data)
+		public static void AddTerm(GoldEticItem item, string ws, string data)
 		{
 			if (item == null) return;
 			item.AddTerm(ws, data);
 		}
 
-		public void AddDefinition(GoldEticItem item, string ws, string data)
+		public static void AddDefinition(GoldEticItem item, string ws, string data)
 		{
 			if (item == null) return;
 			item.AddDefinition(ws, data);
 		}
-
 
 	}
 }

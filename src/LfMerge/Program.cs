@@ -44,8 +44,7 @@ namespace LfMerge
 
 			Container = RegisterTypes().Build();
 			Stream s = typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml");
-			var p = new GoldEticXmlParser();
-			foreach (GoldEticItem item in p.ParseXml(s))
+			foreach (GoldEticItem item in GoldEticXmlParser.ParseXml(s))
 			{
 				foreach (GoldEticItem item2 in item.Subitems)
 					Console.WriteLine("Item {0} is called \"{1}\"", item2.Guid, item2.ORCDelimitedNameByWs("en"));
