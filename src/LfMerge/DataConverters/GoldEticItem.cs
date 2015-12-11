@@ -61,10 +61,18 @@ namespace LfMerge
 			Definitions.Add(ws, data);
 		}
 
+		private string SimplifyWs(string ws)
+		{
+			if (ws.StartsWith("zh")) // The only non-2-letter writing system in GOLDEtic.xml is zh-CN
+				return ws.Substring(0, 5);
+			else
+				return ws.Substring(0, 2);
+		}
+
 		public string NameByWs(string ws)
 		{
 			string name;
-			if (Terms.TryGetValue(ws, out name))
+			if (Terms.TryGetValue(SimplifyWs(ws), out name))
 				return name;
 			else
 				return String.Empty;
@@ -72,6 +80,7 @@ namespace LfMerge
 
 		public string ORCDelimitedNameByWs(string ws)
 		{
+			ws = SimplifyWs(ws);
 			string ORC = "\ufffc";
 			if (Parent != null)
 				return Parent.ORCDelimitedNameByWs(ws) + ORC + NameByWs(ws);

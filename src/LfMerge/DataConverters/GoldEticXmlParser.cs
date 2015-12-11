@@ -70,7 +70,7 @@ namespace LfMerge
 		public static void AddTerm(GoldEticItem item, string ws, string data)
 		{
 			if (item == null) return;
-			item.AddTerm(ws, data);
+			item.AddTerm(ws, data.ToLowerInvariant()); // LanguageForge will be supplying lower-case terms to match against
 		}
 
 		public static void AddDefinition(GoldEticItem item, string ws, string data)
