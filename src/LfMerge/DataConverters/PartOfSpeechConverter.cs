@@ -110,27 +110,24 @@ namespace LfMerge
 			}
 		}
 
-		public IPartOfSpeech FromName(string name, string wsToSearch = "en")
+		private string FindGuidInGoldEtic(string searchTerm, string wsToSearch)
+		{
+			foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
+				if (item.ORCDelimitedNameByWs(wsToSearch) == searchTerm || item.NameByWs(wsToSearch) == searchTerm)
+					return item.Guid;
+		}
+
+		public IPartOfSpeech FromName(string name, string wsToSearch = "en", string fallbackWs = "en")
 		{
 			string guidStr;
 			Guid guid = Guid.Empty;
-			if (PartOfSpeechMasterList.HierarchicalPoSGuids.TryGetValue(name, out guidStr))
-			{
-			}
-			else if (PartOfSpeechMasterList.FlatPoSGuids.TryGetValue(name, out guidStr))
-			{
-			}
-			else
-			{
-				foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
-				{
-					if (item.ORCDelimitedNameByWs(wsToSearch) == name || item.NameByWs(wsToSearch) == name)
-					{
-						guidStr = item.Guid;
-						break;
-					}
-				}
-			}
+			PartOfSpeechMasterList.HierarchicalPoSGuids.TryGetValue(name, out guidStr);
+			if (guidStr == null)
+				PartOfSpeechMasterList.FlatPoSGuids.TryGetValue(name, out guidStr);
+			if (guidStr == null)
+				FindGuidInGoldEtic(name, wsToSearch);
+			if (guidStr == null)
+				FindGuidInGoldEtic(name, fallbackWs);
 			if (guidStr != null)
 				Guid.TryParse(guidStr, out guid);
 			if (guid != Guid.Empty)
