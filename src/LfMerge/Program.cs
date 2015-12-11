@@ -10,6 +10,7 @@ using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
 using LfMerge.Actions;
+using SIL.IO.FileLock;
 using System.Threading;
 using System.Collections.Generic;
 
@@ -50,8 +51,15 @@ namespace LfMerge
 					Console.WriteLine("Item {0} is called \"{1}\"", item2.Guid, item2.ORCDelimitedNameByWs("en"));
 			}
 
+			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
 			try
 			{
+				if (!fileLock.TryAcquireLock())
+				{
+					Console.WriteLine("Can't acquire file lock - is another instance running?");
+					return;
+				}
+
 				LfMergeSettings.LoadSettings();
 				MongoConnection.Initialize(LfMergeSettings.Current.MongoDbHostNameAndPort);
 				// TODO: Move this testing code where it belongs
@@ -80,6 +88,9 @@ namespace LfMerge
 			}
 			finally
 			{
+				if (fileLock != null)
+					fileLock.ReleaseLock();
+
 				Container.Dispose();
 				Cleanup();
 			}

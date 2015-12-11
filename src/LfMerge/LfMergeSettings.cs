@@ -116,6 +116,23 @@ namespace LfMerge
 
 		public string StateDirectory { get; private set; }
 
+		public static string LockFile
+		{
+			get
+			{
+				var path = "/var/run";
+				const string filename = "lfmerge.pid";
+
+				var attributes = File.GetAttributes(path);
+				if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				{
+					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run
+					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+				}
+				return Path.Combine(path, filename);
+			}
+		}
+
 		public string GetQueueDirectory(QueueNames queue)
 		{
 			return QueueDirectories[(int)queue];
