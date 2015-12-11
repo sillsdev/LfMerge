@@ -23,7 +23,10 @@ namespace LfMerge.Actions
 		private IFdoServiceLocator servLoc;
 		private IMongoConnection connection;
 		private MongoProjectRecordFactory projectRecordFactory;
+		private ILfProject lfProject;
+		private MongoProjectRecord projectRecord;
 
+		private ILfProjectConfig lfProjectConfig;
 
 		private ILexEntryRepository entryRepo;
 		private ILexExampleSentenceRepository exampleRepo;
@@ -52,8 +55,16 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
-			ILfProjectConfig config = GetConfigForTesting(project);
-			if (config == null)
+			lfProject = project;
+			projectRecord = projectRecordFactory.Create(lfProject);
+			if (projectRecord == null)
+			{
+				Console.WriteLine("No project named {0}", lfProject.LfProjectCode);
+				Console.WriteLine("If we are unit testing, this may not be an error");
+				return;
+			}
+			lfProjectConfig = projectRecord.Config;
+			if (lfProjectConfig == null)
 				return;
 
 			if (project.FieldWorksProject == null)
@@ -91,7 +102,7 @@ namespace LfMerge.Actions
 			pronunciationFactory = servLoc.GetInstance<ILexPronunciationFactory>();
 			senseFactory = servLoc.GetInstance<ILexSenseFactory>();
 
-			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, config);
+			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
 			{
 				foreach (LfLexEntry lfEntry in lexicon)
@@ -114,13 +125,6 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
 		{
-			MongoProjectRecord projectRecord = projectRecordFactory.Create(project);
-			if (projectRecord == null)
-			{
-				Console.WriteLine("No project named {0}", project.LfProjectCode);
-				Console.WriteLine("If we are unit testing, this may not be an error");
-				return null;
-			}
 			ILfProjectConfig config = projectRecord.Config;
 			Console.WriteLine(config.GetType()); // Should be LfMerge.LanguageForge.Config.LfProjectConfig
 			Console.WriteLine(config.Entry.Type);
