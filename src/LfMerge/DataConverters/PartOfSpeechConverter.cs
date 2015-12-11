@@ -1,13 +1,45 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.IO;
 using System.Collections.Generic;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge
 {
-	public /*static*/ class PartOfSpeechConverter
+	public class PartOfSpeechConverter
 	{
+		public FdoCache cache;
+		private IPartOfSpeechRepository posRepo;
+		private IPartOfSpeechFactory posFactory;
+
+		public PartOfSpeechConverter(FdoCache fdoCache)
+		{
+			cache = fdoCache;
+			posRepo = cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
+			posFactory = cache.ServiceLocator.GetInstance<IPartOfSpeechFactory>();
+		}
+
+		public static Lazy<Stream> GoldEticXml = new Lazy<Stream>(() =>
+			typeof(PartOfSpeechConverter).Assembly.GetManifestResourceStream(typeof(PartOfSpeechConverter), "GOLDEtic.xml")
+		);
+		public static Lazy<List<GoldEticItem>> GoldEticItems = new Lazy<List<GoldEticItem>>(() =>
+			GoldEticXmlParser.ParseXml(GoldEticXml.Value)
+		);
+
+		private static IEnumerable<GoldEticItem> FlattenGoldEticItems(List<GoldEticItem> topLevel)
+		{
+			foreach (GoldEticItem item in GoldEticItems.Value)
+			{
+				yield return item;
+				foreach (GoldEticItem subItem in FlattenGoldEticItems(item.Subitems))
+					yield return subItem;
+			}
+		}
+		public static Lazy<IEnumerable<GoldEticItem>> FlattenedGoldEticItems = new Lazy<IEnumerable<GoldEticItem>>(() =>
+			FlattenGoldEticItems(GoldEticItems.Value)
+		);
+
 		public static string FromGuid(Guid guid, bool flat=false)
 		{
 			return FromGuid(guid.ToString(), flat);
@@ -78,7 +110,7 @@ namespace LfMerge
 			}
 		}
 
-		public static IPartOfSpeech FromName(string name, IPartOfSpeechRepository repo)
+		public IPartOfSpeech FromName(string name, string wsToSearch = "en")
 		{
 			string guidStr;
 			Guid guid = Guid.Empty;
@@ -90,20 +122,26 @@ namespace LfMerge
 			}
 			else
 			{
-				// TODO: Parse the GOLDEtic.xml file and cache it, then look up in different languages.
+				foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
+				{
+					if (item.ORCDelimitedNameByWs(wsToSearch) == name || item.NameByWs(wsToSearch) == name)
+					{
+						guidStr = item.Guid;
+						break;
+					}
+				}
 			}
 			if (guidStr != null)
 				Guid.TryParse(guidStr, out guid);
 			if (guid != Guid.Empty)
 			{
 				IPartOfSpeech result;
-				if (repo.TryGetObject(guid, out result))
+				if (posRepo.TryGetObject(guid, out result))
 					return result;
-				// TODO: Create new part of speech that's not yet registered, instead of just giving up and returning null.
-				return null;
+				// Not found? Fall through to creation.
 			}
-			// TODO: Create new part of speech that's not yet registered, instead of just giving up and returning null.
-			return null;
+			// Whether or not we have an "official" GUID, we can now create a PartOfSpeech
+			return posFactory.Create(guid, cache.LanguageProject.PartsOfSpeechOA);
 		}
 	}
 }

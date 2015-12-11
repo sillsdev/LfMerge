@@ -14,6 +14,8 @@ namespace LfMerge
 		public const string ProjectsCollectionName = "projects";
 
 		public ObjectId Id { get; set; }
+		public string InterfaceLanguageCode { get; set; }
+		public string LanguageCode { get; set; }
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }
 		public LfProjectConfig Config { get; set; }

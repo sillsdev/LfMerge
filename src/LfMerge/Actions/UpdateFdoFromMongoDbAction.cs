@@ -376,7 +376,12 @@ namespace LfMerge.Actions
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
 			if (lfSense.PartOfSpeech != null)
 			{
-				IPartOfSpeech pos = PartOfSpeechConverter.FromName(lfSense.PartOfSpeech.ToString(), posRepo);
+				var posConverter = new PartOfSpeechConverter(cache);
+				//string userWs = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultUserWs);
+				string userWs = projectRecord.InterfaceLanguageCode;
+				if (String.IsNullOrEmpty(userWs))
+					userWs = "en";
+				IPartOfSpeech pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
 					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
