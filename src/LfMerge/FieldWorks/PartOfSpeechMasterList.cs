@@ -64,6 +64,7 @@ namespace LfMerge
 			{ "verb", "86ff66f6-0774-407a-a0dc-3eeaf873daf7" },
 			{ "copulative verb", "55f2a00e-5f07-4ace-8a44-8794ed1a38a8" },
 			{ "ditransitive verb", "efadf1d3-580a-4e4b-a94c-3f1d6e59c5fc" },
+			{ "bitransitive verb", "efadf1d3-580a-4e4b-a94c-3f1d6e59c5fc" }, // SPECIAL CASE: multiple possible names
 			{ "intransitive verb", "4459ff09-9ee0-4b50-8787-ae40fd76d3b7" },
 			{ "transitive verb", "54712931-442f-42d5-8634-f12bd2e310ce" }
 		};
@@ -125,6 +126,7 @@ namespace LfMerge
 			{ "verb", "86ff66f6-0774-407a-a0dc-3eeaf873daf7" },
 			{ "verb\ufffccopulative verb", "55f2a00e-5f07-4ace-8a44-8794ed1a38a8" },
 			{ "verb\ufffcditransitive verb", "efadf1d3-580a-4e4b-a94c-3f1d6e59c5fc" },
+			{ "verb\ufffcbitransitive verb", "efadf1d3-580a-4e4b-a94c-3f1d6e59c5fc" }, // SPECIAL CASE: some data uses this incorrect term
 			{ "verb\ufffcintransitive verb", "4459ff09-9ee0-4b50-8787-ae40fd76d3b7" },
 			{ "verb\ufffctransitive verb", "54712931-442f-42d5-8634-f12bd2e310ce" }
 		};

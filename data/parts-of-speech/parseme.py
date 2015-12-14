@@ -35,10 +35,18 @@ def process_line(s):
     numtabs = s.count('\t')
     flat_names.append('{ "%s", "%s" }' % (guid, term))
     reversed_flat.append('{ "%s", "%s" }' % (term, guid))
+    if term.startswith("ditransitive"):
+        # Special case: some data uses the term "bitransitive" as a synonym
+        # But we should only append it to the term->guid direction.
+        reversed_flat.append('{ "%s", "%s" }' % (term.replace("ditransitive", "bitransitive"), guid))
     if numtabs == 0:
         current_section = term
         hierarchical_names.append('{ "%s", "%s" }' % (guid, term))
         reversed_hierarchical.append('{ "%s", "%s" }' % (term, guid))
+        if term.startswith("ditransitive"):
+            # Special case: some data uses the term "bitransitive" as a synonym
+            # But we should only append it to the term->guid direction.
+            reversed_hierarchical.append('{ "%s", "%s" }' % (term.replace("ditransitive", "bitransitive"), guid))
     else:
         if numtabs == prev_indent:
             pass
@@ -51,6 +59,10 @@ def process_line(s):
             raise AssertionError, "Impossible math happened between {} and {}".format(numtabs, prev_indent)
         hierarchical_names.append('{ "%s", "%s" }' % (guid, ORC.join([current_section, term])))
         reversed_hierarchical.append('{ "%s", "%s" }' % (ORC.join([current_section, term]), guid))
+        if term.startswith("ditransitive"):
+            # Special case: some data uses the term "bitransitive" as a synonym
+            # But we should only append it to the term->guid direction.
+            reversed_hierarchical.append('{ "%s", "%s" }' % (ORC.join([current_section, term.replace("ditransitive", "bitransitive")]), guid))
     # Next two lines should be last in function
     prev_term = term
     prev_indent = numtabs
