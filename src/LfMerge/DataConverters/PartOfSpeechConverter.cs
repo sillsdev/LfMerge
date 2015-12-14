@@ -40,24 +40,51 @@ namespace LfMerge
 		public static Lazy<GoldEticItem[]> FlattenedGoldEticItems = new Lazy<GoldEticItem[]>(() =>
 			FlattenGoldEticItems(GoldEticItems.Value).ToArray()
 		);
+		public static Lazy<Dictionary<string, GoldEticItem>> ItemsByGuidStr = new Lazy<Dictionary<string, GoldEticItem>>(() =>
+			FlattenedGoldEticItems.Value.ToDictionary(item => item.Guid, item => item)
+		);
 
-		public static string FromGuid(Guid guid, bool flat=false)
+		public string NameFromGuid(Guid guid, bool flat=false)
 		{
-			return FromGuid(guid.ToString(), flat);
+			return NameFromGuidStr(guid.ToString(), flat);
 		}
 
-		public static string FromGuid(string guid, bool flat=false)
+		public string NameFromGuidStr(string guidStr, bool flat=false)
 		{
 			string result;
 			Dictionary<string, string> lookupTable = (flat) ?
-				PartOfSpeechMasterList.FlatPoSGuids :
-				PartOfSpeechMasterList.HierarchicalPoSGuids;
-			if (lookupTable.TryGetValue(guid, out result))
+				PartOfSpeechMasterList.FlatPoSNames :
+				PartOfSpeechMasterList.HierarchicalPoSNames;
+			if (lookupTable.TryGetValue(guidStr, out result))
 				return result;
-			// This GUID not found? Hmmm, try something else maybe.
-			// TODO: Implement "get name instead" code. Maybe in a different function, though.
-			// TODO: Actually, just fold this function into the other one since this won't ever need to be called separately.
 			return null;
+		}
+
+		public IPartOfSpeech FromGuid(Guid guid)
+		{
+			return FromGuidStr(guid.ToString());
+		}
+
+		public IPartOfSpeech FromGuidStr(string guidStr)
+		{
+			IPartOfSpeech result = TryGetPos(guidStr);
+			if (result != null) return result;
+			string name = NameFromGuidStr(guidStr, flat:false);
+			if (name == null) return null;
+			// We know we have a well-known name, so we should use it. TODO: Or should we?
+			Guid guid;
+			if (Guid.TryParse(guidStr, out guid))
+				return CreateFromWellKnownGuid(guid);
+			// Really shouldn't get here at all, but if we do...
+			throw new ArgumentException(String.Format("Well-known GUID {0} didn't parse", guidStr), "guidStr");
+			// TODO: Turn that into a log message and don't actually throw an exception.
+		}
+
+		public IPartOfSpeech FromGuidStrOrName(string guidStr, string name, string userWs = "en", string fallbackWs = "en")
+		{
+			IPartOfSpeech posFromGuid = FromGuidStr(guidStr);
+			if (posFromGuid != null) return posFromGuid;
+			return FromName(name, userWs, fallbackWs);
 		}
 
 		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa)
@@ -85,6 +112,7 @@ namespace LfMerge
 
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos)
 		{
+			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
 			switch (msa.GetType().Name)
 			{
 			case "MoDerivAffMsa":
@@ -111,36 +139,209 @@ namespace LfMerge
 			}
 		}
 
-		private string FindGuidInGoldEtic(string searchTerm, string wsToSearch)
+		private GoldEticItem FindGoldEticItem(string searchTerm, string wsToSearch)
 		{
 			foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
 				if (item.ORCDelimitedNameByWs(wsToSearch) == searchTerm || item.NameByWs(wsToSearch) == searchTerm)
-					return item.Guid;
+					return item;
 			return null;
+		}
+
+		private void PopulateWellKnownPos(IPartOfSpeech pos, GoldEticItem item)
+		// Creating, assigning parent, etc., is handled elsewhere. This function only sets text values.
+		{
+			foreach (var kv in item.Abbrevs)
+			{
+				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				if (wsId != 0)
+					pos.Abbreviation.set_String(wsId, kv.Value);
+			}
+			foreach (var kv in item.Definitions)
+			{
+				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				if (wsId != 0)
+					pos.Description.set_String(wsId, kv.Value);
+			}
+			foreach (var kv in item.Terms)
+			{
+				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				if (wsId != 0)
+					pos.Name.set_String(wsId, kv.Value);
+			}
+		}
+
+		private void PopulateCustomPos(IPartOfSpeech pos, string finalName, string userWs)
+		{
+			int wsId = cache.WritingSystemFactory.GetWsFromStr(userWs);
+			pos.Name.set_String(wsId, finalName);
+		}
+
+		private IPartOfSpeech TryGetPos(string guidStr)
+		{
+			Guid guid;
+			Guid.TryParse(guidStr, out guid);
+			if (guid == Guid.Empty)
+				return null;
+			IPartOfSpeech result;
+			return posRepo.TryGetObject(guid, out result) ? result : null;
+		}
+
+		private IPartOfSpeech GetOrCreateTopLevelPos(string guidStr)
+		{
+			IPartOfSpeech existingPos = TryGetPos(guidStr);
+			if (existingPos != null) return existingPos;
+			Guid guid;
+			Guid.TryParse(guidStr, out guid);
+			return posFactory.Create(guid, cache.LanguageProject.PartsOfSpeechOA);
+		}
+
+		private IPartOfSpeech GetOrCreateOwnedPos(string guidStr, IPartOfSpeech owner)
+		{
+			IPartOfSpeech existingPos = TryGetPos(guidStr);
+			if (existingPos != null) return existingPos;
+			Guid guid;
+			Guid.TryParse(guidStr, out guid);
+			return posFactory.Create(guid, owner);
+		}
+
+		public IPartOfSpeech CreateFromWellKnownItem(GoldEticItem item)
+		{
+			IPartOfSpeech pos;
+			if (item.Parent == null)
+			{
+				string guidStr = item.Guid;
+				Guid guid;
+				if (!Guid.TryParse(guidStr, out guid))
+				{
+					// TODO: Log this
+					Console.WriteLine("ERROR: GOLDEtic.xml item {0} had invalid GUID {1}", item.ORCDelimitedName, item.Guid);
+					return null;
+				}
+				pos = GetOrCreateTopLevelPos(item.Guid);
+			}
+			else
+			{
+				IPartOfSpeech fdoParent = CreateFromWellKnownItem(item.Parent);
+				pos = GetOrCreateOwnedPos(item.Guid, fdoParent);
+			}
+			PopulateWellKnownPos(pos, item);
+			return pos;
+		}
+
+		public IPartOfSpeech CreateFromWellKnownGuid(Guid guid)
+		{
+			GoldEticItem item;
+			if (!ItemsByGuidStr.Value.TryGetValue(guid.ToString(), out item))
+				return null;
+			return CreateFromWellKnownItem(item);
+		}
+
+		public IPartOfSpeech CreateFromCustomName(string nameHierarchy, string userWs = "en")
+		{
+			// TODO: Implement me. Should handle "A|B|c" or "A|b|c" or "a|b|c" cases equally well.
+			// If we don't have the GOLDEtic data to help us, the best we can do is set the name
+			string ORC = "\ufffc";
+			string[] names = nameHierarchy.Split(new string[] { ORC }, StringSplitOptions.None);
+			string finalName = names.Last();
+			string allButLast = string.Join(ORC, names.Take(names.Length - 1));
+			IPartOfSpeech pos;
+			if (!String.IsNullOrEmpty(allButLast))
+			{
+				IPartOfSpeech parent = FromName(allButLast);
+				pos = GetOrCreateOwnedPos(null, parent);
+			}
+			else
+				pos = GetOrCreateTopLevelPos(null);
+			PopulateCustomPos(pos, finalName, userWs);
+			return pos;
+		}
+
+		// TODO: Rename this function, then remove this comment
+		// TODO: This might be a duplicate by now, in which case it should be removed
+		private void RenameThisFunction(IPartOfSpeech pos, GoldEticItem item, string userSuppliedName = null, string userWs = "en")
+		{
+			if (item != null)
+			{
+				PopulateWellKnownPos(pos, item);
+			}
+			else
+			{
+				if (userSuppliedName == null)
+					throw new ArgumentNullException("For non-well-known parts of speech, we need at least a name!");
+				PopulateCustomPos(pos, userSuppliedName, userWs);
+			}
+			if (item != null && item.Parent != null)
+			{
+				IPartOfSpeech parent;
+				Guid guid = Guid.Empty;
+				Guid.TryParse(item.Guid, out guid);
+				if (guid != Guid.Empty && posRepo.TryGetObject(guid, out parent))
+					Console.WriteLine(parent);
+				else
+					Console.WriteLine("Create parent as per this function...");
+			}
 		}
 
 		public IPartOfSpeech FromName(string name, string wsToSearch = "en", string fallbackWs = "en")
 		{
 			string guidStr;
+			string foundWs = fallbackWs;
+			GoldEticItem item = null;
 			Guid guid = Guid.Empty;
+
+			// Try four different ways to look up this name in GOLDEtic
 			PartOfSpeechMasterList.HierarchicalPoSGuids.TryGetValue(name, out guidStr);
 			if (guidStr == null)
 				PartOfSpeechMasterList.FlatPoSGuids.TryGetValue(name, out guidStr);
 			if (guidStr == null)
-				guidStr = FindGuidInGoldEtic(name, wsToSearch);
+			{
+				item = FindGoldEticItem(name, wsToSearch);
+				if (item != null)
+				{
+					guidStr = item.Guid;
+					foundWs = wsToSearch;
+				}
+			}
 			if (guidStr == null)
-				guidStr = FindGuidInGoldEtic(name, fallbackWs);
+			{
+				item = FindGoldEticItem(name, fallbackWs);
+				if (item != null)
+				{
+					guidStr = item.Guid;
+					foundWs = fallbackWs;
+				}
+			}
 			if (guidStr != null)
 				Guid.TryParse(guidStr, out guid);
+			
+			// So... did we find it?
 			if (guid != Guid.Empty)
 			{
+				Console.WriteLine("Found official GUID {0} for part of speech {1}", guid, name);
 				IPartOfSpeech result;
 				if (posRepo.TryGetObject(guid, out result))
 					return result;
-				// Not found? Fall through to creation.
+				// Not found in FDO? Create it.
+				// We have an "official" GUID, so we use it to create a PartOfSpeech
+				IPartOfSpeech newPos = (item == null) ?
+					CreateFromWellKnownGuid(guid) :
+					CreateFromWellKnownItem(item); // The Create* functions also populate the PoS data.
+				if (newPos == null)
+				{
+					// This really shouldn't happen. TODO: Log this instead of printing to console.
+					Console.WriteLine("Error: Well-known GUID {0} for part of speech \"{1}\" was not found in GOLDEtic.xml data. " +
+						"This really shouldn't happen", guid, name);
+					// Fall back to custom name creation instead
+					return CreateFromCustomName(name, foundWs);
+				}
+				return newPos;
 			}
-			// Whether or not we have an "official" GUID, we can now create a PartOfSpeech
-			return posFactory.Create(guid, cache.LanguageProject.PartsOfSpeechOA);
+			else
+			{
+				// No "official" GUID, so this is a "custom" PartOfSpeech... and some (but not necessarily all) of its ancestors might be as well.
+				Console.WriteLine("Creating part of speech with GUID {0} for name {1} in ws {2}.", guid, name, foundWs);
+				return CreateFromCustomName(name, foundWs);
+			}
 		}
 	}
 }

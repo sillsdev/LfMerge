@@ -203,7 +203,6 @@ namespace LfMerge.Actions
 			lfEntry.Environments // Don't know how to handle this one. TODO: Research it.
 			lfEntry.LiftId // TODO: Figure out how to handle this one. In fdoEntry, it's a constructed value.
 			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
-			lfEntry.MorphologyType; // TODO: Put this in fdoEntry.PrimaryMorphType
 
 			*/
 
@@ -385,7 +384,7 @@ namespace LfMerge.Actions
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
 					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
-					Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos.AbbrAndName);
+					Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
 				}
 			}
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.

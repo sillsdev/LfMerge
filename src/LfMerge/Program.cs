@@ -43,12 +43,6 @@ namespace LfMerge
 				return;
 
 			Container = RegisterTypes().Build();
-			Stream s = typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml");
-			foreach (GoldEticItem item in GoldEticXmlParser.ParseXml(s))
-			{
-				foreach (GoldEticItem item2 in item.Subitems)
-					Console.WriteLine("Item {0} is called \"{1}\"", item2.Guid, item2.ORCDelimitedNameByWs("en"));
-			}
 
 			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
 			try
@@ -66,6 +60,8 @@ namespace LfMerge
 				var thisProject = LanguageForgeProject.Create(localProjectCode);
 				var foo = Container.ResolveKeyed<IAction>(ActionNames.UpdateMongoDbFromFdo);
 				foo.Run(thisProject);
+				var bar = Container.ResolveKeyed<IAction>(ActionNames.UpdateFdoFromMongoDb);
+				bar.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
 					queue = queue.NextQueueWithWork)
