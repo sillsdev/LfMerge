@@ -33,12 +33,15 @@ namespace LfMerge.Actions
 		private ICmPictureRepository pictureRepo;
 		private ILexPronunciationRepository pronunciationRepo;
 		private ILexSenseRepository senseRepo;
-		private IPartOfSpeechRepository posRepo;
+		private ICmTranslationRepository translationRepo;
 		private ILexEntryFactory entryFactory;
 		private ILexExampleSentenceFactory exampleFactory;
 		private ICmPictureFactory pictureFactory;
 		private ILexPronunciationFactory pronunciationFactory;
 		private ILexSenseFactory senseFactory;
+		private ICmTranslationFactory translationFactory;
+
+		private ICmPossibility freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
 		private CustomFieldConverter customFieldConverter;
 
@@ -94,13 +97,22 @@ namespace LfMerge.Actions
 			exampleRepo = servLoc.GetInstance<ILexExampleSentenceRepository>();
 			pictureRepo = servLoc.GetInstance<ICmPictureRepository>();
 			pronunciationRepo = servLoc.GetInstance<ILexPronunciationRepository>();
-			posRepo = servLoc.GetInstance<IPartOfSpeechRepository>();
 			senseRepo = servLoc.GetInstance<ILexSenseRepository>();
+			translationRepo = servLoc.GetInstance<ICmTranslationRepository>();
 			entryFactory = servLoc.GetInstance<ILexEntryFactory>();
 			exampleFactory = servLoc.GetInstance<ILexExampleSentenceFactory>();
 			pictureFactory = servLoc.GetInstance<ICmPictureFactory>();
 			pronunciationFactory = servLoc.GetInstance<ILexPronunciationFactory>();
 			senseFactory = servLoc.GetInstance<ILexSenseFactory>();
+			translationFactory = servLoc.GetInstance<ICmTranslationFactory>();
+
+			if (cache.LanguageProject != null && cache.LanguageProject.TranslationTagsOA != null)
+			{
+				// TODO: Consider using LangProjectTags.kguidTranFreeTranslation instead
+				freeTranslationType = new PossibilityListConverter(cache.LanguageProject.TranslationTagsOA).GetByName("Free translation");
+				if (freeTranslationType == null)
+					freeTranslationType = cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
+			}
 
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
@@ -194,12 +206,10 @@ namespace LfMerge.Actions
 
 
 			/* TODO: Process the following fields too
-
-					fdoEntry.PronunciationsOS.First();
 					lfEntry.Environments;
 			*/
+
 			/* LfLexEntry fields not mapped:
-			lfEntry.CustomFields // TODO: Handle later
 			lfEntry.Environments // Don't know how to handle this one. TODO: Research it.
 			lfEntry.LiftId // TODO: Figure out how to handle this one. In fdoEntry, it's a constructed value.
 			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
@@ -305,6 +315,25 @@ namespace LfMerge.Actions
 			}
 		}
 
+		private ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner, ICmPossibility typeOfNewTranslation)
+		{
+			// If it's already in the owning list, use that object
+			foreach (ICmTranslation t in owner.TranslationsOC)
+			{
+				if (t.Guid == guid)
+					return t;
+			}
+			ICmTranslation result;
+			if (translationRepo.TryGetObject(guid, out result))
+			{
+				// Not in the owning list, but it already exists elsewhere. Move it "here".
+				owner.TranslationsOC.Add(result);
+				return result;
+			}
+			// Not found anywhere: make a new one.
+			return translationFactory.Create(owner, typeOfNewTranslation);
+		}
+
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
 			Guid guid = lfExample.Guid;
@@ -317,14 +346,10 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
 			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
 			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
-			// fdoExample.TranslationsOC = ToOwningCollection(lfExample.Translation); // TODO: Implement ToOwningCollection<ICmTranslation>(LfMultiText multi)
-			/*
-			ICmTranslation t;
-			t.AvailableWritingSystems;
-			t.Status;
-			t.Translation;
-			t.TypeRA; // Free, literal, etc.
-			*/
+			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, freeTranslationType);
+			SetMultiStringFrom(t.Translation, lfExample.Translation);
+			// TODO: Set t.AvailableWritingSystems appropriately
+			// Ignoring t.Status since LF won't touch it
 
 			customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
 
@@ -334,10 +359,11 @@ namespace LfMerge.Actions
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
 			Guid guid = lfPicture.Guid;
-			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner);
-			SetMultiStringFrom(fdoPicture.Caption, lfPicture.Caption);
-			// ICmFile f = fdoPicture.PictureFileRA; // TODO: Use a factory, and set from lfPicture.FileName
-			// TODO: Any other instance fields?
+			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(cache);
+			int captionWs = kv.Key;
+			string caption = kv.Value;
+			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
+			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
 			return fdoPicture;
 		}
 
@@ -358,7 +384,6 @@ namespace LfMerge.Actions
 //				.UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
 			SetMultiStringFrom(fdoSense.AnthroNote, lfSense.AnthropologyNote);
 			// lfSense.AuthorInfo; // TODO: Figure out if this should be copied too
-			// lfSense.CustomFields; // TODO: Handle these last
 			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
 			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
@@ -394,7 +419,6 @@ namespace LfMerge.Actions
 				#pragma warning disable 0219 // "Variable is assigned but its value is never used"
 				ICmPicture fdoPicture = LfPictureToFdoPicture(lfPicture, fdoSense);
 				#pragma warning restore 0219
-				// TODO: Implement LfPictureToFdoPicture function, then either add any necessary outside-the-function code here or delete this comment
 			}
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestStringFromMultiText(lfSense.ScientificName);
@@ -488,12 +512,15 @@ namespace LfMerge.Actions
 			return result;
 		}
 
-		private ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner)
+		private ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner, string fileName, string caption, int captionWs)
 		{
 			ICmPicture result;
 			if (!pictureRepo.TryGetObject(guid, out result))
 			{
-				result = pictureFactory.Create();
+				if (caption == null)
+					caption = "";
+				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
+				result = pictureFactory.Create(fileName, captionTss, CmFolderTags.LocalPictures);
 				owner.PicturesOS.Add(result);
 			}
 			return result;
