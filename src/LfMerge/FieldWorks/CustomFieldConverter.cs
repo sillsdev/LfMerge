@@ -592,6 +592,9 @@ namespace LfMerge.FieldWorks
 				fieldName = NormalizedFieldName(fieldName, objectType);
 				BsonValue fieldValue = customFieldValues.GetValue(fieldName, BsonNull.Value);
 				BsonValue fieldGuidOrGuids = (customFieldGuids == null) ? BsonNull.Value : customFieldGuids.GetValue(fieldName, BsonNull.Value);
+				// Persist Guid.Empty as null to save space
+				if (fieldGuidOrGuids.BsonType == BsonType.String && fieldGuidOrGuids.AsString == "00000000-0000-0000-0000-000000000000")
+					fieldGuidOrGuids = BsonNull.Value;
 				remainingFieldNames.Remove(fieldName);
 				Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
 				// TODO: Detect when fieldValue is null and don't bother calling SetCustomFieldData
