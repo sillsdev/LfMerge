@@ -20,6 +20,7 @@ namespace LfMerge
 			HOLD,
 		}
 
+		private ILfMergeSettings Settings { get; set; }
 		private SendReceiveStates _state;
 		private long _lastStateChangeTicks;
 		private int _percentComplete;
@@ -39,9 +40,15 @@ namespace LfMerge
 			ProjectCode = string.Empty;
 		}
 
-		public ProcessingState(string projectCode): this()
+		public ProcessingState(string projectCode, ILfMergeSettings settings): this()
 		{
 			ProjectCode = projectCode;
+			SetSettings(settings);
+		}
+
+		public void SetSettings(ILfMergeSettings settings)
+		{
+			Settings = settings;
 		}
 
 		protected virtual void SetProperty<T>(ref T property, T value)
@@ -138,23 +145,36 @@ namespace LfMerge
 
 		public void Serialize()
 		{
+			if (Settings == null)
+				// Don't serialize while we're still being deserialized!
+				return;
 			var json = JsonConvert.SerializeObject(this);
 
-			var fileName = LfMergeSettings.Current.GetStateFileName(ProjectCode);
+			var fileName = Settings.GetStateFileName(ProjectCode);
 			File.WriteAllText(fileName, json);
 		}
 
 		public class Factory: IProcessingStateDeserialize
 		{
+			private ILfMergeSettings Settings { get; set; }
+
+			public Factory(ILfMergeSettings settings)
+			{
+				Settings = settings;
+			}
+
 			public ProcessingState Deserialize(string projectCode)
 			{
-				var fileName = LfMergeSettings.Current.GetStateFileName(projectCode);
+				var fileName = Settings.GetStateFileName(projectCode);
 				if (File.Exists(fileName))
 				{
 					var json = File.ReadAllText(fileName);
-					return JsonConvert.DeserializeObject<ProcessingState>(json);
+					// TODO: Use http://stackoverflow.com/a/8312048/2314532 instead of this hack
+					ProcessingState state = JsonConvert.DeserializeObject<ProcessingState>(json);
+					state.SetSettings(Settings);
+					return state;
 				}
-				return new ProcessingState(projectCode);
+				return new ProcessingState(projectCode, Settings);
 			}
 		}
 

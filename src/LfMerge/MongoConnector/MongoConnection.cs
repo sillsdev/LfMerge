@@ -19,6 +19,7 @@ namespace LfMerge
 	public class MongoConnection : IMongoConnection
 	{
 		private string connectionString;
+		private string mainDatabaseName;
 		private Lazy<IMongoClient> client;
 
 		// TODO: Get these from config instead of hard-coding
@@ -46,16 +47,11 @@ namespace LfMerge
 			//new MongoRegistrarForLfFields().RegisterClassMappings();
 		}
 
-		public static void SetDefaultParameters(string hostName = null, string mainDatabaseName = null)
+		public MongoConnection(ILfMergeSettings settings)
 		{
-			if (hostName != null) HostNameAndPort = hostName;
-			if (mainDatabaseName != null) MainDatabaseName = mainDatabaseName;
-		}
-
-		public MongoConnection(string hostNameAndPort = null)
-		{
-			if (hostNameAndPort == null) hostNameAndPort = HostNameAndPort;
-			connectionString = String.Format("mongodb://{0}", hostNameAndPort);
+			connectionString = String.Format("mongodb://{0}", settings.MongoDbHostNameAndPort);
+			// TODO: Add databaseName to settings instead of the below
+			mainDatabaseName = MainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
 
@@ -73,7 +69,7 @@ namespace LfMerge
 		}
 
 		public IMongoDatabase GetMainDatabase() {
-			return GetDatabase(MainDatabaseName);
+			return GetDatabase(this.mainDatabaseName);
 		}
 
 		public UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {

@@ -6,6 +6,8 @@ namespace LfMerge.Actions
 {
 	public class MergeAction: Action
 	{
+		public MergeAction(ILfMergeSettings settings) : base(settings) {}
+
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
 			get { return ProcessingState.SendReceiveStates.MERGING; }

@@ -11,6 +11,8 @@ namespace LfMerge.Queues
 {
 	public class Queue: IQueue
 	{
+		private ILfMergeSettings Settings { get; set; }
+
 		#region Queue handling
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
@@ -65,11 +67,12 @@ namespace LfMerge.Queues
 
 		#endregion
 
-		public Queue(QueueNames name)
+		public Queue(ILfMergeSettings settings, QueueNames name)
 		{
 			if (name == QueueNames.None)
 				throw new ArgumentException("Can't create a queue of type QueueNames.None", "name");
 
+			Settings = settings;
 			Name = name;
 		}
 
@@ -157,7 +160,7 @@ namespace LfMerge.Queues
 
 		private string QueueDirectory
 		{
-			get { return LfMergeSettings.Current.GetQueueDirectory(Name); }
+			get { return Settings.GetQueueDirectory(Name); }
 		}
 	}
 }

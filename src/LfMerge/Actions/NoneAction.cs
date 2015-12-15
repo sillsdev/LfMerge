@@ -6,6 +6,8 @@ namespace LfMerge.Actions
 {
 	public class NoneAction: Action
 	{
+		public NoneAction(ILfMergeSettings settings) : base(settings) {}
+
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
 			get { return ProcessingState.SendReceiveStates.IDLE; }

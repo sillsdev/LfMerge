@@ -9,9 +9,18 @@ namespace LfMerge
 {
 	public class LanguageDepotProject: ILanguageDepotProject
 	{
+		private ILfMergeSettings Settings { get; set; }
+
+		// TODO: Need to grab a MongoConnection as well
+		public LanguageDepotProject(ILfMergeSettings settings)
+		{
+			Settings = settings;
+		}
+
 		public void Initialize(string lfProjectCode)
 		{
-			var client = new MongoClient("mongodb://" + LfMergeSettings.Current.MongoDbHostNameAndPort);
+			// TODO: This should use the MongoConnection class instead
+			var client = new MongoClient("mongodb://" + Settings.MongoDbHostNameAndPort);
 			var database = client.GetDatabase("scriptureforge");
 			var projectCollection = database.GetCollection<BsonDocument>("projects");
 			//var userCollection = database.GetCollection<BsonDocument>("users");

@@ -7,6 +7,8 @@ namespace LfMerge.Actions
 {
 	public abstract class Action: IAction
 	{
+		protected ILfMergeSettings Settings { get; set; }
+
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
 		{
@@ -29,8 +31,9 @@ namespace LfMerge.Actions
 
 		#endregion
 
-		protected Action()
+		public Action(ILfMergeSettings settings)
 		{
+			Settings = settings;
 		}
 
 		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }

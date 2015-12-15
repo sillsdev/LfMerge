@@ -15,24 +15,26 @@ namespace LfMerge.Tests
 	class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
+		public ILfMergeSettings Settings;
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true)
 		{
-			LfMergeSettingsAccessor.ResetCurrent();
-			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble).Build();
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
-			LfMergeSettings.Initialize(LanguageForgeFolder);
+			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
+				registerProcessingStateDouble, LanguageForgeFolder).Build();
+			Settings = MainClass.Container.Resolve<ILfMergeSettings>();
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			var containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
 			{
+				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<ILfMergeSettings>()
+					.WithParameter(new TypedParameter(typeof(string), temporaryFolder));
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
@@ -60,6 +62,7 @@ namespace LfMerge.Tests
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
 			LfMergeSettingsAccessor.ResetCurrent();
+			Settings = null;
 		}
 
 		public string LanguageForgeFolder
@@ -69,7 +72,7 @@ namespace LfMerge.Tests
 
 		public ILfMergeSettings LangForgeDirFinder
 		{
-			get { return LfMergeSettings.Current; }
+			get { return Settings; }
 		}
 
 		public string ProjectPath(string projectCode)

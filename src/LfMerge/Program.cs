@@ -23,6 +23,7 @@ namespace LfMerge
 		internal static ContainerBuilder RegisterTypes()
 		{
 			var containerBuilder = new ContainerBuilder();
+			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().As<ILfMergeSettings>();
 			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
@@ -53,14 +54,15 @@ namespace LfMerge
 					return;
 				}
 
-				LfMergeSettings.LoadSettings();
-				MongoConnection.Initialize(LfMergeSettings.Current.MongoDbHostNameAndPort);
+				// LfMergeSettings.LoadSettings();
+				var settings = Container.Resolve<ILfMergeSettings>();
+				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 				// TODO: Move this testing code where it belongs
 				var localProjectCode = "TestLangProj";
-				var thisProject = LanguageForgeProject.Create(localProjectCode);
-				var foo = Container.ResolveKeyed<IAction>(ActionNames.UpdateMongoDbFromFdo);
+				var thisProject = LanguageForgeProject.Create(settings, localProjectCode);
+				var foo = Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo);
 				foo.Run(thisProject);
-				var bar = Container.ResolveKeyed<IAction>(ActionNames.UpdateFdoFromMongoDb);
+				var bar = Actions.Action.GetAction(ActionNames.UpdateFdoFromMongoDb);
 				bar.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
@@ -70,7 +72,7 @@ namespace LfMerge
 					foreach (var projectCode in clonedQueue)
 					{
 						queue.DequeueProject(projectCode);
-						var project = LanguageForgeProject.Create(projectCode);
+						var project = LanguageForgeProject.Create(settings, projectCode);
 
 						for (var action = queue.CurrentAction;
 							action != null;

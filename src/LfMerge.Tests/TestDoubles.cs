@@ -9,18 +9,29 @@ using LibFLExBridgeChorusPlugin;
 using SIL.Progress;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using LfMerge.FieldWorks;
+using IniParser;
+using IniParser.Model;
+using IniParser.Model.Configuration;
+using IniParser.Parser;
+using IniParser.Exceptions;
 
 namespace LfMerge.Tests
 {
 	public class ProcessingStateFactoryDouble: IProcessingStateDeserialize
 	{
 		public ProcessingStateDouble State { get; set; }
+		private ILfMergeSettings Settings { get; set; }
+
+		public ProcessingStateFactoryDouble(ILfMergeSettings settings)
+		{
+			Settings = settings;
+		}
 
 		#region IProcessingStateDeserialize implementation
 		public ProcessingState Deserialize(string projectCode)
 		{
 			if (State == null)
-				State = new ProcessingStateDouble(projectCode);
+				State = new ProcessingStateDouble(projectCode, Settings);
 			return State;
 		}
 		#endregion
@@ -30,7 +41,7 @@ namespace LfMerge.Tests
 	{
 		public List<ProcessingState.SendReceiveStates> SavedStates;
 
-		public ProcessingStateDouble(string projectCode): base(projectCode)
+		public ProcessingStateDouble(string projectCode, ILfMergeSettings settings): base(projectCode, settings)
 		{
 			SavedStates = new List<ProcessingState.SendReceiveStates>();
 		}
@@ -51,7 +62,7 @@ namespace LfMerge.Tests
 
 	public class LanguageForgeProjectAccessor: LanguageForgeProject
 	{
-		protected LanguageForgeProjectAccessor(): base(null)
+		protected LanguageForgeProjectAccessor(ILfMergeSettings settings): base(settings, null)
 		{
 		}
 
@@ -66,6 +77,16 @@ namespace LfMerge.Tests
 		public static void ResetCurrent()
 		{
 			Current = null;
+		}
+	}
+
+	public class LfMergeSettingsDouble: LfMergeSettingsIni
+	{
+		public LfMergeSettingsDouble(string replacementBaseDir) : base()
+		{
+			var replacementConfig = new IniData(ParsedConfig);
+			replacementConfig.Global["BaseDir"] = replacementBaseDir;
+			Initialize(replacementConfig);
 		}
 	}
 

@@ -16,6 +16,8 @@ namespace LfMerge.Actions
 {
 	public class ReceiveAction: Action
 	{
+		public ReceiveAction(ILfMergeSettings settings) : base(settings) {}
+
 		private IProgress Progress { get; set; }
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
@@ -29,7 +31,7 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var model = scope.Resolve<InternetCloneSettingsModel>();
-				model.ParentDirectoryToPutCloneIn = LfMergeSettings.Current.WebWorkDirectory;
+				model.ParentDirectoryToPutCloneIn = Settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
 				model.ProjectId = project.LanguageDepotProject.ProjectCode;
@@ -61,7 +63,7 @@ namespace LfMerge.Actions
 
 		private static string GetProjectDirectory(string projectCode)
 		{
-			return Path.Combine(LfMergeSettings.Current.WebWorkDirectory, projectCode);
+			return Path.Combine(Settings.WebWorkDirectory, projectCode);
 		}
 
 		private void InitialClone(InternetCloneSettingsModel model)

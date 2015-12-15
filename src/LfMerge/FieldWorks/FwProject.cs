@@ -24,9 +24,9 @@ namespace LfMerge.FieldWorks
 		private readonly IFdoUI _fdoUi;
 		private readonly ProjectIdentifier _project;
 
-		public FwProject(string database)
+		public FwProject(ILfMergeSettings settings, string database)
 		{
-			_project = new ProjectIdentifier(LfMergeSettings.Current, database);
+			_project = new ProjectIdentifier(settings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
 		}

@@ -17,24 +17,26 @@ namespace LfMerge
 		/// </summary>
 		public const string MongoDatabaseNamePrefix = "sf_"; // TODO: Should this be in the config?
 
+		private ILfMergeSettings _settings;
 		private FwProject _fieldWorksProject;
 		private readonly ProcessingState _state;
 		private readonly string _projectCode;
 		private ILanguageDepotProject _languageDepotProject;
 
-		public static LanguageForgeProject Create(string projectCode)
+		public static LanguageForgeProject Create(ILfMergeSettings settings, string projectCode)
 		{
 			LanguageForgeProject project;
 			if (CachedProjects.TryGetValue(projectCode, out project))
 				return project;
 
-			project = new LanguageForgeProject(projectCode);
+			project = new LanguageForgeProject(settings, projectCode);
 			CachedProjects.Add(projectCode, project);
 			return project;
 		}
 
-		protected LanguageForgeProject(string projectCode)
+		protected LanguageForgeProject(ILfMergeSettings settings, string projectCode)
 		{
+			_settings = settings;
 			_projectCode = projectCode;
 			_state = ProcessingState.Deserialize(projectCode);
 		}
@@ -64,7 +66,7 @@ namespace LfMerge
 				if (_fieldWorksProject == null)
 				{
 					// for now we simply use the language forge project code as name for the fwdata file
-					_fieldWorksProject = new FwProject(FwProjectCode);
+					_fieldWorksProject = new FwProject(_settings, FwProjectCode);
 				}
 				return _fieldWorksProject;
 			}

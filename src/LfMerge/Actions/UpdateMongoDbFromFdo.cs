@@ -30,7 +30,7 @@ namespace LfMerge.Actions
 		private CustomFieldConverter converter;
 		private IMongoConnection connection;
 
-		public UpdateMongoDbFromFdo(IMongoConnection conn)
+		public UpdateMongoDbFromFdo(ILfMergeSettings settings, IMongoConnection conn) : base(settings)
 		{
 			connection = conn;
 		}

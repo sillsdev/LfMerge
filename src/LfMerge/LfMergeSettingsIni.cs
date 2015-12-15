@@ -36,24 +36,22 @@ namespace LfMerge
 			UserConfigDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".config", "languageforge");
 		}
 
-		private string BaseDir { get; set; }
-		private IniData ParsedConfig { get; set; }
+		protected IniData ParsedConfig { get; set; }
 
 		public void Initialize(IniData parsedConfig)
 		{
 			Console.WriteLine("LfMergeSettingsIni.Initialize() was called with config: {0}", parsedConfig);
-			ParsedConfig = parsedConfig; // For ease of persisting again later in SaveSettings()
 //			if (Current != null)
 //				return;
 
 			KeyDataCollection main = parsedConfig.Global ?? new KeyDataCollection();
-			BaseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
+			string baseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
 			string releaseDataDir = main["ReleaseDataDir"] ?? "ReleaseData";
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
 
-			SetAllMembers(BaseDir, releaseDataDir, templatesDir, mongoHostname, mongoPort);
+			SetAllMembers(baseDir, releaseDataDir, templatesDir, mongoHostname, mongoPort);
 
 			Queue.CreateQueueDirectories(this); // TODO: I believe this call properly belongs elsewhere.
 		}
@@ -62,8 +60,9 @@ namespace LfMerge
 
 		public LfMergeSettingsIni()
 		{
-			IniData iniConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile, UserConfigFile);
-			Initialize(iniConfig);
+			// Save parsed config for easier persisting in SaveSettings()
+			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile, UserConfigFile);
+			Initialize(ParsedConfig);
 		}
 
 		private void SetAllMembers(string baseDir, string releaseDataDir, string templatesDir, string mongoHostname, string mongoPort)

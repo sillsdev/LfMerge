@@ -18,11 +18,11 @@ namespace LfMerge.Tests
 			_env = new TestEnvironment();
 
 			var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-			var uri = new Uri("mongodb://" + LfMergeSettings.Current.MongoDbHostNameAndPort);
+			var uri = new Uri("mongodb://" + _env.Settings.MongoDbHostNameAndPort);
 			if (ipGlobalProperties.GetActiveTcpListeners().Count(t => t.Port == uri.Port) == 0)
 			{
 				Assert.Ignore("Ignoring tests because MongoDB doesn't seem to be running on {0}.",
-					LfMergeSettings.Current.MongoDbHostNameAndPort);
+					_env.Settings.MongoDbHostNameAndPort);
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace LfMerge.Tests
 		public void ExistingProject()
 		{
 			// Setup
-			var sut = new LanguageDepotProject();
+			var sut = new LanguageDepotProject(_env.Settings);
 
 			// Exercise
 			sut.Initialize("proja");
@@ -52,7 +52,7 @@ namespace LfMerge.Tests
 		public void NonexistingProject()
 		{
 			// Setup
-			var sut = new LanguageDepotProject();
+			var sut = new LanguageDepotProject(_env.Settings);
 
 			// Exercise/Verify
 			Assert.That(() => sut.Initialize("nonexisting"), Throws.ArgumentException);

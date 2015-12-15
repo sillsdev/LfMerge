@@ -45,7 +45,7 @@ namespace LfMerge.Actions
 
 		private CustomFieldConverter customFieldConverter;
 
-		public UpdateFdoFromMongoDbAction(IMongoConnection conn, MongoProjectRecordFactory factory)
+		public UpdateFdoFromMongoDbAction(ILfMergeSettings settings, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings)
 		{
 			connection = conn;
 			projectRecordFactory = factory;

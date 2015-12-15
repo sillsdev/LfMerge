@@ -77,7 +77,7 @@ namespace LfMerge.Tests.Actions
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create("proja");
+			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
 			var sut = LfMerge.Actions.Action.GetAction(actionName);
 
 			// Exercise
@@ -98,7 +98,7 @@ namespace LfMerge.Tests.Actions
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create("proja");
+			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
 			var state = Factory.Deserialize("proja") as ProcessingStateDouble;
 			state.SRState = ProcessingState.SendReceiveStates.HOLD;
 			state.ResetSavedStates();

@@ -6,6 +6,8 @@ namespace LfMerge.Actions
 {
 	public class CommitAction: Action
 	{
+		public CommitAction(ILfMergeSettings settings) : base(settings) {}
+
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
 			get { return ProcessingState.SendReceiveStates.QUEUED; }
