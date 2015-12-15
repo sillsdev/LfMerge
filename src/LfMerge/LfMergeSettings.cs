@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace LfMerge
 {
-	public class LfMergeSettings: IFdoDirectories
+	public class LfMergeSettings: ILfMergeSettings
 	{
 		public static LfMergeSettings Current { get; protected set; }
 
@@ -38,7 +38,7 @@ namespace LfMerge
 			}
 			Current = new LfMergeSettings(baseDir, releaseDataDir, templatesDir);
 
-			Queue.CreateQueueDirectories();
+			Queue.CreateQueueDirectories(Current);
 		}
 
 		[JsonProperty]

@@ -151,6 +151,9 @@
     <Compile Include="DataConverters\PartOfSpeechConverter.cs" />
     <Compile Include="DataConverters\GoldEticXmlParser.cs" />
     <Compile Include="DataConverters\GoldEticItem.cs" />
+    <Compile Include="LfMergeSettingsIni.cs" />
+    <Compile Include="DefaultLfMergeSettings.cs" />
+    <Compile Include="ILfMergeSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets')" />

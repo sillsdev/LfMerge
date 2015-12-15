@@ -53,11 +53,11 @@ namespace LfMerge.Queues
 			return null;
 		}
 
-		public static void CreateQueueDirectories()
+		public static void CreateQueueDirectories(ILfMergeSettings settings)
 		{
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
-				var queueDir = LfMergeSettings.Current.GetQueueDirectory(queueName);
+				var queueDir = settings.GetQueueDirectory(queueName);
 				if (queueDir != null)
 					Directory.CreateDirectory(queueDir);
 			}
