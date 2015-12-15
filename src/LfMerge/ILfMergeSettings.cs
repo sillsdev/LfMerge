@@ -18,6 +18,8 @@ namespace LfMerge
 		string WebWorkDirectory { get; }
 		string GetStateFileName(string projectCode);
 		string GetQueueDirectory(QueueNames queue);
+
+		void SaveSettings(); // Does this really belong in the interface? The only thing it's used for is in unit testing. 2015-12 RM
 	}
 }
 

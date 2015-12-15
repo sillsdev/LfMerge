@@ -12,7 +12,7 @@ namespace LfMerge
 {
 	public class LfMergeSettings: ILfMergeSettings
 	{
-		public static LfMergeSettings Current { get; protected set; }
+		public static ILfMergeSettings Current { get; protected set; }
 
 		[JsonProperty]
 		public static string ConfigDir { get; set; }
@@ -183,7 +183,7 @@ namespace LfMerge
 			File.WriteAllText(ConfigFile, json);
 		}
 
-		public static LfMergeSettings LoadSettings()
+		public static ILfMergeSettings LoadSettings()
 		{
 			var fileName = ConfigFile;
 			LfMergeSettings.Current = null;

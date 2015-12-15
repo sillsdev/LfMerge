@@ -67,7 +67,7 @@ namespace LfMerge.Tests
 			get { return _languageForgeServerFolder.Path; }
 		}
 
-		public LfMergeSettings LangForgeDirFinder
+		public ILfMergeSettings LangForgeDirFinder
 		{
 			get { return LfMergeSettings.Current; }
 		}
