@@ -61,9 +61,9 @@ namespace LfMerge.Actions
 			get { return ActionNames.Merge; }
 		}
 
-		private static string GetProjectDirectory(string projectCode)
+		private static string GetProjectDirectory(string projectCode, ILfMergeSettings settings)
 		{
-			return Path.Combine(Settings.WebWorkDirectory, projectCode);
+			return Path.Combine(settings.WebWorkDirectory, projectCode);
 		}
 
 		private void InitialClone(InternetCloneSettingsModel model)
@@ -75,7 +75,7 @@ namespace LfMerge.Actions
 		{
 			var actualCloneResult = new ActualCloneResult();
 
-			var cloneLocation = GetProjectDirectory(project.LfProjectCode);
+			var cloneLocation = GetProjectDirectory(project.LfProjectCode, Settings);
 			var newProjectFilename = Path.GetFileName(project.LfProjectCode) + SharedConstants.FwXmlExtension;
 			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
 
