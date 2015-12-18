@@ -159,6 +159,10 @@
   <Import Project="..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.1.5807.26101\build\BuildDependencyTasks.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\..\..\..\fwrepo\fw\Downloads\icu.net.dll.config">
+      <Link>icu.net.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Queues\" />
