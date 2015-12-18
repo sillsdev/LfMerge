@@ -238,22 +238,10 @@ namespace LfMerge
 
 		public IPartOfSpeech CreateFromCustomName(string nameHierarchy, string userWs = "en")
 		{
-			// TODO: Implement me. Should handle "A|B|c" or "A|b|c" or "a|b|c" cases equally well.
-			// If we don't have the GOLDEtic data to help us, the best we can do is set the name
-			string ORC = "\ufffc";
-			string[] names = nameHierarchy.Split(new string[] { ORC }, StringSplitOptions.None);
-			string finalName = names.Last();
-			string allButLast = string.Join(ORC, names.Take(names.Length - 1));
-			IPartOfSpeech pos;
-			if (!String.IsNullOrEmpty(allButLast))
-			{
-				IPartOfSpeech parent = FromName(allButLast);
-				pos = GetOrCreateOwnedPos(null, parent);
-			}
-			else
-				pos = GetOrCreateTopLevelPos(null);
-			PopulateCustomPos(pos, finalName, userWs);
-			return pos;
+			// TODO: Verify that this handles "A|B|c" and "A|b|c" cases, where part of the name is official
+			// (Because I think if A does not yet exist, and "A|b|c" is found, A might get the wrong GUID.)
+			int wsId = cache.WritingSystemFactory.GetWsFromStr(userWs);
+			return (IPartOfSpeech)cache.LangProject.PartsOfSpeechOA.FindOrCreatePossibility(nameHierarchy, wsId, true);
 		}
 
 		// TODO: Rename this function, then remove this comment
@@ -339,8 +327,9 @@ namespace LfMerge
 			else
 			{
 				// No "official" GUID, so this is a "custom" PartOfSpeech... and some (but not necessarily all) of its ancestors might be as well.
-				Console.WriteLine("Creating part of speech with GUID {0} for name {1} in ws {2}.", guid, name, foundWs);
-				return CreateFromCustomName(name, foundWs);
+				var pos = CreateFromCustomName(name, foundWs);
+				Console.WriteLine("Creating part of speech with GUID {0} and full name {3} for name {1} in ws {2}.", pos.Guid, name, foundWs, pos.NameHierarchyString);
+				return pos;
 			}
 		}
 	}
