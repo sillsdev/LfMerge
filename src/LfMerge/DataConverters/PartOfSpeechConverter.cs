@@ -89,19 +89,19 @@ namespace LfMerge
 
 		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa)
 		{
-			switch (msa.GetType().Name)
+			switch (msa.ClassID)
 			{
-			case "MoDerivAffMsa":
+			case MoDerivAffMsaTags.kClassId:
 				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
 				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
 				return ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
-			case "MoDerivStepMsa":
+			case MoDerivStepMsaTags.kClassId:
 				return ((IMoDerivStepMsa)msa).PartOfSpeechRA;
-			case "MoInflAffMsa":
+			case MoInflAffMsaTags.kClassId:
 				return ((IMoInflAffMsa)msa).PartOfSpeechRA;
-			case "MoStemMsa":
+			case MoStemMsaTags.kClassId:
 				return ((IMoStemMsa)msa).PartOfSpeechRA;
-			case "MoUnclassifiedAffixMsa":
+			case MoUnclassifiedAffixMsaTags.kClassId:
 				return ((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA;
 			default:
 				// TODO: Make this a log message, not Console.WriteLine
@@ -113,23 +113,23 @@ namespace LfMerge
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos)
 		{
 			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
-			switch (msa.GetType().Name)
+			switch (msa.ClassID)
 			{
-			case "MoDerivAffMsa":
+			case MoDerivAffMsaTags.kClassId:
 				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
 				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
 				((IMoDerivAffMsa)msa).ToPartOfSpeechRA = pos;
 				break;
-			case "MoDerivStepMsa":
+			case MoDerivStepMsaTags.kClassId:
 				((IMoDerivStepMsa)msa).PartOfSpeechRA = pos;
 				break;
-			case "MoInflAffMsa":
+			case MoInflAffMsaTags.kClassId:
 				((IMoInflAffMsa)msa).PartOfSpeechRA = pos;
 				break;
-			case "MoStemMsa":
+			case MoStemMsaTags.kClassId:
 				((IMoStemMsa)msa).PartOfSpeechRA = pos;
 				break;
-			case "MoUnclassifiedAffixMsa":
+			case MoUnclassifiedAffixMsaTags.kClassId:
 				((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA = pos;
 				break;
 			default:
