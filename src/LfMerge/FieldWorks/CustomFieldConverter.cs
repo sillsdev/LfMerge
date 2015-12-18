@@ -115,34 +115,12 @@ namespace LfMerge.FieldWorks
 
 			switch (fieldType)
 			{
-			case CellarPropertyType.Binary:
-			case CellarPropertyType.Image: // Treat image fields as binary blobs
-				byte[] binaryData;
-				data.get_Binary(hvo, flid, out binaryData);
-				fieldValue = (binaryData == null) ? null : new BsonBinaryData(binaryData);
-				break;
-
-			case CellarPropertyType.Boolean:
-				fieldValue = new BsonBoolean(data.get_BooleanProp(hvo, flid));
-				break;
-
-			case CellarPropertyType.Float:
-				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
-				fieldValue = null;
-				break;
-				// TODO: Maybe issue a proper warning (or error) log message?
-
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
 				string genDateStr = genDate.ToLongString();
 				fieldValue = (String.IsNullOrEmpty(genDateStr)) ? null : new BsonString(genDateStr);
 				break;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
-
-			case CellarPropertyType.Guid:
-				// Note that we do NOT set fieldGuid here. That's only for objects (e.g., OwningAtomic or ReferenceAtomic data)
-				fieldValue = new BsonString(data.get_GuidProp(hvo, flid).ToString());
-				break;
 
 			case CellarPropertyType.Integer:
 				fieldValue = new BsonInt32(data.get_IntProp(hvo, flid));
@@ -154,16 +132,6 @@ namespace LfMerge.FieldWorks
 				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
 				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsBsonDocument());
 				// No need to save GUIDs for multistrings
-				break;
-
-			case CellarPropertyType.Nil:
-				fieldValue = null;
-				break;
-
-			case CellarPropertyType.Numeric:
-				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
-				fieldValue = null;
-				// TODO: Maybe issue a proper warning (or error) log message?
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -199,10 +167,6 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.Unicode:
 				string UnicodeValue = data.get_UnicodeProp(hvo, flid);
 				fieldValue = (String.IsNullOrEmpty(UnicodeValue)) ? null : new BsonString(UnicodeValue);
-				break;
-
-			case CellarPropertyType.Time:
-				fieldValue = new BsonDateTime(data.get_DateTime(hvo, flid));
 				break;
 
 			default:
@@ -345,21 +309,6 @@ namespace LfMerge.FieldWorks
 
 			switch (fieldType)
 			{
-			case CellarPropertyType.Binary:
-			case CellarPropertyType.Image: // Treat image fields as binary blobs
-				byte[] bytes = value.AsBsonBinaryData.Bytes;
-				data.SetBinary(hvo, flid, bytes, bytes.Length);
-				return true;
-
-			case CellarPropertyType.Boolean:
-				data.SetBoolean(hvo, flid, value.AsBoolean);
-				return true;
-
-			case CellarPropertyType.Float:
-				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
-				return false;
-				// TODO: Maybe issue a proper warning (or error) log message?
-
 			case CellarPropertyType.GenDate:
 				GenDate genDate; // = data.get_GenDateProp(hvo, flid);
 				if (GenDate.TryParse(value.AsString, out genDate))
@@ -369,15 +318,6 @@ namespace LfMerge.FieldWorks
 				}
 				return false;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
-
-			case CellarPropertyType.Guid:
-				Guid valueAsGuid;
-				if (Guid.TryParse(value.AsString, out valueAsGuid))
-				{
-					data.SetGuid(hvo, flid, valueAsGuid);
-					return true;
-				}
-				return false;
 
 			case CellarPropertyType.Integer:
 				data.SetInt(hvo, flid, value.AsInt32);
@@ -398,15 +338,6 @@ namespace LfMerge.FieldWorks
 					}
 					return true;
 				}
-
-			case CellarPropertyType.Nil:
-				data.SetUnknown(hvo, flid, null);
-				return true;
-
-			case CellarPropertyType.Numeric:
-				// Floating-point fields are currently not allowed in FDO (as of 2015-11-12)
-				return false;
-				// TODO: Maybe issue a proper warning (or error) log message?
 
 			case CellarPropertyType.OwningAtomic:
 				{
@@ -479,13 +410,6 @@ namespace LfMerge.FieldWorks
 					data.SetObjProp(hvo, flid, newPoss.Hvo);
 					return true;
 				}
-
-			case CellarPropertyType.OwningCollection:
-			case CellarPropertyType.OwningSequence:
-				// NOT implemented since currently, FDO custom fields CANNOT be OwningCollection or OwningSequence.
-				// This is true as of 2015-11-23. If it ever changes, this will need to be implemented.
-				return false;
-				// TODO: Maybe issue a proper warning (or error) log message?
 
 			case CellarPropertyType.ReferenceCollection:
 			case CellarPropertyType.ReferenceSequence:
@@ -564,10 +488,6 @@ namespace LfMerge.FieldWorks
 					data.SetUnicode(hvo, flid, valueStr, valueStr.Length);
 					return true;
 				}
-
-			case CellarPropertyType.Time:
-				data.SetDateTime(hvo, flid, value.ToUniversalTime());
-				return true;
 
 			default:
 				return false;
