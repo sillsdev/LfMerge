@@ -283,7 +283,7 @@ namespace LfMerge.Actions
 				return null;
 			}
 			Console.WriteLine("BestStringFromMultiText got a non-null input");
-			IWritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
+			WritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
 			int wsId = cache.DefaultAnalWs;
 			// IWritingSystem en = wsm.Get("en");
 			string wsStr = wsm.GetStrFromWs(wsId);
