@@ -118,11 +118,7 @@ namespace LfMerge.Actions
 			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
 			{
 				foreach (LfLexEntry lfEntry in lexicon)
-				{
-					#pragma warning disable 0219 // "Variable is assigned but its value is never used"
-					ILexEntry fdoEntry = LfLexEntryToFdoLexEntry(lfEntry);
-					#pragma warning restore 0219
-				}
+					LfLexEntryToFdoLexEntry(lfEntry);
 				// TODO: Use cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
 			});
 		}
@@ -218,11 +214,7 @@ namespace LfMerge.Actions
 
 			if (lfEntry.Senses != null) {
 				foreach(LfSense lfSense in lfEntry.Senses)
-				{
-					#pragma warning disable 0219 // "Variable is assigned but its value is never used"
-					ILexSense fdoSense = LfSenseToFdoSense(lfSense, fdoEntry);
-					#pragma warning restore 0219
-				}
+					LfSenseToFdoSense(lfSense, fdoEntry);
 			}
 
 			customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
@@ -388,12 +380,7 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
 			foreach (LfExample lfExample in lfSense.Examples)
-			{
-				#pragma warning disable 0219 // "Variable is assigned but its value is never used"
-				ILexExampleSentence fdoExample = LfExampleToFdoExample(lfExample, fdoSense);
-				#pragma warning restore 0219
-				// TODO: Implement LfExampleToFdoExample function, then either add any necessary outside-the-function code here or delete this comment
-			};
+				LfExampleToFdoExample(lfExample, fdoSense);
 			SetMultiStringFrom(fdoSense.GeneralNote, lfSense.GeneralNote);
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
@@ -415,11 +402,7 @@ namespace LfMerge.Actions
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
 			foreach (LfPicture lfPicture in lfSense.Pictures)
-			{
-				#pragma warning disable 0219 // "Variable is assigned but its value is never used"
-				ICmPicture fdoPicture = LfPictureToFdoPicture(lfPicture, fdoSense);
-				#pragma warning restore 0219
-			}
+				LfPictureToFdoPicture(lfPicture, fdoSense);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestStringFromMultiText(lfSense.ScientificName);
 //			new PossibilityListConverter(cache.LanguageProject.SemanticDomainListOA)
