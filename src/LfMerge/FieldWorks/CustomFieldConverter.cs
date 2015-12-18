@@ -427,20 +427,17 @@ namespace LfMerge.FieldWorks
 					List<string> fieldData = valueAsStringArray.Values;
 					Console.WriteLine("Reference collection had values {0}", String.Join(", ", fieldData));
 					Console.WriteLine("Reference collection had GUIDs {0}", guidOrGuids.ToJson());
-					List<ICmPossibility> fieldObjs = new List<ICmPossibility>();
-					fieldGuids.Zip<Guid, string, bool>(fieldData, (thisGuid, thisData) =>
+					IEnumerable<ICmPossibility> fieldObjs = fieldGuids.Zip<Guid, string, ICmPossibility>(fieldData, (thisGuid, thisData) =>
 					{
 						ICmPossibility newPoss;
 						if (thisGuid == default(Guid)) {
 							newPoss = ((ICmPossibilityList)parentList).FindOrCreatePossibility(thisData, fieldWs);
-							fieldObjs.Add(newPoss);
+							return newPoss;
 						}
 						else {
 							newPoss = servLoc.GetObject(thisGuid) as ICmPossibility;
-							fieldObjs.Add(newPoss);
+							return newPoss;
 						}
-						Console.WriteLine("Got possibility ({0}) with GUID {1} when looking up GUID {2}", newPoss.AbbrAndName, newPoss.Guid, thisGuid);
-						return true;
 					});
 
 					// Step 2: Remove any objects from the "old" list that weren't in the "new" list
