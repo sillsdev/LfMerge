@@ -80,7 +80,7 @@ namespace LfMerge.Actions
 			if (cache == null)
 			{
 				Console.WriteLine("Failed to find the FDO cache!");
-				var fwProject = project.FieldWorksProject;
+				FwProject fwProject = project.FieldWorksProject;
 				return;
 			}
 
@@ -129,10 +129,10 @@ namespace LfMerge.Actions
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
 		{
-			var db = connection.GetProjectDatabase(project);
-			var collection = db.GetCollection<LfLexEntry>("lexicon");
-			IAsyncCursor<LfLexEntry> result2 = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
-			return result2.AsEnumerable();
+			IMongoDatabase db = connection.GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
+			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
+			return result.AsEnumerable();
 		}
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
@@ -291,10 +291,10 @@ namespace LfMerge.Actions
 				return null;
 			}
 			Console.WriteLine("BestStringFromMultiText got a non-null input");
-			var wsm = cache.ServiceLocator.WritingSystemManager;
+			IWritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
 			int wsId = cache.DefaultAnalWs;
 			// IWritingSystem en = wsm.Get("en");
-			var wsStr = wsm.GetStrFromWs(wsId);
+			string wsStr = wsm.GetStrFromWs(wsId);
 			LfStringField valueField;
 			string value;
 			if (input.TryGetValue(wsStr, out valueField))

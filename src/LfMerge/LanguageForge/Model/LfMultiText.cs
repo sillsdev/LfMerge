@@ -105,8 +105,8 @@ namespace LfMerge.LanguageForge.Model
 		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
 		public ITsString ToITsString(int wsId, FdoCache cache)
 		{
-			var wsm = cache.ServiceLocator.WritingSystemManager;
-			var wsStr = wsm.GetStrFromWs(wsId);
+			IWritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
+			string wsStr = wsm.GetStrFromWs(wsId);
 			LfStringField valueField;
 			if (TryGetValue(wsStr, out valueField))
 				return TsStringUtils.MakeTss(valueField.Value, wsId);

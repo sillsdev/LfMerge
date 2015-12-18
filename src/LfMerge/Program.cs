@@ -58,11 +58,11 @@ namespace LfMerge
 				var settings = Container.Resolve<ILfMergeSettings>();
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 				// TODO: Move this testing code where it belongs
-				var localProjectCode = "TestLangProj";
-				var thisProject = LanguageForgeProject.Create(settings, localProjectCode);
-				var foo = Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo);
+				string localProjectCode = "TestLangProj";
+				LanguageForgeProject thisProject = LanguageForgeProject.Create(settings, localProjectCode);
+				IAction foo = Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo);
 				foo.Run(thisProject);
-				var bar = Actions.Action.GetAction(ActionNames.UpdateFdoFromMongoDb);
+				IAction bar = Actions.Action.GetAction(ActionNames.UpdateFdoFromMongoDb);
 				bar.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

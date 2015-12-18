@@ -537,7 +537,7 @@ namespace LfMerge.FieldWorks
 					}
 
 					// Step 3: Add any objects from the "new" list that weren't in the "old" list
-					foreach (var newHvo in newHvosArray)
+					foreach (int newHvo in newHvosArray)
 					{
 						if (combinedHvos.Contains(newHvo))
 							continue;

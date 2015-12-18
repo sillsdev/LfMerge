@@ -78,10 +78,9 @@ namespace LfMerge.Actions
 				// TODO: Write the lfEntry into Mongo in the right place
 				// TODO: Move this "update this document in this MongoDB collection" code to somewhere where it belongs, like on MongoConnection
 				var filterBuilder = new FilterDefinitionBuilder<LfLexEntry>();
-				var fb = Builders<LfLexEntry>.Filter;
-				var update = connection.BuildUpdate<LfLexEntry>(lfEntry);
-				var filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
-				var collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
+				UpdateDefinition<LfLexEntry> update = connection.BuildUpdate<LfLexEntry>(lfEntry);
+				FilterDefinition<LfLexEntry> filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
+				IMongoCollection<LfLexEntry> collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
 				Console.WriteLine("About to save LfEntry {0} which has morphologyType {1}", lfEntry.Guid, lfEntry.MorphologyType);
 				//var result = collection.FindOneAndReplaceAsync(filter, lfEntry).Result;
 				Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());

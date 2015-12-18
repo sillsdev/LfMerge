@@ -4,6 +4,7 @@ using System;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson;
+using MongoDB.Bson.IO;
 
 namespace LfMerge
 {
@@ -11,9 +12,9 @@ namespace LfMerge
 	{
 		public override bool Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
 		{
-			var bsonReader = context.Reader;
+			IBsonReader bsonReader = context.Reader;
 
-			var bsonType = bsonReader.GetCurrentBsonType();
+			BsonType bsonType = bsonReader.GetCurrentBsonType();
 			if (bsonType == BsonType.String)
 			{
 				string token = bsonReader.ReadString();

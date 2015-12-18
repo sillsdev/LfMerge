@@ -30,7 +30,7 @@ namespace LfMerge.Tests
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
 			bool registerProcessingStateDouble, string temporaryFolder)
 		{
-			var containerBuilder = MainClass.RegisterTypes();
+			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
 			{
 				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<ILfMergeSettings>()
