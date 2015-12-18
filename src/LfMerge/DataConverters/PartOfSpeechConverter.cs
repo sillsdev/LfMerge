@@ -278,9 +278,10 @@ namespace LfMerge
 			Guid guid = Guid.Empty;
 
 			// Try four different ways to look up this name in GOLDEtic
-			PartOfSpeechMasterList.HierarchicalPosGuids.TryGetValue(name, out guidStr);
-			if (guidStr == null)
-				PartOfSpeechMasterList.FlatPosGuids.TryGetValue(name, out guidStr);
+			if (!PartOfSpeechMasterList.HierarchicalPosGuids.TryGetValue(name, out guidStr))
+				guidStr = null;
+			if (guidStr == null && !PartOfSpeechMasterList.FlatPosGuids.TryGetValue(name, out guidStr))
+				guidStr = null;
 			if (guidStr == null)
 			{
 				item = FindGoldEticItem(name, wsToSearch);
@@ -300,8 +301,11 @@ namespace LfMerge
 				}
 			}
 			if (guidStr != null)
-				Guid.TryParse(guidStr, out guid);
-			
+			{
+				if (!Guid.TryParse(guidStr, out guid))
+					guid = Guid.Empty;
+			}
+
 			// So... did we find it?
 			if (guid != Guid.Empty)
 			{
