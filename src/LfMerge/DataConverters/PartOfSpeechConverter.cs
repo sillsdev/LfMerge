@@ -53,8 +53,8 @@ namespace LfMerge
 		{
 			string result;
 			Dictionary<string, string> lookupTable = (flat) ?
-				PartOfSpeechMasterList.FlatPoSNames :
-				PartOfSpeechMasterList.HierarchicalPoSNames;
+				PartOfSpeechMasterList.FlatPosNames :
+				PartOfSpeechMasterList.HierarchicalPosNames;
 			if (lookupTable.TryGetValue(guidStr, out result))
 				return result;
 			return null;
@@ -278,9 +278,9 @@ namespace LfMerge
 			Guid guid = Guid.Empty;
 
 			// Try four different ways to look up this name in GOLDEtic
-			PartOfSpeechMasterList.HierarchicalPoSGuids.TryGetValue(name, out guidStr);
+			PartOfSpeechMasterList.HierarchicalPosGuids.TryGetValue(name, out guidStr);
 			if (guidStr == null)
-				PartOfSpeechMasterList.FlatPoSGuids.TryGetValue(name, out guidStr);
+				PartOfSpeechMasterList.FlatPosGuids.TryGetValue(name, out guidStr);
 			if (guidStr == null)
 			{
 				item = FindGoldEticItem(name, wsToSearch);

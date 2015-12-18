@@ -7,7 +7,7 @@ namespace LfMerge
 {
 	public static class PartOfSpeechMasterList
 	{
-		public static readonly Dictionary<string, string> FlatPoSGuids = new Dictionary<string, string> {
+		public static readonly Dictionary<string, string> FlatPosGuids = new Dictionary<string, string> {
 			{ "adjective", "30d07580-5052-4d91-bc24-469b8b2d7df9" },
 			{ "adposition", "ae115ea8-2cd7-4501-8ae7-dc638e4f17c5" },
 			{ "postposition", "18f1b2b8-0ce3-4889-90e9-003fed6a969f" },
@@ -69,7 +69,7 @@ namespace LfMerge
 			{ "transitive verb", "54712931-442f-42d5-8634-f12bd2e310ce" }
 		};
 
-		public static readonly Dictionary<string, string> HierarchicalPoSGuids = new Dictionary<string, string> {
+		public static readonly Dictionary<string, string> HierarchicalPosGuids = new Dictionary<string, string> {
 			{ "adjective", "30d07580-5052-4d91-bc24-469b8b2d7df9" },
 			{ "adposition", "ae115ea8-2cd7-4501-8ae7-dc638e4f17c5" },
 			{ "adposition\ufffcpostposition", "18f1b2b8-0ce3-4889-90e9-003fed6a969f" },
@@ -131,7 +131,7 @@ namespace LfMerge
 			{ "verb\ufffctransitive verb", "54712931-442f-42d5-8634-f12bd2e310ce" }
 		};
 
-		public static readonly Dictionary<string, string> FlatPoSNames = new Dictionary<string, string> {
+		public static readonly Dictionary<string, string> FlatPosNames = new Dictionary<string, string> {
 			{ "30d07580-5052-4d91-bc24-469b8b2d7df9", "adjective" },
 			{ "ae115ea8-2cd7-4501-8ae7-dc638e4f17c5", "adposition" },
 			{ "18f1b2b8-0ce3-4889-90e9-003fed6a969f", "postposition" },
@@ -192,7 +192,7 @@ namespace LfMerge
 			{ "54712931-442f-42d5-8634-f12bd2e310ce", "transitive verb" }
 		};
 
-		public static readonly Dictionary<string, string> HierarchicalPoSNames = new Dictionary<string, string> {
+		public static readonly Dictionary<string, string> HierarchicalPosNames = new Dictionary<string, string> {
 			{ "30d07580-5052-4d91-bc24-469b8b2d7df9", "adjective" },
 			{ "ae115ea8-2cd7-4501-8ae7-dc638e4f17c5", "adposition" },
 			{ "18f1b2b8-0ce3-4889-90e9-003fed6a969f", "adposition\ufffcpostposition" },
