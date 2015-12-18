@@ -67,8 +67,9 @@ namespace LfMerge
 
 		public IPartOfSpeech FromGuidStr(string guidStr)
 		{
-			IPartOfSpeech result = TryGetPos(guidStr);
-			if (result != null) return result;
+			IPartOfSpeech result;
+			if (TryGetPos(guidStr, out result))
+				return result;
 			string name = NameFromGuidStr(guidStr, flat:false);
 			if (name == null) return null;
 			// We know we have a well-known name, so we should use it. TODO: Or should we?
@@ -176,31 +177,34 @@ namespace LfMerge
 			pos.Name.set_String(wsId, finalName);
 		}
 
-		private IPartOfSpeech TryGetPos(string guidStr)
+		private bool TryGetPos(string guidStr, out IPartOfSpeech result)
 		{
-			Guid guid;
-			Guid.TryParse(guidStr, out guid);
-			if (guid == Guid.Empty)
-				return null;
-			IPartOfSpeech result;
-			return posRepo.TryGetObject(guid, out result) ? result : null;
+			Guid guid = Guid.Empty;
+			if (!Guid.TryParse(guidStr, out guid) || guid == Guid.Empty)
+			{
+				result = null;
+				return false;
+			}
+			return posRepo.TryGetObject(guid, out result);
 		}
 
 		private IPartOfSpeech GetOrCreateTopLevelPos(string guidStr)
 		{
-			IPartOfSpeech existingPos = TryGetPos(guidStr);
-			if (existingPos != null) return existingPos;
+			IPartOfSpeech existingPos;
+			if (TryGetPos(guidStr, out existingPos))
+				return existingPos;
 			Guid guid;
-			Guid.TryParse(guidStr, out guid);
+			Guid.TryParse(guidStr, out guid); // Don't care if this fails
 			return posFactory.Create(guid, cache.LanguageProject.PartsOfSpeechOA);
 		}
 
 		private IPartOfSpeech GetOrCreateOwnedPos(string guidStr, IPartOfSpeech owner)
 		{
-			IPartOfSpeech existingPos = TryGetPos(guidStr);
-			if (existingPos != null) return existingPos;
+			IPartOfSpeech existingPos;
+			if (TryGetPos(guidStr, out existingPos))
+				return existingPos;
 			Guid guid;
-			Guid.TryParse(guidStr, out guid);
+			Guid.TryParse(guidStr, out guid); // Don't care if this fails
 			return posFactory.Create(guid, owner);
 		}
 
