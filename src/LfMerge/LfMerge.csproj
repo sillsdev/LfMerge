@@ -30,18 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="FDO">
-      <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\FDO.dll</HintPath>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\BasicUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\CoreImpl.dll</HintPath>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <HintPath>..\..\..\..\fwrepo\fw\Output_x86_64\Debug\COMInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -74,6 +62,18 @@
     </Reference>
     <Reference Include="LibTriboroughBridge-ChorusPlugin">
       <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="FDO">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="BasicUtils">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="COMInterfaces">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>libfieldworks-fdo</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
