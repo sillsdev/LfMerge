@@ -60,12 +60,7 @@ namespace LfMerge.LanguageForge.Model
 
 		public Dictionary<string, string> AsStringDictionary()
 		{
-			Dictionary<string, string> result = new Dictionary<string, string>();
-			foreach (KeyValuePair<string, LfStringField> kv in this)
-			{
-				result.Add(kv.Key, kv.Value.ToString());
-			}
-			return result;
+			return this.ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
 		}
 
 		public BsonDocument AsBsonDocument()

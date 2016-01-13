@@ -180,7 +180,7 @@ namespace LfMerge.Actions
 					Console.WriteLine("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.", fdoEntry.Guid);
 				return null; // Don't set fields on a deleted entry
 			}
-			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => (x.Value == null) ? "" : x.Value));
+			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end

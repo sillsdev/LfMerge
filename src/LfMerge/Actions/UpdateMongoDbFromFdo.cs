@@ -140,7 +140,7 @@ namespace LfMerge.Actions
 			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
 			if (fdoSense.ExamplesOS != null)
-				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(example => FdoExampleToLfExample(example)));
+				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(FdoExampleToLfExample));
 			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
 			lfSense.GrammarNote = ToMultiText(fdoSense.GrammarNote);
 			lfSense.LiftId = fdoSense.LIFTid;
@@ -156,7 +156,7 @@ namespace LfMerge.Actions
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
-				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(picture => FdoPictureToLfPicture(picture)));
+				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(FdoPictureToLfPicture));
 			foreach (LfPicture picture in lfSense.Pictures)
 			{
 				// TODO: Remove this debugging foreach loop
@@ -167,11 +167,7 @@ namespace LfMerge.Actions
 
 			if (fdoSense.ReversalEntriesRC != null)
 			{
-				var reversalEntries = new List<string>();
-				foreach (IReversalIndexEntry fdoReversalEntry in fdoSense.ReversalEntriesRC)
-				{
-					reversalEntries.Add(fdoReversalEntry.LongName);
-				}
+				IEnumerable<string> reversalEntries = fdoSense.ReversalEntriesRC.Select(fdoReversalEntry => fdoReversalEntry.LongName);
 				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
 			}
 			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoSense.ScientificName);
@@ -385,7 +381,7 @@ namespace LfMerge.Actions
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
 				lfEntry.Senses = new List<LfSense>();
-			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(fdoSense => FdoSenseToLfSense(fdoSense)));
+			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
 			DebugOut("Citation form", lfEntry.CitationForm);
