@@ -2,7 +2,6 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using IniParser;
 using IniParser.Model;

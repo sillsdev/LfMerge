@@ -3,15 +3,9 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Linq;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using SIL.Utils;
-using MongoDB.Driver;
-using MongoDB.Driver.Core;
-using MongoDB.Bson;
 
 namespace LfMerge.FieldWorks
 {

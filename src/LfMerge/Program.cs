@@ -1,18 +1,14 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
 using LfMerge.Actions;
 using SIL.IO.FileLock;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace LfMerge
 {

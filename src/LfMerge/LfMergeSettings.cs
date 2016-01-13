@@ -2,7 +2,6 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
-using SIL.FieldWorks.FDO;
 using LfMerge.Queues;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

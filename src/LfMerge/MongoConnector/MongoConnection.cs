@@ -4,7 +4,6 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
-using Autofac;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;

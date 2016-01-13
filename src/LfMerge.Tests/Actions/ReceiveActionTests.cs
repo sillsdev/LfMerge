@@ -4,8 +4,6 @@ using System;
 using NUnit.Framework;
 using LfMerge.Actions;
 using System.IO;
-using Autofac;
-using Chorus.Model;
 
 namespace LfMerge.Tests.Actions
 {

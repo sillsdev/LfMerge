@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LfMerge
+﻿namespace LfMerge
 {
 	public static class DefaultLfMergeSettings
 	{

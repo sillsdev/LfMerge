@@ -3,8 +3,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Autofac;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;

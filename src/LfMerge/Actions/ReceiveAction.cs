@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
 using SIL.Reporting;

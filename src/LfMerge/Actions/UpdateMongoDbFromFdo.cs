@@ -2,16 +2,13 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Collections.Generic;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.DataConverters;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Application;
 using SIL.FieldWorks.FDO.Infrastructure;
 using SIL.FieldWorks.Common.COMInterfaces;
 

@@ -7,7 +7,6 @@ using Autofac;
 using Chorus.Model;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using SIL.TestUtilities;
-using LibFLExBridgeChorusPlugin;
 using LfMerge.FieldWorks;
 
 namespace LfMerge.Tests

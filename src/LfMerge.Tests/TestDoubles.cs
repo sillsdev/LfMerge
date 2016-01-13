@@ -1,19 +1,14 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
+
 using System.Collections.Generic;
 using System.IO;
 using Chorus.Model;
 using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibFLExBridgeChorusPlugin;
 using SIL.Progress;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using LfMerge.FieldWorks;
-using IniParser;
 using IniParser.Model;
-using IniParser.Model.Configuration;
-using IniParser.Parser;
-using IniParser.Exceptions;
 
 namespace LfMerge.Tests
 {
