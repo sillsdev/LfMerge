@@ -70,8 +70,8 @@ L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 
 
-[TC::bt435]
-Name=FLEx Bridge-master-Precise64-Continuous
+[TC::bt539]
+Name=FLEx Bridge-develop-Precise64-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -79,8 +79,8 @@ Path=LibFLExBridge-ChorusPlugin.*=>lib/
 LibTriboroughBridge-ChorusPlugin.*=>lib/
 
 
-[TC::bt321]
-Name=FLEx Bridge-master-Win32-Continuous
+[TC::bt540]
+Name=FLEx Bridge-develop-Win32-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
