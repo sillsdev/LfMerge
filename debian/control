@@ -1,0 +1,22 @@
+Source: lfmerge
+Section: misc
+Priority: optional
+Maintainer: Eberhard Beilharz <eb1@sil.org>
+Standards-Version: 3.9.5
+Homepage: https://languageforge.org/
+Vcs-Git: git://github.com/sillsdev/LfMerge.git
+Vcs-Browser: https://github.com/sillsdev/LfMerge
+Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
+ wget,
+ mono-sil,
+ libfieldworks-fdo (>= 9.0.0~)
+
+Package: lfmerge
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: LanguageForge Send/Receive
+ lfmerge is a tool that is used by the LanguageForge server
+ to share data with language depot. Since this tool makes assumptions
+ about the location and content of files it is probably not very useful
+ outside of languageforge development and should probably not be
+ installed.

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+LIB=/usr/lib/lfmerge
+SHARE=/usr/share/lfmerge
+
+cd "$SHARE"
+RUNMODE=INSTALLED
+. ./environ
+cd $OLDPWD
+
+exec mono --debug "$LIB"/LfMerge.exe "$@"
