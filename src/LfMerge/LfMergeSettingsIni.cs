@@ -182,7 +182,6 @@ namespace LfMerge
 
 		public static IniData ParseFiles(string defaultConfig, string globalConfigFilename, string userConfigFilename)
 		{
-			IniData result;
 			var utf8 = new UTF8Encoding(false);
 			var parserConfig = new IniParserConfiguration {
 				// ThrowExceptionsOnError = false,
@@ -191,7 +190,7 @@ namespace LfMerge
 			};
 
 			var parser = new IniDataParser(parserConfig);
-			result = parser.Parse(DefaultLfMergeSettings.DefaultIniText);
+			IniData result = parser.Parse(DefaultLfMergeSettings.DefaultIniText);
 
 			string globalIni = File.Exists(globalConfigFilename) ? File.ReadAllText(globalConfigFilename, utf8) : "";
 			if (String.IsNullOrEmpty(globalIni)) {
