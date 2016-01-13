@@ -62,6 +62,8 @@ RevisionValue=latest.lastSuccessful
 Condition=Windows
 Path=SIL.dll=>lib/
 SIL.pdb=>lib/
+SIL.Core.dll=>lib/
+SIL.Core.pdb=>lib/
 SIL.Lift.dll=>lib/
 SIL.Lift.pdb=>lib/
 SIL.TestUtilities.dll=>lib/
