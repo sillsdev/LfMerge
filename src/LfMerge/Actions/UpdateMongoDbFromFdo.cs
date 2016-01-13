@@ -300,7 +300,8 @@ namespace LfMerge.Actions
 		{
 			var result = new LfPicture();
 			result.Caption = ToMultiText(fdoPicture.Caption);
-			result.FileName = fdoPicture.PictureFileRA.InternalPath;
+			if (fdoPicture.PictureFileRA != null)
+				result.FileName = fdoPicture.PictureFileRA.InternalPath;
 			result.Guid = fdoPicture.Guid;
 			// Unmapped ICmPicture fields include:
 			// fdoPicture.Description;
