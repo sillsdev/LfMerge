@@ -8,6 +8,7 @@ Vcs-Git: git://github.com/sillsdev/LfMerge.git
 Vcs-Browser: https://github.com/sillsdev/LfMerge
 Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  wget,
+ pkg-config,
  mono-sil,
  libfieldworks-fdo (>= 9.0.0~)
 
