@@ -104,7 +104,7 @@ namespace LfMerge.FieldWorks
 		/// </returns>
 		/// <param name="hvo">Hvo of object we're getting the field for.</param>
 		/// <param name="flid">Flid for this field.</param>
-		/// <param name="fieldType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
+		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
 		{
 			BsonValue fieldValue = null;
