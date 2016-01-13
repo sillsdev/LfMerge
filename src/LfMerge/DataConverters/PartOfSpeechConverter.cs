@@ -52,7 +52,7 @@ namespace LfMerge
 		public string NameFromGuidStr(string guidStr, bool flat=false)
 		{
 			string result;
-			Dictionary<string, string> lookupTable = (flat) ?
+			Dictionary<string, string> lookupTable = flat ?
 				PartOfSpeechMasterList.FlatPosNames :
 				PartOfSpeechMasterList.HierarchicalPosNames;
 			if (lookupTable.TryGetValue(guidStr, out result))

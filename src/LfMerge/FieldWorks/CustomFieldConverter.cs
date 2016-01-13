@@ -52,7 +52,7 @@ namespace LfMerge.FieldWorks
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
 		public BsonDocument CustomFieldsForThisCmObject(ICmObject cmObj, string objectType = "entry")
 		{
-			if ((cmObj) == null) return null;
+			if (cmObj == null) return null;
 
 			List<int> customFieldIds = new List<int>(
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
@@ -118,7 +118,7 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
 				string genDateStr = genDate.ToLongString();
-				fieldValue = (String.IsNullOrEmpty(genDateStr)) ? null : new BsonString(genDateStr);
+				fieldValue = String.IsNullOrEmpty(genDateStr) ? null : new BsonString(genDateStr);
 				break;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
@@ -166,7 +166,7 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.Unicode:
 				string UnicodeValue = data.get_UnicodeProp(hvo, flid);
-				fieldValue = (String.IsNullOrEmpty(UnicodeValue)) ? null : new BsonString(UnicodeValue);
+				fieldValue = String.IsNullOrEmpty(UnicodeValue) ? null : new BsonString(UnicodeValue);
 				break;
 
 			default:
@@ -213,7 +213,7 @@ namespace LfMerge.FieldWorks
 			wsId = kv.Key;
 			string htmlContents = kv.Value;
 			result.AddRange(htmlContents.Split(new string[] { "</p>" }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(para => (para.StartsWith("<p>") ? para.Substring(3) : para)));
+				.Select(para => para.StartsWith("<p>") ? para.Substring(3) : para));
 			// No need to trim trailing </p> as String.Split has already done that for us
 			return result;
 		}

@@ -69,7 +69,7 @@ namespace LfMerge
 		}
 
 		public IMongoDatabase GetMainDatabase() {
-			return GetDatabase(this.mainDatabaseName);
+			return GetDatabase(mainDatabaseName);
 		}
 
 		public UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
@@ -87,7 +87,7 @@ namespace LfMerge
 					updates.Add(builder.Set(prop.Name, (BsonDocument)prop.GetValue(doc)));
 					break;
 				case "Guid":
-					updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc))));
+					updates.Add(builder.Set(prop.Name, (Guid)prop.GetValue(doc)));
 					break;
 				case "LfAuthorInfo":
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));

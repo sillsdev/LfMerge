@@ -32,7 +32,7 @@ namespace LfMerge.LanguageForge.Model
 		public static LfStringArrayField FromSingleITsString(ITsString source)
 		{
 			if (source == null || source.Text == null) return null;
-			return LfStringArrayField.FromSingleString(source.Text);
+			return FromSingleString(source.Text);
 		}
 
 		public static LfStringArrayField FromBestAnalysisVernaculars(IEnumerable<IMultiAccessorBase> source)
@@ -45,25 +45,25 @@ namespace LfMerge.LanguageForge.Model
 
 		public static LfStringArrayField FromPossibilityAbbrevs(IEnumerable<ICmPossibility> possibilities)
 		{
-			return LfStringArrayField.FromBestAnalysisVernaculars(
+			return FromBestAnalysisVernaculars(
 				possibilities.Select(multiString => multiString.Abbreviation));
 		}
 
 		public static LfStringArrayField FromPossibilityNames(IEnumerable<ICmPossibility> possibilities)
 		{
-			return LfStringArrayField.FromBestAnalysisVernaculars(
+			return FromBestAnalysisVernaculars(
 				possibilities.Select(multiString => multiString.Name));
 		}
 
 		public static LfStringArrayField FromPossibilityAbbrevHierarchies(IEnumerable<ICmPossibility> possibilities)
 		{
-			return LfStringArrayField.FromStrings(
+			return FromStrings(
 				possibilities.Select(multiString => multiString.AbbrevHierarchyString));
 		}
 
 		public static LfStringArrayField FromPossibilityNameHierarchies(IEnumerable<ICmPossibility> possibilities)
 		{
-			return LfStringArrayField.FromStrings(
+			return FromStrings(
 				possibilities.Select(multiString => multiString.NameHierarchyString));
 		}
 
@@ -71,7 +71,7 @@ namespace LfMerge.LanguageForge.Model
 		{
 			if (possibility == null) return null;
 			if (possibility.Abbreviation == null) return null;
-			return LfStringArrayField.FromSingleITsString(possibility.Abbreviation.BestAnalysisVernacularAlternative);
+			return FromSingleITsString(possibility.Abbreviation.BestAnalysisVernacularAlternative);
 		}
 	}
 }

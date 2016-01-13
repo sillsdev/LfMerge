@@ -41,7 +41,7 @@ namespace LfMerge
 
 		private void AddChild(GoldEticItem child)
 		{
-			this.Subitems.Add(child);
+			Subitems.Add(child);
 			// NOTE: We make no attempt to set child.Parent; that was done in the child's constructor.
 			// We also never deal with the case where a child "moves" to a different parent, since we never do that.
 		}

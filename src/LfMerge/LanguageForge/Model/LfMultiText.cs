@@ -75,17 +75,17 @@ namespace LfMerge.LanguageForge.Model
 
 		public string FirstNonEmptyString()
 		{
-			return this.AsStringDictionary().Values.Where(str => !String.IsNullOrEmpty(str)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+			return AsStringDictionary().Values.FirstOrDefault(str => !String.IsNullOrEmpty(str)); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
 		}
 
 		public LfStringField FirstNonEmptyStringField()
 		{
-			return this.Values.Where(strFld => !String.IsNullOrEmpty(strFld.Value)).FirstOrDefault(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+			return Values.FirstOrDefault(strFld => !String.IsNullOrEmpty(strFld.Value)); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
 		}
 
 		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(FdoCache cache)
 		{
-			KeyValuePair<string, string> kv = this.FirstNonEmptyKeyValue();
+			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
 			if (kv.Key == null) return new KeyValuePair<int, string>();
 			WritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
 			int wsId = wsm.GetWsFromStr(kv.Key);
@@ -94,7 +94,7 @@ namespace LfMerge.LanguageForge.Model
 
 		public KeyValuePair<string, string> FirstNonEmptyKeyValue()
 		{
-			return this.AsStringDictionary().Where(kv => !String.IsNullOrEmpty(kv.Value)).FirstOrDefault();
+			return AsStringDictionary().FirstOrDefault(kv => !String.IsNullOrEmpty(kv.Value));
 		}
 
 		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...

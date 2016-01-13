@@ -314,7 +314,7 @@ namespace LfMerge.Actions
 
 		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
 		{
-			if ((fdoEntry) == null) return null;
+			if (fdoEntry == null) return null;
 			Console.WriteLine("Converting one entry");
 
 			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
