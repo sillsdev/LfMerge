@@ -13,7 +13,7 @@ namespace LfMerge.LanguageForge.Model
 		public string ExampleId { get; set; } // Can't call this field "Id", or Mongo thinks it should be an ObjectId
 		public string LiftId { get; set; }
 		[BsonRepresentation(BsonType.String)]
-		public Guid Guid { get; set; }
+		public Guid? Guid { get; set; }
 
 		// Data properties
 		public LfAuthorInfo AuthorInfo { get; set; }

@@ -325,7 +325,7 @@ namespace LfMerge.Actions
 
 		private void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
-			Guid guid = lfExample.Guid;
+			Guid guid = lfExample.Guid ?? Guid.Empty;
 			if (guid == Guid.Empty)
 				guid = GuidFromLiftId(lfExample.LiftId);
 			ILexExampleSentence fdoExample = GetOrCreateExampleByGuid(guid, owner);
@@ -345,7 +345,7 @@ namespace LfMerge.Actions
 
 		private void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
-			Guid guid = lfPicture.Guid;
+			Guid guid = lfPicture.Guid ?? Guid.Empty;
 			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
 			int captionWs = kv.Key;
 			string caption = kv.Value;
@@ -355,7 +355,7 @@ namespace LfMerge.Actions
 
 		private void LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
 		{
-			Guid guid = lfSense.Guid;
+			Guid guid = lfSense.Guid ?? Guid.Empty;
 			if (guid == Guid.Empty)
 				guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);

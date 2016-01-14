@@ -11,7 +11,7 @@ namespace LfMerge.LanguageForge.Model
 		public string FileName { get; set; }
 		public LfMultiText Caption { get; set; }
 		[BsonRepresentation(BsonType.String)]
-		public Guid Guid { get; set; }
+		public Guid? Guid { get; set; }
 	}
 }
 
