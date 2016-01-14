@@ -4,11 +4,12 @@
 using System.Collections.Generic;
 using System.IO;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using SIL.Progress;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
-using LfMerge.FieldWorks;
 using IniParser.Model;
+using LfMerge.FieldWorks;
+using LfMerge.MongoConnector;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibTriboroughBridgeChorusPlugin.Infrastructure;
+using SIL.Progress;
 
 namespace LfMerge.Tests
 {
@@ -125,5 +126,16 @@ namespace LfMerge.Tests
 		{
 		}
 	}
-}
 
+	class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory
+	{
+		public MongoProjectRecordFactoryDouble(IMongoConnection connection): base(connection)
+		{
+		}
+
+		public override MongoProjectRecord Create(ILfProject project)
+		{
+			return null;
+		}
+	}
+}
