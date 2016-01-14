@@ -33,13 +33,6 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\packages\MongoDB.Driver.2.1.0\lib\net45\MongoDB.Driver.dll</HintPath>
-    </Reference>
-
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\..\..\fwrepo\fw\Output\Debug\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
     <Reference Include="LibChorus">
       <HintPath>..\..\lib\LibChorus.dll</HintPath>
     </Reference>
@@ -88,6 +81,9 @@
     </Reference>
     <Reference Include="SIL.WritingSystems">
       <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
+      <Package>libfieldworks-fdo</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
