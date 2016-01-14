@@ -10,15 +10,15 @@ namespace LfMerge
 {
 	public class PartOfSpeechConverter
 	{
-		public FdoCache cache;
-		private IPartOfSpeechRepository posRepo;
-		private IPartOfSpeechFactory posFactory;
+		private FdoCache _cache;
+		private IPartOfSpeechRepository _posRepo;
+		private IPartOfSpeechFactory _posFactory;
 
 		public PartOfSpeechConverter(FdoCache fdoCache)
 		{
-			cache = fdoCache;
-			posRepo = cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
-			posFactory = cache.ServiceLocator.GetInstance<IPartOfSpeechFactory>();
+			_cache = fdoCache;
+			_posRepo = _cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
+			_posFactory = _cache.ServiceLocator.GetInstance<IPartOfSpeechFactory>();
 		}
 
 		public static Lazy<Stream> GoldEticXml = new Lazy<Stream>(() =>
@@ -153,19 +153,19 @@ namespace LfMerge
 		{
 			foreach (var kv in item.Abbrevs)
 			{
-				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				int wsId = _cache.WritingSystemFactory.GetWsFromStr(kv.Key);
 				if (wsId != 0)
 					pos.Abbreviation.set_String(wsId, kv.Value);
 			}
 			foreach (var kv in item.Definitions)
 			{
-				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				int wsId = _cache.WritingSystemFactory.GetWsFromStr(kv.Key);
 				if (wsId != 0)
 					pos.Description.set_String(wsId, kv.Value);
 			}
 			foreach (var kv in item.Terms)
 			{
-				int wsId = cache.WritingSystemFactory.GetWsFromStr(kv.Key);
+				int wsId = _cache.WritingSystemFactory.GetWsFromStr(kv.Key);
 				if (wsId != 0)
 					pos.Name.set_String(wsId, kv.Value);
 			}
@@ -173,7 +173,7 @@ namespace LfMerge
 
 		private void PopulateCustomPos(IPartOfSpeech pos, string finalName, string userWs)
 		{
-			int wsId = cache.WritingSystemFactory.GetWsFromStr(userWs);
+			int wsId = _cache.WritingSystemFactory.GetWsFromStr(userWs);
 			pos.Name.set_String(wsId, finalName);
 		}
 
@@ -185,7 +185,7 @@ namespace LfMerge
 				result = null;
 				return false;
 			}
-			return posRepo.TryGetObject(guid, out result);
+			return _posRepo.TryGetObject(guid, out result);
 		}
 
 		private IPartOfSpeech GetOrCreateTopLevelPos(string guidStr)
@@ -195,7 +195,7 @@ namespace LfMerge
 				return existingPos;
 			Guid guid;
 			Guid.TryParse(guidStr, out guid); // Don't care if this fails
-			return posFactory.Create(guid, cache.LanguageProject.PartsOfSpeechOA);
+			return _posFactory.Create(guid, _cache.LanguageProject.PartsOfSpeechOA);
 		}
 
 		private IPartOfSpeech GetOrCreateOwnedPos(string guidStr, IPartOfSpeech owner)
@@ -205,7 +205,7 @@ namespace LfMerge
 				return existingPos;
 			Guid guid;
 			Guid.TryParse(guidStr, out guid); // Don't care if this fails
-			return posFactory.Create(guid, owner);
+			return _posFactory.Create(guid, owner);
 		}
 
 		public IPartOfSpeech CreateFromWellKnownItem(GoldEticItem item)
@@ -244,8 +244,8 @@ namespace LfMerge
 		{
 			// TODO: Verify that this handles "A|B|c" and "A|b|c" cases, where part of the name is official
 			// (Because I think if A does not yet exist, and "A|b|c" is found, A might get the wrong GUID.)
-			int wsId = cache.WritingSystemFactory.GetWsFromStr(userWs);
-			return (IPartOfSpeech)cache.LangProject.PartsOfSpeechOA.FindOrCreatePossibility(nameHierarchy, wsId, true);
+			int wsId = _cache.WritingSystemFactory.GetWsFromStr(userWs);
+			return (IPartOfSpeech)_cache.LangProject.PartsOfSpeechOA.FindOrCreatePossibility(nameHierarchy, wsId, true);
 		}
 
 		// TODO: Rename this function, then remove this comment
@@ -267,7 +267,7 @@ namespace LfMerge
 				IPartOfSpeech parent;
 				Guid guid = Guid.Empty;
 				Guid.TryParse(item.Guid, out guid);
-				if (guid != Guid.Empty && posRepo.TryGetObject(guid, out parent))
+				if (guid != Guid.Empty && _posRepo.TryGetObject(guid, out parent))
 					Console.WriteLine(parent);
 				else
 					Console.WriteLine("Create parent as per this function...");
@@ -315,7 +315,7 @@ namespace LfMerge
 			{
 				Console.WriteLine("Found official GUID {0} for part of speech {1}", guid, name);
 				IPartOfSpeech result;
-				if (posRepo.TryGetObject(guid, out result))
+				if (_posRepo.TryGetObject(guid, out result))
 					return result;
 				// Not found in FDO? Create it.
 				// We have an "official" GUID, so we use it to create a PartOfSpeech

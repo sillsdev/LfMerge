@@ -21,15 +21,15 @@ namespace LfMerge.Actions
 			get { return ProcessingState.SendReceiveStates.UPDATING; }
 		}
 
-		private FdoCache cache;
-		private IFdoServiceLocator servLoc;
-		private IFwMetaDataCacheManaged fdoMetaData;
-		private CustomFieldConverter converter;
-		private IMongoConnection connection;
+		private FdoCache _cache;
+		private IFdoServiceLocator _servLoc;
+		private IFwMetaDataCacheManaged _fdoMetaData;
+		private CustomFieldConverter _converter;
+		private IMongoConnection _connection;
 
 		public UpdateMongoDbFromFdo(ILfMergeSettings settings, IMongoConnection conn) : base(settings)
 		{
-			connection = conn;
+			_connection = conn;
 		}
 
 		//private List<int> customFieldIds;
@@ -42,32 +42,32 @@ namespace LfMerge.Actions
 				Console.WriteLine("Can't find FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
-			cache = fwProject.Cache;
-			if (cache == null)
+			_cache = fwProject.Cache;
+			if (_cache == null)
 			{
 				Console.WriteLine("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
-			servLoc = cache.ServiceLocator;
-			if (servLoc == null)
+			_servLoc = _cache.ServiceLocator;
+			if (_servLoc == null)
 			{
 				Console.WriteLine("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
-			ILexEntryRepository repo = servLoc.GetInstance<ILexEntryRepository>();
+			ILexEntryRepository repo = _servLoc.GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
 				Console.WriteLine("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
-			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
-			if (fdoMetaData == null)
+			_fdoMetaData = (IFwMetaDataCacheManaged)_cache.MetaDataCacheAccessor;
+			if (_fdoMetaData == null)
 			{
 				Console.WriteLine("***WARNING:*** Don't have access to the FW metadata; custom fields may fail!");
 			}
-			converter = new CustomFieldConverter(cache);
+			_converter = new CustomFieldConverter(_cache);
 
-			IMongoDatabase mongoDb = connection.GetProjectDatabase(project);
+			IMongoDatabase mongoDb = _connection.GetProjectDatabase(project);
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
@@ -75,7 +75,7 @@ namespace LfMerge.Actions
 				// TODO: Write the lfEntry into Mongo in the right place
 				// TODO: Move this "update this document in this MongoDB collection" code to somewhere where it belongs, like on MongoConnection
 				var filterBuilder = new FilterDefinitionBuilder<LfLexEntry>();
-				UpdateDefinition<LfLexEntry> update = connection.BuildUpdate<LfLexEntry>(lfEntry);
+				UpdateDefinition<LfLexEntry> update = _connection.BuildUpdate<LfLexEntry>(lfEntry);
 				FilterDefinition<LfLexEntry> filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
 				IMongoCollection<LfLexEntry> collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
 				Console.WriteLine("About to save LfEntry {0} which has morphologyType {1}", lfEntry.Guid, lfEntry.MorphologyType);
@@ -104,7 +104,7 @@ namespace LfMerge.Actions
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
 		{
 			if (fdoMultiString == null) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
+			return LfMultiText.FromFdoMultiString(fdoMultiString, _servLoc.WritingSystemManager);
 		}
 
 		private string ToStringOrNull(ITsString iTsString)
@@ -117,8 +117,8 @@ namespace LfMerge.Actions
 		{
 			var lfSense = new LfSense();
 
-			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
-			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
+			string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
+			string AnalysisWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
@@ -240,7 +240,7 @@ namespace LfMerge.Actions
 			DebugOut("General note", lfSense.GeneralNote);
 			DebugOut("Usages", lfSense.Usages);
 
-			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoSense, "senses");
+			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoSense, "senses");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -258,7 +258,7 @@ namespace LfMerge.Actions
 		{
 			LfExample result = new LfExample();
 
-			string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
+			string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
 
 			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
 			result.Sentence = ToMultiText(fdoExample.Example);
@@ -279,7 +279,7 @@ namespace LfMerge.Actions
 				result.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoExample, "examples");
+			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoExample, "examples");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -315,8 +315,8 @@ namespace LfMerge.Actions
 			if (fdoEntry == null) return null;
 			Console.WriteLine("Converting one entry");
 
-			string AnalysisWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultAnalWs);
-			// string VernacularWritingSystem = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
+			string AnalysisWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
+			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
 
 			var lfEntry = new LfLexEntry();
 
@@ -386,7 +386,7 @@ namespace LfMerge.Actions
 			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
 			DebugOut("Etymology Source", lfEntry.EtymologySource);
 
-			BsonDocument customFieldsAndGuids = converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
+			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
