@@ -23,7 +23,7 @@ namespace LfMerge.DataConverters
 		}
 
 		public static Lazy<Stream> GoldEticXml = new Lazy<Stream>(() =>
-			typeof(PartOfSpeechConverter).Assembly.GetManifestResourceStream(typeof(PartOfSpeechConverter), "GOLDEtic.xml")
+			typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml")
 		);
 		public static Lazy<List<GoldEticItem>> GoldEticItems = new Lazy<List<GoldEticItem>>(() =>
 			GoldEticXmlParser.ParseXml(GoldEticXml.Value)
