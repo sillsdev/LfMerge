@@ -17,36 +17,36 @@ namespace LfMerge.Actions
 {
 	public class UpdateFdoFromMongoDbAction: Action
 	{
-		private FdoCache cache;
-		private IFdoServiceLocator servLoc;
-		private IMongoConnection connection;
-		private MongoProjectRecordFactory projectRecordFactory;
-		private ILfProject lfProject;
-		private MongoProjectRecord projectRecord;
+		private FdoCache _cache;
+		private IFdoServiceLocator _servLoc;
+		private IMongoConnection _connection;
+		private MongoProjectRecordFactory _projectRecordFactory;
+		private ILfProject _lfProject;
+		private MongoProjectRecord _projectRecord;
 
-		private ILfProjectConfig lfProjectConfig;
+		private ILfProjectConfig _lfProjectConfig;
 
-		private ILexEntryRepository entryRepo;
-		private ILexExampleSentenceRepository exampleRepo;
-		private ICmPictureRepository pictureRepo;
-		private ILexPronunciationRepository pronunciationRepo;
-		private ILexSenseRepository senseRepo;
-		private ICmTranslationRepository translationRepo;
-		private ILexEntryFactory entryFactory;
-		private ILexExampleSentenceFactory exampleFactory;
-		private ICmPictureFactory pictureFactory;
-		private ILexPronunciationFactory pronunciationFactory;
-		private ILexSenseFactory senseFactory;
-		private ICmTranslationFactory translationFactory;
+		private ILexEntryRepository _entryRepo;
+		private ILexExampleSentenceRepository _exampleRepo;
+		private ICmPictureRepository _pictureRepo;
+		private ILexPronunciationRepository _pronunciationRepo;
+		private ILexSenseRepository _senseRepo;
+		private ICmTranslationRepository _translationRepo;
+		private ILexEntryFactory _entryFactory;
+		private ILexExampleSentenceFactory _exampleFactory;
+		private ICmPictureFactory _pictureFactory;
+		private ILexPronunciationFactory _pronunciationFactory;
+		private ILexSenseFactory _senseFactory;
+		private ICmTranslationFactory _translationFactory;
 
-		private ICmPossibility freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
+		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
-		private CustomFieldConverter customFieldConverter;
+		private CustomFieldConverter _customFieldConverter;
 
 		public UpdateFdoFromMongoDbAction(ILfMergeSettings settings, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings)
 		{
-			connection = conn;
-			projectRecordFactory = factory;
+			_connection = conn;
+			_projectRecordFactory = factory;
 		}
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
@@ -56,16 +56,16 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
-			lfProject = project;
-			projectRecord = projectRecordFactory.Create(lfProject);
-			if (projectRecord == null)
+			_lfProject = project;
+			_projectRecord = _projectRecordFactory.Create(_lfProject);
+			if (_projectRecord == null)
 			{
-				Console.WriteLine("No project named {0}", lfProject.LfProjectCode);
+				Console.WriteLine("No project named {0}", _lfProject.LfProjectCode);
 				Console.WriteLine("If we are unit testing, this may not be an error");
 				return;
 			}
-			lfProjectConfig = projectRecord.Config;
-			if (lfProjectConfig == null)
+			_lfProjectConfig = _projectRecord.Config;
+			if (_lfProjectConfig == null)
 				return;
 
 			if (project.FieldWorksProject == null)
@@ -74,56 +74,56 @@ namespace LfMerge.Actions
 				return;
 			}
 			Console.WriteLine("Project {0} disposed", project.FieldWorksProject.IsDisposed ? "is" : "is not");
-			cache = project.FieldWorksProject.Cache;
-			if (cache == null)
+			_cache = project.FieldWorksProject.Cache;
+			if (_cache == null)
 			{
 				Console.WriteLine("Failed to find the FDO cache!");
 				FwProject fwProject = project.FieldWorksProject;
 				return;
 			}
 
-			servLoc = cache.ServiceLocator;
-			if (servLoc == null)
+			_servLoc = _cache.ServiceLocator;
+			if (_servLoc == null)
 			{
 				Console.WriteLine("Failed to find the service locator; giving up.");
 				return;
 			}
-			customFieldConverter = new CustomFieldConverter(cache);
+			_customFieldConverter = new CustomFieldConverter(_cache);
 
 			// For efficiency's sake, cache the five repositories and five factories we'll need all the time,
-			entryRepo = servLoc.GetInstance<ILexEntryRepository>();
-			exampleRepo = servLoc.GetInstance<ILexExampleSentenceRepository>();
-			pictureRepo = servLoc.GetInstance<ICmPictureRepository>();
-			pronunciationRepo = servLoc.GetInstance<ILexPronunciationRepository>();
-			senseRepo = servLoc.GetInstance<ILexSenseRepository>();
-			translationRepo = servLoc.GetInstance<ICmTranslationRepository>();
-			entryFactory = servLoc.GetInstance<ILexEntryFactory>();
-			exampleFactory = servLoc.GetInstance<ILexExampleSentenceFactory>();
-			pictureFactory = servLoc.GetInstance<ICmPictureFactory>();
-			pronunciationFactory = servLoc.GetInstance<ILexPronunciationFactory>();
-			senseFactory = servLoc.GetInstance<ILexSenseFactory>();
-			translationFactory = servLoc.GetInstance<ICmTranslationFactory>();
+			_entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
+			_exampleRepo = _servLoc.GetInstance<ILexExampleSentenceRepository>();
+			_pictureRepo = _servLoc.GetInstance<ICmPictureRepository>();
+			_pronunciationRepo = _servLoc.GetInstance<ILexPronunciationRepository>();
+			_senseRepo = _servLoc.GetInstance<ILexSenseRepository>();
+			_translationRepo = _servLoc.GetInstance<ICmTranslationRepository>();
+			_entryFactory = _servLoc.GetInstance<ILexEntryFactory>();
+			_exampleFactory = _servLoc.GetInstance<ILexExampleSentenceFactory>();
+			_pictureFactory = _servLoc.GetInstance<ICmPictureFactory>();
+			_pronunciationFactory = _servLoc.GetInstance<ILexPronunciationFactory>();
+			_senseFactory = _servLoc.GetInstance<ILexSenseFactory>();
+			_translationFactory = _servLoc.GetInstance<ICmTranslationFactory>();
 
-			if (cache.LanguageProject != null && cache.LanguageProject.TranslationTagsOA != null)
+			if (_cache.LanguageProject != null && _cache.LanguageProject.TranslationTagsOA != null)
 			{
 				// TODO: Consider using LangProjectTags.kguidTranFreeTranslation instead
-				freeTranslationType = new PossibilityListConverter(cache.LanguageProject.TranslationTagsOA).GetByName("Free translation");
-				if (freeTranslationType == null)
-					freeTranslationType = cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
+				_freeTranslationType = new PossibilityListConverter(_cache.LanguageProject.TranslationTagsOA).GetByName("Free translation");
+				if (_freeTranslationType == null)
+					_freeTranslationType = _cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
 
-			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, lfProjectConfig);
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
+			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 			{
 				foreach (LfLexEntry lfEntry in lexicon)
 					LfLexEntryToFdoLexEntry(lfEntry);
-				// TODO: Use cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
+				// TODO: Use _cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
 			});
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
 		{
-			IMongoDatabase db = connection.GetProjectDatabase(project);
+			IMongoDatabase db = _connection.GetProjectDatabase(project);
 			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
 			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
 			return result.AsEnumerable();
@@ -131,7 +131,7 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
 		{
-			ILfProjectConfig config = projectRecord.Config;
+			ILfProjectConfig config = _projectRecord.Config;
 			Console.WriteLine(config.GetType()); // Should be LfMerge.LanguageForge.Config.LfProjectConfig
 			Console.WriteLine(config.Entry.Type);
 			Console.WriteLine(String.Join(", ", config.Entry.FieldOrder));
@@ -140,15 +140,15 @@ namespace LfMerge.Actions
 			return config;
 		}
 
-		private Guid GuidFromLiftId(string LiftId)
+		private Guid GuidFromLiftId(string liftId)
 		{
 			Guid result;
-			if (String.IsNullOrEmpty(LiftId))
+			if (String.IsNullOrEmpty(liftId))
 				return default(Guid);
-			if (Guid.TryParse(LiftId, out result))
+			if (Guid.TryParse(liftId, out result))
 				return result;
-			int pos = LiftId.LastIndexOf('_');
-			if (Guid.TryParse(LiftId.Substring(pos+1), out result))
+			int pos = liftId.LastIndexOf('_');
+			if (Guid.TryParse(liftId.Substring(pos+1), out result))
 				return result;
 			return default(Guid);
 		}
@@ -162,7 +162,7 @@ namespace LfMerge.Actions
 		private void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
 		{
 			if (source != null)
-				source.WriteToFdoMultiString(dest, servLoc.WritingSystemManager);
+				source.WriteToFdoMultiString(dest, _servLoc.WritingSystemManager);
 		}
 
 		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
@@ -215,7 +215,7 @@ namespace LfMerge.Actions
 					LfSenseToFdoSense(lfSense, fdoEntry);
 			}
 
-			customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
+			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 
 			return fdoEntry;
 		}
@@ -265,7 +265,7 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
 			if (lfEntry.Location != null)
 			{
-				var converter = new PossibilityListConverter(cache.LanguageProject.LocationsOA);
+				var converter = new PossibilityListConverter(_cache.LanguageProject.LocationsOA);
 				fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
 			}
 			// Not handling fdoPronunciation.MediaFilesOS. TODO: At some point we may want to handle media files as well.
@@ -281,8 +281,8 @@ namespace LfMerge.Actions
 				return null;
 			}
 			Console.WriteLine("BestStringFromMultiText got a non-null input");
-			WritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
-			int wsId = cache.DefaultAnalWs;
+			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
+			int wsId = _cache.DefaultAnalWs;
 			// IWritingSystem en = wsm.Get("en");
 			string wsStr = wsm.GetStrFromWs(wsId);
 			LfStringField valueField;
@@ -314,14 +314,14 @@ namespace LfMerge.Actions
 					return t;
 			}
 			ICmTranslation result;
-			if (translationRepo.TryGetObject(guid, out result))
+			if (_translationRepo.TryGetObject(guid, out result))
 			{
 				// Not in the owning list, but it already exists elsewhere. Move it "here".
 				owner.TranslationsOC.Add(result);
 				return result;
 			}
 			// Not found anywhere: make a new one.
-			return translationFactory.Create(owner, typeOfNewTranslation);
+			return _translationFactory.Create(owner, typeOfNewTranslation);
 		}
 
 		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
@@ -336,12 +336,12 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
 			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
 			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
-			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, freeTranslationType);
+			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
 			// TODO: Set t.AvailableWritingSystems appropriately
 			// Ignoring t.Status since LF won't touch it
 
-			customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
+			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
 
 			return fdoExample;
 		}
@@ -349,7 +349,7 @@ namespace LfMerge.Actions
 		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
 			Guid guid = lfPicture.Guid;
-			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(cache);
+			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
 			int captionWs = kv.Key;
 			string caption = kv.Value;
 			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
@@ -365,12 +365,12 @@ namespace LfMerge.Actions
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
 			// TODO: Set instance fields
 
-			// var converter = new PossibilityListConverter(cache.LanguageProject.LocationsOA);
+			// var converter = new PossibilityListConverter(_cache.LanguageProject.LocationsOA);
 			// fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
 			// TODO: Check if the compiler is happy with the below (creating an object and throwing it away after calling one method)
-//			new PossibilityListConverter(cache.LanguageProject.SemanticDomainListOA)
+//			new PossibilityListConverter(_cache.LanguageProject.SemanticDomainListOA)
 //				.UpdatePossibilitiesFromStringArray(fdoSense.DomainTypesRC, lfSense.AcademicDomains);
-//			new PossibilityListConverter(cache.LanguageProject.AnthroListOA)
+//			new PossibilityListConverter(_cache.LanguageProject.AnthroListOA)
 //				.UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
 			SetMultiStringFrom(fdoSense.AnthroNote, lfSense.AnthropologyNote);
 			// lfSense.AuthorInfo; // TODO: Figure out if this should be copied too
@@ -385,9 +385,9 @@ namespace LfMerge.Actions
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
 			if (lfSense.PartOfSpeech != null)
 			{
-				var posConverter = new PartOfSpeechConverter(cache);
-				//string userWs = servLoc.WritingSystemManager.GetStrFromWs(cache.DefaultUserWs);
-				string userWs = projectRecord.InterfaceLanguageCode;
+				var posConverter = new PartOfSpeechConverter(_cache);
+				//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
+				string userWs = _projectRecord.InterfaceLanguageCode;
 				if (String.IsNullOrEmpty(userWs))
 					userWs = "en";
 				IPartOfSpeech pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
@@ -403,7 +403,7 @@ namespace LfMerge.Actions
 				LfPictureToFdoPicture(lfPicture, fdoSense);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestStringFromMultiText(lfSense.ScientificName);
-//			new PossibilityListConverter(cache.LanguageProject.SemanticDomainListOA)
+//			new PossibilityListConverter(_cache.LanguageProject.SemanticDomainListOA)
 //				.UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
 			SetMultiStringFrom(fdoSense.SemanticsNote, lfSense.SemanticsNote);
 			SetMultiStringFrom(fdoSense.Bibliography, lfSense.SenseBibliography);
@@ -412,20 +412,20 @@ namespace LfMerge.Actions
 			fdoSense.ImportResidue = BestStringFromMultiText(lfSense.SenseImportResidue);
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
-			fdoSense.SenseTypeRA = new PossibilityListConverter(cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
+			fdoSense.SenseTypeRA = new PossibilityListConverter(_cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
-			// fdoSense.StatusRA = new PossibilityListConverter(cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
+			// fdoSense.StatusRA = new PossibilityListConverter(_cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
 
-			customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
+			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 
 			return fdoSense;
 		}
 
 		private ILexEtymology CreateOwnedEtymology(ILexEntry owner)
 		{
-			ILexEtymologyFactory etymologyFactory = servLoc.GetInstance<ILexEtymologyFactory>();
+			ILexEtymologyFactory etymologyFactory = _servLoc.GetInstance<ILexEtymologyFactory>();
 			ILexEtymology result = etymologyFactory.Create(); // Have to use a different approach for OA fields: factory doesn't have Create(guid, owner)
 			owner.EtymologyOA = result;
 			return result;
@@ -437,8 +437,8 @@ namespace LfMerge.Actions
 //			if (morphologyType == null) // Handled below
 //				morphologyType = "root";
 			IMoForm result;
-			var stemFactory = servLoc.GetInstance<IMoStemAllomorphFactory>();
-			var affixFactory = servLoc.GetInstance<IMoAffixAllomorphFactory>();
+			var stemFactory = _servLoc.GetInstance<IMoStemAllomorphFactory>();
+			var affixFactory = _servLoc.GetInstance<IMoAffixAllomorphFactory>();
 			// TODO: This list of hardcoded strings might belong in an enum, rather than here
 			switch (morphologyType)
 			{
@@ -480,28 +480,28 @@ namespace LfMerge.Actions
 		private ILexEntry GetOrCreateEntryByGuid(Guid guid)
 		{
 			ILexEntry result;
-			if (!entryRepo.TryGetObject(guid, out result))
-				result = entryFactory.Create();
+			if (!_entryRepo.TryGetObject(guid, out result))
+				result = _entryFactory.Create();
 			return result;
 		}
 
 		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid, ILexSense owner)
 		{
 			ILexExampleSentence result;
-			if (!exampleRepo.TryGetObject(guid, out result))
-				result = exampleFactory.Create(guid, owner);
+			if (!_exampleRepo.TryGetObject(guid, out result))
+				result = _exampleFactory.Create(guid, owner);
 			return result;
 		}
 
 		private ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner, string fileName, string caption, int captionWs)
 		{
 			ICmPicture result;
-			if (!pictureRepo.TryGetObject(guid, out result))
+			if (!_pictureRepo.TryGetObject(guid, out result))
 			{
 				if (caption == null)
 					caption = "";
 				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
-				result = pictureFactory.Create(fileName, captionTss, CmFolderTags.LocalPictures);
+				result = _pictureFactory.Create(fileName, captionTss, CmFolderTags.LocalPictures);
 				owner.PicturesOS.Add(result);
 			}
 			return result;
@@ -510,9 +510,9 @@ namespace LfMerge.Actions
 		private ILexPronunciation GetOrCreatePronunciationByGuid(Guid guid, ILexEntry owner)
 		{
 			ILexPronunciation result;
-			if (!pronunciationRepo.TryGetObject(guid, out result))
+			if (!_pronunciationRepo.TryGetObject(guid, out result))
 			{
-				result = pronunciationFactory.Create();
+				result = _pronunciationFactory.Create();
 				owner.PronunciationsOS.Add(result);
 			}
 			return result;
@@ -521,8 +521,8 @@ namespace LfMerge.Actions
 		private ILexSense GetOrCreateSenseByGuid(Guid guid, ILexEntry owner)
 		{
 			ILexSense result;
-			if (!senseRepo.TryGetObject(guid, out result))
-				result = senseFactory.Create(guid, owner);
+			if (!_senseRepo.TryGetObject(guid, out result))
+				result = _senseFactory.Create(guid, owner);
 			return result;
 		}
 
