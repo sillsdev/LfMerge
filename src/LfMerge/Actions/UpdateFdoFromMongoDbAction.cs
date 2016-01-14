@@ -347,7 +347,7 @@ namespace LfMerge.Actions
 			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
 			int captionWs = kv.Key;
 			string caption = kv.Value;
-			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
+			/* ICmPicture fdoPicture = */ GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
 			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
 		}
 
