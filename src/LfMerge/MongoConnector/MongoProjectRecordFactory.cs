@@ -14,10 +14,13 @@ namespace LfMerge.MongoConnector
 			Connection = connection;
 		}
 
-		public MongoProjectRecord Create(ILfProject project)
+		public virtual MongoProjectRecord Create(ILfProject project)
 		{
-			if (project == null) return null;
-			if (Connection == null) return null;
+			if (project == null)
+				return null;
+			if (Connection == null)
+				return null;
+
 			IMongoDatabase db = Connection.GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> coll = db.GetCollection<MongoProjectRecord>(MongoProjectRecord.ProjectsCollectionName);
 			MongoProjectRecord record =

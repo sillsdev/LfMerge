@@ -2,12 +2,13 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
-using NUnit.Framework;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using SIL.TestUtilities;
 using LfMerge.FieldWorks;
+using LfMerge.MongoConnector;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using NUnit.Framework;
+using SIL.TestUtilities;
 
 namespace LfMerge.Tests
 {
@@ -37,6 +38,7 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
+				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
 			var ldProj = new LanguageDepotProjectDouble {

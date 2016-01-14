@@ -77,7 +77,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
-			var sut = LfMerge.Actions.Action.GetAction(actionName);
+			var sut = Action.GetAction(actionName);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -102,7 +102,7 @@ namespace LfMerge.Tests.Actions
 			state.SRState = ProcessingState.SendReceiveStates.HOLD;
 			state.ResetSavedStates();
 			Factory.State = state;
-			var sut = LfMerge.Actions.Action.GetAction(actionName);
+			var sut = Action.GetAction(actionName);
 
 			// Exercise
 			sut.Run(lfProj);
