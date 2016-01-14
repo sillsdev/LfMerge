@@ -37,6 +37,7 @@ Condition=Linux
 Path=SIL.Core.dll*=>lib/
 SIL.Lift.dll*=>lib/
 SIL.TestUtilities.dll*=>lib/
+SIL.WritingSystems.dll*=>lib/
 L10NSharp.dll*=>lib/
 
 
@@ -68,6 +69,8 @@ SIL.Lift.dll=>lib/
 SIL.Lift.pdb=>lib/
 SIL.TestUtilities.dll=>lib/
 SIL.TestUtilities.pdb=>lib/
+SIL.WritingSystems.dll=>lib/
+SIL.WritingSystems.pdb=>lib/
 L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 

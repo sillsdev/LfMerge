@@ -276,32 +276,42 @@ namespace LfMerge.Actions
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				Console.WriteLine("non-null input, but no contents in it!");
+				// Console.WriteLine("non-null input, but no contents in it!"); // TODO: Turn this into a log message
 				return null;
 			}
-			Console.WriteLine("BestStringFromMultiText got a non-null input");
 			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
-			int wsId = _cache.DefaultAnalWs;
-			// IWritingSystem en = wsm.Get("en");
-			string wsStr = wsm.GetStrFromWs(wsId);
-			LfStringField valueField;
-			string value;
-			if (input.TryGetValue(wsStr, out valueField))
+			if (wsm == null) return null;
+
+			List<int> wsIdsToSearch;
+			IWritingSystemContainer wsc = _cache.ServiceLocator.WritingSystems;
+			if (wsc != null)
 			{
-				Console.WriteLine("Returning TsString from {0} for writing system {1}", valueField.Value, wsStr);
-				return TsStringUtils.MakeTss(valueField.Value, wsId);
+				IList<CoreWritingSystemDefinition> analysisWritingSystems = wsc.CurrentAnalysisWritingSystems;
+				wsIdsToSearch = analysisWritingSystems.Select(ws => ws.Handle).ToList();
 			}
 			else
 			{
-				// TODO: Refactor this.
-				if (input.Count == 0) return null;
-				KeyValuePair<string, LfStringField> kv = input.First();
-				wsStr = kv.Key;
-				value = kv.Value.Value;
-				wsId = wsm.GetWsFromStr(wsStr);
-				Console.WriteLine("Returning TsString from {0} for writing system {1}", value, wsStr);
-				return TsStringUtils.MakeTss(value, wsId);
+				wsIdsToSearch = new List<int> { _cache.DefaultAnalWs };
 			}
+			int fallbackWsId = _cache.DefaultUserWs;
+			wsIdsToSearch.Add(fallbackWsId);
+
+			foreach (int wsId in wsIdsToSearch)
+			{
+				string wsStr = wsm.GetStrFromWs(wsId);
+				LfStringField field;
+				if (input.TryGetValue(wsStr, out field) && !String.IsNullOrEmpty(field.Value))
+				{
+					Console.WriteLine("Returning TsString from {0} for writing system {1}", field.Value, wsStr);
+					return TsStringUtils.MakeTss(field.Value, wsId);
+				}
+			}
+
+			// Last-ditch option: just grab the first non-empty string we can find
+			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(_cache);
+			if (kv.Value == null) return null;
+			Console.WriteLine("Returning TsString from {0} for writing system {1}", kv.Value, wsm.GetStrFromWs(kv.Key));
+			return TsStringUtils.MakeTss(kv.Value, kv.Key);
 		}
 
 		private ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner, ICmPossibility typeOfNewTranslation)
