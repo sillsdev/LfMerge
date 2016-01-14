@@ -56,7 +56,7 @@ namespace LfMerge.Tests.Actions
 			sut.Run(lfProj);
 
 			// Verify
-			var projDir = Path.Combine(_env.Settings.WebWorkDirectory, projCode);
+			var projDir = Path.Combine(_env.Settings.WebWorkDirectory, projCode.ToLowerInvariant());
 			Assert.That(Directory.Exists(projDir), Is.True,
 				"Didn't create webwork directory");
 			Assert.That(Directory.Exists(Path.Combine(projDir, ".hg")), Is.True,
@@ -68,7 +68,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var projCode = TestContext.CurrentContext.Test.Name;
-			var projDir = Path.Combine(_env.Settings.WebWorkDirectory, projCode);
+			var projDir = Path.Combine(_env.Settings.WebWorkDirectory, projCode.ToLowerInvariant());
 			Directory.CreateDirectory(projDir);
 			var lfProj = LanguageForgeProject.Create(_env.Settings, projCode);
 			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Receive);
