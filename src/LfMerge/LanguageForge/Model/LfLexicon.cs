@@ -15,20 +15,6 @@ namespace LfMerge.LanguageForge.Model
 		{
 			Config = config;
 		}
-
-		public void PopulateFields(BsonDocument source)
-		{
-			foreach (KeyValuePair<string, LfConfigFieldBase> fieldKeyValue in Config.Entry.Fields)
-			{
-				string name = fieldKeyValue.Key;
-				LfConfigFieldBase field = fieldKeyValue.Value;
-				switch (field.Type)
-				{
-				case LfConfigFieldTypeNames.FieldList:
-					break;
-				}
-			}
-		}
 	}
 }
 
