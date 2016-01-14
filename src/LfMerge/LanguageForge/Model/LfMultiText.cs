@@ -58,11 +58,6 @@ namespace LfMerge.LanguageForge.Model
 			return new LfMultiText { { wsStr, new LfStringField { Value = value.Text } } };
 		}
 
-		public Dictionary<string, string> AsStringDictionary()
-		{
-			return this.ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
-		}
-
 		public BsonDocument AsBsonDocument()
 		{
 			BsonDocument result = new BsonDocument();
@@ -73,14 +68,34 @@ namespace LfMerge.LanguageForge.Model
 			return result;
 		}
 
-		public string FirstNonEmptyString()
+		public KeyValuePair<string, string> BestStringAndWs(IEnumerable<string> wsSearchOrder)
 		{
-			return AsStringDictionary().Values.FirstOrDefault(str => !String.IsNullOrEmpty(str)); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+			foreach (string ws in wsSearchOrder)
+			{
+				LfStringField field;
+				if (this.TryGetValue(ws, out field) && field != null && !String.IsNullOrEmpty(field.Value))
+					return new KeyValuePair<string, string>(ws, field.Value);
+			}
+			// Fall back to first non-empty string
+			return FirstNonEmptyKeyValue();
+		}
+
+		public string BestString(IEnumerable<string> wsSearchOrder)
+		{
+			return BestStringAndWs(wsSearchOrder).Value;
 		}
 
 		public LfStringField FirstNonEmptyStringField()
 		{
-			return Values.FirstOrDefault(strFld => !String.IsNullOrEmpty(strFld.Value)); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+			// TODO: Most functions that call this should instead call BestStringAndWs() and pass in a search list
+			return Values.FirstOrDefault(field => field != null && !String.IsNullOrEmpty(field.Value));
+		}
+
+		public string FirstNonEmptyString()
+		{
+			// TODO: Most functions that call this should instead call BestString() and pass in a search list.
+			LfStringField result = FirstNonEmptyStringField();
+			return (result == null) ? null : result.Value;
 		}
 
 		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(FdoCache cache)
@@ -94,7 +109,10 @@ namespace LfMerge.LanguageForge.Model
 
 		public KeyValuePair<string, string> FirstNonEmptyKeyValue()
 		{
-			return AsStringDictionary().FirstOrDefault(kv => !String.IsNullOrEmpty(kv.Value));
+			KeyValuePair<string, LfStringField> result = this.FirstOrDefault(kv => kv.Value != null && !String.IsNullOrEmpty(kv.Value.Value));
+			return (result.Value == null) ?
+				new KeyValuePair<string, string>(null, null) :
+				new KeyValuePair<string, string>(result.Key, result.Value.Value);
 		}
 
 		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
@@ -116,25 +134,11 @@ namespace LfMerge.LanguageForge.Model
 
 		public void WriteToFdoMultiString(IMultiAccessorBase dest, WritingSystemManager wsManager)
 		{
-			/*
-			LfMultiText newInstance = new LfMultiText();
-			foreach (int wsid in dest.AvailableWritingSystemIds)
-			{
-				string wsstr = wsManager.GetStrFromWs(wsid);
-				ITsString value = dest.get_String(wsid);
-				newInstance.Add(wsstr, new LfStringField { Value = value.Text });
-			}
-			return newInstance;
-			*/
-			foreach (KeyValuePair<string, string> kv in this.AsStringDictionary())
+			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{
 				int wsId = wsManager.GetWsFromStr(kv.Key);
-				if (wsId == 0)
-				{
-					// Skip any unidentified writing systems
-					continue;
-				}
-				string value = kv.Value;
+				if (wsId == 0) continue; // Skip any unidentified writing systems
+				string value = kv.Value.Value;
 				dest.set_String(wsId, value);
 			}
 		}

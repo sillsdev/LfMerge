@@ -324,13 +324,16 @@ namespace LfMerge.FieldWorks
 				{
 					LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 					Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
-					foreach (KeyValuePair<string, string> kv in valueAsMultiText.AsStringDictionary())
+					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
 					{
+						if (kv.Value == null)
+							continue;
+						string s = kv.Value.Value;
 						int wsId = servLoc.WritingSystemManager.GetWsFromStr(kv.Key);
 						if (wsId == 0)
 							continue;
-						Console.WriteLine("  {0}: {1}", kv.Key, kv.Value);
-						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(kv.Value, wsId));
+						Console.WriteLine("  {0}: {1}", kv.Key, s);
+						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(s, wsId));
 					}
 					return true;
 				}
