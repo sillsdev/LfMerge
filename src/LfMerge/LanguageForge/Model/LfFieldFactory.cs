@@ -5,9 +5,6 @@ namespace LfMerge.LanguageForge.Model
 {
 	public class LfFieldFactory
 	{
-		public LfFieldFactory()
-		{
-		}
 	}
 }
 

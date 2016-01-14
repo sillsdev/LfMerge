@@ -25,10 +25,6 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField ExamplePublishIn { get; set; }
 		public BsonDocument CustomFields { get; set; }
 		public BsonDocument CustomFieldGuids { get; set; }
-
-		public LfExample()
-		{
-		}
 	}
 }
 

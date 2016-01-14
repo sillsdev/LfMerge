@@ -15,10 +15,6 @@ namespace LfMerge.LanguageForge.Config
 		public LfConfigFieldList Entry { get; set; }
 		public BsonDocument RoleViews { get; set; }
 		public BsonDocument UserViews { get; set; }
-
-		public LfProjectConfig()
-		{
-		}
 	}
 }
 

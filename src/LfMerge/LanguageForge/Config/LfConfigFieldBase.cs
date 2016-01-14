@@ -14,10 +14,6 @@ namespace LfMerge.LanguageForge.Config
 
 		// Derived classes must override this to be the appropriate string from LfConfigFieldTypeNames
 		// public virtual string TypeName { get; set; }
-
-		public LfConfigFieldBase()
-		{
-		}
 	}
 }
 
