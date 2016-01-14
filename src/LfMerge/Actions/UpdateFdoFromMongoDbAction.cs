@@ -165,7 +165,7 @@ namespace LfMerge.Actions
 				source.WriteToFdoMultiString(dest, _servLoc.WritingSystemManager);
 		}
 
-		private ILexEntry LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
+		private void LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid ?? Guid.Empty;
 			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
@@ -176,7 +176,7 @@ namespace LfMerge.Actions
 				else
 					// TODO: Log this properly
 					Console.WriteLine("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.", fdoEntry.Guid);
-				return null; // Don't set fields on a deleted entry
+				return; // Don't set fields on a deleted entry
 			}
 			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
@@ -216,8 +216,6 @@ namespace LfMerge.Actions
 			}
 
 			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
-
-			return fdoEntry;
 		}
 
 		private void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
@@ -324,7 +322,7 @@ namespace LfMerge.Actions
 			return _translationFactory.Create(owner, typeOfNewTranslation);
 		}
 
-		private ILexExampleSentence LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
+		private void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
 			Guid guid = lfExample.Guid;
 			if (guid == Guid.Empty)
@@ -342,11 +340,9 @@ namespace LfMerge.Actions
 			// Ignoring t.Status since LF won't touch it
 
 			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
-
-			return fdoExample;
 		}
 
-		private ICmPicture LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
+		private void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
 			Guid guid = lfPicture.Guid;
 			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
@@ -354,10 +350,9 @@ namespace LfMerge.Actions
 			string caption = kv.Value;
 			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
 			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
-			return fdoPicture;
 		}
 
-		private ILexSense LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
+		private void LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
 		{
 			Guid guid = lfSense.Guid;
 			if (guid == Guid.Empty)
@@ -419,8 +414,6 @@ namespace LfMerge.Actions
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
 
 			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
-
-			return fdoSense;
 		}
 
 		private ILexEtymology CreateOwnedEtymology(ILexEntry owner)
