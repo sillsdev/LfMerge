@@ -30,9 +30,6 @@ else
 	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
 fi
 
-# add path to FDO assemblies
-MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
-
 ################################################################################################
 
 if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
@@ -54,6 +51,9 @@ else
 fi
 
 ################################################################################################
+
+# add path to FDO assemblies
+MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
 
 MONO_TRACE_LISTENER="Console.Out"
 
