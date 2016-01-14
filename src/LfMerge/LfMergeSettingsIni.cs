@@ -14,17 +14,16 @@ namespace LfMerge
 {
 	public class LfMergeSettingsIni : ILfMergeSettings
 	{
-		public static LfMergeSettingsIni Current { get; protected set; }
-
 		public static string ConfigDir { get; set; }
+
 		public static string UserConfigDir { get; set; }
-		public static string ConfigFile
-		{
+
+		public static string ConfigFile {
 			//get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
 			get { return Path.Combine(ConfigDir, "sendreceive.ini"); } // Only use .ini during testing, then revert to .conf
 		}
-		public static string UserConfigFile
-		{
+
+		public static string UserConfigFile {
 			//get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
 			get { return Path.Combine(UserConfigDir, "sendreceive.ini"); }
 		}
@@ -82,6 +81,7 @@ namespace LfMerge
 		}
 
 		#region Equality and GetHashCode
+
 		public override bool Equals(object obj)
 		{
 			var other = obj as LfMergeSettingsIni;
@@ -115,14 +115,14 @@ namespace LfMerge
 			}
 			return hash;
 		}
+
 		#endregion
 
 		#region IFdoDirectories implementation
 
 		public string ProjectsDirectory { get; private set; }
 
-		public string DefaultProjectsDirectory
-		{
+		public string DefaultProjectsDirectory {
 			get { return ProjectsDirectory; }
 		}
 
@@ -192,7 +192,8 @@ namespace LfMerge
 			IniData result = parser.Parse(DefaultLfMergeSettings.DefaultIniText);
 
 			string globalIni = File.Exists(globalConfigFilename) ? File.ReadAllText(globalConfigFilename, utf8) : "";
-			if (String.IsNullOrEmpty(globalIni)) {
+			if (String.IsNullOrEmpty(globalIni))
+			{
 				// TODO: Make all these Console.WriteLine calls into proper logging calls
 				Console.WriteLine("Warning: no global configuration found. Will use default settings.");
 			}
@@ -201,7 +202,8 @@ namespace LfMerge
 			{
 				globalConfig = parser.Parse(globalIni);
 			}
-			catch (ParsingException e) {
+			catch (ParsingException e)
+			{
 				Console.WriteLine("Warning: Error parsing global configuration file. Will use default settings.");
 				Console.WriteLine("Error follows: {0}", e.ToString());
 				globalConfig = null; // Merging null is perfectly acceptable to IniParser
@@ -215,16 +217,19 @@ namespace LfMerge
 			{
 				userConfig = parser.Parse(userIni);
 			}
-			catch (ParsingException e) {
+			catch (ParsingException e)
+			{
 				Console.WriteLine("Warning: Error parsing user configuration file. Will use global settings.");
 				Console.WriteLine("Error follows: {0}", e.ToString());
 				userConfig = null; // Merging null is perfectly acceptable to IniParser
 			}
 			result.Merge(userConfig);
 
-			foreach (KeyData item in result.Global) {
+			foreach (KeyData item in result.Global)
+			{
 				// Special-case. Could be replaced with a more general regex if we end up using more variables, but YAGNI.
-				if (item.Value.Contains("${HOME}")) {
+				if (item.Value.Contains("${HOME}"))
+				{
 					item.Value = item.Value.Replace("${HOME}", Environment.GetEnvironmentVariable("HOME"));
 				}
 			}

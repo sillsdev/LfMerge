@@ -2,7 +2,9 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using Autofac;
 using CommandLine;
+using IniParser.Model;
 
 namespace LfMerge.TestApp
 {
@@ -35,20 +37,19 @@ namespace LfMerge.TestApp
 		public static void Run(Options options)
 		{
 			var folder = Path.Combine(Path.GetTempPath(), "LfMerge.TestApp");
-			LfMergeSettings.ConfigDir = folder;
-			LfMergeSettings.Initialize(folder);
-			LfMergeSettings.Current.SaveSettings();
+			LfMergeSettingsIni.ConfigDir = folder;
 
-			var queueDir = LfMergeSettings.Current.GetQueueDirectory(options.QueueName);
+			MainClass.Container = MainClass.RegisterTypes().Build();
+			var settings = MainClass.Container.Resolve<ILfMergeSettings>();
+			var config = new IniData();
+			var main = config.Global;
+			main["BaseDir"] = folder;
+			((LfMergeSettingsIni)settings).Initialize(config);
+
+			var queueDir = settings.GetQueueDirectory(options.QueueName);
 			Directory.CreateDirectory(queueDir);
 			File.WriteAllText(Path.Combine(queueDir, options.ProjectCode), string.Empty);
 
-//			var startInfo = new ProcessStartInfo {
-//				Arguments = "--debug LfMerge.exe",
-//				FileName = "mono",
-//				UseShellExecute = true,
-//			};
-//			Process.Start(startInfo);
 			MainClass.Main(new string[0]);
 		}
 	}

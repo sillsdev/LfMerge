@@ -40,7 +40,8 @@ namespace LfMerge
 			if (options == null)
 				return;
 
-			Container = RegisterTypes().Build();
+			if (Container == null)
+				Container = RegisterTypes().Build();
 
 			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
 			try
@@ -51,16 +52,9 @@ namespace LfMerge
 					return;
 				}
 
-				// LfMergeSettings.LoadSettings();
 				var settings = Container.Resolve<ILfMergeSettings>();
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
-				// TODO: Move this testing code where it belongs
-				string localProjectCode = "TestLangProj";
-				LanguageForgeProject thisProject = LanguageForgeProject.Create(settings, localProjectCode);
-				IAction foo = Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo);
-				foo.Run(thisProject);
-				IAction bar = Actions.Action.GetAction(ActionNames.UpdateFdoFromMongoDb);
-				bar.Run(thisProject);
+
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
 					queue = queue.NextQueueWithWork)

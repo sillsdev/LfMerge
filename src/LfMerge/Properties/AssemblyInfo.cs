@@ -28,3 +28,4 @@ using System.Runtime.CompilerServices;
 //[assembly: AssemblyKeyFile("")]
 
 [assembly:InternalsVisibleTo("LfMerge.Tests")]
+[assembly:InternalsVisibleTo("LfMerge.TestApp")]
