@@ -1,12 +1,14 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
+
 using Autofac;
 
 namespace LfMerge.Actions
 {
 	public abstract class Action: IAction
 	{
+		protected ILfMergeSettings Settings { get; set; }
+
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
 		{
@@ -29,8 +31,9 @@ namespace LfMerge.Actions
 
 		#endregion
 
-		protected Action()
+		public Action(ILfMergeSettings settings)
 		{
+			Settings = settings;
 		}
 
 		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }

@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
 using SIL.Reporting;
@@ -16,6 +15,8 @@ namespace LfMerge.Actions
 {
 	public class ReceiveAction: Action
 	{
+		public ReceiveAction(ILfMergeSettings settings) : base(settings) {}
+
 		private IProgress Progress { get; set; }
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
@@ -29,11 +30,11 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var model = scope.Resolve<InternetCloneSettingsModel>();
-				model.ParentDirectoryToPutCloneIn = LfMergeSettings.Current.WebWorkDirectory;
+				model.ParentDirectoryToPutCloneIn = Settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
 				model.ProjectId = project.LanguageDepotProject.ProjectCode;
-				model.LocalFolderName = project.LfProjectName;
+				model.LocalFolderName = project.LfProjectCode;
 				model.AddProgress(Progress);
 
 				try
@@ -59,9 +60,9 @@ namespace LfMerge.Actions
 			get { return ActionNames.Merge; }
 		}
 
-		private static string GetProjectDirectory(string projectCode)
+		private static string GetProjectDirectory(string projectCode, ILfMergeSettings settings)
 		{
-			return Path.Combine(LfMergeSettings.Current.WebWorkDirectory, projectCode);
+			return Path.Combine(settings.WebWorkDirectory, projectCode);
 		}
 
 		private void InitialClone(InternetCloneSettingsModel model)
@@ -73,8 +74,8 @@ namespace LfMerge.Actions
 		{
 			var actualCloneResult = new ActualCloneResult();
 
-			var cloneLocation = GetProjectDirectory(project.LfProjectName);
-			var newProjectFilename = Path.GetFileName(project.LfProjectName) + SharedConstants.FwXmlExtension;
+			var cloneLocation = GetProjectDirectory(project.LfProjectCode, Settings);
+			var newProjectFilename = Path.GetFileName(project.LfProjectCode) + SharedConstants.FwXmlExtension;
 			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
 
 			using (var scope = MainClass.Container.BeginLifetimeScope())
@@ -95,7 +96,7 @@ namespace LfMerge.Actions
 						return false;
 					case FinalCloneResult.FlexVersionIsTooOld:
 						Logger.WriteEvent("Clone failed: Flex version is too old; project: {0}",
-							project.LfProjectName);
+							project.LfProjectCode);
 						if (Directory.Exists(cloneLocation))
 							Directory.Delete(cloneLocation, true);
 						return false;

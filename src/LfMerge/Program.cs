@@ -4,10 +4,11 @@ using System;
 using System.Linq;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
+using LfMerge.Actions;
+using LfMerge.MongoConnector;
 using SIL.IO.FileLock;
 
 namespace LfMerge
@@ -19,11 +20,14 @@ namespace LfMerge
 		internal static ContainerBuilder RegisterTypes()
 		{
 			var containerBuilder = new ContainerBuilder();
+			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().As<ILfMergeSettings>();
 			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
+			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
+			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
@@ -47,17 +51,25 @@ namespace LfMerge
 					return;
 				}
 
-				LfMergeSettings.LoadSettings();
-
+				// LfMergeSettings.LoadSettings();
+				var settings = Container.Resolve<ILfMergeSettings>();
+				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
+				// TODO: Move this testing code where it belongs
+				string localProjectCode = "TestLangProj";
+				LanguageForgeProject thisProject = LanguageForgeProject.Create(settings, localProjectCode);
+				IAction foo = Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo);
+				foo.Run(thisProject);
+				IAction bar = Actions.Action.GetAction(ActionNames.UpdateFdoFromMongoDb);
+				bar.Run(thisProject);
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
 					queue = queue.NextQueueWithWork)
 				{
 					var clonedQueue = queue.QueuedProjects.ToList();
-					foreach (var projectName in clonedQueue)
+					foreach (var projectCode in clonedQueue)
 					{
-						queue.DequeueProject(projectName);
-						var project = LanguageForgeProject.Create(projectName);
+						queue.DequeueProject(projectCode);
+						var project = LanguageForgeProject.Create(settings, projectCode);
 
 						for (var action = queue.CurrentAction;
 							action != null;
@@ -74,7 +86,17 @@ namespace LfMerge
 					fileLock.ReleaseLock();
 
 				Container.Dispose();
+				Cleanup();
 			}
 		}
+
+		/// <summary>
+		/// Clean up anything needed before quitting, e.g. disposing of IDisposable objects.
+		/// </summary>
+		private static void Cleanup()
+		{
+			LanguageForgeProject.DisposeProjectCache();
+		}
+
 	}
 }

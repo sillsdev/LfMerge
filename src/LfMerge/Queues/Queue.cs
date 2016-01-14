@@ -11,6 +11,8 @@ namespace LfMerge.Queues
 {
 	public class Queue: IQueue
 	{
+		private ILfMergeSettings Settings { get; set; }
+
 		#region Queue handling
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
@@ -53,11 +55,11 @@ namespace LfMerge.Queues
 			return null;
 		}
 
-		public static void CreateQueueDirectories()
+		public static void CreateQueueDirectories(ILfMergeSettings settings)
 		{
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
-				var queueDir = LfMergeSettings.Current.GetQueueDirectory(queueName);
+				var queueDir = settings.GetQueueDirectory(queueName);
 				if (queueDir != null)
 					Directory.CreateDirectory(queueDir);
 			}
@@ -65,11 +67,12 @@ namespace LfMerge.Queues
 
 		#endregion
 
-		public Queue(QueueNames name)
+		public Queue(ILfMergeSettings settings, QueueNames name)
 		{
 			if (name == QueueNames.None)
 				throw new ArgumentException("Can't create a queue of type QueueNames.None", "name");
 
+			Settings = settings;
 			Name = name;
 		}
 
@@ -86,14 +89,14 @@ namespace LfMerge.Queues
 			get { return QueuedProjectsEnumerable().ToArray(); }
 		}
 
-		public void EnqueueProject(string projectName)
+		public void EnqueueProject(string projectCode)
 		{
-			File.WriteAllText(Path.Combine(QueueDirectory, projectName), string.Empty);
+			File.WriteAllText(Path.Combine(QueueDirectory, projectCode), string.Empty);
 		}
 
-		public void DequeueProject(string projectName)
+		public void DequeueProject(string projectCode)
 		{
-			File.Delete(Path.Combine(QueueDirectory, projectName));
+			File.Delete(Path.Combine(QueueDirectory, projectCode));
 		}
 
 		public IQueue NextQueueWithWork
@@ -157,7 +160,7 @@ namespace LfMerge.Queues
 
 		private string QueueDirectory
 		{
-			get { return LfMergeSettings.Current.GetQueueDirectory(Name); }
+			get { return Settings.GetQueueDirectory(Name); }
 		}
 	}
 }

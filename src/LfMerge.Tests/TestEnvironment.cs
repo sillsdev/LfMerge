@@ -7,7 +7,6 @@ using Autofac;
 using Chorus.Model;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using SIL.TestUtilities;
-using LibFLExBridgeChorusPlugin;
 using LfMerge.FieldWorks;
 
 namespace LfMerge.Tests
@@ -15,24 +14,26 @@ namespace LfMerge.Tests
 	class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
+		public ILfMergeSettings Settings;
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true)
 		{
-			LfMergeSettingsAccessor.ResetCurrent();
-			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble).Build();
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
-			LfMergeSettings.Initialize(LanguageForgeFolder);
+			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
+				registerProcessingStateDouble, LanguageForgeFolder).Build();
+			Settings = MainClass.Container.Resolve<ILfMergeSettings>();
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
-			var containerBuilder = MainClass.RegisterTypes();
+			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
 			{
+				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<ILfMergeSettings>()
+					.WithParameter(new TypedParameter(typeof(string), temporaryFolder));
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
@@ -60,6 +61,7 @@ namespace LfMerge.Tests
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
 			LfMergeSettingsAccessor.ResetCurrent();
+			Settings = null;
 		}
 
 		public string LanguageForgeFolder
@@ -67,19 +69,19 @@ namespace LfMerge.Tests
 			get { return _languageForgeServerFolder.Path; }
 		}
 
-		public LfMergeSettings LangForgeDirFinder
+		public ILfMergeSettings LangForgeDirFinder
 		{
-			get { return LfMergeSettings.Current; }
+			get { return Settings; }
 		}
 
-		public string ProjectPath(string projectName)
+		public string ProjectPath(string projectCode)
 		{
-			return Path.Combine(LanguageForgeFolder, projectName);
+			return Path.Combine(LanguageForgeFolder, projectCode);
 		}
 
-		public void CreateProjectUpdateFolder(string projectName)
+		public void CreateProjectUpdateFolder(string projectCode)
 		{
-			Directory.CreateDirectory(ProjectPath(projectName));
+			Directory.CreateDirectory(ProjectPath(projectCode));
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)

@@ -18,9 +18,9 @@ namespace LfMerge.FieldWorks
 		private readonly IFdoUI _fdoUi;
 		private readonly ProjectIdentifier _project;
 
-		public FwProject(string database)
+		public FwProject(ILfMergeSettings settings, string database)
 		{
-			_project = new ProjectIdentifier(LfMergeSettings.Current, database);
+			_project = new ProjectIdentifier(settings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
 		}
@@ -82,12 +82,12 @@ namespace LfMerge.FieldWorks
 			}
 			catch (FdoDataMigrationForbiddenException)
 			{
-				Console.WriteLine("Error: Incompatible version");
+				Console.WriteLine("Error: Incompatible version (can't migrate data)");
 				return null;
 			}
 			catch (FdoNewerVersionException)
 			{
-				Console.WriteLine("Error: Incompatible version");
+				Console.WriteLine("Error: Incompatible version (version number newer than expected)");
 				return null;
 			}
 			catch (FdoFileLockedException)

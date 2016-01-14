@@ -26,7 +26,7 @@ namespace LfMerge.Tests
 		[Test]
 		public void Serialization_Roundtrip()
 		{
-			var expectedState = new ProcessingState("ProjA") {
+			var expectedState = new ProcessingState("ProjA", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.QUEUED,
 				LastStateChangeTicks = DateTime.Now.Ticks,
 				PercentComplete = 50,
@@ -54,7 +54,7 @@ namespace LfMerge.Tests
 		[Test]
 		public void Deserialization_FromFile()
 		{
-			var expectedState = new ProcessingState("ProjC") {
+			var expectedState = new ProcessingState("ProjC", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.QUEUED,
 				LastStateChangeTicks = 635683277459459160,
 				PercentComplete = 30,
@@ -70,8 +70,8 @@ namespace LfMerge.Tests
 				"\"TotalSteps\":3,\"CurrentStep\":2,\"RetryCounter\":1,\"UncommittedEditCounter\":0," +
 				"\"ErrorMessage\":null,\"ErrorCode\":0,\"ProjectCode\":\"ProjC\"}";
 
-			Directory.CreateDirectory(LfMergeSettings.Current.StateDirectory);
-			var filename = LfMergeSettings.Current.GetStateFileName("ProjC");
+			Directory.CreateDirectory(_env.Settings.StateDirectory);
+			var filename = _env.Settings.GetStateFileName("ProjC");
 			File.WriteAllText(filename, json);
 
 			var state = ProcessingState.Deserialize("ProjC");
@@ -83,7 +83,7 @@ namespace LfMerge.Tests
 		{
 			// Setup
 			var ticks = DateTime.Now.Ticks;
-			var sut = new ProcessingState("proja") {
+			var sut = new ProcessingState("proja", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.QUEUED,
 				LastStateChangeTicks = ticks,
 				PercentComplete = 50,
@@ -104,8 +104,8 @@ namespace LfMerge.Tests
 			sut.SRState = ProcessingState.SendReceiveStates.MERGING;
 
 			// Verify
-			Directory.CreateDirectory(LfMergeSettings.Current.StateDirectory);
-			var filename = LfMergeSettings.Current.GetStateFileName("proja");
+			Directory.CreateDirectory(_env.Settings.StateDirectory);
+			var filename = _env.Settings.GetStateFileName("proja");
 			Assert.That(File.ReadAllText(filename), Is.EqualTo(expectedJson));
 		}
 

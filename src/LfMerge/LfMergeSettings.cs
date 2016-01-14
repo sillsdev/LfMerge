@@ -2,7 +2,6 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
-using SIL.FieldWorks.FDO;
 using LfMerge.Queues;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,13 +9,12 @@ using System.Reflection;
 
 namespace LfMerge
 {
-	public class LfMergeSettings: IFdoDirectories
+	public class LfMergeSettings: ILfMergeSettings
 	{
-		public static LfMergeSettings Current { get; protected set; }
+		public static ILfMergeSettings Current { get; protected set; }
 
 		[JsonProperty]
 		public static string ConfigDir { get; set; }
-
 		public static string ConfigFile
 		{
 			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
@@ -39,7 +37,7 @@ namespace LfMerge
 			}
 			Current = new LfMergeSettings(baseDir, releaseDataDir, templatesDir);
 
-			Queue.CreateQueueDirectories();
+			Queue.CreateQueueDirectories(Current);
 		}
 
 		[JsonProperty]
@@ -72,7 +70,8 @@ namespace LfMerge
 			var other = obj as LfMergeSettings;
 			if (other == null)
 				return false;
-			bool ret = other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+			bool ret =
+				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
@@ -183,13 +182,13 @@ namespace LfMerge
 			File.WriteAllText(ConfigFile, json);
 		}
 
-		public static LfMergeSettings LoadSettings()
+		public static ILfMergeSettings LoadSettings()
 		{
 			var fileName = ConfigFile;
 			LfMergeSettings.Current = null;
-			if (File.Exists(fileName))
+			string json = File.Exists(fileName) ? File.ReadAllText(fileName) : "";
+			if (!String.IsNullOrWhiteSpace(json))
 			{
-				var json = File.ReadAllText(fileName);
 				JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
 					ContractResolver = new NonPublicPropertiesResolver()
 				};

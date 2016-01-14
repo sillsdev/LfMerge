@@ -33,6 +33,13 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\packages\MongoDB.Driver.2.1.0\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\..\..\fwrepo\fw\Output\Debug\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="LibChorus">
       <HintPath>..\..\lib\LibChorus.dll</HintPath>
     </Reference>
@@ -75,6 +82,13 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="INIFileParser">
+      <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.WritingSystems">
+      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -103,17 +117,86 @@
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="LanguageDepotProject.cs" />
     <Compile Include="ILanguageDepotProject.cs" />
+    <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IProcessingStateDeserialize.cs" />
     <Compile Include="FieldWorks\FlexHelper.cs" />
+    <Compile Include="MongoConnector\MongoConnection.cs" />
+    <Compile Include="MongoConnector\MongoProjectRecord.cs" />
+    <Compile Include="MongoConnector\MongoCursorEnumerableExtensions.cs" />
+    <Compile Include="LanguageForge\Config\ILfProjectConfig.cs" />
+    <Compile Include="LanguageForge\Config\LfProjectConfig.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigFieldBase.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigMultiText.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigFieldList.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigOptionList.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigMultiOptionList.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigPictures.cs" />
+    <Compile Include="LanguageForge\Config\LfFieldTypeMapper.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigFieldTypeNames.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigFieldTypeMapper.cs" />
+    <Compile Include="LanguageForge\Config\MongoRegistrarForLfConfig.cs" />
+    <Compile Include="MongoConnector\MongoRegistrar.cs" />
+    <Compile Include="LanguageForge\Model\ILfLexicon.cs" />
+    <Compile Include="LanguageForge\Model\LfLexicon.cs" />
+    <Compile Include="LanguageForge\Model\LfFieldFactory.cs" />
+    <Compile Include="LanguageForge\Model\LfLexEntry.cs" />
+    <Compile Include="LanguageForge\Model\LfMultiText.cs" />
+    <Compile Include="LanguageForge\Model\LfStringField.cs" />
+    <Compile Include="LanguageForge\Model\LfSense.cs" />
+    <Compile Include="LanguageForge\Model\LfStringArrayField.cs" />
+    <Compile Include="LanguageForge\Model\LfAuthorInfo.cs" />
+    <Compile Include="LanguageForge\Model\LfPicture.cs" />
+    <Compile Include="LanguageForge\Model\LfExample.cs" />
+    <Compile Include="LanguageForge\Model\LfFieldBase.cs" />
+    <Compile Include="LanguageForge\Model\MongoRegistrarForLfFields.cs" />
+    <Compile Include="FieldWorks\CustomFieldConverter.cs" />
+    <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
+    <Compile Include="DataConverters\PossibilityListConverter.cs" />
+    <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
+    <Compile Include="MongoConnector\IMongoConnection.cs" />
+    <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
+    <Compile Include="DataConverters\PartOfSpeechConverter.cs" />
+    <Compile Include="DataConverters\GoldEticXmlParser.cs" />
+    <Compile Include="DataConverters\GoldEticItem.cs" />
+    <Compile Include="LfMergeSettingsIni.cs" />
+    <Compile Include="DefaultLfMergeSettings.cs" />
+    <Compile Include="ILfMergeSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.2.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.2.0\build\BuildDependencyTasks.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\..\..\..\fwrepo\fw\Downloads\icu.net.dll.config">
+      <Link>icu.net.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Queues\" />
     <Folder Include="FieldWorks\" />
     <Folder Include="Actions\" />
+    <Folder Include="MongoConnector\" />
+    <Folder Include="LanguageForge\" />
+    <Folder Include="LanguageForge\Config\" />
+    <Folder Include="LanguageForge\Model\" />
+    <Folder Include="DataConverters\" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <CSharpFormattingPolicy AnonymousMethodBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" EmbeddedStatementPlacement="DoNotCare" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" SpacesBeforeBrackets="False" AlignToFirstMethodDeclarationParameter="False" AlignToFirstIndexerDeclarationParameter="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" TabsToSpaces="False" EolMarker="Unix" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
+          <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
+          <TextStylePolicy inheritsSet="null" scope="application/xml" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">
+      <Link>GOLDEtic.xml</Link>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

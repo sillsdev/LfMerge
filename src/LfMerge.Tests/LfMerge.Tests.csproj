@@ -60,6 +60,18 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Extras.Moq">
+      <HintPath>..\..\packages\Autofac.Extras.Moq.4.0.0\lib\net45\Autofac.Extras.Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="INIFileParser">
+      <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.WritingSystems">
+      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,10 +82,12 @@
     <Compile Include="Queues\QueueTests.cs" />
     <Compile Include="Actions\ActionTests.cs" />
     <Compile Include="LanguageDepotProjectTests.cs" />
+    <Compile Include="BidirectionalDictionaryTests.cs" />
     <Compile Include="Actions\ReceiveActionTests.cs" />
     <Compile Include="TestDoubles.cs" />
     <Compile Include="LfMergeSettingsTests.cs" />
     <Compile Include="TestEnvironmentAttribute.cs" />
+    <Compile Include="SampleData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

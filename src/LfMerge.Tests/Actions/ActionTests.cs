@@ -1,10 +1,9 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
+
 using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
-using LfMerge;
 using LfMerge.Actions;
 using LfMerge.Queues;
 
@@ -77,7 +76,7 @@ namespace LfMerge.Tests.Actions
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create("proja");
+			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
 			var sut = LfMerge.Actions.Action.GetAction(actionName);
 
 			// Exercise
@@ -98,7 +97,7 @@ namespace LfMerge.Tests.Actions
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create("proja");
+			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
 			var state = Factory.Deserialize("proja") as ProcessingStateDouble;
 			state.SRState = ProcessingState.SendReceiveStates.HOLD;
 			state.ResetSavedStates();

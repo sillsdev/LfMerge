@@ -3,8 +3,6 @@
 using System;
 using System.IO;
 using CommandLine;
-using CommandLine.Text;
-using System.Diagnostics;
 
 namespace LfMerge.TestApp
 {

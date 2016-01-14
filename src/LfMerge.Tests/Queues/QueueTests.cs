@@ -20,7 +20,7 @@ namespace LfMerge.Tests.Queues
 		/// </summary>
 		private class QueueDouble: Queue
 		{
-			public QueueDouble(QueueNames name): base(name)
+			public QueueDouble(ILfMergeSettings settings, QueueNames name): base(settings, name)
 			{
 			}
 
@@ -51,18 +51,19 @@ namespace LfMerge.Tests.Queues
 		[Test]
 		public void Ctor_CantCreateQueueForNone()
 		{
-			Assert.That(() => new Queue(QueueNames.None), Throws.ArgumentException);
+			Assert.That(() => new Queue(_env.Settings, QueueNames.None), Throws.ArgumentException);
 		}
 
+		// TODO: All these "using (var tempDir = new TemporaryFolder("Foo")) {}" blocks can be removed,
+		// now that TestEnvironment creates temporary folders itself.
 		[Test]
 		public void IsEmpty_NoFilesReturnsEmpty()
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				var mergequeueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
-				var sut = new Queue(QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Merge);
 
 				// Exercise
 				var isEmpty = sut.IsEmpty;
@@ -77,11 +78,10 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				var mergequeueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
-				var sut = new Queue(QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Merge);
 
 				// Exercise
 				var isEmpty = sut.IsEmpty;
@@ -96,8 +96,7 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("QueuedProjects"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				var mergequeueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "projb"), string.Empty);
 
@@ -106,7 +105,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
 
 				// don't use test double here - we want to test the sorting by date/time
-				var sut = new Queue(QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Merge);
 
 				// Exercise
 				var queuedProjects = sut.QueuedProjects;
@@ -129,7 +128,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--priority-project", prioProj });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
 
 			// Exercise
@@ -149,7 +148,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--project", singleProj });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
 
 			// Exercise
@@ -167,7 +166,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--project", "proja" });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "projd" };
 
 			// Exercise
@@ -183,8 +182,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
 				// Exercise
 				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
@@ -200,10 +198,9 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
@@ -222,10 +219,9 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
@@ -244,10 +240,9 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var mergeQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Merge);
+				var mergeQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
 				File.WriteAllText(Path.Combine(mergeQueueDir, "projz"), string.Empty);
 
 				// Exercise
@@ -268,10 +263,9 @@ namespace LfMerge.Tests.Queues
 
 			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var commitQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Commit);
+				var commitQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Commit);
 				File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
 
 				// Exercise
@@ -288,8 +282,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
 				// Exercise
 				var sut = Queue.FirstQueueWithWork;
@@ -305,10 +298,9 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
 
 				// Exercise
@@ -327,8 +319,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("EnqueueProject"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 				var sut = Queue.GetQueue(QueueNames.Commit);
 
 				// Exercise
@@ -341,7 +332,7 @@ namespace LfMerge.Tests.Queues
 				Assert.That(queueWithWork, Is.Not.Null);
 				Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Commit));
 				Assert.That(queueWithWork.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
-				var queuedProjectFile = Path.Combine(LfMergeSettings.Current.GetQueueDirectory(QueueNames.Commit), "foo");
+				var queuedProjectFile = Path.Combine(_env.Settings.GetQueueDirectory(QueueNames.Commit), "foo");
 				Assert.That(File.Exists(queuedProjectFile), Is.True);
 			}
 		}
@@ -352,10 +343,9 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("DequeueProject"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = LfMergeSettings.Current.GetQueueDirectory(QueueNames.Send);
+				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
 				File.WriteAllText(Path.Combine(sendQueueDir, "foo"), string.Empty);
 				var sut = Queue.GetQueue(QueueNames.Send);
 
@@ -374,8 +364,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			using (var tempDir = new TemporaryFolder("DequeueProject"))
 			{
-				LfMergeSettings.Initialize(tempDir.Path);
-				Queue.CreateQueueDirectories();
+				Queue.CreateQueueDirectories(_env.Settings);
 
 				var sut = Queue.GetQueue(QueueNames.Receive);
 
