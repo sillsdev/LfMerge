@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.DataConverters;
+using LfMerge.MongoConnector;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SIL.FieldWorks.FDO;

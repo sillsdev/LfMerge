@@ -3,7 +3,7 @@
 
 using MongoDB.Driver;
 
-namespace LfMerge
+namespace LfMerge.MongoConnector
 {
 	public interface IMongoConnection
 	{

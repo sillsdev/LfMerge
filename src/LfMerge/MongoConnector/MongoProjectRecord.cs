@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.LanguageForge.Config;
 
-namespace LfMerge
+namespace LfMerge.MongoConnector
 {
 	[BsonIgnoreExtraElements]
 	public class MongoProjectRecord

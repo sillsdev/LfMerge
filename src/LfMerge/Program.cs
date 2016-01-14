@@ -8,6 +8,7 @@ using LibFLExBridgeChorusPlugin.Infrastructure;
 using LfMerge.Queues;
 using LfMerge.FieldWorks;
 using LfMerge.Actions;
+using LfMerge.MongoConnector;
 using SIL.IO.FileLock;
 
 namespace LfMerge

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+
 using System;
 using System.Reflection;
 using System.Linq;
@@ -7,7 +8,7 @@ using LfMerge.LanguageForge.Config;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 
-namespace LfMerge
+namespace LfMerge.MongoConnector
 {
 	public class MongoRegistrar
 	{

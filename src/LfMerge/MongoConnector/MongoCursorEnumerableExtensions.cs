@@ -4,7 +4,7 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 
-namespace LfMerge
+namespace LfMerge.MongoConnector
 {
 	public static class MongoCursorEnumerableExtensions
 	{

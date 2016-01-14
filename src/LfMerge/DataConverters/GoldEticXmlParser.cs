@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace LfMerge
+namespace LfMerge.DataConverters
 {
 	public static class GoldEticXmlParser
 	{

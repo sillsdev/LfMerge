@@ -3,10 +3,11 @@
 using System;
 using MongoDB.Bson.Serialization;
 using LfMerge.LanguageForge.Config;
+using LfMerge.MongoConnector;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class MongoRegistrarForLfFields : LfMerge.MongoRegistrar
+	public class MongoRegistrarForLfFields : MongoRegistrar
 	{
 		public MongoRegistrarForLfFields() :
 		base(new LfConfigFieldTypeMapper())
