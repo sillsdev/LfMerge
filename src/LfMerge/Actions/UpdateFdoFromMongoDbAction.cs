@@ -307,15 +307,13 @@ namespace LfMerge.Actions
 		private ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner, ICmPossibility typeOfNewTranslation)
 		{
 			// If it's already in the owning list, use that object
-			foreach (ICmTranslation t in owner.TranslationsOC)
-			{
-				if (t.Guid == guid)
-					return t;
-			}
-			ICmTranslation result;
+			ICmTranslation result = owner.TranslationsOC.FirstOrDefault(t => t.Guid == guid);
+			if (result != null)
+				return result;
+			// Does a translation with that GUID already exist elsewhere?
 			if (_translationRepo.TryGetObject(guid, out result))
 			{
-				// Not in the owning list, but it already exists elsewhere. Move it "here".
+				// Move it "here". No formerOwner.Remove() needed since TranslationsOC.Add() takes care of that.
 				owner.TranslationsOC.Add(result);
 				return result;
 			}

@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System.Collections.Generic;
+using System.Linq;
 using LfMerge.LanguageForge.Model;
 using SIL.FieldWorks.FDO;
 
@@ -31,14 +32,7 @@ namespace LfMerge.DataConverters
 
 		public ICmPossibility GetByName(string name)
 		{
-			foreach (ICmPossibility poss in Possibilities.ReallyReallyAllPossibilities)
-			{
-				if (BestStringFrom(poss) == name)
-				{
-					return poss;
-				}
-			}
-			return null;
+			return Possibilities.ReallyReallyAllPossibilities.FirstOrDefault(poss => BestStringFrom(poss) == name);
 		}
 
 		public ICmPossibility GetByName(LfStringField nameField)
