@@ -6,6 +6,7 @@ using Autofac;
 using Chorus.Model;
 using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
+using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using NUnit.Framework;
 using SIL.TestUtilities;
@@ -15,7 +16,7 @@ namespace LfMerge.Tests
 	class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
-		public ILfMergeSettings Settings;
+		public LfMergeSettingsIni Settings;
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true)
@@ -24,7 +25,7 @@ namespace LfMerge.Tests
 				+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble, LanguageForgeFolder).Build();
-			Settings = MainClass.Container.Resolve<ILfMergeSettings>();
+			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
@@ -33,7 +34,7 @@ namespace LfMerge.Tests
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<ILfMergeSettings>()
+				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<LfMergeSettingsIni>()
 					.WithParameter(new TypedParameter(typeof(string), temporaryFolder));
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
@@ -62,7 +63,6 @@ namespace LfMerge.Tests
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
-			LfMergeSettingsAccessor.ResetCurrent();
 			Settings = null;
 		}
 
@@ -71,7 +71,7 @@ namespace LfMerge.Tests
 			get { return _languageForgeServerFolder.Path; }
 		}
 
-		public ILfMergeSettings LangForgeDirFinder
+		public LfMergeSettingsIni LangForgeDirFinder
 		{
 			get { return Settings; }
 		}

@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using Autofac;
+using LfMerge.Settings;
 using Newtonsoft.Json;
 
 namespace LfMerge
@@ -20,7 +21,7 @@ namespace LfMerge
 			HOLD,
 		}
 
-		private ILfMergeSettings Settings { get; set; }
+		private LfMergeSettingsIni Settings { get; set; }
 		private SendReceiveStates _state;
 		private long _lastStateChangeTicks;
 		private int _percentComplete;
@@ -40,13 +41,13 @@ namespace LfMerge
 			ProjectCode = string.Empty;
 		}
 
-		public ProcessingState(string projectCode, ILfMergeSettings settings): this()
+		public ProcessingState(string projectCode, LfMergeSettingsIni settings): this()
 		{
 			ProjectCode = projectCode;
 			SetSettings(settings);
 		}
 
-		public void SetSettings(ILfMergeSettings settings)
+		public void SetSettings(LfMergeSettingsIni settings)
 		{
 			Settings = settings;
 		}
@@ -156,9 +157,9 @@ namespace LfMerge
 
 		public class Factory: IProcessingStateDeserialize
 		{
-			private ILfMergeSettings Settings { get; set; }
+			private LfMergeSettingsIni Settings { get; set; }
 
-			public Factory(ILfMergeSettings settings)
+			public Factory(LfMergeSettingsIni settings)
 			{
 				Settings = settings;
 			}

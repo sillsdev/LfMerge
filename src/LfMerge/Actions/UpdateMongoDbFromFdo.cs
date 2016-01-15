@@ -1,17 +1,18 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
-using LfMerge.DataConverters;
 using LfMerge.MongoConnector;
+using LfMerge.Settings;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
-using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.Actions
 {
@@ -28,7 +29,7 @@ namespace LfMerge.Actions
 		private CustomFieldConverter _converter;
 		private IMongoConnection _connection;
 
-		public UpdateMongoDbFromFdo(ILfMergeSettings settings, IMongoConnection conn) : base(settings)
+		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, IMongoConnection conn) : base(settings)
 		{
 			_connection = conn;
 		}

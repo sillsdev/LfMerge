@@ -7,6 +7,7 @@ using Chorus.Model;
 using IniParser.Model;
 using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
+using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
@@ -16,9 +17,9 @@ namespace LfMerge.Tests
 	public class ProcessingStateFactoryDouble: IProcessingStateDeserialize
 	{
 		public ProcessingStateDouble State { get; set; }
-		private ILfMergeSettings Settings { get; set; }
+		private LfMergeSettingsIni Settings { get; set; }
 
-		public ProcessingStateFactoryDouble(ILfMergeSettings settings)
+		public ProcessingStateFactoryDouble(LfMergeSettingsIni settings)
 		{
 			Settings = settings;
 		}
@@ -37,7 +38,7 @@ namespace LfMerge.Tests
 	{
 		public List<ProcessingState.SendReceiveStates> SavedStates;
 
-		public ProcessingStateDouble(string projectCode, ILfMergeSettings settings): base(projectCode, settings)
+		public ProcessingStateDouble(string projectCode, LfMergeSettingsIni settings): base(projectCode, settings)
 		{
 			SavedStates = new List<ProcessingState.SendReceiveStates>();
 		}
@@ -58,21 +59,13 @@ namespace LfMerge.Tests
 
 	public class LanguageForgeProjectAccessor: LanguageForgeProject
 	{
-		protected LanguageForgeProjectAccessor(ILfMergeSettings settings): base(settings, null)
+		protected LanguageForgeProjectAccessor(LfMergeSettingsIni settings): base(settings, null)
 		{
 		}
 
 		public static void Reset()
 		{
 			CachedProjects.Clear();
-		}
-	}
-
-	public class LfMergeSettingsAccessor: LfMergeSettings
-	{
-		public static void ResetCurrent()
-		{
-			Current = null;
 		}
 	}
 

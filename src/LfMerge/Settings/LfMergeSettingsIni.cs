@@ -4,15 +4,16 @@ using System;
 using System.IO;
 using System.Text;
 using IniParser;
+using IniParser.Exceptions;
 using IniParser.Model;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
-using IniParser.Exceptions;
 using LfMerge.Queues;
+using SIL.FieldWorks.FDO;
 
-namespace LfMerge
+namespace LfMerge.Settings
 {
-	public class LfMergeSettingsIni : ILfMergeSettings
+	public class LfMergeSettingsIni : IFdoDirectories
 	{
 		public static string ConfigDir { get; set; }
 
@@ -32,6 +33,13 @@ namespace LfMerge
 		{
 			ConfigDir = "/etc/languageforge/conf/";
 			UserConfigDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".config", "languageforge");
+		}
+
+		public LfMergeSettingsIni()
+		{
+			// Save parsed config for easier persisting in SaveSettings()
+			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile, UserConfigFile);
+			Initialize(ParsedConfig);
 		}
 
 		protected IniData ParsedConfig { get; set; }
@@ -55,13 +63,6 @@ namespace LfMerge
 		}
 
 		private string[] QueueDirectories { get; set; }
-
-		public LfMergeSettingsIni()
-		{
-			// Save parsed config for easier persisting in SaveSettings()
-			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile, UserConfigFile);
-			Initialize(ParsedConfig);
-		}
 
 		private void SetAllMembers(string baseDir, string releaseDataDir, string templatesDir, string mongoHostname, string mongoPort)
 		{
@@ -131,6 +132,23 @@ namespace LfMerge
 		#endregion
 
 		public string StateDirectory { get; private set; }
+
+		public string LockFile
+		{
+			get
+			{
+				var path = "/var/run";
+				const string filename = "lfmerge.pid";
+
+				var attributes = File.GetAttributes(path);
+				if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				{
+					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run
+					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+				}
+				return Path.Combine(path, filename);
+			}
+		}
 
 		public string GetQueueDirectory(QueueNames queue)
 		{

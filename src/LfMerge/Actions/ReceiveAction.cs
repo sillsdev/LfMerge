@@ -4,18 +4,19 @@ using System;
 using System.IO;
 using Autofac;
 using Chorus.Model;
+using LfMerge.FieldWorks;
+using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibTriboroughBridgeChorusPlugin;
+using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
 using SIL.Reporting;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
-using LfMerge.FieldWorks;
 
 namespace LfMerge.Actions
 {
 	public class ReceiveAction: Action
 	{
-		public ReceiveAction(ILfMergeSettings settings) : base(settings) {}
+		public ReceiveAction(LfMergeSettingsIni settings) : base(settings) {}
 
 		private IProgress Progress { get; set; }
 
@@ -60,7 +61,7 @@ namespace LfMerge.Actions
 			get { return ActionNames.Merge; }
 		}
 
-		private static string GetProjectDirectory(string projectCode, ILfMergeSettings settings)
+		private static string GetProjectDirectory(string projectCode, LfMergeSettingsIni settings)
 		{
 			return Path.Combine(settings.WebWorkDirectory, projectCode);
 		}

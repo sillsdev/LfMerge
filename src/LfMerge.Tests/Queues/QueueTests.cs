@@ -3,10 +3,11 @@
 using System;
 using System.IO;
 using System.Threading;
-using NUnit.Framework;
-using SIL.TestUtilities;
 using LfMerge.Actions;
 using LfMerge.Queues;
+using LfMerge.Settings;
+using NUnit.Framework;
+using SIL.TestUtilities;
 
 namespace LfMerge.Tests.Queues
 {
@@ -20,7 +21,7 @@ namespace LfMerge.Tests.Queues
 		/// </summary>
 		private class QueueDouble: Queue
 		{
-			public QueueDouble(ILfMergeSettings settings, QueueNames name): base(settings, name)
+			public QueueDouble(LfMergeSettingsIni settings, QueueNames name): base(settings, name)
 			{
 			}
 

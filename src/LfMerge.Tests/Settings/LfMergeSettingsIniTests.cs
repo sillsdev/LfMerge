@@ -2,32 +2,37 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System.IO;
+using IniParser.Model;
+using LfMerge.Queues;
+using LfMerge.Settings;
 using NUnit.Framework;
 using SIL.TestUtilities;
-using LfMerge.Queues;
 
 namespace LfMerge.Tests
 {
 	[TestFixture]
-	public class LfMergeDirectoriesTests
+	public class LfMergeSettingsIniTests
 	{
-		[SetUp]
-		public void Setup()
+		class LfMergeSettingsAccessor: LfMergeSettingsIni
 		{
-			LfMergeSettingsAccessor.ResetCurrent();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			LfMergeSettingsAccessor.ResetCurrent();
+			public void Initialize(string basePath, string releaseDataDir = null,
+				string templateDir = null)
+			{
+				var replacementConfig = new IniData(ParsedConfig);
+				replacementConfig.Global["BaseDir"] = basePath;
+				if (!string.IsNullOrEmpty(releaseDataDir))
+					replacementConfig.Global["ReleaseDataDir"] = releaseDataDir;
+				if (!string.IsNullOrEmpty(templateDir))
+					replacementConfig.Global["TemplatesDir"] = templateDir;
+				Initialize(replacementConfig);
+			}
 		}
 
 		[Test]
 		public void FdoDirs_RelativePathsAreSubdirsOfBasedir()
 		{
-			LfMergeSettings.Initialize(Path.GetTempPath(), "projects", "templates");
-			var sut = LfMergeSettings.Current;
+			var sut = new LfMergeSettingsAccessor();
+			sut.Initialize(Path.GetTempPath(), "projects", "templates");
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
@@ -37,8 +42,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void FdoDirs_AbsolutePathsRemainAbsolute()
 		{
-			LfMergeSettings.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
-			var sut = LfMergeSettings.Current;
+			var sut = new LfMergeSettingsAccessor();
+			sut.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
 
 			Assert.That(sut.ProjectsDirectory, Is.EqualTo("/projects"));
 			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo("/projects"));
@@ -48,8 +53,8 @@ namespace LfMerge.Tests
 		[Test]
 		public void StateDirectory_Correct()
 		{
-			LfMergeSettings.Initialize(Path.GetTempPath());
-			var sut = LfMergeSettings.Current;
+			var sut = new LfMergeSettingsAccessor();
+			sut.Initialize(Path.GetTempPath());
 
 			Assert.That(sut.StateDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "state")));
 		}
@@ -60,8 +65,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("StateFile"))
 			{
-				LfMergeSettings.Initialize(temp.Path);
-				var sut = LfMergeSettings.Current;
+				var sut = new LfMergeSettingsAccessor();
+				sut.Initialize(temp.Path);
 
 				// Exercise
 				var stateFile = sut.GetStateFileName("ProjA");
@@ -83,8 +88,8 @@ namespace LfMerge.Tests
 			// Setup
 			using (var temp = new TemporaryFolder("QueueDirectory"))
 			{
-				LfMergeSettings.Initialize(temp.Path);
-				var sut = LfMergeSettings.Current;
+				var sut = new LfMergeSettingsAccessor();
+				sut.Initialize(temp.Path);
 
 				// Exercise
 				var queueDir = sut.GetQueueDirectory(queue);

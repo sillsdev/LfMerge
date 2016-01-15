@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 using CommandLine;
 using IniParser.Model;
+using LfMerge.Settings;
 
 namespace LfMerge.TestApp
 {
@@ -40,11 +41,11 @@ namespace LfMerge.TestApp
 			LfMergeSettingsIni.ConfigDir = folder;
 
 			MainClass.Container = MainClass.RegisterTypes().Build();
-			var settings = MainClass.Container.Resolve<ILfMergeSettings>();
+			var settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			var config = new IniData();
 			var main = config.Global;
 			main["BaseDir"] = folder;
-			((LfMergeSettingsIni)settings).Initialize(config);
+			settings.Initialize(config);
 
 			var queueDir = settings.GetQueueDirectory(options.QueueName);
 			Directory.CreateDirectory(queueDir);

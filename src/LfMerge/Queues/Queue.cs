@@ -1,17 +1,18 @@
 ﻿// Copyright (c) 2011-2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using LfMerge.Actions;
 using Autofac;
+using LfMerge.Actions;
+using LfMerge.Settings;
 
 namespace LfMerge.Queues
 {
 	public class Queue: IQueue
 	{
-		private ILfMergeSettings Settings { get; set; }
+		private LfMergeSettingsIni Settings { get; set; }
 
 		#region Queue handling
 		internal static void Register(ContainerBuilder containerBuilder)
@@ -55,7 +56,7 @@ namespace LfMerge.Queues
 			return null;
 		}
 
-		public static void CreateQueueDirectories(ILfMergeSettings settings)
+		public static void CreateQueueDirectories(LfMergeSettingsIni settings)
 		{
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
@@ -67,7 +68,7 @@ namespace LfMerge.Queues
 
 		#endregion
 
-		public Queue(ILfMergeSettings settings, QueueNames name)
+		public Queue(LfMergeSettingsIni settings, QueueNames name)
 		{
 			if (name == QueueNames.None)
 				throw new ArgumentException("Can't create a queue of type QueueNames.None", "name");

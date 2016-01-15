@@ -4,15 +4,16 @@ using System;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using LfMerge.Settings;
 
 namespace LfMerge
 {
 	public class LanguageDepotProject: ILanguageDepotProject
 	{
-		private ILfMergeSettings Settings { get; set; }
+		private LfMergeSettingsIni Settings { get; set; }
 
 		// TODO: Need to grab a MongoConnection as well
-		public LanguageDepotProject(ILfMergeSettings settings)
+		public LanguageDepotProject(LfMergeSettingsIni settings)
 		{
 			Settings = settings;
 		}

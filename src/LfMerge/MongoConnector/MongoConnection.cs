@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization.Conventions;
 
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Settings;
 
 namespace LfMerge.MongoConnector
 {
@@ -47,7 +48,7 @@ namespace LfMerge.MongoConnector
 			//new MongoRegistrarForLfFields().RegisterClassMappings();
 		}
 
-		public MongoConnection(ILfMergeSettings settings)
+		public MongoConnection(LfMergeSettingsIni settings)
 		{
 			connectionString = String.Format("mongodb://{0}", settings.MongoDbHostNameAndPort);
 			// TODO: Add databaseName to settings instead of the below

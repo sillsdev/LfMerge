@@ -2,12 +2,13 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using Autofac;
+using LfMerge.Settings;
 
 namespace LfMerge.Actions
 {
 	public abstract class Action: IAction
 	{
-		protected ILfMergeSettings Settings { get; set; }
+		protected LfMergeSettingsIni Settings { get; set; }
 
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
@@ -31,7 +32,7 @@ namespace LfMerge.Actions
 
 		#endregion
 
-		public Action(ILfMergeSettings settings)
+		public Action(LfMergeSettingsIni settings)
 		{
 			Settings = settings;
 		}

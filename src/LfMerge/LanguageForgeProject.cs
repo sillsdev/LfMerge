@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Autofac;
 using LfMerge.FieldWorks;
+using LfMerge.Settings;
 
 namespace LfMerge
 {
@@ -17,13 +18,13 @@ namespace LfMerge
 		/// </summary>
 		public const string MongoDatabaseNamePrefix = "sf_"; // TODO: Should this be in the config?
 
-		private ILfMergeSettings _settings;
+		private LfMergeSettingsIni _settings;
 		private FwProject _fieldWorksProject;
 		private readonly ProcessingState _state;
 		private readonly string _projectCode;
 		private ILanguageDepotProject _languageDepotProject;
 
-		public static LanguageForgeProject Create(ILfMergeSettings settings, string projectCode)
+		public static LanguageForgeProject Create(LfMergeSettingsIni settings, string projectCode)
 		{
 			LanguageForgeProject project;
 			if (CachedProjects.TryGetValue(projectCode, out project))
@@ -34,7 +35,7 @@ namespace LfMerge
 			return project;
 		}
 
-		protected LanguageForgeProject(ILfMergeSettings settings, string projectCode)
+		protected LanguageForgeProject(LfMergeSettingsIni settings, string projectCode)
 		{
 			_settings = settings;
 			_projectCode = projectCode;

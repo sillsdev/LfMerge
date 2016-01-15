@@ -4,11 +4,12 @@ using System;
 using System.Linq;
 using Autofac;
 using Chorus.Model;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LfMerge.Queues;
-using LfMerge.FieldWorks;
 using LfMerge.Actions;
+using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
+using LfMerge.Queues;
+using LfMerge.Settings;
+using LibFLExBridgeChorusPlugin.Infrastructure;
 using SIL.IO.FileLock;
 
 namespace LfMerge
@@ -20,7 +21,7 @@ namespace LfMerge
 		internal static ContainerBuilder RegisterTypes()
 		{
 			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().As<ILfMergeSettings>();
+			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
@@ -43,7 +44,8 @@ namespace LfMerge
 			if (Container == null)
 				Container = RegisterTypes().Build();
 
-			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
+			var settings = Container.Resolve<LfMergeSettingsIni>();
+			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
 			try
 			{
 				if (!fileLock.TryAcquireLock())
@@ -52,7 +54,6 @@ namespace LfMerge
 					return;
 				}
 
-				var settings = Container.Resolve<ILfMergeSettings>();
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 
 				for (var queue = Queue.FirstQueueWithWork;
