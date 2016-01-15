@@ -80,10 +80,10 @@ namespace LfMerge.Actions
 				FilterDefinition<LfLexEntry> filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
 				IMongoCollection<LfLexEntry> collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
 				Console.WriteLine("About to save LfEntry {0} which has morphologyType {1}", lfEntry.Guid, lfEntry.MorphologyType);
-				//var result = collection.FindOneAndReplaceAsync(filter, lfEntry).Result;
+				//var result = collection.FindOneAndReplace(filter, lfEntry);
 				Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 				Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-				//var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // NOTE: Throwing away result on purpose.
+				//var ignored = collection.FindOneAndUpdate(filter, update); // NOTE: Throwing away result on purpose.
 				Console.WriteLine("Done saving LfEntry {0} into Mongo DB {1}", lfEntry.Guid, mongoDb.DatabaseNamespace.DatabaseName);
 			}
 		}

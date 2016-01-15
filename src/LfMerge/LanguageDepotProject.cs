@@ -26,10 +26,9 @@ namespace LfMerge
 			//var userCollection = database.GetCollection<BsonDocument>("users");
 
 			var projectFilter = new BsonDocument("projectCode", lfProjectCode);
-			var list = projectCollection.Find(projectFilter).ToListAsync();
-			list.Wait();
+			var list = projectCollection.Find(projectFilter).ToList();
 
-			var project = list.Result.FirstOrDefault();
+			var project = list.FirstOrDefault();
 			if (project == null)
 				throw new ArgumentException("Can't find project code", "lfProjectCode");
 

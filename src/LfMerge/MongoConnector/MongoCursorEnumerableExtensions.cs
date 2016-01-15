@@ -16,7 +16,7 @@ namespace LfMerge.MongoConnector
 		/// <param name="cursor">Cursor to enumerate over.</param>
 		public static IEnumerable<TDocument> AsEnumerable<TDocument>(this IAsyncCursor<TDocument> cursor)
 		{
-			while (cursor.MoveNextAsync().Result)
+			while (cursor.MoveNext())
 				foreach (TDocument doc in cursor.Current) // IAsyncCursor returns results in batches
 					yield return doc;
 		}
@@ -24,14 +24,14 @@ namespace LfMerge.MongoConnector
 		// This allows the following two ways of running a query to fetch all the documents from a given collection:
 		/*
 			// If fetching all the documents at once won't be too costly:
-			List<BsonDocument> result = collection.Find<BsonDocument>(_ => true).ToListAsync().Result;
+			List<BsonDocument> result = collection.Find<BsonDocument>(_ => true).ToList();
 			foreach (BsonDocument item in result)
 			{
 				Console.WriteLine(item);
 			}
 
 			// If it is desirable to fetch documents in batches rather than all at once:
-			IAsyncCursor<BsonDocument> result2 = collection.Find<BsonDocument>(_ => true).ToCursorAsync().Result;
+			IAsyncCursor<BsonDocument> result2 = collection.Find<BsonDocument>(_ => true).ToCursor();
 			foreach (BsonDocument item in result2.AsEnumerable())
 			{
 				Console.WriteLine(item);

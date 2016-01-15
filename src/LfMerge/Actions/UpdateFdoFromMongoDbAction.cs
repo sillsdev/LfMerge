@@ -126,7 +126,7 @@ namespace LfMerge.Actions
 		{
 			IMongoDatabase db = _connection.GetProjectDatabase(project);
 			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
-			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursorAsync().Result;
+			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursor();
 			return result.AsEnumerable();
 		}
 
