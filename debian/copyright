@@ -14,6 +14,10 @@ Files: /usr/lib/lfmerge/CommandLine.dll
 Copyright: 2005 - 2015 Giacomo Stelluti Scala & Contributors
 License: MIT
 
+Files: /usr/lib/lfmerge/INIFileParser.dll
+Copyright: 2008 Ricardo Amores Hernández
+License: MIT
+
 Files: /usr/lib/lfmerge/MongoDB.*.dll
 Copyright: 2010-2014 MongoDB Inc.
 License: Apache-2.0

@@ -31,13 +31,25 @@ override_dh_auto_install:
 	# Install binaries
 	install -d $(DESTDIR)/$(LIB)
 	install -m 644 output/$(BUILD)/*.* $(DESTDIR)/$(LIB)
-	cd $(DESTDIR)/$(LIB) && rm *.Tests.dll* *.TestApp.exe* SIL.TestUtilities.dll* nunit.framework.dll
+	cd $(DESTDIR)/$(LIB) && rm *.Tests.dll* *.TestApp.exe* SIL.TestUtilities.dll* nunit.framework.dll *Moq.dll
 	# Install environ file
 	install -d $(DESTDIR)/$(SHARE)
 	install -m 644 environ $(DESTDIR)/$(SHARE)
 	# Install wrapper script
 	install -d $(DESTDIR)/usr/bin
 	install -m 755 lfmerge $(DESTDIR)/usr/bin
+	# Install conf file
+	install -d $(DESTDIR)/etc/languageforge/conf
+	install -m 644 debian/sendreceive.conf $(DESTDIR)/etc/languageforge/conf
+	# Create working directories
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/state
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/webwork
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/mergequeue
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/commitqueue
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/receivequeue
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/sendqueue
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/ReleaseData
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/Templates
 
 # Don't export any assemblies to other packages
 override_dh_makeclilibs:
