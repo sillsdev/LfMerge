@@ -55,7 +55,7 @@ namespace LfMerge.MongoConnector
 			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
 
-		public MongoClient GetNewConnection()
+		private MongoClient GetNewConnection()
 		{
 			return new MongoClient(connectionString);
 		}

@@ -7,7 +7,6 @@ namespace LfMerge.MongoConnector
 {
 	public interface IMongoConnection
 	{
-		MongoClient GetNewConnection();
 		IMongoDatabase GetDatabase(string databaseName);
 		IMongoDatabase GetProjectDatabase(ILfProject project);
 		IMongoDatabase GetMainDatabase(); // TODO: Maybe remove this one?
