@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ldml>
+	<identity>
+		<version number="" />
+		<generation date="2016-01-18T07:05:46Z" />
+		<language type="qaa" />
+		<script type="Zxxx" />
+		<variant type="x-kal-audio" />
+		<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+			<sil:identity windowsLCID="1033" />
+		</special>
+	</identity>
+	<numbers>
+		<numberingSystem id="standard" type="numeric" digits="" />
+	</numbers>
+	<characters>
+		<exemplarCharacters>['\-A-Za-z]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\ -"\&amp;(),./\:;?\[\]\{\}]</exemplarCharacters>
+	</characters>
+	<collations>
+		<defaultCollation>standard</defaultCollation>
+		<collation type="standard" />
+	</collations>
+	<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+		<sil:external-resources>
+			<sil:font name="Charis SIL" />
+		</sil:external-resources>
+	</special>
+	<layout>
+		<orientation>
+			<characterOrder>left-to-right</characterOrder>
+		</orientation>
+	</layout>
+</ldml>

@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectLexiconSettings>
+  <WritingSystems>
+    <WritingSystem id="ar-IQ">
+      <Abbreviation>Ara</Abbreviation>
+      <SpellCheckingId>ar_IQ</SpellCheckingId>
+      <SystemCollation>ar-IQ</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="de">
+      <Abbreviation>Ger</Abbreviation>
+      <SystemCollation>de</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="dv">
+      <Abbreviation>Div</Abbreviation>
+      <SystemCollation>dv</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="en">
+      <Abbreviation>Eng</Abbreviation>
+      <SystemCollation>en</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="es">
+      <Abbreviation>Spn</Abbreviation>
+      <SystemCollation>es</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="fr-fonipa">
+      <Abbreviation>FrnI</Abbreviation>
+      <SpellCheckingId>fr__IPA</SpellCheckingId>
+      <Keyboard>IPA Unicode 5.0c (ver 1.1.5) KMN</Keyboard>
+      <SystemCollation>fr</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="fr">
+      <Abbreviation>Frn</Abbreviation>
+      <SystemCollation>fr</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="grc">
+      <Abbreviation>Grk</Abbreviation>
+    </WritingSystem>
+    <WritingSystem id="hbo">
+      <Abbreviation>Heb</Abbreviation>
+    </WritingSystem>
+    <WritingSystem id="pt">
+      <Abbreviation>Por</Abbreviation>
+      <SystemCollation>pt</SystemCollation>
+    </WritingSystem>
+    <WritingSystem id="qaa-Zxxx-x-kal-audio">
+      <Abbreviation>KalAud</Abbreviation>
+      <LanguageName>Kalaba</LanguageName>
+      <SpellCheckingId>qaa_Zxxx_x_kal_AUDIO</SpellCheckingId>
+    </WritingSystem>
+    <WritingSystem id="qaa-fonipa-x-kal">
+      <Abbreviation>KalIpa</Abbreviation>
+      <LanguageName>Kalaba</LanguageName>
+      <SpellCheckingId>qaa_fonipa_x_kal</SpellCheckingId>
+    </WritingSystem>
+    <WritingSystem id="qaa-x-fwt">
+      <Abbreviation>FwT</Abbreviation>
+      <LanguageName>FwTest</LanguageName>
+      <SpellCheckingId>xfwt</SpellCheckingId>
+      <Keyboard>FwTest</Keyboard>
+    </WritingSystem>
+    <WritingSystem id="qaa-x-kal">
+      <Abbreviation>Kal</Abbreviation>
+      <LanguageName>Kalaba</LanguageName>
+      <SpellCheckingId>x_kal</SpellCheckingId>
+    </WritingSystem>
+    <WritingSystem id="qaa-x-sta">
+      <Abbreviation>Sta</Abbreviation>
+      <LanguageName>Stacked Diacritics</LanguageName>
+      <SpellCheckingId>xsta</SpellCheckingId>
+      <Keyboard>Stacking Diacritics Demo</Keyboard>
+    </WritingSystem>
+    <WritingSystem id="zh-CN">
+      <Abbreviation>Ch</Abbreviation>
+      <SpellCheckingId>cmn</SpellCheckingId>
+      <LegacyMapping>Chinese - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed - Not Installed</LegacyMapping>
+    </WritingSystem>
+  </WritingSystems>
+</ProjectLexiconSettings>
