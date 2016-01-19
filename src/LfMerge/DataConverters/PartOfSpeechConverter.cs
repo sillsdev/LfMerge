@@ -114,6 +114,18 @@ namespace LfMerge.DataConverters
 
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos)
 		{
+			if (msa == null)
+			{
+				Console.WriteLine("msa is null!"); // TODO: Turn this into proper log message
+				// throw new ArgumentNullException("msa");
+				return; // TODO: Or throw an ArgumentNullException?
+			}
+			if (pos == null)
+			{
+				Console.WriteLine("pos is null!"); // TODO: Turn this into proper log message
+				// throw new ArgumentNullException("pos");
+				return; // TODO: Or throw an ArgumentNullException?
+			}
 			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
 			switch (msa.ClassID)
 			{
