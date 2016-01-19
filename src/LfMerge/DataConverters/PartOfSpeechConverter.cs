@@ -127,12 +127,14 @@ namespace LfMerge.DataConverters
 				return; // TODO: Or throw an ArgumentNullException?
 			}
 			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
+			// TODO: Is the below switch statement REALLY complete? Or do we need to do more?
+			// See FdoFactoryAdditions.cs, lines 1603-1698: perhaps we should be using factories and SandboxMSA objects?
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:
 				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
-				((IMoDerivAffMsa)msa).ToPartOfSpeechRA = pos;
+				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"From\" part of speech instead of the \"To\" part of speech.", msa.GetGlossOfFirstSense());
+				((IMoDerivAffMsa)msa).FromPartOfSpeechRA = pos;
 				break;
 			case MoDerivStepMsaTags.kClassId:
 				((IMoDerivStepMsa)msa).PartOfSpeechRA = pos;
