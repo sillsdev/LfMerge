@@ -32,14 +32,14 @@ namespace LfMerge
 			if (project == null)
 				throw new ArgumentException("Can't find project code", "lfProjectCode");
 
-			BsonValue value;
-			if (project.TryGetValue("ldProjectCode", out value))
+			BsonValue value, srProjectValue;
+			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
+			   (srProjectValue.AsBsonDocument.TryGetValue("identifier", out value)))
 				ProjectCode = value.AsString;
 			// TODO: need to get S/R server (language depot public, language depot private, custom, etc).
-			// TODO: ldUsername and ldPassword should come from the users collection
-			if (project.TryGetValue("ldUsername", out value))
+			if (project.TryGetValue("sendReceiveUsername", out value))
 				Username = value.AsString;
-			if (project.TryGetValue("ldPassword", out value))
+			if (project.TryGetValue("sendReceivePassword", out value))
 				Password = value.AsString;
 		}
 
