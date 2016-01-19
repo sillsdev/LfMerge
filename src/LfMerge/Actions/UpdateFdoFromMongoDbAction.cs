@@ -11,6 +11,7 @@ using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
+using SIL.FieldWorks.FDO.DomainServices;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
 
@@ -397,8 +398,35 @@ namespace LfMerge.Actions
 				IPartOfSpeech pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
-					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
-					Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
+					if (fdoSense.MorphoSyntaxAnalysisRA == null)
+					{
+						// If we've got a brand-new fdoSense object, we'll need to create a new MSA for it.
+						// That's what the SandboxGenericMSA class is for: assigning it to the SandboxMSA
+						// member of fdoSense will automatically create an MSA of the correct class. Handy!
+						MsaType msaType = fdoSense.GetDesiredMsaType();
+						SandboxGenericMSA sandboxMsa = SandboxGenericMSA.Create(msaType, pos);
+						if (msaType == MsaType.kDeriv)
+						{
+							// Derivational affixes have a "From" *and* a "To" pos. "From" is the main pos,
+							// but there's a secondary pos member in the sandbox MSA specifically for the "To"
+							// pos of derivational affixes. Currently LF doesn't handle that, so we do nothing
+							// with the secondary pos.
+							// TODO: Once LF handles secondary / "To" parts of speech, do the right thing here.
+							// sandboxMsa.SecondaryPOS = pos;
+						}
+						fdoSense.SandboxMSA = sandboxMsa;
+					}
+					else
+					{
+						if (fdoSense.MorphoSyntaxAnalysisRA.ClassID == MoDerivAffMsaTags.kClassId)
+						{
+							// TODO: Turn this into a proper log message
+							Console.WriteLine("WARNING: Sense {0} ({1}) is a derivational affix, which needs two parts of speech, From and To. Setting the From PoS to {2}, but not changing the To PoS. This might cause duplicated grammar analysis objects in FieldWorks.",
+								fdoSense.Guid, fdoSense.Gloss.BestAnalysisVernacularAlternative.Text, pos.NameHierarchyString);
+						}
+						PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
+						Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
+					}
 				}
 			}
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.

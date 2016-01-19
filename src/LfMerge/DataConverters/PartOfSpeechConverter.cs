@@ -112,7 +112,7 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos)
+		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
 		{
 			if (msa == null)
 			{
@@ -132,9 +132,9 @@ namespace LfMerge.DataConverters
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:
-				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"From\" part of speech instead of the \"To\" part of speech.", msa.GetGlossOfFirstSense());
 				((IMoDerivAffMsa)msa).FromPartOfSpeechRA = pos;
+				if (secondaryPos != null)
+					((IMoDerivAffMsa)msa).ToPartOfSpeechRA = secondaryPos;
 				break;
 			case MoDerivStepMsaTags.kClassId:
 				((IMoDerivStepMsa)msa).PartOfSpeechRA = pos;
