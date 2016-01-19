@@ -62,7 +62,9 @@ override_dh_shlibdeps:
 # Include mono-sil in cli dirs searched
 override_dh_clideps:
 	dh_clideps -l$(MONO_PREFIX)/lib \
-		--exclude-moduleref=security.dll
+		--exclude-moduleref=security.dll \
+		--exclude-moduleref=icuuc52.dll --exclude-moduleref=icuin52.dll \
+		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
