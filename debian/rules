@@ -23,6 +23,7 @@ override_dh_auto_build:
 		yes | certmgr -ssl https://go.microsoft.com && \
 		yes | certmgr -ssl https://nugetgallery.blob.core.windows.net && \
 		yes | certmgr -ssl https://nuget.org && \
+		xbuild /t:Restore build/LfMerge.proj && \
 		xbuild /p:Configuration=$(BUILD) /t:Build build/LfMerge.proj
 
 override_dh_auto_test:
