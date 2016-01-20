@@ -18,7 +18,10 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	. ./environ && \
-		mozroots --import --sync && \
+		mozroots --import --sync --machine && \
+		certmgr -ssl -m https://go.microsoft.com && \
+		certmgr -ssl -m https://nugetgallery.blob.core.windows.net && \
+		certmgr -ssl -m https://nuget.org && \
 		xbuild /p:Configuration=$(BUILD) /t:Build build/LfMerge.proj
 
 override_dh_auto_test:
