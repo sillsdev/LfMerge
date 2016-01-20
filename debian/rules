@@ -17,11 +17,12 @@ SHARE   = usr/share/lfmerge
 override_dh_auto_configure:
 
 override_dh_auto_build:
+	# see also https://bugzilla.xamarin.com/show_bug.cgi?id=21298#c10
 	. ./environ && \
 		mozroots --import --sync --machine && \
-		certmgr -ssl -m https://go.microsoft.com && \
-		certmgr -ssl -m https://nugetgallery.blob.core.windows.net && \
-		certmgr -ssl -m https://nuget.org && \
+		yes | certmgr -ssl -m https://go.microsoft.com && \
+		yes | certmgr -ssl -m https://nugetgallery.blob.core.windows.net && \
+		yes | certmgr -ssl -m https://nuget.org && \
 		xbuild /p:Configuration=$(BUILD) /t:Build build/LfMerge.proj
 
 override_dh_auto_test:
