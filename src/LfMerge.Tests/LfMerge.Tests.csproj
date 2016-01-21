@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -56,6 +57,7 @@
     </Reference>
     <Reference Include="FDO">
       <Package>libfieldworks-fdo</Package>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -71,7 +73,6 @@
     </Reference>
     <Reference Include="SIL.WritingSystems">
       <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
-      <Package>/usr/lib/fieldworks/SIL.WritingSystems.dll</Package>
     </Reference>
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
@@ -79,17 +80,21 @@
     <Reference Include="MongoDB.Bson">
       <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
+    <Reference Include="Microsoft.Practices.ServiceLocation">
       <Package>libfieldworks-fdo</Package>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="BasicUtils, Version=9.0.0.15979, Culture=neutral">
+    <Reference Include="BasicUtils">
       <Package>libfieldworks-fdo</Package>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="CoreImpl, Version=9.0.0.15981, Culture=neutral">
+    <Reference Include="CoreImpl">
       <Package>libfieldworks-fdo</Package>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="COMInterfaces, Version=9.0.0.15981, Culture=neutral">
+    <Reference Include="COMInterfaces">
       <Package>libfieldworks-fdo</Package>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
