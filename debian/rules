@@ -45,7 +45,7 @@ override_dh_auto_install:
 	install -m 644 Mercurial/mercurial.ini $(DESTDIR)/$(LIB)/Mercurial
 	install -m 644 Mercurial/hgext/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext
 	install -m 644 Mercurial/mercurial/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial
-	install -m 644 MercurialExtensions/*.* $(DESTDIR)/$(LIB)/MercuralExtensions
+	install -m 644 MercurialExtensions/**/*.* $(DESTDIR)/$(LIB)/MercuralExtensions
 	# Install environ file
 	install -d $(DESTDIR)/$(SHARE)
 	install -m 644 environ $(DESTDIR)/$(SHARE)
@@ -79,7 +79,9 @@ override_dh_clideps:
 	dh_clideps -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
 		--exclude-moduleref=icuuc52.dll --exclude-moduleref=icuin52.dll \
-		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll
+		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll \
+		--exclude-moduleref=libhunspell \
+		--exclude-moduleref=libicuuc.so --exclude-moduleref=libicui18n.so
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
