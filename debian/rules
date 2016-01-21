@@ -37,9 +37,20 @@ override_dh_auto_install:
 	install -d $(DESTDIR)/$(LIB)
 	install -m 644 output/$(BUILD)/*.* $(DESTDIR)/$(LIB)
 	cd $(DESTDIR)/$(LIB) && rm *.Tests.dll* *.TestApp.exe* SIL.TestUtilities.dll* nunit.framework.dll *Moq.dll
+	install -d $(DESTDIR)/$(LIB)/Mercurial
+	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext
+	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial
+	install -d $(DESTDIR)/$(LIB)/MercuralExtensions
+	install -m 755 Mercurial/hg $(DESTDIR)/$(LIB)/Mercurial
+	install -m 644 Mercurial/mercurial.ini $(DESTDIR)/$(LIB)/Mercurial
+	install -m 644 Mercurial/hgext/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext
+	install -m 644 Mercurial/mercurial/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial
+	install -m 644 MercurialExtensions/*.* $(DESTDIR)/$(LIB)/MercuralExtensions
 	# Install environ file
 	install -d $(DESTDIR)/$(SHARE)
 	install -m 644 environ $(DESTDIR)/$(SHARE)
+	install -d $(DESTDIR)/$(SHARE)/Mercurial/doc
+	install -m 644 Mercurial/doc/*.* $(DESTDIR)/$(SHARE)/Mercurial/doc
 	# Install wrapper script
 	install -d $(DESTDIR)/usr/bin
 	install -m 755 lfmerge $(DESTDIR)/usr/bin

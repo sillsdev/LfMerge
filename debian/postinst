@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # postinst script for lfmerge
 #
 # see: dh_installdeb(1)
@@ -20,8 +20,9 @@ set -e
 
 case "$1" in
 	configure)
-		SR=/var/lib/languageforge/lexicon/sendreceive mkdir -p $SR/{state,webwork,mergequeue,
-		commitqueue,receivequeue,sendqueue,ReleaseData,Templates} chgrp -R fieldworks $SR
+		SR=/var/lib/languageforge/lexicon/sendreceive
+		mkdir -p $SR/{state,webwork,mergequeue,commitqueue,receivequeue,sendqueue,ReleaseData,Templates}
+		chgrp -R fieldworks $SR
 		chmod -R g+w $SR find $SR -type d -print0 | xargs -0 chmod 2775
 	;;
 
