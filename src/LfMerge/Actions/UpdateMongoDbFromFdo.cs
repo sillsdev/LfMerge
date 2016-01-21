@@ -69,23 +69,12 @@ namespace LfMerge.Actions
 			}
 			_converter = new CustomFieldConverter(_cache);
 
-			IMongoDatabase mongoDb = _connection.GetProjectDatabase(project);
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
 				Console.WriteLine("Populated LfEntry {0}", lfEntry.Guid);
-				// TODO: Write the lfEntry into Mongo in the right place
-				// TODO: Move this "update this document in this MongoDB collection" code to somewhere where it belongs, like on MongoConnection
-				var filterBuilder = new FilterDefinitionBuilder<LfLexEntry>();
-				UpdateDefinition<LfLexEntry> update = _connection.BuildUpdate<LfLexEntry>(lfEntry);
-				FilterDefinition<LfLexEntry> filter = filterBuilder.Eq("guid", lfEntry.Guid.ToString());
-				IMongoCollection<LfLexEntry> collection = mongoDb.GetCollection<LfLexEntry>("lexicon");
-				Console.WriteLine("About to save LfEntry {0} which has morphologyType {1}", lfEntry.Guid, lfEntry.MorphologyType);
-				//var result = collection.FindOneAndReplace(filter, lfEntry);
-				Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-				Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-				//var ignored = collection.FindOneAndUpdate(filter, update); // NOTE: Throwing away result on purpose.
-				Console.WriteLine("Done saving LfEntry {0} into Mongo DB {1}", lfEntry.Guid, mongoDb.DatabaseNamespace.DatabaseName);
+				Guid guid = lfEntry.Guid ?? Guid.Empty;
+				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			}
 		}
 

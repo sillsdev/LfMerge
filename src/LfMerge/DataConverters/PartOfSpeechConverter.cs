@@ -112,15 +112,29 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos)
+		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
 		{
+			if (msa == null)
+			{
+				Console.WriteLine("msa is null!"); // TODO: Turn this into proper log message
+				// throw new ArgumentNullException("msa");
+				return; // TODO: Or throw an ArgumentNullException?
+			}
+			if (pos == null)
+			{
+				Console.WriteLine("pos is null!"); // TODO: Turn this into proper log message
+				// throw new ArgumentNullException("pos");
+				return; // TODO: Or throw an ArgumentNullException?
+			}
 			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
+			// TODO: Is the below switch statement REALLY complete? Or do we need to do more?
+			// See FdoFactoryAdditions.cs, lines 1603-1698: perhaps we should be using factories and SandboxMSA objects?
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:
-				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
-				((IMoDerivAffMsa)msa).ToPartOfSpeechRA = pos;
+				((IMoDerivAffMsa)msa).FromPartOfSpeechRA = pos;
+				if (secondaryPos != null)
+					((IMoDerivAffMsa)msa).ToPartOfSpeechRA = secondaryPos;
 				break;
 			case MoDerivStepMsaTags.kClassId:
 				((IMoDerivStepMsa)msa).PartOfSpeechRA = pos;

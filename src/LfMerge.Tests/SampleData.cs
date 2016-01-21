@@ -9,7 +9,7 @@ namespace LfMerge.Tests
 		{
 		}
 
-		public string jsonTestData = @"{
+		public static string jsonTestData = @"{
 	""_id"" : ObjectId(""56332f680f8709ed0fd92d6c""),
 	""authorInfo"" : {
 		""createdByUserRef"" : null,
@@ -111,7 +111,7 @@ namespace LfMerge.Tests
 	},
 	""senses"" : [
 		{
-			""liftId"" : """",
+			""liftId"" : ""eea9c29f-244f-4891-81db-c8274cd61f0c"",
 			""id"" : ""56332f6896739"",
 			""partOfSpeech"" : {
 				""value"" : ""noun""
@@ -124,7 +124,7 @@ namespace LfMerge.Tests
 			},
 			""examples"" : [
 				{
-					""liftId"" : """",
+					""liftId"" : ""c07286a6-3e58-43f5-96ca-db445a5d26d6"",
 					""id"" : ""56332f6896f6d"",
 					""sentence"" : {
 						""qaa-x-kal"" : {
@@ -151,7 +151,7 @@ namespace LfMerge.Tests
 					}
 				},
 				{
-					""liftId"" : """",
+					""liftId"" : ""f387772c-48a0-4aeb-8211-345d329a10ea"",
 					""id"" : ""56332f68970d7"",
 					""sentence"" : {
 						""qaa-x-kal"" : {
@@ -250,7 +250,7 @@ namespace LfMerge.Tests
 			}
 		},
 		{
-			""liftId"" : """",
+			""liftId"" : ""59db2bec-d740-41c1-96df-f7843c5c6854"",
 			""id"" : ""56332f68979d4"",
 			""partOfSpeech"" : {
 				""value"" : null
@@ -336,13 +336,7 @@ namespace LfMerge.Tests
 		}
 	}
 }";
-
-		public string jsonConfigData = @"{
-	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
-	""allowAudioDownload"" : true,
-	""allowInviteAFriend"" : true,
-	""appName"" : ""lexicon"",
-	""config"" : {
+		public static string jsonConfigData = @"{
 		""tasks"" : {
 			""view"" : {
 				""visible"" : true,
@@ -2123,7 +2117,14 @@ namespace LfMerge.Tests
 			}
 		},
 		""userViews"" : { }
-	},
+	}";
+
+		public static string jsonProjectRecordData = @"{
+	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
+	""allowAudioDownload"" : true,
+	""allowInviteAFriend"" : true,
+	""appName"" : ""lexicon"",
+	""config"" : " + jsonConfigData + @",
 	""dateCreated"" : ISODate(""2015-10-30T08:50:37Z""),
 	""dateModified"" : ISODate(""2015-11-18T03:55:29Z""),
 	""featured"" : null,

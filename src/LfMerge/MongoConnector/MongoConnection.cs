@@ -61,7 +61,7 @@ namespace LfMerge.MongoConnector
 			return new MongoClient(connectionString);
 		}
 
-		public IMongoDatabase GetDatabase(string databaseName) {
+		private IMongoDatabase GetDatabase(string databaseName) {
 			return client.Value.GetDatabase(databaseName);
 		}
 
@@ -73,7 +73,15 @@ namespace LfMerge.MongoConnector
 			return GetDatabase(mainDatabaseName);
 		}
 
-		public UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
+			IAsyncCursor<TDocument> result = collection.Find<TDocument>(_ => true).ToCursor();
+			return result.AsEnumerable();
+		}
+
+		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
 			var builder = Builders<TDocument>.Update;
 			var updates = new List<UpdateDefinition<TDocument>>();
 			foreach (PropertyInfo prop in typeof(TDocument).GetProperties())
@@ -125,6 +133,25 @@ namespace LfMerge.MongoConnector
 				}
 			}
 			return builder.Combine(updates);
+		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		{
+			// TODO: This "update this document in this MongoDB collection" code was moved from UpdateMongoDbFromFdoAction. Fix it up so it works.
+			IMongoDatabase mongoDb = GetProjectDatabase(project); // TODO: If this is slow, might want to cache it in the instance
+			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
+			UpdateDefinition<TDocument> update = BuildUpdate(data);
+			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
+			Console.WriteLine("About to save {0} {1}", typeof(TDocument), guid);
+			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
+			//var ignored = collection.FindOneAndReplaceAsync(filter, data).Result;  // Use this one to replace the WHOLE entry wholesale
+			var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // Use this one to update fields within the entry. I think this one is preferred.
+			Console.WriteLine("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
+
+			return true;
 		}
 	}
 }
