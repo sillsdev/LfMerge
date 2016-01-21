@@ -43,7 +43,7 @@ namespace LfMerge
 			if (Container == null)
 				Container = RegisterTypes().Build();
 
-			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettings.LockFile);
+			var fileLock = SimpleFileLock.CreateFromFilePath(LfMergeSettingsIni.LockFile);
 			try
 			{
 				if (!fileLock.TryAcquireLock())

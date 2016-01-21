@@ -19,13 +19,13 @@ namespace LfMerge
 		public static string UserConfigDir { get; set; }
 
 		public static string ConfigFile {
-			//get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
-			get { return Path.Combine(ConfigDir, "sendreceive.ini"); } // Only use .ini during testing, then revert to .conf
+			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
+			//get { return Path.Combine(ConfigDir, "sendreceive.ini"); } // Only use .ini during testing, then revert to .conf
 		}
 
 		public static string UserConfigFile {
-			//get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
-			get { return Path.Combine(UserConfigDir, "sendreceive.ini"); }
+			get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
+			//get { return Path.Combine(UserConfigDir, "sendreceive.ini"); }
 		}
 
 		static LfMergeSettingsIni()
@@ -131,6 +131,23 @@ namespace LfMerge
 		#endregion
 
 		public string StateDirectory { get; private set; }
+
+		public static string LockFile
+		{
+			get
+			{
+				var path = "/var/run";
+				const string filename = "lfmerge.pid";
+
+				var attributes = File.GetAttributes(path);
+				if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				{
+					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run
+					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+				}
+				return Path.Combine(path, filename);
+			}
+		}
 
 		public string GetQueueDirectory(QueueNames queue)
 		{
