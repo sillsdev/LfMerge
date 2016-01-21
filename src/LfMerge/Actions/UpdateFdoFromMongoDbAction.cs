@@ -125,10 +125,11 @@ namespace LfMerge.Actions
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
 		{
-			IMongoDatabase db = _connection.GetProjectDatabase(project);
-			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
-			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursor();
-			return result.AsEnumerable();
+//			IMongoDatabase db = _connection.GetProjectDatabase(project);
+//			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
+//			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursor();
+//			return result.AsEnumerable();
+			return _connection.GetRecords<LfLexEntry>(project, "lexicon");
 		}
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
@@ -388,7 +389,7 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
-			if (lfSense.PartOfSpeech != null)
+			if (lfSense.PartOfSpeech != null && lfSense.PartOfSpeech.Value != null)
 			{
 				var posConverter = new PartOfSpeechConverter(_cache);
 				//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);

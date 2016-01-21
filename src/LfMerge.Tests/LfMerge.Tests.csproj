@@ -72,6 +72,24 @@
     <Reference Include="SIL.WritingSystems">
       <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="BasicUtils, Version=9.0.0.15979, Culture=neutral">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="CoreImpl, Version=9.0.0.15981, Culture=neutral">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
+    <Reference Include="COMInterfaces, Version=9.0.0.15981, Culture=neutral">
+      <Package>libfieldworks-fdo</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +106,8 @@
     <Compile Include="LfMergeSettingsTests.cs" />
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
+    <Compile Include="Actions\UpdateFdoFromMongoActionTests.cs" />
+    <Compile Include="Actions\UpdateMongoFromFdoActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

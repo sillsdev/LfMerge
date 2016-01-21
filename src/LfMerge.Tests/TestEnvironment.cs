@@ -8,6 +8,7 @@ using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using NUnit.Framework;
+using SIL.IO;
 using SIL.TestUtilities;
 
 namespace LfMerge.Tests
@@ -17,11 +18,22 @@ namespace LfMerge.Tests
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		public ILfMergeSettings Settings;
 
+		static TestEnvironment()
+		{
+			// Need to call MongoConnectionDouble.Initialize() exactly once, before any tests are run -- so do it here
+			MongoConnectionDouble.Initialize();
+		}
+
 		public TestEnvironment(bool registerSettingsModelDouble = true,
-			bool registerProcessingStateDouble = true)
+			bool registerProcessingStateDouble = true, string testProjectName = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
+			// Only copy FW project over if we really need it, to save time on most unit tests
+			if (!String.IsNullOrEmpty(testProjectName))
+			{
+				CopySampleFwProject(testProjectName);
+			}
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble, LanguageForgeFolder).Build();
 			Settings = MainClass.Container.Resolve<ILfMergeSettings>();
@@ -38,6 +50,7 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
+				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
@@ -84,6 +97,31 @@ namespace LfMerge.Tests
 		public void CreateProjectUpdateFolder(string projectCode)
 		{
 			Directory.CreateDirectory(ProjectPath(projectCode));
+		}
+
+		public void CopySampleFwProject(string projectName)
+		{
+			// If we're running unit tests, we must be in output/Debug or output/Release folder, so data is two levels up
+			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
+			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectName), LanguageForgeFolder);
+			Console.WriteLine("Just copied {0} to {1}", Path.Combine(dataDir, projectName), LanguageForgeFolder);
+		}
+
+		public string FindGitRepoRoot(string startDir = null)
+		{
+			if (String.IsNullOrEmpty(startDir))
+				startDir = Directory.GetCurrentDirectory();
+			while (!Directory.Exists(Path.Combine(startDir, ".git")))
+			{
+				var di = new DirectoryInfo(startDir);
+				if (di.Parent == null) // We've reached the root directory
+				{
+					// Last-ditch effort: assume we're in output/Debug, even though we never found .git
+					return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", ".."));
+				}
+				startDir = Path.Combine(startDir, "..");
+			}
+			return Path.GetFullPath(startDir);
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)
