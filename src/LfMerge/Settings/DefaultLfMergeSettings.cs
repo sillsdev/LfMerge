@@ -6,7 +6,7 @@ namespace LfMerge.Settings
 	public static class DefaultLfMergeSettings
 	{
 		public const string DefaultIniText = @"
-BaseDir = ${HOME}/fwrepo/fw/DistFiles
+BaseDir = ${HOME}/fwrepo/LfMerge/DistFiles
 ReleaseDataDir = ReleaseData
 TemplatesDir = Templates
 MongoHostname = localhost

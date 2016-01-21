@@ -20,13 +20,11 @@ namespace LfMerge.Settings
 		public static string UserConfigDir { get; set; }
 
 		public static string ConfigFile {
-			//get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
-			get { return Path.Combine(ConfigDir, "sendreceive.ini"); } // Only use .ini during testing, then revert to .conf
+			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
 		}
 
 		public static string UserConfigFile {
-			//get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
-			get { return Path.Combine(UserConfigDir, "sendreceive.ini"); }
+			get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
 		}
 
 		static LfMergeSettingsIni()
@@ -51,7 +49,7 @@ namespace LfMerge.Settings
 //				return;
 
 			KeyDataCollection main = parsedConfig.Global ?? new KeyDataCollection();
-			string baseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/fw/DistFiles");
+			string baseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/LfMerge/DistFiles");
 			string releaseDataDir = main["ReleaseDataDir"] ?? "ReleaseData";
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";

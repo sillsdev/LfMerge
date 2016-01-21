@@ -5,6 +5,8 @@ using System.IO;
 using Autofac;
 using LfMerge.Settings;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace LfMerge
 {
@@ -149,7 +151,14 @@ namespace LfMerge
 			if (Settings == null)
 				// Don't serialize while we're still being deserialized!
 				return;
-			var json = JsonConvert.SerializeObject(this);
+
+			JsonConvert.DefaultSettings = (() => {
+				var settings = new JsonSerializerSettings();
+				settings.Converters.Add(new StringEnumConverter());
+				return settings;
+			});
+
+			var json = JsonConvert.SerializeObject(this, Formatting.Indented);
 
 			var fileName = Settings.GetStateFileName(ProjectCode);
 			File.WriteAllText(fileName, json);
