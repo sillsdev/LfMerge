@@ -336,13 +336,7 @@ namespace LfMerge.Tests
 		}
 	}
 }";
-
 		public static string jsonConfigData = @"{
-	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
-	""allowAudioDownload"" : true,
-	""allowInviteAFriend"" : true,
-	""appName"" : ""lexicon"",
-	""config"" : {
 		""tasks"" : {
 			""view"" : {
 				""visible"" : true,
@@ -2123,7 +2117,14 @@ namespace LfMerge.Tests
 			}
 		},
 		""userViews"" : { }
-	},
+	}";
+
+		public static string jsonProjectRecordData = @"{
+	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
+	""allowAudioDownload"" : true,
+	""allowInviteAFriend"" : true,
+	""appName"" : ""lexicon"",
+	""config"" : " + jsonConfigData + @",
 	""dateCreated"" : ISODate(""2015-10-30T08:50:37Z""),
 	""dateModified"" : ISODate(""2015-11-18T03:55:29Z""),
 	""featured"" : null,
