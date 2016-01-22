@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 using Chorus.Model;
 using LfMerge.FieldWorks;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
@@ -18,6 +19,7 @@ namespace LfMerge.Tests
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		public LfMergeSettingsIni Settings;
+		public ILogger Logger;
 
 		static TestEnvironment()
 		{
@@ -38,6 +40,7 @@ namespace LfMerge.Tests
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble, LanguageForgeFolder).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
+			Logger = MainClass.Container.Resolve<ILogger>();
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,

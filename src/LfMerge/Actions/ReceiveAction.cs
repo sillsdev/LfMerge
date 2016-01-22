@@ -16,7 +16,7 @@ namespace LfMerge.Actions
 {
 	public class ReceiveAction: Action
 	{
-		public ReceiveAction(LfMergeSettingsIni settings) : base(settings) {}
+		public ReceiveAction(LfMergeSettingsIni settings, LfMerge.Logging.ILogger logger) : base(settings, logger) {}
 
 		private IProgress Progress { get; set; }
 
@@ -91,12 +91,12 @@ namespace LfMerge.Actions
 				switch (actualCloneResult.FinalCloneResult)
 				{
 					case FinalCloneResult.ExistingCloneTargetFolder:
-						Logger.WriteEvent("Clone failed: Flex project exists: {0}", cloneLocation);
+						SIL.Reporting.Logger.WriteEvent("Clone failed: Flex project exists: {0}", cloneLocation);
 						if (Directory.Exists(cloneLocation))
 							Directory.Delete(cloneLocation, true);
 						return false;
 					case FinalCloneResult.FlexVersionIsTooOld:
-						Logger.WriteEvent("Clone failed: Flex version is too old; project: {0}",
+						SIL.Reporting.Logger.WriteEvent("Clone failed: Flex version is too old; project: {0}",
 							project.LfProjectCode);
 						if (Directory.Exists(cloneLocation))
 							Directory.Delete(cloneLocation, true);

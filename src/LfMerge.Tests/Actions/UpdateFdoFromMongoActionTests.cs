@@ -39,6 +39,7 @@ namespace LfMerge.Tests.Actions
 
 			sut = new UpdateFdoFromMongoDbAction(
 				_env.Settings,
+				_env.Logger,
 				_conn,
 				_recordFactory
 			);

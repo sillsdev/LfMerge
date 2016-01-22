@@ -9,9 +9,9 @@ namespace LfMerge.Logging
 	{
 		private SIL.Linux.Logging.SyslogLogger _logger;
 
-		public SyslogLogger()
+		public SyslogLogger(string programName = null)
 		{
-			_logger = new SIL.Linux.Logging.SyslogLogger();
+			_logger = new SIL.Linux.Logging.SyslogLogger(programName ?? "LfMerge");
 		}
 
 		private SyslogPriority SeverityToPriority(LogSeverity severity)
