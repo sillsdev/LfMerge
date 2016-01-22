@@ -29,7 +29,7 @@ namespace LfMerge.Settings
 		public LfMergeSettingsIni()
 		{
 			// Save parsed config for easier persisting in SaveSettings()
-			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile, UserConfigFile);
+			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile);
 			Initialize(ParsedConfig);
 		}
 
