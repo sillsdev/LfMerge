@@ -42,7 +42,7 @@ namespace LfMerge.Settings
 //				return;
 
 			KeyDataCollection main = parsedConfig.Global ?? new KeyDataCollection();
-			string baseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/LfMerge/DistFiles");
+			string baseDir = main["BaseDir"] ?? "/var/lib/languageforge/lexicon/sendreceive";
 			string webworkDir = main["WebworkDir"] ?? "webwork";
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
@@ -134,10 +134,13 @@ namespace LfMerge.Settings
 				var attributes = File.GetAttributes(path);
 				if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
 				{
-					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run
-					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR") ??
-						"/run/user/" + Environment.GetEnvironmentVariable("UID"); // See http://serverfault.com/a/727994/246397
+					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run. See http://serverfault.com/a/727994/246397
+					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR") ?? "/tmp/run";
+					if (!Directory.Exists(path)) {
+						Directory.CreateDirectory(path);
+					}
 				}
+
 				return Path.Combine(path, filename);
 			}
 		}
