@@ -17,20 +17,13 @@ namespace LfMerge.Settings
 	{
 		public static string ConfigDir { get; set; }
 
-		public static string UserConfigDir { get; set; }
-
 		public static string ConfigFile {
 			get { return Path.Combine(ConfigDir, "sendreceive.conf"); }
-		}
-
-		public static string UserConfigFile {
-			get { return Path.Combine(UserConfigDir, "sendreceive.conf"); }
 		}
 
 		static LfMergeSettingsIni()
 		{
 			ConfigDir = "/etc/languageforge/conf/";
-			UserConfigDir = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".config", "languageforge");
 		}
 
 		public LfMergeSettingsIni()
@@ -195,7 +188,7 @@ namespace LfMerge.Settings
 			fileParser.WriteFile(fileName, ParsedConfig, utf8);
 		}
 
-		public static IniData ParseFiles(string defaultConfig, string globalConfigFilename, string userConfigFilename)
+		public static IniData ParseFiles(string defaultConfig, string globalConfigFilename)
 		{
 			var utf8 = new UTF8Encoding(false);
 			var parserConfig = new IniParserConfiguration {
@@ -225,21 +218,6 @@ namespace LfMerge.Settings
 				globalConfig = null; // Merging null is perfectly acceptable to IniParser
 			}
 			result.Merge(globalConfig);
-
-			string userIni = File.Exists(userConfigFilename) ? File.ReadAllText(userConfigFilename, utf8) : "";
-			// No warning needed if user config doesn't exist.
-			IniData userConfig;
-			try
-			{
-				userConfig = parser.Parse(userIni);
-			}
-			catch (ParsingException e)
-			{
-				Console.WriteLine("Warning: Error parsing user configuration file. Will use global settings.");
-				Console.WriteLine("Error follows: {0}", e.ToString());
-				userConfig = null; // Merging null is perfectly acceptable to IniParser
-			}
-			result.Merge(userConfig);
 
 			foreach (KeyData item in result.Global)
 			{
