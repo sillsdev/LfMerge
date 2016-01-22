@@ -93,7 +93,18 @@
 			Properties="Configuration=$(Configuration);RootDir=$(RootDir)" />
 	</Target>
 
+	<Target Name="PrepareSource" DependsOnTargets="RestorePackages;DownloadDependencies">
+		<!-- This target gets called before building the source package -->
+		<RemoveDir Directories="$(RootDir)/Downloads"/>
+	</Target>
+
 	<Target Name="Compile" DependsOnTargets="RestorePackages;DownloadDependencies">
+		<CallTarget Targets="CompileOnly"/>
+	</Target>
+
+	<Target Name="CompileOnly">
+		<!-- This target gets called during binary package build and shouldn't download
+			anything -->
 		<MSBuild
 			Projects="$(SolutionPath)"
 			Targets="Build"

@@ -17,13 +17,8 @@ SHARE   = usr/share/lfmerge
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	# see also https://bugzilla.xamarin.com/show_bug.cgi?id=21298#c10
 	. ./environ && \
-		mozroots --import --sync && \
-		yes | certmgr -ssl https://go.microsoft.com && \
-		yes | certmgr -ssl https://nugetgallery.blob.core.windows.net && \
-		yes | certmgr -ssl https://nuget.org && \
-		xbuild /p:Configuration=$(BUILD) /t:Build build/LfMerge.proj
+		xbuild /p:Configuration=$(BUILD) /t:CompileOnly build/LfMerge.proj
 
 override_dh_auto_test:
 
@@ -64,7 +59,7 @@ override_dh_auto_install:
 	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/commitqueue
 	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/receivequeue
 	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/sendqueue
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/ReleaseData
+	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/webwork
 	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/Templates
 
 # Don't export any assemblies to other packages
