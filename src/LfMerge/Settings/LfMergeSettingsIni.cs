@@ -135,7 +135,8 @@ namespace LfMerge.Settings
 				if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
 				{
 					// XDG_RUNTIME_DIR is /run/user/<userid>, and /var/run is symlink'ed to /run
-					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+					path = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR") ??
+						"/run/user/" + Environment.GetEnvironmentVariable("UID"); // See http://serverfault.com/a/727994/246397
 				}
 				return Path.Combine(path, filename);
 			}
