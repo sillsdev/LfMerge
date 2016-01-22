@@ -43,21 +43,21 @@ namespace LfMerge.Settings
 
 			KeyDataCollection main = parsedConfig.Global ?? new KeyDataCollection();
 			string baseDir = main["BaseDir"] ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"), "fwrepo/LfMerge/DistFiles");
-			string releaseDataDir = main["ReleaseDataDir"] ?? "ReleaseData";
+			string webworkDir = main["WebworkDir"] ?? "webwork";
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
 
-			SetAllMembers(baseDir, releaseDataDir, templatesDir, mongoHostname, mongoPort);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort);
 
 			Queue.CreateQueueDirectories(this); // TODO: I believe this call properly belongs elsewhere.
 		}
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string releaseDataDir, string templatesDir, string mongoHostname, string mongoPort)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort)
 		{
-			ProjectsDirectory = Path.IsPathRooted(releaseDataDir) ? releaseDataDir : Path.Combine(baseDir, releaseDataDir);
+			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
 			StateDirectory = Path.Combine(baseDir, "state");
 

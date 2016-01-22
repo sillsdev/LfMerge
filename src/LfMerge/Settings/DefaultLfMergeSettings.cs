@@ -7,7 +7,7 @@ namespace LfMerge.Settings
 	{
 		public const string DefaultIniText = @"
 BaseDir = ${HOME}/fwrepo/LfMerge/DistFiles
-ReleaseDataDir = ReleaseData
+WebworkDir = webwork
 TemplatesDir = Templates
 MongoHostname = localhost
 MongoPort = 27017

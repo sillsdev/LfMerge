@@ -15,13 +15,13 @@ namespace LfMerge.Tests
 	{
 		class LfMergeSettingsAccessor: LfMergeSettingsIni
 		{
-			public void Initialize(string basePath, string releaseDataDir = null,
+			public void Initialize(string basePath, string webworkDir = null,
 				string templateDir = null)
 			{
 				var replacementConfig = new IniData(ParsedConfig);
 				replacementConfig.Global["BaseDir"] = basePath;
-				if (!string.IsNullOrEmpty(releaseDataDir))
-					replacementConfig.Global["ReleaseDataDir"] = releaseDataDir;
+				if (!string.IsNullOrEmpty(webworkDir))
+					replacementConfig.Global["WebworkDir"] = webworkDir;
 				if (!string.IsNullOrEmpty(templateDir))
 					replacementConfig.Global["TemplatesDir"] = templateDir;
 				Initialize(replacementConfig);
