@@ -94,11 +94,20 @@ namespace LfMerge.Tests
 				RetryCounter = 2,
 				UncommittedEditCounter = 0
 			};
-			var expectedJson = string.Format("{{\"SRState\":{0},\"LastStateChangeTicks\":{1}," +
-				"\"PercentComplete\":50,\"ElapsedTimeSeconds\":10,\"TimeRemainingSeconds\":20," +
-				"\"TotalSteps\":5,\"CurrentStep\":1,\"RetryCounter\":2,\"UncommittedEditCounter\":0," +
-				"\"ErrorMessage\":null,\"ErrorCode\":0,\"ProjectCode\":\"proja\"}}",
-				(int)ProcessingState.SendReceiveStates.MERGING, ticks);
+			var expectedJson = string.Format(@"{{
+  ""SRState"": ""{0}"",
+  ""LastStateChangeTicks"": {1},
+  ""PercentComplete"": 50,
+  ""ElapsedTimeSeconds"": 10,
+  ""TimeRemainingSeconds"": 20,
+  ""TotalSteps"": 5,
+  ""CurrentStep"": 1,
+  ""RetryCounter"": 2,
+  ""UncommittedEditCounter"": 0,
+  ""ErrorMessage"": null,
+  ""ErrorCode"": 0,
+  ""ProjectCode"": ""proja""
+}}", ProcessingState.SendReceiveStates.MERGING, ticks);
 
 			// Exercise
 			sut.SRState = ProcessingState.SendReceiveStates.MERGING;
