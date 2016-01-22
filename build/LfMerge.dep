@@ -44,6 +44,14 @@ Spart.dll*=>lib/
 icu.net.dll*=>lib/
 
 
+[TC::bt537]
+Name=palaso-trusty64-LinuxLogging Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux
+Path=SIL.Linux.Logging.dll*=>lib/
+
+
 [TC::bt2]
 Name=chorus-win32-master Continuous
 RevisionName=lastSuccessful
