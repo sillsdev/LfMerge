@@ -41,7 +41,6 @@ SIL.WritingSystems.dll*=>lib/
 L10NSharp.dll*=>lib/
 Ionic.Zip.dll*=>lib/
 Spart.dll*=>lib/
-icu.net.dll*=>lib/
 
 
 [TC::bt537]
@@ -50,6 +49,7 @@ RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=SIL.Linux.Logging.dll*=>lib/
+icu.net.dll*=>lib/
 
 
 [TC::bt2]
