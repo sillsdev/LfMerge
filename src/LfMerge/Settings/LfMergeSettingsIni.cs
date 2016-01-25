@@ -50,7 +50,8 @@ namespace LfMerge.Settings
 
 			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort);
 
-			Queue.CreateQueueDirectories(this); // TODO: I believe this call properly belongs elsewhere.
+			// TODO: Should this CreateDirectories() call live somewhere else?
+			Queue.CreateQueueDirectories(this);
 		}
 
 		private string[] QueueDirectories { get; set; }

@@ -32,15 +32,18 @@ namespace LfMerge.Tests
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
+			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
+				registerProcessingStateDouble, _languageForgeServerFolder.Path).Build();
+			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
+			Logger = MainClass.Container.Resolve<ILogger>();
+			Directory.CreateDirectory(Settings.ProjectsDirectory);
+			Directory.CreateDirectory(Settings.TemplateDirectory);
+			Directory.CreateDirectory(Settings.StateDirectory);
 			// Only copy FW project over if we really need it, to save time on most unit tests
 			if (!String.IsNullOrEmpty(testProjectCode))
 			{
 				CopySampleFwProject(testProjectCode);
 			}
-			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble, LanguageForgeFolder).Build();
-			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
-			Logger = MainClass.Container.Resolve<ILogger>();
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
@@ -84,7 +87,10 @@ namespace LfMerge.Tests
 
 		public string LanguageForgeFolder
 		{
-			get { return _languageForgeServerFolder.Path; }
+			// get { return Path.Combine(_languageForgeServerFolder.Path, "webwork"); }
+			// Should get this from Settings object, but unfortunately we have to resolve this
+			// *before* the Settings object is available.
+			get { return LangForgeDirFinder.ProjectsDirectory; }
 		}
 
 		public LfMergeSettingsIni LangForgeDirFinder
