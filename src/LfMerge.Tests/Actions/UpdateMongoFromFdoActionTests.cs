@@ -14,7 +14,7 @@ namespace LfMerge.Tests.Actions
 {
 	public class UpdateMongoFromFdoActionTests
 	{
-		public const string testProjectName = "TestLangProj";
+		public const string testProjectCode = "TestLangProj";
 		private TestEnvironment _env;
 		private MongoConnectionDouble _conn;
 		private UpdateMongoDbFromFdo sut;
@@ -23,7 +23,7 @@ namespace LfMerge.Tests.Actions
 		public void Setup()
 		{
 			//_env = new TestEnvironment();
-			_env = new TestEnvironment(testProjectName: testProjectName);
+			_env = new TestEnvironment(testProjectCode: testProjectCode);
 			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 			if (_conn == null)
 				throw new AssertionException("Fdo->Mongo tests need a mock MongoConnection in order to work.");
@@ -46,7 +46,7 @@ namespace LfMerge.Tests.Actions
 		public void Action_Should_UpdateLexemes()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectName);
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
 			sut.Run(lfProj);

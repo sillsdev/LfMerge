@@ -28,14 +28,14 @@ namespace LfMerge.Tests
 		}
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
-			bool registerProcessingStateDouble = true, string testProjectName = "")
+			bool registerProcessingStateDouble = true, string testProjectCode = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			// Only copy FW project over if we really need it, to save time on most unit tests
-			if (!String.IsNullOrEmpty(testProjectName))
+			if (!String.IsNullOrEmpty(testProjectCode))
 			{
-				CopySampleFwProject(testProjectName);
+				CopySampleFwProject(testProjectCode);
 			}
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble, LanguageForgeFolder).Build();
@@ -102,12 +102,12 @@ namespace LfMerge.Tests
 			Directory.CreateDirectory(ProjectPath(projectCode));
 		}
 
-		public void CopySampleFwProject(string projectName)
+		public void CopySampleFwProject(string projectCode)
 		{
 			// If we're running unit tests, we must be in output/Debug or output/Release folder, so data is two levels up
 			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
-			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectName), LanguageForgeFolder);
-			Console.WriteLine("Just copied {0} to {1}", Path.Combine(dataDir, projectName), LanguageForgeFolder);
+			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectCode), LanguageForgeFolder);
+			Console.WriteLine("Just copied {0} to {1}", Path.Combine(dataDir, projectCode), LanguageForgeFolder);
 		}
 
 		public string FindGitRepoRoot(string startDir = null)
