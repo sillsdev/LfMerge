@@ -29,7 +29,7 @@ namespace LfMerge.Tests.Actions
 				throw new AssertionException("Fdo->Mongo tests need a mock MongoConnection in order to work.");
 			// TODO: If creating our own Mocks would be better than getting them from Autofac, do that instead.
 
-			sut = new UpdateMongoDbFromFdo(_env.Settings, _conn);
+			sut = new UpdateMongoDbFromFdo(_env.Settings, _env.Logger, _conn);
 		}
 
 		[TearDown]

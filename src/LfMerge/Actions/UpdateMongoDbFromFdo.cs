@@ -6,6 +6,7 @@ using System.Linq;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using MongoDB.Bson;
@@ -29,7 +30,7 @@ namespace LfMerge.Actions
 		private CustomFieldConverter _converter;
 		private IMongoConnection _connection;
 
-		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, IMongoConnection conn) : base(settings)
+		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
 		{
 			_connection = conn;
 		}

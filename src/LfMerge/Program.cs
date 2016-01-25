@@ -6,6 +6,7 @@ using Autofac;
 using Chorus.Model;
 using LfMerge.Actions;
 using LfMerge.FieldWorks;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Queues;
 using LfMerge.Settings;
@@ -22,6 +23,8 @@ namespace LfMerge
 		{
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().AsSelf();
+			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
+				.WithParameter(new TypedParameter(typeof(string), "LfMerge"));
 			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();

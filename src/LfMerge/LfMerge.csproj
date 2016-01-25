@@ -86,6 +86,9 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
       <Package>libfieldworks-fdo</Package>
     </Reference>
+    <Reference Include="SIL.Linux.Logging">
+      <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -156,6 +159,10 @@
     <Compile Include="DataConverters\GoldEticItem.cs" />
     <Compile Include="Settings\LfMergeSettingsIni.cs" />
     <Compile Include="Settings\DefaultLfMergeSettings.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\SyslogLogger.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="Logging\LoggerBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />
@@ -176,6 +183,7 @@
     <Folder Include="LanguageForge\Model\" />
     <Folder Include="DataConverters\" />
     <Folder Include="Settings\" />
+    <Folder Include="Logging\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">

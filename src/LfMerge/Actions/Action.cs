@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using Autofac;
+using LfMerge.Logging;
 using LfMerge.Settings;
 
 namespace LfMerge.Actions
@@ -9,6 +10,7 @@ namespace LfMerge.Actions
 	public abstract class Action: IAction
 	{
 		protected LfMergeSettingsIni Settings { get; set; }
+		protected ILogger Logger { get; set; }
 
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
@@ -32,9 +34,10 @@ namespace LfMerge.Actions
 
 		#endregion
 
-		public Action(LfMergeSettingsIni settings)
+		public Action(LfMergeSettingsIni settings, ILogger logger)
 		{
 			Settings = settings;
+			Logger = logger;
 		}
 
 		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }
@@ -57,6 +60,8 @@ namespace LfMerge.Actions
 
 		public void Run(ILfProject project)
 		{
+			Logger.Notice("Action {0} just started", Name);
+
 			if (project.State.SRState == ProcessingState.SendReceiveStates.HOLD)
 				return;
 

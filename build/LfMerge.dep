@@ -41,6 +41,14 @@ SIL.WritingSystems.dll*=>lib/
 L10NSharp.dll*=>lib/
 Ionic.Zip.dll*=>lib/
 Spart.dll*=>lib/
+
+
+[TC::Libpalaso_PalasoTrusty64LinuxLoggingContinuous]
+Name=palaso-trusty64-LinuxLogging Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux
+Path=SIL.Linux.Logging.dll*=>lib/
 icu.net.dll*=>lib/
 
 
