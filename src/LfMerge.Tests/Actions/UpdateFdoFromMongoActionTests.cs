@@ -60,11 +60,10 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var data = new SampleData();
+			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = "New definition for this unit test";
 
-			_conn.AddToMockData(SampleData.jsonTestData.Replace(
-				"This is the English definition",
-				"New definition for this unit test"
-			));
+			_conn.AddToMockData(data.bsonTestData);
 
 			// Exercise
 			sut.Run(lfProj);

@@ -90,7 +90,7 @@ namespace LfMerge.Tests
 
 	public class MongoConnectionDouble: IMongoConnection
 	{
-		private List<string> _mockData = new List<string>();
+		private List<BsonDocument> _mockData = new List<BsonDocument>();
 		private List<object> _receivedData = new List<object>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
@@ -117,14 +117,14 @@ namespace LfMerge.Tests
 			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
-		public void AddToMockData(string mockData)
+		public void AddToMockData(BsonDocument mockData)
 		{
 			_mockData.Add(mockData);
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
-			foreach (var s in _mockData)
+			foreach (BsonDocument s in _mockData)
 			{
 				yield return BsonSerializer.Deserialize<TDocument>(s);
 			}

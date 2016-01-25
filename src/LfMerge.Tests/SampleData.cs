@@ -1,12 +1,21 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace LfMerge.Tests
 {
 	public class SampleData
 	{
+		public BsonDocument bsonTestData;
+		public BsonDocument bsonConfigData;
+		public BsonDocument bsonProjectRecordData;
+
 		public SampleData()
 		{
+			bsonTestData = BsonSerializer.Deserialize<BsonDocument>(jsonTestData);
+			bsonConfigData = BsonSerializer.Deserialize<BsonDocument>(jsonConfigData);
+			bsonProjectRecordData = BsonSerializer.Deserialize<BsonDocument>(jsonProjectRecordData);
 		}
 
 		public static string jsonTestData = @"{
