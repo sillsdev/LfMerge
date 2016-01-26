@@ -63,11 +63,7 @@ namespace LfMerge.Tests.Actions
 			_conn.AddToMockData(data.bsonTestData);
 
 			// Exercise
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			sut.Run(lfProj);
-			stopwatch.Stop();
-			Console.WriteLine("Running test took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Verify
 			FdoCache cache = lfProj.FieldWorksProject.Cache;

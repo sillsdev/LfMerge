@@ -45,11 +45,7 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			sut.Run(lfProj);
-			stopwatch.Stop();
-			System.Console.WriteLine("Running test took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Verify
 			string[] searchOrder = new string[] { "en", "fr" };

@@ -179,12 +179,8 @@ namespace LfMerge.Tests.Actions
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
 			// Exercise
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			sutFdoToMongo.Run(lfProj);
 			sutMongoToFdo.Run(lfProj);
-			stopwatch.Stop();
-			Console.WriteLine("Running test took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Verify
 			// string expectedShortName = "ztestmain";
@@ -231,12 +227,8 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
-			stopwatch.Stop();
-			Console.WriteLine("Running test took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Verify
 
