@@ -158,33 +158,12 @@ namespace LfMerge.Tests
 		// For use in unit tests that want to verify what was placed into Mongo
 		public Dictionary<Guid, object> StoredData { get { return _storedData; } }
 
-		public static void Initialize()
-		{
-			// Just as with MongoConnection.Initialize(), we need to set up BSON serialization conventions
-			// so that the "fake" connection can deserialize the sample JSON identially to how the real DB does it.
-			Console.WriteLine("Initializing FAKE Mongo connection that stores data...");
-
-			// Serialize Boolean values permissively
-			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
-
-			// Use CamelCaseName conversions between Mongo and our mapping classes
-			var pack = new ConventionPack();
-			pack.Add(new CamelCaseElementNameConvention());
-			ConventionRegistry.Register(
-				"My Custom Conventions",
-				pack,
-				t => t.FullName.StartsWith("LfMerge."));
-
-			// Register class mappings before opening first connection
-			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
-		}
-
 		public void AddToMockData<TDocument>(BsonDocument mockData)
 		{
 			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
 			Guid guid = Guid.Parse(guidStr);
 			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
-			_storedData.Add(guid, data);
+			_storedData[guid] = data;
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
@@ -211,7 +190,7 @@ namespace LfMerge.Tests
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
-			_storedData.Add(guid, data);
+			_storedData[guid] = data;
 			return true;
 		}
 	}

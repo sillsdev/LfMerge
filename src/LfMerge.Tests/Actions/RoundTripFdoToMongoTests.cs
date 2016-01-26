@@ -3,6 +3,7 @@
 using Autofac;
 using LfMerge.Actions;
 using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
 using MongoDB.Bson;
@@ -23,7 +24,7 @@ namespace LfMerge.Tests.Actions
 	{
 		public const string testProjectCode = "TestLangProj";
 		private TestEnvironment _env;
-		private MongoConnectionDouble _conn;
+		private MongoConnectionDoubleThatStoresData _conn;
 		private MongoProjectRecordFactory _recordFactory;
 		private UpdateFdoFromMongoDbAction sutMongoToFdo;
 		private UpdateMongoDbFromFdo sutFdoToMongo;
@@ -36,10 +37,10 @@ namespace LfMerge.Tests.Actions
 		public void Setup()
 		{
 			//_env = new TestEnvironment();
-			_env = new TestEnvironment(testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			_env = new TestEnvironment(fakeMongoConnectionShouldStoreData: true, testProjectCode: testProjectCode);
+			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDoubleThatStoresData;
 			if (_conn == null)
-				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection in order to work.");
+				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection that stores data in order to work.");
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
 			if (_recordFactory == null)
 				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoProjectRecordFactory in order to work.");
@@ -178,7 +179,7 @@ namespace LfMerge.Tests.Actions
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
 			var sampleData = new SampleData();
-			_conn.AddToMockData(sampleData.bsonTestData);
+			_conn.AddToMockData<LfLexEntry>(sampleData.bsonTestData);
 
 			// Exercise
 			sutFdoToMongo.Run(lfProj);
@@ -205,8 +206,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(differencesByName, Is.Empty); // Should fail
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
-			// This test is currently failing on custom field differences, because GUIDs are changing:
-			// Before: customFieldGuids={ "customField_entry_Cust_MultiPara" : "6d6e3f72-b0ce-4f2e-aa3b-824a6bac0101", "customField_entry_Cust_Single_ListRef" : "5364d32b-2b3a-4876-85e4-97b72a47be5d" }
+			// This test is currently failing on custom field differences, because the GUID for the Cust_MultiPara field is changing:
+			// Before: customFieldGuids={ "customField_entry_Cust_MultiPara" : "f71fe561-3677-483f-9ff5-4f918c0203a6", "customField_entry_Cust_Single_ListRef" : "d7f713ad-e8cf-11d3-9764-00c04f186933" }
 			// After:  customFieldGuids={ "customField_entry_Cust_MultiPara" : "cd05615d-c47b-4e6f-8b4e-29285ababcee", "customField_entry_Cust_Single_ListRef" : "d7f713ad-e8cf-11d3-9764-00c04f186933" }
 		}
 
@@ -217,7 +218,7 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var data = new SampleData();
 
-			_conn.AddToMockData(data.bsonTestData);
+			_conn.AddToMockData<LfLexEntry>(data.bsonTestData);
 
 			// Exercise
 			sutMongoToFdo.Run(lfProj);

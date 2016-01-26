@@ -94,7 +94,7 @@ namespace LfMerge.Actions
 			}
 			_customFieldConverter = new CustomFieldConverter(_cache);
 
-			// For efficiency's sake, cache the five repositories and five factories we'll need all the time,
+			// For efficiency's sake, cache the six repositories and six factories we'll need all the time,
 			_entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			_exampleRepo = _servLoc.GetInstance<ILexExampleSentenceRepository>();
 			_pictureRepo = _servLoc.GetInstance<ICmPictureRepository>();
@@ -121,8 +121,8 @@ namespace LfMerge.Actions
 			{
 				foreach (LfLexEntry lfEntry in lexicon)
 					LfLexEntryToFdoLexEntry(lfEntry);
-				// TODO: Use _cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
 			});
+			_cache.ActionHandlerAccessor.Commit();
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
