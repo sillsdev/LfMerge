@@ -48,11 +48,7 @@ namespace LfMerge.Tests.Actions
 		[TearDown]
 		public void TearDown()
 		{
-			// If the current test failed, leave its environment around for manual inspection
-			if (TestContext.CurrentContext.Result.Status != TestStatus.Failed)
-			{
-				_env.Dispose();
-			}
+			_env.Dispose();
 		}
 
 		[Test]
