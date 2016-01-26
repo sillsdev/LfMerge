@@ -68,6 +68,46 @@ namespace LfMerge.Tests.Actions
 				value.ToString();
 		}
 
+		/// <summary>
+		/// Get the field values as a dict, keyed by field ID, for any CmObject.
+		/// </summary>
+		/// <returns>A dictionary with integer field ID mapped to values.</returns>
+		/// <param name="cache">FDO cache the object lives in.</param>
+		/// <param name="obj">Object whose fields we're getting.</param>
+		private IDictionary<int, object> GetFieldValues(FdoCache cache, ICmObject obj)
+		{
+			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
+			ISilDataAccess data = cache.DomainDataByFlid;
+			int[] fieldIds = mdc.GetFields(obj.ClassID, false, (int)CellarPropertyTypeFilter.All);
+			var fieldValues = new Dictionary<int, object>();
+			foreach (int flid in fieldIds)
+			{
+				if (mdc.IsCustom(flid))
+					continue; // Custom fields get processed differently
+				string fieldName = mdc.GetFieldNameOrNull(flid);
+				if (String.IsNullOrEmpty(fieldName))
+					continue;
+				object value = data.get_Prop(obj.Hvo, flid);
+				fieldValues[flid] = value;
+				Console.WriteLine("Field {0} named {1} had value {2} of type {3}",
+					flid, fieldName, Repr(value), (value == null) ? "null" : value.GetType().ToString());
+			}
+			return fieldValues;
+		}
+
+		private BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
+		{
+			// The objectType parameter is used in the names of the custom fields (and nowhere else).
+			var customFieldConverter = new CustomFieldConverter(cache);
+			return customFieldConverter.CustomFieldsForThisCmObject(obj, objectType);
+		}
+
+		private IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)
+		{
+			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
+			return GetFieldValues(cache, obj).ToDictionary(kv => mdc.GetFieldName(kv.Key), kv => kv.Value);
+		}
+
 		[Test]
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepSameValues()
 		{
@@ -85,23 +125,10 @@ namespace LfMerge.Tests.Actions
 			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
 			ISilDataAccess data = cache.DomainDataByFlid;
 			int[] fieldsForLexEntry = mdc.GetFields(LexEntryTags.kClassId, false, (int)CellarPropertyTypeFilter.All);
-			var fieldValues = new Dictionary<int, object>();
-			var fieldValuesByName = new Dictionary<string, object>();
-			var customFieldConverter = new CustomFieldConverter(cache);
-			BsonDocument customFieldValues = customFieldConverter.CustomFieldsForThisCmObject(entry, "entry");
-			foreach (int flid in fieldsForLexEntry)
-			{
-				if (mdc.IsCustom(flid))
-					continue; // Custom fields get processed differently
-				string fieldName = mdc.GetFieldNameOrNull(flid);
-				if (String.IsNullOrEmpty(fieldName))
-					continue;
-				object value = data.get_Prop(entry.Hvo, flid);
-				fieldValues[flid] = value;
-				fieldValuesByName[fieldName] = value;
-				Console.WriteLine("Field {0} named {1} had value {2} of type {3}",
-					flid, fieldName, Repr(value), (value == null) ? "null" : value.GetType().ToString());
-			}
+//			var fieldValues = new Dictionary<int, object>();
+//			var fieldValuesByName = new Dictionary<string, object>();
+			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
+			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
 			var sampleData = new SampleData();
 			_conn.AddToMockData(sampleData.bsonTestData);
@@ -112,11 +139,9 @@ namespace LfMerge.Tests.Actions
 
 			// Verify
 			// string expectedShortName = "ztestmain";
-			BsonDocument customFieldValuesAfterTest = customFieldConverter.CustomFieldsForThisCmObject(entry, "entry");
-			var fieldValuesAfterTest = new Dictionary<int, object>();
-			var fieldValuesByNameAfterTest = new Dictionary<string, object>();
-			var differences = new Dictionary<int, Tuple<object, object>>(); // Tuple of (before, after)
-			var differencesByName = new Dictionary<string, Tuple<object, object>>(); // Tuple of (before, after)
+			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
+			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
+
 			var fieldNamesThatShouldBeDifferent = new string[] {
 				"DateCreated",
 				"DateModified",
@@ -128,54 +153,55 @@ namespace LfMerge.Tests.Actions
 				"HeadWordRef",
 				"HeadWordReversal",
 			};
+			var differences = new Dictionary<int, Tuple<string, string>>(); // Tuple of (before, after)
+			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
 			foreach (int flid in fieldsForLexEntry)
 			{
 				if (mdc.IsCustom(flid))
-					continue; // Custom fields get processed differently
+					continue;
 				string fieldName = mdc.GetFieldNameOrNull(flid);
 				if (String.IsNullOrEmpty(fieldName))
 					continue;
-				object value = data.get_Prop(entry.Hvo, flid);
-				fieldValuesAfterTest[flid] = value;
-				fieldValuesByNameAfterTest[fieldName] = value;
+				object valueAfterTest = fieldValuesAfterTest[flid];
 
-				// Calculate differences
+				// Some fields, like DateModified, *should* be different
 				if (fieldNamesThatShouldBeDifferent.Contains(fieldName) ||
 					fieldNamesToSkip.Contains(fieldName))
 					continue;
-				if ((value == null && fieldValues[flid] == null))
+
+				if ((valueAfterTest == null && fieldValues[flid] == null))
 					continue;
-				if (fieldValues[flid].Equals(value))
+				if (fieldValues[flid].Equals(valueAfterTest))
 					continue;
 				// Arrays need to be compared specially
 				if (fieldValues[flid].GetType() == typeof(int[]))
 				{
 					int[] before = fieldValues[flid] as int[];
-					int[] after = value as int[];
+					int[] after = valueAfterTest as int[];
 					if (before.SequenceEqual(after))
 						continue;
 				}
 				// If we get this far, they're different
-				var diff = new Tuple<object, object>(fieldValues[flid], fieldValuesAfterTest[flid]);
+				var diff = new Tuple<string, string>(Repr(fieldValues[flid]), Repr(fieldValuesAfterTest[flid]));
 				differences[flid] = diff;
 				differencesByName[fieldName] = diff;
 				Console.WriteLine("After test, field {0} named {1} had value {2} of type {3}",
-					flid, fieldName, Repr(value), (value == null) ? "null" : value.GetType().ToString());
+					flid, fieldName, Repr(valueAfterTest), (valueAfterTest == null) ? "null" : valueAfterTest.GetType().ToString());
 			}
 
-			foreach (KeyValuePair<string, Tuple<object, object>> diff in differencesByName)
+			foreach (KeyValuePair<string, Tuple<string, string>> diff in differencesByName)
 			{
 				string fieldName = diff.Key;
-				object oldVal = diff.Value.Item1;
-				object newVal = diff.Value.Item2;
-				Console.WriteLine("Field {0} was different. Old value: {1}, new value: {2}", fieldName, Repr(oldVal), Repr(newVal));
+				string oldVal = diff.Value.Item1;
+				string newVal = diff.Value.Item2;
+				Console.WriteLine("Field {0} was different. Old value: {1}, new value: {2}", fieldName, oldVal, newVal);
 			}
 
 			Console.WriteLine("Custom fields before test: {0}", customFieldValues);
 			Console.WriteLine("Custom fields after test: {0}", customFieldValuesAfterTest);
 
-			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 			Assert.That(differencesByName, Is.Empty); // Should fail
+			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
 			// This test is currently failing on custom field differences, because GUIDs are changing:
 			// Before: customFieldGuids={ "customField_entry_Cust_MultiPara" : "6d6e3f72-b0ce-4f2e-aa3b-824a6bac0101", "customField_entry_Cust_Single_ListRef" : "5364d32b-2b3a-4876-85e4-97b72a47be5d" }
