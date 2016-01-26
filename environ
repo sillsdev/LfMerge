@@ -52,8 +52,11 @@ fi
 
 ################################################################################################
 
-# add path to FDO assemblies
-MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
+if [ "$RUNMODE" != "PACKAGEBUILD" ]
+then
+	# add path to FDO assemblies
+	MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
+fi
 
 MONO_TRACE_LISTENER="Console.Out"
 
