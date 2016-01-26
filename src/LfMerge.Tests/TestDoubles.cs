@@ -151,6 +151,71 @@ namespace LfMerge.Tests
 		}
 	}
 
+	public class MongoConnectionDoubleThatStoresData: IMongoConnection
+	{
+		private Dictionary<Guid, object> _storedData = new Dictionary<Guid, object>();
+
+		// For use in unit tests that want to verify what was placed into Mongo
+		public Dictionary<Guid, object> StoredData { get { return _storedData; } }
+
+		public static void Initialize()
+		{
+			// Just as with MongoConnection.Initialize(), we need to set up BSON serialization conventions
+			// so that the "fake" connection can deserialize the sample JSON identially to how the real DB does it.
+			Console.WriteLine("Initializing FAKE Mongo connection that stores data...");
+
+			// Serialize Boolean values permissively
+			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
+
+			// Use CamelCaseName conversions between Mongo and our mapping classes
+			var pack = new ConventionPack();
+			pack.Add(new CamelCaseElementNameConvention());
+			ConventionRegistry.Register(
+				"My Custom Conventions",
+				pack,
+				t => t.FullName.StartsWith("LfMerge."));
+
+			// Register class mappings before opening first connection
+			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
+		}
+
+		public void AddToMockData<TDocument>(BsonDocument mockData)
+		{
+			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
+			Guid guid = Guid.Parse(guidStr);
+			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
+			_storedData.Add(guid, data);
+		}
+
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			foreach (object item in _storedData.Values)
+			{
+				yield return (TDocument)item;
+			}
+		}
+
+		public IMongoDatabase GetProjectDatabase(ILfProject project)
+		{
+			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
+			// TODO: Add appropriate mock functions if needed
+			return mockDb as IMongoDatabase;
+		}
+
+		public IMongoDatabase GetMainDatabase()
+		{
+			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
+			// TODO: Add appropriate mock functions if needed
+			return mockDb as IMongoDatabase;
+		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		{
+			_storedData.Add(guid, data);
+			return true;
+		}
+	}
+
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory
 	{
 		public MongoProjectRecordFactoryDouble(IMongoConnection connection) : base(connection)
