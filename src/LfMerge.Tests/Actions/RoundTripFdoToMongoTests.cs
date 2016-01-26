@@ -167,16 +167,8 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepSameValues()
 		{
 			// Setup
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			stopwatch.Stop();
-			Console.WriteLine("Creating lfProj took {0} ms", stopwatch.ElapsedMilliseconds);
-			stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
-			stopwatch.Stop();
-			Console.WriteLine("Creating cache before running test took {0} ms", stopwatch.ElapsedMilliseconds);
+			var cache = lfProj.FieldWorksProject.Cache;
 			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 			Guid entryGuid = Guid.Parse(entryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -187,7 +179,7 @@ namespace LfMerge.Tests.Actions
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
 			// Exercise
-			stopwatch = new System.Diagnostics.Stopwatch();
+			var stopwatch = new System.Diagnostics.Stopwatch();
 			stopwatch.Start();
 			sutFdoToMongo.Run(lfProj);
 			sutMongoToFdo.Run(lfProj);
@@ -236,14 +228,10 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_MongoToFdoToMongo_ShouldKeepSameValues()
 		{
 			// Setup
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			stopwatch.Stop();
-			Console.WriteLine("Creating lfProj took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Exercise
-			stopwatch = new System.Diagnostics.Stopwatch();
+			var stopwatch = new System.Diagnostics.Stopwatch();
 			stopwatch.Start();
 			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);

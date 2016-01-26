@@ -66,9 +66,6 @@ namespace LfMerge.FieldWorks
 
 		private FdoCache TryGetFdoCache()
 		{
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
-
 			FdoCache fdoCache = null;
 			var path = _project.Path;
 			if (!File.Exists(path))
@@ -104,9 +101,6 @@ namespace LfMerge.FieldWorks
 				Console.WriteLine("Error: Unknown error");
 				return null;
 			}
-
-			stopwatch.Stop();
-			Console.WriteLine("Creating FDO cache took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			return fdoCache;
 		}

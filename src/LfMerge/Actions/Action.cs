@@ -68,11 +68,7 @@ namespace LfMerge.Actions
 			project.State.SRState = StateForCurrentAction;
 			try
 			{
-				var stopwatch = new System.Diagnostics.Stopwatch();
-				stopwatch.Start();
 				DoRun(project);
-				stopwatch.Stop();
-				System.Console.WriteLine("Running action {1} took {0} ms", stopwatch.ElapsedMilliseconds, Name);
 			}
 			// REVIEW: catch any exception and set state to hold?
 			// TODO: log exceptions
