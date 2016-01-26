@@ -178,9 +178,6 @@ namespace LfMerge.Tests.Actions
 			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
-			var sampleData = new SampleData();
-			_conn.AddToMockData<LfLexEntry>(sampleData.bsonTestData);
-
 			// Exercise
 			sutFdoToMongo.Run(lfProj);
 			sutMongoToFdo.Run(lfProj);
@@ -216,9 +213,6 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			var data = new SampleData();
-
-			_conn.AddToMockData<LfLexEntry>(data.bsonTestData);
 
 			// Exercise
 			sutMongoToFdo.Run(lfProj);
