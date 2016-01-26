@@ -108,6 +108,60 @@ namespace LfMerge.Tests.Actions
 			return GetFieldValues(cache, obj).ToDictionary(kv => mdc.GetFieldName(kv.Key), kv => kv.Value);
 		}
 
+		private IDictionary<string, Tuple<string, string>> GetDifferences(
+			FdoCache cache,
+			IDictionary<int, object> fieldValuesBeforeTest,
+			IDictionary<int, object> fieldValuesAfterTest
+		)
+		{
+			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
+			var fieldNamesThatShouldBeDifferent = new string[] {
+				"DateCreated",
+				"DateModified",
+			};
+			var fieldNamesToSkip = new string[] {
+				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare
+				"HeadWord",
+				"MLHeadWord",
+				"HeadWordRef",
+				"HeadWordReversal",
+			};
+			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
+			foreach (int flid in fieldValuesBeforeTest.Keys)
+			{
+				if (mdc.IsCustom(flid))
+					continue;
+				string fieldName = mdc.GetFieldNameOrNull(flid);
+				if (String.IsNullOrEmpty(fieldName))
+					continue;
+				object valueAfterTest = fieldValuesAfterTest[flid];
+
+				// Some fields, like DateModified, *should* be different
+				if (fieldNamesThatShouldBeDifferent.Contains(fieldName) ||
+					fieldNamesToSkip.Contains(fieldName))
+					continue;
+
+				if ((valueAfterTest == null && fieldValuesBeforeTest[flid] == null))
+					continue;
+				if (fieldValuesBeforeTest[flid].Equals(valueAfterTest))
+					continue;
+				// Arrays need to be compared specially
+				if (fieldValuesBeforeTest[flid].GetType() == typeof(int[]))
+				{
+					int[] before = fieldValuesBeforeTest[flid] as int[];
+					int[] after = valueAfterTest as int[];
+					if (before.SequenceEqual(after))
+						continue;
+				}
+				// If we get this far, they're different
+				var diff = new Tuple<string, string>(Repr(fieldValuesBeforeTest[flid]), Repr(fieldValuesAfterTest[flid]));
+				differencesByName[fieldName] = diff;
+				Console.WriteLine("After test, field {0} named {1} had value {2} of type {3}",
+					flid, fieldName, Repr(valueAfterTest), (valueAfterTest == null) ? "null" : valueAfterTest.GetType().ToString());
+			}
+			return differencesByName;
+		}
+
 		[Test]
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepSameValues()
 		{
@@ -120,13 +174,6 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry, Is.Not.Null);
 
 			// Save field values before test, to compare with values after test
-			// TODO: This is really complex. Extract it to helper methods so we can write multiple
-			// round-trip tests without duplicating all of this.
-			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
-			ISilDataAccess data = cache.DomainDataByFlid;
-			int[] fieldsForLexEntry = mdc.GetFields(LexEntryTags.kClassId, false, (int)CellarPropertyTypeFilter.All);
-//			var fieldValues = new Dictionary<int, object>();
-//			var fieldValuesByName = new Dictionary<string, object>();
 			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
@@ -142,52 +189,7 @@ namespace LfMerge.Tests.Actions
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 
-			var fieldNamesThatShouldBeDifferent = new string[] {
-				"DateCreated",
-				"DateModified",
-			};
-			var fieldNamesToSkip = new string[] {
-				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare
-				"HeadWord",
-				"MLHeadWord",
-				"HeadWordRef",
-				"HeadWordReversal",
-			};
-			var differences = new Dictionary<int, Tuple<string, string>>(); // Tuple of (before, after)
-			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
-			foreach (int flid in fieldsForLexEntry)
-			{
-				if (mdc.IsCustom(flid))
-					continue;
-				string fieldName = mdc.GetFieldNameOrNull(flid);
-				if (String.IsNullOrEmpty(fieldName))
-					continue;
-				object valueAfterTest = fieldValuesAfterTest[flid];
-
-				// Some fields, like DateModified, *should* be different
-				if (fieldNamesThatShouldBeDifferent.Contains(fieldName) ||
-					fieldNamesToSkip.Contains(fieldName))
-					continue;
-
-				if ((valueAfterTest == null && fieldValues[flid] == null))
-					continue;
-				if (fieldValues[flid].Equals(valueAfterTest))
-					continue;
-				// Arrays need to be compared specially
-				if (fieldValues[flid].GetType() == typeof(int[]))
-				{
-					int[] before = fieldValues[flid] as int[];
-					int[] after = valueAfterTest as int[];
-					if (before.SequenceEqual(after))
-						continue;
-				}
-				// If we get this far, they're different
-				var diff = new Tuple<string, string>(Repr(fieldValues[flid]), Repr(fieldValuesAfterTest[flid]));
-				differences[flid] = diff;
-				differencesByName[fieldName] = diff;
-				Console.WriteLine("After test, field {0} named {1} had value {2} of type {3}",
-					flid, fieldName, Repr(valueAfterTest), (valueAfterTest == null) ? "null" : valueAfterTest.GetType().ToString());
-			}
+			var differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
 
 			foreach (KeyValuePair<string, Tuple<string, string>> diff in differencesByName)
 			{
@@ -198,7 +200,7 @@ namespace LfMerge.Tests.Actions
 			}
 
 			Console.WriteLine("Custom fields before test: {0}", customFieldValues);
-			Console.WriteLine("Custom fields after test: {0}", customFieldValuesAfterTest);
+			Console.WriteLine("Custom fields  after test: {0}", customFieldValuesAfterTest);
 
 			Assert.That(differencesByName, Is.Empty); // Should fail
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
