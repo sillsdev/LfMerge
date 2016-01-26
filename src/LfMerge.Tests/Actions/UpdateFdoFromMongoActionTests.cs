@@ -70,7 +70,11 @@ namespace LfMerge.Tests.Actions
 			Console.WriteLine("Running test took {0} ms", stopwatch.ElapsedMilliseconds);
 
 			// Verify
+			stopwatch = new System.Diagnostics.Stopwatch();
+			stopwatch.Start();
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			stopwatch.Stop();
+			Console.WriteLine("Creating cache after running test took {0} ms", stopwatch.ElapsedMilliseconds);
 			// TODO: Get expected data programmatically from SampleData instead of hardcoding it here
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 			string expectedShortName = "ztestmain";
