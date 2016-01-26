@@ -60,6 +60,12 @@ namespace LfMerge.Tests.Actions
 			);
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			_env.Dispose();
+		}
+
 		private string Repr(object value)
 		{
 			if (value == null)
