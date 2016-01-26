@@ -135,12 +135,14 @@ namespace LfMerge.Tests.Actions
 				string fieldName = mdc.GetFieldNameOrNull(flid);
 				if (String.IsNullOrEmpty(fieldName))
 					continue;
-				if (fieldNamesThatShouldBeDifferent.Contains(fieldName) ||
-				    fieldNamesToSkip.Contains(fieldName))
-					continue;
 				object value = data.get_Prop(entry.Hvo, flid);
 				fieldValuesAfterTest[flid] = value;
 				fieldValuesByNameAfterTest[fieldName] = value;
+
+				// Calculate differences
+				if (fieldNamesThatShouldBeDifferent.Contains(fieldName) ||
+					fieldNamesToSkip.Contains(fieldName))
+					continue;
 				if ((value == null && fieldValues[flid] == null))
 					continue;
 				if (fieldValues[flid].Equals(value))
