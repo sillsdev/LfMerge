@@ -183,26 +183,10 @@ namespace LfMerge.Tests.Actions
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			// string expectedShortName = "ztestmain";
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 
-			LfLexEntry mongoEntry = _conn.StoredData[entryGuid] as LfLexEntry;
-			Console.WriteLine("Mongo data for {0}:", entryGuid);
-			Console.WriteLine(mongoEntry.ToJson());
-
 			var differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
-
-			foreach (KeyValuePair<string, Tuple<string, string>> diff in differencesByName)
-			{
-				string fieldName = diff.Key;
-				string oldVal = diff.Value.Item1;
-				string newVal = diff.Value.Item2;
-				Console.WriteLine("Field {0} was different. Old value: {1}, new value: {2}", fieldName, oldVal, newVal);
-			}
-
-			Console.WriteLine("Custom fields before test: {0}", customFieldValues);
-			Console.WriteLine("Custom fields  after test: {0}", customFieldValuesAfterTest);
 
 			// Special case: Ignore one particular GUID change, because our handling of
 			// custom multi-paragraph fields is not yet perfect (some LF model changes
@@ -212,12 +196,8 @@ namespace LfMerge.Tests.Actions
 			customFieldValues["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
 			customFieldValuesAfterTest["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
 
-			Assert.That(differencesByName, Is.Empty); // Should fail
+			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
-
-			// This test is currently failing on custom field differences, because the GUID for the Cust_MultiPara field is changing:
-			// Before: customFieldGuids={ "customField_entry_Cust_MultiPara" : "f71fe561-3677-483f-9ff5-4f918c0203a6", "customField_entry_Cust_Single_ListRef" : "d7f713ad-e8cf-11d3-9764-00c04f186933" }
-			// After:  customFieldGuids={ "customField_entry_Cust_MultiPara" : "cd05615d-c47b-4e6f-8b4e-29285ababcee", "customField_entry_Cust_Single_ListRef" : "d7f713ad-e8cf-11d3-9764-00c04f186933" }
 		}
 
 		[Test]
