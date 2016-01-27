@@ -85,10 +85,10 @@ namespace LfMerge.Tests
 
 		public void Dispose()
 		{
-			_languageForgeServerFolder.Dispose();
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
+			_languageForgeServerFolder.Dispose();
 			Settings = null;
 		}
 

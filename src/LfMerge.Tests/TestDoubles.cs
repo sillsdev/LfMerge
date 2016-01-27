@@ -74,7 +74,7 @@ namespace LfMerge.Tests
 
 		public static void Reset()
 		{
-			CachedProjects.Clear();
+			LanguageForgeProject.DisposeProjectCache();
 		}
 	}
 
