@@ -355,17 +355,14 @@ namespace LfMerge.Tests.Actions
 					entry.CitationForm.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
 			cache.ActionHandlerAccessor.Commit();
-			Console.WriteLine("*** Citation form is now: {0}", entry.CitationForm.VernacularDefaultWritingSystem.Text);
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
-			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
-
-			Console.WriteLine("*** Citation form is now: {0}", entry.CitationForm.VernacularDefaultWritingSystem.Text);
 			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
 			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
 
+			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
+			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
 
 			// Special case: Ignore one particular GUID change, because our handling of
