@@ -477,21 +477,39 @@ namespace LfMerge.Tests.Actions
 					examples[1].Example.SetVernacularDefaultWritingSystem("Second value for this test");
 				});
 			cache.ActionHandlerAccessor.Commit();
+			Console.WriteLine("FDO Example just got manually set to {0} for GUID {1} and HVO {2}",
+				examples[0].Example.BestAnalysisVernacularAlternative.Text,
+				examples[0].Guid,
+				examples[0].Hvo
+			);
 
 			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
 			// Exercise
 			sutFdoToMongo.Run(lfProj);
+			entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
+			examples = senseWithExamples.ExamplesOS.ToArray();
+			Assert.That(examples.Length, Is.EqualTo(2));
 			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
 				{
 					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
 			cache.ActionHandlerAccessor.Commit();
+			Console.WriteLine("FDO Example just got manually and wrongly set to {0} for GUID {1} and HVO {2}",
+				examples[0].Example.BestAnalysisVernacularAlternative.Text,
+				examples[0].Guid,
+				examples[0].Hvo
+			);
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
+			entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
+			examples = senseWithExamples.ExamplesOS.ToArray();
+			Assert.That(examples.Length, Is.EqualTo(2));
 			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
 			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
 			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));

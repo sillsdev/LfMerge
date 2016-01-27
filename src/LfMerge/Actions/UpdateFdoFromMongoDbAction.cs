@@ -345,6 +345,11 @@ namespace LfMerge.Actions
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
+			Console.WriteLine("FDO Example just got set to {0} for GUID {1} and HVO {2}",
+				fdoExample.Example.BestAnalysisVernacularAlternative.Text,
+				fdoExample.Guid,
+				fdoExample.Hvo
+			);
 			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
 			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
