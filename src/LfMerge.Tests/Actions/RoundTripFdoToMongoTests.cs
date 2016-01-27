@@ -70,9 +70,32 @@ namespace LfMerge.Tests.Actions
 		{
 			if (value == null)
 				return "null";
-			return value.GetType() == typeof(int[]) ?
-				"[" + String.Join(",", value as int[]) + "]" :
-				value.ToString();
+			Type t = value.GetType();
+			if (t == typeof(int[]))
+				return "[" + String.Join(",", value as int[]) + "]";
+			var multi = value as IMultiAccessorBase;
+			if (multi != null)
+			{
+				int[] writingSystemIds;
+				try {
+					writingSystemIds = multi.AvailableWritingSystemIds;
+				} catch (NotImplementedException) {
+					// It's probably a VirtualStringAccessor, which we can't handle. Punt.
+					return value.ToString();
+				}
+				var sb = new System.Text.StringBuilder();
+				sb.Append("{ ");
+				foreach (int ws in multi.AvailableWritingSystemIds)
+				{
+					sb.Append(ws);
+					sb.Append(": ");
+					sb.Append(multi.get_String(ws).Text);
+					sb.Append(", ");
+				}
+				sb.Append("}");
+				return sb.ToString();
+			}
+			return value.ToString();
 		}
 
 		/// <summary>
@@ -146,6 +169,7 @@ namespace LfMerge.Tests.Actions
 				string fieldName = mdc.GetFieldNameOrNull(flid);
 				if (String.IsNullOrEmpty(fieldName))
 					continue;
+				object valueBeforeTest = fieldValuesBeforeTest[flid];
 				object valueAfterTest = fieldValuesAfterTest[flid];
 
 				// Some fields, like DateModified, *should* be different
@@ -153,18 +177,42 @@ namespace LfMerge.Tests.Actions
 					fieldNamesToSkip.Contains(fieldName))
 					continue;
 
-				if ((valueAfterTest == null && fieldValuesBeforeTest[flid] == null))
+				if ((valueAfterTest == null && valueBeforeTest == null))
 					continue;
-				if (fieldValuesBeforeTest[flid].Equals(valueAfterTest))
-					continue;
+
+				Type valueType = valueBeforeTest.GetType();
 				// Arrays need to be compared specially
-				if (fieldValuesBeforeTest[flid].GetType() == typeof(int[]))
+				if (valueType == typeof(int[]))
 				{
-					int[] before = fieldValuesBeforeTest[flid] as int[];
+					int[] before = valueBeforeTest as int[];
 					int[] after = valueAfterTest as int[];
 					if (before.SequenceEqual(after))
 						continue;
 				}
+				var multiStrBeforeTest = valueBeforeTest as IMultiAccessorBase;
+				var multiStrAfterTest = valueAfterTest as IMultiAccessorBase;
+				// So do multistrings
+				if (multiStrBeforeTest != null)
+				{
+					bool continueAfterLoop = false;
+					foreach (int wsId in multiStrBeforeTest.AvailableWritingSystemIds)
+					{
+						string beforeStr = multiStrBeforeTest.get_String(wsId).Text;
+						string afterStr = multiStrAfterTest.get_String(wsId).Text;
+						if (beforeStr != afterStr)
+						{
+							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);
+							differencesByName[fieldName + ":" + wsStr] = new Tuple<string, string>(beforeStr, afterStr);
+							continueAfterLoop = true;
+							Console.WriteLine("After test, field {0} named {1} had value {2} of writing system {3}",
+								flid, fieldName, afterStr, wsStr);
+						}
+					}
+					if (continueAfterLoop)
+						continue;
+				}
+				if (valueBeforeTest.Equals(valueAfterTest))
+					continue;
 				// If we get this far, they're different
 				var diff = new Tuple<string, string>(Repr(fieldValuesBeforeTest[flid]), Repr(fieldValuesAfterTest[flid]));
 				differencesByName[fieldName] = diff;
