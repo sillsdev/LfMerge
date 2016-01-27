@@ -122,10 +122,15 @@ namespace LfMerge.Tests.Actions
 			};
 			var fieldNamesToSkip = new string[] {
 				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare
+				"FullReferenceName",
 				"HeadWord",
-				"MLHeadWord",
 				"HeadWordRef",
 				"HeadWordReversal",
+				"LexSenseOutline",
+				"MLHeadWord",
+				"MLOwnerOutlineName",
+				"ReversalEntriesBulkText",
+				"ReversalName",
 			};
 			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
 			foreach (int flid in fieldValuesBeforeTest.Keys)
@@ -164,7 +169,7 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdo_ShouldKeepSameValues()
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInEntries()
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
@@ -186,7 +191,7 @@ namespace LfMerge.Tests.Actions
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 
-			var differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
+			IDictionary<string, Tuple<string, string>> differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
 
 			// Special case: Ignore one particular GUID change, because our handling of
 			// custom multi-paragraph fields is not yet perfect (some LF model changes
@@ -201,19 +206,200 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldKeepSameValues()
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInSenses()
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var cache = lfProj.FieldWorksProject.Cache;
+			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			Guid entryGuid = Guid.Parse(entryGuidStr);
+			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			ILexSense[] senses = entry.SensesOS.ToArray();
+			Assert.That(senses.Length, Is.EqualTo(2));
+
+			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
+			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
 			// Exercise
 			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
 
 			// Verify
+			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
+			IDictionary<int, object>[] fieldValuesAfterTest = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
-			// TODO: Write verification here.
+			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+
+			Assert.That(differencesByName1, Is.Empty);
+			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			Assert.That(differencesByName2, Is.Empty);
+			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
+
+		[Test]
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInExampleSentences()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var cache = lfProj.FieldWorksProject.Cache;
+			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			Guid entryGuid = Guid.Parse(entryGuidStr);
+			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			ILexSense senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
+			// Have to do it that way, because weirdly, the following line gets First() from MongoDB.Driver.Core!??!
+			// ILexSense senseWithExamples = entry.SensesOS.First(sense => sense.ExamplesOS.Count > 0);
+			ILexExampleSentence[] examples = senseWithExamples.ExamplesOS.ToArray();
+			Assert.That(examples.Length, Is.EqualTo(2));
+
+			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
+			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
+
+			// Verify
+			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
+			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
+
+			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+
+			Assert.That(differencesByName1, Is.Empty);
+			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			Assert.That(differencesByName2, Is.Empty);
+			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
+		}
+
+		[Test]
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepModifiedValuesInEntries()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var cache = lfProj.FieldWorksProject.Cache;
+			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			Guid entryGuid = Guid.Parse(entryGuidStr);
+			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					entry.CitationForm.SetVernacularDefaultWritingSystem("New value for this test");
+				});
+			cache.ActionHandlerAccessor.Commit();
+
+			// Save field values before test, to compare with values after test
+			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
+			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
+
+			// Exercise
+			sutFdoToMongo.Run(lfProj);
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					entry.CitationForm.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+				});
+			cache.ActionHandlerAccessor.Commit();
+			Console.WriteLine("*** Citation form is now: {0}", entry.CitationForm.VernacularDefaultWritingSystem.Text);
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
+			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
+
+			Console.WriteLine("*** Citation form is now: {0}", entry.CitationForm.VernacularDefaultWritingSystem.Text);
+			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
+
+			IDictionary<string, Tuple<string, string>> differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
+
+			// Special case: Ignore one particular GUID change, because our handling of
+			// custom multi-paragraph fields is not yet perfect (some LF model changes
+			// would be necessary to make it perfect).
+			// TODO: Once we improve our handling of custom multi-paragraph fields, restore this check
+			// by removing the code that ignores one particular field's GUID.
+			customFieldValues["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
+			customFieldValuesAfterTest["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
+
+			Assert.That(differencesByName, Is.Empty);
+			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
+		}
+
+		/* Modify this one to modify values before and during, like the Entry one. Then uncomment.
+		[Test]
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepModifiedValuesInSenses()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var cache = lfProj.FieldWorksProject.Cache;
+			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			Guid entryGuid = Guid.Parse(entryGuidStr);
+			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			ILexSense[] senses = entry.SensesOS.ToArray();
+			Assert.That(senses.Length, Is.EqualTo(2));
+
+			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
+			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
+
+			// Verify
+			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
+			IDictionary<int, object>[] fieldValuesAfterTest = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
+
+			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+
+			Assert.That(differencesByName1, Is.Empty);
+			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			Assert.That(differencesByName2, Is.Empty);
+			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
+		}
+		*/
+
+		/* Modify this one to modify values before and during, like the Entry one. Then uncomment.
+		[Test]
+		public void RoundTrip_FdoToMongoToFdo_ShouldKeepModifiedValuesInExampleSentences()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var cache = lfProj.FieldWorksProject.Cache;
+			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			Guid entryGuid = Guid.Parse(entryGuidStr);
+			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			ILexSense senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
+			// Have to do it that way, because weirdly, the following line gets First() from MongoDB.Driver.Core!??!
+			// ILexSense senseWithExamples = entry.SensesOS.First(sense => sense.ExamplesOS.Count > 0);
+			ILexExampleSentence[] examples = senseWithExamples.ExamplesOS.ToArray();
+			Assert.That(examples.Length, Is.EqualTo(2));
+
+			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
+			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
+
+			// Verify
+			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
+			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
+
+			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+
+			Assert.That(differencesByName1, Is.Empty);
+			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			Assert.That(differencesByName2, Is.Empty);
+			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
+		}
+		*/
+
+		// public void RoundTrip_MongoToFdoToMongo_ShouldKeepOriginalValues()
 	}
 }
 
