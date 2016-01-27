@@ -276,8 +276,8 @@ namespace LfMerge.Tests.Actions
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
@@ -312,8 +312,8 @@ namespace LfMerge.Tests.Actions
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
