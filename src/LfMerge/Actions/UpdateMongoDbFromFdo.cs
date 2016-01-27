@@ -252,6 +252,7 @@ namespace LfMerge.Actions
 
 			string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
 
+			result.Guid = fdoExample.Guid;
 			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
 			result.Sentence = ToMultiText(fdoExample.Example);
 			result.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem, fdoExample.Reference);
