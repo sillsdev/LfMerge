@@ -377,7 +377,6 @@ namespace LfMerge.Tests.Actions
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 		}
 
-		/* Modify this one to modify values before and during, like the Entry one. Then uncomment.
 		[Test]
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepModifiedValuesInSenses()
 		{
@@ -390,18 +389,34 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry, Is.Not.Null);
 			ILexSense[] senses = entry.SensesOS.ToArray();
 			Assert.That(senses.Length, Is.EqualTo(2));
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("New value for this test");
+					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("Second value for this test");
+				});
+			cache.ActionHandlerAccessor.Commit();
 
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+				});
+			cache.ActionHandlerAccessor.Commit();
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
+			Assert.That(senses[0].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(senses[1].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(senses[0].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
+			Assert.That(senses[1].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.EqualTo("Second value for this test"));
+
 			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
-
 			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
@@ -410,9 +425,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
-		*/
 
-		/* Modify this one to modify values before and during, like the Entry one. Then uncomment.
 		[Test]
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepModifiedValuesInExampleSentences()
 		{
@@ -428,18 +441,34 @@ namespace LfMerge.Tests.Actions
 			// ILexSense senseWithExamples = entry.SensesOS.First(sense => sense.ExamplesOS.Count > 0);
 			ILexExampleSentence[] examples = senseWithExamples.ExamplesOS.ToArray();
 			Assert.That(examples.Length, Is.EqualTo(2));
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					examples[0].Example.SetVernacularDefaultWritingSystem("New value for this test");
+					examples[1].Example.SetVernacularDefaultWritingSystem("Second value for this test");
+				});
+			cache.ActionHandlerAccessor.Commit();
 
 			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
 			sutFdoToMongo.Run(lfProj);
+			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+				{
+					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+				});
+			cache.ActionHandlerAccessor.Commit();
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
+			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
+			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("Second value for this test"));
+
 			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
-
 			var differencesByName1 = GetDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
@@ -448,7 +477,6 @@ namespace LfMerge.Tests.Actions
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
-		*/
 
 		// public void RoundTrip_MongoToFdoToMongo_ShouldKeepOriginalValues()
 	}
