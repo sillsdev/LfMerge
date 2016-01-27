@@ -73,6 +73,9 @@ namespace LfMerge.Tests.Actions
 			Type t = value.GetType();
 			if (t == typeof(int[]))
 				return "[" + String.Join(",", value as int[]) + "]";
+			var tsString = value as ITsString;
+			if (tsString != null)
+				return tsString.Text;
 			var multi = value as IMultiAccessorBase;
 			if (multi != null)
 			{
@@ -151,15 +154,15 @@ namespace LfMerge.Tests.Actions
 			};
 			var fieldNamesToSkip = new string[] {
 				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare
-				"FullReferenceName",
-				"HeadWord",
-				"HeadWordRef",
-				"HeadWordReversal",
-				"LexSenseOutline",
-				"MLHeadWord",
-				"MLOwnerOutlineName",
-				"ReversalEntriesBulkText",
-				"ReversalName",
+//				"FullReferenceName",
+//				"HeadWord",
+//				"HeadWordRef",
+//				"HeadWordReversal",
+//				"LexSenseOutline",
+//				"MLHeadWord",
+//				"MLOwnerOutlineName",
+//				"ReversalEntriesBulkText",
+//				"ReversalName",
 			};
 			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
 			foreach (int flid in fieldValuesBeforeTest.Keys)
@@ -179,9 +182,13 @@ namespace LfMerge.Tests.Actions
 
 				if ((valueAfterTest == null && valueBeforeTest == null))
 					continue;
+				if (mdc.GetFieldType(flid) == (int)CellarPropertyType.String)
+				{
+					// Might not need this, see below
+				}
 
-				Type valueType = valueBeforeTest.GetType();
 				// Arrays need to be compared specially
+				Type valueType = valueBeforeTest.GetType();
 				if (valueType == typeof(int[]))
 				{
 					int[] before = valueBeforeTest as int[];
@@ -189,13 +196,36 @@ namespace LfMerge.Tests.Actions
 					if (before.SequenceEqual(after))
 						continue;
 				}
+				// So do TsString objects
+				var tsStringBeforeTest = valueBeforeTest as ITsString;
+				var tsStringAfterTest = valueAfterTest as ITsString;
+				if (tsStringBeforeTest != null && tsStringAfterTest != null)
+				{
+					if (tsStringBeforeTest.Text != tsStringAfterTest.Text)
+					{
+						differencesByName[fieldName] = new Tuple<string, string>(
+							tsStringBeforeTest.Text,
+							tsStringAfterTest.Text
+						);
+					}
+					continue;
+				}
+				// So do multistrings
 				var multiStrBeforeTest = valueBeforeTest as IMultiAccessorBase;
 				var multiStrAfterTest = valueAfterTest as IMultiAccessorBase;
-				// So do multistrings
-				if (multiStrBeforeTest != null)
+				if (multiStrBeforeTest != null && multiStrAfterTest != null)
 				{
-					bool continueAfterLoop = false;
-					foreach (int wsId in multiStrBeforeTest.AvailableWritingSystemIds)
+					int[] wsIds;
+					try
+					{
+						wsIds = multiStrBeforeTest.AvailableWritingSystemIds;
+					}
+					catch (NotImplementedException)
+					{
+						// This is a VirtualStringAccessor, which we can't easily compare. Punt.
+						continue;
+					}
+					foreach (int wsId in wsIds)
 					{
 						string beforeStr = multiStrBeforeTest.get_String(wsId).Text;
 						string afterStr = multiStrAfterTest.get_String(wsId).Text;
@@ -203,16 +233,16 @@ namespace LfMerge.Tests.Actions
 						{
 							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);
 							differencesByName[fieldName + ":" + wsStr] = new Tuple<string, string>(beforeStr, afterStr);
-							continueAfterLoop = true;
 							Console.WriteLine("After test, field {0} named {1} had value {2} of writing system {3}",
 								flid, fieldName, afterStr, wsStr);
 						}
 					}
-					if (continueAfterLoop)
-						continue;
+					continue;
 				}
 				if (valueBeforeTest.Equals(valueAfterTest))
 					continue;
+//				if (Repr(valueBeforeTest) == Repr(valueAfterTest))
+//					continue; // This should catch TsStrings
 				// If we get this far, they're different
 				var diff = new Tuple<string, string>(Repr(fieldValuesBeforeTest[flid]), Repr(fieldValuesAfterTest[flid]));
 				differencesByName[fieldName] = diff;
