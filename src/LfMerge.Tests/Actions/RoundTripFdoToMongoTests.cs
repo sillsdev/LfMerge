@@ -29,6 +29,7 @@ namespace LfMerge.Tests.Actions
 		private MongoProjectRecordFactory _recordFactory;
 		private UpdateFdoFromMongoDbAction sutMongoToFdo;
 		private UpdateMongoDbFromFdo sutFdoToMongo;
+		private SampleData _sampleData;
 
 		public RoundTripFdoToMongoTests()
 		{
@@ -59,6 +60,9 @@ namespace LfMerge.Tests.Actions
 				_env.Logger,
 				_conn
 			);
+
+			_sampleData = new SampleData();
+			_conn.AddToMockData<LfOptionList>("optionlists", _sampleData.bsonOptionListData);
 		}
 
 		[TearDown]

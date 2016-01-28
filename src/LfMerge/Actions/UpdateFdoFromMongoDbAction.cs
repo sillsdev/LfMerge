@@ -115,7 +115,16 @@ namespace LfMerge.Actions
 				if (_freeTranslationType == null)
 					_freeTranslationType = _cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
-
+/*
+			Console.WriteLine("Grammar follows:");
+			LfOptionList grammar = GetGrammar(project);
+			foreach (LfOptionListItem item in grammar.Items)
+			{
+				Console.WriteLine("Grammar item {0} has abbrev {1} and GUID {2}",
+					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
+				);
+			}
+*/
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 			{
@@ -143,6 +152,16 @@ namespace LfMerge.Actions
 			Console.WriteLine(config.Entry.Fields["lexeme"].Type);
 			Console.WriteLine(config.Entry.Fields["lexeme"].GetType());
 			return config;
+		}
+
+		private IEnumerable<LfOptionList> GetOptionLists(ILfProject project)
+		{
+			return _connection.GetRecords<LfOptionList>(project, "optionlists");
+		}
+
+		private LfOptionList GetGrammar(ILfProject project)
+		{
+			return GetOptionLists(project).First(x => x.Code == "grammatical-info"); // TODO: Move this hardcoded value elsewhere, maybe to .conf file?
 		}
 
 		private Guid GuidFromLiftId(string liftId)

@@ -153,22 +153,31 @@ namespace LfMerge.Tests
 
 	public class MongoConnectionDoubleThatStoresData: IMongoConnection
 	{
-		private Dictionary<Guid, object> _storedData = new Dictionary<Guid, object>();
+		private Dictionary<string, Dictionary<Guid, object>> _storedData = new Dictionary<string, Dictionary<Guid, object>>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
-		public Dictionary<Guid, object> StoredData { get { return _storedData; } }
+		public Dictionary<string, Dictionary<Guid, object>> StoredData { get { return _storedData; } }
 
-		public void AddToMockData<TDocument>(BsonDocument mockData)
+		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
 		{
+			try
+			{
+				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
 			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
 			Guid guid = Guid.Parse(guidStr);
 			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
-			_storedData[guid] = data;
+			_storedData[collectionName][guid] = data;
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
-			foreach (object item in _storedData.Values)
+			var fakeCollection = _storedData[collectionName];
+			foreach (object item in fakeCollection.Values)
 			{
 				yield return (TDocument)item;
 			}
@@ -190,7 +199,15 @@ namespace LfMerge.Tests
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
-			_storedData[guid] = data;
+			try
+			{
+				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
+			_storedData[collectionName][guid] = data;
 			return true;
 		}
 	}
