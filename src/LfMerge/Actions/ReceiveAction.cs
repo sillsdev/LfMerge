@@ -31,6 +31,7 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var model = scope.Resolve<InternetCloneSettingsModel>();
+				model.InitFromUri("http://hg-public.languagedepot.org");	// TODO: check mongo project for private repo
 				model.ParentDirectoryToPutCloneIn = Settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
