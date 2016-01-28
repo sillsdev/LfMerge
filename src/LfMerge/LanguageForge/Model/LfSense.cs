@@ -18,6 +18,7 @@ namespace LfMerge.LanguageForge.Model
 
 		// Data properties
 		public LfStringField PartOfSpeech { get; set; }
+		public Guid? PartOfSpeechGuid { get; set; } // TODO: Move this to the project config model!
 		public LfStringArrayField SemanticDomain { get; set; }
 		public List<LfExample> Examples { get; set; }
 		public BsonDocument CustomFields { get; set; } // Mapped at runtime

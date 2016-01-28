@@ -137,11 +137,17 @@ namespace LfMerge.Actions
 			{
 				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA);
 				if (pos == null)
+				{
 					lfSense.PartOfSpeech = null;
+					lfSense.PartOfSpeechGuid = null;
+				}
 				else
+				{
 					lfSense.PartOfSpeech = LfStringField.FromString(pos.NameHierarchyString);
 					// Or: lfSense.PartOfSpeech = LfStringField.FromString(pos.Name.BestAnalysisVernacularAlternative.Text);
-				// TODO: Should we add a PartOfSpeech GUID here? Or the GUID of the MSA? Think about it.
+					lfSense.PartOfSpeechGuid = pos.Guid; // TODO: This should eventually end up in the project config, not in the entry
+					// TODO: Should we use the GUID of the MSA instead? Think about it.
+				}
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)

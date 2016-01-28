@@ -398,12 +398,18 @@ namespace LfMerge.Actions
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
 			if (lfSense.PartOfSpeech != null && lfSense.PartOfSpeech.Value != null)
 			{
-				var posConverter = new PartOfSpeechConverter(_cache);
-				//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
-				string userWs = _projectRecord.InterfaceLanguageCode;
-				if (String.IsNullOrEmpty(userWs))
-					userWs = "en";
-				IPartOfSpeech pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
+				IPartOfSpeech pos = null;
+				if (lfSense.PartOfSpeechGuid != null)
+					pos = fdoSense.Cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>().GetObject(lfSense.PartOfSpeechGuid.Value);
+				if (pos == null) // GetObject() returns null if not found, which means we need to make a PoS object from the name
+				{
+					var posConverter = new PartOfSpeechConverter(_cache);
+					//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
+					string userWs = _projectRecord.InterfaceLanguageCode;
+					if (String.IsNullOrEmpty(userWs))
+						userWs = "en";
+					pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
+				}
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
 					if (fdoSense.MorphoSyntaxAnalysisRA == null)
