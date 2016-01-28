@@ -19,6 +19,17 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UnitTestInformation>
+      <UnitTestInformation>
+        <Test Path="">
+          <Options EnableFilter="True" Exclude="True" ctype="NUnitCategoryOptions">
+            <Categories>
+              <Category>LongRunning</Category>
+            </Categories>
+          </Options>
+        </Test>
+      </UnitTestInformation>
+    </UnitTestInformation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>

@@ -20,6 +20,7 @@ using System.Linq;
 
 namespace LfMerge.Tests.Actions
 {
+	[TestFixture, Explicit, Category("LongRunning")]
 	public class RoundTripFdoToMongoTests
 	{
 		public const string testProjectCode = "TestLangProj";
