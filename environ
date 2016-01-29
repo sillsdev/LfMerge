@@ -15,6 +15,8 @@ MONO_RUNTIME=v4.0.30319
 MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
+COMPONENTS_MAP_PATH=/usr/lib/fieldworks
+ICU_DATA=/usr/share/fieldworks/Icu54
 
 ################################################################################################
 
@@ -65,6 +67,7 @@ MONO_TRACE_LISTENER="Console.Out"
 
 export \
 	PATH LD_LIBRARY_PATH PKG_CONFIG_PATH LD_PRELOAD \
+	COMPONENTS_MAP_PATH ICU_DATA \
 	MONO_PATH \
 	MONO_RUNTIME MONO_PREFIX MONO_GAC_PREFIX \
 	MONO_TRACE_LISTENER \
