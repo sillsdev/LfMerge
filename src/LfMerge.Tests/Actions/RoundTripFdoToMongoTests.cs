@@ -61,6 +61,8 @@ namespace LfMerge.Tests.Actions
 				_conn
 			);
 
+			// TODO: Get rid of this sample data once FDO->Mongo code updates the option list with
+			// part-of-speech GUIDs.
 			_sampleData = new SampleData();
 			_conn.AddToMockData<LfOptionList>("optionlists", _sampleData.bsonOptionListData);
 		}

@@ -161,7 +161,7 @@ namespace LfMerge.Actions
 
 		private LfOptionList GetGrammar(ILfProject project)
 		{
-			return GetOptionLists(project).First(x => x.Code == "grammatical-info"); // TODO: Move this hardcoded value elsewhere, maybe to .conf file?
+			return GetOptionLists(project).First(x => x.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 		}
 
 		private Guid GuidFromLiftId(string liftId)
