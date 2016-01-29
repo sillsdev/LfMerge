@@ -4,13 +4,13 @@ using System;
 using System.IO;
 using Autofac;
 using Chorus.Model;
+using Chorus.VcsDrivers.Mercurial;
 using LfMerge.FieldWorks;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LibTriboroughBridgeChorusPlugin;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
-using SIL.Reporting;
 
 namespace LfMerge.Actions
 {
@@ -53,8 +53,15 @@ namespace LfMerge.Actions
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					}
 				}
-				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)
+				catch (RepositoryAuthorizationException)
 				{
+					// We get this if the LD project doesn't exist or if authorization fails
+					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+					throw;
+				}
+				catch (UnauthorizedAccessException)
+				{
+					// We get this if we can't create the local folder
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;
 				}

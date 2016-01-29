@@ -54,17 +54,20 @@ namespace LfMerge.Tests
 			bool registerProcessingStateDouble, bool fakeMongoConnectionShouldStoreData, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
+			containerBuilder.RegisterType<LfMergeSettingsDouble>()
+				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
+				.As<LfMergeSettingsIni>();
+
+			if (fakeMongoConnectionShouldStoreData)
+				containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
+			else
+				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<LfMergeSettingsIni>()
-					.WithParameter(new TypedParameter(typeof(string), temporaryFolder));
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
-				if (fakeMongoConnectionShouldStoreData)
-					containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
-				else
-					containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
