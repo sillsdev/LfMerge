@@ -48,6 +48,8 @@ namespace LfMerge.Tests
 			{
 				CopySampleFwProject(testProjectCode);
 			}
+			SIL.Reporting.Logger.Init(Path.Combine(Directory.GetCurrentDirectory(), "LfMergeTests"),
+				false);
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
@@ -93,6 +95,7 @@ namespace LfMerge.Tests
 			LanguageForgeProjectAccessor.Reset();
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
+			SIL.Reporting.Logger.ShutDown();
 		}
 
 		public string LanguageForgeFolder
