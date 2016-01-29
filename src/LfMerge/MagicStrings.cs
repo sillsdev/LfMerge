@@ -6,7 +6,10 @@ namespace LfMerge
 {
 	public static class MagicStrings
 	{
-		public static string LfOptionListCodeForGrammaticalInfo = "grammatical-info";
+		public const string LfOptionListCodeForGrammaticalInfo = "grammatical-info";
+		public const string LfOptionListNameForGrammaticalInfo = "Part of Speech";
+		public const string LfCollectionNameForLexicon = "lexicon";
+		public const string LfCollectionNameForOptionLists = "optionlists";
 	}
 }
 

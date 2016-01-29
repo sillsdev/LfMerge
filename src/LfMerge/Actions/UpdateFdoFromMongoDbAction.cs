@@ -140,7 +140,7 @@ namespace LfMerge.Actions
 //			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
 //			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursor();
 //			return result.AsEnumerable();
-			return _connection.GetRecords<LfLexEntry>(project, "lexicon");
+			return _connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
@@ -156,7 +156,7 @@ namespace LfMerge.Actions
 
 		private IEnumerable<LfOptionList> GetOptionLists(ILfProject project)
 		{
-			return _connection.GetRecords<LfOptionList>(project, "optionlists");
+			return _connection.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists);
 		}
 
 		private LfOptionList GetGrammar(ILfProject project)
