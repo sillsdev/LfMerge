@@ -11,6 +11,7 @@ using LibTriboroughBridgeChorusPlugin;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.Progress;
 using SIL.Reporting;
+using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Actions
 {
@@ -83,8 +84,8 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var helper = scope.Resolve<UpdateBranchHelperFlex>();
-				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(
-				/*FDOBackendProvider.ModelVersion*/ "7000068", actualCloneResult, cloneLocation))
+				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(FdoCache.ModelVersion,
+					actualCloneResult, cloneLocation))
 				{
 					actualCloneResult.Message = "Flex version is too old";
 				}
