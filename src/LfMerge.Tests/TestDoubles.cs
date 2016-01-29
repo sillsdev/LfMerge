@@ -74,7 +74,7 @@ namespace LfMerge.Tests
 
 		public static void Reset()
 		{
-			CachedProjects.Clear();
+			LanguageForgeProject.DisposeProjectCache();
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace LfMerge.Tests
 
 	public class MongoConnectionDouble: IMongoConnection
 	{
-		private List<string> _mockData = new List<string>();
+		private List<BsonDocument> _mockData = new List<BsonDocument>();
 		private List<object> _receivedData = new List<object>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
@@ -117,14 +117,14 @@ namespace LfMerge.Tests
 			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
-		public void AddToMockData(string mockData)
+		public void AddToMockData(BsonDocument mockData)
 		{
 			_mockData.Add(mockData);
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
-			foreach (var s in _mockData)
+			foreach (BsonDocument s in _mockData)
 			{
 				yield return BsonSerializer.Deserialize<TDocument>(s);
 			}
@@ -147,6 +147,67 @@ namespace LfMerge.Tests
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
 			_receivedData.Add(data);
+			return true;
+		}
+	}
+
+	public class MongoConnectionDoubleThatStoresData: IMongoConnection
+	{
+		private Dictionary<string, Dictionary<Guid, object>> _storedData = new Dictionary<string, Dictionary<Guid, object>>();
+
+		// For use in unit tests that want to verify what was placed into Mongo
+		public Dictionary<string, Dictionary<Guid, object>> StoredData { get { return _storedData; } }
+
+		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
+		{
+			try
+			{
+				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
+			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
+			Guid guid = Guid.Parse(guidStr);
+			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
+			_storedData[collectionName][guid] = data;
+		}
+
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			var fakeCollection = _storedData[collectionName];
+			foreach (object item in fakeCollection.Values)
+			{
+				yield return (TDocument)item;
+			}
+		}
+
+		public IMongoDatabase GetProjectDatabase(ILfProject project)
+		{
+			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
+			// TODO: Add appropriate mock functions if needed
+			return mockDb as IMongoDatabase;
+		}
+
+		public IMongoDatabase GetMainDatabase()
+		{
+			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
+			// TODO: Add appropriate mock functions if needed
+			return mockDb as IMongoDatabase;
+		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		{
+			try
+			{
+				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
+			_storedData[collectionName][guid] = data;
 			return true;
 		}
 	}

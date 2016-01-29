@@ -113,6 +113,7 @@
     <Compile Include="Settings\LfMergeSettingsIniTests.cs" />
     <Compile Include="Actions\UpdateFdoFromMongoActionTests.cs" />
     <Compile Include="Actions\UpdateMongoFromFdoActionTests.cs" />
+    <Compile Include="Actions\RoundTripFdoToMongoTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -28,12 +28,16 @@ namespace LfMerge.Tests
 		}
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
-			bool registerProcessingStateDouble = true, string testProjectCode = "")
+			bool registerProcessingStateDouble = true,
+			bool fakeMongoConnectionShouldStoreData = false,
+			string testProjectCode = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble, _languageForgeServerFolder.Path).Build();
+				registerProcessingStateDouble,
+				fakeMongoConnectionShouldStoreData,
+				_languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			Logger = MainClass.Container.Resolve<ILogger>();
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
@@ -47,7 +51,7 @@ namespace LfMerge.Tests
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, string temporaryFolder)
+			bool registerProcessingStateDouble, bool fakeMongoConnectionShouldStoreData, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
@@ -57,7 +61,10 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
-				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+				if (fakeMongoConnectionShouldStoreData)
+					containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
+				else
+					containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
@@ -78,10 +85,10 @@ namespace LfMerge.Tests
 
 		public void Dispose()
 		{
-			_languageForgeServerFolder.Dispose();
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
 			LanguageForgeProjectAccessor.Reset();
+			_languageForgeServerFolder.Dispose();
 			Settings = null;
 		}
 

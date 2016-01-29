@@ -48,11 +48,7 @@ namespace LfMerge.Tests.Actions
 		[TearDown]
 		public void TearDown()
 		{
-			// If the current test failed, leave its environment around for manual inspection
-			if (TestContext.CurrentContext.Result.Status != TestStatus.Failed)
-			{
-				_env.Dispose();
-			}
+			_env.Dispose();
 		}
 
 		[Test]
@@ -60,11 +56,11 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var data = new SampleData();
+			string newDefinition = "New definition for this unit test";
+			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = newDefinition;
 
-			_conn.AddToMockData(SampleData.jsonTestData.Replace(
-				"This is the English definition",
-				"New definition for this unit test"
-			));
+			_conn.AddToMockData(data.bsonTestData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -74,14 +70,13 @@ namespace LfMerge.Tests.Actions
 			// TODO: Get expected data programmatically from SampleData instead of hardcoding it here
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 			string expectedShortName = "ztestmain";
-			string expectedDefinition = "New definition for this unit test";
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
 
 			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
 			Assert.IsNotNull(entry);
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 			Assert.That(entry.ShortName, Is.EqualTo(expectedShortName));
-			Assert.That(entry.SensesOS[0].DefinitionOrGloss.BestAnalysisAlternative.Text, Is.EqualTo(expectedDefinition));
+			Assert.That(entry.SensesOS[0].DefinitionOrGloss.BestAnalysisAlternative.Text, Is.EqualTo(newDefinition));
 		}
 	}
 }

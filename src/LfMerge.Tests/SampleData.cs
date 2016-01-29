@@ -1,12 +1,23 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace LfMerge.Tests
 {
 	public class SampleData
 	{
+		public BsonDocument bsonTestData;
+		public BsonDocument bsonConfigData;
+		public BsonDocument bsonProjectRecordData;
+		public BsonDocument bsonOptionListData;
+
 		public SampleData()
 		{
+			bsonTestData = BsonSerializer.Deserialize<BsonDocument>(jsonTestData);
+			bsonConfigData = BsonSerializer.Deserialize<BsonDocument>(jsonConfigData);
+			bsonProjectRecordData = BsonSerializer.Deserialize<BsonDocument>(jsonProjectRecordData);
+			bsonOptionListData = BsonSerializer.Deserialize<BsonDocument>(jsonOptionListData);
 		}
 
 		public static string jsonTestData = @"{
@@ -2206,6 +2217,68 @@ namespace LfMerge.Tests
 		}
 	},
 	""usersRequestingAccess"" : null
+}";
+
+		public static string jsonOptionListData = @"{
+	""_id"" : ObjectId(""56a9e2450f8709b702f15f97""),
+	""canDelete"" : false,
+	""code"" : ""grammatical-info"",
+	""dateCreated"" : ISODate(""2016-01-28T09:41:25Z""),
+	""dateModified"" : ISODate(""2016-01-28T09:41:43Z""),
+	""defaultItemKey"" : null,
+	""items"" : [
+		{
+			""key"" : ""adj"",
+			""value"" : ""Adjective (adj)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""prep"",
+			""value"" : ""Preposition (prep)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""adv"",
+			""value"" : ""Adverb (adv)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""cla"",
+			""value"" : ""Classifier (cla)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""num"",
+			""value"" : ""Numeral (num)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""n"",
+			""value"" : ""Noun (n)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""nprop"",
+			""value"" : ""Proper Noun (nprop)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""p"",
+			""value"" : ""Particle (p)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""pro"",
+			""value"" : ""Pronoun (pro)"",
+			""abbreviation"" : null
+		},
+		{
+			""key"" : ""v"",
+			""value"" : ""Verb (v)"",
+			""abbreviation"" : null
+		}
+	],
+	""name"" : ""Part of Speech""
 }";
 	}
 }

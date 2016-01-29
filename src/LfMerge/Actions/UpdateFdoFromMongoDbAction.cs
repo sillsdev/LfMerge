@@ -94,7 +94,7 @@ namespace LfMerge.Actions
 			}
 			_customFieldConverter = new CustomFieldConverter(_cache);
 
-			// For efficiency's sake, cache the five repositories and five factories we'll need all the time,
+			// For efficiency's sake, cache the six repositories and six factories we'll need all the time,
 			_entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			_exampleRepo = _servLoc.GetInstance<ILexExampleSentenceRepository>();
 			_pictureRepo = _servLoc.GetInstance<ICmPictureRepository>();
@@ -115,14 +115,23 @@ namespace LfMerge.Actions
 				if (_freeTranslationType == null)
 					_freeTranslationType = _cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
-
+/*
+			Console.WriteLine("Grammar follows:");
+			LfOptionList grammar = GetGrammar(project);
+			foreach (LfOptionListItem item in grammar.Items)
+			{
+				Console.WriteLine("Grammar item {0} has abbrev {1} and GUID {2}",
+					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
+				);
+			}
+*/
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 			{
 				foreach (LfLexEntry lfEntry in lexicon)
 					LfLexEntryToFdoLexEntry(lfEntry);
-				// TODO: Use _cache.ActionHandlerAccessor.Commit() to actually save the file that we've just modified.
 			});
+			_cache.ActionHandlerAccessor.Commit();
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
@@ -131,7 +140,7 @@ namespace LfMerge.Actions
 //			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>("lexicon");
 //			IAsyncCursor<LfLexEntry> result = collection.Find<LfLexEntry>(_ => true).ToCursor();
 //			return result.AsEnumerable();
-			return _connection.GetRecords<LfLexEntry>(project, "lexicon");
+			return _connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
@@ -143,6 +152,16 @@ namespace LfMerge.Actions
 			Console.WriteLine(config.Entry.Fields["lexeme"].Type);
 			Console.WriteLine(config.Entry.Fields["lexeme"].GetType());
 			return config;
+		}
+
+		private IEnumerable<LfOptionList> GetOptionLists(ILfProject project)
+		{
+			return _connection.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists);
+		}
+
+		private LfOptionList GetGrammar(ILfProject project)
+		{
+			return GetOptionLists(project).First(x => x.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 		}
 
 		private Guid GuidFromLiftId(string liftId)
@@ -345,6 +364,11 @@ namespace LfMerge.Actions
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
+			Console.WriteLine("FDO Example just got set to {0} for GUID {1} and HVO {2}",
+				fdoExample.Example.BestAnalysisVernacularAlternative.Text,
+				fdoExample.Guid,
+				fdoExample.Hvo
+			);
 			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
 			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
@@ -393,12 +417,18 @@ namespace LfMerge.Actions
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
 			if (lfSense.PartOfSpeech != null && lfSense.PartOfSpeech.Value != null)
 			{
-				var posConverter = new PartOfSpeechConverter(_cache);
-				//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
-				string userWs = _projectRecord.InterfaceLanguageCode;
-				if (String.IsNullOrEmpty(userWs))
-					userWs = "en";
-				IPartOfSpeech pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
+				IPartOfSpeech pos = null;
+				if (lfSense.PartOfSpeechGuid != null)
+					pos = fdoSense.Cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>().GetObject(lfSense.PartOfSpeechGuid.Value);
+				if (pos == null) // GetObject() returns null if not found, which means we need to make a PoS object from the name
+				{
+					var posConverter = new PartOfSpeechConverter(_cache);
+					//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
+					string userWs = _projectRecord.InterfaceLanguageCode;
+					if (String.IsNullOrEmpty(userWs))
+						userWs = "en";
+					pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
+				}
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
 					if (fdoSense.MorphoSyntaxAnalysisRA == null)
