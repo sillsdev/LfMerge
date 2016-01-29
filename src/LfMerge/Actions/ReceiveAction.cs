@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -31,11 +31,15 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var model = scope.Resolve<InternetCloneSettingsModel>();
-				model.InitFromUri("http://hg-public.languagedepot.org");	// TODO: check mongo project for private repo
+				if (project.LanguageDepotProject.Repository != null && project.LanguageDepotProject.Repository.Contains("private"))
+					model.InitFromUri("http://hg-private.languagedepot.org");
+				else
+					model.InitFromUri("http://hg-public.languagedepot.org");
+
 				model.ParentDirectoryToPutCloneIn = Settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
-				model.ProjectId = project.LanguageDepotProject.ProjectCode;
+				model.ProjectId = project.LanguageDepotProject.Identifier;
 				model.LocalFolderName = project.LfProjectCode;
 				model.AddProgress(Progress);
 
@@ -49,7 +53,7 @@ namespace LfMerge.Actions
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					}
 				}
-				catch (UnauthorizedAccessException)
+				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)
 				{
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;

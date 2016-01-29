@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System;
@@ -239,12 +239,13 @@ namespace LfMerge.Tests
 		#region ILanguageDepotProject implementation
 		public void Initialize(string lfProjectCode)
 		{
-			ProjectCode = lfProjectCode;
+			Identifier = lfProjectCode;
 		}
 
 		public string Username { get; set; }
 		public string Password { get; set; }
-		public string ProjectCode { get; set; }
+		public string Identifier { get; set; }
+		public string Repository { get; set; }
 		#endregion
 	}
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -36,6 +36,8 @@ namespace LfMerge.Tests
 		[Ignore("Currently we don't have the required fields in mongodb")]
 		public void ExistingProject()
 		{
+			// relies on a project being manually added to MongoDB with projectCode "proja"
+
 			// Setup
 			var sut = new LanguageDepotProject(_env.Settings);
 
@@ -45,7 +47,8 @@ namespace LfMerge.Tests
 			// Verify
 			Assert.That(sut.Username, Is.EqualTo("proja-user"));
 			Assert.That(sut.Password, Is.EqualTo("proja-pw"));
-			Assert.That(sut.ProjectCode, Is.EqualTo("proja-langdepot"));
+			Assert.That(sut.Identifier, Is.EqualTo("proja-langdepot"));
+			Assert.That(sut.Repository, Contains.Substring("public"));
 		}
 
 		[Test]

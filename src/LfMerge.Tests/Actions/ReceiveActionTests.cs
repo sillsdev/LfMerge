@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using NUnit.Framework;
@@ -38,7 +38,7 @@ namespace LfMerge.Tests.Actions
 			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Receive);
 
 			// Execute/Verify
-			Assert.That(() => sut.Run(lfProj), Throws.InstanceOf<UnauthorizedAccessException>());
+			Assert.That(() => sut.Run(lfProj), Throws.InstanceOf<Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException>());
 
 			// Verify
 			Assert.That(lfProj.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));

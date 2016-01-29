@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -36,8 +36,10 @@ namespace LfMerge
 			BsonValue value, srProjectValue;
 			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
 			   (srProjectValue.AsBsonDocument.TryGetValue("identifier", out value)))
-				ProjectCode = value.AsString;
-			// TODO: need to get S/R server (language depot public, language depot private, custom, etc).
+				Identifier = value.AsString;
+			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
+				(srProjectValue.AsBsonDocument.TryGetValue("repository", out value)))
+				Repository = value.AsString;
 			if (project.TryGetValue("sendReceiveUsername", out value))
 				Username = value.AsString;
 			if (project.TryGetValue("sendReceivePassword", out value))
@@ -48,7 +50,9 @@ namespace LfMerge
 
 		public string Password { get; private set; }
 
-		public string ProjectCode { get; private set; }
+		public string Identifier { get; private set; }
+
+		public string Repository { get; private set; }
 	}
 }
 
