@@ -62,9 +62,9 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
 				Directory.CreateDirectory(mergequeueDir);
-				var sut = new Queue(_env.Settings, QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Edit);
 
 				// Exercise
 				var isEmpty = sut.IsEmpty;
@@ -79,10 +79,10 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("SomeQueue"))
 			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
-				var sut = new Queue(_env.Settings, QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Edit);
 
 				// Exercise
 				var isEmpty = sut.IsEmpty;
@@ -97,7 +97,7 @@ namespace LfMerge.Tests.Queues
 		{
 			using (var tempDir = new TemporaryFolder("QueuedProjects"))
 			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
+				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
 				Directory.CreateDirectory(mergequeueDir);
 				File.WriteAllText(Path.Combine(mergequeueDir, "projb"), string.Empty);
 
@@ -106,7 +106,7 @@ namespace LfMerge.Tests.Queues
 				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
 
 				// don't use test double here - we want to test the sorting by date/time
-				var sut = new Queue(_env.Settings, QueueNames.Merge);
+				var sut = new Queue(_env.Settings, QueueNames.Edit);
 
 				// Exercise
 				var queuedProjects = sut.QueuedProjects;
@@ -129,7 +129,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--priority-project", prioProj });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
 
 			// Exercise
@@ -149,7 +149,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--project", singleProj });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
 
 			// Exercise
@@ -167,7 +167,7 @@ namespace LfMerge.Tests.Queues
 			Options.ParseCommandLineArgs(new[] { "--project", "proja" });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Merge);
+			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "projd" };
 
 			// Exercise
@@ -193,6 +193,7 @@ namespace LfMerge.Tests.Queues
 			}
 		}
 
+# if OLD_QUEUES
 		[Test]
 		public void NextQueueWithWork_ReturnsNonEmptyQueue()
 		{
@@ -384,6 +385,7 @@ namespace LfMerge.Tests.Queues
 
 			Assert.That(sut.CurrentAction, Is.TypeOf(expectedType));
 		}
+# endif
 	}
 }
 

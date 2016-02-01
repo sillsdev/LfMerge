@@ -12,22 +12,18 @@ namespace LfMerge.Tests
 	{
 		[TestCase(new string[0],
 			"all", QueueNames.None, null, QueueNames.None, TestName = "No arguments")]
-		[TestCase(new[] { "--priority-project", "ProjA" },
+		[TestCase(new[] { "-priority-project", "ProjA" },
 			"ProjA", QueueNames.None, null, QueueNames.None, TestName = "Prio project specified")]
 		[TestCase(new[] { "-p", "ProjA" },
 			"all", QueueNames.None, "ProjA", QueueNames.None, TestName = "Single project specified")]
 		[TestCase(new[] { "--priority-queue", "Commit" },
 			"all", QueueNames.Commit, null, QueueNames.None, TestName = "Prio queue specified")]
 		[TestCase(new[] { "-q", "Receive" },
-			"all", QueueNames.None, null, QueueNames.Receive, TestName = "single queue specified")]
-		[TestCase(new[] { "--priority-project", "ProjA", "--priority-queue", "Send" },
-			"ProjA", QueueNames.Send, null, QueueNames.None, TestName = "Prio project+queue specified")]
+			"all", QueueNames.None, null, QueueNames.Synchronize, TestName = "single queue specified")]
 		[TestCase(new[] { "-p", "ProjA", "-q", "Merge" },
-			"all", QueueNames.None, "ProjA", QueueNames.Merge, TestName = "Single project+queue specified")]
-		[TestCase(new[] { "--priority-project", "ProjA", "-q", "Send" },
-			"ProjA", QueueNames.None, null, QueueNames.Send, TestName = "Prio project + single queue specified")]
+			"all", QueueNames.None, "ProjA", QueueNames.Edit, TestName = "Single project+queue specified")]
 		[TestCase(new[] { "-p", "ProjA", "--priority-queue", "Merge" },
-			"all", QueueNames.Merge, "ProjA", QueueNames.None, TestName = "Single project + prio queue specified")]
+			"all", QueueNames.Edit, "ProjA", QueueNames.None, TestName = "Single project + prio queue specified")]
 		public void ParseArgs(string[] args, string expectedPrioProj,
 			QueueNames expectedPrioQueue, string expectedSingleProj,
 			QueueNames expectedSingleQueue)
@@ -74,7 +70,7 @@ namespace LfMerge.Tests
 		[TestCase(new[] { "--priority-queue", "commit" },
 			ActionNames.Commit, false, TestName = "Prio queue specified")]
 		[TestCase(new[] { "-q", "receive" },
-			ActionNames.Receive, true, TestName = "Single queue specified")]
+			ActionNames.Synchronize, true, TestName = "Single queue specified")]
 		public void FirstActionAndStopAfterFirstAction(string[] args,
 			ActionNames expectedFirstAction, bool expectedStop)
 		{
@@ -87,20 +83,18 @@ namespace LfMerge.Tests
 
 		[TestCase(QueueNames.None, ActionNames.None)]
 		[TestCase(QueueNames.Commit, ActionNames.Commit)]
-		[TestCase(QueueNames.Merge, ActionNames.UpdateFdoFromMongoDb)]
-		[TestCase(QueueNames.Receive, ActionNames.Receive)]
-		[TestCase(QueueNames.Send, ActionNames.Send)]
+		[TestCase(QueueNames.Edit, ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(QueueNames.Synchronize, ActionNames.Synchronize)]
 		public void GetActionFromQueue(QueueNames queue, ActionNames expectedAction)
 		{
 			Assert.That(Options.GetActionForQueue(queue), Is.EqualTo(expectedAction));
 		}
 
 		[TestCase(ActionNames.None, QueueNames.None)]
-		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Merge)]
+		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Edit)]
 		[TestCase(ActionNames.Commit, QueueNames.Commit)]
-		[TestCase(ActionNames.Receive, QueueNames.Receive)]
-		[TestCase(ActionNames.Merge, QueueNames.None)]
-		[TestCase(ActionNames.Send, QueueNames.Send)]
+		[TestCase(ActionNames.Synchronize, QueueNames.Synchronize)]
+		[TestCase(ActionNames.Edit, QueueNames.None)]
 		[TestCase(ActionNames.UpdateMongoDbFromFdo, QueueNames.None)]
 		public void GetQueueFromAction(ActionNames action, QueueNames expectedQueue)
 		{
@@ -109,10 +103,9 @@ namespace LfMerge.Tests
 
 		[TestCase(ActionNames.None, ActionNames.UpdateFdoFromMongoDb)]
 		[TestCase(ActionNames.UpdateFdoFromMongoDb, ActionNames.Commit)]
-		[TestCase(ActionNames.Commit, ActionNames.Receive)]
-		[TestCase(ActionNames.Receive, ActionNames.Merge)]
-		[TestCase(ActionNames.Merge, ActionNames.Send)]
-		[TestCase(ActionNames.Send, ActionNames.UpdateMongoDbFromFdo)]
+		[TestCase(ActionNames.Commit, ActionNames.Synchronize)]
+		[TestCase(ActionNames.Synchronize, ActionNames.Edit)]
+		[TestCase(ActionNames.Edit, ActionNames.UpdateMongoDbFromFdo)]
 		[TestCase(ActionNames.UpdateMongoDbFromFdo, ActionNames.None)]
 		public void GetNextAction(ActionNames currentAction, ActionNames expectedAction)
 		{
@@ -123,9 +116,8 @@ namespace LfMerge.Tests
 		[TestCase(ActionNames.None)]
 		[TestCase(ActionNames.UpdateFdoFromMongoDb)]
 		[TestCase(ActionNames.Commit)]
-		[TestCase(ActionNames.Receive)]
-		[TestCase(ActionNames.Merge)]
-		[TestCase(ActionNames.Send)]
+		[TestCase(ActionNames.Synchronize)]
+		[TestCase(ActionNames.Edit)]
 		[TestCase(ActionNames.UpdateMongoDbFromFdo)]
 		public void GetNextActionIfStopAfterFirstAction_ReturnsNone(ActionNames currentAction)
 		{

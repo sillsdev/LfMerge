@@ -35,7 +35,7 @@ namespace LfMerge.Tests.Actions
 			_env = new TestEnvironment(false);
 
 			var lfProj = LanguageForgeProject.Create(_env.Settings, nonExistingProject);
-			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Receive);
+			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Synchronize);
 
 			// Execute/Verify
 			Assert.That(() => sut.Run(lfProj), Throws.InstanceOf<Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException>());
@@ -50,7 +50,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var projCode = TestContext.CurrentContext.Test.Name;
 			var lfProj = LanguageForgeProject.Create(_env.Settings, projCode);
-			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Receive);
+			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Synchronize);
 
 			// Execute
 			sut.Run(lfProj);
@@ -71,7 +71,7 @@ namespace LfMerge.Tests.Actions
 			var projDir = Path.Combine(_env.Settings.WebWorkDirectory, projCode.ToLowerInvariant());
 			Directory.CreateDirectory(projDir);
 			var lfProj = LanguageForgeProject.Create(_env.Settings, projCode);
-			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Receive);
+			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Synchronize);
 
 			// Execute
 			sut.Run(lfProj);

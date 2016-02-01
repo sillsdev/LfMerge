@@ -106,8 +106,6 @@ namespace LfMerge
 					break;
 				case QueueNames.Synchronize:
 					return ActionNames.Synchronize;
-				case QueueNames.Send:
-					return ActionNames.Send;
 			}
 			return ActionNames.None;
 		}
@@ -122,8 +120,6 @@ namespace LfMerge
 					return QueueNames.Commit;
 				case ActionNames.Synchronize:
 					return QueueNames.Synchronize;
-				case ActionNames.Send:
-					return QueueNames.Send;
 				case ActionNames.None:
 				case ActionNames.Edit:
 				case ActionNames.UpdateMongoDbFromFdo:
