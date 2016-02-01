@@ -40,6 +40,9 @@ namespace LfMerge
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			var logger = Container.Resolve<ILogger>();
+			logger.Notice("LfMerge starting");
+
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return;
@@ -53,10 +56,10 @@ namespace LfMerge
 			{
 				if (!fileLock.TryAcquireLock())
 				{
-					Console.WriteLine("Can't acquire file lock - is another instance running?");
+					logger.Notice("LfMerge: Can't acquire file lock - is another instance running?");
 					return;
 				}
-
+				logger.Notice("lock acquired");
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 
 				for (var queue = Queue.FirstQueueWithWork;
@@ -66,6 +69,7 @@ namespace LfMerge
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
+						logger.Notice("projectCode {0}", projectCode);
 						queue.DequeueProject(projectCode);
 						var project = LanguageForgeProject.Create(settings, projectCode);
 
@@ -86,6 +90,7 @@ namespace LfMerge
 				Container.Dispose();
 				Cleanup();
 			}
+			logger.Notice("LfMerge finished");
 		}
 
 		/// <summary>
