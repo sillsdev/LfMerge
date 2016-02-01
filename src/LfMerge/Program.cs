@@ -40,15 +40,15 @@ namespace LfMerge
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			var logger = Container.Resolve<ILogger>();
-			logger.Notice("LfMerge starting");
-
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return;
 
 			if (Container == null)
 				Container = RegisterTypes().Build();
+
+			var logger = Container.Resolve<ILogger>();
+			logger.Notice("LfMerge starting");
 
 			var settings = Container.Resolve<LfMergeSettingsIni>();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
@@ -60,6 +60,7 @@ namespace LfMerge
 					return;
 				}
 				logger.Notice("lock acquired");
+
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 
 				for (var queue = Queue.FirstQueueWithWork;
@@ -90,6 +91,7 @@ namespace LfMerge
 				Container.Dispose();
 				Cleanup();
 			}
+
 			logger.Notice("LfMerge finished");
 		}
 

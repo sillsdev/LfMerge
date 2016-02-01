@@ -51,7 +51,6 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[TestCase(QueueNames.Edit, new[] { ActionNames.UpdateFdoFromMongoDb })]
-		[TestCase(QueueNames.Commit, new[] { ActionNames.Commit })]
 		[TestCase(QueueNames.Synchronize, new[] { ActionNames.Synchronize, ActionNames.UpdateMongoDbFromFdo })]
 		public void NextAction(QueueNames queueName, ActionNames[] expectedActionNames)
 		{

@@ -7,8 +7,7 @@ namespace LfMerge.Queues
 	{
 		None,
 		Edit,
-		Synchronize,
-		Commit
+		Synchronize
 	}
 }
 

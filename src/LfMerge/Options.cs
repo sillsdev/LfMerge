@@ -17,17 +17,8 @@ namespace LfMerge
 			Current = this;
 		}
 
-		[Option("priority-queue", HelpText = "Queue to process first (merge|send|receive|commit)")]
-		public QueueNames PriorityQueue { get; set; }
-
-		[Option('q', "queue", HelpText = "Only process the specified queue")]
-		public QueueNames SingleQueue { get; set; }
-
-		[Option("priority-project", DefaultValue = "all", HelpText = "Project to process first")]
+		[Option('p', "project", HelpText = "Process the specified project first")]
 		public string PriorityProject { get; set; }
-
-		[Option('p', "project", HelpText = "Only process the specified project")]
-		public string SingleProject { get; set; }
 
 		[Option('h', "help", HelpText = "Display this help")]
 		public bool ShowHelp { get; set; }
@@ -37,7 +28,7 @@ namespace LfMerge
 			var help = new HelpText
 			{
 				Heading = new HeadingInfo("LfMerge"),
-				Copyright = new CopyrightInfo("SIL International", 2015),
+				Copyright = new CopyrightInfo("SIL International", 2016),
 				AdditionalNewLineAfterOption = false,
 				AddDashesToOption = true
 			};
@@ -47,39 +38,29 @@ namespace LfMerge
 
 		public string FirstProject
 		{
-			get { return string.IsNullOrEmpty(SingleProject) ? PriorityProject : SingleProject; }
+			get { return string.IsNullOrEmpty(PriorityProject) ? PriorityProject : PriorityProject; }
 		}
 
 		public bool StopAfterFirstProject
 		{
-			get { return !string.IsNullOrEmpty(SingleProject); }
-		}
-
-		private QueueNames FirstQueue
-		{
-			get
-			{
-				return SingleQueue != QueueNames.None ? SingleQueue :
-					PriorityQueue != QueueNames.None ? PriorityQueue : QueueNames.Edit;
-			}
+			get { return !string.IsNullOrEmpty(PriorityProject); }
 		}
 
 		public ActionNames FirstAction
 		{
-			get { return GetActionForQueue(FirstQueue); }
+			get { return GetActionForQueue(QueueNames.Edit); }
 		}
 
 		public bool StopAfterFirstAction
 		{
-			get { return SingleQueue != QueueNames.None; }
+			get { return false; }
 		}
 
 		private bool AllArgumentsValid
 		{
 			get
 			{
-				return ((PriorityProject == "all" || string.IsNullOrEmpty(SingleProject)) &&
-				(PriorityQueue == QueueNames.None || SingleQueue == QueueNames.None));
+				return (!string.IsNullOrEmpty(PriorityProject));
 			}
 		}
 
@@ -98,8 +79,6 @@ namespace LfMerge
 		{
 			switch (queue)
 			{
-				case QueueNames.Commit:
-					return ActionNames.Commit;
 				case QueueNames.Edit:
 					return ActionNames.UpdateFdoFromMongoDb;
 				case QueueNames.None:
@@ -116,10 +95,9 @@ namespace LfMerge
 			{
 				case ActionNames.UpdateFdoFromMongoDb:
 					return QueueNames.Edit;
-				case ActionNames.Commit:
-					return QueueNames.Commit;
 				case ActionNames.Synchronize:
 					return QueueNames.Synchronize;
+				case ActionNames.Commit:
 				case ActionNames.None:
 				case ActionNames.Edit:
 				case ActionNames.UpdateMongoDbFromFdo:

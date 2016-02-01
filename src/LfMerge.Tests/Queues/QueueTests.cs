@@ -50,79 +50,69 @@ namespace LfMerge.Tests.Queues
 		}
 
 		[Test]
+		[ExpectedException( "System.ArgumentException" )]
 		public void Ctor_CantCreateQueueForNone()
 		{
-			Assert.That(() => new Queue(_env.Settings, QueueNames.None), Throws.ArgumentException);
-		}
-
-		// TODO: All these "using (var tempDir = new TemporaryFolder("Foo")) {}" blocks can be removed,
-		// now that TestEnvironment creates temporary folders itself.
-		[Test]
-		public void IsEmpty_NoFilesReturnsEmpty()
-		{
-			using (var tempDir = new TemporaryFolder("SomeQueue"))
-			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
-				Directory.CreateDirectory(mergequeueDir);
-				var sut = new Queue(_env.Settings, QueueNames.Edit);
-
-				// Exercise
-				var isEmpty = sut.IsEmpty;
-
-				// Verify
-				Assert.That(isEmpty, Is.True, "Queue doesn't report it is empty");
-			}
+			new Queue(_env.Settings, QueueNames.None);
 		}
 
 		[Test]
-		public void IsEmpty_ExistingFilesReturnsNotEmpty()
+		public void IsEmpty_NoFiles_ReturnsEmpty()
 		{
-			using (var tempDir = new TemporaryFolder("SomeQueue"))
-			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
-				Directory.CreateDirectory(mergequeueDir);
-				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
-				var sut = new Queue(_env.Settings, QueueNames.Edit);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			Directory.CreateDirectory(editQueueDir);
+			var sut = new Queue(_env.Settings, QueueNames.Edit);
 
-				// Exercise
-				var isEmpty = sut.IsEmpty;
+			// Exercise
+			var isEmpty = sut.IsEmpty;
 
-				// Verify
-				Assert.That(isEmpty, Is.False, "Queue reports it is empty");
-			}
+			// Verify
+			Assert.That(isEmpty, Is.True, "Queue doesn't report it is empty");
+		}
+
+		[Test]
+		public void IsEmpty_ExistingFiles_ReturnsNotEmpty()
+		{
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			Directory.CreateDirectory(editQueueDir);
+			File.WriteAllText(Path.Combine(editQueueDir, "proja"), string.Empty);
+			var sut = new Queue(_env.Settings, QueueNames.Edit);
+
+			// Exercise
+			var isEmpty = sut.IsEmpty;
+
+			// Verify
+			Assert.That(isEmpty, Is.False, "Queue reports it is empty");
 		}
 
 		[Test]
 		public void QueuedProjects_ReturnsOldestFirst()
 		{
-			using (var tempDir = new TemporaryFolder("QueuedProjects"))
-			{
-				var mergequeueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
-				Directory.CreateDirectory(mergequeueDir);
-				File.WriteAllText(Path.Combine(mergequeueDir, "projb"), string.Empty);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			Directory.CreateDirectory(editQueueDir);
+			File.WriteAllText(Path.Combine(editQueueDir, "projb"), string.Empty);
 
-				// wait 1s so that we get a different timestamp on the file
-				Thread.Sleep(1000);
-				File.WriteAllText(Path.Combine(mergequeueDir, "proja"), string.Empty);
+			// wait 1s so that we get a different timestamp on the file
+			Thread.Sleep(1000);
+			File.WriteAllText(Path.Combine(editQueueDir, "proja"), string.Empty);
 
-				// don't use test double here - we want to test the sorting by date/time
-				var sut = new Queue(_env.Settings, QueueNames.Edit);
+			// don't use test double here - we want to test the sorting by date/time
+			var sut = new Queue(_env.Settings, QueueNames.Edit);
 
-				// Exercise
-				var queuedProjects = sut.QueuedProjects;
+			// Exercise
+			var queuedProjects = sut.QueuedProjects;
 
-				// Verify
-				Assert.That(queuedProjects.Length, Is.EqualTo(2));
-				Assert.That(queuedProjects[0], Is.EqualTo("projb"), "First file");
-				Assert.That(queuedProjects[1], Is.EqualTo("proja"), "Second file");
-			}
+			// Verify
+			Assert.That(queuedProjects.Length, Is.EqualTo(2));
+			Assert.That(queuedProjects[0], Is.EqualTo("projb"), "First file");
+			Assert.That(queuedProjects[1], Is.EqualTo("proja"), "Second file");
 		}
 
 		[TestCase("proja", new[] { "proja", "projd", "projc", "projb"})]
 		[TestCase("projb", new[] { "projb", "proja", "projd", "projc"})]
 		[TestCase("projc", new[] { "projc", "projb", "proja", "projd"})]
 		[TestCase("projd", new[] { "projd", "projc", "projb", "proja"})]
-		public void QueuedProjects_PriorityProjectReturnsPriorityBeforeNext(string prioProj,
+		public void QueuedProjects_PriorityProject_ReturnsPriorityBeforeNext(string prioProj,
 			string[] expectedProjects)
 		{
 			// Setup
@@ -143,7 +133,7 @@ namespace LfMerge.Tests.Queues
 		[TestCase("projb")]
 		[TestCase("projc")]
 		[TestCase("projd")]
-		public void QueuedProjects_SingleProjectReturnsOnlySingleProj(string singleProj)
+		public void QueuedProjects_SingleProject_ReturnsOnlySingleProj(string singleProj)
 		{
 			// Setup
 			Options.ParseCommandLineArgs(new[] { "--project", singleProj });
@@ -161,7 +151,7 @@ namespace LfMerge.Tests.Queues
 
 		// test single project if that project has nothing in queue
 		[Test]
-		public void QueuedProjects_SingleProjectEmptyReturnsEmpty()
+		public void QueuedProjects_SingleProjectEmpty_ReturnsEmpty()
 		{
 			// Setup
 			Options.ParseCommandLineArgs(new[] { "--project", "proja" });
@@ -178,214 +168,180 @@ namespace LfMerge.Tests.Queues
 		}
 
 		[Test]
-		public void NextQueueWithWork_AllQueuesEmptyReturnsNull()
+		public void NextQueueWithWork_AllQueuesEmpty_ReturnsNull()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				// Exercise
-				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
+			// Exercise
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
-				// Verify
-				Assert.That(sut, Is.Null);
-			}
+			// Verify
+			Assert.That(sut, Is.Null);
 		}
 
-# if OLD_QUEUES
 		[Test]
 		public void NextQueueWithWork_ReturnsNonEmptyQueue()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
-				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
+			var syncQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Synchronize);
+			File.WriteAllText(Path.Combine(syncQueueDir, "projz"), string.Empty);
 
-				// Exercise
-				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
+			// Exercise
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
-				// Verify
-				Assert.That(sut, Is.Not.Null);
-				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
-			}
+			// Verify
+			Assert.That(sut, Is.Not.Null);
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Synchronize));
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
 		[Test]
-		public void NextQueueWithWork_CurrentNonEmptyReturnsCurrent()
+		public void NextQueueWithWork_CurrentNonEmpty_ReturnsCurrent()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
-				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
-				// Exercise
-				var sut = Queue.GetNextQueueWithWork(ActionNames.Send);
+			// Exercise
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Edit);
 
-				// Verify
-				Assert.That(sut, Is.Not.Null);
-				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
-			}
+			// Verify
+			Assert.That(sut, Is.Not.Null);
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
 		[Test]
-		public void NextQueueWithWork_NonEmptyQueueWrapAround()
+		public void NextQueueWithWork_NonEmptyQueue_WrapAround()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var mergeQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Merge);
-				File.WriteAllText(Path.Combine(mergeQueueDir, "projz"), string.Empty);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
-				// Exercise
-				var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
+			// Exercise
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Commit);
 
-				// Verify
-				Assert.That(sut, Is.Not.Null);
-				Assert.That(sut.Name, Is.EqualTo(QueueNames.Merge));
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
-			}
+			// Verify
+			Assert.That(sut, Is.Not.Null);
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
 		[Test]
-		public void NextQueueWithWork_SingleQueueReturnsNullIfCurrentEmpty()
+		public void NextQueueWithWork_SingleQueue_ReturnsNullIfCurrentEmpty()
 		{
 			// Setup
-			Options.ParseCommandLineArgs(new[] { "--queue", "send" });
+			Options.ParseCommandLineArgs(new[] { "--queue", "edit" });
 
-			using (var tempDir = new TemporaryFolder("NextQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var commitQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Commit);
-				File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
+			var commitQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
 
-				// Exercise
-				var sut = Queue.GetNextQueueWithWork(ActionNames.Send);
+			// Exercise
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Edit);
 
-				// Verify
-				Assert.That(sut, Is.Null);
-			}
+			// Verify
+			Assert.That(sut, Is.Null);
 		}
 
 		[Test]
-		public void FirstQueueWithWork_AllQueuesEmptyReturnsNull()
+		public void FirstQueueWithWork_AllQueuesEmpty_ReturnsNull()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				// Exercise
-				var sut = Queue.FirstQueueWithWork;
+			// Exercise
+			var sut = Queue.FirstQueueWithWork;
 
-				// Verify
-				Assert.That(sut, Is.Null);
-			}
+			// Verify
+			Assert.That(sut, Is.Null);
 		}
 
 		[Test]
 		public void FirstQueueWithWork_ReturnsNonEmptyQueue()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("FirstQueueWithWork"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
-				File.WriteAllText(Path.Combine(sendQueueDir, "projz"), string.Empty);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
-				// Exercise
-				var sut = Queue.FirstQueueWithWork;
+			// Exercise
+			var sut = Queue.FirstQueueWithWork;
 
-				// Verify
-				Assert.That(sut, Is.Not.Null);
-				Assert.That(sut.Name, Is.EqualTo(QueueNames.Send));
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
-			}
+			// Verify
+			Assert.That(sut, Is.Not.Null);
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
 		[Test]
 		public void EnqueueProject_Works()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("EnqueueProject"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
-				var sut = Queue.GetQueue(QueueNames.Commit);
+			Queue.CreateQueueDirectories(_env.Settings);
+			var sut = Queue.GetQueue(QueueNames.Edit);
 
-				// Exercise
-				sut.EnqueueProject("foo");
+			// Exercise
+			sut.EnqueueProject("foo");
 
-				// Verify
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
+			// Verify
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
 
-				var queueWithWork = Queue.FirstQueueWithWork;
-				Assert.That(queueWithWork, Is.Not.Null);
-				Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Commit));
-				Assert.That(queueWithWork.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
-				var queuedProjectFile = Path.Combine(_env.Settings.GetQueueDirectory(QueueNames.Commit), "foo");
-				Assert.That(File.Exists(queuedProjectFile), Is.True);
-			}
+			var queueWithWork = Queue.FirstQueueWithWork;
+			Assert.That(queueWithWork, Is.Not.Null);
+			Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(queueWithWork.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
+			var queuedProjectFile = Path.Combine(_env.Settings.GetQueueDirectory(QueueNames.Edit), "foo");
+			Assert.That(File.Exists(queuedProjectFile), Is.True);
 		}
 
 		[Test]
 		public void DequeueProject_Works()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("DequeueProject"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var sendQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Send);
-				File.WriteAllText(Path.Combine(sendQueueDir, "foo"), string.Empty);
-				var sut = Queue.GetQueue(QueueNames.Send);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			File.WriteAllText(Path.Combine(editQueueDir, "foo"), string.Empty);
+			var sut = Queue.GetQueue(QueueNames.Edit);
 
-				// Exercise
-				sut.DequeueProject("foo");
+			// Exercise
+			sut.DequeueProject("foo");
 
-				// Verify
-				Assert.That(sut.QueuedProjects, Is.EquivalentTo(new string[] { }));
-				Assert.That(File.Exists(Path.Combine(sendQueueDir, "foo")), Is.False);
-			}
+			// Verify
+			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new string[] { }));
+			Assert.That(File.Exists(Path.Combine(editQueueDir, "foo")), Is.False);
 		}
 
 		[Test]
-		public void DequeueProject_NonExistingProjectIgnored()
+		public void DequeueProject_NonExistingProject_Ignored()
 		{
 			// Setup
-			using (var tempDir = new TemporaryFolder("DequeueProject"))
-			{
-				Queue.CreateQueueDirectories(_env.Settings);
+			Queue.CreateQueueDirectories(_env.Settings);
 
-				var sut = Queue.GetQueue(QueueNames.Receive);
+			var sut = Queue.GetQueue(QueueNames.Synchronize);
 
-				// Exercise/Verify
-				Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
-			}
+			// Exercise/Verify
+			Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
 		}
 
-		[TestCase(QueueNames.Merge, typeof(UpdateFdoFromMongoDbAction))]
-		[TestCase(QueueNames.Commit, typeof(CommitAction))]
-		[TestCase(QueueNames.Receive, typeof(ReceiveAction))]
-		[TestCase(QueueNames.Send, typeof(SendAction))]
+		[TestCase(QueueNames.Edit, typeof(UpdateFdoFromMongoDbAction))]
+		[TestCase(QueueNames.Synchronize, typeof(SynchronizeAction))]
 		public void CurrentAction_Works(QueueNames queueName, Type expectedType)
 		{
 			var sut = Queue.GetQueue(queueName);
 
 			Assert.That(sut.CurrentAction, Is.TypeOf(expectedType));
 		}
-# endif
 	}
 }
 

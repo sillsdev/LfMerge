@@ -78,9 +78,8 @@ namespace LfMerge.Tests
 			}
 		}
 
-		[TestCase(QueueNames.Commit, "commitqueue")]
-		[TestCase(QueueNames.Edit, "mergequeue")]
-		[TestCase(QueueNames.Synchronize, "receivequeue")]
+		[TestCase(QueueNames.Edit, "editqueue")]
+		[TestCase(QueueNames.Synchronize, "syncqueue")]
 		[TestCase(QueueNames.None, null)]
 		public void GetQueueDirectory_Correct(QueueNames queue, string expectedDir)
 		{
