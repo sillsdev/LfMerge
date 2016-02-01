@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Chorus.Model;
 using IniParser.Model;
 using LfMerge.LanguageForge.Model;
@@ -149,34 +151,57 @@ namespace LfMerge.Tests
 			_receivedData.Add(data);
 			return true;
 		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId key, string collectionName)
+		{
+			_receivedData.Add(data);
+			return true;
+		}
 	}
 
 	public class MongoConnectionDoubleThatStoresData: IMongoConnection
 	{
-		private Dictionary<string, Dictionary<Guid, object>> _storedData = new Dictionary<string, Dictionary<Guid, object>>();
+		private Dictionary<string, Dictionary<Guid, object>> _storedDataByGuid = new Dictionary<string, Dictionary<Guid, object>>();
+		private Dictionary<string, Dictionary<ObjectId, object>> _storedDataByObjectId = new Dictionary<string, Dictionary<ObjectId, object>>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
-		public Dictionary<string, Dictionary<Guid, object>> StoredData { get { return _storedData; } }
+		public Dictionary<string, Dictionary<Guid, object>> StoredDataByGuid { get { return _storedDataByGuid; } }
+		public Dictionary<string, Dictionary<ObjectId, object>> StoredDataByObjectId { get { return _storedDataByObjectId; } }
 
-		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
+		private void EnsureCollectionExists(string collectionName)
 		{
 			try
 			{
-				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+				_storedDataByGuid.Add(collectionName, new Dictionary<Guid, object>());
 			}
 			catch (ArgumentException)
 			{
 				// It's fine if it already exists
 			}
+			try
+			{
+				_storedDataByObjectId.Add(collectionName, new Dictionary<ObjectId, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
+		}
+
+		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
+		{
+			EnsureCollectionExists(collectionName);
 			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
+			ObjectId id = mockData.GetValue("_id", ObjectId.Empty).AsObjectId; // TODO: Breakpoint this and check if "_id" is the right name
 			Guid guid = Guid.Parse(guidStr);
 			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
-			_storedData[collectionName][guid] = data;
+			_storedDataByGuid[collectionName][guid] = data;
+			_storedDataByObjectId[collectionName][id] = data;
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
-			var fakeCollection = _storedData[collectionName];
+			var fakeCollection = _storedDataByGuid[collectionName];
 			foreach (object item in fakeCollection.Values)
 			{
 				yield return (TDocument)item;
@@ -199,15 +224,39 @@ namespace LfMerge.Tests
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
-			try
+			EnsureCollectionExists(collectionName);
+			_storedDataByGuid[collectionName][guid] = data;
+			// Fetching the ObjectId is more complicated, since we have to use reflection to find it
+			PropertyInfo pi = data.GetType().GetProperty("Id", typeof(ObjectId));
+			if (pi == null) // Also try fetching by property type if it didn't have the name Id
 			{
-				_storedData.Add(collectionName, new Dictionary<Guid, object>());
+				pi = data.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.PropertyType == typeof(ObjectId));
 			}
-			catch (ArgumentException)
+			if (pi != null)
+				_storedDataByObjectId[collectionName][(ObjectId)pi.GetValue(data)] = data;
+			return true;
+		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
+		{
+			EnsureCollectionExists(collectionName);
+			_storedDataByObjectId[collectionName][id] = data;
+			// Fetching the Guid is more complicated, since we have to use reflection to find it
+			PropertyInfo pi = data.GetType().GetProperty("Guid", new Type[] {typeof(Guid), typeof(Nullable<Guid>)});
+			if (pi == null) // Also try fetching by property type if it didn't have the name Guid
 			{
-				// It's fine if it already exists
+				pi = data.GetType().GetProperties().FirstOrDefault(propInfo =>
+					propInfo.PropertyType == typeof(Guid) ||
+					propInfo.PropertyType == typeof(Nullable<Guid>)
+				);
 			}
-			_storedData[collectionName][guid] = data;
+			if (pi != null)
+			{
+				Guid guid = pi.PropertyType == typeof(Guid) ?
+					(Guid)pi.GetValue(data) :
+					(pi.GetValue(data) as Nullable<Guid>).GetValueOrDefault();
+				_storedDataByGuid[collectionName][guid] = data;
+			}
 			return true;
 		}
 	}

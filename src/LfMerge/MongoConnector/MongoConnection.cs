@@ -122,6 +122,9 @@ namespace LfMerge.MongoConnector
 					case "LfPicture":
 						updates.Add(builder.Set(prop.Name, (List<LfPicture>)prop.GetValue(doc)));
 						break;
+					case "LfOptionListItem":
+						updates.Add(builder.Set(prop.Name, (List<LfOptionListItem>)prop.GetValue(doc)));
+						break;
 					default:
 						updates.Add(builder.Set(prop.Name, (List<object>)prop.GetValue(doc)));
 						break;
@@ -135,6 +138,8 @@ namespace LfMerge.MongoConnector
 			return builder.Combine(updates);
 		}
 
+		// TODO: These two UpdateRecord overloads share MOST of their code. Refactor to one method, called by
+		// both of them with a different FilterDefinition.
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
 			// TODO: This "update this document in this MongoDB collection" code was moved from UpdateMongoDbFromFdoAction. Fix it up so it works.
@@ -150,6 +155,25 @@ namespace LfMerge.MongoConnector
 			//var ignored = collection.FindOneAndReplaceAsync(filter, data).Result;  // Use this one to replace the WHOLE entry wholesale
 			var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // Use this one to update fields within the entry. I think this one is preferred.
 			Console.WriteLine("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
+
+			return true;
+		}
+
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
+		{
+			// TODO: This "update this document in this MongoDB collection" code was moved from UpdateMongoDbFromFdoAction. Fix it up so it works.
+			IMongoDatabase mongoDb = GetProjectDatabase(project); // TODO: If this is slow, might want to cache it in the instance
+			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
+			UpdateDefinition<TDocument> update = BuildUpdate(data);
+			FilterDefinition<TDocument> filter = filterBuilder.Eq("_id", id);
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
+			Console.WriteLine("About to save {0} with ObjectID {1}", typeof(TDocument), id);
+			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
+			//var ignored = collection.FindOneAndReplaceAsync(filter, data).Result;  // Use this one to replace the WHOLE entry wholesale
+			var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // Use this one to update fields within the entry. I think this one is preferred.
+			Console.WriteLine("Done saving {0} with ObjectID {1} into Mongo DB {2}", typeof(TDocument), id, mongoDb.DatabaseNamespace.DatabaseName);
 
 			return true;
 		}
