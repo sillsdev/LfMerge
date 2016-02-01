@@ -60,7 +60,7 @@ namespace LfMerge
 			get
 			{
 				return SingleQueue != QueueNames.None ? SingleQueue :
-					PriorityQueue != QueueNames.None ? PriorityQueue : QueueNames.Merge;
+					PriorityQueue != QueueNames.None ? PriorityQueue : QueueNames.Edit;
 			}
 		}
 
@@ -100,12 +100,12 @@ namespace LfMerge
 			{
 				case QueueNames.Commit:
 					return ActionNames.Commit;
-				case QueueNames.Merge:
+				case QueueNames.Edit:
 					return ActionNames.UpdateFdoFromMongoDb;
 				case QueueNames.None:
 					break;
-				case QueueNames.Receive:
-					return ActionNames.Receive;
+				case QueueNames.Synchronize:
+					return ActionNames.Synchronize;
 				case QueueNames.Send:
 					return ActionNames.Send;
 			}
@@ -117,15 +117,15 @@ namespace LfMerge
 			switch (action)
 			{
 				case ActionNames.UpdateFdoFromMongoDb:
-					return QueueNames.Merge;
+					return QueueNames.Edit;
 				case ActionNames.Commit:
 					return QueueNames.Commit;
-				case ActionNames.Receive:
-					return QueueNames.Receive;
+				case ActionNames.Synchronize:
+					return QueueNames.Synchronize;
 				case ActionNames.Send:
 					return QueueNames.Send;
 				case ActionNames.None:
-				case ActionNames.Merge:
+				case ActionNames.Edit:
 				case ActionNames.UpdateMongoDbFromFdo:
 					break;
 			}

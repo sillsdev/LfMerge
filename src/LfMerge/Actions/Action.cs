@@ -25,8 +25,8 @@ namespace LfMerge.Actions
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
 			containerBuilder.RegisterType<CommitAction>().Keyed<IAction>(ActionNames.Commit).SingleInstance();
-			containerBuilder.RegisterType<MergeAction>().Keyed<IAction>(ActionNames.Merge).SingleInstance();
-			containerBuilder.RegisterType<ReceiveAction>().Keyed<IAction>(ActionNames.Receive).SingleInstance();
+			containerBuilder.RegisterType<EditAction>().Keyed<IAction>(ActionNames.Edit).SingleInstance();
+			containerBuilder.RegisterType<SynchronizeAction>().Keyed<IAction>(ActionNames.Synchronize).SingleInstance();
 			containerBuilder.RegisterType<SendAction>().Keyed<IAction>(ActionNames.Send).SingleInstance();
 			containerBuilder.RegisterType<UpdateFdoFromMongoDbAction>().Keyed<IAction>(ActionNames.UpdateFdoFromMongoDb).SingleInstance();
 			containerBuilder.RegisterType<UpdateMongoDbFromFdo>().Keyed<IAction>(ActionNames.UpdateMongoDbFromFdo).SingleInstance();

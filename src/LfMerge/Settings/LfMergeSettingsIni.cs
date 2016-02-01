@@ -65,9 +65,9 @@ namespace LfMerge.Settings
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
 			QueueDirectories = new string[queueCount];
 			QueueDirectories[(int)QueueNames.None] = null;
-			QueueDirectories[(int)QueueNames.Merge] = Path.Combine(baseDir, "mergequeue");
+			QueueDirectories[(int)QueueNames.Edit] = Path.Combine(baseDir, "mergequeue");
 			QueueDirectories[(int)QueueNames.Commit] = Path.Combine(baseDir, "commitqueue");
-			QueueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
+			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(baseDir, "receivequeue");
 			QueueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
 
 			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);

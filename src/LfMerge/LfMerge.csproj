@@ -109,9 +109,6 @@
     <Compile Include="Actions\UpdateFdoFromMongoDbAction.cs" />
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\CommitAction.cs" />
-    <Compile Include="Actions\ReceiveAction.cs" />
-    <Compile Include="Actions\MergeAction.cs" />
-    <Compile Include="Actions\SendAction.cs" />
     <Compile Include="Actions\UpdateMongoDbFromFdo.cs" />
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="LanguageDepotProject.cs" />
@@ -166,6 +163,8 @@
     <Compile Include="LanguageForge\Model\LfOptionList.cs" />
     <Compile Include="LanguageForge\Model\LfOptionListItem.cs" />
     <Compile Include="MagicStrings.cs" />
+    <Compile Include="Actions\SynchronizeAction.cs" />
+    <Compile Include="Actions\EditAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />
@@ -196,12 +195,9 @@
   <Target Name="AfterBuild">
     <!-- Copy .mdb files for all files in output directory -->
     <ItemGroup>
-      <FilesInOutput Include="$(OutputPath)/*.*"/>
-      <FilesToCopy Include="@(FilesInOutput->'../../lib/%(Filename)%(Extension).mdb')"
-        Condition="Exists('../../lib/%(Filename)%(Extension).mdb')"/>
+      <FilesInOutput Include="$(OutputPath)/*.*" />
+      <FilesToCopy Include="@(FilesInOutput-&gt;'../../lib/%(Filename)%(Extension).mdb')" Condition="Exists('../../lib/%(Filename)%(Extension).mdb')" />
     </ItemGroup>
-    <Copy SourceFiles="@(FilesToCopy)"
-      DestinationFolder="$(OutputPath)"
-      SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true"/>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>
