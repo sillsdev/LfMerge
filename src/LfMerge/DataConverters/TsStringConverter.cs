@@ -21,7 +21,7 @@ namespace LfMerge.DataConverters
 			_wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
 		}
 
-		public string SafeTsStringText(ITsString tss)
+		public static string SafeTsStringText(ITsString tss)
 		{
 			if (tss == null)
 				return null;

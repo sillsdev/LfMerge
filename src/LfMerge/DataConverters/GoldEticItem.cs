@@ -89,6 +89,26 @@ namespace LfMerge.DataConverters
 				return NameByWs(ws);
 			// NOTE: Doesn't handle cases where some ancestors have names for that writing system but others don't.
 		}
+
+		public string AbbrevByWs(string ws)
+		{
+			string name;
+			if (Abbrevs.TryGetValue(SimplifyWs(ws), out name))
+				return name;
+			else
+				return String.Empty;
+		}
+
+		public string ORCDelimitedAbbrevByWs(string ws)
+		{
+			ws = SimplifyWs(ws);
+			string ORC = "\ufffc";
+			if (Parent != null)
+				return Parent.ORCDelimitedAbbrevByWs(ws) + ORC + AbbrevByWs(ws);
+			else
+				return AbbrevByWs(ws);
+			// NOTE: Doesn't handle cases where some ancestors have names for that writing system but others don't.
+		}
 	}
 }
 

@@ -51,6 +51,7 @@ namespace LfMerge.Tests.Actions
 			_env.Dispose();
 		}
 
+		// TODO: Need to switch this test over to a Mongo double that keeps data, so it can handle grammar info
 		[Test]
 		public void Action_Should_UpdateDefinitions()
 		{

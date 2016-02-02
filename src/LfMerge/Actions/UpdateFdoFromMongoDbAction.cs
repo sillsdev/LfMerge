@@ -29,12 +29,15 @@ namespace LfMerge.Actions
 		private MongoProjectRecord _projectRecord;
 
 		private ILfProjectConfig _lfProjectConfig;
+		private LfOptionList _lfGrammar;
+		private Dictionary<string, LfOptionListItem> _lfGrammarByKey;
 
 		private ILexEntryRepository _entryRepo;
 		private ILexExampleSentenceRepository _exampleRepo;
 		private ICmPictureRepository _pictureRepo;
 		private ILexPronunciationRepository _pronunciationRepo;
 		private ILexSenseRepository _senseRepo;
+		private IPartOfSpeechRepository _posRepo;
 		private ICmTranslationRepository _translationRepo;
 		private ILexEntryFactory _entryFactory;
 		private ILexExampleSentenceFactory _exampleFactory;
@@ -100,6 +103,7 @@ namespace LfMerge.Actions
 			_pictureRepo = _servLoc.GetInstance<ICmPictureRepository>();
 			_pronunciationRepo = _servLoc.GetInstance<ILexPronunciationRepository>();
 			_senseRepo = _servLoc.GetInstance<ILexSenseRepository>();
+			_posRepo = _servLoc.GetInstance<IPartOfSpeechRepository>();
 			_translationRepo = _servLoc.GetInstance<ICmTranslationRepository>();
 			_entryFactory = _servLoc.GetInstance<ILexEntryFactory>();
 			_exampleFactory = _servLoc.GetInstance<ILexExampleSentenceFactory>();
@@ -115,16 +119,18 @@ namespace LfMerge.Actions
 				if (_freeTranslationType == null)
 					_freeTranslationType = _cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
-/*
+
+			_lfGrammar = GetGrammar(project);
+			_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
+/* Comment this out once we're sure it works */
 			Console.WriteLine("Grammar follows:");
-			LfOptionList grammar = GetGrammar(project);
-			foreach (LfOptionListItem item in grammar.Items)
+			foreach (LfOptionListItem item in _lfGrammar.Items)
 			{
 				Console.WriteLine("Grammar item {0} has abbrev {1} and GUID {2}",
 					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
 				);
 			}
-*/
+/* */
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 			{
@@ -427,7 +433,24 @@ namespace LfMerge.Actions
 					string userWs = _projectRecord.InterfaceLanguageCode;
 					if (String.IsNullOrEmpty(userWs))
 						userWs = "en";
-					pos = posConverter.FromName(lfSense.PartOfSpeech.ToString(), userWs);
+					// pos = posConverter.FromAbbrevAndName(lfSense.PartOfSpeech.ToString(), userWs);
+					string posStr = lfSense.PartOfSpeech.ToString();
+					LfOptionListItem lfGrammarEntry;
+					if (_lfGrammarByKey.TryGetValue(posStr, out lfGrammarEntry))
+						pos = OptionListItemToPartOfSpeech(lfGrammarEntry, _cache.LanguageProject.PartsOfSpeechOA, _posRepo);
+					else
+					{
+						// TODO: Make this a Logger.Warning instead
+						Console.WriteLine("WARNING: Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
+							posStr,
+							lfSense.Gloss,
+							(lfSense.Guid != null) ? lfSense.Guid.ToString() : "(no GUID)",
+							MagicStrings.LfOptionListCodeForGrammaticalInfo,
+							_lfProject.LfProjectCode,
+							posStr
+						);
+						pos = posConverter.FromAbbrevAndName(posStr, null, userWs);
+					}
 				}
 				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
 				{
@@ -445,7 +468,7 @@ namespace LfMerge.Actions
 							// pos of derivational affixes. Currently LF doesn't handle that, so we do nothing
 							// with the secondary pos.
 							// TODO: Once LF handles secondary / "To" parts of speech, do the right thing here.
-							// sandboxMsa.SecondaryPOS = pos;
+							// sandboxMsa.SecondaryPOS = GetSecondaryPosFromLfSomehow();
 						}
 						fdoSense.SandboxMSA = sandboxMsa;
 					}
@@ -587,6 +610,60 @@ namespace LfMerge.Actions
 			if (!_senseRepo.TryGetObject(guid, out result))
 				result = _senseFactory.Create(guid, owner);
 			return result;
+		}
+
+		private void UpdateFdoGrammerFromLfGrammar(LfOptionList lfGrammar)
+		{
+			ICmPossibilityList fdoGrammar = _cache.LanguageProject.PartsOfSpeechOA;
+			var posRepo = _servLoc.GetInstance<IPartOfSpeechRepository>();
+			foreach (LfOptionListItem item in lfGrammar.Items)
+			{
+				IPartOfSpeech pos = OptionListItemToPartOfSpeech(item, fdoGrammar, posRepo);
+				// TODO: Either make this a log message or remove it (and don't save the value of the above function)
+				Console.WriteLine("Updated FDO grammar entry with PoS {0}", pos.AbbrAndName);
+			}
+		}
+
+		private IPartOfSpeech OptionListItemToPartOfSpeech(LfOptionListItem item, ICmPossibilityList posList, IPartOfSpeechRepository posRepo)
+		{
+			IPartOfSpeech pos = null;
+			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+			if (item.Guid != null)
+			{
+				if (posRepo.TryGetObject(item.Guid.Value, out pos))
+				{
+					// Any fields that are different need to be set in the FDO PoS object
+					pos.Abbreviation.SetAnalysisDefaultWritingSystem(item.Abbreviation);
+					pos.Name.SetAnalysisDefaultWritingSystem(item.Value);
+					// pos.Description won't be updated as that field is currently not kept in LF
+					return pos;
+				}
+				else
+				{
+					// No pos with that GUID, so we might have to create one
+					var converter = new PartOfSpeechConverter(_cache);
+					pos = converter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
+					return pos;
+				}
+			}
+			else
+			{
+				// Don't simply assume FDO doesn't know about it until we search by name and abbreviation.
+				// LF PoS keys are English *only* and never translated. Try that first.
+				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Key, wsEn) as IPartOfSpeech;
+				if (pos != null)
+					return pos;
+				// Part of speech name, though, should be searched in the LF analysis language
+				// TODO: Using interface language as a fallback, but get the analysis language once it's available
+				int wsId = _cache.WritingSystemFactory.GetWsFromStr(_projectRecord.InterfaceLanguageCode);
+				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Value, wsId) as IPartOfSpeech;
+				if (pos != null)
+					return pos;
+				// If we still haven't found it, we'll need to create one
+				var converter = new PartOfSpeechConverter(_cache);
+				pos = converter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
+				return pos;
+			}
 		}
 
 		protected override ActionNames NextActionName

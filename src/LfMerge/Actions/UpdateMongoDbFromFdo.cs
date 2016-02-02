@@ -27,6 +27,8 @@ namespace LfMerge.Actions
 		private FdoCache _cache;
 		private IFdoServiceLocator _servLoc;
 		private IFwMetaDataCacheManaged _fdoMetaData;
+		private ICmPossibilityList _fdoPartsOfSpeech;
+		private LfOptionList _lfGrammar;
 		private CustomFieldConverter _converter;
 		private IMongoConnection _connection;
 
@@ -69,6 +71,10 @@ namespace LfMerge.Actions
 				Console.WriteLine("***WARNING:*** Don't have access to the FW metadata; custom fields may fail!");
 			}
 			_converter = new CustomFieldConverter(_cache);
+
+			// Update grammar before updating entries, so we can reference GUIDs in parts of speech
+			_fdoPartsOfSpeech = _cache.LanguageProject.PartsOfSpeechOA;
+			_lfGrammar = UpdateGrammarOptionListFromFdo(project, _fdoPartsOfSpeech);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
@@ -136,18 +142,16 @@ namespace LfMerge.Actions
 			if (fdoSense.MorphoSyntaxAnalysisRA != null)
 			{
 				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA);
-				if (pos == null)
-				{
+				// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
+				// writing system alternatives, and simplify the process of getting a real string
+				// (as opposed to a TsString) from it.
+				int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+				if (pos == null || pos.Abbreviation == null)
 					lfSense.PartOfSpeech = null;
-					lfSense.PartOfSpeechGuid = null;
-				}
 				else
-				{
-					lfSense.PartOfSpeech = LfStringField.FromString(pos.NameHierarchyString);
-					// Or: lfSense.PartOfSpeech = LfStringField.FromString(pos.Name.BestAnalysisVernacularAlternative.Text);
-					lfSense.PartOfSpeechGuid = pos.Guid; // TODO: This should eventually end up in the project config, not in the entry
-					// TODO: Should we use the GUID of the MSA instead? Think about it.
-				}
+					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
+					lfSense.PartOfSpeech = LfStringField.FromString(
+						PartOfSpeechConverter.ToLfPosStringKey(pos, _lfGrammar, wsEn));
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
@@ -440,6 +444,103 @@ namespace LfMerge.Actions
 			fdoEntry.VisibleVariantEntryRefs;
 
 			*/
+		}
+
+		private LfOptionListItem PartOfSpeechToOptionListItem(IPartOfSpeech pos)
+		{
+			var item = new LfOptionListItem();
+			SetOptionListItemFromPartOfSpeech(item, pos);
+			return item;
+		}
+
+		private void SetOptionListItemFromPartOfSpeech(LfOptionListItem item, IPartOfSpeech pos)
+		{
+			const char ORC = '\xfffc';
+			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+			item.Abbreviation = ToStringOrNull(pos.Abbreviation.BestAnalysisVernacularAlternative);
+			item.Key = ToStringOrNull(pos.Abbreviation.get_String(wsEn)); // Key is fixed and should not change
+			item.Value = ToStringOrNull(pos.Name.BestAnalysisVernacularAlternative);
+			item.Guid = pos.Guid;
+		}
+
+		// Use this one when there's no original grammar list in LF
+		private LfOptionList PartsOfSpeechToOptionList(ICmPossibilityList partsOfSpeech)
+		{
+			var result = new LfOptionList();
+			result.Items = partsOfSpeech.ReallyReallyAllPossibilities
+				.OfType<IPartOfSpeech>()
+				.Select(pos => PartOfSpeechToOptionListItem(pos))
+				.ToList();
+			result.DateCreated = result.DateModified = DateTime.UtcNow;
+			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+			result.Name = MagicStrings.LfOptionListNameForGrammaticalInfo;
+			result.CanDelete = false;
+			result.DefaultItemKey = null;
+			return result;
+		}
+
+		// Use this one when there's a grammar list already present in LF
+		private LfOptionList PrepareGrammarOptionListUpdate(ICmPossibilityList partsOfSpeech, LfOptionList lfGrammarList)
+		{
+			if (lfGrammarList == null)
+			{
+				return PartsOfSpeechToOptionList(partsOfSpeech);
+			}
+			Dictionary<Guid, LfOptionListItem> lfGrammarByGuid = lfGrammarList.Items
+				.Where(item => item.Guid != null)
+				.ToDictionary(item => item.Guid.Value, item => item);
+			Dictionary<Guid, IPartOfSpeech> fdoGrammarByGuid = partsOfSpeech.ReallyReallyAllPossibilities
+				.OfType<IPartOfSpeech>()
+				// .Where(pos => pos.Guid != null) // Not needed as IPartOfSpeech GUIDs are not nullable
+				.ToDictionary(pos => pos.Guid, pos => pos);
+
+			foreach (IPartOfSpeech pos in fdoGrammarByGuid.Values)
+			{
+				LfOptionListItem correspondingItem;
+				if (lfGrammarByGuid.TryGetValue(pos.Guid, out correspondingItem))
+				{
+					SetOptionListItemFromPartOfSpeech(correspondingItem, pos);
+				}
+				else
+				{
+					correspondingItem = PartOfSpeechToOptionListItem(pos);
+					lfGrammarByGuid.Add(pos.Guid, correspondingItem);
+				}
+			}
+
+			// Clone old grammar list into new list, changing only the items
+			// ... We could use a MongoDB update query for this, but that would
+			// require new code in MongoConnection and MongoConnectionDouble.
+			// TODO: When appropriate, write that new code. Until then, we clone manually.
+			var newOptionList = new LfOptionList();
+			newOptionList.CanDelete = lfGrammarList.CanDelete;
+			newOptionList.Code = lfGrammarList.Code;
+			newOptionList.DateCreated = lfGrammarList.DateCreated;
+			newOptionList.DateModified = DateTime.UtcNow;
+			newOptionList.DefaultItemKey = lfGrammarList.DefaultItemKey;
+			newOptionList.Name = lfGrammarList.Name;
+			// We filter by "Does FDO have a PoS with corresponding GUID?" because if it doesn't,
+			// then that part of speech was probably deleted in FDO, so we should delete it here.
+			newOptionList.Items = lfGrammarByGuid.Values
+				.Where(item => fdoGrammarByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
+				.ToList();
+			return newOptionList;
+		}
+
+		private LfOptionList UpdateGrammarOptionListFromFdo(ILfProject project, ICmPossibilityList partsOfSpeech)
+		{
+			// _connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
+			LfOptionList lfGrammarList = _connection
+				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(list => list.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			LfOptionList newGrammarList = PrepareGrammarOptionListUpdate(partsOfSpeech, lfGrammarList);
+			_connection.UpdateRecord<LfOptionList>(
+				project,
+				newGrammarList,
+				newGrammarList.Id,
+				MagicStrings.LfCollectionNameForOptionLists
+			);
+			return newGrammarList;
 		}
 
 		protected override ActionNames NextActionName
