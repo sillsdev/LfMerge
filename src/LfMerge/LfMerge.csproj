@@ -166,6 +166,7 @@
     <Compile Include="LanguageForge\Model\LfOptionList.cs" />
     <Compile Include="LanguageForge\Model\LfOptionListItem.cs" />
     <Compile Include="MagicStrings.cs" />
+    <Compile Include="DataConverters\TsStringConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />
