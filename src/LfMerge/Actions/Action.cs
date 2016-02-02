@@ -77,6 +77,7 @@ namespace LfMerge.Actions
 			project.State.SRState = StateForCurrentAction;
 			try
 			{
+				EnsureClone(project);
 				DoRun(project);
 			}
 			// REVIEW: catch any exception and set state to hold?

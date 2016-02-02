@@ -11,22 +11,30 @@ namespace LfMerge.Tests
 	public class OptionsTests
 	{
 		[TestCase(new string[0],
-			"all", QueueNames.None, null, QueueNames.None, TestName = "No arguments")]
+			null, TestName = "No arguments")]
 		[TestCase(new[] { "-p", "ProjA" },
-			"ProjA", QueueNames.None, null, QueueNames.None, TestName = "Prio project specified")]
-		public void ParseArgs(string[] args, string expectedPrioProj,
-			QueueNames expectedPrioQueue, string expectedSingleProj,
-			QueueNames expectedSingleQueue)
+			"ProjA", TestName = "Prio project specified")]
+		public void ParseArgs(string[] args,
+			string expectedPrioProj)
 		{
 			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
 			Assert.That(sut.PriorityProject, Is.EqualTo(expectedPrioProj));
-			Assert.That(sut.PriorityProject, Is.EqualTo(expectedSingleProj));
+		}
+
+		[TestCase(new[] {"-q", "NotAQueue"}, null,
+			TestName = "Invalid args")]
+		public void ParseInvalidArgs(string[] args, string expectedOptions)
+		{
+			var sut = Options.ParseCommandLineArgs(args);
+
+			// Verify
+			Assert.That(sut, Is.EqualTo(expectedOptions));
 		}
 
 		[TestCase(new string[0],
-			"all", false, TestName = "No arguments")]
+			null, false, TestName = "No arguments")]
 		[TestCase(new[] { "-p", "ProjA" },
 			"ProjA", false, TestName = "Prio project specified")]
 		public void FirstProjectAndStopAfterFirstProject(string[] args,

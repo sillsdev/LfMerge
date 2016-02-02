@@ -25,12 +25,11 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
-			EnsureClone(project);
 		}
 
 		protected override ActionNames NextActionName
 		{
-			get { return ActionNames.Edit; }
+			get { return ActionNames.UpdateMongoDbFromFdo; }
 		}
 
 	}

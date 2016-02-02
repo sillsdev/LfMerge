@@ -591,7 +591,7 @@ namespace LfMerge.Actions
 
 		protected override ActionNames NextActionName
 		{
-			get { return ActionNames.None; }
+			get { return ActionNames.Edit; }
 		}
 	}
 }

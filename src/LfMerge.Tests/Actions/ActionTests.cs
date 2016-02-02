@@ -50,7 +50,7 @@ namespace LfMerge.Tests.Actions
 			_env.Dispose();
 		}
 
-		[TestCase(QueueNames.Edit, new[] { ActionNames.UpdateFdoFromMongoDb })]
+		[TestCase(QueueNames.Edit, new[] { ActionNames.UpdateFdoFromMongoDb, ActionNames.Edit, ActionNames.Synchronize, ActionNames.UpdateMongoDbFromFdo })]
 		[TestCase(QueueNames.Synchronize, new[] { ActionNames.Synchronize, ActionNames.UpdateMongoDbFromFdo })]
 		public void NextAction(QueueNames queueName, ActionNames[] expectedActionNames)
 		{

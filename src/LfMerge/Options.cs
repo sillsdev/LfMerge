@@ -43,7 +43,7 @@ namespace LfMerge
 
 		public bool StopAfterFirstProject
 		{
-			get { return !string.IsNullOrEmpty(PriorityProject); }
+			get { return false; }
 		}
 
 		public ActionNames FirstAction
@@ -56,12 +56,11 @@ namespace LfMerge
 			get { return false; }
 		}
 
-		private bool AllArgumentsValid
+		private bool AllArgumentsValid(string[] args)
 		{
-			get
-			{
-				return (!string.IsNullOrEmpty(PriorityProject));
-			}
+			return (!string.IsNullOrEmpty(PriorityProject) ||
+				(args == null) ||
+				(args.Length == 0));
 		}
 
 		public ActionNames GetNextAction(ActionNames currentAction)
@@ -111,7 +110,7 @@ namespace LfMerge
 			var options = new Options();
 			if (Parser.Default.ParseArguments(args, options))
 			{
-				if (options.AllArgumentsValid && !options.ShowHelp)
+				if (options.AllArgumentsValid(args) && !options.ShowHelp)
 				{
 					Current = options;
 					return options;
