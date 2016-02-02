@@ -10,12 +10,9 @@ namespace LfMerge.Tests
 	[TestFixture]
 	public class OptionsTests
 	{
-		[TestCase(new string[0],
-			null, TestName = "No arguments")]
-		[TestCase(new[] { "-p", "ProjA" },
-			"ProjA", TestName = "Prio project specified")]
-		public void ParseArgs(string[] args,
-			string expectedPrioProj)
+		[TestCase(new string[0], null, TestName = "No arguments")]
+		[TestCase(new[] { "-p", "ProjA" }, "ProjA", TestName = "Prio project specified")]
+		public void ParseArgs(string[] args,string expectedPrioProj)
 		{
 			var sut = Options.ParseCommandLineArgs(args);
 
@@ -23,8 +20,7 @@ namespace LfMerge.Tests
 			Assert.That(sut.PriorityProject, Is.EqualTo(expectedPrioProj));
 		}
 
-		[TestCase(new[] {"-q", "NotAQueue"}, null,
-			TestName = "Invalid args")]
+		[TestCase(new[] {"-q", "NotAQueue"}, null, TestName = "Invalid args")]
 		public void ParseInvalidArgs(string[] args, string expectedOptions)
 		{
 			var sut = Options.ParseCommandLineArgs(args);
@@ -80,4 +76,3 @@ namespace LfMerge.Tests
 
 	}
 }
-

@@ -8,7 +8,7 @@ using System.IO;
 namespace LfMerge.Tests.Actions
 {
 	[TestFixture]
-	public class ReceiveActionTests
+	public class SynchronizeActionTests
 	{
 		private TestEnvironment _env;
 

@@ -116,7 +116,7 @@ namespace LfMerge.Tests.Queues
 			string[] expectedProjects)
 		{
 			// Setup
-			Options.ParseCommandLineArgs(new[] { "--priority-project", prioProj });
+			Options.ParseCommandLineArgs(new[] { "--project", prioProj });
 
 			// we use the test double here so that we don't have to wait between creating files
 			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
@@ -127,44 +127,6 @@ namespace LfMerge.Tests.Queues
 
 			// Verify
 			Assert.That(queuedProjects, Is.EquivalentTo(expectedProjects));
-		}
-
-		[TestCase("proja")]
-		[TestCase("projb")]
-		[TestCase("projc")]
-		[TestCase("projd")]
-		public void QueuedProjects_SingleProject_ReturnsOnlySingleProj(string singleProj)
-		{
-			// Setup
-			Options.ParseCommandLineArgs(new[] { "--project", singleProj });
-
-			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
-			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
-
-			// Exercise
-			var queuedProjects = sut.QueuedProjects;
-
-			// Verify
-			Assert.That(queuedProjects, Is.EquivalentTo(new[] { singleProj }));
-		}
-
-		// test single project if that project has nothing in queue
-		[Test]
-		public void QueuedProjects_SingleProjectEmpty_ReturnsEmpty()
-		{
-			// Setup
-			Options.ParseCommandLineArgs(new[] { "--project", "proja" });
-
-			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
-			sut.ProjectsForTesting = new[] { "projc", "projb", "projd" };
-
-			// Exercise
-			var queuedProjects = sut.QueuedProjects;
-
-			// Verify
-			Assert.That(queuedProjects, Is.EquivalentTo(new string[] { }));
 		}
 
 		[Test]
@@ -232,24 +194,6 @@ namespace LfMerge.Tests.Queues
 			Assert.That(sut, Is.Not.Null);
 			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
 			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
-		}
-
-		[Test]
-		public void NextQueueWithWork_SingleQueue_ReturnsNullIfCurrentEmpty()
-		{
-			// Setup
-			Options.ParseCommandLineArgs(new[] { "--queue", "edit" });
-
-			Queue.CreateQueueDirectories(_env.Settings);
-
-			var commitQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
-			File.WriteAllText(Path.Combine(commitQueueDir, "projz"), string.Empty);
-
-			// Exercise
-			var sut = Queue.GetNextQueueWithWork(ActionNames.Edit);
-
-			// Verify
-			Assert.That(sut, Is.Null);
 		}
 
 		[Test]

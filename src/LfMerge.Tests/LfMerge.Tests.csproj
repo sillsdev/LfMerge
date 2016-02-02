@@ -106,7 +106,6 @@
     <Compile Include="Actions\ActionTests.cs" />
     <Compile Include="LanguageDepotProjectTests.cs" />
     <Compile Include="BidirectionalDictionaryTests.cs" />
-    <Compile Include="Actions\ReceiveActionTests.cs" />
     <Compile Include="TestDoubles.cs" />
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
@@ -114,6 +113,7 @@
     <Compile Include="Actions\UpdateFdoFromMongoActionTests.cs" />
     <Compile Include="Actions\UpdateMongoFromFdoActionTests.cs" />
     <Compile Include="Actions\RoundTripFdoToMongoTests.cs" />
+    <Compile Include="Actions\SynchronizeActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
