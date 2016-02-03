@@ -24,7 +24,7 @@ namespace LfMerge.Tests
 		static TestEnvironment()
 		{
 			// Need to call MongoConnectionDouble.Initialize() exactly once, before any tests are run -- so do it here
-			MongoConnectionDouble.Initialize();
+			DeprecatedMongoConnectionDouble.Initialize();
 		}
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
@@ -62,9 +62,8 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
 				if (fakeMongoConnectionShouldStoreData)
-					containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
-				else
-					containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+					Console.WriteLine("Using data-storing MongoConnection for ALL tests now, don't need that bool");
+				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 

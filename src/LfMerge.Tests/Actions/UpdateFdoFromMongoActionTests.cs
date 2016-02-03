@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
 using MongoDB.Bson;
@@ -61,7 +62,7 @@ namespace LfMerge.Tests.Actions
 			string newDefinition = "New definition for this unit test";
 			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = newDefinition;
 
-			_conn.AddToMockData(data.bsonTestData);
+			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, data.bsonTestData);
 
 			// Exercise
 			sut.Run(lfProj);

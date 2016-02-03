@@ -90,7 +90,7 @@ namespace LfMerge.Tests
 		}
 	}
 
-	public class MongoConnectionDouble: IMongoConnection
+	public class DeprecatedMongoConnectionDouble: IMongoConnection
 	{
 		private List<BsonDocument> _mockData = new List<BsonDocument>();
 		private List<object> _receivedData = new List<object>();
@@ -159,7 +159,7 @@ namespace LfMerge.Tests
 		}
 	}
 
-	public class MongoConnectionDoubleThatStoresData: IMongoConnection
+	public class MongoConnectionDouble: IMongoConnection
 	{
 		private Dictionary<string, Dictionary<Guid, object>> _storedDataByGuid = new Dictionary<string, Dictionary<Guid, object>>();
 		private Dictionary<string, Dictionary<ObjectId, object>> _storedDataByObjectId = new Dictionary<string, Dictionary<ObjectId, object>>();
@@ -201,6 +201,7 @@ namespace LfMerge.Tests
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
+			EnsureCollectionExists(collectionName);
 			var fakeCollection = _storedDataByGuid[collectionName];
 			foreach (object item in fakeCollection.Values)
 			{

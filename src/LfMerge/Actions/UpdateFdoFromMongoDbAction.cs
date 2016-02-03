@@ -121,10 +121,13 @@ namespace LfMerge.Actions
 			}
 
 			_lfGrammar = GetGrammar(project);
-			_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
+			if (_lfGrammar == null)
+				_lfGrammarByKey = new Dictionary<string, LfOptionListItem>();
+			else
+				_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
 /* Comment this out once we're sure it works */
 			Console.WriteLine("Grammar follows:");
-			foreach (LfOptionListItem item in _lfGrammar.Items)
+			foreach (LfOptionListItem item in _lfGrammarByKey.Values)
 			{
 				Console.WriteLine("Grammar item {0} has abbrev {1} and GUID {2}",
 					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
@@ -167,7 +170,7 @@ namespace LfMerge.Actions
 
 		private LfOptionList GetGrammar(ILfProject project)
 		{
-			return GetOptionLists(project).First(x => x.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			return GetOptionLists(project).FirstOrDefault(x => x.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 		}
 
 		private Guid GuidFromLiftId(string liftId)

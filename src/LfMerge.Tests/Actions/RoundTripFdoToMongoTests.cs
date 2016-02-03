@@ -25,7 +25,7 @@ namespace LfMerge.Tests.Actions
 	{
 		public const string testProjectCode = "TestLangProj";
 		private TestEnvironment _env;
-		private MongoConnectionDoubleThatStoresData _conn;
+		private MongoConnectionDouble _conn;
 		private MongoProjectRecordFactory _recordFactory;
 		private UpdateFdoFromMongoDbAction sutMongoToFdo;
 		private UpdateMongoDbFromFdo sutFdoToMongo;
@@ -40,7 +40,7 @@ namespace LfMerge.Tests.Actions
 		{
 			//_env = new TestEnvironment();
 			_env = new TestEnvironment(fakeMongoConnectionShouldStoreData: true, testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDoubleThatStoresData;
+			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 			if (_conn == null)
 				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection that stores data in order to work.");
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
