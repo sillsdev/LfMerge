@@ -10,6 +10,7 @@ namespace LfMerge
 		public const string LfOptionListNameForGrammaticalInfo = "Part of Speech";
 		public const string LfCollectionNameForLexicon = "lexicon";
 		public const string LfCollectionNameForOptionLists = "optionlists";
+		public const string UnknownString = "***";
 	}
 }
 

@@ -447,110 +447,14 @@ namespace LfMerge.Actions
 			*/
 		}
 
-		private LfOptionListItem PartOfSpeechToOptionListItem(IPartOfSpeech pos)
-		{
-			var item = new LfOptionListItem();
-			SetOptionListItemFromPartOfSpeech(item, pos);
-			return item;
-		}
-
-		private string AbbrevHierarchyStringForWs(ICmPossibility poss, int wsId)
-		{
-			// The CmPossibility.AbbrevHierarchyString property uses the default analysis language.
-			// But we need to force a specific language (English) even if that is not the analysis language.
-			string ORC = "\ufffc";
-			ICmPossibility current = poss;
-			LinkedList<ICmPossibility> allAncestors = new LinkedList<ICmPossibility>();
-			while (current != null)
-			{
-				allAncestors.AddFirst(current);
-				current = current.Owner as ICmPossibility;
-			}
-			// TODO: The below line might fail if one of them doesn't have a corresponding string. Deal with that case.
-			return string.Join(ORC, allAncestors.Select(ancestor => ancestor.Abbreviation.get_String(wsId).Text));
-		}
-
-		private void SetOptionListItemFromPartOfSpeech(LfOptionListItem item, IPartOfSpeech pos)
-		{
-			const char ORC = '\xfffc';
-			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
-			item.Abbreviation = ToStringOrNull(pos.Abbreviation.BestAnalysisVernacularAlternative);
-			item.Key = AbbrevHierarchyStringForWs(pos, wsEn); // Key is fixed and should not change
-			item.Value = ToStringOrNull(pos.Name.BestAnalysisVernacularAlternative);
-			item.Guid = pos.Guid;
-		}
-
-		// Use this one when there's no original grammar list in LF
-		private LfOptionList PartsOfSpeechToOptionList(ICmPossibilityList partsOfSpeech)
-		{
-			var result = new LfOptionList();
-			result.Items = partsOfSpeech.ReallyReallyAllPossibilities
-				.OfType<IPartOfSpeech>()
-				.Select(pos => PartOfSpeechToOptionListItem(pos))
-				.ToList();
-			result.DateCreated = result.DateModified = DateTime.UtcNow;
-			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-			result.Name = MagicStrings.LfOptionListNameForGrammaticalInfo;
-			result.CanDelete = false;
-			result.DefaultItemKey = null;
-			return result;
-		}
-
-		// Use this one when there's a grammar list already present in LF
-		private LfOptionList PrepareGrammarOptionListUpdate(ICmPossibilityList partsOfSpeech, LfOptionList lfGrammarList)
-		{
-			if (lfGrammarList == null)
-			{
-				return PartsOfSpeechToOptionList(partsOfSpeech);
-			}
-			Dictionary<Guid, LfOptionListItem> lfGrammarByGuid = lfGrammarList.Items
-				.Where(item => item.Guid != null)
-				.ToDictionary(item => item.Guid.Value, item => item);
-			Dictionary<Guid, IPartOfSpeech> fdoGrammarByGuid = partsOfSpeech.ReallyReallyAllPossibilities
-				.OfType<IPartOfSpeech>()
-				// .Where(pos => pos.Guid != null) // Not needed as IPartOfSpeech GUIDs are not nullable
-				.ToDictionary(pos => pos.Guid, pos => pos);
-
-			foreach (IPartOfSpeech pos in fdoGrammarByGuid.Values)
-			{
-				LfOptionListItem correspondingItem;
-				if (lfGrammarByGuid.TryGetValue(pos.Guid, out correspondingItem))
-				{
-					SetOptionListItemFromPartOfSpeech(correspondingItem, pos);
-				}
-				else
-				{
-					correspondingItem = PartOfSpeechToOptionListItem(pos);
-					lfGrammarByGuid.Add(pos.Guid, correspondingItem);
-				}
-			}
-
-			// Clone old grammar list into new list, changing only the items
-			// ... We could use a MongoDB update query for this, but that would
-			// require new code in MongoConnection and MongoConnectionDouble.
-			// TODO: When appropriate, write that new code. Until then, we clone manually.
-			var newOptionList = new LfOptionList();
-			newOptionList.CanDelete = lfGrammarList.CanDelete;
-			newOptionList.Code = lfGrammarList.Code;
-			newOptionList.DateCreated = lfGrammarList.DateCreated;
-			newOptionList.DateModified = DateTime.UtcNow;
-			newOptionList.DefaultItemKey = lfGrammarList.DefaultItemKey;
-			newOptionList.Name = lfGrammarList.Name;
-			// We filter by "Does FDO have a PoS with corresponding GUID?" because if it doesn't,
-			// then that part of speech was probably deleted in FDO, so we should delete it here.
-			newOptionList.Items = lfGrammarByGuid.Values
-				.Where(item => fdoGrammarByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
-				.ToList();
-			return newOptionList;
-		}
-
 		private LfOptionList UpdateGrammarOptionListFromFdo(ILfProject project, ICmPossibilityList partsOfSpeech)
 		{
 			// _connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			LfOptionList lfGrammarList = _connection
 				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
 				.FirstOrDefault(list => list.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
-			LfOptionList newGrammarList = PrepareGrammarOptionListUpdate(partsOfSpeech, lfGrammarList);
+			var converter = new GrammarConverter(_cache, lfGrammarList);
+			LfOptionList newGrammarList = converter.PrepareGrammarOptionListUpdate(partsOfSpeech);
 			_connection.UpdateRecord<LfOptionList>(
 				project,
 				newGrammarList,
