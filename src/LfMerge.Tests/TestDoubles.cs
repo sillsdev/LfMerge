@@ -151,14 +151,34 @@ namespace LfMerge.Tests
 			_storedDataByObjectId[collectionName][id] = data;
 		}
 
-		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		private IEnumerable<TDocument> GetRecordsByGuid<TDocument>(ILfProject project, string collectionName)
 		{
-			EnsureCollectionExists(collectionName);
-			var fakeCollection = _storedDataByGuid[collectionName];
+			Dictionary<Guid, object> fakeCollection = _storedDataByGuid[collectionName];
 			foreach (object item in fakeCollection.Values)
 			{
 				yield return (TDocument)item;
 			}
+		}
+
+		private IEnumerable<TDocument> GetRecordsByObjectId<TDocument>(ILfProject project, string collectionName)
+		{
+			Dictionary<ObjectId, object> fakeCollection = _storedDataByObjectId[collectionName];
+			foreach (object item in fakeCollection.Values)
+			{
+				yield return (TDocument)item;
+			}
+		}
+
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			EnsureCollectionExists(collectionName);
+			bool byGuid = false;
+			if (collectionName == MagicStrings.LfCollectionNameForLexicon)
+				byGuid = true;
+			if (byGuid)
+				return GetRecordsByGuid<TDocument>(project, collectionName);
+			else
+				return GetRecordsByObjectId<TDocument>(project, collectionName);
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project)

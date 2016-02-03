@@ -29,7 +29,6 @@ namespace LfMerge.Tests.Actions
 		private MongoProjectRecordFactory _recordFactory;
 		private UpdateFdoFromMongoDbAction sutMongoToFdo;
 		private UpdateMongoDbFromFdo sutFdoToMongo;
-		private SampleData _sampleData;
 
 		public RoundTripFdoToMongoTests()
 		{
@@ -60,11 +59,6 @@ namespace LfMerge.Tests.Actions
 				_env.Logger,
 				_conn
 			);
-
-			// TODO: Get rid of this sample data once FDO->Mongo code updates the option list with
-			// part-of-speech GUIDs.
-			_sampleData = new SampleData();
-			_conn.AddToMockData<LfOptionList>("optionlists", _sampleData.bsonOptionListData);
 		}
 
 		[TearDown]
