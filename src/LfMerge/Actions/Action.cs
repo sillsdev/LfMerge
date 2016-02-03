@@ -19,8 +19,7 @@ namespace LfMerge.Actions
 	{
 		protected LfMergeSettingsIni Settings { get; set; }
 		protected ILogger Logger { get; set; }
-
-		private IProgress Progress { get; set; }
+		protected IProgress Progress { get; set; }
 
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
@@ -69,7 +68,7 @@ namespace LfMerge.Actions
 
 		public void Run(ILfProject project)
 		{
-			Logger.Notice("Action {0} just started", Name);
+			Logger.Notice("Action {0} started", Name);
 
 			if (project.State.SRState == ProcessingState.SendReceiveStates.HOLD)
 				return;
@@ -87,6 +86,8 @@ namespace LfMerge.Actions
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 			}
+
+			Logger.Notice("Action {0} finished", Name);
 		}
 
 		#endregion

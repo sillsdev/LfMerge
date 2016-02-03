@@ -3,14 +3,8 @@
 using System;
 using System.IO;
 using Autofac;
-using Chorus.Model;
-using LfMerge.FieldWorks;
 using LfMerge.Settings;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
-using SIL.Progress;
-using SIL.Reporting;
+using Chorus.sync;
 
 namespace LfMerge.Actions
 {
@@ -25,13 +19,21 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
+			GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
+
+			var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
+			var config = new ProjectFolderConfiguration(projectFolderPath);
+			var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
+			var options = new SyncOptions();
+			synchroniser.SyncNow(options);
+
+			GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
 		}
 
 		protected override ActionNames NextActionName
 		{
-			get { return ActionNames.UpdateMongoDbFromFdo; }
+			get { return ActionNames.None; }
 		}
 
 	}
 }
-
