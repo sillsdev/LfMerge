@@ -39,7 +39,7 @@ namespace LfMerge.Tests.Actions
 		public void Setup()
 		{
 			//_env = new TestEnvironment();
-			_env = new TestEnvironment(fakeMongoConnectionShouldStoreData: true, testProjectCode: testProjectCode);
+			_env = new TestEnvironment(testProjectCode: testProjectCode);
 			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 			if (_conn == null)
 				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection that stores data in order to work.");

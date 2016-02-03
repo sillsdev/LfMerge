@@ -90,18 +90,12 @@ namespace LfMerge.Tests
 		}
 	}
 
-	public class DeprecatedMongoConnectionDouble: IMongoConnection
+	public class MongoConnectionDouble: IMongoConnection
 	{
-		private List<BsonDocument> _mockData = new List<BsonDocument>();
-		private List<object> _receivedData = new List<object>();
-
-		// For use in unit tests that want to verify what was placed into Mongo
-		public List<object> ReceivedData { get { return _receivedData; } }
-
 		public static void Initialize()
 		{
 			// Just as with MongoConnection.Initialize(), we need to set up BSON serialization conventions
-			// so that the "fake" connection can deserialize the sample JSON identially to how the real DB does it.
+			// so that the "fake" connection can deserialize the sample JSON identically to how the real DB does it.
 			Console.WriteLine("Initializing FAKE Mongo connection...");
 
 			// Serialize Boolean values permissively
@@ -119,48 +113,6 @@ namespace LfMerge.Tests
 			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
-		public void AddToMockData(BsonDocument mockData)
-		{
-			_mockData.Add(mockData);
-		}
-
-		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
-		{
-			foreach (BsonDocument s in _mockData)
-			{
-				yield return BsonSerializer.Deserialize<TDocument>(s);
-			}
-		}
-
-		public IMongoDatabase GetProjectDatabase(ILfProject project)
-		{
-			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
-			// TODO: Add appropriate mock functions if needed
-			return mockDb as IMongoDatabase;
-		}
-
-		public IMongoDatabase GetMainDatabase()
-		{
-			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
-			// TODO: Add appropriate mock functions if needed
-			return mockDb as IMongoDatabase;
-		}
-
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
-		{
-			_receivedData.Add(data);
-			return true;
-		}
-
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId key, string collectionName)
-		{
-			_receivedData.Add(data);
-			return true;
-		}
-	}
-
-	public class MongoConnectionDouble: IMongoConnection
-	{
 		private Dictionary<string, Dictionary<Guid, object>> _storedDataByGuid = new Dictionary<string, Dictionary<Guid, object>>();
 		private Dictionary<string, Dictionary<ObjectId, object>> _storedDataByObjectId = new Dictionary<string, Dictionary<ObjectId, object>>();
 

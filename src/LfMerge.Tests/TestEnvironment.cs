@@ -24,19 +24,17 @@ namespace LfMerge.Tests
 		static TestEnvironment()
 		{
 			// Need to call MongoConnectionDouble.Initialize() exactly once, before any tests are run -- so do it here
-			DeprecatedMongoConnectionDouble.Initialize();
+			MongoConnectionDouble.Initialize();
 		}
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
-			bool fakeMongoConnectionShouldStoreData = false,
 			string testProjectCode = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
-				fakeMongoConnectionShouldStoreData,
 				_languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			Logger = MainClass.Container.Resolve<ILogger>();
@@ -51,7 +49,7 @@ namespace LfMerge.Tests
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, bool fakeMongoConnectionShouldStoreData, string temporaryFolder)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			if (registerSettingsModel)
@@ -61,8 +59,6 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
-				if (fakeMongoConnectionShouldStoreData)
-					Console.WriteLine("Using data-storing MongoConnection for ALL tests now, don't need that bool");
 				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
