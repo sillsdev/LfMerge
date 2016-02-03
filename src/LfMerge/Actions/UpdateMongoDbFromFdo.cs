@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
@@ -453,12 +454,28 @@ namespace LfMerge.Actions
 			return item;
 		}
 
+		private string AbbrevHierarchyStringForWs(ICmPossibility poss, int wsId)
+		{
+			// The CmPossibility.AbbrevHierarchyString property uses the default analysis language.
+			// But we need to force a specific language (English) even if that is not the analysis language.
+			string ORC = "\ufffc";
+			ICmPossibility current = poss;
+			LinkedList<ICmPossibility> allAncestors = new LinkedList<ICmPossibility>();
+			while (current != null)
+			{
+				allAncestors.AddFirst(current);
+				current = current.Owner as ICmPossibility;
+			}
+			// TODO: The below line might fail if one of them doesn't have a corresponding string. Deal with that case.
+			return string.Join(ORC, allAncestors.Select(ancestor => ancestor.Abbreviation.get_String(wsId).Text));
+		}
+
 		private void SetOptionListItemFromPartOfSpeech(LfOptionListItem item, IPartOfSpeech pos)
 		{
 			const char ORC = '\xfffc';
 			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			item.Abbreviation = ToStringOrNull(pos.Abbreviation.BestAnalysisVernacularAlternative);
-			item.Key = ToStringOrNull(pos.Abbreviation.get_String(wsEn)); // Key is fixed and should not change
+			item.Key = AbbrevHierarchyStringForWs(pos, wsEn); // Key is fixed and should not change
 			item.Value = ToStringOrNull(pos.Name.BestAnalysisVernacularAlternative);
 			item.Guid = pos.Guid;
 		}
