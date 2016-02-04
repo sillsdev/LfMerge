@@ -130,8 +130,8 @@ namespace LfMerge.Actions
 			grammarLogMsgs.Add("Grammar follows:");
 			foreach (LfOptionListItem item in _lfGrammarByKey.Values)
 			{
-				grammarLogMsgs.Add(String.Format("Grammar item {0} has abbrev {1} and GUID {2}",
-					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
+				grammarLogMsgs.Add(String.Format("Grammar item {0} has abbrev {1}, key {2} and GUID {3}",
+					item.Value, item.Abbreviation, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
 				));
 			}
 			Logger.LogMany(LogSeverity.Debug, grammarLogMsgs);
