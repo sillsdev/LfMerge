@@ -45,31 +45,31 @@ namespace LfMerge.Actions
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
-				Console.WriteLine("Can't find FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
-				Console.WriteLine("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
-				Console.WriteLine("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			ILexEntryRepository repo = _servLoc.GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
-				Console.WriteLine("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			_fdoMetaData = (IFwMetaDataCacheManaged)_cache.MetaDataCacheAccessor;
 			if (_fdoMetaData == null)
 			{
-				Console.WriteLine("***WARNING:*** Don't have access to the FW metadata; custom fields may fail!");
+				Logger.Warning("Don't have access to the FW metadata; custom fields may fail!");
 			}
 			_converter = new CustomFieldConverter(_cache);
 
@@ -80,24 +80,10 @@ namespace LfMerge.Actions
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
-				Console.WriteLine("Populated LfEntry {0}", lfEntry.Guid);
+				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Guid guid = lfEntry.Guid ?? Guid.Empty;
 				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			}
-		}
-
-		private void DebugOut(string fieldName, LfMultiText multiText)
-		{
-			if (multiText == null) return;
-			foreach (KeyValuePair<string, LfStringField> kv in multiText)
-			{
-				Console.WriteLine("{0} in writing system {1} is \"{2}\"", fieldName, kv.Key, kv.Value);
-			}
-		}
-
-		private void DebugOut(string fieldName, LfStringArrayField strings)
-		{
-			Console.WriteLine("{0} values are [{1}]", fieldName, String.Join(", ", strings.Values));
 		}
 
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
@@ -124,9 +110,6 @@ namespace LfMerge.Actions
 			lfSense.Guid = fdoSense.Guid;
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
-
-			DebugOut("Gloss", lfSense.Gloss);
-			DebugOut("Definition", lfSense.Definition);
 
 			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
 			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
@@ -159,8 +142,8 @@ namespace LfMerge.Actions
 				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(FdoPictureToLfPicture));
 			foreach (LfPicture picture in lfSense.Pictures)
 			{
-				// TODO: Remove this debugging foreach loop
-				Console.WriteLine("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
+				// TODO: Remove this debugging foreach loop once we know pictures are working
+				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
 			}
 			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
@@ -173,7 +156,6 @@ namespace LfMerge.Actions
 			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoSense.ScientificName);
 			lfSense.SemanticDomain = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.SemanticDomainsRC);
 
-			DebugOut("Semantic domains", lfSense.SemanticDomain);
 
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
@@ -236,23 +218,12 @@ namespace LfMerge.Actions
 			fdoSense.LexSenseOutline;
 			*/
 
-			DebugOut("Sense bibliography", lfSense.SenseBibliography);
-			DebugOut("Anthropology note", lfSense.AnthropologyNote);
-			DebugOut("Discourse note", lfSense.DiscourseNote);
-			DebugOut("Encyclopedic note", lfSense.EncyclopedicNote);
-			DebugOut("General note", lfSense.GeneralNote);
-			DebugOut("Usages", lfSense.Usages);
-
 			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoSense, "senses");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
-			Console.WriteLine("Custom fields for this sense:");
-			Console.WriteLine(lfSense.CustomFields);
-			Console.WriteLine("Custom field GUIDs for this sense:");
-			Console.WriteLine(lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -289,10 +260,6 @@ namespace LfMerge.Actions
 
 			result.CustomFields = customFieldsBson;
 			result.CustomFieldGuids = customFieldGuids;
-			Console.WriteLine("Custom fields for this example:");
-			Console.WriteLine(result.CustomFields);
-			Console.WriteLine("Custom field GUIDs for this example:");
-			Console.WriteLine(result.CustomFieldGuids);
 
 			return result;
 		}
@@ -317,7 +284,7 @@ namespace LfMerge.Actions
 		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
 		{
 			if (fdoEntry == null) return null;
-			Console.WriteLine("Converting one entry");
+			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			string AnalysisWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
@@ -330,8 +297,6 @@ namespace LfMerge.Actions
 			else
 				lfEntry.Lexeme = ToMultiText(fdoLexeme.Form);
 			// Other fields of fdoLexeme (AllomorphEnvironments, LiftResidue, MorphTypeRA, etc.) not mapped
-
-			DebugOut("Lexeme", lfEntry.Lexeme);
 
 			// Fields below in alphabetical order by ILexSense property, except for Lexeme
 			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
@@ -386,20 +351,12 @@ namespace LfMerge.Actions
 			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			DebugOut("Citation form", lfEntry.CitationForm);
-			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
-			DebugOut("Etymology Source", lfEntry.EtymologySource);
-
 			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfEntry.CustomFields = customFieldsBson;
 			lfEntry.CustomFieldGuids = customFieldGuids;
-			Console.WriteLine("Custom fields for this entry:");
-			Console.WriteLine(lfEntry.CustomFields);
-			Console.WriteLine("Custom field GUIDs for this entry:");
-			Console.WriteLine(lfEntry.CustomFieldGuids);
 
 			return lfEntry;
 

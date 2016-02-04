@@ -67,8 +67,8 @@ namespace LfMerge.Actions
 			_projectRecord = _projectRecordFactory.Create(_lfProject);
 			if (_projectRecord == null)
 			{
-				Console.WriteLine("No project named {0}", _lfProject.LfProjectCode);
-				Console.WriteLine("If we are unit testing, this may not be an error");
+				Logger.Warning("No project named {0}", _lfProject.LfProjectCode);
+				Logger.Warning("If we are unit testing, this may not be an error");
 				return;
 			}
 			_lfProjectConfig = _projectRecord.Config;
@@ -77,22 +77,22 @@ namespace LfMerge.Actions
 
 			if (project.FieldWorksProject == null)
 			{
-				Console.WriteLine("Failed to find the corresponding FieldWorks project!");
+				Logger.Error("Failed to find the corresponding FieldWorks project!");
 				return;
 			}
-			Console.WriteLine("Project {0} disposed", project.FieldWorksProject.IsDisposed ? "is" : "is not");
+			if (project.FieldWorksProject.IsDisposed)
+				Logger.Warning("Project {0} is already disposed; this shouldn't happen", project.FwProjectCode);
 			_cache = project.FieldWorksProject.Cache;
 			if (_cache == null)
 			{
-				Console.WriteLine("Failed to find the FDO cache!");
-				FwProject fwProject = project.FieldWorksProject;
+				Logger.Error("Failed to find the FDO cache!");
 				return;
 			}
 
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
-				Console.WriteLine("Failed to find the service locator; giving up.");
+				Logger.Error("Failed to find the service locator; giving up.");
 				return;
 			}
 			_customFieldConverter = new CustomFieldConverter(_cache);
@@ -125,14 +125,16 @@ namespace LfMerge.Actions
 				_lfGrammarByKey = new Dictionary<string, LfOptionListItem>();
 			else
 				_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
-/* Comment this out once we're sure it works */
-			Console.WriteLine("Grammar follows:");
+/* Comment this logging out once we're sure the grammar conversion works */
+			var grammarLogMsgs = new List<string>();
+			grammarLogMsgs.Add("Grammar follows:");
 			foreach (LfOptionListItem item in _lfGrammarByKey.Values)
 			{
-				Console.WriteLine("Grammar item {0} has abbrev {1} and GUID {2}",
+				grammarLogMsgs.Add(String.Format("Grammar item {0} has abbrev {1} and GUID {2}",
 					item.Value, item.Key, (item.Guid == null) ? "(none)" : item.Guid.Value.ToString()
-				);
+				));
 			}
+			Logger.LogMany(LogSeverity.Debug, grammarLogMsgs);
 /* */
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
@@ -154,13 +156,8 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig GetConfigForTesting(ILfProject project)
 		{
-			ILfProjectConfig config = _projectRecord.Config;
-			Console.WriteLine(config.GetType()); // Should be LfMerge.LanguageForge.Config.LfProjectConfig
-			Console.WriteLine(config.Entry.Type);
-			Console.WriteLine(String.Join(", ", config.Entry.FieldOrder));
-			Console.WriteLine(config.Entry.Fields["lexeme"].Type);
-			Console.WriteLine(config.Entry.Fields["lexeme"].GetType());
-			return config;
+			// TODO: Pretty sure this function is unused; remove it if it really is unused.
+			return _projectRecord.Config;
 		}
 
 		private IEnumerable<LfOptionList> GetOptionLists(ILfProject project)
@@ -207,12 +204,11 @@ namespace LfMerge.Actions
 				if (fdoEntry.CanDelete)
 					fdoEntry.Delete();
 				else
-					// TODO: Log this properly
-					Console.WriteLine("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.", fdoEntry.Guid);
+					Logger.Warning("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.", fdoEntry.Guid);
 				return; // Don't set fields on a deleted entry
 			}
 			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
-			Console.WriteLine("Checking entry {0} ({1}) in lexicon", guid, entryNameForDebugging);
+			Logger.Notice("Processing entry {0} ({1}) from LF lexicon", guid, entryNameForDebugging);
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
@@ -285,10 +281,10 @@ namespace LfMerge.Actions
 			    lfEntry.Tone == null &&
 			    lfEntry.Location == null)
 			{
-				Console.WriteLine("No pronunciation data in lfEntry {0}", lfEntry.Guid);
+				// Do we even need to log this scenario? TODO: Either uncomment or remove the line below.
+				// Logger.Info("No pronunciation data in lfEntry {0}", lfEntry.Guid);
 				return;
 			}
-			// TODO: Once LF stores pronunciation GUIDs in Mongo, switch to a GetOrCreatePronunciationByGuid method
 			ILexPronunciation fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
 
 			fdoPronunciation.CVPattern = BestStringFromMultiText(lfEntry.CvPattern);
@@ -308,7 +304,7 @@ namespace LfMerge.Actions
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				// Console.WriteLine("non-null input, but no contents in it!"); // TODO: Turn this into a log message
+				Logger.Warning("BestStringFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
 				return null;
 			}
 			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
@@ -334,7 +330,7 @@ namespace LfMerge.Actions
 				LfStringField field;
 				if (input.TryGetValue(wsStr, out field) && !String.IsNullOrEmpty(field.Value))
 				{
-					Console.WriteLine("Returning TsString from {0} for writing system {1}", field.Value, wsStr);
+					Logger.Info("Returning TsString from {0} for writing system {1}", field.Value, wsStr);
 					return TsStringUtils.MakeTss(field.Value, wsId);
 				}
 			}
@@ -342,7 +338,7 @@ namespace LfMerge.Actions
 			// Last-ditch option: just grab the first non-empty string we can find
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(_cache);
 			if (kv.Value == null) return null;
-			Console.WriteLine("Returning TsString from {0} for writing system {1}", kv.Value, wsm.GetStrFromWs(kv.Key));
+			Logger.Info("Returning first non-empty TsString from {0} for writing system {1}", kv.Value, wsm.GetStrFromWs(kv.Key));
 			return TsStringUtils.MakeTss(kv.Value, kv.Key);
 		}
 
@@ -373,7 +369,7 @@ namespace LfMerge.Actions
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
-			Console.WriteLine("FDO Example just got set to {0} for GUID {1} and HVO {2}",
+			Logger.Info("FDO Example just got set to {0} for GUID {1} and HVO {2}",
 				fdoExample.Example.BestAnalysisVernacularAlternative.Text,
 				fdoExample.Guid,
 				fdoExample.Hvo
@@ -443,8 +439,7 @@ namespace LfMerge.Actions
 						pos = OptionListItemToPartOfSpeech(lfGrammarEntry, _cache.LanguageProject.PartsOfSpeechOA, _posRepo);
 					else
 					{
-						// TODO: Make this a Logger.Warning instead
-						Console.WriteLine("WARNING: Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
+						Logger.Warning("Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
 							posStr,
 							lfSense.Gloss,
 							(lfSense.Guid != null) ? lfSense.Guid.ToString() : "(no GUID)",
@@ -480,11 +475,11 @@ namespace LfMerge.Actions
 						if (fdoSense.MorphoSyntaxAnalysisRA.ClassID == MoDerivAffMsaTags.kClassId)
 						{
 							// TODO: Turn this into a proper log message
-							Console.WriteLine("WARNING: Sense {0} ({1}) is a derivational affix, which needs two parts of speech, From and To. Setting the From PoS to {2}, but not changing the To PoS. This might cause duplicated grammar analysis objects in FieldWorks.",
+							Logger.Warning("Sense {0} ({1}) is a derivational affix, which needs two parts of speech, From and To. Setting the From PoS to {2}, but not changing the To PoS. This might cause duplicated grammar analysis objects in FieldWorks.",
 								fdoSense.Guid, fdoSense.Gloss.BestAnalysisVernacularAlternative.Text, pos.NameHierarchyString);
 						}
 						PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
-						Console.WriteLine("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
+						Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
 					}
 				}
 			}
@@ -558,7 +553,7 @@ namespace LfMerge.Actions
 				break;
 
 			default:
-				Console.WriteLine("WARNING: Unrecognized morphology type \"{0}\" in word {1}", morphologyType, owner.Guid);
+				Logger.Warning("Unrecognized morphology type \"{0}\" in word {1}", morphologyType, owner.Guid);
 				result = stemFactory.Create();
 				break;
 			}
@@ -622,8 +617,8 @@ namespace LfMerge.Actions
 			foreach (LfOptionListItem item in lfGrammar.Items)
 			{
 				IPartOfSpeech pos = OptionListItemToPartOfSpeech(item, fdoGrammar, posRepo);
-				// TODO: Either make this a log message or remove it (and don't save the value of the above function)
-				Console.WriteLine("Updated FDO grammar entry with PoS {0}", pos.AbbrAndName);
+				// TODO: Once we're confident that this works, remove this log message
+				Logger.Info("Updated FDO grammar entry with PoS {0}", pos.AbbrAndName);
 			}
 		}
 
