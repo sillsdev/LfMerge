@@ -29,14 +29,12 @@ namespace LfMerge.Tests
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
-			bool fakeMongoConnectionShouldStoreData = false,
 			string testProjectCode = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
-				fakeMongoConnectionShouldStoreData,
 				_languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			Logger = MainClass.Container.Resolve<ILogger>();
@@ -53,17 +51,14 @@ namespace LfMerge.Tests
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, bool fakeMongoConnectionShouldStoreData, string temporaryFolder)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
 				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
 				.As<LfMergeSettingsIni>();
 
-			if (fakeMongoConnectionShouldStoreData)
-				containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
-			else
-				containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 
 			if (registerSettingsModel)
 			{

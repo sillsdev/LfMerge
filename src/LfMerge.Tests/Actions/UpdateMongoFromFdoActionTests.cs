@@ -52,7 +52,7 @@ namespace LfMerge.Tests.Actions
 			string expectedLexeme = "zitʰɛstmen";
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 
-			List<object> receivedData = _conn.ReceivedData;
+			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
 			LfLexEntry entry = receivedData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
