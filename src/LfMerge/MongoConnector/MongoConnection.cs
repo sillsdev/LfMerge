@@ -147,8 +147,14 @@ namespace LfMerge.MongoConnector
 			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
-			//var ignored = collection.FindOneAndReplaceAsync(filter, data).Result;  // Use this one to replace the WHOLE entry wholesale
-			var ignored = collection.FindOneAndUpdateAsync(filter, update).Result; // Use this one to update fields within the entry. I think this one is preferred.
+			//var replaceOptions = new FindOneAndReplaceOptions<TDocument> {
+			//	IsUpsert = true
+			//};
+			//var ignored = collection.FindOneAndReplaceAsync(filter, data, replaceOptions).Result;  // Use this one to replace the WHOLE entry wholesale
+			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
+				IsUpsert = true
+			};
+			var ignored = collection.FindOneAndUpdateAsync(filter, update, updateOptions).Result; // Use this one to update fields within the entry. I think this one is preferred.
 			Console.WriteLine("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
 
 			return true;
