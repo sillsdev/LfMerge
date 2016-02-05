@@ -67,6 +67,8 @@ namespace LfMerge
 				}
 				logger.Notice("Lock acquired");
 
+				if (!EnsureSetup(settings, logger)) return;
+
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
 
 				for (var queue = Queue.FirstQueueWithWork;
@@ -96,7 +98,7 @@ namespace LfMerge
 				Cleanup();
 			}
 
-			logger.Notice("LfMerge finished");
+			logger.Notice("LfMerge finished\n");
 		}
 
 		protected static void EnsureClone(ILfProject project, ILogger logger)
@@ -191,6 +193,23 @@ namespace LfMerge
 		private static void Cleanup()
 		{
 			LanguageForgeProject.DisposeProjectCache();
+		}
+
+		private static bool EnsureSetup(LfMergeSettingsIni settings, ILogger logger)
+		{
+			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
+			string[] folderPaths = new[] { Path.Combine(homeFolder, ".local"),
+				Path.GetDirectoryName(settings.WebWorkDirectory) };
+			foreach (string folderPath in folderPaths)
+			{
+				if (!Directory.Exists(folderPath))
+				{
+					logger.Notice("Folder '{0}' doesn't exist", folderPath);
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 	}
