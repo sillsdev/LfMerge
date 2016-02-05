@@ -24,10 +24,12 @@ namespace LfMerge.MongoConnector
 		private string mainDatabaseName;
 		private Lazy<IMongoClient> client;
 		private ILogger _logger;
+		private LfMergeSettingsIni _settings;
 
 		public ILogger Logger { get { return _logger; } }
+		public LfMergeSettingsIni Settings { get { return _settings; } }
 
-		// TODO: Get these from config instead of hard-coding
+		// TODO: Get rid of these hardcoded defaults and see what breaks, then make sure that code calls Initialize() like it should.
 		public static string MainDatabaseName = "scriptureforge";
 		public static string HostNameAndPort = "localhost:27017";
 
@@ -54,10 +56,10 @@ namespace LfMerge.MongoConnector
 
 		public MongoConnection(LfMergeSettingsIni settings, ILogger logger)
 		{
-			connectionString = String.Format("mongodb://{0}", settings.MongoDbHostNameAndPort);
+			_settings = settings;
 			_logger = logger;
-			// TODO: Add databaseName to settings instead of the below
-			mainDatabaseName = MainDatabaseName;
+			connectionString = String.Format("mongodb://{0}", Settings.MongoDbHostNameAndPort);
+			mainDatabaseName = Settings.MongoMainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
 

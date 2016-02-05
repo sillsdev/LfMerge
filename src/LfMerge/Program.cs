@@ -69,7 +69,7 @@ namespace LfMerge
 
 				if (!EnsureSetup(settings, logger)) return;
 
-				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
+				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, settings.MongoMainDatabaseName);
 
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

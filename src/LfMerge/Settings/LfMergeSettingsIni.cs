@@ -47,8 +47,9 @@ namespace LfMerge.Settings
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
+			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoMainDatabaseName);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
@@ -56,7 +57,7 @@ namespace LfMerge.Settings
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoMainDatabaseName)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
@@ -69,6 +70,7 @@ namespace LfMerge.Settings
 			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(baseDir, "syncqueue");
 
 			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);
+			MongoMainDatabaseName = mongoMainDatabaseName;
 		}
 
 		#region Equality and GetHashCode
@@ -163,6 +165,8 @@ namespace LfMerge.Settings
 		}
 
 		public string MongoDbHostNameAndPort { get; private set; }
+
+		public string MongoMainDatabaseName { get; private set; }
 
 		#region Serialization/Deserialization
 
