@@ -89,6 +89,11 @@ namespace LfMerge
 					}
 				}
 			}
+			catch (Exception e)
+			{
+				logger.Debug("Unhandled Exception: \n" + e.ToString());
+				throw;
+			}
 			finally
 			{
 				if (fileLock != null)
