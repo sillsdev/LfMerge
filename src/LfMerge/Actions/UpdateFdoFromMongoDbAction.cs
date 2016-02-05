@@ -60,6 +60,7 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
+			Logger.Notice("UpdateFdoFromMongoDbAction starting");
 			_lfProject = project;
 			_projectRecord = _projectRecordFactory.Create(_lfProject);
 			if (_projectRecord == null)
@@ -68,10 +69,12 @@ namespace LfMerge.Actions
 				Logger.Notice("If we are unit testing, this may not be an error");
 				return;
 			}
+			Logger.Notice("UpdateFdoFromMongoDbAction 2");
 			_lfProjectConfig = _projectRecord.Config;
 			if (_lfProjectConfig == null)
 				return;
 
+			Logger.Notice("UpdateFdoFromMongoDbAction FwProjectCode{0}", project.FwProjectCode);
 			if (project.FieldWorksProject == null)
 			{
 				Logger.Notice("Failed to find the corresponding FieldWorks project!");
@@ -82,10 +85,10 @@ namespace LfMerge.Actions
 			if (_cache == null)
 			{
 				Logger.Notice("Failed to find the FDO cache!");
-				FwProject fwProject = project.FieldWorksProject;
 				return;
 			}
 
+			Logger.Notice("UpdateFdoFromMongoDbAction cache service locator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
@@ -132,6 +135,9 @@ namespace LfMerge.Actions
 					LfLexEntryToFdoLexEntry(lfEntry);
 			});
 			_cache.ActionHandlerAccessor.Commit();
+
+			Logger.Notice("UpdateFdoFromMongoDbAction done");
+
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)

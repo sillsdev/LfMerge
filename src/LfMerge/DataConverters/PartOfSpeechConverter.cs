@@ -95,7 +95,7 @@ namespace LfMerge.DataConverters
 			{
 			case MoDerivAffMsaTags.kClassId:
 				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
+//				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
 				return ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
 			case MoDerivStepMsaTags.kClassId:
 				return ((IMoDerivStepMsa)msa).PartOfSpeechRA;

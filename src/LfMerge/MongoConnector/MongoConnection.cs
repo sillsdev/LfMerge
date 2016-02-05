@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization.Conventions;
 
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Logging;
 using LfMerge.Settings;
 
 namespace LfMerge.MongoConnector
@@ -22,6 +23,9 @@ namespace LfMerge.MongoConnector
 		private string connectionString;
 		private string mainDatabaseName;
 		private Lazy<IMongoClient> client;
+		private ILogger _logger;
+
+		public ILogger Logger { get { return _logger; } }
 
 		// TODO: Get these from config instead of hard-coding
 		public static string MainDatabaseName = "scriptureforge";
@@ -48,9 +52,10 @@ namespace LfMerge.MongoConnector
 			//new MongoRegistrarForLfFields().RegisterClassMappings();
 		}
 
-		public MongoConnection(LfMergeSettingsIni settings)
+		public MongoConnection(LfMergeSettingsIni settings, ILogger logger)
 		{
 			connectionString = String.Format("mongodb://{0}", settings.MongoDbHostNameAndPort);
+			_logger = logger;
 			// TODO: Add databaseName to settings instead of the below
 			mainDatabaseName = MainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
@@ -143,19 +148,15 @@ namespace LfMerge.MongoConnector
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
-			Console.WriteLine("About to save {0} {1}", typeof(TDocument), guid);
-			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			Logger.Notice("About to save {0} {1}", typeof(TDocument), guid);
+//			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+//			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
-			//var replaceOptions = new FindOneAndReplaceOptions<TDocument> {
-			//	IsUpsert = true
-			//};
-			//var ignored = collection.FindOneAndReplaceAsync(filter, data, replaceOptions).Result;  // Use this one to replace the WHOLE entry wholesale
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
 			};
 			var ignored = collection.FindOneAndUpdateAsync(filter, update, updateOptions).Result; // Use this one to update fields within the entry. I think this one is preferred.
-			Console.WriteLine("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
+			Logger.Notice("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
 
 			return true;
 		}

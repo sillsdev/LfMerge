@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 using LfMerge.Settings;
 using Chorus.sync;
+using SIL.Progress;
 
 namespace LfMerge.Actions
 {
@@ -19,15 +20,23 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
-			GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
+			Logger.Notice("LfMerge: starting Sync");
 
-			var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
-			var config = new ProjectFolderConfiguration(projectFolderPath);
-			var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
-			var options = new SyncOptions();
-			synchroniser.SyncNow(options);
+			using (var scope = MainClass.Container.BeginLifetimeScope())
+			{
+				// TODO: Add this back in once we verify UpdateMongoDbFromFdo working
+				//GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
 
-			GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
+				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
+				var config = new ProjectFolderConfiguration(projectFolderPath);
+				var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
+				var options = new SyncOptions();
+				synchroniser.SyncNow(options);
+
+				GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
+			}
+
+			Logger.Notice("LfMerge: done with Sync");
 		}
 
 		protected override ActionNames NextActionName

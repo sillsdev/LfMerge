@@ -39,30 +39,35 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
+			Logger.Notice("MongoDbFromFdo: starting");
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
 				Logger.Notice("Can't find FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
+			Logger.Notice("MongoDbFromFdo: getting cache");
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
 				Logger.Notice("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
+			Logger.Notice("MongoDbFromFdo: serviceLocator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
 				Logger.Notice("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
+			Logger.Notice("MongoDbFromFdo: LexEntryRepository");
 			ILexEntryRepository repo = _servLoc.GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
 				Logger.Notice("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
+			Logger.Notice("MongoDbFromFdo: MetaDataCacheAccessor");
 			_fdoMetaData = (IFwMetaDataCacheManaged)_cache.MetaDataCacheAccessor;
 			if (_fdoMetaData == null)
 			{
@@ -70,6 +75,7 @@ namespace LfMerge.Actions
 			}
 			_converter = new CustomFieldConverter(_cache);
 
+			Logger.Notice("LfMerge: for loop");
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
@@ -248,6 +254,8 @@ namespace LfMerge.Actions
 //			Logger.Notice(lfSense.CustomFields.ToString());
 //			Logger.Notice("Custom field GUIDs for this sense:");
 //			Logger.Notice(lfSense.CustomFieldGuids.ToString());
+			Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
+			Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -288,7 +296,8 @@ namespace LfMerge.Actions
 //			Logger.Notice(result.CustomFields.ToString());
 //			Logger.Notice("Custom field GUIDs for this example:");
 //			Logger.Notice(result.CustomFieldGuids.ToString());
-
+			Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
+			Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return result;
 		}
 
