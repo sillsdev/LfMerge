@@ -88,7 +88,7 @@ namespace LfMerge.Actions
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Guid guid = lfEntry.Guid ?? Guid.Empty;
-				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
+				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, MagicStrings.LfCollectionNameForLexicon);
 			}
 
 			// make sure LF has all the writing systems that FDO has

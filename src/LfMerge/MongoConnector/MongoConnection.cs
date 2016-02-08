@@ -194,20 +194,18 @@ namespace LfMerge.MongoConnector
 		// both of them with a different FilterDefinition.
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
-			// TODO: This "update this document in this MongoDB collection" code was moved from UpdateMongoDbFromFdoAction. Fix it up so it works.
-			IMongoDatabase mongoDb = GetProjectDatabase(project); // TODO: If this is slow, might want to cache it in the instance
+			IMongoDatabase mongoDb = GetProjectDatabase(project);
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
-			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			//Logger.Notice("About to save {0} {1}", typeof(TDocument), guid);
 			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
 			};
-			var ignored = collection.FindOneAndUpdateAsync(filter, update, updateOptions).Result; // Use this one to update fields within the entry. I think this one is preferred.
+			TDocument ignored = collection.FindOneAndUpdate(filter, update, updateOptions);
 			Logger.Notice("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
 
 			return true;
