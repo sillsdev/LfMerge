@@ -26,13 +26,13 @@ namespace LfMerge.Actions
 			{
 				// TODO: Add this back in once we verify UpdateMongoDbFromFdo working
 				//GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
-
+				/*
 				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
 				var config = new ProjectFolderConfiguration(projectFolderPath);
 				var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
 				var options = new SyncOptions();
 				synchroniser.SyncNow(options);
-
+*/
 				GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
 			}
 
