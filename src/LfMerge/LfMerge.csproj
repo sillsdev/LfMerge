@@ -165,6 +165,8 @@
     <Compile Include="MagicStrings.cs" />
     <Compile Include="Actions\SynchronizeAction.cs" />
     <Compile Include="Actions\EditAction.cs" />
+    <Compile Include="LanguageForge\Model\LfProject.cs" />
+    <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

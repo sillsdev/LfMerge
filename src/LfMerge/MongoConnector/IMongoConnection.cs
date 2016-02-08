@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using MongoDB.Driver;
-using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Model;
 
 namespace LfMerge.MongoConnector
 {
@@ -14,6 +14,8 @@ namespace LfMerge.MongoConnector
 		IMongoDatabase GetMainDatabase(); // TODO: Maybe remove this one?
 		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName);
 		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName);
+		IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project);
+		bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems);
 	}
 }
 

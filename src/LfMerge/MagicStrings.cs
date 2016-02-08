@@ -8,8 +8,18 @@ namespace LfMerge
 	{
 		public const string LfOptionListCodeForGrammaticalInfo = "grammatical-info";
 		public const string LfOptionListNameForGrammaticalInfo = "Part of Speech";
+
+		// Collections found in individual project DBs
 		public const string LfCollectionNameForLexicon = "lexicon";
 		public const string LfCollectionNameForOptionLists = "optionlists";
+
+		// Collections found in main database
+		public const string LfCollectionNameForProjectRecords = "projects";
+
+		public const string WSFolder = "WritingSystemStore";
+
+		// For Flex v9.0+
+		//public const string WSFolder = "SharedSettings";
 
 		public const string FDOModelVersion = "7000068";
 	}

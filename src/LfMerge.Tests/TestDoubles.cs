@@ -143,6 +143,16 @@ namespace LfMerge.Tests
 			// TODO: Add appropriate mock functions if needed
 			return mockDb as IMongoDatabase;
 		}
+			
+		public IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project)
+		{
+			return new List<LfInputSystemRecord>();
+		}
+
+		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)
+		{
+			return false;
+		}
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
@@ -195,6 +205,16 @@ namespace LfMerge.Tests
 			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
 			// TODO: Add appropriate mock functions if needed
 			return mockDb as IMongoDatabase;
+		}
+
+		public IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project)
+		{
+			return new List<LfInputSystemRecord>();
+		}
+
+		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)
+		{
+			return false;
 		}
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)

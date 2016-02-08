@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
@@ -83,6 +84,15 @@ namespace LfMerge.Actions
 				Guid guid = lfEntry.Guid ?? Guid.Empty;
 				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			}
+
+			// make sure LF has all the writing systems that FDO has
+			/*
+			var wsList = _connection.GetInputSystems(project);
+			foreach (var filename in Directory.EnumerateFiles(Path.Combine(Settings.WebWorkDirectory, MagicStrings.WSFolder))) {
+				Ws = getfromfilename(filename);
+				ensureWSInMongo(Ws);
+			}
+			*/
 		}
 
 		private void DebugOut(string fieldName, LfMultiText multiText)
