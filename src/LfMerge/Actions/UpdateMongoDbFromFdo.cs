@@ -254,8 +254,8 @@ namespace LfMerge.Actions
 //			Logger.Notice(lfSense.CustomFields.ToString());
 //			Logger.Notice("Custom field GUIDs for this sense:");
 //			Logger.Notice(lfSense.CustomFieldGuids.ToString());
-			Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
-			Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
+			//Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
+			//Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -296,8 +296,8 @@ namespace LfMerge.Actions
 //			Logger.Notice(result.CustomFields.ToString());
 //			Logger.Notice("Custom field GUIDs for this example:");
 //			Logger.Notice(result.CustomFieldGuids.ToString());
-			Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
-			Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
+			//Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
+			//Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return result;
 		}
 

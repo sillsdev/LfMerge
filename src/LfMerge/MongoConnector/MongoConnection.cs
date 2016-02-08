@@ -102,8 +102,11 @@ namespace LfMerge.MongoConnector
 				case "BsonDocument":
 					updates.Add(builder.Set(prop.Name, (BsonDocument)prop.GetValue(doc)));
 					break;
-				case "Guid":
-					updates.Add(builder.Set(prop.Name, (Guid)prop.GetValue(doc)));
+				case "Nullable`1":
+					if (prop.Name.Contains("Guid"))
+						updates.Add(builder.Set(prop.Name, ((Guid)prop.GetValue(doc)).ToString()));
+					else
+						updates.Add(builder.Set(prop.Name, prop.GetValue(doc)));
 					break;
 				case "LfAuthorInfo":
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));
@@ -150,9 +153,9 @@ namespace LfMerge.MongoConnector
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
-			Logger.Notice("About to save {0} {1}", typeof(TDocument), guid);
-//			Console.WriteLine("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-//			Console.WriteLine("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			//Logger.Notice("About to save {0} {1}", typeof(TDocument), guid);
+			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			// NOTE: Throwing away result of FindOneAnd___Async on purpose.
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true

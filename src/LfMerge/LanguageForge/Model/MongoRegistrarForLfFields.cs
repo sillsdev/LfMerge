@@ -13,14 +13,6 @@ namespace LfMerge.LanguageForge.Model
 		base(new LfConfigFieldTypeMapper())
 		{
 		}
-
-		public override void RegisterClassMappings()
-		{
-			BsonClassMap.RegisterClassMap<LfLexEntry>(cm => {
-				cm.AutoMap();
-				cm.MapMember(c => c.Guid).SetDefaultValue(Guid.Empty);
-			});
-		}
 	}
 }
 
