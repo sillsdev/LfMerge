@@ -190,40 +190,33 @@ namespace LfMerge.MongoConnector
 			return builder.Combine(updates);
 		}
 
-		// TODO: These two UpdateRecord overloads share MOST of their code. Refactor to one method, called by
-		// both of them with a different FilterDefinition.
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
-			IMongoDatabase mongoDb = GetProjectDatabase(project);
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
-			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
-			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
-			//Logger.Notice("About to save {0} {1}", typeof(TDocument), guid);
-			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
-				IsUpsert = true
-			};
-			collection.FindOneAndUpdate(filter, update, updateOptions);
-			Logger.Notice("Done saving {0} {1} into Mongo DB {2}", typeof(TDocument), guid, mongoDb.DatabaseNamespace.DatabaseName);
-
-			return true;
+			bool result = UpdateRecordImpl(project, data, filter, collectionName);
+			Logger.Notice("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
+			return result;
 		}
 
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
 		{
-			IMongoDatabase mongoDb = GetProjectDatabase(project);
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
-			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("_id", id);
-			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName); // This was hardcoded to "lexicon" in the UpdateMongoDbFromFdoAction version
+			bool result = UpdateRecordImpl(project, data, filter, collectionName);
+			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB", typeof(TDocument), id);
+			return result;
+		}
+
+		private bool UpdateRecordImpl<TDocument>(ILfProject project, TDocument data, FilterDefinition<TDocument> filter, string collectionName)
+		{
+			IMongoDatabase mongoDb = GetProjectDatabase(project);
+			UpdateDefinition<TDocument> update = BuildUpdate(data);
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			//Logger.Notice("About to save {0} with ObjectID {1}", typeof(TDocument), id);
 			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			collection.FindOneAndUpdate(filter, update);
-			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB {2}", typeof(TDocument), id, mongoDb.DatabaseNamespace.DatabaseName);
-
 			return true;
 		}
 	}
