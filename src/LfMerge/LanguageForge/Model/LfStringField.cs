@@ -19,6 +19,8 @@ namespace LfMerge.LanguageForge.Model
 
 		public static LfStringField FromString(string source)
 		{
+			if (source == null)
+				return null;
 			return new LfStringField { Value = source };
 		}
 

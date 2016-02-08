@@ -1,0 +1,43 @@
+﻿// Copyright (c) 2015 SIL International
+// This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+
+using System.Collections.Generic;
+
+namespace LfMerge
+{
+	public static class PartOfSpeechMasterList
+	{
+		public static readonly Dictionary<string, string> FlatPosAbbrevs = new Dictionary<string, string> {
+			// INSERT FLAT ABBREVS HERE
+		};
+
+		public static readonly Dictionary<string, string> HierarchicalPosAbbrevs = new Dictionary<string, string> {
+			// INSERT HIERARCHICAL ABBREVS HERE
+		};
+
+		public static readonly Dictionary<string, string> FlatPosGuidsFromAbbrevs = new Dictionary<string, string> {
+			// INSERT FLAT REVERSE ABBREVS HERE
+		};
+
+		public static readonly Dictionary<string, string> HierarchicalPosGuidsFromAbbrevs = new Dictionary<string, string> {
+			// INSERT HIERARCHICAL REVERSE ABBREVS HERE
+		};
+
+		public static readonly Dictionary<string, string> FlatPosGuids = new Dictionary<string, string> { // TODO: Rename this to FlatPosGuidsFromNames
+			// INSERT FLAT REVERSE NAMES HERE
+		};
+
+		public static readonly Dictionary<string, string> HierarchicalPosGuids = new Dictionary<string, string> { // TODO: Rename this to HierarchicalPosGuidsFromNames
+			// INSERT HIERARCHICAL REVERSE NAMES HERE
+		};
+
+		public static readonly Dictionary<string, string> FlatPosNames = new Dictionary<string, string> {
+			// INSERT FLAT NAMES HERE
+		};
+
+		public static readonly Dictionary<string, string> HierarchicalPosNames = new Dictionary<string, string> {
+			// INSERT HIERARCHICAL NAMES HERE
+		};
+	}
+}
+

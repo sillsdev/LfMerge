@@ -1,9 +1,10 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using NUnit.Framework;
-using LfMerge.Actions;
 using System.IO;
+using Chorus.VcsDrivers.Mercurial;
+using LfMerge.Actions;
+using NUnit.Framework;
 
 namespace LfMerge.Tests.Actions
 {
@@ -38,7 +39,7 @@ namespace LfMerge.Tests.Actions
 			var sut = LfMerge.Actions.Action.GetAction(ActionNames.Synchronize);
 
 			// Execute/Verify
-			Assert.That(() => sut.Run(lfProj), Throws.InstanceOf<Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException>());
+			Assert.That(() => sut.Run(lfProj), Throws.InstanceOf<RepositoryAuthorizationException>());
 
 			// Verify
 			Assert.That(lfProj.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));

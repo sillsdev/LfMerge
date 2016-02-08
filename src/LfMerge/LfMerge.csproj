@@ -165,6 +165,8 @@
     <Compile Include="MagicStrings.cs" />
     <Compile Include="Actions\SynchronizeAction.cs" />
     <Compile Include="Actions\EditAction.cs" />
+    <Compile Include="DataConverters\TsStringConverter.cs" />
+    <Compile Include="DataConverters\GrammarConverter.cs" />
     <Compile Include="LanguageForge\Model\LfProject.cs" />
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
   </ItemGroup>

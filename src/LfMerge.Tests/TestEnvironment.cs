@@ -29,14 +29,12 @@ namespace LfMerge.Tests
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
-			bool fakeMongoConnectionShouldStoreData = false,
 			string testProjectCode = "")
 		{
 			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 				+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
-				fakeMongoConnectionShouldStoreData,
 				_languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			Logger = MainClass.Container.Resolve<ILogger>();
@@ -48,23 +46,25 @@ namespace LfMerge.Tests
 			{
 				CopySampleFwProject(testProjectCode);
 			}
+			SIL.Reporting.Logger.Init(Path.Combine(Directory.GetCurrentDirectory(), "LfMergeTests"),
+				false);
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, bool fakeMongoConnectionShouldStoreData, string temporaryFolder)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
+			containerBuilder.RegisterType<LfMergeSettingsDouble>()
+				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
+				.As<LfMergeSettingsIni>();
+
+			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<LfMergeSettingsDouble>().As<LfMergeSettingsIni>()
-					.WithParameter(new TypedParameter(typeof(string), temporaryFolder));
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
-				if (fakeMongoConnectionShouldStoreData)
-					containerBuilder.RegisterType<MongoConnectionDoubleThatStoresData>().As<IMongoConnection>();
-				else
-					containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
@@ -90,6 +90,7 @@ namespace LfMerge.Tests
 			LanguageForgeProjectAccessor.Reset();
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
+			SIL.Reporting.Logger.ShutDown();
 		}
 
 		public string LanguageForgeFolder

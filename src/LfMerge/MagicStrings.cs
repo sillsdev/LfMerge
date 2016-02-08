@@ -12,6 +12,7 @@ namespace LfMerge
 		// Collections found in individual project DBs
 		public const string LfCollectionNameForLexicon = "lexicon";
 		public const string LfCollectionNameForOptionLists = "optionlists";
+		public const string UnknownString = "***";
 
 		// Collections found in main database
 		public const string LfCollectionNameForProjectRecords = "projects";

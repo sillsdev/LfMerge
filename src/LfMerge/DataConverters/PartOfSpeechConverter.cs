@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
+using LfMerge.LanguageForge.Model;
 using System;
 using System.IO;
 using System.Linq;
@@ -15,12 +16,19 @@ namespace LfMerge.DataConverters
 		private IPartOfSpeechRepository _posRepo;
 		private IPartOfSpeechFactory _posFactory;
 
+		// TODO: Should we also pass in an LfProject object? And make the POSConverter responsible for
+		// updating the LF part of speech list as needed? Consider, and refactor if the answer is yes.
 		public PartOfSpeechConverter(FdoCache fdoCache)
 		{
 			_cache = fdoCache;
 			_posRepo = _cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
 			_posFactory = _cache.ServiceLocator.GetInstance<IPartOfSpeechFactory>();
 		}
+
+		// TODO: Do we need the GOLDEtic.xml parsing code any longer?
+		// ... Yes, until LF gains the ability to create new grammar entries *properly*. Until then,
+		// we'll have to keep this code around so we can create proper PoSes in FW as needed.
+		// Once LF gains that feature, we can remove the whole GOLDEtic parsing code.
 
 		public static Lazy<Stream> GoldEticXml = new Lazy<Stream>(() =>
 			typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml")
@@ -63,7 +71,12 @@ namespace LfMerge.DataConverters
 
 		public IPartOfSpeech FromGuid(Guid guid)
 		{
-			return FromGuidStr(guid.ToString());
+			IPartOfSpeech result;
+			if (TryGetPos(guid, out result))
+				return result;
+			string name = NameFromGuidStr(guid.ToString(), flat:false);
+			if (name == null) return null; // If it's not a well-known name, we'll need to create an entry
+			return CreateFromWellKnownGuid(guid);
 		}
 
 		public IPartOfSpeech FromGuidStr(string guidStr)
@@ -86,7 +99,7 @@ namespace LfMerge.DataConverters
 		{
 			IPartOfSpeech posFromGuid = FromGuidStr(guidStr);
 			if (posFromGuid != null) return posFromGuid;
-			return FromName(name, userWs, fallbackWs);
+			return FromAbbrevAndName(name, userWs, fallbackWs);
 		}
 
 		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa)
@@ -158,8 +171,12 @@ namespace LfMerge.DataConverters
 		private GoldEticItem FindGoldEticItem(string searchTerm, string wsToSearch)
 		{
 			foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
+			{
+				if (item.ORCDelimitedAbbrevByWs(wsToSearch) == searchTerm || item.AbbrevByWs(wsToSearch) == searchTerm)
+					return item;
 				if (item.ORCDelimitedNameByWs(wsToSearch) == searchTerm || item.NameByWs(wsToSearch) == searchTerm)
 					return item;
+			}
 			return null;
 		}
 
@@ -190,6 +207,11 @@ namespace LfMerge.DataConverters
 		{
 			int wsId = _cache.WritingSystemFactory.GetWsFromStr(userWs);
 			pos.Name.set_String(wsId, finalName);
+		}
+
+		private bool TryGetPos(Guid guid, out IPartOfSpeech result)
+		{
+			return _posRepo.TryGetObject(guid, out result);
 		}
 
 		private bool TryGetPos(string guidStr, out IPartOfSpeech result)
@@ -255,54 +277,46 @@ namespace LfMerge.DataConverters
 			return CreateFromWellKnownItem(item);
 		}
 
-		public IPartOfSpeech CreateFromCustomName(string nameHierarchy, string userWs = "en")
+		public IPartOfSpeech CreateFromCustomName(string abbrev, string name, string userWs = "en")
 		{
 			// TODO: Verify that this handles "A|B|c" and "A|b|c" cases, where part of the name is official
 			// (Because I think if A does not yet exist, and "A|b|c" is found, A might get the wrong GUID.)
 			int wsId = _cache.WritingSystemFactory.GetWsFromStr(userWs);
-			return (IPartOfSpeech)_cache.LangProject.PartsOfSpeechOA.FindOrCreatePossibility(nameHierarchy, wsId, true);
+			var pos = (IPartOfSpeech)_cache.LangProject.PartsOfSpeechOA.FindOrCreatePossibility(name, wsId, true);
+			pos.Abbreviation.set_String(wsId, abbrev);
+			return pos;
 		}
 
-		// TODO: Rename this function, then remove this comment
-		// TODO: This might be a duplicate by now, in which case it should be removed
-		private void RenameThisFunction(IPartOfSpeech pos, GoldEticItem item, string userSuppliedName = null, string userWs = "en")
-		{
-			if (item != null)
-			{
-				PopulateWellKnownPos(pos, item);
-			}
-			else
-			{
-				if (userSuppliedName == null)
-					throw new ArgumentNullException("For non-well-known parts of speech, we need at least a name!");
-				PopulateCustomPos(pos, userSuppliedName, userWs);
-			}
-			if (item != null && item.Parent != null)
-			{
-				IPartOfSpeech parent;
-				Guid guid = Guid.Empty;
-				Guid.TryParse(item.Guid, out guid);
-				if (guid != Guid.Empty && _posRepo.TryGetObject(guid, out parent))
-					Console.WriteLine(parent);
-				else
-					Console.WriteLine("Create parent as per this function...");
-			}
-		}
-
-		public IPartOfSpeech FromName(string name, string wsToSearch = "en", string fallbackWs = "en")
+		public IPartOfSpeech FromAbbrevAndName(string abbrev, string name, string wsToSearch = "en", string fallbackWs = "en")
 		{
 			string guidStr;
 			string foundWs = fallbackWs;
 			GoldEticItem item = null;
 			Guid guid = Guid.Empty;
 
-			// Try four different ways to look up this name in GOLDEtic
-			if (!PartOfSpeechMasterList.HierarchicalPosGuids.TryGetValue(name, out guidStr))
+			if (name == null)
+				name = abbrev; // Worst case, the new PoS will have something like abbrev "adj" and name "adj"
+
+			// TODO: Refactor this to use a "while (!found) {}" loop with break working as a "goto".
+			// That should look cleaner than this code, which is getting a bit messy by now.
+
+			// Try eight different ways to look up this name in GOLDEtic: abbreviation first, then name
+			if (!PartOfSpeechMasterList.HierarchicalPosGuidsFromAbbrevs.TryGetValue(abbrev, out guidStr))
+				guidStr = null;
+			if (guidStr == null && !PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs.TryGetValue(abbrev, out guidStr))
+				guidStr = null;
+			if (guidStr == null && !PartOfSpeechMasterList.HierarchicalPosGuids.TryGetValue(name, out guidStr))
 				guidStr = null;
 			if (guidStr == null && !PartOfSpeechMasterList.FlatPosGuids.TryGetValue(name, out guidStr))
 				guidStr = null;
 			if (guidStr == null)
 			{
+				item = FindGoldEticItem(abbrev, wsToSearch);
+				if (item != null)
+				{
+					guidStr = item.Guid;
+					foundWs = wsToSearch;
+				}
 				item = FindGoldEticItem(name, wsToSearch);
 				if (item != null)
 				{
@@ -312,6 +326,12 @@ namespace LfMerge.DataConverters
 			}
 			if (guidStr == null)
 			{
+				item = FindGoldEticItem(abbrev, fallbackWs);
+				if (item != null)
+				{
+					guidStr = item.Guid;
+					foundWs = fallbackWs;
+				}
 				item = FindGoldEticItem(name, fallbackWs);
 				if (item != null)
 				{
@@ -328,7 +348,7 @@ namespace LfMerge.DataConverters
 			// So... did we find it?
 			if (guid != Guid.Empty)
 			{
-				Console.WriteLine("Found official GUID {0} for part of speech {1}", guid, name);
+				Console.WriteLine("Found official GUID {0} for part of speech {1}", guid, abbrev);
 				IPartOfSpeech result;
 				if (_posRepo.TryGetObject(guid, out result))
 					return result;
@@ -341,18 +361,57 @@ namespace LfMerge.DataConverters
 				{
 					// This really shouldn't happen. TODO: Log this instead of printing to console.
 					Console.WriteLine("Error: Well-known GUID {0} for part of speech \"{1}\" was not found in GOLDEtic.xml data. " +
-						"This really shouldn't happen", guid, name);
+						"This really shouldn't happen", guid, abbrev);
 					// Fall back to custom name creation instead
-					return CreateFromCustomName(name, foundWs);
+					return CreateFromCustomName(abbrev, foundWs);
 				}
 				return newPos;
 			}
 			else
 			{
 				// No "official" GUID, so this is a "custom" PartOfSpeech... and some (but not necessarily all) of its ancestors might be as well.
-				var pos = CreateFromCustomName(name, foundWs);
-				Console.WriteLine("Creating part of speech with GUID {0} and full name {3} for name {1} in ws {2}.", pos.Guid, name, foundWs, pos.NameHierarchyString);
+				var pos = CreateFromCustomName(abbrev, foundWs);
+				Console.WriteLine("Creating part of speech with GUID {0} and full name {3} for name {1} in ws {2}.", pos.Guid, abbrev, foundWs, pos.NameHierarchyString);
 				return pos;
+			}
+		}
+
+		// We ask for the writing system ID for English because the calling code already has that
+		// TODO: Consider refactoring to where this is an instance method, and it looks up the
+		// writing system for English only once. Measure whether that saves significant time or not.
+		public static string ToLfPosStringKey(IPartOfSpeech pos, LfOptionList lfGrammar, int wsEn)
+		{
+			string result;
+			if (pos == null)
+				return null;
+			if (lfGrammar != null)
+			{
+				// TODO: Optimize this by keeping lfGrammar in the object instance, and building the dictionary
+				// only once.
+				Dictionary<Guid, string> lfGrammarDict = lfGrammar.Items.ToDictionary(
+					item => item.Guid.GetValueOrDefault(),
+					item => item.Key
+				);
+				if (lfGrammarDict.TryGetValue(pos.Guid, out result))
+					return result;
+				// We shouldn't get here, because the grammar list SHOULD be pre-populated.
+				// TODO: Make this a log message. (Pass an ILogger instance into the constructor first).
+				Console.WriteLine("ERROR: Got a part of speech without a corresponding LF grammar entry. " +
+					"FDO PoS '{0}' had GUID {1} but no LF grammar entry was found",
+					pos.AbbrAndName,
+					pos.Guid
+				);
+				return null;
+			}
+			if (pos.Abbreviation == null || pos.Abbreviation.get_String(wsEn) == null)
+			{
+				// Last-ditch effort
+				char ORC = '\ufffc';
+				return pos.AbbrevHierarchyString.Split(ORC).LastOrDefault();
+			}
+			else
+			{
+				return TsStringConverter.SafeTsStringText(pos.Abbreviation.get_String(wsEn));
 			}
 		}
 	}

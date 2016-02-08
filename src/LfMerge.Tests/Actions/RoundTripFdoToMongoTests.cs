@@ -25,11 +25,10 @@ namespace LfMerge.Tests.Actions
 	{
 		public const string testProjectCode = "TestLangProj";
 		private TestEnvironment _env;
-		private MongoConnectionDoubleThatStoresData _conn;
+		private MongoConnectionDouble _conn;
 		private MongoProjectRecordFactory _recordFactory;
 		private UpdateFdoFromMongoDbAction sutMongoToFdo;
 		private UpdateMongoDbFromFdo sutFdoToMongo;
-		private SampleData _sampleData;
 
 		public RoundTripFdoToMongoTests()
 		{
@@ -39,8 +38,8 @@ namespace LfMerge.Tests.Actions
 		public void Setup()
 		{
 			//_env = new TestEnvironment();
-			_env = new TestEnvironment(fakeMongoConnectionShouldStoreData: true, testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDoubleThatStoresData;
+			_env = new TestEnvironment(testProjectCode: testProjectCode);
+			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 			if (_conn == null)
 				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection that stores data in order to work.");
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
@@ -60,11 +59,6 @@ namespace LfMerge.Tests.Actions
 				_env.Logger,
 				_conn
 			);
-
-			// TODO: Get rid of this sample data once FDO->Mongo code updates the option list with
-			// part-of-speech GUIDs.
-			_sampleData = new SampleData();
-			_conn.AddToMockData<LfOptionList>("optionlists", _sampleData.bsonOptionListData);
 		}
 
 		[TearDown]

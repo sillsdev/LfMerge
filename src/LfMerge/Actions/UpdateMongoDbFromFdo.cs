@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
@@ -28,6 +29,8 @@ namespace LfMerge.Actions
 		private FdoCache _cache;
 		private IFdoServiceLocator _servLoc;
 		private IFwMetaDataCacheManaged _fdoMetaData;
+		private ICmPossibilityList _fdoPartsOfSpeech;
+		private LfOptionList _lfGrammar;
 		private CustomFieldConverter _converter;
 		private IMongoConnection _connection;
 
@@ -44,43 +47,46 @@ namespace LfMerge.Actions
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
-				Logger.Notice("Can't find FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			Logger.Notice("MongoDbFromFdo: getting cache");
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
-				Logger.Notice("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			Logger.Notice("MongoDbFromFdo: serviceLocator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
-				Logger.Notice("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			Logger.Notice("MongoDbFromFdo: LexEntryRepository");
 			ILexEntryRepository repo = _servLoc.GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
-				Logger.Notice("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", project.FwProjectCode);
 				return;
 			}
 			Logger.Notice("MongoDbFromFdo: MetaDataCacheAccessor");
 			_fdoMetaData = (IFwMetaDataCacheManaged)_cache.MetaDataCacheAccessor;
 			if (_fdoMetaData == null)
 			{
-				Logger.Notice("***WARNING:*** Don't have access to the FW metadata; custom fields may fail!");
+				Logger.Warning("Don't have access to the FW metadata; custom fields may fail!");
 			}
 			_converter = new CustomFieldConverter(_cache);
 
-			Logger.Notice("LfMerge: for loop");
+			// Update grammar before updating entries, so we can reference GUIDs in parts of speech
+			_fdoPartsOfSpeech = _cache.LanguageProject.PartsOfSpeechOA;
+			_lfGrammar = UpdateGrammarOptionListFromFdo(project, _fdoPartsOfSpeech);
+
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
-				Logger.Notice("Populated LfEntry {0}", lfEntry.Guid);
+				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Guid guid = lfEntry.Guid ?? Guid.Empty;
 				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			}
@@ -93,20 +99,6 @@ namespace LfMerge.Actions
 				ensureWSInMongo(Ws);
 			}
 			*/
-		}
-
-		private void DebugOut(string fieldName, LfMultiText multiText)
-		{
-			if (multiText == null) return;
-			foreach (KeyValuePair<string, LfStringField> kv in multiText)
-			{
-				Logger.Notice("{0} in writing system {1} is \"{2}\"", fieldName, kv.Key, kv.Value);
-			}
-		}
-
-		private void DebugOut(string fieldName, LfStringArrayField strings)
-		{
-			Logger.Notice("{0} values are [{1}]", fieldName, String.Join(", ", strings.Values));
 		}
 
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
@@ -134,9 +126,6 @@ namespace LfMerge.Actions
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
 
-			DebugOut("Gloss", lfSense.Gloss);
-			DebugOut("Definition", lfSense.Definition);
-
 			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
 			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
 			lfSense.AnthropologyNote = ToMultiText(fdoSense.AnthroNote);
@@ -152,26 +141,24 @@ namespace LfMerge.Actions
 			if (fdoSense.MorphoSyntaxAnalysisRA != null)
 			{
 				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA);
-				if (pos == null)
-				{
+				// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
+				// writing system alternatives, and simplify the process of getting a real string
+				// (as opposed to a TsString) from it.
+				int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+				if (pos == null || pos.Abbreviation == null)
 					lfSense.PartOfSpeech = null;
-					lfSense.PartOfSpeechGuid = null;
-				}
 				else
-				{
-					lfSense.PartOfSpeech = LfStringField.FromString(pos.NameHierarchyString);
-					// Or: lfSense.PartOfSpeech = LfStringField.FromString(pos.Name.BestAnalysisVernacularAlternative.Text);
-					lfSense.PartOfSpeechGuid = pos.Guid; // TODO: This should eventually end up in the project config, not in the entry
-					// TODO: Should we use the GUID of the MSA instead? Think about it.
-				}
+					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
+					lfSense.PartOfSpeech = LfStringField.FromString(
+						PartOfSpeechConverter.ToLfPosStringKey(pos, _lfGrammar, wsEn));
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
 				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(FdoPictureToLfPicture));
 			foreach (LfPicture picture in lfSense.Pictures)
 			{
-				// TODO: Remove this debugging foreach loop
-				Logger.Notice("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
+				// TODO: Remove this debugging foreach loop once we know pictures are working
+				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
 			}
 			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
@@ -184,7 +171,6 @@ namespace LfMerge.Actions
 			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoSense.ScientificName);
 			lfSense.SemanticDomain = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.SemanticDomainsRC);
 
-			DebugOut("Semantic domains", lfSense.SemanticDomain);
 
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
@@ -247,23 +233,12 @@ namespace LfMerge.Actions
 			fdoSense.LexSenseOutline;
 			*/
 
-			DebugOut("Sense bibliography", lfSense.SenseBibliography);
-			DebugOut("Anthropology note", lfSense.AnthropologyNote);
-			DebugOut("Discourse note", lfSense.DiscourseNote);
-			DebugOut("Encyclopedic note", lfSense.EncyclopedicNote);
-			DebugOut("General note", lfSense.GeneralNote);
-			DebugOut("Usages", lfSense.Usages);
-
 			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoSense, "senses");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
-//			Logger.Notice("Custom fields for this sense:");
-//			Logger.Notice(lfSense.CustomFields.ToString());
-//			Logger.Notice("Custom field GUIDs for this sense:");
-//			Logger.Notice(lfSense.CustomFieldGuids.ToString());
 			//Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
 			//Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
@@ -302,10 +277,6 @@ namespace LfMerge.Actions
 
 			result.CustomFields = customFieldsBson;
 			result.CustomFieldGuids = customFieldGuids;
-//			Logger.Notice("Custom fields for this example:");
-//			Logger.Notice(result.CustomFields.ToString());
-//			Logger.Notice("Custom field GUIDs for this example:");
-//			Logger.Notice(result.CustomFieldGuids.ToString());
 			//Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
 			//Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return result;
@@ -331,7 +302,7 @@ namespace LfMerge.Actions
 		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
 		{
 			if (fdoEntry == null) return null;
-			Logger.Notice("Converting one entry");
+			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			string AnalysisWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
@@ -344,8 +315,6 @@ namespace LfMerge.Actions
 			else
 				lfEntry.Lexeme = ToMultiText(fdoLexeme.Form);
 			// Other fields of fdoLexeme (AllomorphEnvironments, LiftResidue, MorphTypeRA, etc.) not mapped
-
-			DebugOut("Lexeme", lfEntry.Lexeme);
 
 			// Fields below in alphabetical order by ILexSense property, except for Lexeme
 			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
@@ -400,20 +369,12 @@ namespace LfMerge.Actions
 			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			DebugOut("Citation form", lfEntry.CitationForm);
-			DebugOut("Entry restrictions", lfEntry.EntryRestrictions);
-			DebugOut("Etymology Source", lfEntry.EtymologySource);
-
 			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfEntry.CustomFields = customFieldsBson;
 			lfEntry.CustomFieldGuids = customFieldGuids;
-//			Logger.Notice("Custom fields for this entry:");
-//			Logger.Notice(lfEntry.CustomFields.ToString());
-//			Logger.Notice("Custom field GUIDs for this entry:");
-//			Logger.Notice(lfEntry.CustomFieldGuids.ToString());
 
 			return lfEntry;
 
@@ -459,6 +420,23 @@ namespace LfMerge.Actions
 			fdoEntry.VisibleVariantEntryRefs;
 
 			*/
+		}
+
+		private LfOptionList UpdateGrammarOptionListFromFdo(ILfProject project, ICmPossibilityList partsOfSpeech)
+		{
+			// _connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
+			LfOptionList lfGrammarList = _connection
+				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(list => list.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			var converter = new GrammarConverter(_cache, lfGrammarList);
+			LfOptionList newGrammarList = converter.PrepareGrammarOptionListUpdate(partsOfSpeech);
+			_connection.UpdateRecord<LfOptionList>(
+				project,
+				newGrammarList,
+				newGrammarList.Id,
+				MagicStrings.LfCollectionNameForOptionLists
+			);
+			return newGrammarList;
 		}
 
 		protected override ActionNames NextActionName
