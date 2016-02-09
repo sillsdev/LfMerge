@@ -23,9 +23,9 @@ namespace LfMerge.LanguageForge.Model
 			return value != null && !value.IsEmpty;
 		}
 
-		protected bool _ShouldSerializeList(List<object> value)
+		protected bool _ShouldSerializeList(IEnumerable<object> value)
 		{
-			return value != null && value.Count > 0;
+			return value != null && value.GetEnumerator().MoveNext() != false;
 		}
 
 		protected bool _ShouldSerializeBsonDocument(BsonDocument value)

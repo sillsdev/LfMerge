@@ -53,8 +53,8 @@ namespace LfMerge.LanguageForge.Model
 		// Maybe later we can write reflection code to automatically add these to the class...
 		public bool ShouldSerializeSemanticDomain() { return _ShouldSerializeLfStringArrayField(SemanticDomain); }
 		public bool ShouldSerializeExamples() { return _ShouldSerializeList(Examples); }
-		public bool ShouldSerializeCustomFields() { return _ShouldSerializeList(CustomFields); }
-		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeList(CustomFieldGuids); }
+		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
+		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
 		// public bool ShouldSerializeAuthorInfo() { return true; } // Not needed, as this is the default
 		public bool ShouldSerializePictures() { return _ShouldSerializeList(Pictures); }
 		public bool ShouldSerializeDefinition() { return _ShouldSerializeLfMultiText(Definition); }

@@ -34,8 +34,8 @@ namespace LfMerge.LanguageForge.Model
 		public bool ShouldSerializeTranslationGuid() { return TranslationGuid != System.Guid.Empty; }
 		public bool ShouldSerializeReference() { return _ShouldSerializeLfMultiText(Reference); }
 		public bool ShouldSerializeExamplePublishIn() { return _ShouldSerializeLfStringArrayField(ExamplePublishIn); }
-		public bool ShouldSerializeCustomFields() { return _ShouldSerializeList(CustomFields); }
-		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeList(CustomFieldGuids); }
+		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
+		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
 	}
 }
 
