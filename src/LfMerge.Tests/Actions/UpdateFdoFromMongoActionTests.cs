@@ -247,7 +247,7 @@ namespace LfMerge.Tests.Actions
 
 
 		[Test]
-		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldAddOnlyOneNewGrammarEntry()
+		public void Action_WithOneWellKnownTopLevelItemButNoGuidInMongoGrammar_ShouldAddOnlyOneNewGrammarEntry()
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
@@ -255,7 +255,7 @@ namespace LfMerge.Tests.Actions
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
-			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
+			grammarEntry.Add("key", "adp"); // Standard abbreviation for "adposition", a top-level entry
 			grammarEntry.Add("value", "NotTheRightName");
 			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
@@ -267,7 +267,76 @@ namespace LfMerge.Tests.Actions
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
-			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest + 1)); // Ending up with +2. TODO: Find out why.
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest + 1));
+		}
+
+		[Test]
+		public void Action_WithOneWellKnownItemThatHasOneParentButNoGuidInMongoGrammar_ShouldAddTwoNewGrammarEntries()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector", whose parent is "connector"
+			grammarEntry.Add("value", "NotTheRightName");
+			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest + 2));
+		}
+
+		[Test]
+		public void Action_WithOneWellKnownItemThatHasOneParentButNoGuidInMongoGrammar_ShouldAddTwoGrammarEntriesWithCorrectNamesAndParents()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector", whose parent is "connector"
+			grammarEntry.Add("value", "NotTheRightName");
+			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			char ORC = '\ufffc';
+			string expectedGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs["subordconn"];
+			string[] expectedNames = PartOfSpeechMasterList.HierarchicalPosNames[expectedGuid].Split(ORC);
+			string[] expectedAbbrevs = PartOfSpeechMasterList.HierarchicalPosAbbrevs[expectedGuid].Split(ORC);
+			string expectedName = expectedNames[1];
+			string expectedAbbrev = expectedAbbrevs[1];
+			string expectedParentName = expectedNames[0];
+			string expectedParentAbbrev = expectedAbbrevs[0];
+			string expectedParentGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs[expectedParentAbbrev];
+
+			IPartOfSpeech newlyCreatedPos = cache.LangProject.AllPartsOfSpeech.FirstOrDefault(pos =>
+				pos.Name.BestAnalysisVernacularAlternative.Text == expectedName
+			);
+			Assert.That(newlyCreatedPos, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid.ToString(), Is.EqualTo(expectedGuid));
+			Assert.That(newlyCreatedPos.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedName));
+			Assert.That(newlyCreatedPos.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedAbbrev));
+			Assert.That(newlyCreatedPos.OwningPossibility, Is.Not.Null);
+			Assert.That(newlyCreatedPos.OwningPossibility, Is.InstanceOf<IPartOfSpeech>());
+			Assert.That(newlyCreatedPos.OwningPossibility.Guid, Is.Not.Null);
+			Assert.That(newlyCreatedPos.OwningPossibility.Guid.ToString(), Is.EqualTo(expectedParentGuid));
+			Assert.That(newlyCreatedPos.OwningPossibility.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedParentName));
+			Assert.That(newlyCreatedPos.OwningPossibility.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedParentAbbrev));
 		}
 	}
 }
