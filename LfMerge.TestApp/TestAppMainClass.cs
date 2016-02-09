@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 using CommandLine;
 using IniParser.Model;
+using LfMerge.Queues;
 using LfMerge.Settings;
 
 namespace LfMerge.TestApp
@@ -13,30 +14,10 @@ namespace LfMerge.TestApp
 	{
 		public static void Main(string[] args)
 		{
-			var options = ParseCommandLineArgs(args);
+			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return;
 
-			Run(options);
-		}
-
-		public static Options ParseCommandLineArgs(string[] args)
-		{
-			var options = new Options();
-			if (Parser.Default.ParseArguments(args, options))
-			{
-				if (!options.ShowHelp)
-				{
-					return options;
-				}
-			}
-			// Display the default usage information
-			Console.WriteLine(options.GetUsage());
-			return null;
-		}
-
-		public static void Run(Options options)
-		{
 			var folder = Path.Combine(Path.GetTempPath(), "LfMerge.TestApp");
 			LfMergeSettingsIni.ConfigDir = folder;
 
@@ -47,9 +28,9 @@ namespace LfMerge.TestApp
 			main["BaseDir"] = folder;
 			settings.Initialize(config);
 
-			var queueDir = settings.GetQueueDirectory(options.QueueName);
+			var queueDir = settings.GetQueueDirectory(QueueNames.Synchronize);
 			Directory.CreateDirectory(queueDir);
-			File.WriteAllText(Path.Combine(queueDir, options.ProjectCode), string.Empty);
+			File.WriteAllText(Path.Combine(queueDir, options.PriorityProject), string.Empty);
 
 			MainClass.Main(new string[0]);
 		}
