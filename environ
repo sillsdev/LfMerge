@@ -60,6 +60,9 @@ then
 	MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
 fi
 
+LD_LIBRARY_PATH="/usr/lib/fieldworks:${LD_LIBRARY_PATH}"
+FW_ROOTCODE=/usr/share/fieldworks
+
 MONO_TRACE_LISTENER="Console.Out"
 
 # if debugging for performance unset DEBUG_ENABLE_PTR_VALIDATION env var.
@@ -71,7 +74,8 @@ export \
 	MONO_PATH \
 	MONO_RUNTIME MONO_PREFIX MONO_GAC_PREFIX \
 	MONO_TRACE_LISTENER \
-	MONO_DEBUG MONO_ENV_OPTIONS
+	MONO_DEBUG MONO_ENV_OPTIONS \
+	FW_ROOTCODE
 
 # set HGRCPATH so that we ignore ~/.hgrc files which might have content that is
 # incompatible with our version of Mercurial

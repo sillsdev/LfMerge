@@ -190,6 +190,8 @@ namespace LfMerge.MongoConnector
 			return builder.Combine(updates);
 		}
 
+		// TODO: These two UpdateRecord overloads share MOST of their code. Refactor to one method, called by
+		// both of them with a different FilterDefinition.
 		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
 		{
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();

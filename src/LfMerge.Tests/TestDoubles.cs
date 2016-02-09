@@ -150,8 +150,6 @@ namespace LfMerge.Tests
 			return false;
 		}
 
-
-
 		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
 		{
 			EnsureCollectionExists(collectionName);
