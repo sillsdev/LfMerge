@@ -113,6 +113,11 @@ namespace LfMerge.MongoConnector
 					continue; // Mongo doesn't allow changing Mongo IDs
 				if (prop.GetCustomAttributes<BsonElementAttribute>().Any(attr => attr.ElementName == "id"))
 					continue; // Don't change Languageforge-internal IDs either
+				if (prop.GetValue(doc) == null)
+				{
+					updates.Add(builder.Unset(prop.Name));
+					continue;
+				}
 				switch (prop.PropertyType.Name)
 				{
 				case "BsonDocument":
@@ -131,8 +136,14 @@ namespace LfMerge.MongoConnector
 					updates.Add(builder.Set(prop.Name, (LfAuthorInfo)prop.GetValue(doc)));
 					break;
 				case "LfMultiText":
-					updates.Add(builder.Set(prop.Name, (LfMultiText)prop.GetValue(doc)));
-					break;
+					{
+						LfMultiText value = (LfMultiText)prop.GetValue(doc);
+						if (value.IsEmpty)
+							updates.Add(builder.Unset(prop.Name));
+						else
+							updates.Add(builder.Set(prop.Name, value));
+						break;
+					}
 				case "LfStringArrayField":
 					updates.Add(builder.Set(prop.Name, (LfStringArrayField)prop.GetValue(doc)));
 					break;
