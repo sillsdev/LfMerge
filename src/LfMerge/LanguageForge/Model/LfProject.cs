@@ -7,7 +7,7 @@ using MongoDB.Bson;
 
 namespace LfMerge.LanguageForge.Model
 {
-	[BsonIgnoreExtraElements]
+	[BsonIgnoreExtraElements] // WARNING: Beware of using FindOneAndReplace() with IgnoreExtraElements, as you can lose data
 	public class LfProject
 	{
 		public ObjectId Id { get; set; }

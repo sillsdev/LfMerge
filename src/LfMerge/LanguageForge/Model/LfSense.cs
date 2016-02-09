@@ -49,6 +49,37 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField AnthropologyCategories { get; set; }
 		public LfStringArrayField Status { get; set; }
 
+		// Ugh. But Mongo doesn't let you provide a ShouldSerialize() by field *type*, only by field *name*.
+		// Maybe later we can write reflection code to automatically add these to the class...
+		public bool ShouldSerializeSemanticDomain() { return _ShouldSerializeLfStringArrayField(SemanticDomain); }
+		public bool ShouldSerializeExamples() { return _ShouldSerializeList(Examples); }
+		public bool ShouldSerializeCustomFields() { return _ShouldSerializeList(CustomFields); }
+		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeList(CustomFieldGuids); }
+		// public bool ShouldSerializeAuthorInfo() { return true; } // Not needed, as this is the default
+		public bool ShouldSerializePictures() { return _ShouldSerializeList(Pictures); }
+		public bool ShouldSerializeDefinition() { return _ShouldSerializeLfMultiText(Definition); }
+		public bool ShouldSerializeGloss() { return _ShouldSerializeLfMultiText(Gloss); }
+		public bool ShouldSerializeScientificName() { return _ShouldSerializeLfMultiText(ScientificName); }
+		public bool ShouldSerializeAnthropologyNote() { return _ShouldSerializeLfMultiText(AnthropologyNote); }
+		public bool ShouldSerializeSenseBibliography() { return _ShouldSerializeLfMultiText(SenseBibliography); }
+		public bool ShouldSerializeDiscourseNote() { return _ShouldSerializeLfMultiText(DiscourseNote); }
+		public bool ShouldSerializeEncyclopedicNote() { return _ShouldSerializeLfMultiText(EncyclopedicNote); }
+		public bool ShouldSerializeGeneralNote() { return _ShouldSerializeLfMultiText(GeneralNote); }
+		public bool ShouldSerializeGrammarNote() { return _ShouldSerializeLfMultiText(GrammarNote); }
+		public bool ShouldSerializePhonologyNote() { return _ShouldSerializeLfMultiText(PhonologyNote); }
+		public bool ShouldSerializeSenseRestrictions() { return _ShouldSerializeLfMultiText(SenseRestrictions); }
+		public bool ShouldSerializeSemanticsNote() { return _ShouldSerializeLfMultiText(SemanticsNote); }
+		public bool ShouldSerializeSociolinguisticsNote() { return _ShouldSerializeLfMultiText(SociolinguisticsNote); }
+		public bool ShouldSerializeSource() { return _ShouldSerializeLfMultiText(Source); }
+		public bool ShouldSerializeSenseImportResidue() { return _ShouldSerializeLfMultiText(SenseImportResidue); }
+		public bool ShouldSerializeUsages() { return _ShouldSerializeLfStringArrayField(Usages); }
+		public bool ShouldSerializeReversalEntries() { return _ShouldSerializeLfStringArrayField(ReversalEntries); }
+		public bool ShouldSerializeSenseType() { return _ShouldSerializeLfStringField(SenseType); }
+		public bool ShouldSerializeAcademicDomains() { return _ShouldSerializeLfStringArrayField(AcademicDomains); }
+		public bool ShouldSerializeSensePublishIn() { return _ShouldSerializeLfStringArrayField(SensePublishIn); }
+		public bool ShouldSerializeAnthropologyCategories() { return _ShouldSerializeLfStringArrayField(AnthropologyCategories); }
+		public bool ShouldSerializeStatus() { return _ShouldSerializeLfStringArrayField(Status); }
+
 		public LfSense()
 		{
 			Examples = new List<LfExample>();
