@@ -69,9 +69,8 @@ namespace LfMerge.Tests.Actions
 
 			// Verify
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
-			// TODO: Get expected data programmatically from SampleData instead of hardcoding it here
-			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			string expectedShortName = "ztestmain";
+			string expectedGuidStr = data.bsonTestData["guid"].AsString;
+			string expectedShortName = data.bsonTestData["citationForm"]["qaa-x-kal"]["value"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
 
 			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
