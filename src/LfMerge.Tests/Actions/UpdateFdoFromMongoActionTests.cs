@@ -70,7 +70,7 @@ namespace LfMerge.Tests.Actions
 			// Verify
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;
-			string expectedShortName = data.bsonTestData["citationForm"]["qaa-x-kal"]["value"].AsString;
+			string expectedShortName = data.bsonTestData["citationForm"].AsBsonDocument.GetElement(0).Value["value"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
 
 			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
