@@ -130,6 +130,14 @@ namespace LfMerge.Tests
 			{
 				// It's fine if it already exists
 			}
+			try
+			{
+				_storedDataByObjectId.Add(collectionName, new Dictionary<ObjectId, object>());
+			}
+			catch (ArgumentException)
+			{
+				// It's fine if it already exists
+			}
 		}
 			
 		public IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project)
