@@ -54,7 +54,7 @@ def process_line(s):
         # abbreviations that are different. Just deal with the "wrong" abbrevs.
     if numtabs == 0:
         current_section = term
-        current_abbrev_section = term
+        current_abbrev_section = abbrev
         hierarchical_abbrevs.append('{ "%s", "%s" }' % (guid, abbrev))
         reversed_hierarchical_abbrevs.append('{ "%s", "%s" }' % (abbrev, guid))
         hierarchical_names.append('{ "%s", "%s" }' % (guid, term))
@@ -71,7 +71,7 @@ def process_line(s):
         elif numtabs > prev_indent:
             if current_section != prev_term:
                 current_section = ORC.join([current_section, prev_term])
-                current_abbrev_section = ORC.join([current_abbrev_section, prev_term])
+                current_abbrev_section = ORC.join([current_abbrev_section, prev_abbrev])
         elif numtabs < prev_indent:
             current_section = "".join(current_section.rsplit(ORC, (prev_indent-numtabs))[:1])
             current_abbrev_section = "".join(current_abbrev_section.rsplit(ORC, (prev_indent-numtabs))[:1])
