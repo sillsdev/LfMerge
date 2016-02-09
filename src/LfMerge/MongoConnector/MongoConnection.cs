@@ -145,11 +145,23 @@ namespace LfMerge.MongoConnector
 						break;
 					}
 				case "LfStringArrayField":
-					updates.Add(builder.Set(prop.Name, (LfStringArrayField)prop.GetValue(doc)));
-					break;
+					{
+						LfStringArrayField value = (LfStringArrayField)prop.GetValue(doc);
+						if (value.IsEmpty)
+							updates.Add(builder.Unset(prop.Name));
+						else
+							updates.Add(builder.Set(prop.Name, value));
+						break;
+					}
 				case "LfStringField":
-					updates.Add(builder.Set(prop.Name, (LfStringField)prop.GetValue(doc)));
-					break;
+					{
+						LfStringField value = (LfStringField)prop.GetValue(doc);
+						if (value.IsEmpty)
+							updates.Add(builder.Unset(prop.Name));
+						else
+							updates.Add(builder.Set(prop.Name, value));
+						break;
+					}
 				case "List`1":
 					switch (prop.PropertyType.GenericTypeArguments[0].Name)
 					{
