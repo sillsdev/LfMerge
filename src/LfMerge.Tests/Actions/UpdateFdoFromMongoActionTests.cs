@@ -14,6 +14,7 @@ using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using System;
+using System.Linq;
 
 namespace LfMerge.Tests.Actions
 {
@@ -78,6 +79,195 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 			Assert.That(entry.ShortName, Is.EqualTo(expectedShortName));
 			Assert.That(entry.SensesOS[0].DefinitionOrGloss.BestAnalysisAlternative.Text, Is.EqualTo(newDefinition));
+		}
+
+		[Test]
+		public void Action_WithEmptyMongoGrammar_ShouldPreserveFdoGrammarEntries()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosAfterTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest));
+			Assert.That(secondPosAfterTest, Is.Not.Null);
+			Assert.That(secondPosAfterTest.Guid, Is.EqualTo(secondPosBeforeTest.Guid));
+			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
+		}
+
+		[Test]
+		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "k");
+			grammarEntry.Add("value", "v");
+			grammarEntry.Add("abbreviation", "a");
+			grammarEntry.Add("guid", secondPosBeforeTest.Guid.ToString());
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosAfterTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest));
+			Assert.That(secondPosAfterTest, Is.Not.Null);
+			Assert.That(secondPosAfterTest.Guid, Is.EqualTo(secondPosBeforeTest.Guid));
+			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
+			Assert.That(secondPosAfterTest.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo("v"));
+			Assert.That(secondPosAfterTest.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo("a"));
+			// LF key shouldn't be copied to FDO, so don't test that one
+		}
+
+		[Test]
+		public void Action_WithOneItemInMongoGrammarThatHasNoGuidAndIsNotWellKnown_ShouldAddOneNewItemInFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "k2");
+			grammarEntry.Add("value", "v2");
+			grammarEntry.Add("abbreviation", "a2");
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
+			IPartOfSpeech secondPosAfterTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
+			IPartOfSpeech newlyCreatedPos = cache.LangProject.AllPartsOfSpeech.FirstOrDefault(pos =>
+				pos.Abbreviation.BestAnalysisVernacularAlternative.Text == "k2" && // NOTE: k2 not a2
+				pos.Name.BestAnalysisVernacularAlternative.Text == "v2"
+			);
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest + 1));
+			Assert.That(secondPosAfterTest, Is.Not.Null);
+			Assert.That(secondPosAfterTest.Guid, Is.EqualTo(secondPosBeforeTest.Guid));
+			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
+			Assert.That(secondPosAfterTest.Name.BestAnalysisVernacularAlternative.Text, Is.Not.EqualTo("v2"));
+			Assert.That(secondPosAfterTest.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.Not.EqualTo("a2"));
+			Assert.That(secondPosAfterTest.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.Not.EqualTo("k2"));
+			Assert.That(newlyCreatedPos, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo("v2"));
+			Assert.That(newlyCreatedPos.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo("k2"));
+			// The newly-created part of speech will get its abbreviation from the LF key, not the LF abbrev.
+			// TODO: Consider whether or not that's a bug, and whether it should use the (user-supplied) abbrev.
+			// OTOH, they should be the same... unless LF has a non-English UI language. In which case we *need*
+			// the English abbrev (the "key") and we *want* the non-English abbrev.
+		}
+
+
+		[Test]
+		public void Action_WithOneWellKnownItemAndCorrectGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
+			grammarEntry.Add("value", "NotTheRightName");
+			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
+			string expectedGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs["subordconn"];
+			grammarEntry.Add("guid", expectedGuid);
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			string expectedName = PartOfSpeechMasterList.FlatPosNames[expectedGuid];
+			string expectedAbbrev = PartOfSpeechMasterList.FlatPosAbbrevs[expectedGuid];
+			IPartOfSpeech newlyCreatedPos = cache.LangProject.AllPartsOfSpeech.FirstOrDefault(pos =>
+				pos.Name.BestAnalysisVernacularAlternative.Text == expectedName
+			);
+			Assert.That(newlyCreatedPos, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid.ToString(), Is.EqualTo(expectedGuid));
+			Assert.That(newlyCreatedPos.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedName));
+			Assert.That(newlyCreatedPos.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedAbbrev));
+		}
+
+		[Test]
+		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
+			grammarEntry.Add("value", "NotTheRightName");
+			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			string expectedGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs["subordconn"];
+			string expectedName = PartOfSpeechMasterList.FlatPosNames[expectedGuid];
+			string expectedAbbrev = PartOfSpeechMasterList.FlatPosAbbrevs[expectedGuid];
+			IPartOfSpeech newlyCreatedPos = cache.LangProject.AllPartsOfSpeech.FirstOrDefault(pos =>
+				pos.Name.BestAnalysisVernacularAlternative.Text == expectedName
+			);
+			Assert.That(newlyCreatedPos, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid, Is.Not.Null);
+			Assert.That(newlyCreatedPos.Guid.ToString(), Is.EqualTo(expectedGuid));
+			Assert.That(newlyCreatedPos.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedName));
+			Assert.That(newlyCreatedPos.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedAbbrev));
+		}
+
+
+		[Test]
+		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldAddOnlyOneNewGrammarEntry()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
+			var data = new SampleData();
+			BsonDocument grammarEntry = new BsonDocument();
+			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
+			grammarEntry.Add("value", "NotTheRightName");
+			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
+			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
+
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, data.bsonOptionListData);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
+			Assert.That(grammarCountAfterTest, Is.EqualTo(grammarCountBeforeTest + 1)); // Ending up with +2. TODO: Find out why.
 		}
 	}
 }

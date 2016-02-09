@@ -139,6 +139,8 @@ namespace LfMerge.Actions
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 				{
+					if (_lfGrammar != null)
+						UpdateFdoGrammerFromLfGrammar(_lfGrammar);
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});

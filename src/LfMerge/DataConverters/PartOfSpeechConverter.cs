@@ -363,14 +363,14 @@ namespace LfMerge.DataConverters
 					Console.WriteLine("Error: Well-known GUID {0} for part of speech \"{1}\" was not found in GOLDEtic.xml data. " +
 						"This really shouldn't happen", guid, abbrev);
 					// Fall back to custom name creation instead
-					return CreateFromCustomName(abbrev, foundWs);
+					return CreateFromCustomName(abbrev, name, foundWs);
 				}
 				return newPos;
 			}
 			else
 			{
 				// No "official" GUID, so this is a "custom" PartOfSpeech... and some (but not necessarily all) of its ancestors might be as well.
-				var pos = CreateFromCustomName(abbrev, foundWs);
+				var pos = CreateFromCustomName(abbrev, name, foundWs);
 				Console.WriteLine("Creating part of speech with GUID {0} and full name {3} for name {1} in ws {2}.", pos.Guid, abbrev, foundWs, pos.NameHierarchyString);
 				return pos;
 			}
