@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -80,25 +81,33 @@ namespace LfMerge.MongoConnector
 			return GetDatabase(mainDatabaseName);
 		}
 
-		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
-			IAsyncCursor<TDocument> result = collection.Find<TDocument>(_ => true).ToCursor();
+			IAsyncCursor<TDocument> result = collection.Find<TDocument>(filter).ToCursor();
 			return result.AsEnumerable();
+		}
+
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			return GetRecords<TDocument>(project, collectionName, _ => true);
+		}
+
+		public MongoProjectRecord GetProjectRecord(ILfProject project)
+		{
+			IMongoDatabase db = GetMainDatabase();
+			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MongoProjectRecord.ProjectsCollectionName);
+			return collection.Find(proj => proj.ProjectCode == project.LfProjectCode)
+				.Limit(1).FirstOrDefault();
 		}
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
-			IMongoDatabase db = GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MongoProjectRecord.ProjectsCollectionName);
-			MongoProjectRecord record =
-				collection.Find(proj => proj.ProjectCode == project.LfProjectCode)
-					.Limit(1).FirstOrDefault();
-
-			if (record == null)
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null)
 				return new Dictionary<string, LfInputSystemRecord>();
-			return record.InputSystems;
+			return projectRecord.InputSystems;
 		}
 
 		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)
