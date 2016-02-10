@@ -14,14 +14,6 @@ namespace LfMerge
 		public const string LfCollectionNameForOptionLists = "optionlists";
 		public const string UnknownString = "***";
 
-		// Collections found in main database
-		public const string LfCollectionNameForProjectRecords = "projects";
-
-		public const string WSFolder = "WritingSystemStore";
-
-		// For Flex v9.0+
-		//public const string WSFolder = "SharedSettings";
-
 		public const string FDOModelVersion = "7000068";
 	}
 }

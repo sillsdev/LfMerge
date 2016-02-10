@@ -28,11 +28,12 @@ namespace LfMerge.Actions
 
 		private FdoCache _cache;
 		private IFdoServiceLocator _servLoc;
+		private IMongoConnection _connection;
+
 		private IFwMetaDataCacheManaged _fdoMetaData;
 		private ICmPossibilityList _fdoPartsOfSpeech;
 		private LfOptionList _lfGrammar;
 		private CustomFieldConverter _converter;
-		private IMongoConnection _connection;
 
 		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
 		{
@@ -77,6 +78,12 @@ namespace LfMerge.Actions
 			{
 				Logger.Warning("Don't have access to the FW metadata; custom fields may fail!");
 			}
+
+			// Reconcile writing systems from FDO and Mongo
+			//var wsList = _connection.GetInputSystems(project);
+			var lfWsList = FdoWsToLfWs();
+			_connection.SetInputSystems(project, lfWsList);
+
 			_converter = new CustomFieldConverter(_cache);
 
 			// Update grammar before updating entries, so we can reference GUIDs in parts of speech
@@ -91,14 +98,6 @@ namespace LfMerge.Actions
 				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, MagicStrings.LfCollectionNameForLexicon);
 			}
 
-			// make sure LF has all the writing systems that FDO has
-			/*
-			var wsList = _connection.GetInputSystems(project);
-			foreach (var filename in Directory.EnumerateFiles(Path.Combine(Settings.WebWorkDirectory, MagicStrings.WSFolder))) {
-				Ws = getfromfilename(filename);
-				ensureWSInMongo(Ws);
-			}
-			*/
 		}
 
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
@@ -111,6 +110,27 @@ namespace LfMerge.Actions
 		{
 			if (iTsString == null) return null;
 			return iTsString.Text;
+		}
+
+		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
+		{
+			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
+			foreach (var fdoWs in _cache.LangProject.AllWritingSystems)
+			{
+				var lfWs = new LfInputSystemRecord()
+				{
+					//These are for current libpalaso with SIL Writing Systems.
+					// TODO: handle legacy WS definition
+					Abbreviation = fdoWs.Abbreviation,
+					IsRightToLeft = fdoWs.RightToLeftScript,
+					LanguageName = fdoWs.LanguageName,
+					Tag = fdoWs.LanguageTag
+				};
+
+				lfWsList.Add(fdoWs.LanguageTag, lfWs);
+			}
+
+			return lfWsList;
 		}
 
 		private LfSense FdoSenseToLfSense(ILexSense fdoSense)

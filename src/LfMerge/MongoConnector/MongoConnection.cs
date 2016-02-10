@@ -88,15 +88,17 @@ namespace LfMerge.MongoConnector
 			return result.AsEnumerable();
 		}
 
-		public IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project)
+		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			IMongoDatabase db = GetMainDatabase();
-			IMongoCollection<LfProject> collection = db.GetCollection<LfProject>(MagicStrings.LfCollectionNameForProjectRecords);
-			IAsyncCursor<LfProject> result = collection.Find<LfProject>(projRecord => projRecord.ProjectCode == project.LfProjectCode).ToCursor();
-			LfProject foundProject = result.FirstOrDefault();
-			if (foundProject == null)
-				return new List<LfInputSystemRecord>();
-			return foundProject.InputSystems;
+			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MongoProjectRecord.ProjectsCollectionName);
+			MongoProjectRecord record =
+				collection.Find(proj => proj.ProjectCode == project.LfProjectCode)
+					.Limit(1).FirstOrDefault();
+
+			if (record == null)
+				return new Dictionary<string, LfInputSystemRecord>();
+			return record.InputSystems;
 		}
 
 		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)

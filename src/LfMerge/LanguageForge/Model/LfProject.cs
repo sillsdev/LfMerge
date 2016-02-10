@@ -13,11 +13,11 @@ namespace LfMerge.LanguageForge.Model
 		public ObjectId Id { get; set; }
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }
-		public List<LfInputSystemRecord> InputSystems { get; set; }
+		public Dictionary<string, LfInputSystemRecord> InputSystems { get; set; }
 
 		public LfProject()
 		{
-			InputSystems = new List<LfInputSystemRecord>();
+			InputSystems = new Dictionary<string, LfInputSystemRecord>();
 		}
 	}
 }

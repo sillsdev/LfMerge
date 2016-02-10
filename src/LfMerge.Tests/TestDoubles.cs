@@ -140,9 +140,9 @@ namespace LfMerge.Tests
 			}
 		}
 			
-		public IEnumerable<LfInputSystemRecord> GetInputSystems(ILfProject project)
+		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
-			return new List<LfInputSystemRecord>();
+			return new Dictionary<string, LfInputSystemRecord>();
 		}
 
 		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)

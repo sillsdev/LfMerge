@@ -4,6 +4,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Model;
+using System.Collections.Generic;
 
 namespace LfMerge.MongoConnector
 {
@@ -13,6 +15,7 @@ namespace LfMerge.MongoConnector
 		public const string ProjectsCollectionName = "projects";
 
 		public ObjectId Id { get; set; }
+		public Dictionary<string, LfInputSystemRecord> InputSystems { get; set; }
 		public string InterfaceLanguageCode { get; set; }
 		public string LanguageCode { get; set; }
 		public string ProjectCode { get; set; }
