@@ -229,7 +229,10 @@ namespace LfMerge.MongoConnector
 			//Logger.Notice("About to save {0} with ObjectID {1}", typeof(TDocument), id);
 			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			collection.FindOneAndUpdate(filter, update);
+			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
+				IsUpsert = true
+			};
+			collection.FindOneAndUpdate(filter, update, updateOptions);
 			return true;
 		}
 	}
