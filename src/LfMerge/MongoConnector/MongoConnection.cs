@@ -97,7 +97,7 @@ namespace LfMerge.MongoConnector
 		public MongoProjectRecord GetProjectRecord(ILfProject project)
 		{
 			IMongoDatabase db = GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MongoProjectRecord.ProjectsCollectionName);
+			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
 			return collection.Find(proj => proj.ProjectCode == project.LfProjectCode)
 				.Limit(1).FirstOrDefault();
 		}

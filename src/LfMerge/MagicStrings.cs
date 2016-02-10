@@ -12,8 +12,11 @@ namespace LfMerge
 		// Collections found in individual project DBs
 		public const string LfCollectionNameForLexicon = "lexicon";
 		public const string LfCollectionNameForOptionLists = "optionlists";
-		public const string UnknownString = "***";
 
+		// Collections found in main DB
+		public const string LfCollectionNameForProjectRecords = "projects";
+
+		public const string UnknownString = "***";
 		public const string FDOModelVersion = "7000068";
 	}
 }

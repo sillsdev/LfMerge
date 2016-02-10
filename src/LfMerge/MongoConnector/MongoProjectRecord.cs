@@ -12,8 +12,6 @@ namespace LfMerge.MongoConnector
 	[BsonIgnoreExtraElements]
 	public class MongoProjectRecord
 	{
-		public const string ProjectsCollectionName = "projects";
-
 		public ObjectId Id { get; set; }
 		public Dictionary<string, LfInputSystemRecord> InputSystems { get; set; }
 		public string InterfaceLanguageCode { get; set; }
