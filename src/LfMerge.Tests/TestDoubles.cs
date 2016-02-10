@@ -145,7 +145,7 @@ namespace LfMerge.Tests
 			return new Dictionary<string, LfInputSystemRecord>();
 		}
 
-		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems)
 		{
 			return false;
 		}
@@ -205,7 +205,7 @@ namespace LfMerge.Tests
 			return mockDb as IMongoDatabase;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
 		{
 			EnsureCollectionExists(collectionName);
 			_storedDataByGuid[collectionName][guid] = data;
@@ -220,7 +220,7 @@ namespace LfMerge.Tests
 			return true;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
 		{
 			EnsureCollectionExists(collectionName);
 			_storedDataByObjectId[collectionName][id] = data;
@@ -257,6 +257,18 @@ namespace LfMerge.Tests
 			// TODO: Could we use a Mock to do this instead?
 			return new MongoProjectRecord {
 				Id = new ObjectId(),
+				InputSystems = new Dictionary<string, LfInputSystemRecord>() {
+					{"en", new LfInputSystemRecord {
+							Abbreviation = "en",
+							Tag = "en",
+							LanguageName = "English",
+							IsRightToLeft = false } },
+					{"fr", new LfInputSystemRecord {
+							Abbreviation = "fr",
+							Tag = "fr",
+							LanguageName = "French",
+							IsRightToLeft = false } },
+				},
 				InterfaceLanguageCode = "en",
 				LanguageCode = "fr",
 				ProjectCode = project.LfProjectCode,

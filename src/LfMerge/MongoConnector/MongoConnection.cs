@@ -19,6 +19,11 @@ using LfMerge.Settings;
 
 namespace LfMerge.MongoConnector
 {
+	public enum MongoDbSelector {
+		MainDatabase,
+		ProjectDatabase,
+	}
+
 	public class MongoConnection : IMongoConnection
 	{
 		private string connectionString;
@@ -110,9 +115,20 @@ namespace LfMerge.MongoConnector
 			return projectRecord.InputSystems;
 		}
 
-		public bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems)
+		public bool UpdateProjectRecord(ILfProject project, MongoProjectRecord projectRecord)
 		{
-			return false;
+			var filterBuilder = new FilterDefinitionBuilder<MongoProjectRecord>();
+			FilterDefinition<MongoProjectRecord> filter = filterBuilder.Eq(record => record.ProjectCode, projectRecord.ProjectCode);
+			return UpdateRecordImpl<MongoProjectRecord>(project, projectRecord, filter, MagicStrings.LfCollectionNameForProjectRecords, MongoDbSelector.MainDatabase);
+		}
+
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems)
+		{
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null)
+				return false; // TODO: Create project record if needed. Here? Or in a different function?
+			projectRecord.InputSystems = inputSystems; // TODO: Consider doing a Dictionary update (merge new record into old) instead of the overwrite we do here.
+			return UpdateProjectRecord(project, projectRecord);
 		}
 
 		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
@@ -188,6 +204,10 @@ namespace LfMerge.MongoConnector
 					case "LfOptionListItem":
 						updates.Add(builder.Set(prop.Name, (List<LfOptionListItem>)prop.GetValue(doc)));
 						break;
+					// TODO: Check if the "LfInputSystemRecord" case is needed; I think it really isn't
+//					case "LfInputSystemRecord":
+//						updates.Add(builder.Set(prop.Name, (List<LfInputSystemRecord>)prop.GetValue(doc)));
+//						break;
 					default:
 						updates.Add(builder.Set(prop.Name, (List<object>)prop.GetValue(doc)));
 						break;
@@ -203,27 +223,31 @@ namespace LfMerge.MongoConnector
 
 		// TODO: These two UpdateRecord overloads share MOST of their code. Refactor to one method, called by
 		// both of them with a different FilterDefinition.
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
 		{
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
-			bool result = UpdateRecordImpl(project, data, filter, collectionName);
+			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
 			Logger.Notice("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
 			return result;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
+		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
 		{
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("_id", id);
-			bool result = UpdateRecordImpl(project, data, filter, collectionName);
+			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
 			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB", typeof(TDocument), id);
 			return result;
 		}
 
-		private bool UpdateRecordImpl<TDocument>(ILfProject project, TDocument data, FilterDefinition<TDocument> filter, string collectionName)
+		private bool UpdateRecordImpl<TDocument>(ILfProject project, TDocument data, FilterDefinition<TDocument> filter, string collectionName, MongoDbSelector whichDb)
 		{
-			IMongoDatabase mongoDb = GetProjectDatabase(project);
+			IMongoDatabase mongoDb;
+			if (whichDb == MongoDbSelector.ProjectDatabase)
+				mongoDb = GetProjectDatabase(project);
+			else
+				mongoDb = GetMainDatabase();
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			//Logger.Notice("About to save {0} with ObjectID {1}", typeof(TDocument), id);

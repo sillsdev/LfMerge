@@ -14,10 +14,10 @@ namespace LfMerge.MongoConnector
 		IMongoDatabase GetProjectDatabase(ILfProject project);
 		IMongoDatabase GetMainDatabase(); // TODO: Maybe remove this one?
 		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName);
-		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName);
-		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName);
+		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase);
+		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
-		bool SetInputSystems<TDocument>(ILfProject project, TDocument inputSystems);
+		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems);
 	}
 }
 
