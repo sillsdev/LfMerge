@@ -120,8 +120,8 @@ namespace LfMerge.DataConverters
 				{
 					correspondingItem = PartOfSpeechToOptionListItem(pos);
 				}
-				_lfGrammarByGuid.Add(pos.Guid, correspondingItem);
-				_lfGrammarByStrKey.Add(correspondingItem.Key, correspondingItem);
+				_lfGrammarByGuid[pos.Guid] = correspondingItem;
+				_lfGrammarByStrKey[correspondingItem.Key] = correspondingItem;
 			}
 
 			// Clone old grammar list into new list, changing only the items
