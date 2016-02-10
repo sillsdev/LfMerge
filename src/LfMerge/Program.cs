@@ -23,8 +23,7 @@ namespace LfMerge
 	public class MainClass
 	{
 		public static IContainer Container { get; internal set; }
-
-		private static ILogger Logger { get; set; }
+		public static ILogger Logger { get; set; }
 
 		internal static ContainerBuilder RegisterTypes()
 		{

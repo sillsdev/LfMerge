@@ -20,8 +20,6 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
-			Logger.Notice("LfMerge: starting Sync");
-
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				// TODO: Add this back in once we verify UpdateMongoDbFromFdo working
@@ -35,8 +33,6 @@ namespace LfMerge.Actions
 */
 				GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
 			}
-
-			Logger.Notice("LfMerge: done with Sync");
 		}
 
 		protected override ActionNames NextActionName
