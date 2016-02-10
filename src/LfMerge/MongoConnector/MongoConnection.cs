@@ -124,11 +124,16 @@ namespace LfMerge.MongoConnector
 
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems)
 		{
-			MongoProjectRecord projectRecord = GetProjectRecord(project);
-			if (projectRecord == null)
-				return false; // TODO: Create project record if needed. Here? Or in a different function?
-			projectRecord.InputSystems = inputSystems; // TODO: Consider doing a Dictionary update (merge new record into old) instead of the overwrite we do here.
-			return UpdateProjectRecord(project, projectRecord);
+			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
+			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
+
+			IMongoDatabase mongoDb = GetMainDatabase();
+			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
+			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
+				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
+			};
+			collection.FindOneAndUpdate(filter, update, updateOptions);
+			return true;
 		}
 
 		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
