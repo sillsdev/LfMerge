@@ -21,6 +21,11 @@ namespace LfMerge.MongoConnector
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }
 		public LfProjectConfig Config { get; set; }
+
+		public MongoProjectRecord()
+		{
+			InputSystems = new Dictionary<string, LfInputSystemRecord>();
+		}
 	}
 }
 
@@ -33,7 +38,6 @@ namespace LfMerge.MongoConnector
 { "_id" : "dateCreated", "value" : null }
 { "_id" : "dateModified", "value" : null }
 { "_id" : "featured", "value" : null }
-{ "_id" : "inputSystems", "value" : null }
 { "_id" : "interfaceLanguageCode", "value" : null }
 { "_id" : "isArchived", "value" : null }
 { "_id" : "language", "value" : null }
