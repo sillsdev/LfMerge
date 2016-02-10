@@ -80,7 +80,6 @@ namespace LfMerge.Actions
 			}
 
 			// Reconcile writing systems from FDO and Mongo
-			//var wsList = _connection.GetInputSystems(project);
 			var lfWsList = FdoWsToLfWs();
 			_connection.SetInputSystems(project, lfWsList);
 
@@ -115,7 +114,7 @@ namespace LfMerge.Actions
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
-			foreach (var fdoWs in _cache.LangProject.AllWritingSystems)
+			foreach (var fdoWs in _cache.ServiceLocator.WritingSystemManager.WritingSystems)
 			{
 				var lfWs = new LfInputSystemRecord()
 				{
