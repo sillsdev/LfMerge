@@ -24,6 +24,8 @@ namespace LfMerge
 	{
 		public static IContainer Container { get; internal set; }
 
+		private static ILogger Logger { get; set; }
+
 		internal static ContainerBuilder RegisterTypes()
 		{
 			var containerBuilder = new ContainerBuilder();
@@ -53,8 +55,8 @@ namespace LfMerge
 			if (Container == null)
 				Container = RegisterTypes().Build();
 
-			var logger = Container.Resolve<ILogger>();
-			logger.Notice("LfMerge starting with args: {0}", string.Join(" ", args));
+			Logger = Container.Resolve<ILogger>();
+			Logger.Notice("LfMerge starting with args: {0}", string.Join(" ", args));
 
 			var settings = Container.Resolve<LfMergeSettingsIni>();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
@@ -62,12 +64,12 @@ namespace LfMerge
 			{
 				if (!fileLock.TryAcquireLock())
 				{
-					logger.Notice("Can't acquire file lock - is another instance running?");
+					Logger.Error("Can't acquire file lock - is another instance running?");
 					return;
 				}
-				logger.Notice("Lock acquired");
+				Logger.Notice("Lock acquired");
 
-				if (!EnsureSetup(settings, logger)) return;
+				if (!CheckSetup(settings)) return;
 
 				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, settings.MongoMainDatabaseName);
 
@@ -78,9 +80,9 @@ namespace LfMerge
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						logger.Notice("ProjectCode {0}", projectCode);
+						Logger.Notice("ProjectCode {0}", projectCode);
 						var project = LanguageForgeProject.Create(settings, projectCode);
-						EnsureClone(project, logger);
+						EnsureClone(project);
 
 						queue.CurrentAction.Run(project);
 
@@ -91,7 +93,7 @@ namespace LfMerge
 			}
 			catch (Exception e)
 			{
-				logger.Debug("Unhandled Exception: \n" + e.ToString());
+				Logger.Debug("Unhandled Exception: \n" + e.ToString());
 				throw;
 			}
 			finally
@@ -103,10 +105,10 @@ namespace LfMerge
 				Cleanup();
 			}
 
-			logger.Notice("LfMerge finished\n");
+			Logger.Notice("LfMerge finished\n");
 		}
 
-		protected static void EnsureClone(ILfProject project, ILogger logger)
+		protected static void EnsureClone(ILfProject project)
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
@@ -145,17 +147,12 @@ namespace LfMerge
 			}
 		}
 
-		private static string GetProjectDirectory(string projectCode, LfMergeSettingsIni settings)
-		{
-			return Path.Combine(settings.WebWorkDirectory, projectCode);
-		}
-
 		private static bool FinishClone(ILfProject project)
 		{
 			var actualCloneResult = new ActualCloneResult();
-			var Settings = Container.Resolve<LfMergeSettingsIni>();
+			var settings = Container.Resolve<LfMergeSettingsIni>();
 
-			var cloneLocation = GetProjectDirectory(project.LfProjectCode, Settings);
+			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.LfProjectCode);
 			var newProjectFilename = Path.GetFileName(project.LfProjectCode) + SharedConstants.FwXmlExtension;
 			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
 
@@ -171,13 +168,12 @@ namespace LfMerge
 				switch (actualCloneResult.FinalCloneResult)
 				{
 				case FinalCloneResult.ExistingCloneTargetFolder:
-					SIL.Reporting.Logger.WriteEvent("Clone failed: Flex project exists: {0}", cloneLocation);
+					Logger.Error("Clone failed: Flex project exists: {0}", cloneLocation);
 					if (Directory.Exists(cloneLocation))
 						Directory.Delete(cloneLocation, true);
 					return false;
 				case FinalCloneResult.FlexVersionIsTooOld:
-					SIL.Reporting.Logger.WriteEvent("Clone failed: Flex version is too old; project: {0}",
-						project.LfProjectCode);
+					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.LfProjectCode);
 					if (Directory.Exists(cloneLocation))
 						Directory.Delete(cloneLocation, true);
 					return false;
@@ -200,7 +196,7 @@ namespace LfMerge
 			LanguageForgeProject.DisposeProjectCache();
 		}
 
-		private static bool EnsureSetup(LfMergeSettingsIni settings, ILogger logger)
+		private static bool CheckSetup(LfMergeSettingsIni settings)
 		{
 			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
 			string[] folderPaths = new[] { Path.Combine(homeFolder, ".local"),
@@ -209,7 +205,7 @@ namespace LfMerge
 			{
 				if (!Directory.Exists(folderPath))
 				{
-					logger.Notice("Folder '{0}' doesn't exist", folderPath);
+					Logger.Notice("Folder '{0}' doesn't exist", folderPath);
 					return false;
 				}
 			}
