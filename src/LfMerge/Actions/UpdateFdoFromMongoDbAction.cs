@@ -140,7 +140,7 @@ namespace LfMerge.Actions
 			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
 				{
 					if (_lfGrammar != null)
-						UpdateFdoGrammerFromLfGrammar(_lfGrammar);
+						UpdateFdoGrammarFromLfGrammar(_lfGrammar);
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
@@ -611,7 +611,7 @@ namespace LfMerge.Actions
 			return result;
 		}
 
-		private void UpdateFdoGrammerFromLfGrammar(LfOptionList lfGrammar)
+		private void UpdateFdoGrammarFromLfGrammar(LfOptionList lfGrammar)
 		{
 			ICmPossibilityList fdoGrammar = _cache.LanguageProject.PartsOfSpeechOA;
 			var posRepo = _servLoc.GetInstance<IPartOfSpeechRepository>();
