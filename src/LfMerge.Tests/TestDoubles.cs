@@ -145,9 +145,9 @@ namespace LfMerge.Tests
 			return new Dictionary<string, LfInputSystemRecord>();
 		}
 
-		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems)
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
-			return false;
+			return true;
 		}
 
 		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)

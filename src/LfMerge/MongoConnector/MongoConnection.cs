@@ -122,7 +122,18 @@ namespace LfMerge.MongoConnector
 			return UpdateRecordImpl<MongoProjectRecord>(project, projectRecord, filter, MagicStrings.LfCollectionNameForProjectRecords, MongoDbSelector.MainDatabase);
 		}
 
-		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems)
+		/// <summary>
+		/// Sets the input systems (writing systems) in the project configuration.
+		/// During an initial clone, some vernacular and analysis input systems are also set.
+		/// </summary>
+		/// <returns>True if mongodb was updated</returns>
+		/// <param name="project">Language forge Project.</param>
+		/// <param name="inputSystems">List of input systems to add to the project configuration.</param>
+		/// <param name="initialClone">If set to <c>true</c>, an initial clone is being done so also update associated field view input systems.</param>
+		/// <param name="vernacularWs">Default vernacular writing system.</param>
+		/// <param name="analysisWs">Default analysis writing system.</param>
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
+			bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
 			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
@@ -133,6 +144,41 @@ namespace LfMerge.MongoConnector
 				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
 			};
 			collection.FindOneAndUpdate(filter, update, updateOptions);
+
+			// For initial clone, also update field writing systems accordingly
+			if (initialClone)
+			{
+				var builder = Builders<MongoProjectRecord>.Update;
+				var updates = new List<UpdateDefinition<MongoProjectRecord>>();
+
+				var vernacularInputSystems = new List<string> { vernacularWs };
+				List<string> vernacularFieldsWsList = new List<string> {
+					"citationForm", "lexeme",
+				};
+				foreach (var vernacularFieldName in vernacularFieldsWsList)
+				{
+					updates.Add(builder.Set("config.entry.fields." + vernacularFieldName + ".inputSystems", vernacularInputSystems));
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[vernacularFieldName].InputSystems, vernacularInputSystems));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[vernacularFieldName]).InputSystems, vernacularInputSystems));
+				}
+
+				var analysisInputSystems = new List<string> { analysisWs };
+				List<string> analysisFieldsWsList = new List<string> {
+					"note",
+				};
+				foreach (var analysisFieldName in analysisFieldsWsList)
+				{
+					updates.Add(builder.Set("config.entry.fields." + analysisFieldName + ".inputSystems", analysisInputSystems));
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[analysisFieldName].InputSystems, analysisInputSystems));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[analysisFieldName]).InputSystems, analysisInputSystems));
+				}
+
+				update = builder.Combine(updates);
+				Logger.Debug("Built an input systems update that looks like {0}",
+					update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+				collection.FindOneAndUpdate(filter, update, updateOptions);
+			}
+
 			return true;
 		}
 

@@ -35,6 +35,8 @@ namespace LfMerge.Actions
 		private LfOptionList _lfGrammar;
 		private CustomFieldConverter _converter;
 
+		public static bool InitialClone { get; set; }
+
 		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
 		{
 			_connection = conn;
@@ -80,8 +82,12 @@ namespace LfMerge.Actions
 			}
 
 			// Reconcile writing systems from FDO and Mongo
-			var lfWsList = FdoWsToLfWs();
-			_connection.SetInputSystems(project, lfWsList);
+			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
+			string VernacularWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
+			string AnalysisWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
+			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
+			_connection.SetInputSystems(project, lfWsList, InitialClone, VernacularWs, AnalysisWs);
+			InitialClone = false;
 
 			_converter = new CustomFieldConverter(_cache);
 
@@ -114,7 +120,7 @@ namespace LfMerge.Actions
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
-			foreach (var fdoWs in _cache.ServiceLocator.WritingSystemManager.WritingSystems)
+			foreach (var fdoWs in _cache.LangProject.AllWritingSystems)
 			{
 				var lfWs = new LfInputSystemRecord()
 				{

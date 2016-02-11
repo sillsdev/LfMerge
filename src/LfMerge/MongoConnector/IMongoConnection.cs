@@ -17,7 +17,8 @@ namespace LfMerge.MongoConnector
 		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase);
 		bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
-		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems);
+		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
+			bool initialClone = false, string vernacularWs = "", string analysisWs = "");
 	}
 }
 

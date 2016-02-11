@@ -135,6 +135,7 @@ namespace LfMerge
 						if (!FinishClone(project))
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 
+						UpdateMongoDbFromFdo.InitialClone = true;
 						LfMerge.Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
 					}
 				}
