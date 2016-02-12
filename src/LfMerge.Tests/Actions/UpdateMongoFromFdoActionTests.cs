@@ -4,9 +4,12 @@ using Autofac;
 using NUnit.Framework;
 using LfMerge;
 using LfMerge.Actions;
+using LfMerge.DataConverters;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
 using LfMerge.LanguageForge.Model;
+using SIL.FieldWorks.FDO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,6 +41,33 @@ namespace LfMerge.Tests.Actions
 			_env.Dispose();
 		}
 
+		private LfOptionList CreateLfGrammarWith(IEnumerable<LfOptionListItem> grammarItems)
+		{
+			var result = new LfOptionList();
+			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+			result.Name = MagicStrings.LfOptionListNameForGrammaticalInfo;
+			result.DateCreated = result.DateModified = System.DateTime.UtcNow;
+			result.CanDelete = false;
+			result.DefaultItemKey = null;
+			result.Items = grammarItems.ToList();
+			return result;
+		}
+
+		private IEnumerable<LfOptionListItem> DefaultGrammarItems(int howMany)
+		{
+			foreach (string guidStr in PartOfSpeechMasterList.FlatPosNames.Keys.Take(howMany))
+			{
+				string name = PartOfSpeechMasterList.FlatPosNames[guidStr];
+				string abbrev = PartOfSpeechMasterList.FlatPosAbbrevs[guidStr];
+				yield return new LfOptionListItem {
+					Guid = Guid.Parse(guidStr),
+					Key = abbrev,
+					Abbreviation = abbrev,
+					Value = name,
+				};
+			}
+		}
+
 		[Test]
 		public void Action_Should_UpdateLexemes()
 		{
@@ -58,6 +88,101 @@ namespace LfMerge.Tests.Actions
 			LfLexEntry entry = receivedData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.Lexeme.BestString(searchOrder), Is.EqualTo(expectedLexeme));
+		}
+
+		[Test]
+		public void Action_WithEmptyMongoGrammar_ShouldPopulateMongoGrammarFromFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			LfOptionList lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			Assert.That(lfGrammar, Is.Null);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			Assert.That(lfGrammar, Is.Not.Null);
+			Assert.That(lfGrammar.Items, Is.Not.Empty);
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+		}
+
+		[Test]
+		public void Action_WithPreviousMongoGrammarWithGuids_ShouldReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			int initialGrammarItemCount = 10;
+			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			Assert.That(lfGrammar, Is.Not.Null);
+			Assert.That(lfGrammar.Items, Is.Not.Empty);
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+		}
+
+		[Test]
+		public void Action_WithPreviousMongoGrammarWithNoGuids_ShouldStillReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			int initialGrammarItemCount = 10;
+			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
+			foreach (LfOptionListItem item in lfGrammar.Items)
+			{
+				item.Guid = null;
+			}
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			Assert.That(lfGrammar, Is.Not.Null);
+			Assert.That(lfGrammar.Items, Is.Not.Empty);
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+		}
+
+		[Test]
+		public void Action_WithPreviousMongoGrammarWithMatchingGuids_ShouldBeUpdatedFromFdoGrammar()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			var converter = new GrammarConverter(cache, null);
+			LfOptionList lfGrammar = converter.PrepareGrammarOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
+			LfOptionListItem itemForTest = lfGrammar.Items.First();
+			Guid g = itemForTest.Guid.Value;
+			itemForTest.Abbreviation = "Different abbreviation";
+			itemForTest.Value = "Different name";
+			itemForTest.Key = "Different key";
+			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
+			Assert.That(lfGrammar, Is.Not.Null);
+			Assert.That(lfGrammar.Items, Is.Not.Empty);
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+			itemForTest = lfGrammar.Items.FirstOrDefault(x => x.Guid == g);
+			Assert.That(itemForTest, Is.Not.Null);
+			Assert.That(itemForTest.Abbreviation, Is.Not.EqualTo("Different abbreviation"));
+			Assert.That(itemForTest.Value, Is.Not.EqualTo("Different name"));
+			Assert.That(itemForTest.Key, Is.EqualTo("Different key")); // NOTE: Is.EqualTo, because keys shouldn't be updated
 		}
 	}
 }
