@@ -452,7 +452,7 @@ namespace LfMerge.Actions
 			_connection.UpdateRecord<LfOptionList>(
 				project,
 				newGrammarList,
-				lfGrammarList.Id,
+				lfGrammarList == null ? default(ObjectId) : lfGrammarList.Id,
 				MagicStrings.LfCollectionNameForOptionLists
 			);
 			return newGrammarList;

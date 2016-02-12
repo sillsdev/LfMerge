@@ -161,6 +161,15 @@ namespace LfMerge.Tests
 			_storedDataByObjectId[collectionName][id] = data;
 		}
 
+		public void AddToMockData<TDocument>(string collectionName, TDocument data)
+		{
+			BsonDocument mockData = data.ToBsonDocument();
+			AddToMockData<TDocument>(collectionName, mockData);
+			// NOTE: Without the explicit <TDocument>, that would have just called this function
+			// again as AddToMockData<BsonDocument>(collectionName, mockData), which would have led
+			// to infinite recursion and a stack overflow.
+		}
+
 		private IEnumerable<TDocument> GetRecordsByGuid<TDocument>(ILfProject project, string collectionName)
 		{
 			Dictionary<Guid, object> fakeCollection = _storedDataByGuid[collectionName];
