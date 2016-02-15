@@ -320,7 +320,7 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoEtymology.Comment, lfEntry.EtymologyComment);
 			SetMultiStringFrom(fdoEtymology.Gloss, lfEntry.EtymologyGloss);
 			if (lfEntry.EtymologySource != null)
-				fdoEtymology.Source = lfEntry.EtymologySource.FirstNonEmptyString(); // TODO: Use best analysis or vernacular instead of just first non-blank entry.
+				fdoEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource);
 		}
 
 		private void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
