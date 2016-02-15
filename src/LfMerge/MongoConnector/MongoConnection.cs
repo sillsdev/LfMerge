@@ -173,7 +173,11 @@ namespace LfMerge.MongoConnector
 					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[analysisFieldName]).InputSystems, analysisInputSystems));
 				}
 
+				// Also update the LF language code with the vernacular WS
+				updates.Add(builder.Set("languageCode", vernacularWs));
+
 				update = builder.Combine(updates);
+
 				Logger.Debug("Built an input systems update that looks like {0}",
 					update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 				collection.FindOneAndUpdate(filter, update, updateOptions);
