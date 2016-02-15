@@ -139,7 +139,7 @@ namespace LfMerge.Tests
 				// It's fine if it already exists
 			}
 		}
-			
+
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			return new Dictionary<string, LfInputSystemRecord>();

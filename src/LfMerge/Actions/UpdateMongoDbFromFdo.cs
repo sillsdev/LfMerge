@@ -117,6 +117,10 @@ namespace LfMerge.Actions
 			return iTsString.Text;
 		}
 
+		/// <summary>
+		/// Converts FDO writing systems to LF input systems
+		/// </summary>
+		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();

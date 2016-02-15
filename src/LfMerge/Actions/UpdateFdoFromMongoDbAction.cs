@@ -63,6 +63,7 @@ namespace LfMerge.Actions
 
 		protected override void DoRun(ILfProject project)
 		{
+			Logger.Debug("FdoFromMongoDb: starting");
 			_lfProject = project;
 			_projectRecord = _projectRecordFactory.Create(_lfProject);
 			if (_projectRecord == null)
@@ -95,6 +96,10 @@ namespace LfMerge.Actions
 				Logger.Error("Failed to find the service locator; giving up.");
 				return;
 			}
+
+			// Update writing systems from project config input systems
+			LfWsToFdoWs(_projectRecord.InputSystems);
+
 			_customFieldConverter = new CustomFieldConverter(_cache);
 
 			// For efficiency's sake, cache the six repositories and six factories we'll need all the time,
@@ -145,6 +150,7 @@ namespace LfMerge.Actions
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
 			_cache.ActionHandlerAccessor.Commit();
+			Logger.Debug("FdoFromMongoDb: done");
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
@@ -195,6 +201,50 @@ namespace LfMerge.Actions
 		{
 			if (source != null)
 				source.WriteToFdoMultiString(dest, _servLoc.WritingSystemManager);
+		}
+
+		/// <summary>
+		/// Converts the list of LF input systems and adds them to FDO writing systems
+		/// </summary>
+		/// <param name="lfWsList">List of LF input systems.</param>
+		private void LfWsToFdoWs(Dictionary<string, LfInputSystemRecord> lfWsList)
+		{
+			WritingSystemManager wsm = _servLoc.WritingSystemManager;
+			if (wsm == null)
+			{
+				Logger.Error("Failed to find the writing system manager");
+				return;
+			}
+
+			string vernacularLanguageCode = _projectRecord.LanguageCode;
+			foreach (var lfWs in lfWsList.Values)
+			{
+				CoreWritingSystemDefinition ws;
+				if (wsm.TryGet(lfWs.Tag, out ws))
+				{
+					ws.Abbreviation = lfWs.Abbreviation;
+					ws.RightToLeftScript = lfWs.IsRightToLeft;
+					// Creating LanguageSubTag throwing exceptions??
+					// ws.Language = new SIL.WritingSystems.LanguageSubtag(lfWs.Tag, lfWs.LanguageName);
+					ws.LanguageTag = lfWs.Tag;
+					wsm.Replace(ws);
+				}
+				else
+				{
+					ws = wsm.Create(lfWs.Tag);
+					ws.Abbreviation = lfWs.Abbreviation;
+					ws.RightToLeftScript = lfWs.IsRightToLeft;
+					// Creating LanguageSubTag throwing exceptions??
+					// ws.Language = new SIL.WritingSystems.LanguageSubtag(lfWs.Tag, lfWs.LanguageName);
+
+					// TODO: Also distinguish vernacular / analysis writing system  DDW 02-2016
+					if (lfWs.Tag.Equals(vernacularLanguageCode))
+					{
+						_servLoc.WritingSystems.AddToCurrentVernacularWritingSystems(ws);
+					}
+					wsm.Set(ws);
+				}
+			}
 		}
 
 		private void LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
