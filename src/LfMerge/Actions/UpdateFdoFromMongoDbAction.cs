@@ -119,9 +119,8 @@ namespace LfMerge.Actions
 
 			if (_cache.LanguageProject != null && _cache.LanguageProject.TranslationTagsOA != null)
 			{
-				// TODO: Consider using LangProjectTags.kguidTranFreeTranslation instead
-				_freeTranslationType = new PossibilityListConverter(_cache.LanguageProject.TranslationTagsOA).GetByName("Free translation");
-				if (_freeTranslationType == null)
+				_freeTranslationType = _servLoc.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation) as ICmPossibility;
+				if (_freeTranslationType == null) // Shouldn't happen, but let's have a fallback possibility
 					_freeTranslationType = _cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
 
