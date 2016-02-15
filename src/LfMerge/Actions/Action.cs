@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
+using System;
 using Autofac;
 using LfMerge.Logging;
 using LfMerge.Settings;
@@ -78,10 +79,11 @@ namespace LfMerge.Actions
 			{
 				DoRun(project);
 			}
-			// REVIEW: catch any exception and set state to hold?
-			// TODO: log exceptions
-			finally
+			catch (Exception)
 			{
+				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+				throw;
 			}
 
 			Logger.Notice("Action {0} finished", Name);
