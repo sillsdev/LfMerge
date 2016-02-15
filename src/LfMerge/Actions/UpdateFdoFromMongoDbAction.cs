@@ -346,8 +346,8 @@ namespace LfMerge.Actions
 			}
 			ILexPronunciation fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
 
-			fdoPronunciation.CVPattern = BestStringFromMultiText(lfEntry.CvPattern);
-			fdoPronunciation.Tone = BestStringFromMultiText(lfEntry.Tone);
+			fdoPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
+			fdoPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
 			if (lfEntry.Location != null)
 			{
@@ -358,12 +358,12 @@ namespace LfMerge.Actions
 			// Not handling fdoPronunciation.LiftResidue
 		}
 
-		private ITsString BestStringFromMultiText(LfMultiText input)
+		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input)
 		{
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				Logger.Warning("BestStringFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
+				Logger.Warning("BestStringAndWsFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
 				return null;
 			}
 			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
@@ -390,7 +390,7 @@ namespace LfMerge.Actions
 				if (input.TryGetValue(wsStr, out field) && !String.IsNullOrEmpty(field.Value))
 				{
 					Logger.Info("Returning TsString from {0} for writing system {1}", field.Value, wsStr);
-					return TsStringUtils.MakeTss(field.Value, wsId);
+					return new Tuple<string, int>(field.Value, wsId);
 				}
 			}
 
@@ -398,7 +398,23 @@ namespace LfMerge.Actions
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(_cache);
 			if (kv.Value == null) return null;
 			Logger.Info("Returning first non-empty TsString from {0} for writing system {1}", kv.Value, wsm.GetStrFromWs(kv.Key));
-			return TsStringUtils.MakeTss(kv.Value, kv.Key);
+			return new Tuple<string, int>(kv.Value, kv.Key);
+		}
+
+		private ITsString BestTsStringFromMultiText(LfMultiText input)
+		{
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input);
+			if (stringAndWsId == null)
+				return null;
+			return TsStringUtils.MakeTss(stringAndWsId.Item1, stringAndWsId.Item2);
+		}
+
+		private string BestStringFromMultiText(LfMultiText input)
+		{
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input);
+			if (stringAndWsId == null)
+				return null;
+			return stringAndWsId.Item1;
 		}
 
 		private ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner, ICmPossibility typeOfNewTranslation)
@@ -434,7 +450,7 @@ namespace LfMerge.Actions
 				fdoExample.Hvo
 			);
 			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
-			fdoExample.Reference = BestStringFromMultiText(lfExample.Reference);
+			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
 			// TODO: Set t.AvailableWritingSystems appropriately
@@ -547,19 +563,19 @@ namespace LfMerge.Actions
 			foreach (LfPicture lfPicture in lfSense.Pictures)
 				LfPictureToFdoPicture(lfPicture, fdoSense);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
-			fdoSense.ScientificName = BestStringFromMultiText(lfSense.ScientificName);
+			fdoSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);
 			//			new PossibilityListConverter(_cache.LanguageProject.SemanticDomainListOA)
 			//				.UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
 			SetMultiStringFrom(fdoSense.SemanticsNote, lfSense.SemanticsNote);
 			SetMultiStringFrom(fdoSense.Bibliography, lfSense.SenseBibliography);
 
 			// lfSense.SenseId; // TODO: What do I do with this one?
-			fdoSense.ImportResidue = BestStringFromMultiText(lfSense.SenseImportResidue);
+			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
 			fdoSense.SenseTypeRA = new PossibilityListConverter(_cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
-			fdoSense.Source = BestStringFromMultiText(lfSense.Source);
+			fdoSense.Source = BestTsStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(_cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
 
