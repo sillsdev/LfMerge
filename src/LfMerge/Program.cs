@@ -85,6 +85,9 @@ namespace LfMerge
 
 						queue.CurrentAction.Run(project);
 
+						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+							project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+
 						// TODO: Verify actions complete before dequeuing
 						queue.DequeueProject(projectCode);
 					}

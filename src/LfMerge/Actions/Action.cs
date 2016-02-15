@@ -82,8 +82,6 @@ namespace LfMerge.Actions
 			// TODO: log exceptions
 			finally
 			{
-				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
-					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 			}
 
 			Logger.Notice("Action {0} finished", Name);
