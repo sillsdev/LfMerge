@@ -48,8 +48,9 @@ namespace LfMerge.Settings
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
 			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
+			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoMainDatabaseName);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoDatabaseNamePrefix, mongoMainDatabaseName);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
@@ -57,7 +58,7 @@ namespace LfMerge.Settings
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoMainDatabaseName)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix, string mongoMainDatabaseName)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
@@ -69,6 +70,7 @@ namespace LfMerge.Settings
 			QueueDirectories[(int)QueueNames.Edit] = Path.Combine(baseDir, "editqueue");
 			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(baseDir, "syncqueue");
 
+			MongoDatabaseNamePrefix = mongoDatabaseNamePrefix;
 			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);
 			MongoMainDatabaseName = mongoMainDatabaseName;
 		}
@@ -82,7 +84,9 @@ namespace LfMerge.Settings
 				return false;
 			bool ret =
 				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
+				other.MongoMainDatabaseName == MongoMainDatabaseName &&
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
 				other.TemplateDirectory == TemplateDirectory &&
@@ -97,8 +101,12 @@ namespace LfMerge.Settings
 		public override int GetHashCode()
 		{
 			var hash = DefaultProjectsDirectory.GetHashCode() ^
-				MongoDbHostNameAndPort.GetHashCode() ^ ProjectsDirectory.GetHashCode() ^
-				StateDirectory.GetHashCode() ^ TemplateDirectory.GetHashCode() ^
+				MongoDatabaseNamePrefix.GetHashCode() ^
+				MongoDbHostNameAndPort.GetHashCode() ^
+				MongoMainDatabaseName.GetHashCode() ^
+				ProjectsDirectory.GetHashCode() ^
+				StateDirectory.GetHashCode() ^
+				TemplateDirectory.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
@@ -167,6 +175,11 @@ namespace LfMerge.Settings
 		public string MongoDbHostNameAndPort { get; private set; }
 
 		public string MongoMainDatabaseName { get; private set; }
+
+		/// <summary>
+		/// The prefix prepended to project codes to get the Mongo database name.
+		/// </summary>
+		public string MongoDatabaseNamePrefix { get; private set; }
 
 		#region Serialization/Deserialization
 
