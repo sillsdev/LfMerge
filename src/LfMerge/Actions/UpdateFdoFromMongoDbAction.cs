@@ -49,11 +49,11 @@ namespace LfMerge.Actions
 		// Values that we use a lot and therefore cache here
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 		private List<Tuple<int, string>> _analysisWsIdsAndNamesInSearchOrder;
-		private List<int> _analysisWsIdSearchOrder;
-		private List<string> _analysisWsStrSearchOrder;
+		// private List<int> _analysisWsIdSearchOrder;
+		// private List<string> _analysisWsStrSearchOrder;
 		private List<Tuple<int, string>> _vernacularWsIdsAndNamesInSearchOrder;
-		private List<int> _vernacularWsIdSearchOrder;
-		private List<string> _vernacularWsStrSearchOrder;
+		// private List<int> _vernacularWsIdSearchOrder;
+		// private List<string> _vernacularWsStrSearchOrder;
 
 		private CustomFieldConverter _customFieldConverter;
 
@@ -129,11 +129,11 @@ namespace LfMerge.Actions
 
 			// Also cache writing system search orders that we'll use all the time
 			_analysisWsIdsAndNamesInSearchOrder = PrepareAnalysisWsSearchOrder().ToList();
-			_analysisWsIdSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
-			_analysisWsStrSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
+			// _analysisWsIdSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
+			// _analysisWsStrSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
 			_vernacularWsIdsAndNamesInSearchOrder = PrepareVernacularWsSearchOrder().ToList();
-			_vernacularWsIdSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
-			_vernacularWsStrSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
+			// _vernacularWsIdSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
+			// _vernacularWsStrSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
 
 			if (_cache.LanguageProject != null && _cache.LanguageProject.TranslationTagsOA != null)
 			{

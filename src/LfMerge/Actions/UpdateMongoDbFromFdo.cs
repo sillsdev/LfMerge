@@ -379,7 +379,7 @@ namespace LfMerge.Actions
 			if (fdoEntry.PrimaryMorphType != null) {
 				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.NameHierarchyString;
 			}
-			// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert all of the. E.g.,
+			// TODO: Once LF's data model is updated from a single pronunciation to an array of pronunciations, convert all of them instead of just the first. E.g.,
 			//foreach (ILexPronunciation fdoPronunciation in fdoEntry.PronunciationsOS) { ... }
 			if (fdoEntry.PronunciationsOS.Count > 0)
 			{

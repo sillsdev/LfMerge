@@ -72,6 +72,8 @@ namespace LfMerge.LanguageForge.Model
 		{
 			foreach (string ws in wsSearchOrder)
 			{
+				if (ws == null) // Shouldn't happen, but apparently does happen sometimes. TODO: Find out why.
+					continue;
 				LfStringField field;
 				if (this.TryGetValue(ws, out field) && field != null && !String.IsNullOrEmpty(field.Value))
 					return new KeyValuePair<string, string>(ws, field.Value);

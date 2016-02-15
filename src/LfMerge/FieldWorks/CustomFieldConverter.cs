@@ -473,8 +473,13 @@ namespace LfMerge.FieldWorks
 					Console.WriteLine("Got value {0} of type {1}", value, value.GetType());
 					Console.WriteLine("Writing system #{0} is \"{1}\" for this field", fdoMetaData.GetFieldWs(flid), servLoc.WritingSystemManager.GetStrFromWs(fdoMetaData.GetFieldWs(flid)));
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-					data.SetString(hvo, flid, TsStringUtils.MakeTss(valueAsMultiText.FirstNonEmptyString(), cache.DefaultAnalWs));
-					// TODO: Somehow use WritingSystemServices.ActualWs to get the right writing system here, instead of just assuming analysis
+					int wsIdForField = cache.MetaDataCacheAccessor.GetFieldWs(flid);
+					string wsStrForField = cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
+					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
+					string foundWs = kv.Key;
+					string foundData = kv.Value;
+					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
+					data.SetString(hvo, flid, TsStringUtils.MakeTss(foundData, foundWsId));
 					return true;
 				}
 
