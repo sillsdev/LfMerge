@@ -103,13 +103,13 @@ namespace LfMerge.FieldWorks
 		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
 		{
-			// TODO: Trim this down. Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection - that's it.
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
+			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -121,14 +121,6 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.Integer:
 				fieldValue = new BsonInt32(data.get_IntProp(hvo, flid));
-				break;
-
-			case CellarPropertyType.MultiString:
-			case CellarPropertyType.MultiUnicode:
-				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
-				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, servLoc.WritingSystemManager);
-				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsBsonDocument());
-				// No need to save GUIDs for multistrings
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -159,11 +151,6 @@ namespace LfMerge.FieldWorks
 					fieldValue = null;
 				else
 					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
-				break;
-
-			case CellarPropertyType.Unicode:
-				string UnicodeValue = data.get_UnicodeProp(hvo, flid);
-				fieldValue = String.IsNullOrEmpty(UnicodeValue) ? null : new BsonString(UnicodeValue);
 				break;
 
 			default:
@@ -283,7 +270,6 @@ namespace LfMerge.FieldWorks
 		/// May be null or BsonNull.Value if no GUIDs associated with this value.</param>
 		public bool SetCustomFieldData(int hvo, int flid, BsonValue value, BsonValue guidOrGuids)
 		{
-			// TODO: Trim this down. Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection - that's it.
 			if (value == null || value == BsonNull.Value)
 				return false;
 			List<Guid> fieldGuids = new List<Guid>();
@@ -305,40 +291,21 @@ namespace LfMerge.FieldWorks
 			if (fieldName == null)
 				return false;
 
+			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
-				GenDate genDate; // = data.get_GenDateProp(hvo, flid);
+				GenDate genDate;
 				if (GenDate.TryParse(value.AsString, out genDate))
 				{
 					data.SetGenDate(hvo, flid, genDate);
 					return true;
 				}
 				return false;
-				// When parsing, will use GenDate.TryParse(str, out genDate)
 
 			case CellarPropertyType.Integer:
 				data.SetInt(hvo, flid, value.AsInt32);
 				return true;
-
-			case CellarPropertyType.MultiString:
-			case CellarPropertyType.MultiUnicode:
-				{
-					LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-					Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
-					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
-					{
-						if (kv.Value == null)
-							continue;
-						string s = kv.Value.Value;
-						int wsId = servLoc.WritingSystemManager.GetWsFromStr(kv.Key);
-						if (wsId == 0)
-							continue;
-						Console.WriteLine("  {0}: {1}", kv.Key, s);
-						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(s, wsId));
-					}
-					return true;
-				}
 
 			case CellarPropertyType.OwningAtomic:
 				{
@@ -480,13 +447,6 @@ namespace LfMerge.FieldWorks
 					string foundData = kv.Value;
 					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
 					data.SetString(hvo, flid, TsStringUtils.MakeTss(foundData, foundWsId));
-					return true;
-				}
-
-			case CellarPropertyType.Unicode:
-				{
-					string valueStr = value.AsString;
-					data.SetUnicode(hvo, flid, valueStr, valueStr.Length);
 					return true;
 				}
 
