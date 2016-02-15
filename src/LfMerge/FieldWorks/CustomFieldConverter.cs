@@ -103,7 +103,7 @@ namespace LfMerge.FieldWorks
 		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
 		{
-			// TODO: There are a lot of custom field types that FDO just dones't allow. Narrow this function down.
+			// TODO: Trim this down. Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection - that's it.
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
@@ -283,6 +283,7 @@ namespace LfMerge.FieldWorks
 		/// May be null or BsonNull.Value if no GUIDs associated with this value.</param>
 		public bool SetCustomFieldData(int hvo, int flid, BsonValue value, BsonValue guidOrGuids)
 		{
+			// TODO: Trim this down. Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection - that's it.
 			if (value == null || value == BsonNull.Value)
 				return false;
 			List<Guid> fieldGuids = new List<Guid>();
