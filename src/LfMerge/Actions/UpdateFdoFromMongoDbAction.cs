@@ -46,7 +46,14 @@ namespace LfMerge.Actions
 		private ILexSenseFactory _senseFactory;
 		private ICmTranslationFactory _translationFactory;
 
+		// Values that we use a lot and therefore cache here
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
+		private List<Tuple<int, string>> _analysisWsIdsAndNamesInSearchOrder;
+		private List<int> _analysisWsIdSearchOrder;
+		private List<string> _analysisWsStrSearchOrder;
+		private List<Tuple<int, string>> _vernacularWsIdsAndNamesInSearchOrder;
+		private List<int> _vernacularWsIdSearchOrder;
+		private List<string> _vernacularWsStrSearchOrder;
 
 		private CustomFieldConverter _customFieldConverter;
 
@@ -120,6 +127,14 @@ namespace LfMerge.Actions
 			_senseFactory = _servLoc.GetInstance<ILexSenseFactory>();
 			_translationFactory = _servLoc.GetInstance<ICmTranslationFactory>();
 
+			// Also cache writing system search orders that we'll use all the time
+			_analysisWsIdsAndNamesInSearchOrder = PrepareAnalysisWsSearchOrder().ToList();
+			_analysisWsIdSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
+			_analysisWsStrSearchOrder = _analysisWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
+			_vernacularWsIdsAndNamesInSearchOrder = PrepareVernacularWsSearchOrder().ToList();
+			_vernacularWsIdSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item1).ToList();
+			_vernacularWsStrSearchOrder = _vernacularWsIdsAndNamesInSearchOrder.Select(tuple => tuple.Item2).ToList();
+
 			if (_cache.LanguageProject != null && _cache.LanguageProject.TranslationTagsOA != null)
 			{
 				_freeTranslationType = _servLoc.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation) as ICmPossibility;
@@ -153,6 +168,48 @@ namespace LfMerge.Actions
 				});
 			_cache.ActionHandlerAccessor.Commit();
 			Logger.Debug("FdoFromMongoDb: done");
+		}
+
+		private IEnumerable<Tuple<int, string>> PrepareAnalysisWsSearchOrder()
+		{
+			int wsAnalysis = _cache.DefaultAnalWs;
+			int wsUser = _cache.DefaultUserWs;
+			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
+
+			// Search default analysis ws first, then all other analysis wses, then UI ws as a final fallback
+			yield return new Tuple<int, string>(wsAnalysis, wsm.GetStrFromWs(wsAnalysis));
+			IWritingSystemContainer wsc = _cache.ServiceLocator.WritingSystems;
+			if (wsc != null)
+			{
+				// Alas, there's no C# equivalent to F#'s yield! keyword, which could yield a whole enumerable at once
+				foreach (int wsId in wsc.CurrentAnalysisWritingSystems.Select(ws => ws.Handle))
+				{
+					if (wsId == wsAnalysis || wsId == wsUser)
+						continue;
+					yield return new Tuple<int, string>(wsId, wsm.GetStrFromWs(wsId));
+				}
+			}
+			yield return new Tuple<int, string>(wsUser, wsm.GetStrFromWs(wsUser));
+		}
+
+		private IEnumerable<Tuple<int, string>> PrepareVernacularWsSearchOrder()
+		{
+			int wsVernacular = _cache.DefaultVernWs;
+			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
+
+			// Default vernacular first, then all other vernacular wses, but don't fall back to UI ws
+			yield return new Tuple<int, string>(wsVernacular, wsm.GetStrFromWs(wsVernacular));
+			IWritingSystemContainer wsc = _cache.ServiceLocator.WritingSystems;
+			if (wsc != null)
+			{
+				// Alas, there's no C# equivalent to F#'s yield! keyword, which could yield a whole enumerable at once
+				foreach (int wsId in wsc.CurrentVernacularWritingSystems.Select(ws => ws.Handle))
+				{
+					if (wsId == wsVernacular)
+						continue;
+					yield return new Tuple<int, string>(wsId, wsm.GetStrFromWs(wsId));
+				}
+			}
 		}
 
 		private IEnumerable<LfLexEntry> GetLexiconForTesting(ILfProject project, ILfProjectConfig config)
@@ -358,7 +415,7 @@ namespace LfMerge.Actions
 			// Not handling fdoPronunciation.LiftResidue
 		}
 
-		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input)
+		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			if (input == null) return null;
 			if (input.Count == 0)
@@ -366,21 +423,15 @@ namespace LfMerge.Actions
 				Logger.Warning("BestStringAndWsFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
 				return null;
 			}
-			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
-			if (wsm == null) return null;
 
-			// Search default analysis ws first, then all analyses wses, then UI ws as a final fallback
-			List<int> wsIdsToSearch = new List<int> { _cache.DefaultAnalWs };
-			IWritingSystemContainer wsc = _cache.ServiceLocator.WritingSystems;
-			if (wsc != null)
-				wsIdsToSearch.AddRange(wsc.CurrentAnalysisWritingSystems.Select(ws => ws.Handle));
-			wsIdsToSearch.Add(_cache.DefaultUserWs);
-			// TODO: We call this fairly often. Cache this search list in the Update object, rather
-			// than re-creating it every time.
+			List<Tuple<int, string>> wsesToSearch = isAnalysisField ?
+				_analysisWsIdsAndNamesInSearchOrder :
+				_vernacularWsIdsAndNamesInSearchOrder;
 
-			foreach (int wsId in wsIdsToSearch)
+			foreach (Tuple<int, string> pair in wsesToSearch)
 			{
-				string wsStr = wsm.GetStrFromWs(wsId);
+				int wsId = pair.Item1;
+				string wsStr = pair.Item2;
 				LfStringField field;
 				if (input.TryGetValue(wsStr, out field) && !String.IsNullOrEmpty(field.Value))
 				{
@@ -392,21 +443,21 @@ namespace LfMerge.Actions
 			// Last-ditch option: just grab the first non-empty string we can find
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(_cache);
 			if (kv.Value == null) return null;
-			Logger.Info("Returning first non-empty TsString from {0} for writing system {1}", kv.Value, wsm.GetStrFromWs(kv.Key));
+			Logger.Info("Returning first non-empty TsString from {0} for writing system with ID {1}", kv.Value, kv.Key);
 			return new Tuple<string, int>(kv.Value, kv.Key);
 		}
 
-		private ITsString BestTsStringFromMultiText(LfMultiText input)
+		private ITsString BestTsStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
-			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input);
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
 			return TsStringUtils.MakeTss(stringAndWsId.Item1, stringAndWsId.Item2);
 		}
 
-		private string BestStringFromMultiText(LfMultiText input)
+		private string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
-			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input);
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
 			return stringAndWsId.Item1;
