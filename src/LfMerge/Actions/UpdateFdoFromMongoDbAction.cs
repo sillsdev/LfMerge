@@ -369,19 +369,14 @@ namespace LfMerge.Actions
 			WritingSystemManager wsm = _cache.ServiceLocator.WritingSystemManager;
 			if (wsm == null) return null;
 
-			List<int> wsIdsToSearch;
+			// Search default analysis ws first, then all analyses wses, then UI ws as a final fallback
+			List<int> wsIdsToSearch = new List<int> { _cache.DefaultAnalWs };
 			IWritingSystemContainer wsc = _cache.ServiceLocator.WritingSystems;
 			if (wsc != null)
-			{
-				IList<CoreWritingSystemDefinition> analysisWritingSystems = wsc.CurrentAnalysisWritingSystems;
-				wsIdsToSearch = analysisWritingSystems.Select(ws => ws.Handle).ToList();
-			}
-			else
-			{
-				wsIdsToSearch = new List<int> { _cache.DefaultAnalWs };
-			}
-			int fallbackWsId = _cache.DefaultUserWs;
-			wsIdsToSearch.Add(fallbackWsId);
+				wsIdsToSearch.AddRange(wsc.CurrentAnalysisWritingSystems.Select(ws => ws.Handle));
+			wsIdsToSearch.Add(_cache.DefaultUserWs);
+			// TODO: We call this fairly often. Cache this search list in the Update object, rather
+			// than re-creating it every time.
 
 			foreach (int wsId in wsIdsToSearch)
 			{
