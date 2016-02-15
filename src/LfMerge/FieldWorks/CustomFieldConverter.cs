@@ -103,6 +103,7 @@ namespace LfMerge.FieldWorks
 		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
 		{
+			// TODO: There are a lot of custom field types that FDO just dones't allow. Narrow this function down.
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
@@ -470,8 +471,6 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.String:
 				{
-					Console.WriteLine("Got value {0} of type {1}", value, value.GetType());
-					Console.WriteLine("Writing system #{0} is \"{1}\" for this field", fdoMetaData.GetFieldWs(flid), servLoc.WritingSystemManager.GetStrFromWs(fdoMetaData.GetFieldWs(flid)));
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 					int wsIdForField = cache.MetaDataCacheAccessor.GetFieldWs(flid);
 					string wsStrForField = cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
