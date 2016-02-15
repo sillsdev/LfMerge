@@ -107,7 +107,7 @@ namespace LfMerge
 				Cleanup();
 			}
 
-			Logger.Notice("LfMerge finished\n");
+			Logger.Notice("LfMerge finished");
 		}
 
 		protected static void EnsureClone(ILfProject project)

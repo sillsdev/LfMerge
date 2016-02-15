@@ -22,15 +22,20 @@ namespace LfMerge.Actions
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
-				// TODO: Add this back in once we verify UpdateMongoDbFromFdo working
-				//GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
-				/*
+				GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
+
+				Logger.Notice("Syncing");
 				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
 				var config = new ProjectFolderConfiguration(projectFolderPath);
 				var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
 				var options = new SyncOptions();
-				synchroniser.SyncNow(options);
-*/
+				var syncResult = synchroniser.SyncNow(options);
+				if (!syncResult.Succeeded)
+				{
+					Logger.Error("Sync failed");
+					return;
+				}
+
 				GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
 			}
 		}

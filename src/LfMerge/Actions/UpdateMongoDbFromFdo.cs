@@ -156,10 +156,9 @@ namespace LfMerge.Actions
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
 
 			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
+			lfSense.AcademicDomains = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.DomainTypesRC);
 			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
 			lfSense.AnthropologyNote = ToMultiText(fdoSense.AnthroNote);
-			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
-			lfSense.AcademicDomains = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.DomainTypesRC);
 			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
 			if (fdoSense.ExamplesOS != null)
@@ -189,6 +188,7 @@ namespace LfMerge.Actions
 				// TODO: Remove this debugging foreach loop once we know pictures are working
 				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
 			}
+			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
 			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
 

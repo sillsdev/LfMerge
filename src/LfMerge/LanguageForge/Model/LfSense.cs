@@ -55,7 +55,7 @@ namespace LfMerge.LanguageForge.Model
 		public bool ShouldSerializeExamples() { return _ShouldSerializeList(Examples); }
 		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
 		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
-		// public bool ShouldSerializeAuthorInfo() { return true; } // Not needed, as this is the default
+		public bool ShouldSerializeAuthorInfo() { return AuthorInfo != null; }
 		public bool ShouldSerializePictures() { return _ShouldSerializeList(Pictures); }
 		public bool ShouldSerializeDefinition() { return _ShouldSerializeLfMultiText(Definition); }
 		public bool ShouldSerializeGloss() { return _ShouldSerializeLfMultiText(Gloss); }
@@ -87,4 +87,3 @@ namespace LfMerge.LanguageForge.Model
 		}
 	}
 }
-
