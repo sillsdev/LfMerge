@@ -18,6 +18,7 @@ namespace LfMerge.LanguageForge.Model
 		public string MercurialSha { get; set; }
 		public DateTime DateCreated { get; set; }
 		public DateTime DateModified { get; set; }
+		public int DirtySR { get; set ; }
 
 		// Data properties
 		public LfMultiText Lexeme { get; set; }

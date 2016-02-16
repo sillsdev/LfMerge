@@ -304,6 +304,20 @@ namespace LfMerge.MongoConnector
 			else
 				mongoDb = GetMainDatabase();
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
+
+#if DIRTYSR
+			// TODO for Robin: Decrement dirtySR counter.  The commented out code below throws exceptions
+			if (typeof(TDocument) == typeof(LfLexEntry))
+			{
+				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
+				var builder = Builders<TDocument>.Update;
+				// Magic strings again, arg... but I can't do "UpdateDefinition<LfLexEntry> entryUpdate = update as UpdateDefinition<LfLexEntry>"
+				// to use a Builders<LfLexEntry>.Update, as C#'s type system won't allow me to do that. 2016-02 RM
+				update = builder.Combine(update, builder.Inc("dirtySR", -1));
+				update = builder.Combine(update, builder.Max("dirtySR", 0));
+			}
+#endif
+
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			//Logger.Notice("About to save {0} with ObjectID {1}", typeof(TDocument), id);
 			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
