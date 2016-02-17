@@ -313,6 +313,45 @@ namespace LfMerge.MongoConnector
 				// to use a Builders<LfLexEntry>.Update, as C#'s type system won't allow me to do that. 2016-02 RM
 				update = builder.Combine(update, builder.Inc("dirtySR", -1));
 				update = builder.Combine(update, builder.Max("dirtySR", 0));
+				// Alas, that doesn't work. Mongo complains "Cannot update 'dirtySR' and 'dirtySR' at the same time"
+			}
+#endif
+#if DIRTYSR2
+			// This is another approach that we tried, which 1) doesn't compile, and 2) doesn't work.
+			if (typeof(TDocument) == typeof(LfLexEntry))
+			{
+				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
+				var builder = Builders<LfLexEntry>.Update;
+				var entryUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
+				entryUpdate = builder.Combine(entryUpdate, builder.Inc(item => item.DirtySR, -1));
+				entryUpdate = builder.Combine(entryUpdate, builder.Max(item => item.DirtySR, 0));
+				update = entryUpdate as UpdateDefinition<TDocument>;
+			}
+#endif
+#if DIRTYSR3
+			// Here's a third approach, that would theoretically work but won't compile. But this approach can be refactored so that C# is happy.
+			if (typeof(TDocument) == typeof(LfLexEntry))
+			{
+				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
+				// Mongo won't let us say "decrement only if greater than N" in the update, only in the filter. But we already have to use a filter
+				// to specify the object ID or GUID we're looking for. So what we have to use is two mutually-exclusive filters and two updates:
+				var ub = Builders<LfLexEntry>.Update;
+				var fb = Builders<LfLexEntry>.Filter;
+				var zeroOrLessFilter = fb.And(filter as FilterDefinition<LfLexEntry>, fb.Lte(entry => entry.DirtySR, 0));
+				var oneOrMoreFilter = fb.And(filter as FilterDefinition<LfLexEntry>, fb.Gt(entry => entry.DirtySR, 0));
+				var decrementUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
+				var noDecrementUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
+				decrementUpdate = ub.Combine(decrementUpdate, ub.Inc(item => item.DirtySR, -1));
+				noDecrementUpdate = ub.Combine(noDecrementUpdate, ub.Max(item => item.DirtySR, 0));
+				update = decrementUpdate as UpdateDefinition<TDocument>;
+				// Then instead of the normal FindOneAndUpdate below, we'd run two (or three!), only one of which can possibly succeed:
+				// Upsert = FALSE, collection.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, updateOptions);
+				// Upsert = FALSE, collection.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, updateOptions);
+				// But first we have to check if the document exists, and if it doesn't, then instead we run the following:
+				// Upsert = TRUE, collection.FindOneAndUpdate(filter, noDecrementUpdate, updateOptions);
+
+				// TODO: Refactor the UpdateRecord<TDocument> functions to be non-generic, then do the same for the MongoConnectionDouble functions (and the IMongoConnection interface).
+				// And set up the three possible updates, with a "count records matching this filter" first as an if statement.
 			}
 #endif
 
