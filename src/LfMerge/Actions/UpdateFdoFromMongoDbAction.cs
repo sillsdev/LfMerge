@@ -97,8 +97,11 @@ namespace LfMerge.Actions
 				return;
 			}
 
-			// Update writing systems from project config input systems
-			LfWsToFdoWs(_projectRecord.InputSystems);
+			// Update writing systems from project config input systems.  Won't commit till the end
+			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
+				{
+					LfWsToFdoWs(_projectRecord.InputSystems);
+				});
 
 			_customFieldConverter = new CustomFieldConverter(_cache);
 
@@ -215,17 +218,26 @@ namespace LfMerge.Actions
 				return;
 			}
 
-			string vernacularLanguageCode = _projectRecord.LanguageCode;
 			foreach (var lfWs in lfWsList.Values)
 			{
 				CoreWritingSystemDefinition ws;
+
+				// It would be nice to call this to add to both analysis and vernacular WS.
+				// But we need the flexibility of bringing in LF WS properties.
+				/*
+				if (!WritingSystemServices.FindOrCreateSomeWritingSystem(
+					_cache, null, lfWs.Tag, true, true, out ws))
+				{
+					// Could neither find NOR create a writing system, probably because the tag was malformed? Log it and move on.
+					Logger.Warning("Failed to find or create an FDO writing system corresponding to tag {0}. Is it malformed?", lfWs.Tag);
+					continue;
+				}
+				*/
+
 				if (wsm.TryGet(lfWs.Tag, out ws))
 				{
 					ws.Abbreviation = lfWs.Abbreviation;
 					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					// Creating LanguageSubTag throwing exceptions??
-					// ws.Language = new SIL.WritingSystems.LanguageSubtag(lfWs.Tag, lfWs.LanguageName);
-					ws.LanguageTag = lfWs.Tag;
 					wsm.Replace(ws);
 				}
 				else
@@ -233,15 +245,12 @@ namespace LfMerge.Actions
 					ws = wsm.Create(lfWs.Tag);
 					ws.Abbreviation = lfWs.Abbreviation;
 					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					// Creating LanguageSubTag throwing exceptions??
-					// ws.Language = new SIL.WritingSystems.LanguageSubtag(lfWs.Tag, lfWs.LanguageName);
-
-					// TODO: Also distinguish vernacular / analysis writing system  DDW 02-2016
-					if (lfWs.Tag.Equals(vernacularLanguageCode))
-					{
-						_servLoc.WritingSystems.AddToCurrentVernacularWritingSystems(ws);
-					}
 					wsm.Set(ws);
+
+					// For now, since LF can't distinguish vernacular/analysis WS, we have to add to both.
+					// (We do know _projectRecord.LanguageCode is always going to be a vernacular WS)
+					_servLoc.WritingSystems.AddToCurrentVernacularWritingSystems(ws);
+					_servLoc.WritingSystems.AddToCurrentAnalysisWritingSystems(ws);
 				}
 			}
 		}
