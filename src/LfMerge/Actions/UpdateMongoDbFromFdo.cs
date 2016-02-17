@@ -99,8 +99,7 @@ namespace LfMerge.Actions
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
-				Guid guid = lfEntry.Guid ?? Guid.Empty;
-				_connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, MagicStrings.LfCollectionNameForLexicon);
+				_connection.UpdateRecord(project, lfEntry);
 			}
 
 		}
@@ -453,18 +452,12 @@ namespace LfMerge.Actions
 
 		private LfOptionList UpdateGrammarOptionListFromFdo(ILfProject project, ICmPossibilityList partsOfSpeech)
 		{
-			// _connection.UpdateRecord<LfLexEntry>(project, lfEntry, guid, "lexicon");
 			LfOptionList lfGrammarList = _connection
 				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
 				.FirstOrDefault(list => list.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			var converter = new GrammarConverter(_cache, lfGrammarList);
 			LfOptionList newGrammarList = converter.PrepareGrammarOptionListUpdate(partsOfSpeech);
-			_connection.UpdateRecord<LfOptionList>(
-				project,
-				newGrammarList,
-				lfGrammarList == null ? default(ObjectId) : lfGrammarList.Id,
-				MagicStrings.LfCollectionNameForOptionLists
-			);
+			_connection.UpdateRecord(project, newGrammarList, lfGrammarList == null ? default(ObjectId) : lfGrammarList.Id);
 			return newGrammarList;
 		}
 

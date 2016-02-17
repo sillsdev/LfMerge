@@ -214,42 +214,24 @@ namespace LfMerge.Tests
 			return mockDb as IMongoDatabase;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
+		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
-			EnsureCollectionExists(collectionName);
-			_storedDataByGuid[collectionName][guid] = data;
-			// Fetching the ObjectId is more complicated, since we have to use reflection to find it
-			PropertyInfo pi = data.GetType().GetProperty("Id", typeof(ObjectId));
-			if (pi == null) // Also try fetching by property type if it didn't have the name Id
-			{
-				pi = data.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.PropertyType == typeof(ObjectId));
-			}
-			if (pi != null)
-				_storedDataByObjectId[collectionName][(ObjectId)pi.GetValue(data)] = data;
-			return true;
+			return UpdateRecordImpl<LfLexEntry>(project, data, data.Guid, null, MagicStrings.LfCollectionNameForLexicon);
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
+		public bool UpdateRecord(ILfProject project, LfOptionList data, ObjectId id)
+		{
+			return UpdateRecordImpl<LfOptionList>(project, data, null, id, MagicStrings.LfCollectionNameForOptionLists);
+		}
+
+		public bool UpdateRecordImpl<TDocument>(ILfProject project, TDocument data, Guid? guid, ObjectId? id, string collectionName)
 		{
 			EnsureCollectionExists(collectionName);
-			_storedDataByObjectId[collectionName][id] = data;
-			// Fetching the Guid is more complicated, since we have to use reflection to find it
-			PropertyInfo pi = data.GetType().GetProperty("Guid", new Type[] {typeof(Guid), typeof(Nullable<Guid>)});
-			if (pi == null) // Also try fetching by property type if it didn't have the name Guid
-			{
-				pi = data.GetType().GetProperties().FirstOrDefault(propInfo =>
-					propInfo.PropertyType == typeof(Guid) ||
-					propInfo.PropertyType == typeof(Nullable<Guid>)
-				);
-			}
-			if (pi != null)
-			{
-				Guid guid = pi.PropertyType == typeof(Guid) ?
-					(Guid)pi.GetValue(data) :
-					(pi.GetValue(data) as Nullable<Guid>).GetValueOrDefault();
-				_storedDataByGuid[collectionName][guid] = data;
-			}
-			return true;
+			if (guid != null)
+				_storedDataByGuid[collectionName][guid.Value] = data;
+			if (id != null)
+				_storedDataByObjectId[collectionName][id.Value] = data;
+			return (guid != null) || (id != null);
 		}
 	}
 

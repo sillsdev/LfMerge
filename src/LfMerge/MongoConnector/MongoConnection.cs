@@ -259,10 +259,6 @@ namespace LfMerge.MongoConnector
 					case "LfOptionListItem":
 						updates.Add(builder.Set(prop.Name, (List<LfOptionListItem>)prop.GetValue(doc)));
 						break;
-					// TODO: Check if the "LfInputSystemRecord" case is needed; I think it really isn't
-//					case "LfInputSystemRecord":
-//						updates.Add(builder.Set(prop.Name, (List<LfInputSystemRecord>)prop.GetValue(doc)));
-//						break;
 					default:
 						updates.Add(builder.Set(prop.Name, (List<object>)prop.GetValue(doc)));
 						break;
@@ -285,12 +281,59 @@ namespace LfMerge.MongoConnector
 			return result;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName, MongoDbSelector whichDb = MongoDbSelector.ProjectDatabase)
+		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
-			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
-			FilterDefinition<TDocument> filter = filterBuilder.Eq("_id", id);
-			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
-			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB", typeof(TDocument), id);
+			var filterBuilder = Builders<LfLexEntry>.Filter;
+			FilterDefinition<LfLexEntry> filter = filterBuilder.Eq(entry => entry.Guid, data.Guid);
+			UpdateDefinition<LfLexEntry> coreUpdate = BuildUpdate(data);
+			var doNotUpsert = new FindOneAndUpdateOptions<LfLexEntry> {
+				IsUpsert = false,
+				ReturnDocument = ReturnDocument.Before
+			};
+			var upsert = new FindOneAndUpdateOptions<LfLexEntry> {
+				IsUpsert = true,
+				ReturnDocument = ReturnDocument.After
+			};
+			// Special handling for LfLexEntry records: we need to decrement dirtySR iff it's >0, but Mongo
+			// doesn't allow an update like "{'$inc': {dirtySR: -1}, '$max': {dirtySR: 0}}". We have to use
+			// filters for that, and that means there are THREE possibilities:
+			// 1. This is an *insert*, where dirtySR should be set to 0.
+			// 2. This is an *update*, but dirtySR was already 0; do not decrement.
+			// 3. This is an *update*, and dirtySR was >0; decrement.
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> coll = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+			LfLexEntry updateResult;
+			if (coll.Count(filter) == 0)
+			{
+				// Theoretically, we could just do an InsertOne() here. But we have special logic in the
+				// BuildUpdate() function (for handling Nullable<Guid> fields, for example), and we want to
+				// make sure that gets applied for both inserts and updates. So we'll do an upsert even though
+				// we *know* there's no previous data
+				updateResult = coll.FindOneAndUpdate(filter, coreUpdate, upsert);
+				return (updateResult != null);
+			}
+			else
+			{
+				var updateBuilder = Builders<LfLexEntry>.Update;
+				var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
+				var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
+				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
+				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
+				// Precisely one of the next two calls can succeed.
+				updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
+				if (updateResult != null)
+					return true;
+				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
+				return (updateResult != null);
+			}
+		}
+
+		public bool UpdateRecord(ILfProject project, LfOptionList data, ObjectId id)
+		{
+			var filterBuilder = Builders<LfOptionList>.Filter;
+			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Id, id);
+			bool result = UpdateRecordImpl(project, data, filter, MagicStrings.LfCollectionNameForOptionLists, MongoDbSelector.ProjectDatabase);
+			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB", typeof(LfOptionList), id);
 			return result;
 		}
 
@@ -302,63 +345,7 @@ namespace LfMerge.MongoConnector
 			else
 				mongoDb = GetMainDatabase();
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
-
-#if DIRTYSR
-			// TODO for Robin: Decrement dirtySR counter.  The commented out code below throws exceptions
-			if (typeof(TDocument) == typeof(LfLexEntry))
-			{
-				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
-				var builder = Builders<TDocument>.Update;
-				// Magic strings again, arg... but I can't do "UpdateDefinition<LfLexEntry> entryUpdate = update as UpdateDefinition<LfLexEntry>"
-				// to use a Builders<LfLexEntry>.Update, as C#'s type system won't allow me to do that. 2016-02 RM
-				update = builder.Combine(update, builder.Inc("dirtySR", -1));
-				update = builder.Combine(update, builder.Max("dirtySR", 0));
-				// Alas, that doesn't work. Mongo complains "Cannot update 'dirtySR' and 'dirtySR' at the same time"
-			}
-#endif
-#if DIRTYSR2
-			// This is another approach that we tried, which 1) doesn't compile, and 2) doesn't work.
-			if (typeof(TDocument) == typeof(LfLexEntry))
-			{
-				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
-				var builder = Builders<LfLexEntry>.Update;
-				var entryUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
-				entryUpdate = builder.Combine(entryUpdate, builder.Inc(item => item.DirtySR, -1));
-				entryUpdate = builder.Combine(entryUpdate, builder.Max(item => item.DirtySR, 0));
-				update = entryUpdate as UpdateDefinition<TDocument>;
-			}
-#endif
-#if DIRTYSR3
-			// Here's a third approach, that would theoretically work but won't compile. But this approach can be refactored so that C# is happy.
-			if (typeof(TDocument) == typeof(LfLexEntry))
-			{
-				// LexEntries also need their DirtySR field decremented when it's positive, and that number will NOT be found in the incoming data
-				// Mongo won't let us say "decrement only if greater than N" in the update, only in the filter. But we already have to use a filter
-				// to specify the object ID or GUID we're looking for. So what we have to use is two mutually-exclusive filters and two updates:
-				var ub = Builders<LfLexEntry>.Update;
-				var fb = Builders<LfLexEntry>.Filter;
-				var zeroOrLessFilter = fb.And(filter as FilterDefinition<LfLexEntry>, fb.Lte(entry => entry.DirtySR, 0));
-				var oneOrMoreFilter = fb.And(filter as FilterDefinition<LfLexEntry>, fb.Gt(entry => entry.DirtySR, 0));
-				var decrementUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
-				var noDecrementUpdate = update as UpdateDefinition<LfLexEntry>; // update's type is currently UpdateDefinition<TDocument>
-				decrementUpdate = ub.Combine(decrementUpdate, ub.Inc(item => item.DirtySR, -1));
-				noDecrementUpdate = ub.Combine(noDecrementUpdate, ub.Max(item => item.DirtySR, 0));
-				update = decrementUpdate as UpdateDefinition<TDocument>;
-				// Then instead of the normal FindOneAndUpdate below, we'd run two (or three!), only one of which can possibly succeed:
-				// Upsert = FALSE, collection.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, updateOptions);
-				// Upsert = FALSE, collection.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, updateOptions);
-				// But first we have to check if the document exists, and if it doesn't, then instead we run the following:
-				// Upsert = TRUE, collection.FindOneAndUpdate(filter, noDecrementUpdate, updateOptions);
-
-				// TODO: Refactor the UpdateRecord<TDocument> functions to be non-generic, then do the same for the MongoConnectionDouble functions (and the IMongoConnection interface).
-				// And set up the three possible updates, with a "count records matching this filter" first as an if statement.
-			}
-#endif
-
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
-			//Logger.Notice("About to save {0} with ObjectID {1}", typeof(TDocument), id);
-			//Logger.Debug("Built filter that looks like: {0}", filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-			//Logger.Debug("Built update that looks like: {0}", update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
 			};
