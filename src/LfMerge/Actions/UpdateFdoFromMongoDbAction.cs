@@ -275,6 +275,7 @@ namespace LfMerge.Actions
 				return;
 			}
 
+			string vernacularLanguageCode = _projectRecord.LanguageCode;
 			foreach (var lfWs in lfWsList.Values)
 			{
 				CoreWritingSystemDefinition ws;
@@ -304,10 +305,13 @@ namespace LfMerge.Actions
 					ws.RightToLeftScript = lfWs.IsRightToLeft;
 					wsm.Set(ws);
 
-					// For now, since LF can't distinguish vernacular/analysis WS, we have to add to both.
-					// (We do know _projectRecord.LanguageCode is always going to be a vernacular WS)
-					_servLoc.WritingSystems.AddToCurrentVernacularWritingSystems(ws);
-					_servLoc.WritingSystems.AddToCurrentAnalysisWritingSystems(ws);
+					// LF doesn't distinguish between vernacular/analysis WS, so we'll
+					// only assign the project language code to vernacular.
+					// All other WS assigned to analysis.
+					if (lfWs.Tag.Equals(vernacularLanguageCode))
+						_servLoc.WritingSystems.AddToCurrentVernacularWritingSystems(ws);
+					else
+						_servLoc.WritingSystems.AddToCurrentAnalysisWritingSystems(ws);
 				}
 			}
 		}
