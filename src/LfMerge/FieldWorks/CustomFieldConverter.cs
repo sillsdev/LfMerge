@@ -30,7 +30,7 @@ namespace LfMerge.FieldWorks
 		/// <summary>
 		/// Returns value of custom fields for this CmObject.
 		/// </summary>
-		/// <returns>A BsonDocument with the following structure: <br />
+		/// <returns>Either null, or a BsonDocument with the following structure: <br />
 		/// { <br />
 		///     "customFields": { fieldName: fieldValue, fieldName2: fieldValue2, etc. } <br />
 		///     "customFieldGuids": { fieldName: "Guid-as-string", fieldName2: "Guid2-as-string", etc. } <br />
@@ -43,6 +43,12 @@ namespace LfMerge.FieldWorks
 		/// The format of the fieldName keys will be "customField_FOO_field_name_with_underscores",
 		/// where FOO is one of "entry", "senses", or "examples". <br />
 		/// Some fields have no need for a GUID (e.g., a custom number field), so not all fieldNames will appear in customFieldGuids.
+		/// Only custom fields with actual data will be returned: empty lists and strings will be suppressed, and integer
+		/// fields whose value is 0 will be suppressed. (They will get the default int value, 0, when read from Mongo, so this
+		/// allows us to save space in the Mongo DB). If a custom field's value is suppressed, it will not appear in the output,
+		/// and will not have a corresponding value in customFieldGuids.
+		/// If ALL custom fields are suppressed because of having null, default or empty values, then this function will return
+		/// null instead of returning a useless-but-not-actually-empty BsonDocument.
 		/// </returns>
 		/// <param name="cmObj">Cm object.</param>
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
@@ -121,6 +127,8 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.Integer:
 				fieldValue = new BsonInt32(data.get_IntProp(hvo, flid));
+				if (fieldValue.AsInt32 == default(Int32))
+					fieldValue = null; // Suppress int fields with 0 in them, to save Mongo DB space
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -141,8 +149,13 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.ReferenceSequence:
 				int[] listHvos = data.VecProp(hvo, flid);
 				var innerValues = new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid, ref dataGuids)).Where(x => x != null));
-				fieldValue = new BsonDocument("values", innerValues);
-				fieldGuid = new BsonArray(dataGuids.Select(guid => guid.ToString()));
+				if (innerValues.Count == 0)
+					fieldValue = null;
+				else
+				{
+					fieldValue = new BsonDocument("values", innerValues);
+					fieldGuid = new BsonArray(dataGuids.Select(guid => guid.ToString()));
+				}
 				break;
 
 			case CellarPropertyType.String:
@@ -158,18 +171,23 @@ namespace LfMerge.FieldWorks
 				break;
 				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
-			var result = new BsonDocument();
-			result.Add("value", fieldValue ?? BsonNull.Value); // BsonValues aren't allowed to have C# nulls; they have their own null representation
-			if (fieldGuid is BsonArray)
-				result.Add("guid", fieldGuid, ((BsonArray)fieldGuid).Count > 0);
+			if (fieldValue == null)
+				return null;
 			else
-				result.Add("guid", fieldGuid, fieldGuid != null);
-			return result;
+			{
+				var result = new BsonDocument();
+				result.Add("value", fieldValue ?? BsonNull.Value); // BsonValues aren't allowed to have C# nulls; they have their own null representation
+				if (fieldGuid is BsonArray)
+					result.Add("guid", fieldGuid, ((BsonArray)fieldGuid).Count > 0);
+				else
+					result.Add("guid", fieldGuid, fieldGuid != null);
+				return result;
+			}
 		}
 
 		private BsonValue GetCustomStTextValues(IStText obj, int flid)
 		{
-			if (obj == null) return null;
+			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Select(para => para.Contents).ToList();
 			List<string> htmlParas = paras.Where(para => para != null).Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
 			WritingSystemManager wsManager = cache.ServiceLocator.WritingSystemManager;
@@ -477,7 +495,8 @@ namespace LfMerge.FieldWorks
 				if (fieldGuidOrGuids.BsonType == BsonType.String && fieldGuidOrGuids.AsString == "00000000-0000-0000-0000-000000000000")
 					fieldGuidOrGuids = BsonNull.Value;
 				remainingFieldNames.Remove(fieldName);
-				Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
+				if (fieldValue != BsonNull.Value)
+					Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
 				// TODO: Detect when fieldValue is null and don't bother calling SetCustomFieldData
 				SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
 				customFieldValues.Remove(fieldName);
