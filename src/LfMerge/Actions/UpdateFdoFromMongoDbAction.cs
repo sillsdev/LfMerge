@@ -47,6 +47,7 @@ namespace LfMerge.Actions
 		private ICmTranslationFactory _translationFactory;
 
 		// Values that we use a lot and therefore cache here
+		private PartOfSpeechConverter _posConverter;
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 		private List<Tuple<int, string>> _analysisWsIdsAndNamesInSearchOrder;
 		// private List<int> _analysisWsIdSearchOrder;
@@ -111,6 +112,7 @@ namespace LfMerge.Actions
 				});
 
 			_customFieldConverter = new CustomFieldConverter(_cache);
+			_posConverter = new PartOfSpeechConverter(_cache);
 
 			// For efficiency's sake, cache the six repositories and six factories we'll need all the time,
 			_entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
@@ -545,67 +547,25 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
-			if (lfSense.PartOfSpeech != null && lfSense.PartOfSpeech.Value != null)
+			IPartOfSpeech pos = ConvertPos(lfSense.PartOfSpeech);
+			if (pos != null)
 			{
-				IPartOfSpeech pos = null;
-				if (lfSense.PartOfSpeechGuid != null)
-					pos = fdoSense.Cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>().GetObject(lfSense.PartOfSpeechGuid.Value);
-				if (pos == null) // GetObject() returns null if not found, which means we need to make a PoS object from the name
+				IPartOfSpeech secondaryPos = ConvertPos(lfSense.SecondaryPartOfSpeech); // Only used in derivational affixes, will be null otherwise
+				if (fdoSense.MorphoSyntaxAnalysisRA == null)
 				{
-					var posConverter = new PartOfSpeechConverter(_cache);
-					//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
-					string userWs = _projectRecord.InterfaceLanguageCode;
-					if (String.IsNullOrEmpty(userWs))
-						userWs = "en";
-					// pos = posConverter.FromAbbrevAndName(lfSense.PartOfSpeech.ToString(), userWs);
-					string posStr = lfSense.PartOfSpeech.ToString();
-					LfOptionListItem lfGrammarEntry;
-					if (_lfGrammarByKey.TryGetValue(posStr, out lfGrammarEntry))
-						pos = OptionListItemToPartOfSpeech(lfGrammarEntry, _cache.LanguageProject.PartsOfSpeechOA, _posRepo);
-					else
-					{
-						Logger.Warning("Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
-							posStr,
-							lfSense.Gloss,
-							(lfSense.Guid != null) ? lfSense.Guid.ToString() : "(no GUID)",
-							MagicStrings.LfOptionListCodeForGrammaticalInfo,
-							_lfProject.LfProjectCode,
-							posStr
-						);
-						pos = posConverter.FromAbbrevAndName(posStr, null, userWs);
-					}
+					// If we've got a brand-new fdoSense object, we'll need to create a new MSA for it.
+					// That's what the SandboxGenericMSA class is for: assigning it to the SandboxMSA
+					// member of fdoSense will automatically create an MSA of the correct class. Handy!
+					MsaType msaType = fdoSense.GetDesiredMsaType();
+					SandboxGenericMSA sandboxMsa = SandboxGenericMSA.Create(msaType, pos);
+					if (secondaryPos != null)
+						sandboxMsa.SecondaryPOS = secondaryPos;
+					fdoSense.SandboxMSA = sandboxMsa;
 				}
-				if (pos != null) // TODO: If it's null, PartOfSpeechConverter.FromName will eventually create it. Once that happens, this check can be removed.
+				else
 				{
-					if (fdoSense.MorphoSyntaxAnalysisRA == null)
-					{
-						// If we've got a brand-new fdoSense object, we'll need to create a new MSA for it.
-						// That's what the SandboxGenericMSA class is for: assigning it to the SandboxMSA
-						// member of fdoSense will automatically create an MSA of the correct class. Handy!
-						MsaType msaType = fdoSense.GetDesiredMsaType();
-						SandboxGenericMSA sandboxMsa = SandboxGenericMSA.Create(msaType, pos);
-						if (msaType == MsaType.kDeriv)
-						{
-							// Derivational affixes have a "From" *and* a "To" pos. "From" is the main pos,
-							// but there's a secondary pos member in the sandbox MSA specifically for the "To"
-							// pos of derivational affixes. Currently LF doesn't handle that, so we do nothing
-							// with the secondary pos.
-							// TODO: Once LF handles secondary / "To" parts of speech, do the right thing here.
-							// sandboxMsa.SecondaryPOS = GetSecondaryPosFromLfSomehow();
-						}
-						fdoSense.SandboxMSA = sandboxMsa;
-					}
-					else
-					{
-						if (fdoSense.MorphoSyntaxAnalysisRA.ClassID == MoDerivAffMsaTags.kClassId)
-						{
-							// TODO: Turn this into a proper log message
-							Logger.Warning("Sense {0} ({1}) is a derivational affix, which needs two parts of speech, From and To. Setting the From PoS to {2}, but not changing the To PoS. This might cause duplicated grammar analysis objects in FieldWorks.",
-								fdoSense.Guid, fdoSense.Gloss.BestAnalysisVernacularAlternative.Text, pos.NameHierarchyString);
-						}
-						PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos);
-						Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
-					}
+					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos); // It's fine if secondaryPos is null
+					Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
 				}
 			}
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
@@ -630,6 +590,30 @@ namespace LfMerge.Actions
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
 
 			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
+		}
+
+		private IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
+		{
+			if (source == null || source.ToString() == null)
+				return null;
+			string posStr = source.ToString();
+			LfOptionListItem lfGrammarEntry;
+			if (_lfGrammarByKey.TryGetValue(posStr, out lfGrammarEntry))
+				return OptionListItemToPartOfSpeech(lfGrammarEntry, _cache.LanguageProject.PartsOfSpeechOA, _posRepo);
+			//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultUserWs);
+			string userWs = _projectRecord.InterfaceLanguageCode;
+			if (String.IsNullOrEmpty(userWs))
+				userWs = "en";
+			// return posConverter.FromAbbrevAndName(lfSense.PartOfSpeech.ToString(), userWs);
+			Logger.Warning("Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
+				posStr,
+				owner.Gloss,
+				(owner.Guid != null) ? owner.Guid.ToString() : "(no GUID)",
+				MagicStrings.LfOptionListCodeForGrammaticalInfo,
+				_lfProject.LfProjectCode,
+				posStr
+			);
+			return _posConverter.FromAbbrevAndName(posStr, null, userWs);
 		}
 
 		private ILexEtymology CreateOwnedEtymology(ILexEntry owner)
@@ -764,8 +748,7 @@ namespace LfMerge.Actions
 				else
 				{
 					// No pos with that GUID, so we might have to create one
-					var converter = new PartOfSpeechConverter(_cache);
-					pos = converter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
+					pos = _posConverter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
 					return pos;
 				}
 			}
@@ -783,8 +766,7 @@ namespace LfMerge.Actions
 				if (pos != null)
 					return pos;
 				// If we still haven't found it, we'll need to create one
-				var converter = new PartOfSpeechConverter(_cache);
-				pos = converter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
+				pos = _posConverter.FromAbbrevAndName(item.Key, item.Value, _projectRecord.InterfaceLanguageCode);
 				return pos;
 			}
 		}

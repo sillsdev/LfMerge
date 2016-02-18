@@ -167,7 +167,8 @@ namespace LfMerge.Actions
 			lfSense.LiftId = fdoSense.LIFTid;
 			if (fdoSense.MorphoSyntaxAnalysisRA != null)
 			{
-				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA);
+				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
+				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
 				// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
 				// writing system alternatives, and simplify the process of getting a real string
 				// (as opposed to a TsString) from it.
@@ -178,6 +179,11 @@ namespace LfMerge.Actions
 					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
 					lfSense.PartOfSpeech = LfStringField.FromString(
 						PartOfSpeechConverter.ToLfPosStringKey(pos, _lfGrammar, wsEn));
+				if (secondaryPos == null || secondaryPos.Abbreviation == null)
+					lfSense.SecondaryPartOfSpeech = null;
+				else
+					lfSense.SecondaryPartOfSpeech = LfStringField.FromString(
+						PartOfSpeechConverter.ToLfPosStringKey(secondaryPos, _lfGrammar, wsEn));
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)

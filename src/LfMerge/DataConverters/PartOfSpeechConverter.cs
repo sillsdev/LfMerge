@@ -102,14 +102,14 @@ namespace LfMerge.DataConverters
 			return FromAbbrevAndName(name, userWs, fallbackWs);
 		}
 
-		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa)
+		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa, out IPartOfSpeech secondaryPos)
 		{
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:
-				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-//				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
-				return ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
+				// FDO considers the "From" PoS to be the main one, and "To" to be the secondary one
+				secondaryPos = ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
+				return ((IMoDerivAffMsa)msa).FromPartOfSpeechRA;
 			case MoDerivStepMsaTags.kClassId:
 				return ((IMoDerivStepMsa)msa).PartOfSpeechRA;
 			case MoInflAffMsaTags.kClassId:
