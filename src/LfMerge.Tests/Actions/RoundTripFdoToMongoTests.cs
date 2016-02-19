@@ -21,52 +21,8 @@ using System.Linq;
 namespace LfMerge.Tests.Actions
 {
 	[TestFixture, Explicit, Category("LongRunning")]
-	public class RoundTripFdoToMongoTests
+	public class RoundTripFdoToMongoTests : RoundTripBase
 	{
-		public const string testProjectCode = "TestLangProj";
-		private TestEnvironment _env;
-		private MongoConnectionDouble _conn;
-		private MongoProjectRecordFactory _recordFactory;
-		private UpdateFdoFromMongoDbAction sutMongoToFdo;
-		private UpdateMongoDbFromFdo sutFdoToMongo;
-
-		public RoundTripFdoToMongoTests()
-		{
-		}
-
-		[SetUp]
-		public void Setup()
-		{
-			//_env = new TestEnvironment();
-			_env = new TestEnvironment(testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			if (_conn == null)
-				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoConnection that stores data in order to work.");
-			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
-			if (_recordFactory == null)
-				throw new AssertionException("Fdo->Mongo roundtrip tests need a mock MongoProjectRecordFactory in order to work.");
-			// TODO: If creating our own Mocks would be better than getting them from Autofac, do that instead.
-
-			sutMongoToFdo = new UpdateFdoFromMongoDbAction(
-				_env.Settings,
-				_env.Logger,
-				_conn,
-				_recordFactory
-			);
-
-			sutFdoToMongo = new UpdateMongoDbFromFdo(
-				_env.Settings,
-				_env.Logger,
-				_conn
-			);
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			_env.Dispose();
-		}
-
 		private string Repr(object value)
 		{
 			if (value == null)
@@ -259,8 +215,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 
@@ -296,8 +251,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 			ILexSense[] senses = entry.SensesOS.ToArray();
@@ -329,8 +283,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 			ILexSense senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
@@ -365,8 +318,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
@@ -414,8 +366,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 			ILexSense[] senses = entry.SensesOS.ToArray();
@@ -463,8 +414,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			var cache = lfProj.FieldWorksProject.Cache;
-			string entryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			Guid entryGuid = Guid.Parse(entryGuidStr);
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 			ILexSense senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
@@ -527,7 +477,5 @@ namespace LfMerge.Tests.Actions
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
 
-		// public void RoundTrip_MongoToFdoToMongo_ShouldKeepOriginalValues()
 	}
 }
-

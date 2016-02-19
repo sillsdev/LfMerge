@@ -112,6 +112,8 @@
     <Compile Include="Actions\UpdateMongoFromFdoActionTests.cs" />
     <Compile Include="Actions\RoundTripFdoToMongoTests.cs" />
     <Compile Include="Actions\SynchronizeActionTests.cs" />
+    <Compile Include="Actions\RoundTripMongoToFdoTests.cs" />
+    <Compile Include="Actions\RoundTripBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

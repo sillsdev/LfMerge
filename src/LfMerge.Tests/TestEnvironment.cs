@@ -15,7 +15,7 @@ using SIL.TestUtilities;
 
 namespace LfMerge.Tests
 {
-	class TestEnvironment : IDisposable
+	public class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		public LfMergeSettingsIni Settings;

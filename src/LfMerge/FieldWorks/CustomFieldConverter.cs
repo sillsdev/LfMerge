@@ -512,9 +512,6 @@ namespace LfMerge.FieldWorks
 					Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
 					SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
 				}
-				customFieldValues.Remove(fieldName);
-				if (customFieldGuids != null && customFieldGuids != BsonNull.Value)
-					customFieldGuids.Remove(fieldName);
 			}
 			foreach (string fieldName in remainingFieldNames)
 			{
