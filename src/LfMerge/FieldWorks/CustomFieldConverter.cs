@@ -327,41 +327,53 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.OwningAtomic:
 				{
-					// Custom field is a MultiparagraphText
-					if (fieldGuids.First() != Guid.Empty)
+					// Custom field is a MultiparagraphText, which is an IStText object in FDO
+					IStTextRepository textRepo = cache.ServiceLocator.GetInstance<IStTextRepository>();
+					Guid fieldGuid = fieldGuids.FirstOrDefault();
+					IStText text;
+					if (!textRepo.TryGetObject(fieldGuid, out text))
 					{
-						// TODO: In the future, we should use this GUID to look up the current
-						// value of the field. Then instead of deleting and re-creating the field
-						// contents, we'll compare its contents to what's coming in, and only
-						// delete and re-create paragraphs that have *changed*. That will make for
-						// much less "churn" in Mercurial history.
+						int currentFieldContentsHvo = data.get_ObjectProp(hvo, flid);
+						if (currentFieldContentsHvo != FdoCache.kNullHvo)
+							text = (IStText)cache.GetAtomicPropObject(currentFieldContentsHvo);
+						else
+						{
+							// NOTE: I don't like the "magic" -2 number below, but FDO doesn't seem to have an enum for this. 2015-11 RM
+							int newStTextHvo = data.MakeNewObject(cache.GetDestinationClass(flid), hvo, flid, -2);
+							text = (IStText)cache.GetAtomicPropObject(newStTextHvo);
+						}
 					}
-					// Delete and re-create field (TODO: Change this once we implement compare-to-current-value algorithm)
-					int currentFieldContentsHvo = data.get_ObjectProp(hvo, flid);
-					if (currentFieldContentsHvo != FdoCache.kNullHvo)
-						data.DeleteObjOwner(hvo, currentFieldContentsHvo, flid, 0);
-					// NOTE: I don't like the "magic" -2 number below, but FDO doesn't seem to have an enum for this. 2015-11 RM
-					int newStTextHvo = data.MakeNewObject(cache.GetDestinationClass(flid), hvo, flid, -2);
-
-					Console.WriteLine("Creating new StTxtPara for custom field {0} that has value {1}", fieldName, value.ToJson());
-
-					int wsId;
-					List<string> texts = ParseCustomStTextValuesFromBson(value.AsBsonDocument, out wsId);
-					// TODO: Right now the assumption is baked in that FDO custom fields of OwningAtomic are ONLY multiparagraph texts.
-					// But if this field's destination class is ever NOT StText, this cast will fail. If that happens, this code will
-					// need to be modified.
-					IStText newStText = (IStText)cache.GetAtomicPropObject(newStTextHvo);
+					BsonValue currentFdoTextContents = GetCustomStTextValues(text, flid);
+					if (currentFdoTextContents == null && value == null)
+						return true;
+					if (currentFdoTextContents != null && currentFdoTextContents.Equals(value))
+					{
+						// No changes needed.
+						return true;
+					}
 					// TODO: In the future when we don't create a new object but re-use the existing one, we'll need
 					// to compare paragraph contents and call newStText.AddNewTextPara() or newStText.DeleteParagraph() as many
 					// times as needed to have the right # of paras. Then set the contents of each paragraph to their new values.
 					//
-					// For now, though, we just add a number of paragraphs to the brand-new object.
-					foreach (string paraContents in texts)
+					// For now, though, we just clear out all the current paragraphs, then add a number of paragraphs to the newly-empty object.
+					int wsId;
+					List<string> newParagraphs = ParseCustomStTextValuesFromBson(value.AsBsonDocument, out wsId);
+					// Keep styles even though we're replacing contents. If we've added new paragraphs in LF, give them the same
+					// style as the first paragraph. This should work most of the time.
+					List<string> currentStyles = text.ParagraphsOS.Select(stPara => stPara.StyleName).ToList();
+					if (currentStyles.Count > 0 && currentStyles.Count < newParagraphs.Count)
 					{
-						IStTxtPara newPara = newStText.AddNewTextPara(null);
+						int countDifference = newParagraphs.Count - currentStyles.Count;
+						currentStyles.AddRange(Enumerable.Repeat(currentStyles.First(), countDifference));
+					}
+					// Clear contents, keep styles
+					text.ParagraphsOS.Clear();
+					foreach (Tuple<string,string> textAndStyle in newParagraphs.Zip(currentStyles, (a,b) => new Tuple<string,string>(a,b)))
+					{
+						string paraContents = textAndStyle.Item1;
+						string styleName = textAndStyle.Item2;
+						IStTxtPara newPara = text.AddNewTextPara(styleName);
 						newPara.Contents = TsStringUtils.MakeTss(paraContents, wsId);
-						// TODO: Do we need to set anything else on the new paragraph object?
-						Console.WriteLine("New paragraph contents: {0}", paraContents);
 					}
 					return true;
 				}
@@ -496,9 +508,10 @@ namespace LfMerge.FieldWorks
 					fieldGuidOrGuids = BsonNull.Value;
 				remainingFieldNames.Remove(fieldName);
 				if (fieldValue != BsonNull.Value)
+				{
 					Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
-				// TODO: Detect when fieldValue is null and don't bother calling SetCustomFieldData
-				SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
+					SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
+				}
 				customFieldValues.Remove(fieldName);
 				if (customFieldGuids != null && customFieldGuids != BsonNull.Value)
 					customFieldGuids.Remove(fieldName);
