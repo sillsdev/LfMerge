@@ -61,8 +61,8 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_MongoToFdoToMongo_ShouldKeepOriginalValuesInEntries()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			sutFdoToMongo.Run(lfProj);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
 			IEnumerable<object> originalData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
 			LfLexEntry originalEntry = originalData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(originalData, Is.Not.Null);
@@ -71,8 +71,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(originalEntry, Is.Not.Null);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
-			sutFdoToMongo.Run(lfProj);
+			sutMongoToFdo.Run(lfProject);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
@@ -92,8 +92,8 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_MongoToFdoToMongo_ShouldKeepModifiedValuesInEntries()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			sutFdoToMongo.Run(lfProj);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
 			IEnumerable<object> originalData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
 			LfLexEntry originalEntry = originalData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 
@@ -103,11 +103,11 @@ namespace LfMerge.Tests.Actions
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			sutMongoToFdo.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Lexeme["qaa-x-kal"].Value = changedLexemeDuringUpdate;
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
@@ -130,8 +130,8 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_MongoToFdoToMongo_ShouldKeepModifiedValuesInSenses()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			sutFdoToMongo.Run(lfProj);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
 			IEnumerable<object> originalData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
 			LfLexEntry originalEntry = originalData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(originalEntry.Senses.Count, Is.EqualTo(2));
@@ -145,12 +145,12 @@ namespace LfMerge.Tests.Actions
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			sutMongoToFdo.Run(lfProject);
 			string changedDefinitionDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Definition["en"].Value = changedDefinitionDuringUpdate;
 			originalEntry.Senses[1].Definition["en"].Value = changedDefinitionDuringUpdate;
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
@@ -181,8 +181,8 @@ namespace LfMerge.Tests.Actions
 		public void RoundTrip_MongoToFdoToMongo_ShouldKeepModifiedValuesInExampleTranslations()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			sutFdoToMongo.Run(lfProj);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
 			IEnumerable<object> originalData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
 			LfLexEntry originalEntry = originalData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(originalEntry.Senses.Count, Is.EqualTo(2));
@@ -197,12 +197,12 @@ namespace LfMerge.Tests.Actions
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			sutMongoToFdo.Run(lfProject);
 			string changedTranslationDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedTranslationDuringUpdate;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedTranslationDuringUpdate;
 			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, originalEntry);
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
@@ -225,8 +225,46 @@ namespace LfMerge.Tests.Actions
 			Assert.That(differencesByName.Count(), Is.EqualTo(1));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].Examples[1].ToBsonDocument(), entry.Senses[0].Examples[1].ToBsonDocument());
 			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName = GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), entry.Senses[0].ToBsonDocument());
+			Assert.That(differencesByName.Count(), Is.EqualTo(1));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), entry.ToBsonDocument());
 			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+		}
+
+		[Test]
+		public void RoundTrip_MongoToFdoToMongo_ShouldAddNewEntry()
+		{
+			// Setup
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
+			LfLexEntry newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			string newLexeme = "new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping("qaa-x-kal", newLexeme);
+			_conn.AddToMockData<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon, newEntry);
+			string newEntryGuidStr = newEntry.Guid.ToString();
+
+			IEnumerable<object> originalData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
+			Assert.That(originalData, Is.Not.Null);
+			Assert.That(originalData, Is.Not.Empty);
+			Assert.That(originalData.Count(), Is.EqualTo(62));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
+			Assert.That(receivedData, Is.Not.Null);
+			Assert.That(receivedData, Is.Not.Empty);
+			Assert.That(receivedData.Count(), Is.EqualTo(62));
+
+			LfLexEntry entry = receivedData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
+			Assert.That(entry, Is.Not.Null);
+
+			IDictionary<string, Tuple<string, string>> differencesByName = 
+				GetMongoDifferences(newEntry.ToBsonDocument(), entry.ToBsonDocument());
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
 	}
