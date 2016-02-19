@@ -104,6 +104,7 @@ namespace LfMerge.DataConverters
 
 		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa, out IPartOfSpeech secondaryPos)
 		{
+			secondaryPos = null;
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:

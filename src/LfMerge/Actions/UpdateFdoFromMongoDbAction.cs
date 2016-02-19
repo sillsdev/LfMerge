@@ -547,10 +547,10 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
 			// fdoSense.LIFTid = lfSense.LiftId; // Read-only property in FDO Sense, doesn't make sense to set it. TODO: Is that correct?
-			IPartOfSpeech pos = ConvertPos(lfSense.PartOfSpeech);
+			IPartOfSpeech pos = ConvertPos(lfSense.PartOfSpeech, lfSense);
 			if (pos != null)
 			{
-				IPartOfSpeech secondaryPos = ConvertPos(lfSense.SecondaryPartOfSpeech); // Only used in derivational affixes, will be null otherwise
+				IPartOfSpeech secondaryPos = ConvertPos(lfSense.SecondaryPartOfSpeech, lfSense); // Only used in derivational affixes, will be null otherwise
 				if (fdoSense.MorphoSyntaxAnalysisRA == null)
 				{
 					// If we've got a brand-new fdoSense object, we'll need to create a new MSA for it.
