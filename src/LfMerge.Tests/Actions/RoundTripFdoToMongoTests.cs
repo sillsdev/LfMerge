@@ -230,17 +230,7 @@ namespace LfMerge.Tests.Actions
 			// Verify
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
-
 			IDictionary<string, Tuple<string, string>> differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
-
-			// Special case: Ignore one particular GUID change, because our handling of
-			// custom multi-paragraph fields is not yet perfect (some LF model changes
-			// would be necessary to make it perfect).
-			// TODO: Once we improve our handling of custom multi-paragraph fields, restore this check
-			// by removing the code that ignores one particular field's GUID.
-			customFieldValues["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
-			customFieldValuesAfterTest["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
-
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 		}
@@ -347,15 +337,6 @@ namespace LfMerge.Tests.Actions
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetDifferences(cache, fieldValues, fieldValuesAfterTest);
-
-			// Special case: Ignore one particular GUID change, because our handling of
-			// custom multi-paragraph fields is not yet perfect (some LF model changes
-			// would be necessary to make it perfect).
-			// TODO: Once we improve our handling of custom multi-paragraph fields, restore this check
-			// by removing the code that ignores one particular field's GUID.
-			customFieldValues["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
-			customFieldValuesAfterTest["customFieldGuids"].AsBsonDocument.Remove("customField_entry_Cust_MultiPara");
-
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 		}
