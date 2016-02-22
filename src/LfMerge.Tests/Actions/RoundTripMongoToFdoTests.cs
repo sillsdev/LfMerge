@@ -237,6 +237,10 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			sutFdoToMongo.Run(lfProject);
+			FdoCache cache = lfProject.FieldWorksProject.Cache;
+			ILexEntryRepository entryRepo = lfProject.FieldWorksProject.Cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			Assert.That(entryRepo.Count, Is.EqualTo(61));
+
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
 			string newLexeme = "new lexeme for this test";
@@ -251,6 +255,7 @@ namespace LfMerge.Tests.Actions
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(62));
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
