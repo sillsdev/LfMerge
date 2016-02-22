@@ -82,10 +82,10 @@ namespace LfMerge.Tests.Actions
 			string expectedLexeme = "zitʰɛstmen";
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 
-			IEnumerable<object> receivedData = _conn.StoredDataByGuid[MagicStrings.LfCollectionNameForLexicon].Values;
+			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			LfLexEntry entry = receivedData.OfType<LfLexEntry>().FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
+			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.Lexeme.BestString(searchOrder), Is.EqualTo(expectedLexeme));
 		}
@@ -95,7 +95,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			LfOptionList lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+			LfOptionList lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Null);
 
@@ -103,7 +103,7 @@ namespace LfMerge.Tests.Actions
 			sut.Run(lfProj);
 
 			// Verify
-			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
@@ -117,13 +117,13 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
-			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+			_conn.AddMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);
 
 			// Verify
-			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
@@ -141,13 +141,13 @@ namespace LfMerge.Tests.Actions
 			{
 				item.Guid = null;
 			}
-			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+			_conn.AddMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);
 
 			// Verify
-			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
@@ -167,13 +167,13 @@ namespace LfMerge.Tests.Actions
 			itemForTest.Abbreviation = "Different abbreviation";
 			itemForTest.Value = "Different name";
 			itemForTest.Key = "Different key";
-			_conn.AddToMockData<LfOptionList>(MagicStrings.LfCollectionNameForOptionLists, lfGrammar);
+			_conn.AddMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);
 
 			// Verify
-			lfGrammar = _conn.GetRecords<LfOptionList>(lfProj, MagicStrings.LfCollectionNameForOptionLists)
+			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
