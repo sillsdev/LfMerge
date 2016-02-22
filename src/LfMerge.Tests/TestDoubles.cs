@@ -157,12 +157,12 @@ namespace LfMerge.Tests
 			_storedLfOptionLists[id] = mockData;
 		}
 
-		public IEnumerable<LfLexEntry> GetLfLexEntries(ILfProject project)
+		public IEnumerable<LfLexEntry> GetLfLexEntries()
 		{
 			return _storedLfLexEntries.Values;
 		}
 
-		public IEnumerable<LfOptionList> GetLfOptionLists(ILfProject project)
+		public IEnumerable<LfOptionList> GetLfOptionLists()
 		{
 			return _storedLfOptionLists.Values;
 		}
