@@ -674,7 +674,7 @@ namespace LfMerge.Actions
 		{
 			ILexEntry result;
 			if (!_entryRepo.TryGetObject(guid, out result))
-				result = _entryFactory.Create();
+				result = _entryFactory.Create(guid, _cache.LangProject.LexDbOA);
 			return result;
 		}
 
@@ -694,6 +694,9 @@ namespace LfMerge.Actions
 				if (caption == null)
 					caption = "";
 				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
+				// NOTE: The CmPictureFactory class doesn't allow us to specify the GUID of the
+				// created Picture object. So we can't rely on GUIDs for round-tripping pictures.
+				// TODO: Look into what we *can* rely on for round-tripping pictures.
 				result = _pictureFactory.Create(fileName, captionTss, CmFolderTags.LocalPictures);
 				owner.PicturesOS.Add(result);
 			}

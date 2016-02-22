@@ -264,6 +264,10 @@ namespace LfMerge.Tests.Actions
 
 			IDictionary<string, Tuple<string, string>> differencesByName = 
 				GetMongoDifferences(newEntry.ToBsonDocument(), entry.ToBsonDocument());
+			// FDO-to-Mongo direction populates AuthorInfo and LiftID even if they were null in original,
+			// so don't consider those two differences to be errors for this test.
+			differencesByName.Remove("authorInfo");
+			differencesByName.Remove("liftId");
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
