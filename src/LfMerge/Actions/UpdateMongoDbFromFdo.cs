@@ -13,6 +13,7 @@ using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
@@ -122,6 +123,9 @@ namespace LfMerge.Actions
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
+			IList<CoreWritingSystemDefinition> vernacularWSList = _cache.LangProject.CurrentVernacularWritingSystems;
+			IList<CoreWritingSystemDefinition> analysisWSList = _cache.LangProject.CurrentAnalysisWritingSystems;
+
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var fdoWs in _cache.LangProject.AllWritingSystems)
 			{
@@ -132,12 +136,13 @@ namespace LfMerge.Actions
 					Abbreviation = fdoWs.Abbreviation,
 					IsRightToLeft = fdoWs.RightToLeftScript,
 					LanguageName = fdoWs.LanguageName,
-					Tag = fdoWs.LanguageTag
+					Tag = fdoWs.LanguageTag,
+					VernacularWS = vernacularWSList.Contains(fdoWs),
+					AnalysisWS = analysisWSList.Contains(fdoWs)
 				};
 
 				lfWsList.Add(fdoWs.LanguageTag, lfWs);
 			}
-
 			return lfWsList;
 		}
 

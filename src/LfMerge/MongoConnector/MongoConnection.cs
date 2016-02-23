@@ -129,9 +129,9 @@ namespace LfMerge.MongoConnector
 		/// <returns>True if mongodb was updated</returns>
 		/// <param name="project">Language forge Project.</param>
 		/// <param name="inputSystems">List of input systems to add to the project configuration.</param>
-		/// <param name="initialClone">If set to <c>true</c>, an initial clone is being done so also update associated field view input systems.</param>
-		/// <param name="vernacularWs">Default vernacular writing system.</param>
-		/// <param name="analysisWs">Default analysis writing system.</param>
+		/// <param name="initialClone">If set to <c>true</c>, also update associated field view input systems. Default false</param>
+		/// <param name="vernacularWs">Default vernacular writing system. Default blank</param>
+		/// <param name="analysisWs">Default analysis writing system. Default blank</param>
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
@@ -153,7 +153,7 @@ namespace LfMerge.MongoConnector
 
 				var vernacularInputSystems = new List<string> { vernacularWs };
 				List<string> vernacularFieldsWsList = new List<string> {
-					"citationForm", "lexeme",
+					"citationForm", "lexeme"
 				};
 				foreach (var vernacularFieldName in vernacularFieldsWsList)
 				{
@@ -162,9 +162,10 @@ namespace LfMerge.MongoConnector
 					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[vernacularFieldName]).InputSystems, vernacularInputSystems));
 				}
 
+				// TODO: sort out what LF fields are "vernacular" / "analysis"
 				var analysisInputSystems = new List<string> { analysisWs };
 				List<string> analysisFieldsWsList = new List<string> {
-					"note",
+					"note", "senses.fields.examples.fields.sentence"
 				};
 				foreach (var analysisFieldName in analysisFieldsWsList)
 				{
@@ -320,9 +321,18 @@ namespace LfMerge.MongoConnector
 				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
 				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
 				// Precisely one of the next two calls can succeed.
-				updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
-				if (updateResult != null)
-					return true;
+				try
+				{
+					updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
+					if (updateResult != null)
+						return true;
+				}
+				catch (MongoCommandException e)
+				{
+					// Max needs MongoDB version 2.6+. which may not be currently installed.
+					// Decrementing DirtySR isn't needed for LfMerge v1.1
+					Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
+				}
 				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
 				return (updateResult != null);
 			}

@@ -2144,31 +2144,41 @@ namespace LfMerge.Tests
 			""abbreviation"" : ""qaa-fonipa-x-kal"",
 			""tag"" : ""qaa-fonipa-x-kal"",
 			""languageName"" : ""Unlisted Language"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""qaa-x-kal"" : {
 			""abbreviation"" : ""qaa-x-kal"",
 			""tag"" : ""qaa-x-kal"",
 			""languageName"" : ""Unlisted Language"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : true,
+			""analysisWS"" : false
 		},
 		""en"" : {
 			""abbreviation"" : ""en"",
 			""tag"" : ""en"",
 			""languageName"" : ""English"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""es"" : {
 			""abbreviation"" : ""es"",
 			""tag"" : ""es"",
 			""languageName"" : ""Spanish"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""fr"" : {
 			""abbreviation"" : ""fr"",
 			""tag"" : ""fr"",
 			""languageName"" : ""French"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		}
 	},
 	""interfaceLanguageCode"" : ""en"",

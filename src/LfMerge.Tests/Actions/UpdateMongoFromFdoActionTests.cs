@@ -69,7 +69,41 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		public void Action_Should_UpdateLexemes()
+		public void Action_ShouldPopulateMongoInputSystems()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			UpdateMongoDbFromFdo.InitialClone = true;
+			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProj);
+			Assert.That(lfWsList.Count, Is.EqualTo(0));
+
+			// Exercise
+			sut.Run(lfProj);
+
+			// Verify
+			const int expectedNumVernacularWS = 3;
+			const int expectedNumAnalysisWS = 2;
+			// TODO: Investigate why qaa-Zxxx-x-kal-audio is in CurrentVernacularWritingSystems, but somehow in
+			// UpdateMongoDbFromFdo.FdoWsToLfWs() is not contained in _cache.LangProject.CurrentVernacularWritingSystems
+			const string notVernacularWs = "qaa-Zxxx-x-kal-audio";
+
+			lfWsList = _conn.GetInputSystems(lfProj);
+			var languageProj = lfProj.FieldWorksProject.Cache.LangProject;
+
+			foreach (var fdoVernacularWs in languageProj.CurrentVernacularWritingSystems)
+			{
+				if (fdoVernacularWs.LanguageTag != notVernacularWs)
+					Assert.That(lfWsList[fdoVernacularWs.LanguageTag].VernacularWS);
+			}
+			Assert.That(languageProj.CurrentVernacularWritingSystems.Count, Is.EqualTo(expectedNumVernacularWS));
+
+			foreach (var fdoAnalysisWs in languageProj.CurrentAnalysisWritingSystems)
+				Assert.That(lfWsList[fdoAnalysisWs.LanguageTag].AnalysisWS);
+			Assert.That(languageProj.CurrentAnalysisWritingSystems.Count, Is.EqualTo(expectedNumAnalysisWS));
+		}
+
+		[Test]
+		public void Action_ShouldUpdateLexemes()
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
