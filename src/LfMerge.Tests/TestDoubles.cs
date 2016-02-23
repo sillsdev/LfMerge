@@ -139,25 +139,25 @@ namespace LfMerge.Tests
 			return true;
 		}
 
-		public void AddMockLfLexEntry(BsonDocument mockData)
+		public void UpdateMockLfLexEntry(BsonDocument mockData)
 		{
 			LfLexEntry data = BsonSerializer.Deserialize<LfLexEntry>(mockData);
-			AddMockLfLexEntry(data);
+			UpdateMockLfLexEntry(data);
 		}
 
-		public void AddMockLfLexEntry(LfLexEntry mockData)
+		public void UpdateMockLfLexEntry(LfLexEntry mockData)
 		{
 			Guid guid = mockData.Guid ?? Guid.Empty;
 			_storedLfLexEntries[guid] = mockData;
 		}
 
-		public void AddMockOptionList(BsonDocument mockData)
+		public void UpdateMockOptionList(BsonDocument mockData)
 		{
 			LfOptionList data = BsonSerializer.Deserialize<LfOptionList>(mockData);
-			AddMockOptionList(data);
+			UpdateMockOptionList(data);
 		}
 
-		public void AddMockOptionList(LfOptionList mockData)
+		public void UpdateMockOptionList(LfOptionList mockData)
 		{
 			ObjectId id = mockData.Id; // ObjectId is a struct and thus cannot be null
 			_storedLfOptionLists[id] = mockData;
@@ -212,6 +212,13 @@ namespace LfMerge.Tests
 			_storedLfOptionLists[id] = data;
 			return true;
 		}
+
+		public bool RemoveRecord(ILfProject project, Guid guid)
+		{
+			_storedLfLexEntries.Remove(guid);
+			return true;
+		}
+
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory

@@ -100,13 +100,13 @@ namespace LfMerge.Tests.Actions
 			string originalLexeme = originalEntry.Lexeme["qaa-x-kal"].Value;
 			string changedLexeme = "Changed lexeme for this test";
 			originalEntry.Lexeme["qaa-x-kal"].Value = changedLexeme;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Lexeme["qaa-x-kal"].Value = changedLexemeDuringUpdate;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
@@ -121,9 +121,10 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry.Lexeme["qaa-x-kal"].Value, Is.EqualTo(changedLexeme));
 
 			originalEntry.Lexeme["qaa-x-kal"].Value = originalLexeme;
-			IDictionary<string, Tuple<string, string>> differencesByName = 
+			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.ToBsonDocument(), entry.ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("lexeme");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -142,14 +143,14 @@ namespace LfMerge.Tests.Actions
 			string changedSense1Definition = "Changed sense1 definition for this test";
 			originalEntry.Senses[0].Definition["en"].Value = changedSense0Definition;
 			originalEntry.Senses[1].Definition["en"].Value = changedSense1Definition;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
 			string changedDefinitionDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Definition["en"].Value = changedDefinitionDuringUpdate;
 			originalEntry.Senses[1].Definition["en"].Value = changedDefinitionDuringUpdate;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
@@ -168,13 +169,16 @@ namespace LfMerge.Tests.Actions
 
 			originalEntry.Senses[0].Definition["en"].Value = originalSense0Definition;
 			originalEntry.Senses[1].Definition["en"].Value = originalSense1Definition;
-			IDictionary<string, Tuple<string, string>> differencesByName = 
+			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), entry.Senses[0].ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("definition");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[1].ToBsonDocument(), entry.Senses[1].ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("definition");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), entry.ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("senses");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -194,14 +198,14 @@ namespace LfMerge.Tests.Actions
 			string changedSense0Example1Translation = "Changed sense0 example1 sentence for this test";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedSense0Example0Translation;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedSense0Example1Translation;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
 			string changedTranslationDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedTranslationDuringUpdate;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedTranslationDuringUpdate;
-			_conn.AddMockLfLexEntry(originalEntry);
+			_conn.UpdateMockLfLexEntry(originalEntry);
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
@@ -220,24 +224,27 @@ namespace LfMerge.Tests.Actions
 
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = originalSense0Example0Translation;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = originalSense0Example1Translation;
-			IDictionary<string, Tuple<string, string>> differencesByName = 
+			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].Examples[0].ToBsonDocument(), entry.Senses[0].Examples[0].ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("translation");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].Examples[1].ToBsonDocument(), entry.Senses[0].Examples[1].ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("translation");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), entry.Senses[0].ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("examples");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), entry.ToBsonDocument());
-			Assert.That(differencesByName.Count(), Is.EqualTo(1));
+			differencesByName.Remove("senses");
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddNewEntry()
+		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewEntry()
 		{
-			// Setup
+			// Create
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			sutFdoToMongo.Run(lfProject);
-			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			ILexEntryRepository entryRepo = lfProject.FieldWorksProject.Cache.ServiceLocator.GetInstance<ILexEntryRepository>();
 			Assert.That(entryRepo.Count, Is.EqualTo(61));
 
@@ -245,7 +252,10 @@ namespace LfMerge.Tests.Actions
 			newEntry.Guid = Guid.NewGuid();
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping("qaa-x-kal", newLexeme);
-			_conn.AddMockLfLexEntry(newEntry);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = new DateTime();
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
 			string newEntryGuidStr = newEntry.Guid.ToString();
 
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
@@ -267,13 +277,27 @@ namespace LfMerge.Tests.Actions
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
 
-			IDictionary<string, Tuple<string, string>> differencesByName = 
+			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(newEntry.ToBsonDocument(), entry.ToBsonDocument());
-			// FDO-to-Mongo direction populates AuthorInfo and LiftID even if they were null in original,
-			// so don't consider those two differences to be errors for this test.
-			differencesByName.Remove("authorInfo");
+			// FDO-to-Mongo direction populates LiftID even if it was null in original,
+			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId");
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
+
+			// Delete
+			newEntry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(newEntry);
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData.Count(), Is.EqualTo(62));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(61));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData.Count(), Is.EqualTo(61));
 		}
 
 	}

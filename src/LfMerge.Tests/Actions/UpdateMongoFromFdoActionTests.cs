@@ -151,7 +151,7 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
-			_conn.AddMockOptionList(lfGrammar);
+			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -175,7 +175,7 @@ namespace LfMerge.Tests.Actions
 			{
 				item.Guid = null;
 			}
-			_conn.AddMockOptionList(lfGrammar);
+			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -201,7 +201,7 @@ namespace LfMerge.Tests.Actions
 			itemForTest.Abbreviation = "Different abbreviation";
 			itemForTest.Value = "Different name";
 			itemForTest.Key = "Different key";
-			_conn.AddMockOptionList(lfGrammar);
+			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
 			sut.Run(lfProj);

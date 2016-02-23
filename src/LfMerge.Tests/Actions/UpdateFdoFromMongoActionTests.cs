@@ -63,7 +63,7 @@ namespace LfMerge.Tests.Actions
 			string newDefinition = "New definition for this unit test";
 			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = newDefinition;
 
-			_conn.AddMockLfLexEntry(data.bsonTestData);
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -118,7 +118,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("guid", secondPosBeforeTest.Guid.ToString());
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -150,7 +150,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("abbreviation", "a2");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -195,7 +195,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("guid", expectedGuid);
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -226,7 +226,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -260,7 +260,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -284,7 +284,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);
@@ -307,7 +307,7 @@ namespace LfMerge.Tests.Actions
 			grammarEntry.Add("abbreviation", "NotTheRightAbbrev");
 			data.bsonOptionListData["items"] = new BsonArray(new BsonDocument[] { grammarEntry });
 
-			_conn.AddMockOptionList(data.bsonOptionListData);
+			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
 			sut.Run(lfProj);

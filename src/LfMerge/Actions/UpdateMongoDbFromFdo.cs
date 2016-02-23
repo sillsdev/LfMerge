@@ -103,6 +103,20 @@ namespace LfMerge.Actions
 				_connection.UpdateRecord(project, lfEntry);
 			}
 
+			IEnumerable<LfLexEntry> lfEntries = _connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
+			List<Guid> entryGuidsToRemove = new List<Guid>();
+			foreach (LfLexEntry lfEntry in lfEntries)
+			{
+				if (lfEntry.Guid == null)
+					continue;
+				if (!_servLoc.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value))
+					entryGuidsToRemove.Add(lfEntry.Guid.Value);
+			}
+			foreach (Guid guid in entryGuidsToRemove)
+			{
+				_connection.RemoveRecord(project, guid);
+
+			}
 		}
 
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)

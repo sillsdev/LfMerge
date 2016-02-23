@@ -362,6 +362,15 @@ namespace LfMerge.MongoConnector
 			collection.FindOneAndUpdate(filter, update, updateOptions);
 			return true;
 		}
+
+		public bool RemoveRecord(ILfProject project, Guid guid)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+			FilterDefinition<LfLexEntry> filter = Builders<LfLexEntry>.Filter.Eq(entry => entry.Guid, guid);
+			var removeResult = collection.DeleteOne(filter);
+			return (removeResult != null);
+		}
 	}
 }
 
