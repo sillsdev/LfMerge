@@ -130,7 +130,7 @@ namespace LfMerge.Tests
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
 			foreach (var ws in inputSystems.Keys)
-				_storedInputSystems.Add(ws, inputSystems[ws]);
+				_storedInputSystems[ws] = inputSystems[ws];
 
 			if (initialClone)
 			{
