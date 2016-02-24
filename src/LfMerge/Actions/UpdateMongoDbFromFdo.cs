@@ -210,7 +210,7 @@ namespace LfMerge.Actions
 			foreach (LfPicture picture in lfSense.Pictures)
 			{
 				// TODO: Remove this debugging foreach loop once we know pictures are working
-				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption, picture.FileName);
+				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption.FirstNonEmptyString(), picture.FileName);
 			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
 			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
@@ -339,7 +339,7 @@ namespace LfMerge.Actions
 		{
 			var result = new LfPicture();
 			result.Caption = ToMultiText(fdoPicture.Caption);
-			if (fdoPicture.PictureFileRA != null)
+			if ((fdoPicture.PictureFileRA != null) && (!string.IsNullOrEmpty(fdoPicture.PictureFileRA.InternalPath)))
 				result.FileName = fdoPicture.PictureFileRA.InternalPath;
 			result.Guid = fdoPicture.Guid;
 			// Unmapped ICmPicture fields include:

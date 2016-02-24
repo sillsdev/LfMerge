@@ -319,7 +319,10 @@ namespace LfMerge.MongoConnector
 				var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
 				var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
 				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
-				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
+				// Future version will use Max to decrement DirtySR.  MongoDB will need to be version 2.6+.
+				// which may not be currently installed. Decrementing DirtySR isn't needed for LfMerge v1.1
+				// var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
+				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Set(item => item.DirtySR, 0));
 				// Precisely one of the next two calls can succeed.
 				try
 				{
@@ -329,8 +332,6 @@ namespace LfMerge.MongoConnector
 				}
 				catch (MongoCommandException e)
 				{
-					// Max needs MongoDB version 2.6+. which may not be currently installed.
-					// Decrementing DirtySR isn't needed for LfMerge v1.1
 					Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
 				}
 				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
