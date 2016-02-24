@@ -166,15 +166,15 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			Queue.CreateQueueDirectories(_env.Settings);
 
-			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Synchronize);
 			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
 			// Exercise
-			var sut = Queue.GetNextQueueWithWork(ActionNames.Edit);
+			var sut = Queue.GetNextQueueWithWork(ActionNames.Synchronize);
 
 			// Verify
 			Assert.That(sut, Is.Not.Null);
-			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Synchronize));
 			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
@@ -184,7 +184,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			Queue.CreateQueueDirectories(_env.Settings);
 
-			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Synchronize);
 			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
 			// Exercise
@@ -192,7 +192,7 @@ namespace LfMerge.Tests.Queues
 
 			// Verify
 			Assert.That(sut, Is.Not.Null);
-			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Synchronize));
 			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
@@ -215,7 +215,7 @@ namespace LfMerge.Tests.Queues
 			// Setup
 			Queue.CreateQueueDirectories(_env.Settings);
 
-			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Edit);
+			var editQueueDir = _env.Settings.GetQueueDirectory(QueueNames.Synchronize);
 			File.WriteAllText(Path.Combine(editQueueDir, "projz"), string.Empty);
 
 			// Exercise
@@ -223,7 +223,7 @@ namespace LfMerge.Tests.Queues
 
 			// Verify
 			Assert.That(sut, Is.Not.Null);
-			Assert.That(sut.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(sut.Name, Is.EqualTo(QueueNames.Synchronize));
 			Assert.That(sut.QueuedProjects, Is.EquivalentTo(new[] { "projz"}));
 		}
 
@@ -232,7 +232,7 @@ namespace LfMerge.Tests.Queues
 		{
 			// Setup
 			Queue.CreateQueueDirectories(_env.Settings);
-			var sut = Queue.GetQueue(QueueNames.Edit);
+			var sut = Queue.GetQueue(QueueNames.Synchronize);
 
 			// Exercise
 			sut.EnqueueProject("foo");
@@ -242,9 +242,9 @@ namespace LfMerge.Tests.Queues
 
 			var queueWithWork = Queue.FirstQueueWithWork;
 			Assert.That(queueWithWork, Is.Not.Null);
-			Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Edit));
+			Assert.That(queueWithWork.Name, Is.EqualTo(QueueNames.Synchronize));
 			Assert.That(queueWithWork.QueuedProjects, Is.EquivalentTo(new[] { "foo"}));
-			var queuedProjectFile = Path.Combine(_env.Settings.GetQueueDirectory(QueueNames.Edit), "foo");
+			var queuedProjectFile = Path.Combine(_env.Settings.GetQueueDirectory(QueueNames.Synchronize), "foo");
 			Assert.That(File.Exists(queuedProjectFile), Is.True);
 		}
 
@@ -278,7 +278,7 @@ namespace LfMerge.Tests.Queues
 			Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
 		}
 
-		[TestCase(QueueNames.Edit, typeof(UpdateFdoFromMongoDbAction))]
+		[TestCase(QueueNames.Edit, typeof(EditAction))]
 		[TestCase(QueueNames.Synchronize, typeof(SynchronizeAction))]
 		public void CurrentAction_Works(QueueNames queueName, Type expectedType)
 		{
@@ -288,4 +288,3 @@ namespace LfMerge.Tests.Queues
 		}
 	}
 }
-

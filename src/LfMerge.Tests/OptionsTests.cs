@@ -44,7 +44,7 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(QueueNames.None, ActionNames.None)]
-		[TestCase(QueueNames.Edit, ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(QueueNames.Edit, ActionNames.Edit)]
 		[TestCase(QueueNames.Synchronize, ActionNames.Synchronize)]
 		public void GetActionFromQueue(QueueNames queue, ActionNames expectedAction)
 		{
@@ -52,7 +52,7 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(ActionNames.None, QueueNames.None)]
-		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Edit)]
+		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Commit, QueueNames.None)]
 		[TestCase(ActionNames.Synchronize, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Edit, QueueNames.None)]

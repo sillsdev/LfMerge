@@ -110,7 +110,7 @@ namespace LfMerge
 			Logger.Notice("LfMerge finished");
 		}
 
-		protected static void EnsureClone(ILfProject project)
+		public static void EnsureClone(ILfProject project)
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{

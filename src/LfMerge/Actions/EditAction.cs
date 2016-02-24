@@ -20,8 +20,7 @@ namespace LfMerge.Actions
 
 		protected override ActionNames NextActionName
 		{
-			get { return ActionNames.Synchronize; }
+			get { return ActionNames.None; }
 		}
 	}
 }
-

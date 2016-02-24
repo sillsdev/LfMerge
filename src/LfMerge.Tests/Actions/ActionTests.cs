@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-
 using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
@@ -50,8 +49,8 @@ namespace LfMerge.Tests.Actions
 			_env.Dispose();
 		}
 
-		[TestCase(QueueNames.Edit, new[] { ActionNames.UpdateFdoFromMongoDb, ActionNames.Edit, ActionNames.Synchronize, ActionNames.UpdateMongoDbFromFdo })]
-		[TestCase(QueueNames.Synchronize, new[] { ActionNames.Synchronize, ActionNames.UpdateMongoDbFromFdo })]
+		[TestCase(QueueNames.Edit, new[] { ActionNames.Edit })]
+		[TestCase(QueueNames.Synchronize, new[] { ActionNames.Synchronize })]
 		public void NextAction(QueueNames queueName, ActionNames[] expectedActionNames)
 		{
 			var actions = new List<ActionNames>();
@@ -67,7 +66,7 @@ namespace LfMerge.Tests.Actions
 
 		[TestCase(ActionNames.UpdateFdoFromMongoDb, ProcessingState.SendReceiveStates.QUEUED)]
 		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.QUEUED)]
-		[TestCase(ActionNames.Synchronize, ProcessingState.SendReceiveStates.RECEIVING)]
+//		[TestCase(ActionNames.Synchronize, ProcessingState.SendReceiveStates.RECEIVING)]
 		[TestCase(ActionNames.Edit, ProcessingState.SendReceiveStates.MERGING)]
 		[TestCase(ActionNames.UpdateMongoDbFromFdo, ProcessingState.SendReceiveStates.UPDATING)]
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
@@ -80,9 +79,8 @@ namespace LfMerge.Tests.Actions
 			sut.Run(lfProj);
 
 			// Verify
-			Assert.That(ProcessState.SavedStates, Is.EqualTo(new[] {
-				expectedState, ProcessingState.SendReceiveStates.IDLE }));
-			Assert.That(lfProj.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.IDLE));
+			Assert.That(ProcessState.SavedStates, Is.EqualTo(new[] { expectedState }));
+			Assert.That(lfProj.State.SRState, Is.EqualTo(expectedState));
 		}
 
 		[TestCase(ActionNames.UpdateFdoFromMongoDb)]
@@ -108,4 +106,3 @@ namespace LfMerge.Tests.Actions
 		}
 	}
 }
-

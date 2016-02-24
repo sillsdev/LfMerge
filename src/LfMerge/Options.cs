@@ -79,7 +79,7 @@ namespace LfMerge
 			switch (queue)
 			{
 				case QueueNames.Edit:
-					return ActionNames.UpdateFdoFromMongoDb;
+					return ActionNames.Edit;
 				case QueueNames.None:
 					break;
 				case QueueNames.Synchronize:
@@ -93,7 +93,6 @@ namespace LfMerge
 			switch (action)
 			{
 				case ActionNames.UpdateFdoFromMongoDb:
-					return QueueNames.Edit;
 				case ActionNames.Synchronize:
 					return QueueNames.Synchronize;
 				case ActionNames.Commit:
