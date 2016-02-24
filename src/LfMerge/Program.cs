@@ -15,6 +15,7 @@ using LibFLExBridgeChorusPlugin.Infrastructure;
 using LibTriboroughBridgeChorusPlugin;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.IO.FileLock;
+using SIL.WritingSystems;
 using SIL.Progress;
 
 
@@ -67,6 +68,8 @@ namespace LfMerge
 					return;
 				}
 				Logger.Notice("Lock acquired");
+
+				Sldr.Initialize();
 
 				if (!CheckSetup(settings)) return;
 
@@ -197,6 +200,7 @@ namespace LfMerge
 		private static void Cleanup()
 		{
 			LanguageForgeProject.DisposeProjectCache();
+			Sldr.Cleanup();
 		}
 
 		private static bool CheckSetup(LfMergeSettingsIni settings)

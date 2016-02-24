@@ -113,6 +113,7 @@
     <Compile Include="Actions\RoundTripBase.cs" />
     <Compile Include="Actions\ProgramTests.cs" />
     <Compile Include="Actions\RoundTripTests.cs" />
+    <Compile Include="GlobalTestFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
