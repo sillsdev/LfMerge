@@ -2,9 +2,8 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
@@ -206,7 +205,14 @@ namespace LfMerge.Actions
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
+			{
 				lfSense.Pictures = new List<LfPicture>(fdoSense.PicturesOS.Select(FdoPictureToLfPicture));
+				//Use the commented code for debugging into FdoPictureToLfPicture
+				//
+				//lfSense.Pictures = new List<LfPicture>();
+				//foreach (var fdoPic in fdoSense.PicturesOS)
+				//	lfSense.Pictures.Add(FdoPictureToLfPicture(fdoPic));
+			}
 			foreach (LfPicture picture in lfSense.Pictures)
 			{
 				// TODO: Remove this debugging foreach loop once we know pictures are working
@@ -340,7 +346,12 @@ namespace LfMerge.Actions
 			var result = new LfPicture();
 			result.Caption = ToMultiText(fdoPicture.Caption);
 			if ((fdoPicture.PictureFileRA != null) && (!string.IsNullOrEmpty(fdoPicture.PictureFileRA.InternalPath)))
-				result.FileName = fdoPicture.PictureFileRA.InternalPath;
+			{
+				// Remove "Pictures" directory from internal path name
+				// If the incoming internal path doesn't begin with "Pictures", then preserve the full external path.
+				Regex regex = new Regex(@"^Pictures[/\\]");
+				result.FileName = regex.Replace(fdoPicture.PictureFileRA.InternalPath, "");
+			}
 			result.Guid = fdoPicture.Guid;
 			// Unmapped ICmPicture fields include:
 			// fdoPicture.Description;
