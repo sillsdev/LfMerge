@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
@@ -511,13 +512,32 @@ namespace LfMerge.Actions
 			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
 		}
 
+		/// <summary>
+		/// Converts LF picture into FDO picture.  Internal FDO pictures will need to have the
+		/// directory path "Pictures/" prepended to the filename.  Externally linked picture names won't be modifed.
+		/// </summary>
+		/// <param name="lfPicture">Lf picture.</param>
+		/// <param name="owner">Owning sense.</param>
 		private void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
 			Guid guid = lfPicture.Guid ?? Guid.Empty;
-			KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
-			int captionWs = kv.Key;
-			string caption = kv.Value;
-			/* ICmPicture fdoPicture = */ GetOrCreatePictureByGuid(guid, owner, lfPicture.FileName, caption, captionWs);
+			int captionWs = _cache.DefaultAnalWs;
+			string caption = "";
+			if (lfPicture.Caption != null)
+			{
+				KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(_cache);
+				captionWs = kv.Key;
+				caption = kv.Value;
+			}
+
+			// FDO expects internal pictures in a certain path.  If an external path already
+			// exists, leave it alone.
+			string pictureName = lfPicture.FileName;
+			Regex regex = new Regex(@"[/\\]");
+			const string fdoPicturePath = "Pictures/";
+			string picturePath = regex.Match(pictureName).Success ? pictureName : string.Format("{0}{1}", fdoPicturePath, pictureName);
+
+			/* ICmPicture fdoPicture = */ GetOrCreatePictureByGuid(guid, owner, picturePath, caption, captionWs);
 			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
 		}
 
@@ -692,15 +712,15 @@ namespace LfMerge.Actions
 			if (!_pictureRepo.TryGetObject(guid, out result))
 			{
 				if (caption == null)
+				{
 					caption = "";
+					captionWs = _cache.DefaultAnalWs;
+				}
 				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
-				// FDO expects pictures in a certain path
-				const string fdoPicturePath = "Pictures/";
-				string picturePath = pictureName.StartsWith(fdoPicturePath) ? pictureName : string.Format("{0}{1}", fdoPicturePath, pictureName);
 				// NOTE: The CmPictureFactory class doesn't allow us to specify the GUID of the
 				// created Picture object. So we can't rely on GUIDs for round-tripping pictures.
 				// TODO: Look into what we *can* rely on for round-tripping pictures.
-				result = _pictureFactory.Create(picturePath, captionTss, CmFolderTags.LocalPictures);
+				result = _pictureFactory.Create(pictureName, captionTss, CmFolderTags.LocalPictures);
 				owner.PicturesOS.Add(result);
 			}
 			return result;
