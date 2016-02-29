@@ -6,6 +6,7 @@ using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Moq;
 using Newtonsoft.Json;
@@ -79,6 +80,58 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 			Assert.That(entry.ShortName, Is.EqualTo(expectedShortName));
 			Assert.That(entry.SensesOS[0].DefinitionOrGloss.BestAnalysisAlternative.Text, Is.EqualTo(newDefinition));
+		}
+
+		[Test]
+		public void Action_Should_UpdatePictures()
+		{
+			// Setup initial project has 1 picture and 2 captions
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var data = new SampleData();
+			int originalNumberOfPictures = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
+			int originalNumberOfCaptions = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
+			Assert.That(originalNumberOfPictures, Is.EqualTo(1));
+			Assert.That(originalNumberOfCaptions, Is.EqualTo(2));
+
+			const string newPictureString = @"{
+				""fileName"" : ""Picture2.jpg"",
+				""caption"" : {
+					""qaa-x-kal"" : {
+						""value"" : ""Second Vernacular caption""
+					},
+					""en"" : {
+						""value"" : ""Second Analysis caption""
+					}
+				},
+				""guid"" : ""4569709a-11e4-34c5-9c14-8b13e2aa4b5e""
+			}";
+			BsonDocument newPicture = BsonSerializer.Deserialize<BsonDocument>(newPictureString);
+			data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Add(newPicture);
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+
+			// Exercise adding 1 picture with 2 captions
+			sut.Run(lfProj);
+
+			// Verify Sense now has 2 pictures, and the second picture has 2 captions
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string expectedGuidStr = data.bsonTestData["guid"].AsString;
+			Guid expectedGuid = Guid.Parse(expectedGuidStr);
+
+			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
+			Assert.IsNotNull(entry);
+			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
+
+			LfMultiText expectedNewCaption = UpdateMongoDbFromFdo.ToMultiText(
+				entry.SensesOS[0].PicturesOS[1].Caption, cache.ServiceLocator.WritingSystemManager);
+			int expectedNumberOfPictures = entry.SensesOS[0].PicturesOS.Count;
+			int expectedNumberOfNewCaptions = expectedNewCaption.Count();
+			Assert.That(expectedNumberOfPictures, Is.EqualTo(2));
+			Assert.That(expectedNumberOfNewCaptions, Is.EqualTo(2));
+
+			string expectedNewVernacularCaption = expectedNewCaption["qaa-x-kal"].Value;
+			string expectedNewAnalysisCaption = expectedNewCaption["en"].Value;
+			Assert.That(expectedNewVernacularCaption.Equals("Second Vernacular caption"));
+			Assert.That(expectedNewAnalysisCaption.Equals("Second Analysis caption"));
 		}
 
 		[Test]

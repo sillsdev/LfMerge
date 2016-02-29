@@ -121,7 +121,13 @@ namespace LfMerge.Actions
 		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
 		{
 			if (fdoMultiString == null) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, _servLoc.WritingSystemManager);
+				return LfMultiText.FromFdoMultiString(fdoMultiString, _servLoc.WritingSystemManager);
+		}
+
+		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, WritingSystemManager fdoWritingSystemManager)
+		{
+			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
+			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
 		}
 
 		private string ToStringOrNull(ITsString iTsString)

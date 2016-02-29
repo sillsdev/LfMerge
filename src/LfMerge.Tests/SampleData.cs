@@ -20,6 +20,7 @@ namespace LfMerge.Tests
 			bsonOptionListData = BsonSerializer.Deserialize<BsonDocument>(jsonOptionListData);
 		}
 
+		#region JSON Test Data
 		public static string jsonTestData = @"{
 	""_id"" : ObjectId(""56332f680f8709ed0fd92d6c""),
 	""authorInfo"" : {
@@ -209,7 +210,18 @@ namespace LfMerge.Tests
 					""value"" : """"
 				}
 			},
-			""pictures"" : [ ],
+			""pictures"" : [
+				{ ""fileName"" : ""Picture1.jpg"" ,
+					""caption"" : {
+						""qaa-x-kal"" : {
+							""value"" : ""First Vernacular caption""
+						},
+						""en"": {
+							""value"" : ""First Analysis caption""
+						}
+					},
+					""guid"" : ""567081ab-22f5-45d6-ad25-9c24f3bb5c6f""
+				}],
 			""scientificName"" : {
 				""en"" : {
 					""value"" : ""Scientific name""
@@ -347,6 +359,9 @@ namespace LfMerge.Tests
 		}
 	}
 }";
+		#endregion
+
+		#region JSON Config Data
 		public static string jsonConfigData = @"{
 		""tasks"" : {
 			""view"" : {
@@ -2129,7 +2144,9 @@ namespace LfMerge.Tests
 		},
 		""userViews"" : { }
 	}";
+		#endregion
 
+		#region JSON Project Record Data
 		public static string jsonProjectRecordData = @"{
 	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
 	""allowAudioDownload"" : true,
@@ -2228,7 +2245,9 @@ namespace LfMerge.Tests
 	},
 	""usersRequestingAccess"" : null
 }";
+		#endregion
 
+		#region JSON Option List Data
 		public static string jsonOptionListData = @"{
 	""_id"" : ObjectId(""56a9e2450f8709b702f15f97""),
 	""canDelete"" : false,
@@ -2290,6 +2309,7 @@ namespace LfMerge.Tests
 	],
 	""name"" : ""Part of Speech""
 }";
+		#endregion
 	}
 }
 

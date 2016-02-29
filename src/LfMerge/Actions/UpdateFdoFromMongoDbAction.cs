@@ -537,7 +537,9 @@ namespace LfMerge.Actions
 			const string fdoPicturePath = "Pictures/";
 			string picturePath = regex.Match(pictureName).Success ? pictureName : string.Format("{0}{1}", fdoPicturePath, pictureName);
 
-			/* ICmPicture fdoPicture = */ GetOrCreatePictureByGuid(guid, owner, picturePath, caption, captionWs);
+			ICmPicture fdoPicture = GetOrCreatePictureByGuid(guid, owner, picturePath, caption, captionWs);
+			// FDO currently only allows one caption to be created with the picture, so set the other captions afterwards
+			SetMultiStringFrom(fdoPicture.Caption, lfPicture.Caption);
 			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
 		}
 
