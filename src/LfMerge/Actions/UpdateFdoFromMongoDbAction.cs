@@ -107,7 +107,7 @@ namespace LfMerge.Actions
 			}
 
 			// Update writing systems from project config input systems.  Won't commit till the end
-			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
 				{
 					LfWsToFdoWs(_projectRecord.InputSystems);
 				});
@@ -162,14 +162,15 @@ namespace LfMerge.Actions
 			Logger.LogMany(LogSeverity.Debug, grammarLogMsgs);
 			/* */
 			IEnumerable<LfLexEntry> lexicon = GetLexiconForTesting(project, _lfProjectConfig);
-			NonUndoableUnitOfWorkHelper.Do(_cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
 				{
 					if (_lfGrammar != null)
 						UpdateFdoGrammarFromLfGrammar(_lfGrammar);
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
-			_cache.ActionHandlerAccessor.Commit();
+			if (Settings.CommitWhenDone)
+				_cache.ActionHandlerAccessor.Commit();
 			Logger.Debug("FdoFromMongoDb: done");
 		}
 

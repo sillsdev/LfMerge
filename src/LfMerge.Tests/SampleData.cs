@@ -57,6 +57,10 @@ namespace LfMerge.Tests
 			""value"" : ""comparative linguistics""
 		}
 	},
+	""customFieldGuids"" : {
+		""customField_entry_Cust_MultiPara"" : ""cd05615d-c47b-4e6f-8b4e-29285ababcee"",
+		""customField_entry_Cust_Single_ListRef"" : ""d7f713ad-e8cf-11d3-9764-00c04f186933""
+	},
 	""cvPattern"" : {
 		""qaa-x-kal"" : {
 			""value"" : ""CCVCCCVVC""
@@ -187,6 +191,12 @@ namespace LfMerge.Tests
 						""Second Custom Item""
 					]
 				}
+			},
+			""customFieldGuids"" : {
+				""customField_senses_Cust_Multi_ListRef"" : [
+					""85c48e72-218d-4fac-bb82-41a5eb9e268a"",
+					""43b38fe1-706a-4288-9404-462daf8f283b""
+				]
 			},
 			""definition"" : {
 				""en"" : {

@@ -64,6 +64,8 @@ namespace LfMerge.Settings
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
 			StateDirectory = Path.Combine(baseDir, "state");
 
+			CommitWhenDone = true;
+
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
 			QueueDirectories = new string[queueCount];
 			QueueDirectories[(int)QueueNames.None] = null;
@@ -75,6 +77,8 @@ namespace LfMerge.Settings
 			MongoMainDatabaseName = mongoMainDatabaseName;
 		}
 
+		public bool CommitWhenDone { get; protected set; }
+
 		#region Equality and GetHashCode
 
 		public override bool Equals(object obj)
@@ -83,6 +87,7 @@ namespace LfMerge.Settings
 			if (other == null)
 				return false;
 			bool ret =
+				other.CommitWhenDone == CommitWhenDone &&
 				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
 				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
@@ -100,7 +105,8 @@ namespace LfMerge.Settings
 
 		public override int GetHashCode()
 		{
-			var hash = DefaultProjectsDirectory.GetHashCode() ^
+			var hash = CommitWhenDone.GetHashCode() ^
+				DefaultProjectsDirectory.GetHashCode() ^
 				MongoDatabaseNamePrefix.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^
 				MongoMainDatabaseName.GetHashCode() ^

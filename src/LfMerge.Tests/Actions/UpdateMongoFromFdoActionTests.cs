@@ -13,34 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LfMerge.Tests.Actions
+namespace LfMerge.Tests.Fdo
 {
-	public class UpdateMongoFromFdoActionTests
+	public class UpdateMongoFromFdoActionTests : FdoTestBase
 	{
-		public const string testProjectCode = "TestLangProj";
-		private TestEnvironment _env;
-		private MongoConnectionDouble _conn;
-		private UpdateMongoDbFromFdo sut;
-
-		[SetUp]
-		public void Setup()
-		{
-			//_env = new TestEnvironment();
-			_env = new TestEnvironment(testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			if (_conn == null)
-				throw new AssertionException("Fdo->Mongo tests need a mock MongoConnection in order to work.");
-			// TODO: If creating our own Mocks would be better than getting them from Autofac, do that instead.
-
-			sut = new UpdateMongoDbFromFdo(_env.Settings, _env.Logger, _conn);
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			_env.Dispose();
-		}
-
 		private LfOptionList CreateLfGrammarWith(IEnumerable<LfOptionListItem> grammarItems)
 		{
 			var result = new LfOptionList();
@@ -78,7 +54,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			const int expectedNumVernacularWS = 3;
@@ -109,7 +85,7 @@ namespace LfMerge.Tests.Actions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			string[] searchOrder = new string[] { "en", "fr" };
@@ -134,7 +110,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfGrammar, Is.Null);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
@@ -154,7 +130,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
@@ -178,7 +154,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
@@ -204,7 +180,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutFdoToMongo.Run(lfProj);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()

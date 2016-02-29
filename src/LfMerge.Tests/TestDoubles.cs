@@ -87,6 +87,7 @@ namespace LfMerge.Tests
 			var replacementConfig = new IniData(ParsedConfig);
 			replacementConfig.Global["BaseDir"] = replacementBaseDir;
 			Initialize(replacementConfig);
+			CommitWhenDone = false;
 		}
 	}
 
@@ -121,6 +122,13 @@ namespace LfMerge.Tests
 		public Dictionary<string, LfInputSystemRecord> StoredInputSystems { get { return _storedInputSystems; } }
 		public Dictionary<Guid, LfLexEntry> StoredLfLexEntries { get { return _storedLfLexEntries; } }
 		public Dictionary<ObjectId, LfOptionList> StoredLfOptionLists { get { return _storedLfOptionLists; } }
+
+		public void Reset()
+		{
+			_storedInputSystems.Clear();
+			_storedLfLexEntries.Clear();
+			_storedLfOptionLists.Clear();
+		}
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
@@ -218,7 +226,6 @@ namespace LfMerge.Tests
 			_storedLfLexEntries.Remove(guid);
 			return true;
 		}
-
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory

@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LfMerge.Tests.Actions
+namespace LfMerge.Tests.Fdo
 {
 	[TestFixture, Explicit, Category("LongRunning")]
 	public class RoundTripTests : RoundTripBase
@@ -150,11 +150,10 @@ namespace LfMerge.Tests.Actions
 			Guid entryGuid = Guid.Parse(testEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					entry.CitationForm.SetVernacularDefaultWritingSystem("New value for this test");
 				});
-			cache.ActionHandlerAccessor.Commit();
 
 			// Save field values before test, to compare with values after test
 			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
@@ -162,11 +161,10 @@ namespace LfMerge.Tests.Actions
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					entry.CitationForm.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
-			cache.ActionHandlerAccessor.Commit();
 
 			// Save original mongo data
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
@@ -222,24 +220,22 @@ namespace LfMerge.Tests.Actions
 			Assert.That(entry, Is.Not.Null);
 			ILexSense[] senses = entry.SensesOS.ToArray();
 			Assert.That(senses.Length, Is.EqualTo(2));
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("New value for this test");
 					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("Second value for this test");
 				});
-			cache.ActionHandlerAccessor.Commit();
 
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
-			cache.ActionHandlerAccessor.Commit();
 
 			// Save original mongo data
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
@@ -322,12 +318,11 @@ namespace LfMerge.Tests.Actions
 			// ILexSense senseWithExamples = entry.SensesOS.First(sense => sense.ExamplesOS.Count > 0);
 			ILexExampleSentence[] examples = senseWithExamples.ExamplesOS.ToArray();
 			Assert.That(examples.Length, Is.EqualTo(2));
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					examples[0].Example.SetVernacularDefaultWritingSystem("New value for this test");
 					examples[1].Example.SetVernacularDefaultWritingSystem("Second value for this test");
 				});
-			cache.ActionHandlerAccessor.Commit();
 			Console.WriteLine("FDO Example just got manually set to {0} for GUID {1} and HVO {2}",
 				examples[0].Example.BestAnalysisVernacularAlternative.Text,
 				examples[0].Guid,
@@ -343,12 +338,11 @@ namespace LfMerge.Tests.Actions
 			senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
 			examples = senseWithExamples.ExamplesOS.ToArray();
 			Assert.That(examples.Length, Is.EqualTo(2));
-			NonUndoableUnitOfWorkHelper.Do(cache.ActionHandlerAccessor, () =>
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
-			cache.ActionHandlerAccessor.Commit();
 			Console.WriteLine("FDO Example just got manually and wrongly set to {0} for GUID {1} and HVO {2}",
 				examples[0].Example.BestAnalysisVernacularAlternative.Text,
 				examples[0].Guid,

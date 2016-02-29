@@ -114,6 +114,7 @@
     <Compile Include="Actions\ProgramTests.cs" />
     <Compile Include="Actions\RoundTripTests.cs" />
     <Compile Include="GlobalTestFixture.cs" />
+    <Compile Include="Actions\FdoTestBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

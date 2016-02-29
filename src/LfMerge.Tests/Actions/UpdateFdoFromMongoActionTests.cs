@@ -17,44 +17,10 @@ using SIL.FieldWorks.FDO;
 using System;
 using System.Linq;
 
-namespace LfMerge.Tests.Actions
+namespace LfMerge.Tests.Fdo
 {
-	public class UpdateFdoFromMongoActionTests
+	public class UpdateFdoFromMongoActionTests : FdoTestBase
 	{
-		public const string testProjectCode = "TestLangProj";
-		private TestEnvironment _env;
-		private MongoConnectionDouble _conn;
-		private MongoProjectRecordFactory _recordFactory;
-		private UpdateFdoFromMongoDbAction sut;
-
-		[SetUp]
-		public void Setup()
-		{
-			//_env = new TestEnvironment();
-			_env = new TestEnvironment(testProjectCode: testProjectCode);
-			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			if (_conn == null)
-				throw new AssertionException("Fdo->Mongo tests need a mock MongoConnection in order to work.");
-			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
-			if (_recordFactory == null)
-				throw new AssertionException("Fdo->Mongo tests need a mock MongoProjectRecordFactory in order to work.");
-			// TODO: If creating our own Mocks would be better than getting them from Autofac, do that instead.
-
-			sut = new UpdateFdoFromMongoDbAction(
-				_env.Settings,
-				_env.Logger,
-				_conn,
-				_recordFactory
-			);
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			_env.Dispose();
-		}
-
-		// TODO: Need to switch this test over to a Mongo double that keeps data, so it can handle grammar info
 		[Test]
 		public void Action_Should_UpdateDefinitions()
 		{
@@ -67,7 +33,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
@@ -110,7 +76,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 
 			// Exercise adding 1 picture with 2 captions
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify Sense now has 2 pictures, and the second picture has 2 captions
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
@@ -144,7 +110,7 @@ namespace LfMerge.Tests.Actions
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -174,7 +140,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -206,7 +172,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -251,7 +217,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			string expectedName = PartOfSpeechMasterList.FlatPosNames[expectedGuid];
@@ -282,7 +248,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			string expectedGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs["subordconn"];
@@ -316,7 +282,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -340,7 +306,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -363,7 +329,7 @@ namespace LfMerge.Tests.Actions
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sut.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
 
 			// Verify
 			char ORC = '\ufffc';
