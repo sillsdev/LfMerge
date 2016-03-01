@@ -108,13 +108,13 @@
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
     <Compile Include="Settings\LfMergeSettingsIniTests.cs" />
-    <Compile Include="Actions\UpdateFdoFromMongoActionTests.cs" />
-    <Compile Include="Actions\UpdateMongoFromFdoActionTests.cs" />
-    <Compile Include="Actions\RoundTripBase.cs" />
     <Compile Include="Actions\ProgramTests.cs" />
-    <Compile Include="Actions\RoundTripTests.cs" />
     <Compile Include="GlobalTestFixture.cs" />
-    <Compile Include="Actions\FdoTestBase.cs" />
+    <Compile Include="Fdo\FdoTestBase.cs" />
+    <Compile Include="Fdo\RoundTripBase.cs" />
+    <Compile Include="Fdo\RoundTripTests.cs" />
+    <Compile Include="Fdo\UpdateFdoFromMongoActionTests.cs" />
+    <Compile Include="Fdo\UpdateMongoFromFdoActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -130,5 +130,6 @@
     <Folder Include="Queues\" />
     <Folder Include="Actions\" />
     <Folder Include="Settings\" />
+    <Folder Include="Fdo\" />
   </ItemGroup>
 </Project>
