@@ -87,7 +87,6 @@ namespace LfMerge.Actions
 			string AnalysisWs = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			_connection.SetInputSystems(project, lfWsList, InitialClone, VernacularWs, AnalysisWs);
-			InitialClone = false;
 
 			_converter = new CustomFieldConverter(_cache);
 
@@ -101,6 +100,7 @@ namespace LfMerge.Actions
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				_connection.UpdateRecord(project, lfEntry);
 			}
+			InitialClone = false;
 
 			IEnumerable<LfLexEntry> lfEntries = _connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 			List<Guid> entryGuidsToRemove = new List<Guid>();
@@ -397,6 +397,12 @@ namespace LfMerge.Actions
 
 			lfEntry.DateCreated = fdoEntry.DateCreated;
 			lfEntry.DateModified = fdoEntry.DateModified;
+			if (InitialClone)
+			{
+				var now = DateTime.Now;
+				lfEntry.DateCreated = now;
+				lfEntry.DateModified = now;
+			}
 			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();

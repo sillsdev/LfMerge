@@ -45,16 +45,16 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_ShouldPopulateMongoInputSystems()
+		public void Action_InitialClone_ShouldPopulateMongoInputSystems()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			UpdateMongoDbFromFdo.InitialClone = true;
-			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProj);
+			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProject);
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			const int expectedNumVernacularWS = 3;
@@ -63,8 +63,8 @@ namespace LfMerge.Tests.Fdo
 			// UpdateMongoDbFromFdo.FdoWsToLfWs() is not contained in _cache.LangProject.CurrentVernacularWritingSystems
 			const string notVernacularWs = "qaa-Zxxx-x-kal-audio";
 
-			lfWsList = _conn.GetInputSystems(lfProj);
-			var languageProj = lfProj.FieldWorksProject.Cache.LangProject;
+			lfWsList = _conn.GetInputSystems(lfProject);
+			var languageProj = lfProject.FieldWorksProject.Cache.LangProject;
 
 			foreach (var fdoVernacularWs in languageProj.CurrentVernacularWritingSystems)
 			{
@@ -79,13 +79,35 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
+		public void Action_InitialClone_ShouldUpdateDates()
+		{
+			// Setup
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			UpdateMongoDbFromFdo.InitialClone = true;
+
+			// Exercise
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
+			Assert.That(receivedData, Is.Not.Null);
+			Assert.That(receivedData, Is.Not.Empty);
+
+			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
+			Assert.That(entry, Is.Not.Null);
+			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.Now).Within(1).Seconds);
+			Assert.That(entry.DateModified, Is.EqualTo(DateTime.Now).Within(1).Seconds);
+		}
+
+		[Test]
 		public void Action_ShouldUpdateLexemes()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			string[] searchOrder = new string[] { "en", "fr" };
@@ -104,47 +126,47 @@ namespace LfMerge.Tests.Fdo
 		public void Action_WithEmptyMongoGrammar_ShouldPopulateMongoGrammarFromFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			LfOptionList lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Null);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
-			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProject.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
 		}
 
 		[Test]
 		public void Action_WithPreviousMongoGrammarWithGuids_ShouldReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
-			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProject.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
 		}
 
 		[Test]
 		public void Action_WithPreviousMongoGrammarWithNoGuids_ShouldStillReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			foreach (LfOptionListItem item in lfGrammar.Items)
@@ -154,22 +176,22 @@ namespace LfMerge.Tests.Fdo
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
-			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProject.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
 		}
 
 		[Test]
 		public void Action_WithPreviousMongoGrammarWithMatchingGuids_ShouldBeUpdatedFromFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			var converter = new GrammarConverter(cache, null);
 			LfOptionList lfGrammar = converter.PrepareGrammarOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
 			LfOptionListItem itemForTest = lfGrammar.Items.First();
@@ -180,14 +202,14 @@ namespace LfMerge.Tests.Fdo
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
-			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProj.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
+			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProject.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
 			itemForTest = lfGrammar.Items.FirstOrDefault(x => x.Guid == g);
 			Assert.That(itemForTest, Is.Not.Null);
 			Assert.That(itemForTest.Abbreviation, Is.Not.EqualTo("Different abbreviation"));

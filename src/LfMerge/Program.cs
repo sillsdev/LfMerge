@@ -137,6 +137,7 @@ namespace LfMerge
 					if (!Directory.Exists(model.ParentDirectoryToPutCloneIn) ||
 						model.TargetLocationIsUnused)
 					{
+						project.State.SRState = ProcessingState.SendReceiveStates.RECEIVING;
 						model.DoClone();
 						if (!FinishClone(project))
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
