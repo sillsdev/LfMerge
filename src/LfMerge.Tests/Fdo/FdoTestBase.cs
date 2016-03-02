@@ -22,6 +22,7 @@ namespace LfMerge.Tests.Fdo
 	public class FdoTestFixture
 	{
 		public const string testProjectCode = "TestLangProj";
+		public const int originalNumOfFdoEntries = 63;
 		public TestEnvironment env;
 		public LfMergeSettingsIni Settings;
 		public static LanguageForgeProject lfProj;
@@ -91,6 +92,7 @@ namespace LfMerge.Tests.Fdo
 		protected UpdateMongoDbFromFdo sutFdoToMongo;
 
 		public const string testProjectCode = FdoTestFixture.testProjectCode;
+		public const int originalNumOfFdoEntries = FdoTestFixture.originalNumOfFdoEntries;
 
 		[SetUp]
 		public void Setup()

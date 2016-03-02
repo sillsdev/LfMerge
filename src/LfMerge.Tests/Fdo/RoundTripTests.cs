@@ -6,6 +6,7 @@ using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
+using LfMerge.Tests.Fdo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -23,8 +24,6 @@ namespace LfMerge.Tests.Fdo
 	[TestFixture, Explicit, Category("LongRunning")]
 	public class RoundTripTests : RoundTripBase
 	{
-		private const int originalNumberOfEntries = 63;
-
 		[Test]
 		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepOriginalValuesInEntries()
 		{
@@ -47,7 +46,7 @@ namespace LfMerge.Tests.Fdo
 			LfLexEntry originalLfEntry = originalData.FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 			Assert.That(originalLfEntry, Is.Not.Null);
 
 			// Exercise
@@ -67,7 +66,7 @@ namespace LfMerge.Tests.Fdo
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -198,7 +197,7 @@ namespace LfMerge.Tests.Fdo
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -282,7 +281,7 @@ namespace LfMerge.Tests.Fdo
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -399,7 +398,7 @@ namespace LfMerge.Tests.Fdo
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == testEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -433,7 +432,7 @@ namespace LfMerge.Tests.Fdo
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			sutFdoToMongo.Run(lfProject);
 			ILexEntryRepository entryRepo = lfProject.FieldWorksProject.Cache.ServiceLocator.GetInstance<ILexEntryRepository>();
-			Assert.That(entryRepo.Count, Is.EqualTo(originalNumberOfEntries));
+			Assert.That(entryRepo.Count, Is.EqualTo(LfMerge.Tests.Fdo.FdoTestBase.originalNumOfFdoEntries));
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -449,18 +448,18 @@ namespace LfMerge.Tests.Fdo
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(originalNumberOfEntries+1));
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries+1));
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(originalNumberOfEntries+1));
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries+1));
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(originalNumberOfEntries+1));
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries+1));
 
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
@@ -476,16 +475,16 @@ namespace LfMerge.Tests.Fdo
 			newEntry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(newEntry);
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(originalNumberOfEntries+1));
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries+1));
 
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(originalNumberOfEntries));
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(originalNumberOfEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 		}
 
 	}
