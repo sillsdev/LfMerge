@@ -123,6 +123,23 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
+		public void Action_ShouldUpdatePictures()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
+			int originalNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
+			Assert.That(originalNumPictures, Is.EqualTo(0));
+
+			// Exercise
+			sutFdoToMongo.Run(lfProj);
+
+			// Verify LF project now contains the 4 FDO pictures (1 externally linked, 3 internal)
+			int newNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
+			Assert.That(newNumPictures, Is.EqualTo(4));
+		}
+
+		[Test]
 		public void Action_WithEmptyMongoGrammar_ShouldPopulateMongoGrammarFromFdoGrammar()
 		{
 			// Setup
