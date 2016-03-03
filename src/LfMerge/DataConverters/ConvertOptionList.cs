@@ -36,7 +36,6 @@ namespace LfMerge.DataConverters
 		public virtual LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
 		{
 			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
-				.OfType<ICmPossibility>()
 				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
 				.ToDictionary(poss => poss.Guid, poss => poss);
 
