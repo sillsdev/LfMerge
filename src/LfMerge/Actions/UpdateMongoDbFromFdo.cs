@@ -92,7 +92,11 @@ namespace LfMerge.Actions
 
 			// Update grammar before updating entries, so we can reference GUIDs in parts of speech
 			_fdoPartsOfSpeech = _cache.LanguageProject.PartsOfSpeechOA;
-			_lfGrammar = UpdateGrammarOptionListFromFdo(project, _fdoPartsOfSpeech);
+			_lfGrammar = ConvertOptionListFromFdo(project, MagicStrings.LfOptionListCodeForGrammaticalInfo, _fdoPartsOfSpeech);
+
+			// Sense type
+			var fdoSenseType = _cache.LanguageProject.LexDbOA.SenseTypesOA;
+			ConvertOptionListFromFdo(project, "", fdoSenseType);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
@@ -498,15 +502,17 @@ namespace LfMerge.Actions
 			*/
 		}
 
-		private LfOptionList UpdateGrammarOptionListFromFdo(ILfProject project, ICmPossibilityList partsOfSpeech)
+		private LfOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList)
 		{
-			LfOptionList lfGrammarList = _connection
+			LfOptionList lfExistingOptionList = _connection
 				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
-				.FirstOrDefault(list => list.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
-			var converter = new GrammarConverter(_cache, lfGrammarList);
-			LfOptionList newGrammarList = converter.PrepareGrammarOptionListUpdate(partsOfSpeech);
-			_connection.UpdateRecord(project, newGrammarList, lfGrammarList == null ? default(ObjectId) : lfGrammarList.Id);
-			return newGrammarList;
+				.FirstOrDefault(list => list.Code == listCode);
+			var converter = new ConvertOptionList(lfExistingOptionList);
+			if (listCode == MagicStrings.LfOptionListCodeForGrammaticalInfo)
+				converter = new GrammarConverter(_cache, lfExistingOptionList);
+			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
+			_connection.UpdateRecord(project, lfChangedOptionList, lfExistingOptionList == null ? default(ObjectId) : lfExistingOptionList.Id);
+			return lfChangedOptionList;
 		}
 
 		protected override ActionNames NextActionName

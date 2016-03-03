@@ -9,44 +9,39 @@ using LfMerge.LanguageForge.Model;
 
 namespace LfMerge.DataConverters
 {
-	public class GrammarConverter
+	public class GrammarConverter : ConvertOptionList
 	{
-		private FdoCache _cache;
-		private LfOptionList _lfGrammar;
-		private Dictionary<Guid, LfOptionListItem> _lfGrammarByGuid;
-		private Dictionary<string, LfOptionListItem> _lfGrammarByStrKey;
 		private int _wsForKeys;
 
 		// TODO: We don't really need a cache, just a WritingSystemFactory, or even just an int to set wsForKeys from
-		public GrammarConverter(FdoCache cache, LfOptionList lfGrammar)
+		public GrammarConverter(FdoCache cache, LfOptionList lfOptionList) : base(lfOptionList)
 		{
-			_cache = cache;
-			_wsForKeys = _cache.WritingSystemFactory.GetWsFromStr("en");
-			if (lfGrammar == null)
-				lfGrammar = MakeEmptyGrammarOptionList();
-			_lfGrammar = lfGrammar;
-			UpdateGrammarDicts(_lfGrammar);
+			_wsForKeys = cache.WritingSystemFactory.GetWsFromStr("en");
 		}
 
-		private LfOptionList MakeEmptyGrammarOptionList()
+		public override LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
 		{
-			var result = new LfOptionList();
-			result.Items = new List<LfOptionListItem>();
-			result.DateCreated = result.DateModified = DateTime.UtcNow;
-			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-			result.Name = MagicStrings.LfOptionListNameForGrammaticalInfo;
-			result.CanDelete = false;
-			result.DefaultItemKey = null;
-			return result;
-		}
+			Dictionary<Guid, IPartOfSpeech> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
+				.OfType<IPartOfSpeech>()
+				// .Where(pos => pos.Guid != null) // Not needed as IPartOfSpeech GUIDs are not nullable
+				.ToDictionary(pos => pos.Guid, pos => pos);
 
-		private void UpdateGrammarDicts(LfOptionList lfGrammar)
-		{
-			_lfGrammarByGuid = lfGrammar.Items
-				.Where(item => item.Guid != null)
-				.ToDictionary(item => item.Guid.Value, item => item);
-			_lfGrammarByStrKey = lfGrammar.Items
-				.ToDictionary(item => item.Key, item => item);
+			foreach (IPartOfSpeech pos in fdoOptionListByGuid.Values)
+			{
+				LfOptionListItem correspondingItem;
+				if (_lfOptionListItemByGuid.TryGetValue(pos.Guid, out correspondingItem))
+				{
+					SetOptionListItemFromPartOfSpeech(correspondingItem, pos);
+				}
+				else
+				{
+					correspondingItem = PartOfSpeechToOptionListItem(pos);
+				}
+				_lfOptionListItemByGuid[pos.Guid] = correspondingItem;
+				_lfOptionListItemByStrKey[correspondingItem.Key] = correspondingItem;
+			}
+
+			return base.PrepareOptionListUpdate(fdoOptionList);
 		}
 
 		private string ToStringOrNull(ITsString iTsString)
@@ -77,7 +72,7 @@ namespace LfMerge.DataConverters
 				originalKey = MagicStrings.UnknownString; // Can't let a null key exist, so use something non-representative
 			string currentTry = originalKey;
 			int extraNum = 0;
-			while (_lfGrammarByStrKey.ContainsKey(currentTry))
+			while (_lfOptionListItemByStrKey.ContainsKey(currentTry))
 			{
 				extraNum++;
 				currentTry = originalKey + extraNum.ToString();
@@ -101,47 +96,5 @@ namespace LfMerge.DataConverters
 			SetOptionListItemFromPartOfSpeech(item, pos, true);
 			return item;
 		}
-
-		public LfOptionList PrepareGrammarOptionListUpdate(ICmPossibilityList partsOfSpeech)
-		{
-			Dictionary<Guid, IPartOfSpeech> fdoGrammarByGuid = partsOfSpeech.ReallyReallyAllPossibilities
-				.OfType<IPartOfSpeech>()
-				// .Where(pos => pos.Guid != null) // Not needed as IPartOfSpeech GUIDs are not nullable
-				.ToDictionary(pos => pos.Guid, pos => pos);
-
-			foreach (IPartOfSpeech pos in fdoGrammarByGuid.Values)
-			{
-				LfOptionListItem correspondingItem;
-				if (_lfGrammarByGuid.TryGetValue(pos.Guid, out correspondingItem))
-				{
-					SetOptionListItemFromPartOfSpeech(correspondingItem, pos);
-				}
-				else
-				{
-					correspondingItem = PartOfSpeechToOptionListItem(pos);
-				}
-				_lfGrammarByGuid[pos.Guid] = correspondingItem;
-				_lfGrammarByStrKey[correspondingItem.Key] = correspondingItem;
-			}
-
-			// Clone old grammar list into new list, changing only the items
-			// ... We could use a MongoDB update query for this, but that would
-			// require new code in MongoConnection and MongoConnectionDouble.
-			// TODO: When appropriate, write that new code. Until then, we clone manually.
-			var newOptionList = new LfOptionList();
-			newOptionList.CanDelete = _lfGrammar.CanDelete;
-			newOptionList.Code = _lfGrammar.Code;
-			newOptionList.DateCreated = _lfGrammar.DateCreated;
-			newOptionList.DateModified = DateTime.UtcNow;
-			newOptionList.DefaultItemKey = _lfGrammar.DefaultItemKey;
-			newOptionList.Name = _lfGrammar.Name;
-			// We filter by "Does FDO have a PoS with corresponding GUID?" because if it doesn't,
-			// then that part of speech was probably deleted in FDO, so we should delete it here.
-			newOptionList.Items = _lfGrammarByGuid.Values
-				.Where(item => fdoGrammarByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
-				.ToList();
-			return newOptionList;
-		}
 	}
 }
-

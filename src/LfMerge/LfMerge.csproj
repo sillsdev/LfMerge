@@ -169,6 +169,7 @@
     <Compile Include="DataConverters\GrammarConverter.cs" />
     <Compile Include="LanguageForge\Model\LfProject.cs" />
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
+    <Compile Include="DataConverters\ConvertOptionList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

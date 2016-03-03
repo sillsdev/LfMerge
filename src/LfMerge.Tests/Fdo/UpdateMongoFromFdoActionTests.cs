@@ -210,7 +210,7 @@ namespace LfMerge.Tests.Fdo
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			var converter = new GrammarConverter(cache, null);
-			LfOptionList lfGrammar = converter.PrepareGrammarOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
+			LfOptionList lfGrammar = converter.PrepareOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
 			LfOptionListItem itemForTest = lfGrammar.Items.First();
 			Guid g = itemForTest.Guid.Value;
 			itemForTest.Abbreviation = "Different abbreviation";
