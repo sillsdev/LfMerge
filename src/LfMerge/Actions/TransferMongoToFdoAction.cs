@@ -20,7 +20,7 @@ using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.Actions
 {
-	public class UpdateFdoFromMongoDbAction: Action
+	public class TransferMongoToFdoAction: Action
 	{
 		private FdoCache _cache;
 		private IFdoServiceLocator _servLoc;
@@ -59,7 +59,7 @@ namespace LfMerge.Actions
 
 		private CustomFieldConverter _customFieldConverter;
 
-		public UpdateFdoFromMongoDbAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings, logger)
+		public TransferMongoToFdoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings, logger)
 		{
 			_connection = conn;
 			_projectRecordFactory = factory;

@@ -142,8 +142,8 @@ namespace LfMerge
 						if (!FinishClone(project))
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 
-						UpdateMongoDbFromFdo.InitialClone = true;
-						LfMerge.Actions.Action.GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
+						TransferFdoToMongoAction.InitialClone = true;
+						LfMerge.Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
 					}
 				}
 				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)

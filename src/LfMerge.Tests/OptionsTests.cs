@@ -52,22 +52,22 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(ActionNames.None, QueueNames.None)]
-		[TestCase(ActionNames.UpdateFdoFromMongoDb, QueueNames.Synchronize)]
+		[TestCase(ActionNames.TransferMongoToFdo, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Commit, QueueNames.None)]
 		[TestCase(ActionNames.Synchronize, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Edit, QueueNames.None)]
-		[TestCase(ActionNames.UpdateMongoDbFromFdo, QueueNames.None)]
+		[TestCase(ActionNames.TransferFdoToMongo, QueueNames.None)]
 		public void GetQueueFromAction(ActionNames action, QueueNames expectedQueue)
 		{
 			Assert.That(Options.GetQueueForAction(action), Is.EqualTo(expectedQueue));
 		}
 
-		[TestCase(ActionNames.None, ActionNames.UpdateFdoFromMongoDb)]
-		[TestCase(ActionNames.UpdateFdoFromMongoDb, ActionNames.Commit)]
+		[TestCase(ActionNames.None, ActionNames.TransferMongoToFdo)]
+		[TestCase(ActionNames.TransferMongoToFdo, ActionNames.Commit)]
 		[TestCase(ActionNames.Commit, ActionNames.Synchronize)]
 		[TestCase(ActionNames.Synchronize, ActionNames.Edit)]
-		[TestCase(ActionNames.Edit, ActionNames.UpdateMongoDbFromFdo)]
-		[TestCase(ActionNames.UpdateMongoDbFromFdo, ActionNames.None)]
+		[TestCase(ActionNames.Edit, ActionNames.TransferFdoToMongo)]
+		[TestCase(ActionNames.TransferFdoToMongo, ActionNames.None)]
 		public void GetNextAction(ActionNames currentAction, ActionNames expectedAction)
 		{
 			var option = new Options();

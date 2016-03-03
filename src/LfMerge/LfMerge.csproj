@@ -106,10 +106,8 @@
     <Compile Include="ILfProject.cs" />
     <Compile Include="Actions\ActionNames.cs" />
     <Compile Include="Actions\IAction.cs" />
-    <Compile Include="Actions\UpdateFdoFromMongoDbAction.cs" />
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\CommitAction.cs" />
-    <Compile Include="Actions\UpdateMongoDbFromFdo.cs" />
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="LanguageDepotProject.cs" />
     <Compile Include="ILanguageDepotProject.cs" />
@@ -170,6 +168,8 @@
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
     <Compile Include="DataConverters\ConvertOptionList.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionListItem.cs" />
+    <Compile Include="Actions\TransferMongoToFdoAction.cs" />
+    <Compile Include="Actions\TransferFdoToMongoAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

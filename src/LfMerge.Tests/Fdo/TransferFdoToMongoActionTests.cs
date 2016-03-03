@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace LfMerge.Tests.Fdo
 {
-	public class UpdateMongoFromFdoActionTests : FdoTestBase
+	public class TransferFdoToMongoActionTests : FdoTestBase
 	{
 		private LfOptionList CreateLfGrammarWith(IEnumerable<LfOptionListItem> grammarItems)
 		{
@@ -49,7 +49,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			UpdateMongoDbFromFdo.InitialClone = true;
+			TransferFdoToMongoAction.InitialClone = true;
 			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProject);
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
 
@@ -83,7 +83,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			UpdateMongoDbFromFdo.InitialClone = true;
+			TransferFdoToMongoAction.InitialClone = true;
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);

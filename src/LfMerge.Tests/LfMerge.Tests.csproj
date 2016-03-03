@@ -113,8 +113,8 @@
     <Compile Include="Fdo\FdoTestBase.cs" />
     <Compile Include="Fdo\RoundTripBase.cs" />
     <Compile Include="Fdo\RoundTripTests.cs" />
-    <Compile Include="Fdo\UpdateFdoFromMongoActionTests.cs" />
-    <Compile Include="Fdo\UpdateMongoFromFdoActionTests.cs" />
+    <Compile Include="Fdo\TransferMongoToFdoActionTests.cs" />
+    <Compile Include="Fdo\TransferFdoToMongoActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -19,7 +19,7 @@ using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.Actions
 {
-	public class UpdateMongoDbFromFdo: Action
+	public class TransferFdoToMongoAction: Action
 	{
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
@@ -39,7 +39,7 @@ namespace LfMerge.Actions
 
 		public static bool InitialClone { get; set; }
 
-		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
+		public TransferFdoToMongoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
 		{
 			_connection = conn;
 		}

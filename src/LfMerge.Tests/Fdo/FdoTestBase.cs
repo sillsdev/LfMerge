@@ -88,8 +88,8 @@ namespace LfMerge.Tests.Fdo
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
 		protected UndoableUnitOfWorkHelper _undoHelper;
-		protected UpdateFdoFromMongoDbAction sutMongoToFdo;
-		protected UpdateMongoDbFromFdo sutFdoToMongo;
+		protected TransferMongoToFdoAction sutMongoToFdo;
+		protected TransferFdoToMongoAction sutFdoToMongo;
 
 		public const string testProjectCode = FdoTestFixture.testProjectCode;
 		public const int originalNumOfFdoEntries = FdoTestFixture.originalNumOfFdoEntries;
@@ -110,14 +110,14 @@ namespace LfMerge.Tests.Fdo
 			_undoHelper = new UndoableUnitOfWorkHelper(_cache.ActionHandlerAccessor, "undo", "redo");
 			_undoHelper.RollBack = true;
 
-			sutMongoToFdo = new UpdateFdoFromMongoDbAction(
+			sutMongoToFdo = new TransferMongoToFdoAction(
 				_env.Settings,
 				_env.Logger,
 				_conn,
 				_recordFactory
 			);
 
-			sutFdoToMongo = new UpdateMongoDbFromFdo(
+			sutFdoToMongo = new TransferFdoToMongoAction(
 				_env.Settings,
 				_env.Logger,
 				_conn

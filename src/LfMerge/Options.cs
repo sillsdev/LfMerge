@@ -69,7 +69,7 @@ namespace LfMerge
 			if (!StopAfterFirstAction)
 				nextAction = ((int)currentAction) + 1;
 
-			if (nextAction > (int)ActionNames.UpdateMongoDbFromFdo)
+			if (nextAction > (int)ActionNames.TransferFdoToMongo)
 				nextAction = 0;
 			return (ActionNames)nextAction;
 		}
@@ -92,13 +92,13 @@ namespace LfMerge
 		{
 			switch (action)
 			{
-				case ActionNames.UpdateFdoFromMongoDb:
+				case ActionNames.TransferMongoToFdo:
 				case ActionNames.Synchronize:
 					return QueueNames.Synchronize;
 				case ActionNames.Commit:
 				case ActionNames.None:
 				case ActionNames.Edit:
-				case ActionNames.UpdateMongoDbFromFdo:
+				case ActionNames.TransferFdoToMongo:
 					break;
 			}
 			return QueueNames.None;

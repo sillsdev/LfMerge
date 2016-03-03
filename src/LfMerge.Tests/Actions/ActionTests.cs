@@ -64,11 +64,11 @@ namespace LfMerge.Tests.Actions
 			Assert.That(actions, Is.EquivalentTo(expectedActionNames));
 		}
 
-		[TestCase(ActionNames.UpdateFdoFromMongoDb, ProcessingState.SendReceiveStates.QUEUED)]
+		[TestCase(ActionNames.TransferMongoToFdo, ProcessingState.SendReceiveStates.QUEUED)]
 		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.QUEUED)]
 //		[TestCase(ActionNames.Synchronize, ProcessingState.SendReceiveStates.RECEIVING)]
 		[TestCase(ActionNames.Edit, ProcessingState.SendReceiveStates.MERGING)]
-		[TestCase(ActionNames.UpdateMongoDbFromFdo, ProcessingState.SendReceiveStates.UPDATING)]
+		[TestCase(ActionNames.TransferFdoToMongo, ProcessingState.SendReceiveStates.UPDATING)]
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
@@ -83,11 +83,11 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfProj.State.SRState, Is.EqualTo(expectedState));
 		}
 
-		[TestCase(ActionNames.UpdateFdoFromMongoDb)]
+		[TestCase(ActionNames.TransferMongoToFdo)]
 		[TestCase(ActionNames.Commit)]
 		[TestCase(ActionNames.Synchronize)]
 		[TestCase(ActionNames.Edit)]
-		[TestCase(ActionNames.UpdateMongoDbFromFdo)]
+		[TestCase(ActionNames.TransferFdoToMongo)]
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup

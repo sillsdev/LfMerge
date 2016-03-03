@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace LfMerge.Tests.Fdo
 {
-	public class UpdateFdoFromMongoActionTests : FdoTestBase
+	public class TransferMongoToFdoActionTests : FdoTestBase
 	{
 		[Test]
 		public void Action_Should_UpdateDefinitions()
@@ -79,7 +79,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
 			// Verify "Added" picture is now a second picture on the sense, and has 2 captions
-			LfMultiText expectedNewCaption = UpdateMongoDbFromFdo.ToMultiText(
+			LfMultiText expectedNewCaption = TransferFdoToMongoAction.ToMultiText(
 				entry.SensesOS[0].PicturesOS[1].Caption, cache.ServiceLocator.WritingSystemManager);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));

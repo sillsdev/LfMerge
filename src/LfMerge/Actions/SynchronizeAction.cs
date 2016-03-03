@@ -22,7 +22,7 @@ namespace LfMerge.Actions
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
-				GetAction(ActionNames.UpdateFdoFromMongoDb).Run(project);
+				GetAction(ActionNames.TransferMongoToFdo).Run(project);
 
 				Logger.Notice("Syncing");
 				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
@@ -36,7 +36,7 @@ namespace LfMerge.Actions
 					return;
 				}
 
-				GetAction(ActionNames.UpdateMongoDbFromFdo).Run(project);
+				GetAction(ActionNames.TransferFdoToMongo).Run(project);
 			}
 		}
 

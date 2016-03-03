@@ -6,11 +6,11 @@ namespace LfMerge.Actions
 	public enum ActionNames
 	{
 		None,
-		UpdateFdoFromMongoDb,
+		TransferMongoToFdo,
 		Commit,
 		Synchronize,
 		Edit,
-		UpdateMongoDbFromFdo
+		TransferFdoToMongo
 	}
 }
 
