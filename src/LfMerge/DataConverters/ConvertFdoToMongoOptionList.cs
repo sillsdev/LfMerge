@@ -9,7 +9,7 @@ using LfMerge.LanguageForge.Model;
 
 namespace LfMerge.DataConverters
 {
-	public class ConvertOptionList
+	public class ConvertFdoToMongoOptionList
 	{
 		protected int _wsForKeys;
 
@@ -17,7 +17,7 @@ namespace LfMerge.DataConverters
 		protected Dictionary<Guid, LfOptionListItem> _lfOptionListItemByGuid;
 		protected Dictionary<string, LfOptionListItem> _lfOptionListItemByStrKey;
 
-		public ConvertOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode)
+		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode)
 		{
 			_wsForKeys = wsForKeys;
 			if (lfOptionList == null)

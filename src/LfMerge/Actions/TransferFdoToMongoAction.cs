@@ -511,7 +511,7 @@ namespace LfMerge.Actions
 				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
 				.FirstOrDefault(list => list.Code == listCode);
 			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
-			var converter = new ConvertOptionList(lfExistingOptionList, wsEn, listCode);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, wsEn, listCode);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			_connection.UpdateRecord(project, lfChangedOptionList, listCode);
 			return lfChangedOptionList;
