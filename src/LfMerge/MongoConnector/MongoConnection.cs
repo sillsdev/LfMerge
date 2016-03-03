@@ -99,6 +99,11 @@ namespace LfMerge.MongoConnector
 			return GetRecords<TDocument>(project, collectionName, _ => true);
 		}
 
+		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
+		{
+			return GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists, list => list.Code == listCode).FirstOrDefault();
+		}
+
 		public MongoProjectRecord GetProjectRecord(ILfProject project)
 		{
 			IMongoDatabase db = GetMainDatabase();

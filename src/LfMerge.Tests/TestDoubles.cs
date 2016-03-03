@@ -195,6 +195,14 @@ namespace LfMerge.Tests
 			}
 		}
 
+		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
+		{
+			LfOptionList result;
+			if (!_storedLfOptionLists.TryGetValue(listCode, out result))
+				result = null;
+			return result;
+		}
+
 		public IMongoDatabase GetProjectDatabase(ILfProject project)
 		{
 			var mockDb = new Mock<IMongoDatabase>(); // SO much easier than implementing the 9 public methods for a manual stub of IMongoDatabase!
