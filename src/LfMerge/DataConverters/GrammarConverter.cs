@@ -11,43 +11,13 @@ namespace LfMerge.DataConverters
 {
 	public class GrammarConverter : ConvertOptionList
 	{
-		private int _wsForKeys;
-
-		// TODO: We don't really need a cache, just a WritingSystemFactory, or even just an int to set wsForKeys from
-		public GrammarConverter(FdoCache cache, LfOptionList lfOptionList) : base(lfOptionList)
+		public GrammarConverter(LfOptionList lfOptionList, int wsForKeys) : base(lfOptionList, wsForKeys, MagicStrings.LfOptionListCodeForGrammaticalInfo)
 		{
-			_wsForKeys = cache.WritingSystemFactory.GetWsFromStr("en");
 		}
 
 		public override LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
 		{
-			Dictionary<Guid, IPartOfSpeech> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
-				.OfType<IPartOfSpeech>()
-				// .Where(pos => pos.Guid != null) // Not needed as IPartOfSpeech GUIDs are not nullable
-				.ToDictionary(pos => pos.Guid, pos => pos);
-
-			foreach (IPartOfSpeech pos in fdoOptionListByGuid.Values)
-			{
-				LfOptionListItem correspondingItem;
-				if (_lfOptionListItemByGuid.TryGetValue(pos.Guid, out correspondingItem))
-				{
-					SetOptionListItemFromPartOfSpeech(correspondingItem, pos);
-				}
-				else
-				{
-					correspondingItem = PartOfSpeechToOptionListItem(pos);
-				}
-				_lfOptionListItemByGuid[pos.Guid] = correspondingItem;
-				_lfOptionListItemByStrKey[correspondingItem.Key] = correspondingItem;
-			}
-
 			return base.PrepareOptionListUpdate(fdoOptionList);
-		}
-
-		private string ToStringOrNull(ITsString iTsString)
-		{
-			if (iTsString == null) return null;
-			return iTsString.Text;
 		}
 
 		private string AbbrevHierarchyStringForWs(ICmPossibility poss, int wsId)
@@ -66,35 +36,5 @@ namespace LfMerge.DataConverters
 			return string.Join(ORC, allAncestors.Select(ancestor => ancestor.Abbreviation.get_String(wsId).Text));
 		}
 
-		private string FindAppropriateKey(string originalKey)
-		{
-			if (originalKey == null)
-				originalKey = MagicStrings.UnknownString; // Can't let a null key exist, so use something non-representative
-			string currentTry = originalKey;
-			int extraNum = 0;
-			while (_lfOptionListItemByStrKey.ContainsKey(currentTry))
-			{
-				extraNum++;
-				currentTry = originalKey + extraNum.ToString();
-			}
-			return currentTry;
-		}
-
-		private void SetOptionListItemFromPartOfSpeech(LfOptionListItem item, IPartOfSpeech pos, bool setKey = false)
-		{
-			const char ORC = '\xfffc';
-			item.Abbreviation = ToStringOrNull(pos.Abbreviation.BestAnalysisVernacularAlternative);
-			if (setKey)
-				item.Key = FindAppropriateKey(ToStringOrNull(pos.Abbreviation.get_String(_wsForKeys)));
-			item.Value = ToStringOrNull(pos.Name.BestAnalysisVernacularAlternative);
-			item.Guid = pos.Guid;
-		}
-
-		private LfOptionListItem PartOfSpeechToOptionListItem(IPartOfSpeech pos)
-		{
-			var item = new LfOptionListItem();
-			SetOptionListItemFromPartOfSpeech(item, pos, true);
-			return item;
-		}
 	}
 }

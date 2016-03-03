@@ -116,12 +116,12 @@ namespace LfMerge.Tests
 
 		private Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
 		private Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
-		private Dictionary<ObjectId, LfOptionList> _storedLfOptionLists = new Dictionary<ObjectId, LfOptionList>();
+		private Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
 		public Dictionary<string, LfInputSystemRecord> StoredInputSystems { get { return _storedInputSystems; } }
 		public Dictionary<Guid, LfLexEntry> StoredLfLexEntries { get { return _storedLfLexEntries; } }
-		public Dictionary<ObjectId, LfOptionList> StoredLfOptionLists { get { return _storedLfOptionLists; } }
+		public Dictionary<string, LfOptionList> StoredLfOptionLists { get { return _storedLfOptionLists; } }
 
 		public void Reset()
 		{
@@ -167,8 +167,8 @@ namespace LfMerge.Tests
 
 		public void UpdateMockOptionList(LfOptionList mockData)
 		{
-			ObjectId id = mockData.Id; // ObjectId is a struct and thus cannot be null
-			_storedLfOptionLists[id] = mockData;
+			string listCode = mockData.Code ?? string.Empty;
+			_storedLfOptionLists[listCode] = mockData;
 		}
 
 		public IEnumerable<LfLexEntry> GetLfLexEntries()
@@ -215,9 +215,9 @@ namespace LfMerge.Tests
 			return true;
 		}
 
-		public bool UpdateRecord(ILfProject project, LfOptionList data, ObjectId id)
+		public bool UpdateRecord(ILfProject project, LfOptionList data, string listCode)
 		{
-			_storedLfOptionLists[id] = data;
+			_storedLfOptionLists[listCode ?? string.Empty] = data;
 			return true;
 		}
 

@@ -339,12 +339,12 @@ namespace LfMerge.MongoConnector
 			}
 		}
 
-		public bool UpdateRecord(ILfProject project, LfOptionList data, ObjectId id)
+		public bool UpdateRecord(ILfProject project, LfOptionList data, string listCode)
 		{
 			var filterBuilder = Builders<LfOptionList>.Filter;
-			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Id, id);
+			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Code, listCode);
 			bool result = UpdateRecordImpl(project, data, filter, MagicStrings.LfCollectionNameForOptionLists, MongoDbSelector.ProjectDatabase);
-			Logger.Notice("Done saving {0} with ObjectID {1} into Mongo DB", typeof(LfOptionList), id);
+			Logger.Notice("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
 			return result;
 		}
 

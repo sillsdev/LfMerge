@@ -15,7 +15,7 @@ namespace LfMerge.MongoConnector
 		IMongoDatabase GetMainDatabase();
 		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName);
 		bool UpdateRecord(ILfProject project, LfLexEntry data);
-		bool UpdateRecord(ILfProject project, LfOptionList data, ObjectId id);
+		bool UpdateRecord(ILfProject project, LfOptionList data, string listCode);
 		bool RemoveRecord(ILfProject project, Guid guid);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,

@@ -96,7 +96,7 @@ namespace LfMerge.Actions
 
 			// Sense type
 			var fdoSenseType = _cache.LanguageProject.LexDbOA.SenseTypesOA;
-			ConvertOptionListFromFdo(project, "", fdoSenseType);
+			ConvertOptionListFromFdo(project, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
@@ -505,13 +505,12 @@ namespace LfMerge.Actions
 		private LfOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList)
 		{
 			LfOptionList lfExistingOptionList = _connection
-				.GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists)
+				.GetRecords<LfOptionList>(project, listCode)
 				.FirstOrDefault(list => list.Code == listCode);
-			var converter = new ConvertOptionList(lfExistingOptionList);
-			if (listCode == MagicStrings.LfOptionListCodeForGrammaticalInfo)
-				converter = new GrammarConverter(_cache, lfExistingOptionList);
+			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+			var converter = new ConvertOptionList(lfExistingOptionList, wsEn, listCode);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
-			_connection.UpdateRecord(project, lfChangedOptionList, lfExistingOptionList == null ? default(ObjectId) : lfExistingOptionList.Id);
+			_connection.UpdateRecord(project, lfChangedOptionList, listCode);
 			return lfChangedOptionList;
 		}
 

@@ -21,7 +21,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			var result = new LfOptionList();
 			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-			result.Name = MagicStrings.LfOptionListNameForGrammaticalInfo;
+			result.Name = MagicStrings.FdoOptionlistNames[MagicStrings.LfOptionListCodeForGrammaticalInfo];
 			result.DateCreated = result.DateModified = System.DateTime.UtcNow;
 			result.CanDelete = false;
 			result.DefaultItemKey = null;
@@ -209,7 +209,8 @@ namespace LfMerge.Tests.Fdo
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
-			var converter = new GrammarConverter(cache, null);
+			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
+			var converter = new GrammarConverter(null, wsEn);
 			LfOptionList lfGrammar = converter.PrepareOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
 			LfOptionListItem itemForTest = lfGrammar.Items.First();
 			Guid g = itemForTest.Guid.Value;

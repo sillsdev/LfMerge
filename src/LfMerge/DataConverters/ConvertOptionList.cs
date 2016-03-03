@@ -4,56 +4,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SIL.FieldWorks.FDO;
+using SIL.FieldWorks.Common.COMInterfaces;
 using LfMerge.LanguageForge.Model;
 
 namespace LfMerge.DataConverters
 {
 	public class ConvertOptionList
 	{
-		private static Dictionary<string, string> _fdoOptionlistNames = new Dictionary<string, string>()
-		{
-			{ "grammatical-info" , "Part of Speech" },
-			{ "semantic-domain-ddp4" , "Semantic Domain" },
-			{ "domain-type" , "Academic Domains" },
-			{ "environments" , "Environments" },
-			{ "location" , "Location" },
-			{ "usage-type" , "Usages" },
-			{ "reversal-type" , "Reversal Entries" },
-			{ "sense-type" , "Type" },
-			{ "anthro-code" , "Anthropology Categories" },
-			{ "do-not-publish-in" , "Publish In" },
-			{ "status" , "Status" },
-
-			{ "etymology" , "Etymology" },
-			{ "lexical-relation" , "Lexical Relation" },
-			{ "note-type" , "Note Type" },
-			{ "paradigm" , "Paradigm" },
-			{ "users" , "Users" },
-			{ "translation-type" , "Translation Type" },
-			{ "from-part-of-speech" , "From Part of Speech" },
-			{ "morph-type" , "Morph Type" },
-			{ "noun-slot" , "Noun Slot" },
-			{ "verb-slot" , "Verb Slot" },
-			{ "stative-slot" , "Stative Slot" },
-			{ "noun-infl-class" , "Noun Inflection Class" },
-			{ "verb-infl-class" , "Verb Inflection Class" }
-		};
+		protected int _wsForKeys;
 
 		protected LfOptionList _lfOptionList;
 		protected Dictionary<Guid, LfOptionListItem> _lfOptionListItemByGuid;
 		protected Dictionary<string, LfOptionListItem> _lfOptionListItemByStrKey;
 
-		public ConvertOptionList(LfOptionList lfOptionList)
+		public ConvertOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode)
 		{
+			_wsForKeys = wsForKeys;
 			if (lfOptionList == null)
-				lfOptionList = MakeEmptyOptionList(MagicStrings.LfOptionListCodeForGrammaticalInfo);
+				lfOptionList = MakeEmptyOptionList(listCode);
 			_lfOptionList = lfOptionList;
 			UpdateOptionListItemDictionaries(_lfOptionList);
 		}
 
 		public static string FdoOptionListName(string listCode) {
-			if (_fdoOptionlistNames.ContainsKey(listCode)) {
-				return _fdoOptionlistNames[listCode];
+			if (MagicStrings.FdoOptionlistNames.ContainsKey(listCode)) {
+				return MagicStrings.FdoOptionlistNames[listCode];
 			}
 			return listCode;
 		}
@@ -62,26 +37,39 @@ namespace LfMerge.DataConverters
 		{
 			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
 				.OfType<ICmPossibility>()
-				// .Where(pos => pos.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
-				.ToDictionary(pos => pos.Guid, pos => pos);
+				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
+				.ToDictionary(poss => poss.Guid, poss => poss);
 
-			// Clone old option list into new list, changing only the items
-			// ... We could use a MongoDB update query for this, but that would
-			// require new code in MongoConnection and MongoConnectionDouble.
-			// TODO: When appropriate, write that new code. Until then, we clone manually.
-			var lfNewOptionList = new LfOptionList();
-			lfNewOptionList.CanDelete = _lfOptionList.CanDelete;
-			lfNewOptionList.Code = _lfOptionList.Code;
-			lfNewOptionList.DateCreated = _lfOptionList.DateCreated;
-			lfNewOptionList.DateModified = DateTime.UtcNow;
-			lfNewOptionList.DefaultItemKey = _lfOptionList.DefaultItemKey;
-			lfNewOptionList.Name = _lfOptionList.Name;
+			foreach (ICmPossibility poss in fdoOptionListByGuid.Values)
+			{
+				LfOptionListItem correspondingItem;
+				if (_lfOptionListItemByGuid.TryGetValue(poss.Guid, out correspondingItem))
+				{
+					SetOptionListItemFromCmPossibility(correspondingItem, poss);
+				}
+				else
+				{
+					correspondingItem = CmPossibilityToOptionListItem(poss);
+				}
+				_lfOptionListItemByGuid[poss.Guid] = correspondingItem;
+				_lfOptionListItemByStrKey[correspondingItem.Key] = correspondingItem;
+			}
+
+			var lfNewOptionList = CloneOptionListWithEmptyItems(_lfOptionList);
 			// We filter by "Does FDO have a PoS with corresponding GUID?" because if it doesn't,
 			// then that part of speech was probably deleted in FDO, so we should delete it here.
 			lfNewOptionList.Items = _lfOptionListItemByGuid.Values
 				.Where(item => fdoOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
 				.ToList();
+
 			return lfNewOptionList;
+		}
+
+		protected LfOptionListItem CmPossibilityToOptionListItem(ICmPossibility pos)
+		{
+			var item = new LfOptionListItem();
+			SetOptionListItemFromCmPossibility(item, pos, true);
+			return item;
 		}
 
 		protected void UpdateOptionListItemDictionaries(LfOptionList lfOptionList)
@@ -103,6 +91,47 @@ namespace LfMerge.DataConverters
 			result.CanDelete = false;
 			result.DefaultItemKey = null;
 			return result;
+		}
+
+		// Clone old option list into new list, changing only the items
+		// ... We could use a MongoDB update query for this, but that would
+		// require new code in MongoConnection and MongoConnectionDouble.
+		// TODO: We pretty much have that code by now. See if we can get rid of this function by now.
+		protected LfOptionList CloneOptionListWithEmptyItems(LfOptionList original)
+		{
+			var newList = new LfOptionList();
+			newList.CanDelete = original.CanDelete;
+			newList.Code = original.Code;
+			newList.DateCreated = original.DateCreated;
+			newList.DateModified = DateTime.UtcNow;
+			newList.DefaultItemKey = original.DefaultItemKey;
+			newList.Name = original.Name;
+			// lfNewOptionList.Items is set to an empty list by its constructor; no need to set it here.
+			return newList;
+		}
+
+		protected string FindAppropriateKey(string originalKey)
+		{
+			if (originalKey == null)
+				originalKey = MagicStrings.UnknownString; // Can't let a null key exist, so use something non-representative
+			string currentTry = originalKey;
+			int extraNum = 0;
+			while (_lfOptionListItemByStrKey.ContainsKey(currentTry))
+			{
+				extraNum++;
+				currentTry = originalKey + extraNum.ToString();
+			}
+			return currentTry;
+		}
+
+		protected void SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
+		{
+			const char ORC = '\xfffc';
+			item.Abbreviation = TsStringConverter.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
+			if (setKey)
+				item.Key = FindAppropriateKey(TsStringConverter.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
+			item.Value = TsStringConverter.SafeTsStringText(poss.Name.BestAnalysisVernacularAlternative);
+			item.Guid = poss.Guid;
 		}
 
 	}
