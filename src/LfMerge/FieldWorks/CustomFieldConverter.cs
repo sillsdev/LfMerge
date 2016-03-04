@@ -121,7 +121,8 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
 				string genDateStr = genDate.ToLongString();
-				fieldValue = String.IsNullOrEmpty(genDateStr) ? null : new BsonString(genDateStr);
+				fieldValue = String.IsNullOrEmpty(genDateStr) ? null :
+					new BsonDocument("value", new BsonString(genDateStr));
 				break;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
@@ -313,13 +314,21 @@ namespace LfMerge.FieldWorks
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
-				GenDate genDate;
-				if (GenDate.TryParse(value.AsString, out genDate))
 				{
-					data.SetGenDate(hvo, flid, genDate);
-					return true;
+					LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
+					if (valueAsLfStringField == null)
+						return false;
+					string valueAsString = valueAsLfStringField.Value;
+					if (valueAsString == null)
+						return false;
+					GenDate genDate;
+					if (GenDate.TryParse(valueAsString, out genDate))
+					{
+						data.SetGenDate(hvo, flid, genDate);
+						return true;
+					}
+					return false;
 				}
-				return false;
 
 			case CellarPropertyType.Integer:
 				data.SetInt(hvo, flid, value.AsInt32);
