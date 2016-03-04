@@ -9,21 +9,21 @@ using System.Linq;
 
 namespace LfMerge.DataConverters
 {
-	public class TsStringConverter
+	public class ConvertFdoToMongoTsStrings
 	{
 		private int[] _wsSearchOrder;
 
-		public TsStringConverter(IEnumerable<int> wsPreferences)
+		public ConvertFdoToMongoTsStrings(IEnumerable<int> wsPreferences)
 		{
 			_wsSearchOrder = wsPreferences.ToArray();
 		}
 
-		public TsStringConverter(IEnumerable<CoreWritingSystemDefinition> wsPreferences)
+		public ConvertFdoToMongoTsStrings(IEnumerable<CoreWritingSystemDefinition> wsPreferences)
 		{
 			_wsSearchOrder = wsPreferences.Select(ws => ws.Handle).ToArray();
 		}
 
-		public TsStringConverter(IEnumerable<string> wsPreferences, ILgWritingSystemFactory wsf)
+		public ConvertFdoToMongoTsStrings(IEnumerable<string> wsPreferences, ILgWritingSystemFactory wsf)
 		{
 			_wsSearchOrder = wsPreferences.Select(wsName => wsf.GetWsFromStr(wsName)).ToArray();
 		}

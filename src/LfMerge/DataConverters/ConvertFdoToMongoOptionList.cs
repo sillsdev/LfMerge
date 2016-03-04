@@ -126,10 +126,10 @@ namespace LfMerge.DataConverters
 		protected void SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
 		{
 			const char ORC = '\xfffc';
-			item.Abbreviation = TsStringConverter.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
+			item.Abbreviation = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
 			if (setKey)
-				item.Key = FindAppropriateKey(TsStringConverter.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
-			item.Value = TsStringConverter.SafeTsStringText(poss.Name.BestAnalysisVernacularAlternative);
+				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
+			item.Value = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Name.BestAnalysisVernacularAlternative);
 			item.Guid = poss.Guid;
 		}
 
