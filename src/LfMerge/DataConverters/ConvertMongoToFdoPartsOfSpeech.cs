@@ -10,7 +10,7 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.DataConverters
 {
-	public class PartOfSpeechConverter
+	public class ConvertMongoToFdoPartsOfSpeech
 	{
 		private FdoCache _cache;
 		private IPartOfSpeechRepository _posRepo;
@@ -18,7 +18,7 @@ namespace LfMerge.DataConverters
 
 		// TODO: Should we also pass in an LfProject object? And make the POSConverter responsible for
 		// updating the LF part of speech list as needed? Consider, and refactor if the answer is yes.
-		public PartOfSpeechConverter(FdoCache fdoCache)
+		public ConvertMongoToFdoPartsOfSpeech(FdoCache fdoCache)
 		{
 			_cache = fdoCache;
 			_posRepo = _cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();

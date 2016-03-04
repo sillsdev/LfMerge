@@ -204,7 +204,7 @@ namespace LfMerge.Actions
 			if (fdoSense.MorphoSyntaxAnalysisRA != null)
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
-				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
+				IPartOfSpeech pos = ConvertMongoToFdoPartsOfSpeech.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
 				if (pos == null || pos.Abbreviation == null)
 					lfSense.PartOfSpeech = null;
 				else

@@ -48,7 +48,7 @@ namespace LfMerge.Actions
 		private ICmTranslationFactory _translationFactory;
 
 		// Values that we use a lot and therefore cache here
-		private PartOfSpeechConverter _posConverter;
+		private ConvertMongoToFdoPartsOfSpeech _posConverter;
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 		private List<Tuple<int, string>> _analysisWsIdsAndNamesInSearchOrder;
 		// private List<int> _analysisWsIdSearchOrder;
@@ -113,7 +113,7 @@ namespace LfMerge.Actions
 				});
 
 			_customFieldConverter = new CustomFieldConverter(_cache);
-			_posConverter = new PartOfSpeechConverter(_cache);
+			_posConverter = new ConvertMongoToFdoPartsOfSpeech(_cache);
 
 			// For efficiency's sake, cache the six repositories and six factories we'll need all the time,
 			_entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
@@ -587,7 +587,7 @@ namespace LfMerge.Actions
 				}
 				else
 				{
-					PartOfSpeechConverter.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos); // It's fine if secondaryPos is null
+					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos); // It's fine if secondaryPos is null
 					Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
 				}
 			}
