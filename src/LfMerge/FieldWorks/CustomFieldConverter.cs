@@ -121,6 +121,7 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
 				string genDateStr = genDate.ToLongString();
+				// LF wants single-string fields in the format { "value": "contents" }
 				fieldValue = String.IsNullOrEmpty(genDateStr) ? null :
 					new BsonDocument("value", new BsonString(genDateStr));
 				break;
@@ -130,6 +131,9 @@ namespace LfMerge.FieldWorks
 				fieldValue = new BsonInt32(data.get_IntProp(hvo, flid));
 				if (fieldValue.AsInt32 == default(Int32))
 					fieldValue = null; // Suppress int fields with 0 in them, to save Mongo DB space
+				else
+					// LF wants single-string fields in the format { "value": "contents" }
+					fieldValue = new BsonDocument("value", fieldValue);
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -315,6 +319,7 @@ namespace LfMerge.FieldWorks
 			{
 			case CellarPropertyType.GenDate:
 				{
+					// LF stores single-string fields in the format { "value": "contents" }
 					LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
 					if (valueAsLfStringField == null)
 						return false;
@@ -331,8 +336,36 @@ namespace LfMerge.FieldWorks
 				}
 
 			case CellarPropertyType.Integer:
-				data.SetInt(hvo, flid, value.AsInt32);
-				return true;
+				{
+					// LF stores single-string fields in the format { "value": "contents" }
+					// Here, "contents" should be integer, but might have become a string when LF touched it; handle both cases.
+					if (value.AsBsonDocument == null)
+						return false;
+					BsonValue fieldValue;
+					if (!value.AsBsonDocument.TryGetValue("value", out fieldValue))
+						return false;
+					if (fieldValue.BsonType == BsonType.Int32)
+					{
+						data.SetInt(hvo, flid, fieldValue.AsInt32);
+						return true;
+					}
+					else
+					{
+						LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
+						if (valueAsLfStringField == null)
+							return false;
+						string valueAsString = valueAsLfStringField.Value;
+						if (valueAsString == null)
+							return false;
+						int valueAsInt;
+						if (int.TryParse(valueAsString, out valueAsInt))
+						{
+							data.SetInt(hvo, flid, valueAsInt);
+							return true;
+						}
+						return false;
+					}
+				}
 
 			case CellarPropertyType.OwningAtomic:
 				{
