@@ -56,6 +56,7 @@ namespace LfMerge.Actions
 		private List<Tuple<int, string>> _vernacularWsIdsAndNamesInSearchOrder;
 		// private List<int> _vernacularWsIdSearchOrder;
 		// private List<string> _vernacularWsStrSearchOrder;
+		int _wsEn;
 
 		private CustomFieldConverter _customFieldConverter;
 
@@ -111,6 +112,8 @@ namespace LfMerge.Actions
 				{
 					LfWsToFdoWs(_projectRecord.InputSystems);
 				});
+
+			_wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 
 			_customFieldConverter = new CustomFieldConverter(_cache);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(_cache);
@@ -416,7 +419,8 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
 			if (lfEntry.Location != null)
 			{
-				var converter = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LocationsOA);
+				// TODO: Cache this in the instance
+				var converter = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LocationsOA, _wsEn);
 				fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
 			}
 			// Not handling fdoPronunciation.MediaFilesOS. TODO: At some point we may want to handle media files as well.
@@ -606,7 +610,7 @@ namespace LfMerge.Actions
 			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
-			fdoSense.SenseTypeRA = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
+			fdoSense.SenseTypeRA = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LexDbOA.SenseTypesOA, _wsEn).GetByKey(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestTsStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(_cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
@@ -763,7 +767,6 @@ namespace LfMerge.Actions
 		private IPartOfSpeech OptionListItemToPartOfSpeech(LfOptionListItem item, ICmPossibilityList posList, IPartOfSpeechRepository posRepo)
 		{
 			IPartOfSpeech pos = null;
-			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			if (item.Guid != null)
 			{
 				if (posRepo.TryGetObject(item.Guid.Value, out pos))
@@ -785,7 +788,7 @@ namespace LfMerge.Actions
 			{
 				// Don't simply assume FDO doesn't know about it until we search by name and abbreviation.
 				// LF PoS keys are English *only* and never translated. Try that first.
-				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Key, wsEn) as IPartOfSpeech;
+				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Key, _wsEn) as IPartOfSpeech;
 				if (pos != null)
 					return pos;
 				// Part of speech name, though, should be searched in the LF analysis language

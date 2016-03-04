@@ -57,7 +57,7 @@ namespace LfMerge.DataConverters
 			}
 			else
 			{
-				return TsStringConverter.SafeTsStringText(fdoOptionListItem.Abbreviation.get_String(ws));
+				return ConvertFdoToMongoTsStrings.SafeTsStringText(fdoOptionListItem.Abbreviation.get_String(ws));
 			}
 		}
 	}
