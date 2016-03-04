@@ -28,7 +28,7 @@ namespace LfMerge.LanguageForge.Model
 
 		// Ugh. But Mongo doesn't let you provide a ShouldSerialize() by field *type*, only by field *name*.
 		// Maybe later we can write reflection code to automatically add these to the class...
-		// public bool ShouldSerializeAuthorInfo() { return true; } // Not needed, as this is the default
+		public bool ShouldSerializeAuthorInfo() { return (AuthorInfo != null); }
 		public bool ShouldSerializeSentence() { return _ShouldSerializeLfMultiText(Sentence); }
 		public bool ShouldSerializeTranslation() { return _ShouldSerializeLfMultiText(Translation); }
 		public bool ShouldSerializeTranslationGuid() { return TranslationGuid != System.Guid.Empty; }
