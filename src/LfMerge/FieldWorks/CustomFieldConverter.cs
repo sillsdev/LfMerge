@@ -121,9 +121,10 @@ namespace LfMerge.FieldWorks
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
 				string genDateStr = genDate.ToLongString();
-				// LF wants single-string fields in the format { "value": "contents" }
+				// LF wants single-string fields in the format { "ws": { "value": "contents" } }
 				fieldValue = String.IsNullOrEmpty(genDateStr) ? null :
-					new BsonDocument("value", new BsonString(genDateStr));
+					LfMultiText.FromSingleStringMapping(
+						MagicStrings.LanguageCodeForGenDateFields, genDateStr).AsBsonDocument();
 				break;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
@@ -132,8 +133,10 @@ namespace LfMerge.FieldWorks
 				if (fieldValue.AsInt32 == default(Int32))
 					fieldValue = null; // Suppress int fields with 0 in them, to save Mongo DB space
 				else
-					// LF wants single-string fields in the format { "value": "contents" }
-					fieldValue = new BsonDocument("value", fieldValue);
+					// LF wants single-string fields in the format { "ws": { "value": "contents" } }
+					// LfMultiText.FromSingleStringMapping
+					fieldValue = LfMultiText.FromSingleStringMapping(
+						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString()).AsBsonDocument();
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -319,17 +322,14 @@ namespace LfMerge.FieldWorks
 			{
 			case CellarPropertyType.GenDate:
 				{
-					// LF stores single-string fields in the format { "value": "contents" }
-					LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
-					if (valueAsLfStringField == null)
+					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					string valueAsString = valueAsMultiText.BestString(new string[] { MagicStrings.LanguageCodeForGenDateFields });
+					if (string.IsNullOrEmpty(valueAsString))
 						return false;
-					string valueAsString = valueAsLfStringField.Value;
-					if (valueAsString == null)
-						return false;
-					GenDate genDate;
-					if (GenDate.TryParse(valueAsString, out genDate))
+					GenDate valueAsGenDate;
+					if (GenDate.TryParse(valueAsString, out valueAsGenDate))
 					{
-						data.SetGenDate(hvo, flid, genDate);
+						data.SetGenDate(hvo, flid, valueAsGenDate);
 						return true;
 					}
 					return false;
@@ -337,34 +337,17 @@ namespace LfMerge.FieldWorks
 
 			case CellarPropertyType.Integer:
 				{
-					// LF stores single-string fields in the format { "value": "contents" }
-					// Here, "contents" should be integer, but might have become a string when LF touched it; handle both cases.
-					if (value.AsBsonDocument == null)
+					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					string valueAsString = valueAsMultiText.BestString(new string[] { MagicStrings.LanguageCodeForIntFields });
+					if (string.IsNullOrEmpty(valueAsString))
 						return false;
-					BsonValue fieldValue;
-					if (!value.AsBsonDocument.TryGetValue("value", out fieldValue))
-						return false;
-					if (fieldValue.BsonType == BsonType.Int32)
+					int valueAsInt;
+					if (int.TryParse(valueAsString, out valueAsInt))
 					{
-						data.SetInt(hvo, flid, fieldValue.AsInt32);
+						data.SetInt(hvo, flid, valueAsInt);
 						return true;
 					}
-					else
-					{
-						LfStringField valueAsLfStringField = BsonSerializer.Deserialize<LfStringField>(value.AsBsonDocument);
-						if (valueAsLfStringField == null)
-							return false;
-						string valueAsString = valueAsLfStringField.Value;
-						if (valueAsString == null)
-							return false;
-						int valueAsInt;
-						if (int.TryParse(valueAsString, out valueAsInt))
-						{
-							data.SetInt(hvo, flid, valueAsInt);
-							return true;
-						}
-						return false;
-					}
+					return false;
 				}
 
 			case CellarPropertyType.OwningAtomic:
