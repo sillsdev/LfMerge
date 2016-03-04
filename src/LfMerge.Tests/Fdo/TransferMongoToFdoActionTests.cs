@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.DataConverters;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
@@ -79,7 +80,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
 			// Verify "Added" picture is now a second picture on the sense, and has 2 captions
-			LfMultiText expectedNewCaption = TransferFdoToMongoAction.ToMultiText(
+			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.ToMultiText(
 				entry.SensesOS[0].PicturesOS[1].Caption, cache.ServiceLocator.WritingSystemManager);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
