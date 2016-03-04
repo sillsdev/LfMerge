@@ -35,6 +35,8 @@ namespace LfMerge.Actions
 		private LfOptionList _lfGrammar;
 		private CustomFieldConverter _converter;
 
+		private ConvertFdoToMongoOptionListItem _convertSenseTypeOptionListItem;
+
 		public static bool InitialClone { get; set; }
 
 		public UpdateMongoDbFromFdo(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
@@ -96,7 +98,8 @@ namespace LfMerge.Actions
 
 			// Sense type
 			var fdoSenseType = _cache.LanguageProject.LexDbOA.SenseTypesOA;
-			ConvertOptionListFromFdo(project, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
+			LfOptionList lfSenseTypeOptionList = ConvertOptionListFromFdo(project, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
+			_convertSenseTypeOptionListItem = new ConvertFdoToMongoOptionListItem(lfSenseTypeOptionList, Logger);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
@@ -176,6 +179,11 @@ namespace LfMerge.Actions
 			string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultVernWs);
 			string AnalysisWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(_cache.DefaultAnalWs);
 
+			// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
+			// writing system alternatives, and simplify the process of getting a real string
+			// (as opposed to a TsString) from it.
+			int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
+
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
 			lfSense.Guid = fdoSense.Guid;
@@ -197,10 +205,6 @@ namespace LfMerge.Actions
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
 				IPartOfSpeech pos = PartOfSpeechConverter.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
-				// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
-				// writing system alternatives, and simplify the process of getting a real string
-				// (as opposed to a TsString) from it.
-				int wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 				if (pos == null || pos.Abbreviation == null)
 					lfSense.PartOfSpeech = null;
 				else
@@ -243,8 +247,7 @@ namespace LfMerge.Actions
 
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
-			if (fdoSense.SenseTypeRA != null)
-				lfSense.SenseType = LfStringField.FromString(fdoSense.SenseTypeRA.NameHierarchyString);
+			lfSense.SenseType = LfStringField.FromString(_convertSenseTypeOptionListItem.LfKeyString(fdoSense.SenseTypeRA, wsEn));
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
