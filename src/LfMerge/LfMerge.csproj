@@ -145,7 +145,6 @@
     <Compile Include="LanguageForge\Model\MongoRegistrarForLfFields.cs" />
     <Compile Include="FieldWorks\CustomFieldConverter.cs" />
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
-    <Compile Include="DataConverters\PossibilityListConverter.cs" />
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\IMongoConnection.cs" />
     <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
@@ -170,6 +169,7 @@
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\TransferFdoToMongoAction.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
+    <Compile Include="DataConverters\ConvertMongoToFdoPossibilityLists.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

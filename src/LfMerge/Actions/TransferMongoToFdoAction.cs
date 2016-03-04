@@ -416,7 +416,7 @@ namespace LfMerge.Actions
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
 			if (lfEntry.Location != null)
 			{
-				var converter = new PossibilityListConverter(_cache.LanguageProject.LocationsOA);
+				var converter = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LocationsOA);
 				fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
 			}
 			// Not handling fdoPronunciation.MediaFilesOS. TODO: At some point we may want to handle media files as well.
@@ -606,7 +606,7 @@ namespace LfMerge.Actions
 			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
-			fdoSense.SenseTypeRA = new PossibilityListConverter(_cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
+			fdoSense.SenseTypeRA = new ConvertMongoToFdoPossibilityLists(_cache.LanguageProject.LexDbOA.SenseTypesOA).GetByName(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestTsStringFromMultiText(lfSense.Source);
 			// fdoSense.StatusRA = new PossibilityListConverter(_cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.

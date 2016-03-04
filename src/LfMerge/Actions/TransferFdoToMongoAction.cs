@@ -444,7 +444,7 @@ namespace LfMerge.Actions
 				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem, fdoPronunciation.Tone);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
 				//lfEntry.Location = LfStringField.FromString(fdoPronunciation.LocationRA.AbbrAndName);
-				lfEntry.Location = LfStringField.FromString(PossibilityListConverter.BestStringFrom(fdoPronunciation.LocationRA));
+				lfEntry.Location = LfStringField.FromString(ConvertMongoToFdoPossibilityLists.BestStringFrom(fdoPronunciation.LocationRA));
 			}
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful

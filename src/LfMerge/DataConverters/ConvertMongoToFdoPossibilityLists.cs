@@ -8,11 +8,11 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.DataConverters
 {
-	public class PossibilityListConverter
+	public class ConvertMongoToFdoPossibilityLists
 	{
 		public ICmPossibilityList Possibilities { get; private set; }
 
-		public PossibilityListConverter(ICmPossibilityList possibilities)
+		public ConvertMongoToFdoPossibilityLists(ICmPossibilityList possibilities)
 		{
 			Possibilities = possibilities;
 		}
