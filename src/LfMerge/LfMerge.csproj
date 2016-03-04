@@ -170,6 +170,7 @@
     <Compile Include="DataConverters\ConvertMongoToFdoPossibilityLists.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoPartsOfSpeech.cs" />
+    <Compile Include="DataConverters\ConvertFdoToMongoPartsOfSpeech.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

@@ -102,30 +102,6 @@ namespace LfMerge.DataConverters
 			return FromAbbrevAndName(name, userWs, fallbackWs);
 		}
 
-		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa, out IPartOfSpeech secondaryPos)
-		{
-			secondaryPos = null;
-			switch (msa.ClassID)
-			{
-			case MoDerivAffMsaTags.kClassId:
-				// FDO considers the "From" PoS to be the main one, and "To" to be the secondary one
-				secondaryPos = ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
-				return ((IMoDerivAffMsa)msa).FromPartOfSpeechRA;
-			case MoDerivStepMsaTags.kClassId:
-				return ((IMoDerivStepMsa)msa).PartOfSpeechRA;
-			case MoInflAffMsaTags.kClassId:
-				return ((IMoInflAffMsa)msa).PartOfSpeechRA;
-			case MoStemMsaTags.kClassId:
-				return ((IMoStemMsa)msa).PartOfSpeechRA;
-			case MoUnclassifiedAffixMsaTags.kClassId:
-				return ((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA;
-			default:
-				// TODO: Make this a log message, not Console.WriteLine
-				Console.WriteLine("Got MSA of unknown type {0}", msa.GetType().Name);
-				return null;
-			}
-		}
-
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
 		{
 			if (msa == null)
