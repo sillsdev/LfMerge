@@ -11,14 +11,21 @@ namespace LfMerge.DataConverters
 {
 	public class TsStringConverter
 	{
-		private FdoCache _cache;
-		private int _wsEn;
+		private int[] _wsSearchOrder;
 
-		public TsStringConverter(FdoCache cache, IEnumerable<int> wsPreferences)
+		public TsStringConverter(IEnumerable<int> wsPreferences)
 		{
-			// Or should wsPreferences be a list of strings? TODO: Consider it.
-			_cache = cache;
-			_wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
+			_wsSearchOrder = wsPreferences.ToArray();
+		}
+
+		public TsStringConverter(IEnumerable<CoreWritingSystemDefinition> wsPreferences)
+		{
+			_wsSearchOrder = wsPreferences.Select(ws => ws.Handle).ToArray();
+		}
+
+		public TsStringConverter(IEnumerable<string> wsPreferences, ILgWritingSystemFactory wsf)
+		{
+			_wsSearchOrder = wsPreferences.Select(wsName => wsf.GetWsFromStr(wsName)).ToArray();
 		}
 
 		public static string SafeTsStringText(ITsString tss)
@@ -28,48 +35,24 @@ namespace LfMerge.DataConverters
 			return tss.Text;
 		}
 
-		public string AnalysisText(IMultiAccessorBase multiString)
+		public string BestString(IMultiAccessorBase multiString)
 		{
-			return SafeTsStringText(multiString.get_String(_cache.DefaultAnalWs));
-		}
-
-		public string EnglishText(IMultiAccessorBase multiString)
-		{
-			return SafeTsStringText(multiString.get_String(_wsEn));
-		}
-
-		public string PronunciationText(IMultiAccessorBase multiString)
-		{
-			return SafeTsStringText(multiString.get_String(_cache.DefaultPronunciationWs));
-		}
-
-		public string UserText(IMultiAccessorBase multiString)
-		{
-			return SafeTsStringText(multiString.get_String(_cache.DefaultUserWs));
-		}
-
-		public string VernacularText(IMultiAccessorBase multiString)
-		{
-			return SafeTsStringText(multiString.get_String(_cache.DefaultVernWs));
-		}
-
-		public string BestString(IMultiAccessorBase multiString, IEnumerable<int> wsPreferenceOrder)
-		{
+			// If this is an IMultiStringAccessor, we can just hand it off to GetBestAlternative
+			var accessor = multiString as IMultiStringAccessor;
+			if (accessor != null)
+			{
+				int wsActual;
+				return SafeTsStringText(accessor.GetBestAlternative(out wsActual, _wsSearchOrder));
+			}
+			// JUst a MultiAccessorBase? Then search manually
 			string result;
-			foreach (int wsId in wsPreferenceOrder)
+			foreach (int wsId in _wsSearchOrder)
 			{
 				result = SafeTsStringText(multiString.StringOrNull(wsId));
 				if (result != null)
 					return result;
 			}
 			return null;
-		}
-
-		public string BestString(IMultiAccessorBase multiString, IEnumerable<string> wsPreferenceOrder)
-		{
-			IEnumerable<int> wsPreferenceIds = wsPreferenceOrder
-				.Select(wsStr => _cache.WritingSystemFactory.GetWsFromStr(wsStr));
-			return BestString(multiString, wsPreferenceIds);
 		}
 	}
 }
