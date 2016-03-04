@@ -210,12 +210,12 @@ namespace LfMerge.Actions
 				else
 					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
 					lfSense.PartOfSpeech = LfStringField.FromString(
-						PartOfSpeechConverter.ToLfPosStringKey(pos, _lfGrammar, wsEn));
+						ConvertMongoToFdoOptionListItem.ToLfStringKey(pos, _lfGrammar, wsEn));
 				if (secondaryPos == null || secondaryPos.Abbreviation == null)
 					lfSense.SecondaryPartOfSpeech = null;
 				else
 					lfSense.SecondaryPartOfSpeech = LfStringField.FromString(
-						PartOfSpeechConverter.ToLfPosStringKey(secondaryPos, _lfGrammar, wsEn));
+						ConvertMongoToFdoOptionListItem.ToLfStringKey(secondaryPos, _lfGrammar, wsEn));
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)

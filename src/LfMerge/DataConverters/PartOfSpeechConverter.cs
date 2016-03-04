@@ -376,45 +376,6 @@ namespace LfMerge.DataConverters
 				return pos;
 			}
 		}
-
-		// We ask for the writing system ID for English because the calling code already has that
-		// TODO: Consider refactoring to where this is an instance method, and it looks up the
-		// writing system for English only once. Measure whether that saves significant time or not.
-		public static string ToLfPosStringKey(IPartOfSpeech pos, LfOptionList lfGrammar, int wsEn)
-		{
-			string result;
-			if (pos == null)
-				return null;
-			if (lfGrammar != null)
-			{
-				// TODO: Optimize this by keeping lfGrammar in the object instance, and building the dictionary
-				// only once.
-				Dictionary<Guid, string> lfGrammarDict = lfGrammar.Items.ToDictionary(
-					item => item.Guid.GetValueOrDefault(),
-					item => item.Key
-				);
-				if (lfGrammarDict.TryGetValue(pos.Guid, out result))
-					return result;
-				// We shouldn't get here, because the grammar list SHOULD be pre-populated.
-				// TODO: Make this a log message. (Pass an ILogger instance into the constructor first).
-				Console.WriteLine("ERROR: Got a part of speech without a corresponding LF grammar entry. " +
-					"FDO PoS '{0}' had GUID {1} but no LF grammar entry was found",
-					pos.AbbrAndName,
-					pos.Guid
-				);
-				return null;
-			}
-			if (pos.Abbreviation == null || pos.Abbreviation.get_String(wsEn) == null)
-			{
-				// Last-ditch effort
-				char ORC = '\ufffc';
-				return pos.AbbrevHierarchyString.Split(ORC).LastOrDefault();
-			}
-			else
-			{
-				return TsStringConverter.SafeTsStringText(pos.Abbreviation.get_String(wsEn));
-			}
-		}
 	}
 }
 
