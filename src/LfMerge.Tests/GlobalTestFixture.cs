@@ -2,7 +2,6 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using NUnit.Framework;
-using SIL.WritingSystems;
 
 namespace LfMerge.Tests
 {
@@ -14,13 +13,11 @@ namespace LfMerge.Tests
 		[SetUp]
 		public void InitializeAllTests()
 		{
-			Sldr.Initialize();
 		}
 
 		[TearDown]
 		public void CleanupAllTests()
 		{
-			Sldr.Cleanup();
 		}
 	}
 }
