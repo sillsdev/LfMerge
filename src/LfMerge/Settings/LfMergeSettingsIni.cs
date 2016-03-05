@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -47,8 +47,10 @@ namespace LfMerge.Settings
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
+			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
+			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoDatabaseNamePrefix, mongoMainDatabaseName);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
@@ -56,22 +58,26 @@ namespace LfMerge.Settings
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix, string mongoMainDatabaseName)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
 			StateDirectory = Path.Combine(baseDir, "state");
 
+			CommitWhenDone = true;
+
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
 			QueueDirectories = new string[queueCount];
 			QueueDirectories[(int)QueueNames.None] = null;
-			QueueDirectories[(int)QueueNames.Merge] = Path.Combine(baseDir, "mergequeue");
-			QueueDirectories[(int)QueueNames.Commit] = Path.Combine(baseDir, "commitqueue");
-			QueueDirectories[(int)QueueNames.Receive] = Path.Combine(baseDir, "receivequeue");
-			QueueDirectories[(int)QueueNames.Send] = Path.Combine(baseDir, "sendqueue");
+			QueueDirectories[(int)QueueNames.Edit] = Path.Combine(baseDir, "editqueue");
+			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(baseDir, "syncqueue");
 
+			MongoDatabaseNamePrefix = mongoDatabaseNamePrefix;
 			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);
+			MongoMainDatabaseName = mongoMainDatabaseName;
 		}
+
+		public bool CommitWhenDone { get; protected set; }
 
 		#region Equality and GetHashCode
 
@@ -81,8 +87,11 @@ namespace LfMerge.Settings
 			if (other == null)
 				return false;
 			bool ret =
+				other.CommitWhenDone == CommitWhenDone &&
 				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
+				other.MongoMainDatabaseName == MongoMainDatabaseName &&
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
 				other.TemplateDirectory == TemplateDirectory &&
@@ -96,9 +105,14 @@ namespace LfMerge.Settings
 
 		public override int GetHashCode()
 		{
-			var hash = DefaultProjectsDirectory.GetHashCode() ^
-				MongoDbHostNameAndPort.GetHashCode() ^ ProjectsDirectory.GetHashCode() ^
-				StateDirectory.GetHashCode() ^ TemplateDirectory.GetHashCode() ^
+			var hash = CommitWhenDone.GetHashCode() ^
+				DefaultProjectsDirectory.GetHashCode() ^
+				MongoDatabaseNamePrefix.GetHashCode() ^
+				MongoDbHostNameAndPort.GetHashCode() ^
+				MongoMainDatabaseName.GetHashCode() ^
+				ProjectsDirectory.GetHashCode() ^
+				StateDirectory.GetHashCode() ^
+				TemplateDirectory.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
@@ -165,6 +179,13 @@ namespace LfMerge.Settings
 		}
 
 		public string MongoDbHostNameAndPort { get; private set; }
+
+		public string MongoMainDatabaseName { get; private set; }
+
+		/// <summary>
+		/// The prefix prepended to project codes to get the Mongo database name.
+		/// </summary>
+		public string MongoDatabaseNamePrefix { get; private set; }
 
 		#region Serialization/Deserialization
 

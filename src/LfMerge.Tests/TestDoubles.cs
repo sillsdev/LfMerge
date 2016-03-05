@@ -87,6 +87,7 @@ namespace LfMerge.Tests
 			var replacementConfig = new IniData(ParsedConfig);
 			replacementConfig.Global["BaseDir"] = replacementBaseDir;
 			Initialize(replacementConfig);
+			CommitWhenDone = false;
 		}
 	}
 
@@ -113,72 +114,93 @@ namespace LfMerge.Tests
 			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
-		private Dictionary<string, Dictionary<Guid, object>> _storedDataByGuid = new Dictionary<string, Dictionary<Guid, object>>();
-		private Dictionary<string, Dictionary<ObjectId, object>> _storedDataByObjectId = new Dictionary<string, Dictionary<ObjectId, object>>();
+		private Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
+		private Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
+		private Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 
 		// For use in unit tests that want to verify what was placed into Mongo
-		public Dictionary<string, Dictionary<Guid, object>> StoredDataByGuid { get { return _storedDataByGuid; } }
-		public Dictionary<string, Dictionary<ObjectId, object>> StoredDataByObjectId { get { return _storedDataByObjectId; } }
+		public Dictionary<string, LfInputSystemRecord> StoredInputSystems { get { return _storedInputSystems; } }
+		public Dictionary<Guid, LfLexEntry> StoredLfLexEntries { get { return _storedLfLexEntries; } }
+		public Dictionary<string, LfOptionList> StoredLfOptionLists { get { return _storedLfOptionLists; } }
 
-		private void EnsureCollectionExists(string collectionName)
+		public void Reset()
 		{
-			try
-			{
-				_storedDataByGuid.Add(collectionName, new Dictionary<Guid, object>());
-			}
-			catch (ArgumentException)
-			{
-				// It's fine if it already exists
-			}
-			try
-			{
-				_storedDataByObjectId.Add(collectionName, new Dictionary<ObjectId, object>());
-			}
-			catch (ArgumentException)
-			{
-				// It's fine if it already exists
-			}
+			_storedInputSystems.Clear();
+			_storedLfLexEntries.Clear();
+			_storedLfOptionLists.Clear();
 		}
 
-		public void AddToMockData<TDocument>(string collectionName, BsonDocument mockData)
+		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
-			EnsureCollectionExists(collectionName);
-			string guidStr = mockData.GetValue("guid", Guid.Empty.ToString()).AsString;
-			ObjectId id = mockData.GetValue("_id", ObjectId.Empty).AsObjectId; // TODO: Breakpoint this and check if "_id" is the right name
-			Guid guid = Guid.Parse(guidStr);
-			TDocument data = BsonSerializer.Deserialize<TDocument>(mockData);
-			_storedDataByGuid[collectionName][guid] = data;
-			_storedDataByObjectId[collectionName][id] = data;
+			return StoredInputSystems;
 		}
 
-		private IEnumerable<TDocument> GetRecordsByGuid<TDocument>(ILfProject project, string collectionName)
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
-			Dictionary<Guid, object> fakeCollection = _storedDataByGuid[collectionName];
-			foreach (object item in fakeCollection.Values)
+			foreach (var ws in inputSystems.Keys)
+				_storedInputSystems[ws] = inputSystems[ws];
+
+			if (initialClone)
 			{
-				yield return (TDocument)item;
+				// TODO: Update field input systems too?
 			}
+			return true;
 		}
 
-		private IEnumerable<TDocument> GetRecordsByObjectId<TDocument>(ILfProject project, string collectionName)
+		public void UpdateMockLfLexEntry(BsonDocument mockData)
 		{
-			Dictionary<ObjectId, object> fakeCollection = _storedDataByObjectId[collectionName];
-			foreach (object item in fakeCollection.Values)
-			{
-				yield return (TDocument)item;
-			}
+			LfLexEntry data = BsonSerializer.Deserialize<LfLexEntry>(mockData);
+			UpdateMockLfLexEntry(data);
+		}
+
+		public void UpdateMockLfLexEntry(LfLexEntry mockData)
+		{
+			Guid guid = mockData.Guid ?? Guid.Empty;
+			_storedLfLexEntries[guid] = mockData;
+		}
+
+		public void UpdateMockOptionList(BsonDocument mockData)
+		{
+			LfOptionList data = BsonSerializer.Deserialize<LfOptionList>(mockData);
+			UpdateMockOptionList(data);
+		}
+
+		public void UpdateMockOptionList(LfOptionList mockData)
+		{
+			string listCode = mockData.Code ?? string.Empty;
+			_storedLfOptionLists[listCode] = mockData;
+		}
+
+		public IEnumerable<LfLexEntry> GetLfLexEntries()
+		{
+			return _storedLfLexEntries.Values;
+		}
+
+		public IEnumerable<LfOptionList> GetLfOptionLists()
+		{
+			return _storedLfOptionLists.Values;
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
-			EnsureCollectionExists(collectionName);
-			bool byGuid = false;
-			if (collectionName == MagicStrings.LfCollectionNameForLexicon)
-				byGuid = true;
-			if (byGuid)
-				return GetRecordsByGuid<TDocument>(project, collectionName);
-			else
-				return GetRecordsByObjectId<TDocument>(project, collectionName);
+			switch (collectionName)
+			{
+			case MagicStrings.LfCollectionNameForLexicon:
+				return (IEnumerable<TDocument>)GetLfLexEntries();
+			case MagicStrings.LfCollectionNameForOptionLists:
+				return (IEnumerable<TDocument>)GetLfOptionLists();
+			default:
+				List<TDocument> empty = new List<TDocument>();
+				return empty.AsEnumerable();
+			}
+		}
+
+		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
+		{
+			LfOptionList result;
+			if (!_storedLfOptionLists.TryGetValue(listCode, out result))
+				result = null;
+			return result;
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project)
@@ -195,41 +217,21 @@ namespace LfMerge.Tests
 			return mockDb as IMongoDatabase;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, Guid guid, string collectionName)
+		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
-			EnsureCollectionExists(collectionName);
-			_storedDataByGuid[collectionName][guid] = data;
-			// Fetching the ObjectId is more complicated, since we have to use reflection to find it
-			PropertyInfo pi = data.GetType().GetProperty("Id", typeof(ObjectId));
-			if (pi == null) // Also try fetching by property type if it didn't have the name Id
-			{
-				pi = data.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.PropertyType == typeof(ObjectId));
-			}
-			if (pi != null)
-				_storedDataByObjectId[collectionName][(ObjectId)pi.GetValue(data)] = data;
+			_storedLfLexEntries[data.Guid ?? Guid.Empty] = data;
 			return true;
 		}
 
-		public bool UpdateRecord<TDocument>(ILfProject project, TDocument data, ObjectId id, string collectionName)
+		public bool UpdateRecord(ILfProject project, LfOptionList data, string listCode)
 		{
-			EnsureCollectionExists(collectionName);
-			_storedDataByObjectId[collectionName][id] = data;
-			// Fetching the Guid is more complicated, since we have to use reflection to find it
-			PropertyInfo pi = data.GetType().GetProperty("Guid", new Type[] {typeof(Guid), typeof(Nullable<Guid>)});
-			if (pi == null) // Also try fetching by property type if it didn't have the name Guid
-			{
-				pi = data.GetType().GetProperties().FirstOrDefault(propInfo =>
-					propInfo.PropertyType == typeof(Guid) ||
-					propInfo.PropertyType == typeof(Nullable<Guid>)
-				);
-			}
-			if (pi != null)
-			{
-				Guid guid = pi.PropertyType == typeof(Guid) ?
-					(Guid)pi.GetValue(data) :
-					(pi.GetValue(data) as Nullable<Guid>).GetValueOrDefault();
-				_storedDataByGuid[collectionName][guid] = data;
-			}
+			_storedLfOptionLists[listCode ?? string.Empty] = data;
+			return true;
+		}
+
+		public bool RemoveRecord(ILfProject project, Guid guid)
+		{
+			_storedLfLexEntries.Remove(guid);
 			return true;
 		}
 	}
@@ -247,6 +249,18 @@ namespace LfMerge.Tests
 			// TODO: Could we use a Mock to do this instead?
 			return new MongoProjectRecord {
 				Id = new ObjectId(),
+				InputSystems = new Dictionary<string, LfInputSystemRecord>() {
+					{"en", new LfInputSystemRecord {
+							Abbreviation = "en",
+							Tag = "en",
+							LanguageName = "English",
+							IsRightToLeft = false } },
+					{"fr", new LfInputSystemRecord {
+							Abbreviation = "fr",
+							Tag = "fr",
+							LanguageName = "French",
+							IsRightToLeft = false } },
+				},
 				InterfaceLanguageCode = "en",
 				LanguageCode = "fr",
 				ProjectCode = project.LfProjectCode,

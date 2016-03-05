@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System.IO;
@@ -78,10 +78,8 @@ namespace LfMerge.Tests
 			}
 		}
 
-		[TestCase(QueueNames.Commit, "commitqueue")]
-		[TestCase(QueueNames.Merge, "mergequeue")]
-		[TestCase(QueueNames.Receive, "receivequeue")]
-		[TestCase(QueueNames.Send, "sendqueue")]
+		[TestCase(QueueNames.Edit, "editqueue")]
+		[TestCase(QueueNames.Synchronize, "syncqueue")]
 		[TestCase(QueueNames.None, null)]
 		public void GetQueueDirectory_Correct(QueueNames queue, string expectedDir)
 		{

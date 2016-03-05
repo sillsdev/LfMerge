@@ -50,7 +50,7 @@
   </Property>
   <Property>
     <name>db$local$ToolForAreaNamed_lists</name>
-    <value xsi:type="xsd:string">CustListEdit</value>
+    <value xsi:type="xsd:string">domainTypeEdit</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
@@ -106,6 +106,33 @@
     <doDispose>false</doDispose>
   </Property>
   <Property>
+    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_sortName</name>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_sorter</name>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_filter</name>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>db$local$ShowInvisibleSpaces</name>
+    <value xsi:type="xsd:boolean">false</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>db$local$ClickInvisibleSpace</name>
+    <value xsi:type="xsd:boolean">false</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
     <name>db$local$LexDb.Entries_sortName</name>
     <value xsi:type="xsd:string">Headword</value>
     <doPersist>true</doPersist>
@@ -153,7 +180,7 @@
   </Property>
   <Property>
     <name>db$local$entries-Index</name>
-    <value xsi:type="xsd:int">58</value>
+    <value xsi:type="xsd:int">62</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
@@ -164,110 +191,19 @@
     <doDispose>false</doDispose>
   </Property>
   <Property>
+    <name>db$local$LastBridgeUsed</name>
+    <value xsi:type="xsd:string">NoBridgeUsedYet</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
     <name>db$local$lexicon$lexiconEdit$CurrentSlicePartName</name>
-    <value xsi:type="xsd:string">MoMorphSynAnalysis-Detail-MainEdit</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
     <name>db$local$lexicon$lexiconEdit$CurrentSliceObjectGuid</name>
-    <value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">425ec2ef-f3be-4a00-be13-dbe678e6eb98</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$ShowHiddenFields-domainTypeEdit</name>
-    <value xsi:type="xsd:boolean">false</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.DomainTypes_sortName</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.DomainTypes_sorter</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.DomainTypes_filter</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$DomainTypeList-Index</name>
-    <value xsi:type="xsd:int">-1</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$lists$domainTypeEdit$CurrentSlicePartName</name>
-    <value xsi:type="xsd:string">CmPossibility-Detail-NameAllA</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$lists$domainTypeEdit$CurrentSliceObjectGuid</name>
-    <value xmlns:q2="http://microsoft.com/wsdl/types/" xsi:type="q2:guid">d7f713b6-e8cf-11d3-9764-00c04f186933</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_sortName</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_sorter</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CmPossibilityList.66911672-9396-4130-b1ef-c495ae60e6fe_filter</name>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$ShowHiddenFields-CustListEdit</name>
-    <value xsi:type="xsd:boolean">false</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$CustListList-Index</name>
-    <value xsi:type="xsd:int">1</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$lists$CustListEdit$CurrentSlicePartName</name>
-    <value xsi:type="xsd:string">CmPossibility-Detail-AbbreviationAllA</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$lists$CustListEdit$CurrentSliceObjectGuid</name>
-    <value xmlns:q3="http://microsoft.com/wsdl/types/" xsi:type="q3:guid">43b38fe1-706a-4288-9404-462daf8f283b</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$ShowInvisibleSpaces</name>
-    <value xsi:type="xsd:boolean">false</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$ClickInvisibleSpace</name>
-    <value xsi:type="xsd:boolean">false</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>db$local$LastBridgeUsed</name>
-    <value xsi:type="xsd:string">NoBridgeUsedYet</value>
+    <value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">00000000-0000-0000-0000-000000000000</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>

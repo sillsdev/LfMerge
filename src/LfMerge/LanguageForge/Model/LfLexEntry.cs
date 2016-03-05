@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ namespace LfMerge.LanguageForge.Model
 		public string MercurialSha { get; set; }
 		public DateTime DateCreated { get; set; }
 		public DateTime DateModified { get; set; }
+		public int DirtySR { get; set ; }
 
 		// Data properties
 		public LfMultiText Lexeme { get; set; }
@@ -48,5 +49,30 @@ namespace LfMerge.LanguageForge.Model
 		{
 			Senses = new List<LfSense>();
 		}
+
+		// Ugh. But Mongo doesn't let you provide a ShouldSerialize() by field *type*, only by field *name*.
+		// Maybe later we can write reflection code to automatically add these to the class...
+		public bool ShouldSerializeLexeme() { return _ShouldSerializeLfMultiText(Lexeme); }
+		public bool ShouldSerializeSenses() { return _ShouldSerializeList(Senses); }
+		// public bool ShouldSerializeAuthorInfo() { return true; } // Not needed, as this is the default
+		public bool ShouldSerializeCitationForm() { return _ShouldSerializeLfMultiText(CitationForm); }
+		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
+		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
+		public bool ShouldSerializeCvPattern() { return _ShouldSerializeLfMultiText(CvPattern); }
+		public bool ShouldSerializeEntryBibliography() { return _ShouldSerializeLfMultiText(EntryBibliography); }
+		public bool ShouldSerializeEntryRestrictions() { return _ShouldSerializeLfMultiText(EntryRestrictions); }
+		public bool ShouldSerializeEnvironments() { return _ShouldSerializeLfStringArrayField(Environments); }
+		public bool ShouldSerializeEtymology() { return _ShouldSerializeLfMultiText(Etymology); }
+		public bool ShouldSerializeEtymologyGloss() { return _ShouldSerializeLfMultiText(EtymologyGloss); }
+		public bool ShouldSerializeEtymologyComment() { return _ShouldSerializeLfMultiText(EtymologyComment); }
+		public bool ShouldSerializeEtymologySource() { return _ShouldSerializeLfMultiText(EtymologySource); }
+		public bool ShouldSerializeLiteralMeaning() { return _ShouldSerializeLfMultiText(LiteralMeaning); }
+		public bool ShouldSerializeLocation() { return _ShouldSerializeLfStringField(Location); }
+		public bool ShouldSerializeMorphologyType() { return !String.IsNullOrEmpty(MorphologyType); }
+		public bool ShouldSerializeNote() { return _ShouldSerializeLfMultiText(Note); }
+		public bool ShouldSerializePronunciation() { return _ShouldSerializeLfMultiText(Pronunciation); }
+		public bool ShouldSerializePronunciationGuid() { return PronunciationGuid != System.Guid.Empty; }
+		public bool ShouldSerializeSummaryDefinition() { return _ShouldSerializeLfMultiText(SummaryDefinition); }
+		public bool ShouldSerializeTone() { return _ShouldSerializeLfMultiText(Tone); }
 	}
 }

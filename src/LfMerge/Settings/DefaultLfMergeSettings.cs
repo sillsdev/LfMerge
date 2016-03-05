@@ -11,6 +11,8 @@ WebworkDir = webwork
 TemplatesDir = Templates
 MongoHostname = localhost
 MongoPort = 27017
+MongoMainDatabaseName = scriptureforge
+MongoDatabaseNamePrefix = sf_
 ";
 	}
 }

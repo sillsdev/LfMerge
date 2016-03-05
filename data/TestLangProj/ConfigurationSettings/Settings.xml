@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Property>
-    <name>DoingAutomatedTest</name>
-    <value xsi:type="xsd:boolean">false</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
     <name>RemoveAnalyses</name>
     <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
@@ -73,13 +67,19 @@
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>AllowInsertLinkToFile</name>
-    <value xsi:type="xsd:boolean">true</value>
+    <name>ReversalIndexGuid</name>
+    <value xsi:type="xsd:string">57d97996-4ae0-49db-8ed8-0029c481a8d5</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
     <name>UseVernSpellingDictionary</name>
+    <value xsi:type="xsd:boolean">true</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>AllowInsertLinkToFile</name>
     <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
@@ -93,12 +93,6 @@
   <Property>
     <name>PreviousToolbarVersion</name>
     <value xsi:type="xsd:string">1</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>windowState</name>
-    <value xsi:type="FormWindowState">Normal</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
@@ -136,68 +130,26 @@
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>expand/B5HxMMPXEK/eQXtOBSuag==</name>
+    <name>windowState</name>
+    <value xsi:type="FormWindowState">Maximized</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>expandA0lLSfJYWUCF7sX3aFHeNQ==</name>
     <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>expandONkwtnap9UC2MrQPUQfbVA==</name>
+    <name>expandlYY0QRpjcUy6N4roHOK7LA==</name>
     <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>expandJsC3xY9fcUmtwdr3ZCJjLw==</name>
+    <name>expandN8R57ciOAkCK8xnLeVQwPQ==</name>
     <value xsi:type="xsd:boolean">true</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>expandvpgJt4jos0aAh6tQx16JFg==</name>
-    <value xsi:type="xsd:boolean">true</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>expand2bJ0wg50P0KoH8wGRQpwYQ==</name>
-    <value xsi:type="xsd:boolean">true</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>expandk2ngUNPM3E6RQJ4lzebZDw==</name>
-    <value xsi:type="xsd:boolean">true</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>windowLocation</name>
-    <value xsi:type="Point">
-      <X>424</X>
-      <Y>287</Y>
-    </value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>windowSize</name>
-    <value xsi:type="Size">
-      <Width>956</Width>
-      <Height>607</Height>
-    </value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>DomainTypeList.listsEdit.DataTree-SliceSplitterBaseDistance</name>
-    <value xsi:type="xsd:int">150</value>
-    <doPersist>true</doPersist>
-    <doDispose>false</doDispose>
-  </Property>
-  <Property>
-    <name>CustListList.listsEdit.DataTree-SliceSplitterBaseDistance</name>
-    <value xsi:type="xsd:int">150</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
@@ -280,38 +232,44 @@
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>entries.normalEdit.DataTree-SimpleListChooser-windowState</name>
-    <value xsi:type="FormWindowState">Normal</value>
+    <name>expandvfmdmQDgc0y4Q8n+xAnZiQ==</name>
+    <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>entries.normalEdit.DataTree-SimpleListChooser-windowSize</name>
-    <value xsi:type="Size">
-      <Width>331</Width>
-      <Height>392</Height>
-    </value>
+    <name>expandxkpRtBq0B0qSuhw5RD++PQ==</name>
+    <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>entries.normalEdit.DataTree-SimpleListChooser-windowLocation</name>
-    <value xsi:type="Point">
-      <X>25</X>
-      <Y>25</Y>
-    </value>
+    <name>expand0A9tO0KbXkmHTMhhREqeow==</name>
+    <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>ReversalIndexGuid</name>
-    <value xsi:type="xsd:string">57d97996-4ae0-49db-8ed8-0029c481a8d5</value>
+    <name>expandpr26pjBowE6jY8f7oUJo6w==</name>
+    <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>
   <Property>
-    <name>BestStyleName</name>
-    <value xsi:type="xsd:string">????</value>
+    <name>expandsAcVGpmoRUuvopwpS4+B1g==</name>
+    <value xsi:type="xsd:boolean">true</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>expanddcEhNNHn6keT7H2IvUHPLg==</name>
+    <value xsi:type="xsd:boolean">true</value>
+    <doPersist>true</doPersist>
+    <doDispose>false</doDispose>
+  </Property>
+  <Property>
+    <name>expandVd1+FW+IkU2wCY5rSZkchQ==</name>
+    <value xsi:type="xsd:boolean">true</value>
     <doPersist>true</doPersist>
     <doDispose>false</doDispose>
   </Property>

@@ -1,13 +1,13 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.Logging;
 using LfMerge.Settings;
 
 namespace LfMerge.Actions
 {
-	public class MergeAction: Action
+	public class EditAction: Action
 	{
-		public MergeAction(LfMergeSettingsIni settings, ILogger logger) : base(settings, logger) {}
+		public EditAction(LfMergeSettingsIni settings, ILogger logger) : base(settings, logger) {}
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
@@ -24,4 +24,3 @@ namespace LfMerge.Actions
 		}
 	}
 }
-

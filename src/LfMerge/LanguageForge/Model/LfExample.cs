@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using MongoDB.Bson;
@@ -25,6 +25,17 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringArrayField ExamplePublishIn { get; set; }
 		public BsonDocument CustomFields { get; set; }
 		public BsonDocument CustomFieldGuids { get; set; }
+
+		// Ugh. But Mongo doesn't let you provide a ShouldSerialize() by field *type*, only by field *name*.
+		// Maybe later we can write reflection code to automatically add these to the class...
+		public bool ShouldSerializeAuthorInfo() { return (AuthorInfo != null); }
+		public bool ShouldSerializeSentence() { return _ShouldSerializeLfMultiText(Sentence); }
+		public bool ShouldSerializeTranslation() { return _ShouldSerializeLfMultiText(Translation); }
+		public bool ShouldSerializeTranslationGuid() { return TranslationGuid != System.Guid.Empty; }
+		public bool ShouldSerializeReference() { return _ShouldSerializeLfMultiText(Reference); }
+		public bool ShouldSerializeExamplePublishIn() { return _ShouldSerializeLfStringArrayField(ExamplePublishIn); }
+		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
+		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
 	}
 }
 

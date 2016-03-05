@@ -1,23 +1,29 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Model;
+using System.Collections.Generic;
 
 namespace LfMerge.MongoConnector
 {
 	[BsonIgnoreExtraElements]
 	public class MongoProjectRecord
 	{
-		public const string ProjectsCollectionName = "projects";
-
 		public ObjectId Id { get; set; }
+		public Dictionary<string, LfInputSystemRecord> InputSystems { get; set; }
 		public string InterfaceLanguageCode { get; set; }
 		public string LanguageCode { get; set; }
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }
 		public LfProjectConfig Config { get; set; }
+
+		public MongoProjectRecord()
+		{
+			InputSystems = new Dictionary<string, LfInputSystemRecord>();
+		}
 	}
 }
 
@@ -30,7 +36,6 @@ namespace LfMerge.MongoConnector
 { "_id" : "dateCreated", "value" : null }
 { "_id" : "dateModified", "value" : null }
 { "_id" : "featured", "value" : null }
-{ "_id" : "inputSystems", "value" : null }
 { "_id" : "interfaceLanguageCode", "value" : null }
 { "_id" : "isArchived", "value" : null }
 { "_id" : "language", "value" : null }

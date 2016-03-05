@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -15,9 +15,10 @@ using SIL.TestUtilities;
 
 namespace LfMerge.Tests
 {
-	class TestEnvironment : IDisposable
+	public class TestEnvironment : IDisposable
 	{
 		private readonly TemporaryFolder _languageForgeServerFolder;
+		private bool _resetLfProjectsDuringCleanup;
 		public LfMergeSettingsIni Settings;
 		public ILogger Logger;
 
@@ -29,10 +30,15 @@ namespace LfMerge.Tests
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
-			string testProjectCode = "")
+			bool resetLfProjectsDuringCleanup = true,
+			TemporaryFolder languageForgeServerFolder = null)
 		{
-			_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
-				+ Path.GetRandomFileName());
+			_resetLfProjectsDuringCleanup = resetLfProjectsDuringCleanup;
+			if (languageForgeServerFolder != null)
+				_languageForgeServerFolder = languageForgeServerFolder;
+			else
+				_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
+					+ Path.GetRandomFileName());
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
 				_languageForgeServerFolder.Path).Build();
@@ -41,13 +47,6 @@ namespace LfMerge.Tests
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
 			Directory.CreateDirectory(Settings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
-			// Only copy FW project over if we really need it, to save time on most unit tests
-			if (!String.IsNullOrEmpty(testProjectCode))
-			{
-				CopySampleFwProject(testProjectCode);
-			}
-			SIL.Reporting.Logger.Init(Path.Combine(Directory.GetCurrentDirectory(), "LfMergeTests"),
-				false);
 		}
 
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
@@ -87,10 +86,10 @@ namespace LfMerge.Tests
 		{
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
-			LanguageForgeProjectAccessor.Reset();
+			if (_resetLfProjectsDuringCleanup)
+				LanguageForgeProjectAccessor.Reset();
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
-			SIL.Reporting.Logger.ShutDown();
 		}
 
 		public string LanguageForgeFolder
@@ -114,31 +113,6 @@ namespace LfMerge.Tests
 		public void CreateProjectUpdateFolder(string projectCode)
 		{
 			Directory.CreateDirectory(ProjectPath(projectCode));
-		}
-
-		public void CopySampleFwProject(string projectCode)
-		{
-			// If we're running unit tests, we must be in output/Debug or output/Release folder, so data is two levels up
-			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
-			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectCode), LanguageForgeFolder);
-			Console.WriteLine("Just copied {0} to {1}", Path.Combine(dataDir, projectCode), LanguageForgeFolder);
-		}
-
-		public string FindGitRepoRoot(string startDir = null)
-		{
-			if (String.IsNullOrEmpty(startDir))
-				startDir = Directory.GetCurrentDirectory();
-			while (!Directory.Exists(Path.Combine(startDir, ".git")))
-			{
-				var di = new DirectoryInfo(startDir);
-				if (di.Parent == null) // We've reached the root directory
-				{
-					// Last-ditch effort: assume we're in output/Debug, even though we never found .git
-					return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", ".."));
-				}
-				startDir = Path.Combine(startDir, "..");
-			}
-			return Path.GetFullPath(startDir);
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)

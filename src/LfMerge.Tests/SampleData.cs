@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -20,6 +20,7 @@ namespace LfMerge.Tests
 			bsonOptionListData = BsonSerializer.Deserialize<BsonDocument>(jsonOptionListData);
 		}
 
+		#region JSON Test Data
 		public static string jsonTestData = @"{
 	""_id"" : ObjectId(""56332f680f8709ed0fd92d6c""),
 	""authorInfo"" : {
@@ -55,6 +56,10 @@ namespace LfMerge.Tests
 		""customField_entry_Cust_Single_ListRef"" : {
 			""value"" : ""comparative linguistics""
 		}
+	},
+	""customFieldGuids"" : {
+		""customField_entry_Cust_MultiPara"" : ""cd05615d-c47b-4e6f-8b4e-29285ababcee"",
+		""customField_entry_Cust_Single_ListRef"" : ""d7f713ad-e8cf-11d3-9764-00c04f186933""
 	},
 	""cvPattern"" : {
 		""qaa-x-kal"" : {
@@ -187,6 +192,12 @@ namespace LfMerge.Tests
 					]
 				}
 			},
+			""customFieldGuids"" : {
+				""customField_senses_Cust_Multi_ListRef"" : [
+					""85c48e72-218d-4fac-bb82-41a5eb9e268a"",
+					""43b38fe1-706a-4288-9404-462daf8f283b""
+				]
+			},
 			""definition"" : {
 				""en"" : {
 					""value"" : ""This is the English definition""
@@ -209,7 +220,18 @@ namespace LfMerge.Tests
 					""value"" : """"
 				}
 			},
-			""pictures"" : [ ],
+			""pictures"" : [
+				{ ""fileName"" : ""Picture1.jpg"" ,
+					""caption"" : {
+						""qaa-x-kal"" : {
+							""value"" : ""First Vernacular caption""
+						},
+						""en"": {
+							""value"" : ""First Analysis caption""
+						}
+					},
+					""guid"" : ""567081ab-22f5-45d6-ad25-9c24f3bb5c6f""
+				}],
 			""scientificName"" : {
 				""en"" : {
 					""value"" : ""Scientific name""
@@ -347,6 +369,9 @@ namespace LfMerge.Tests
 		}
 	}
 }";
+		#endregion
+
+		#region JSON Config Data
 		public static string jsonConfigData = @"{
 		""tasks"" : {
 			""view"" : {
@@ -2129,7 +2154,9 @@ namespace LfMerge.Tests
 		},
 		""userViews"" : { }
 	}";
+		#endregion
 
+		#region JSON Project Record Data
 		public static string jsonProjectRecordData = @"{
 	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
 	""allowAudioDownload"" : true,
@@ -2144,31 +2171,41 @@ namespace LfMerge.Tests
 			""abbreviation"" : ""qaa-fonipa-x-kal"",
 			""tag"" : ""qaa-fonipa-x-kal"",
 			""languageName"" : ""Unlisted Language"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""qaa-x-kal"" : {
 			""abbreviation"" : ""qaa-x-kal"",
 			""tag"" : ""qaa-x-kal"",
 			""languageName"" : ""Unlisted Language"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : true,
+			""analysisWS"" : false
 		},
 		""en"" : {
 			""abbreviation"" : ""en"",
 			""tag"" : ""en"",
 			""languageName"" : ""English"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""es"" : {
 			""abbreviation"" : ""es"",
 			""tag"" : ""es"",
 			""languageName"" : ""Spanish"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		},
 		""fr"" : {
 			""abbreviation"" : ""fr"",
 			""tag"" : ""fr"",
 			""languageName"" : ""French"",
-			""isRightToLeft"" : false
+			""isRightToLeft"" : false,
+			""vernacularWS"" : false,
+			""analysisWS"" : true
 		}
 	},
 	""interfaceLanguageCode"" : ""en"",
@@ -2218,7 +2255,9 @@ namespace LfMerge.Tests
 	},
 	""usersRequestingAccess"" : null
 }";
+		#endregion
 
+		#region JSON Option List Data
 		public static string jsonOptionListData = @"{
 	""_id"" : ObjectId(""56a9e2450f8709b702f15f97""),
 	""canDelete"" : false,
@@ -2280,6 +2319,7 @@ namespace LfMerge.Tests
 	],
 	""name"" : ""Part of Speech""
 }";
+		#endregion
 	}
 }
 

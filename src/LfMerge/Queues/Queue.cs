@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -124,15 +124,6 @@ namespace LfMerge.Queues
 		private IEnumerable<string> QueuedProjectsEnumerable()
 		{
 			var projects = RawQueuedProjects.ToList();
-			if (Options.Current.StopAfterFirstProject)
-			{
-				// returns only single project (if it is queued)
-				var singleProject = Options.Current.SingleProject;
-				if (projects.Contains(singleProject))
-					yield return singleProject;
-				yield break;
-			}
-
 			var prioProj = Options.Current.PriorityProject;
 			if (!string.IsNullOrEmpty(prioProj) &&
 				projects.Contains(prioProj))

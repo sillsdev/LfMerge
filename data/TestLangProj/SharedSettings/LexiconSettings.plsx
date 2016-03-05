@@ -16,10 +16,12 @@
     </WritingSystem>
     <WritingSystem id="en">
       <Abbreviation>Eng</Abbreviation>
+      <SpellCheckingId>en</SpellCheckingId>
       <SystemCollation>en</SystemCollation>
     </WritingSystem>
     <WritingSystem id="es">
       <Abbreviation>Spn</Abbreviation>
+      <SpellCheckingId>es</SpellCheckingId>
       <SystemCollation>es</SystemCollation>
     </WritingSystem>
     <WritingSystem id="fr-fonipa">
@@ -29,14 +31,15 @@
       <SystemCollation>fr</SystemCollation>
     </WritingSystem>
     <WritingSystem id="fr">
-      <Abbreviation>Frn</Abbreviation>
+      <Abbreviation>Fre</Abbreviation>
+      <SpellCheckingId>fr</SpellCheckingId>
       <SystemCollation>fr</SystemCollation>
     </WritingSystem>
     <WritingSystem id="grc">
-      <Abbreviation>Grk</Abbreviation>
+      <Abbreviation>grk</Abbreviation>
     </WritingSystem>
     <WritingSystem id="hbo">
-      <Abbreviation>Heb</Abbreviation>
+      <Abbreviation>heb</Abbreviation>
     </WritingSystem>
     <WritingSystem id="pt">
       <Abbreviation>Por</Abbreviation>
@@ -45,7 +48,7 @@
     <WritingSystem id="qaa-Zxxx-x-kal-audio">
       <Abbreviation>KalAud</Abbreviation>
       <LanguageName>Kalaba</LanguageName>
-      <SpellCheckingId>qaa_Zxxx_x_kal_AUDIO</SpellCheckingId>
+      <SpellCheckingId>qaa_Zxxx_x_kal_audio</SpellCheckingId>
     </WritingSystem>
     <WritingSystem id="qaa-fonipa-x-kal">
       <Abbreviation>KalIpa</Abbreviation>

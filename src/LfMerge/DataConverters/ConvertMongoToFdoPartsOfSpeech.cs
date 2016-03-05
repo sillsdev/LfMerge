@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using LfMerge.LanguageForge.Model;
@@ -10,7 +10,7 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.DataConverters
 {
-	public class PartOfSpeechConverter
+	public class ConvertMongoToFdoPartsOfSpeech
 	{
 		private FdoCache _cache;
 		private IPartOfSpeechRepository _posRepo;
@@ -18,7 +18,7 @@ namespace LfMerge.DataConverters
 
 		// TODO: Should we also pass in an LfProject object? And make the POSConverter responsible for
 		// updating the LF part of speech list as needed? Consider, and refactor if the answer is yes.
-		public PartOfSpeechConverter(FdoCache fdoCache)
+		public ConvertMongoToFdoPartsOfSpeech(FdoCache fdoCache)
 		{
 			_cache = fdoCache;
 			_posRepo = _cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
@@ -100,29 +100,6 @@ namespace LfMerge.DataConverters
 			IPartOfSpeech posFromGuid = FromGuidStr(guidStr);
 			if (posFromGuid != null) return posFromGuid;
 			return FromAbbrevAndName(name, userWs, fallbackWs);
-		}
-
-		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa)
-		{
-			switch (msa.ClassID)
-			{
-			case MoDerivAffMsaTags.kClassId:
-				// TODO: Turn this into a log message, and try to make the log message a little clearer to non-linguists, if possible.
-				Console.WriteLine("For derivational affix {0}, arbitrarily picking \"To\" part of speech instead of the \"From\" part of speech.", msa.GetGlossOfFirstSense());
-				return ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
-			case MoDerivStepMsaTags.kClassId:
-				return ((IMoDerivStepMsa)msa).PartOfSpeechRA;
-			case MoInflAffMsaTags.kClassId:
-				return ((IMoInflAffMsa)msa).PartOfSpeechRA;
-			case MoStemMsaTags.kClassId:
-				return ((IMoStemMsa)msa).PartOfSpeechRA;
-			case MoUnclassifiedAffixMsaTags.kClassId:
-				return ((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA;
-			default:
-				// TODO: Make this a log message, not Console.WriteLine
-				Console.WriteLine("Got MSA of unknown type {0}", msa.GetType().Name);
-				return null;
-			}
 		}
 
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
@@ -363,55 +340,16 @@ namespace LfMerge.DataConverters
 					Console.WriteLine("Error: Well-known GUID {0} for part of speech \"{1}\" was not found in GOLDEtic.xml data. " +
 						"This really shouldn't happen", guid, abbrev);
 					// Fall back to custom name creation instead
-					return CreateFromCustomName(abbrev, foundWs);
+					return CreateFromCustomName(abbrev, name, foundWs);
 				}
 				return newPos;
 			}
 			else
 			{
 				// No "official" GUID, so this is a "custom" PartOfSpeech... and some (but not necessarily all) of its ancestors might be as well.
-				var pos = CreateFromCustomName(abbrev, foundWs);
+				var pos = CreateFromCustomName(abbrev, name, foundWs);
 				Console.WriteLine("Creating part of speech with GUID {0} and full name {3} for name {1} in ws {2}.", pos.Guid, abbrev, foundWs, pos.NameHierarchyString);
 				return pos;
-			}
-		}
-
-		// We ask for the writing system ID for English because the calling code already has that
-		// TODO: Consider refactoring to where this is an instance method, and it looks up the
-		// writing system for English only once. Measure whether that saves significant time or not.
-		public static string ToLfPosStringKey(IPartOfSpeech pos, LfOptionList lfGrammar, int wsEn)
-		{
-			string result;
-			if (pos == null)
-				return null;
-			if (lfGrammar != null)
-			{
-				// TODO: Optimize this by keeping lfGrammar in the object instance, and building the dictionary
-				// only once.
-				Dictionary<Guid, string> lfGrammarDict = lfGrammar.Items.ToDictionary(
-					item => item.Guid.GetValueOrDefault(),
-					item => item.Key
-				);
-				if (lfGrammarDict.TryGetValue(pos.Guid, out result))
-					return result;
-				// We shouldn't get here, because the grammar list SHOULD be pre-populated.
-				// TODO: Make this a log message. (Pass an ILogger instance into the constructor first).
-				Console.WriteLine("ERROR: Got a part of speech without a corresponding LF grammar entry. " +
-					"FDO PoS '{0}' had GUID {1} but no LF grammar entry was found",
-					pos.AbbrAndName,
-					pos.Guid
-				);
-				return null;
-			}
-			if (pos.Abbreviation == null || pos.Abbreviation.get_String(wsEn) == null)
-			{
-				// Last-ditch effort
-				char ORC = '\ufffc';
-				return pos.AbbrevHierarchyString.Split(ORC).LastOrDefault();
-			}
-			else
-			{
-				return TsStringConverter.SafeTsStringText(pos.Abbreviation.get_String(wsEn));
 			}
 		}
 	}

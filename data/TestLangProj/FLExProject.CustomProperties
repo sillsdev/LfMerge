@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AdditionalFields>
+	<CustomField
+		class="LexEntry"
+		key="LexEntryCust Date"
+		name="Cust Date"
+		type="GenDate" />
+	<CustomField
+		class="LexEntry"
+		destclass="14"
+		key="LexEntryCust MultiPara"
+		name="Cust MultiPara"
+		type="OwningAtomic" />
+	<CustomField
+		class="LexEntry"
+		key="LexEntryCust Number"
+		name="Cust Number"
+		type="Integer" />
+	<CustomField
+		class="LexEntry"
+		helpString="This is a custom single line field"
+		key="LexEntryCust Single Line"
+		name="Cust Single Line"
+		type="String"
+		wsSelector="-1" />
+	<CustomField
+		class="LexEntry"
+		key="LexEntryCust Single Line All"
+		name="Cust Single Line All"
+		type="MultiUnicode"
+		wsSelector="-3" />
+	<CustomField
+		class="LexEntry"
+		destclass="7"
+		key="LexEntryCust Single ListRef"
+		listRoot="d7f713a0-e8cf-11d3-9764-00c04f186933"
+		name="Cust Single ListRef"
+		type="ReferenceAtomic" />
+	<CustomField
+		class="LexExampleSentence"
+		key="LexExampleSentenceCust Example"
+		name="Cust Example"
+		type="MultiUnicode"
+		wsSelector="-4" />
+	<CustomField
+		class="LexSense"
+		destclass="7"
+		helpString="Multi list reference field to a custom list."
+		key="LexSenseCust Multi ListRef"
+		listRoot="66911672-9396-4130-b1ef-c495ae60e6fe"
+		name="Cust Multi ListRef"
+		type="ReferenceCollection" />
+	<CustomField
+		class="MoForm"
+		key="MoFormCust Allomorph"
+		name="Cust Allomorph"
+		type="MultiUnicode"
+		wsSelector="-4" />
+	<CustomField
+		class="RnGenericRec"
+		destclass="7"
+		helpString="originally a standard part of Data Notebook records"
+		key="RnGenericRecWeather"
+		listRoot="2bdd1159-f9b2-11d3-977b-00c04f186933"
+		name="Weather"
+		type="ReferenceCollection"
+		wsSelector="-3" />
+</AdditionalFields>

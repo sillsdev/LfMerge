@@ -1,6 +1,7 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.IO;
 using System.Linq;
 using Autofac;
 using Chorus.Model;
@@ -11,13 +12,19 @@ using LfMerge.MongoConnector;
 using LfMerge.Queues;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibTriboroughBridgeChorusPlugin;
+using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using SIL.IO.FileLock;
+using SIL.WritingSystems;
+using SIL.Progress;
+
 
 namespace LfMerge
 {
 	public class MainClass
 	{
 		public static IContainer Container { get; internal set; }
+		public static ILogger Logger { get; set; }
 
 		internal static ContainerBuilder RegisterTypes()
 		{
@@ -32,6 +39,7 @@ namespace LfMerge
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
+			containerBuilder.RegisterType<ConsoleProgress>().AsSelf();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
@@ -47,17 +55,25 @@ namespace LfMerge
 			if (Container == null)
 				Container = RegisterTypes().Build();
 
+			Logger = Container.Resolve<ILogger>();
+			Logger.Notice("LfMerge starting with args: {0}", string.Join(" ", args));
+
 			var settings = Container.Resolve<LfMergeSettingsIni>();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
 			try
 			{
 				if (!fileLock.TryAcquireLock())
 				{
-					Console.WriteLine("Can't acquire file lock - is another instance running?");
+					Logger.Error("Can't acquire file lock - is another instance running?");
 					return;
 				}
+				Logger.Notice("Lock acquired");
 
-				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, "scriptureforge"); // TODO: Database name should come from config
+				Sldr.Initialize();
+
+				if (!CheckSetup(settings)) return;
+
+				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, settings.MongoMainDatabaseName);
 
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;
@@ -66,17 +82,24 @@ namespace LfMerge
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						queue.DequeueProject(projectCode);
+						Logger.Notice("ProjectCode {0}", projectCode);
 						var project = LanguageForgeProject.Create(settings, projectCode);
+						EnsureClone(project);
 
-						for (var action = queue.CurrentAction;
-							action != null;
-							action = action.NextAction)
-						{
-							action.Run(project);
-						}
+						queue.CurrentAction.Run(project);
+
+						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+							project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+
+						// TODO: Verify actions complete before dequeuing
+						queue.DequeueProject(projectCode);
 					}
 				}
+			}
+			catch (Exception e)
+			{
+				Logger.Debug("Unhandled Exception: \n" + e.ToString());
+				throw;
 			}
 			finally
 			{
@@ -86,6 +109,90 @@ namespace LfMerge
 				Container.Dispose();
 				Cleanup();
 			}
+
+			Logger.Notice("LfMerge finished");
+		}
+
+		public static void EnsureClone(ILfProject project)
+		{
+			using (var scope = MainClass.Container.BeginLifetimeScope())
+			{
+				var Progress = scope.Resolve<ConsoleProgress>();
+				var model = scope.Resolve<InternetCloneSettingsModel>();
+				if (project.LanguageDepotProject.Repository != null && project.LanguageDepotProject.Repository.Contains("private"))
+					model.InitFromUri("http://hg-private.languagedepot.org");
+				else
+					model.InitFromUri("http://hg-public.languagedepot.org");
+
+				var settings = Container.Resolve<LfMergeSettingsIni>();
+				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
+				model.AccountName = project.LanguageDepotProject.Username;
+				model.Password = project.LanguageDepotProject.Password;
+				model.ProjectId = project.LanguageDepotProject.Identifier;
+				model.LocalFolderName = project.LfProjectCode;
+				model.AddProgress(Progress);
+
+				try
+				{
+					if (!Directory.Exists(model.ParentDirectoryToPutCloneIn) ||
+						model.TargetLocationIsUnused)
+					{
+						project.State.SRState = ProcessingState.SendReceiveStates.RECEIVING;
+						model.DoClone();
+						if (!FinishClone(project))
+							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+
+						TransferFdoToMongoAction.InitialClone = true;
+						LfMerge.Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
+					}
+				}
+				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)
+				{
+					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+					throw;
+				}
+			}
+		}
+
+		private static bool FinishClone(ILfProject project)
+		{
+			var actualCloneResult = new ActualCloneResult();
+			var settings = Container.Resolve<LfMergeSettingsIni>();
+
+			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.LfProjectCode);
+			var newProjectFilename = Path.GetFileName(project.LfProjectCode) + SharedConstants.FwXmlExtension;
+			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
+
+			using (var scope = MainClass.Container.BeginLifetimeScope())
+			{
+				var helper = scope.Resolve<UpdateBranchHelperFlex>();
+				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(
+					MagicStrings.FDOModelVersion, actualCloneResult, cloneLocation))
+				{
+					actualCloneResult.Message = "Flex version is too old";
+				}
+
+				switch (actualCloneResult.FinalCloneResult)
+				{
+				case FinalCloneResult.ExistingCloneTargetFolder:
+					Logger.Error("Clone failed: Flex project exists: {0}", cloneLocation);
+					if (Directory.Exists(cloneLocation))
+						Directory.Delete(cloneLocation, true);
+					return false;
+				case FinalCloneResult.FlexVersionIsTooOld:
+					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.LfProjectCode);
+					if (Directory.Exists(cloneLocation))
+						Directory.Delete(cloneLocation, true);
+					return false;
+				case FinalCloneResult.Cloned:
+					break;
+				}
+
+				var projectUnifier = scope.Resolve<FlexHelper>();
+				var Progress = scope.Resolve<ConsoleProgress>();
+				projectUnifier.PutHumptyTogetherAgain(Progress, false, newFwProjectPathname);
+				return true;
+			}
 		}
 
 		/// <summary>
@@ -94,6 +201,24 @@ namespace LfMerge
 		private static void Cleanup()
 		{
 			LanguageForgeProject.DisposeProjectCache();
+			Sldr.Cleanup();
+		}
+
+		private static bool CheckSetup(LfMergeSettingsIni settings)
+		{
+			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
+			string[] folderPaths = new[] { Path.Combine(homeFolder, ".local"),
+				Path.GetDirectoryName(settings.WebWorkDirectory) };
+			foreach (string folderPath in folderPaths)
+			{
+				if (!Directory.Exists(folderPath))
+				{
+					Logger.Notice("Folder '{0}' doesn't exist", folderPath);
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 	}

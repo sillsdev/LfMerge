@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -72,6 +72,8 @@ namespace LfMerge.LanguageForge.Model
 		{
 			foreach (string ws in wsSearchOrder)
 			{
+				if (ws == null) // Shouldn't happen, but apparently does happen sometimes. TODO: Find out why.
+					continue;
 				LfStringField field;
 				if (this.TryGetValue(ws, out field) && field != null && !String.IsNullOrEmpty(field.Value))
 					return new KeyValuePair<string, string>(ws, field.Value);

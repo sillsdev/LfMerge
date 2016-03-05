@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System.Collections.Generic;
@@ -8,17 +8,19 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.DataConverters
 {
-	public class PossibilityListConverter
+	public class ConvertMongoToFdoPossibilityLists
 	{
 		public ICmPossibilityList Possibilities { get; private set; }
+		public int WsForKeys { get; private set; }
 
-		public PossibilityListConverter(ICmPossibilityList possibilities)
+		public ConvertMongoToFdoPossibilityLists(ICmPossibilityList possibilities, int wsForKeys)
 		{
 			Possibilities = possibilities;
+			WsForKeys = wsForKeys;
 		}
 
 		// If necessary, could specify name or abbrev explicitly via a second parameter.
-		public static string BestStringFrom(ICmPossibility possibility)
+		public string BestStringFrom(ICmPossibility possibility)
 		{
 			if (possibility == null)
 				return null;
@@ -27,7 +29,8 @@ namespace LfMerge.DataConverters
 				stringSource = possibility.Abbreviation;
 			if (stringSource == null)
 				return null;
-			return stringSource.BestAnalysisVernacularAlternative.Text;
+			return ConvertFdoToMongoTsStrings.SafeTsStringText(stringSource.get_String(WsForKeys));
+			//return stringSource.BestAnalysisVernacularAlternative.Text;
 		}
 
 		public ICmPossibility GetByName(string name)
@@ -39,6 +42,18 @@ namespace LfMerge.DataConverters
 		{
 			if (nameField == null) return null;
 			return GetByName(nameField.ToString());
+		}
+
+		public ICmPossibility GetByKey(string key)
+		{
+			// return Possibilities.ReallyReallyAllPossibilities.FirstOrDefault(poss => BestStringFrom(poss) == key);
+			return Possibilities.FindPossibilityByName(Possibilities.PossibilitiesOS, key, WsForKeys);
+		}
+
+		public ICmPossibility GetByKey(LfStringField keyField)
+		{
+			if (keyField == null || string.IsNullOrEmpty(keyField.ToString())) return null;
+			return GetByKey(keyField.ToString());
 		}
 
 		/// <summary>

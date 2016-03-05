@@ -1,9 +1,12 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
+using System;
 using Autofac;
 using LfMerge.Logging;
 using LfMerge.Settings;
+using SIL.FieldWorks.FDO;
+using SIL.Progress;
 
 namespace LfMerge.Actions
 {
@@ -11,6 +14,9 @@ namespace LfMerge.Actions
 	{
 		protected LfMergeSettingsIni Settings { get; set; }
 		protected ILogger Logger { get; set; }
+		protected IProgress Progress { get; set; }
+
+		private  FdoCache Cache { get; set; }
 
 		#region Action handling
 		internal static IAction GetAction(ActionNames actionName)
@@ -25,11 +31,10 @@ namespace LfMerge.Actions
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
 			containerBuilder.RegisterType<CommitAction>().Keyed<IAction>(ActionNames.Commit).SingleInstance();
-			containerBuilder.RegisterType<MergeAction>().Keyed<IAction>(ActionNames.Merge).SingleInstance();
-			containerBuilder.RegisterType<ReceiveAction>().Keyed<IAction>(ActionNames.Receive).SingleInstance();
-			containerBuilder.RegisterType<SendAction>().Keyed<IAction>(ActionNames.Send).SingleInstance();
-			containerBuilder.RegisterType<UpdateFdoFromMongoDbAction>().Keyed<IAction>(ActionNames.UpdateFdoFromMongoDb).SingleInstance();
-			containerBuilder.RegisterType<UpdateMongoDbFromFdo>().Keyed<IAction>(ActionNames.UpdateMongoDbFromFdo).SingleInstance();
+			containerBuilder.RegisterType<EditAction>().Keyed<IAction>(ActionNames.Edit).SingleInstance();
+			containerBuilder.RegisterType<SynchronizeAction>().Keyed<IAction>(ActionNames.Synchronize).SingleInstance();
+			containerBuilder.RegisterType<TransferMongoToFdoAction>().Keyed<IAction>(ActionNames.TransferMongoToFdo).SingleInstance();
+			containerBuilder.RegisterType<TransferFdoToMongoAction>().Keyed<IAction>(ActionNames.TransferFdoToMongo).SingleInstance();
 		}
 
 		#endregion
@@ -38,6 +43,7 @@ namespace LfMerge.Actions
 		{
 			Settings = settings;
 			Logger = logger;
+			Progress = MainClass.Container.Resolve<ConsoleProgress>();
 		}
 
 		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }
@@ -60,23 +66,27 @@ namespace LfMerge.Actions
 
 		public void Run(ILfProject project)
 		{
-			Logger.Notice("Action {0} just started", Name);
+			Logger.Notice("Action {0} started", Name);
 
 			if (project.State.SRState == ProcessingState.SendReceiveStates.HOLD)
+			{
+				Logger.Notice("LFMerge on hold");
 				return;
+			}
 
 			project.State.SRState = StateForCurrentAction;
 			try
 			{
 				DoRun(project);
 			}
-			// REVIEW: catch any exception and set state to hold?
-			// TODO: log exceptions
-			finally
+			catch (Exception)
 			{
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+				throw;
 			}
+
+			Logger.Notice("Action {0} finished", Name);
 		}
 
 		#endregion

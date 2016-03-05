@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 SIL International
+﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -83,22 +83,22 @@ namespace LfMerge.FieldWorks
 			}
 			catch (FdoDataMigrationForbiddenException)
 			{
-				Console.WriteLine("Error: Incompatible version (can't migrate data)");
+				MainClass.Logger.Error("FDO: Incompatible version (can't migrate data)");
 				return null;
 			}
 			catch (FdoNewerVersionException)
 			{
-				Console.WriteLine("Error: Incompatible version (version number newer than expected)");
+				MainClass.Logger.Error("FDO: Incompatible version (version number newer than expected)");
 				return null;
 			}
 			catch (FdoFileLockedException)
 			{
-				Console.WriteLine("Error: Access denied");
+				MainClass.Logger.Error("FDO: Access denied");
 				return null;
 			}
 			catch (StartupException)
 			{
-				Console.WriteLine("Error: Unknown error");
+				MainClass.Logger.Error("FDO: Unknown error");
 				return null;
 			}
 

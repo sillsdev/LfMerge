@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2015 SIL International
+﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using CommandLine;
@@ -17,17 +17,8 @@ namespace LfMerge
 			Current = this;
 		}
 
-		[Option("priority-queue", HelpText = "Queue to process first (merge|send|receive|commit)")]
-		public QueueNames PriorityQueue { get; set; }
-
-		[Option('q', "queue", HelpText = "Only process the specified queue")]
-		public QueueNames SingleQueue { get; set; }
-
-		[Option("priority-project", DefaultValue = "all", HelpText = "Project to process first")]
+		[Option('p', "project", HelpText = "Process the specified project first")]
 		public string PriorityProject { get; set; }
-
-		[Option('p', "project", HelpText = "Only process the specified project")]
-		public string SingleProject { get; set; }
 
 		[Option('h', "help", HelpText = "Display this help")]
 		public bool ShowHelp { get; set; }
@@ -37,7 +28,7 @@ namespace LfMerge
 			var help = new HelpText
 			{
 				Heading = new HeadingInfo("LfMerge"),
-				Copyright = new CopyrightInfo("SIL International", 2015),
+				Copyright = new CopyrightInfo("SIL International", 2016),
 				AdditionalNewLineAfterOption = false,
 				AddDashesToOption = true
 			};
@@ -47,40 +38,29 @@ namespace LfMerge
 
 		public string FirstProject
 		{
-			get { return string.IsNullOrEmpty(SingleProject) ? PriorityProject : SingleProject; }
+			get { return string.IsNullOrEmpty(PriorityProject) ? PriorityProject : PriorityProject; }
 		}
 
 		public bool StopAfterFirstProject
 		{
-			get { return !string.IsNullOrEmpty(SingleProject); }
-		}
-
-		private QueueNames FirstQueue
-		{
-			get
-			{
-				return SingleQueue != QueueNames.None ? SingleQueue :
-					PriorityQueue != QueueNames.None ? PriorityQueue : QueueNames.Merge;
-			}
+			get { return false; }
 		}
 
 		public ActionNames FirstAction
 		{
-			get { return GetActionForQueue(FirstQueue); }
+			get { return GetActionForQueue(QueueNames.Edit); }
 		}
 
 		public bool StopAfterFirstAction
 		{
-			get { return SingleQueue != QueueNames.None; }
+			get { return false; }
 		}
 
-		private bool AllArgumentsValid
+		private bool AllArgumentsValid(string[] args)
 		{
-			get
-			{
-				return ((PriorityProject == "all" || string.IsNullOrEmpty(SingleProject)) &&
-				(PriorityQueue == QueueNames.None || SingleQueue == QueueNames.None));
-			}
+			return (!string.IsNullOrEmpty(PriorityProject) ||
+				(args == null) ||
+				(args.Length == 0));
 		}
 
 		public ActionNames GetNextAction(ActionNames currentAction)
@@ -89,7 +69,7 @@ namespace LfMerge
 			if (!StopAfterFirstAction)
 				nextAction = ((int)currentAction) + 1;
 
-			if (nextAction > (int)ActionNames.UpdateMongoDbFromFdo)
+			if (nextAction > (int)ActionNames.TransferFdoToMongo)
 				nextAction = 0;
 			return (ActionNames)nextAction;
 		}
@@ -98,16 +78,12 @@ namespace LfMerge
 		{
 			switch (queue)
 			{
-				case QueueNames.Commit:
-					return ActionNames.Commit;
-				case QueueNames.Merge:
-					return ActionNames.UpdateFdoFromMongoDb;
+				case QueueNames.Edit:
+					return ActionNames.Edit;
 				case QueueNames.None:
 					break;
-				case QueueNames.Receive:
-					return ActionNames.Receive;
-				case QueueNames.Send:
-					return ActionNames.Send;
+				case QueueNames.Synchronize:
+					return ActionNames.Synchronize;
 			}
 			return ActionNames.None;
 		}
@@ -116,17 +92,13 @@ namespace LfMerge
 		{
 			switch (action)
 			{
-				case ActionNames.UpdateFdoFromMongoDb:
-					return QueueNames.Merge;
+				case ActionNames.TransferMongoToFdo:
+				case ActionNames.Synchronize:
+					return QueueNames.Synchronize;
 				case ActionNames.Commit:
-					return QueueNames.Commit;
-				case ActionNames.Receive:
-					return QueueNames.Receive;
-				case ActionNames.Send:
-					return QueueNames.Send;
 				case ActionNames.None:
-				case ActionNames.Merge:
-				case ActionNames.UpdateMongoDbFromFdo:
+				case ActionNames.Edit:
+				case ActionNames.TransferFdoToMongo:
 					break;
 			}
 			return QueueNames.None;
@@ -137,7 +109,7 @@ namespace LfMerge
 			var options = new Options();
 			if (Parser.Default.ParseArguments(args, options))
 			{
-				if (options.AllArgumentsValid && !options.ShowHelp)
+				if (options.AllArgumentsValid(args) && !options.ShowHelp)
 				{
 					Current = options;
 					return options;
@@ -149,4 +121,3 @@ namespace LfMerge
 		}
 	}
 }
-
