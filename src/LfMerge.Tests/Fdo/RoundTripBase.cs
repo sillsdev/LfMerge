@@ -31,8 +31,13 @@ namespace LfMerge.Tests.Fdo
 		)
 		{
 			var fieldNamesThatShouldBeDifferent = new string[] {
-				"DateCreated",
-				"DateModified",
+				"dateCreated",
+				"dateModified",
+				"createdDate",
+				"modifiedDate",
+			};
+			var fieldNamesThatAreSubdocuments = new string[] {
+				"authorInfo",
 			};
 			var differencesByName = new Dictionary<string, Tuple<string, string>>(); // Tuple of (before, after)
 			foreach (var field in itemAfterTest)
@@ -40,23 +45,52 @@ namespace LfMerge.Tests.Fdo
 				if (fieldNamesThatShouldBeDifferent.Contains(field.Name))
 					continue;
 
+				if (fieldNamesThatAreSubdocuments.Contains(field.Name))
+				{
+					IDictionary<string, Tuple<string, string>> subDocumentDifferences;
+					subDocumentDifferences = GetMongoDifferencesInSubDocument(itemBeforeTest, itemAfterTest, field.Name);
+					foreach (var subField in subDocumentDifferences)
+					{
+						string subFieldName = subField.Key;
+						differencesByName[field.Name + "." + subFieldName] = subField.Value;
+					}
+					continue;
+				}
+
 				if (!itemBeforeTest.Contains(field.Name))
 				{
 					differencesByName[field.Name] = new Tuple<string, string>(
 						null,
-						field.Value.ToString()
+						field.Value == null ? null : field.Value.ToString()
 					);
 				}
 				else if (field.Value != itemBeforeTest[field.Name])
 				{
 					differencesByName[field.Name] = new Tuple<string, string>(
 						itemBeforeTest[field.Name].ToString(),
-						field.Value.ToString()
+						field.Value == null ? null : field.Value.ToString()
 					);
 				}
 			}
 
 			return differencesByName;
+		}
+
+		protected IDictionary<string, Tuple<string, string>> GetMongoDifferencesInSubDocument(
+			BsonDocument parentDocumentBeforeTest,
+			BsonDocument parentDocumentAfterTest,
+			string fieldName
+		)
+		{
+			var emptyDict = new Dictionary<string, Tuple<string, string>>();
+			BsonDocument emptyBsonDoc = new BsonDocument();
+			BsonValue subDocumentBeforeTest = parentDocumentBeforeTest.GetValue(fieldName, emptyBsonDoc);
+			BsonValue subDocumentAfterTest = parentDocumentAfterTest.GetValue(fieldName, emptyBsonDoc);
+			if (subDocumentBeforeTest.BsonType != BsonType.Document)
+				return emptyDict;
+			if (subDocumentAfterTest.BsonType != BsonType.Document)
+				return emptyDict;
+			return GetMongoDifferences(subDocumentBeforeTest.AsBsonDocument, subDocumentAfterTest.AsBsonDocument);
 		}
 
 		protected string Repr(object value)
