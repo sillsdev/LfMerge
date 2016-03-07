@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
@@ -123,8 +124,8 @@ namespace LfMerge.Tests.Fdo
 		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
-			var customFieldConverter = new CustomFieldConverter(cache);
-			return customFieldConverter.CustomFieldsForThisCmObject(obj, objectType);
+			var convertCustomField = new ConvertCustomField(cache);
+			return convertCustomField.CustomFieldsForThisCmObject(obj, objectType);
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)

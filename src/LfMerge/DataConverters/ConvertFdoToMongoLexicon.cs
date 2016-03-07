@@ -27,7 +27,7 @@ namespace LfMerge.DataConverters
 
 		public ICmPossibilityList _fdoPartsOfSpeech;
 		public LfOptionList _lfGrammar;
-		public CustomFieldConverter _converter;
+		public ConvertCustomField _converter;
 
 		public bool InitialClone { get; set; }
 
@@ -48,7 +48,7 @@ namespace LfMerge.DataConverters
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			_converter = new CustomFieldConverter(Cache);
+			_converter = new ConvertCustomField(Cache);
 		}
 
 		// TODO: Maybe put this in constructor

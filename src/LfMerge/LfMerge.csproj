@@ -143,7 +143,6 @@
     <Compile Include="LanguageForge\Model\LfExample.cs" />
     <Compile Include="LanguageForge\Model\LfFieldBase.cs" />
     <Compile Include="LanguageForge\Model\MongoRegistrarForLfFields.cs" />
-    <Compile Include="FieldWorks\CustomFieldConverter.cs" />
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\IMongoConnection.cs" />
@@ -166,6 +165,7 @@
     <Compile Include="DataConverters\ConvertFdoToMongoOptionListItem.cs" />
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\TransferFdoToMongoAction.cs" />
+    <Compile Include="DataConverters\ConvertCustomField.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoPossibilityLists.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
