@@ -65,7 +65,6 @@ namespace LfMerge.Actions
 			}
 
 			_lexiconConverter = new ConvertFdoToMongoLexicon(project, InitialClone, Logger, _connection);
-			_lexiconConverter.DoInitialSetup();
 			_lexiconConverter.RunConversion();
 		}
 

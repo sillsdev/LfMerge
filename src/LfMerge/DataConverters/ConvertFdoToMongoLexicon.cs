@@ -25,17 +25,15 @@ namespace LfMerge.DataConverters
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
-		public ICmPossibilityList _fdoPartsOfSpeech;
-		public LfOptionList _lfGrammar;
 		public ConvertCustomField _converter;
 
 		public bool InitialClone { get; set; }
 
 		public int _wsEn;
 
-		public ConvertFdoToMongoOptionListItem _convertGrammaticalCategoryOptionListItem;
-		public ConvertFdoToMongoOptionListItem _convertSenseTypeOptionListItem;
-		public ConvertFdoToMongoOptionListItem _convertLocationOptionListItem;
+		public ConvertFdoToMongoOptionList _convertGrammaticalCategoryOptionList;
+		public ConvertFdoToMongoOptionList _convertSenseTypeOptionList;
+		public ConvertFdoToMongoOptionList _convertLocationOptionList;
 
 		public ConvertFdoToMongoLexicon(ILfProject lfProject, bool initialClone, ILogger logger, IMongoConnection connection)
 		{
@@ -43,17 +41,12 @@ namespace LfMerge.DataConverters
 			InitialClone = initialClone;
 			Logger = logger;
 			Connection = connection;
-			// TODO: What other constructor arguments do we need?
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
 			_converter = new ConvertCustomField(Cache);
-		}
 
-		// TODO: Maybe put this in constructor
-		public void DoInitialSetup()
-		{
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
 			CoreWritingSystemDefinition VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
@@ -61,20 +54,14 @@ namespace LfMerge.DataConverters
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
-			// Update grammar before updating entries, so we can reference GUIDs in parts of speech
-			_fdoPartsOfSpeech = Cache.LanguageProject.PartsOfSpeechOA;
-			_lfGrammar = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo, _fdoPartsOfSpeech);
-			_convertGrammaticalCategoryOptionListItem = new ConvertFdoToMongoOptionListItem(_lfGrammar, Logger);
+			var fdoPartsOfSpeech = Cache.LanguageProject.PartsOfSpeechOA;
+			_convertGrammaticalCategoryOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo, fdoPartsOfSpeech);
 
-			// Sense type
 			var fdoSenseType = Cache.LanguageProject.LexDbOA.SenseTypesOA;
-			LfOptionList lfSenseTypeOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
-			_convertSenseTypeOptionListItem = new ConvertFdoToMongoOptionListItem(lfSenseTypeOptionList, Logger);
+			_convertSenseTypeOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
 
-			// Location
 			var fdoLocation = Cache.LanguageProject.LocationsOA;
-			LfOptionList lfLocationOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
-			_convertLocationOptionListItem = new ConvertFdoToMongoOptionListItem(lfLocationOptionList, Logger);
+			_convertLocationOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForLocations, fdoSenseType);
 		}
 
 		public void RunConversion()
@@ -202,7 +189,7 @@ namespace LfMerge.DataConverters
 				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.Tone);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
 				//lfEntry.Location = LfStringField.FromString(fdoPronunciation.LocationRA.AbbrAndName);
-				lfEntry.Location = LfStringField.FromString(_convertLocationOptionListItem.LfKeyString(fdoPronunciation.LocationRA, _wsEn));
+				lfEntry.Location = LfStringField.FromString(_convertLocationOptionList.LfItemKeyString(fdoPronunciation.LocationRA, _wsEn));
 			}
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
@@ -299,12 +286,12 @@ namespace LfMerge.DataConverters
 				else
 					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
 					lfSense.PartOfSpeech = LfStringField.FromString(
-						_convertGrammaticalCategoryOptionListItem.LfKeyString(pos, _wsEn));
+						_convertGrammaticalCategoryOptionList.LfItemKeyString(pos, _wsEn));
 				if (secondaryPos == null || secondaryPos.Abbreviation == null)
 					lfSense.SecondaryPartOfSpeech = null;
 				else
 					lfSense.SecondaryPartOfSpeech = LfStringField.FromString(
-						_convertGrammaticalCategoryOptionListItem.LfKeyString(pos, _wsEn));
+						_convertGrammaticalCategoryOptionList.LfItemKeyString(pos, _wsEn));
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
@@ -334,7 +321,7 @@ namespace LfMerge.DataConverters
 			lfSense.SemanticDomain = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.SemanticDomainsRC);
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
-			lfSense.SenseType = LfStringField.FromString(_convertSenseTypeOptionListItem.LfKeyString(fdoSense.SenseTypeRA, _wsEn));
+			lfSense.SenseType = LfStringField.FromString(_convertSenseTypeOptionList.LfItemKeyString(fdoSense.SenseTypeRA, _wsEn));
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
@@ -492,14 +479,13 @@ namespace LfMerge.DataConverters
 			return lfWsList;
 		}
 
-		public LfOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList)
+		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
-			int _wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			Connection.UpdateRecord(project, lfChangedOptionList, listCode);
-			return lfChangedOptionList;
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger);
 		}
 	}
 }
