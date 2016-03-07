@@ -4,6 +4,7 @@ using Autofac;
 using LfMerge.Actions;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
@@ -157,9 +158,14 @@ namespace LfMerge.Tests.Fdo
 
 		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
 		{
+			string lfCustomFieldType;
+			LfConfigFieldBase lfCustomFieldSettings;
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
 			var convertCustomField = new ConvertCustomField(cache);
-			return convertCustomField.CustomFieldsForThisCmObject(obj, objectType);
+			BsonDocument result;
+			convertCustomField.getCustomFieldsForThisCmObject(obj, objectType,
+				out result, out lfCustomFieldType, out lfCustomFieldSettings);
+			return result;
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)

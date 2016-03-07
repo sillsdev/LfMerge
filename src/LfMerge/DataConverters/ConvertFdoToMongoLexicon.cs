@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
@@ -25,11 +26,11 @@ namespace LfMerge.DataConverters
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
-		public ConvertCustomField _converter;
-
 		public bool InitialClone { get; set; }
 
 		public int _wsEn;
+
+		public ConvertCustomField _convertCustomField;
 
 		public ConvertFdoToMongoOptionList _convertGrammaticalCategoryOptionList;
 		public ConvertFdoToMongoOptionList _convertSenseTypeOptionList;
@@ -45,7 +46,8 @@ namespace LfMerge.DataConverters
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			_converter = new ConvertCustomField(Cache);
+
+			_convertCustomField = new ConvertCustomField(Cache);
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
@@ -62,6 +64,9 @@ namespace LfMerge.DataConverters
 
 			var fdoLocation = Cache.LanguageProject.LocationsOA;
 			_convertLocationOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForLocations, fdoSenseType);
+
+			//Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+
 		}
 
 		public void RunConversion()
@@ -95,6 +100,28 @@ namespace LfMerge.DataConverters
 			{
 				Connection.RemoveRecord(LfProject, guid);
 			}
+
+
+			lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
+			var LfCustomFieldEntryList = lfEntries.Select(e => e.CustomFields).Where(c => c != null && c.Count() > 0);
+			Console.WriteLine("custom fields is {0}", LfCustomFieldEntryList);
+			foreach (var LfCustomFieldEntryName in LfCustomFieldEntryList.First().Names)
+			{
+				Console.WriteLine("custom field entry name is {0}", LfCustomFieldEntryName);
+			}
+
+			// Update custom fields for project config
+			IEnumerable<LfLexEntry>lfCustomFieldEntries = lfEntries.Where(e => e.CustomFields.Count() > 0);
+			Console.WriteLine("lfCustomFieldEntries is {0}", lfCustomFieldEntries);
+
+			// During initial clone, use initial FDO view preferences for custom fields.
+			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
+
+			#region custom field
+			Connection.SetCustomFieldConfig(LfProject);
+			#endregion
+
+
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
@@ -197,7 +224,11 @@ namespace LfMerge.DataConverters
 			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
+			BsonDocument customFieldsAndGuids;
+			string lfCustomFieldType;
+			LfConfigFieldBase lfCustomFieldSettings;
+			_convertCustomField.getCustomFieldsForThisCmObject(fdoEntry, "entry",
+				out customFieldsAndGuids, out lfCustomFieldType, out lfCustomFieldSettings);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -379,9 +410,28 @@ namespace LfMerge.DataConverters
 			fdoSense.LexSenseOutline;
 			*/
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoSense, "senses");
+			string lfCustomFieldType;
+			LfConfigFieldBase lfCustomFieldSettings;
+			BsonDocument customFieldsAndGuids;
+			_convertCustomField.getCustomFieldsForThisCmObject(fdoSense, "senses",
+				out customFieldsAndGuids, out lfCustomFieldType, out lfCustomFieldSettings);
+			Console.WriteLine("lf custom field type {0}", lfCustomFieldType);
+			Console.WriteLine("lf custom field settings {0}", lfCustomFieldSettings);
+
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
+
+			//if (customFieldsBson.Count() > 0)
+			//	_lfCustomFieldList.Add(customFieldsBson.Names.First(), new LfConfigMultiText());
+
+			// Role Views only set on initial clone
+			if (InitialClone)
+			{
+				;
+			}
+
+			// If custom field was deleted in Flex, delete config here
+
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
@@ -417,7 +467,11 @@ namespace LfMerge.DataConverters
 				result.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoExample, "examples");
+			string lfCustomFieldType;
+			LfConfigFieldBase lfCustomFieldSettings;
+			BsonDocument customFieldsAndGuids;
+			_convertCustomField.getCustomFieldsForThisCmObject(fdoExample, "examples",
+				out customFieldsAndGuids, out lfCustomFieldType, out lfCustomFieldSettings);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 

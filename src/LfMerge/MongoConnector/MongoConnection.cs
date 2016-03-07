@@ -192,6 +192,27 @@ namespace LfMerge.MongoConnector
 			return true;
 		}
 
+		/// <summary>
+		/// Sets custom field in the project configuration
+		/// WIP - 2016-03--7 DDW
+		/// </summary>
+		/// <returns>True if mongodb was updated</returns>
+		public bool SetCustomFieldConfig(ILfProject project)
+		{
+			#if WS_FIX
+			//UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.Config.Entry.Fields, inputSystems);
+			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
+
+			IMongoDatabase mongoDb = GetMainDatabase();
+			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
+			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
+				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
+			};
+			//collection.FindOneAndUpdate(filter, update, updateOptions);
+			#endif
+			return true;
+		}
+
 		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
 			var builder = Builders<TDocument>.Update;
 			var updates = new List<UpdateDefinition<TDocument>>();
