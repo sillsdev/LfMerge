@@ -112,7 +112,7 @@ namespace LfMerge.DataConverters
 
 			// Update custom fields for project config
 			IEnumerable<LfLexEntry>lfCustomFieldEntries = lfEntries.Where(e => e.CustomFields.Count() > 0);
-			Console.WriteLine("lfCustomFieldEntries is {0}", lfCustomFieldEntries);
+			Console.WriteLine("lfCustomFieldEntries is [{0}]", String.Join(", ", lfCustomFieldEntries.Select(entry => entry.Lexeme.FirstNonEmptyString())));
 
 			// During initial clone, use initial FDO view preferences for custom fields.
 			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();

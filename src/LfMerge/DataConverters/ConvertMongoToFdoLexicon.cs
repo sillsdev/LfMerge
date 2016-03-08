@@ -390,10 +390,25 @@ namespace LfMerge.DataConverters
 			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
 			*/
 
+			var senseGuidsFoundInLf = new HashSet<Guid>();
 			if (lfEntry.Senses != null) {
-				foreach(LfSense lfSense in lfEntry.Senses)
+				foreach (LfSense lfSense in lfEntry.Senses)
+				{
 					LfSenseToFdoSense(lfSense, fdoEntry);
+					if (lfSense.Guid != null)
+						senseGuidsFoundInLf.Add(lfSense.Guid.Value);
+				}
 			}
+
+			// If any FDO senses are *not* on the lfEntry at this point, it's because they were deleted from LF in the past.
+			var sensesToDeleteFromFdo = new HashSet<ILexSense>();
+			foreach (ILexSense fdoSense in fdoEntry.SensesOS)
+			{
+				if (!senseGuidsFoundInLf.Contains(fdoSense.Guid))
+					sensesToDeleteFromFdo.Add(fdoSense);
+			}
+			foreach (ILexSense senseToDelete in sensesToDeleteFromFdo)
+				senseToDelete.Delete();
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 		}
@@ -460,7 +475,9 @@ namespace LfMerge.DataConverters
 			if (guid == Guid.Empty)
 				guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
-			// TODO: Set instance fields
+
+			// Set the Guid on the LfSense object, so we can later track it for deletion purposes (see LfEntryToFdoEntry)
+			lfSense.Guid = fdoSense.Guid;
 
 			// var converter = new PossibilityListConverter(Cache.LanguageProject.LocationsOA);
 			// fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
