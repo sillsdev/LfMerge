@@ -34,10 +34,9 @@ Name=palaso-precise64-libpalaso-2.6 Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
-Path=SIL.Core.dll*=>lib/
-SIL.Lift.dll*=>lib/
-SIL.TestUtilities.dll*=>lib/
-SIL.WritingSystems.dll*=>lib/
+Path=Palaso.dll*=>lib/
+Palaso.Lift.dll*=>lib/
+Palaso.TestUtilities.dll*=>lib/
 L10NSharp.dll*=>lib/
 Ionic.Zip.dll*=>lib/
 Spart.dll*=>lib/
@@ -74,14 +73,12 @@ RevisionValue=latest.lastSuccessful
 Condition=Windows
 Path=SIL.dll=>lib/
 SIL.pdb=>lib/
-SIL.Core.dll=>lib/
-SIL.Core.pdb=>lib/
-SIL.Lift.dll=>lib/
-SIL.Lift.pdb=>lib/
-SIL.TestUtilities.dll=>lib/
-SIL.TestUtilities.pdb=>lib/
-SIL.WritingSystems.dll=>lib/
-SIL.WritingSystems.pdb=>lib/
+Palaso.dll=>lib/
+Palaso.pdb=>lib/
+Palaso.Lift.dll=>lib/
+Palaso.Lift.pdb=>lib/
+Palaso.TestUtilities.dll=>lib/
+Palaso.TestUtilities.pdb=>lib/
 L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 

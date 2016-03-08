@@ -30,6 +30,7 @@ else
 	PATH="${BASE}/output/${BUILD}:${PATH}"
 	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH}"
 	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
+	COMPONENTS_MAP_PATH="${BASE}/output/${BUILD}"
 fi
 
 ################################################################################################
@@ -60,7 +61,11 @@ then
 	MONO_PATH="$(pkg-config --variable=assemblies_dir libfieldworks-fdo):$MONO_PATH"
 fi
 
-LD_LIBRARY_PATH="/usr/lib/fieldworks:${LD_LIBRARY_PATH}"
+if [ "$RUNMODE" = "INSTALLED" ]
+then
+	LD_LIBRARY_PATH="/usr/lib/fieldworks:${LD_LIBRARY_PATH}"
+fi
+
 FW_ROOTCODE=/usr/share/fieldworks
 
 MONO_TRACE_LISTENER="Console.Out"
