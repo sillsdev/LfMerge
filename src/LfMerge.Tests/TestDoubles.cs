@@ -82,6 +82,11 @@ namespace LfMerge.Tests
 
 	public class LfMergeSettingsDouble: LfMergeSettingsIni
 	{
+		static LfMergeSettingsDouble()
+		{
+			ConfigDir = Path.GetRandomFileName();
+		}
+
 		public LfMergeSettingsDouble(string replacementBaseDir) : base()
 		{
 			var replacementConfig = new IniData(ParsedConfig);

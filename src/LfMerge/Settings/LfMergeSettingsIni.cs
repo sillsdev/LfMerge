@@ -23,7 +23,8 @@ namespace LfMerge.Settings
 
 		static LfMergeSettingsIni()
 		{
-			ConfigDir = "/etc/languageforge/conf/";
+			if (string.IsNullOrEmpty(ConfigDir))
+				ConfigDir = "/etc/languageforge/conf/";
 		}
 
 		public LfMergeSettingsIni()
