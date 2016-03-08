@@ -9,9 +9,9 @@ using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
+using Palaso.IO;
+using Palaso.TestUtilities;
 using NUnit.Framework;
-using SIL.IO;
-using SIL.TestUtilities;
 
 namespace LfMerge.Tests
 {

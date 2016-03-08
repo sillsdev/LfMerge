@@ -5,7 +5,7 @@ using System.IO;
 using Autofac;
 using LfMerge.Settings;
 using Chorus.sync;
-using SIL.Progress;
+using Palaso.Progress;
 
 namespace LfMerge.Actions
 {

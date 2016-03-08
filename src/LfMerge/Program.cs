@@ -14,8 +14,8 @@ using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LibTriboroughBridgeChorusPlugin;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
-using SIL.IO.FileLock;
-using SIL.Progress;
+using Palaso.IO.FileLock;
+using Palaso.Progress;
 
 
 namespace LfMerge

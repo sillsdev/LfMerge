@@ -2,8 +2,8 @@
 Type=TeamCity
 Url=http://build.palaso.org
 
-[TC::bt323]
-Name=chorus-precise64-master Continuous
+[TC::ChorusPrecise64lfmergeCont]
+Name=chorus-precise64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -13,24 +13,24 @@ LibChorus.dll* => lib/
 MercurialExtensions/**/*.py=>MercurialExtensions
 
 
-[TC::bt323]
-Name=chorus-precise64-master Continuous
+[TC::ChorusPrecise64lfmergeCont]
+Name=chorus-precise64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux32
 Path=Mercurial-i686.zip!**=>.
 
 
-[TC::bt323]
-Name=chorus-precise64-master Continuous
+[TC::ChorusPrecise64lfmergeCont]
+Name=chorus-precise64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::bt322]
-Name=palaso-precise64-master Continuous
+[TC::PalasoPrecise64v26Cont]
+Name=palaso-precise64-libpalaso-2.6 Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -52,8 +52,8 @@ Path=SIL.Linux.Logging.dll*=>lib/
 icu.net.dll*=>lib/
 
 
-[TC::bt2]
-Name=chorus-win32-master Continuous
+[TC::ChorusWin32LfmergeStrongnameCont]
+Name=chorus-win32-lfmerge-strongname Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
@@ -67,8 +67,8 @@ MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 
-[TC::bt223]
-Name=palaso-win32-master Continuous
+[TC::PalasoWin32lfmergeStrongnameContinuous]
+Name=palaso-win32-lfmerge-strongname Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
@@ -86,8 +86,8 @@ L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 
 
-[TC::FLExBridge_FLExBridgeDevelopPrecise64Continuous]
-Name=FLEx Bridge-develop-Precise64-Continuous
+[TC::FLExBridgeLfmergePrecise64Continuous]
+Name=FLEx Bridge-lfmerge-Precise64-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux

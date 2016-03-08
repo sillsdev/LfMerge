@@ -6,8 +6,8 @@ using System.Threading;
 using LfMerge.Actions;
 using LfMerge.Queues;
 using LfMerge.Settings;
+using Palaso.TestUtilities;
 using NUnit.Framework;
-using SIL.TestUtilities;
 
 namespace LfMerge.Tests.Queues
 {

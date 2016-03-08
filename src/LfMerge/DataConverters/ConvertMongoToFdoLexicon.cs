@@ -30,8 +30,8 @@ namespace LfMerge.DataConverters
 		public IMongoConnection Connection { get; set; }
 		public MongoProjectRecord ProjectRecord { get; set; }
 
-		public IEnumerable<CoreWritingSystemDefinition> AnalysisWritingSystems;
-		public IEnumerable<CoreWritingSystemDefinition> VernacularWritingSystems;
+		public IEnumerable<IWritingSystem> AnalysisWritingSystems;
+		public IEnumerable<IWritingSystem> VernacularWritingSystems;
 
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
@@ -124,8 +124,8 @@ namespace LfMerge.DataConverters
 		/// <param name="lfWsList">List of LF input systems.</param>
 		public void LfWsToFdoWs(Dictionary<string, LfInputSystemRecord> lfWsList)
 		{
-			WritingSystemManager wsm = Cache.ServiceLocator.WritingSystemManager;
-			if (wsm == null)
+			IWritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
+			if (wsManager == null)
 			{
 				Logger.Error("Failed to find the writing system manager");
 				return;
@@ -135,7 +135,7 @@ namespace LfMerge.DataConverters
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
-				CoreWritingSystemDefinition ws;
+				IWritingSystem ws;
 
 				// It would be nice to call this to add to both analysis and vernacular WS.
 				// But we need the flexibility of bringing in LF WS properties.
@@ -149,18 +149,18 @@ namespace LfMerge.DataConverters
 				}
 				*/
 
-				if (wsm.TryGet(lfWs.Tag, out ws))
+				if (wsManager.TryGet(lfWs.Tag, out ws))
 				{
 					ws.Abbreviation = lfWs.Abbreviation;
 					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsm.Replace(ws);
+					wsManager.Replace(ws);
 				}
 				else
 				{
-					ws = wsm.Create(lfWs.Tag);
+					ws = wsManager.Create(lfWs.Tag);
 					ws.Abbreviation = lfWs.Abbreviation;
 					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsm.Set(ws);
+					wsManager.Set(ws);
 
 					// LF doesn't distinguish between vernacular/analysis WS, so we'll
 					// only assign the project language code to vernacular.
@@ -183,14 +183,14 @@ namespace LfMerge.DataConverters
 				return null;
 			}
 
-			IEnumerable<CoreWritingSystemDefinition> wsesToSearch = isAnalysisField ?
+			IEnumerable<IWritingSystem> wsesToSearch = isAnalysisField ?
 				Cache.LanguageProject.AnalysisWritingSystems :
 				Cache.LanguageProject.VernacularWritingSystems;
 //			List<Tuple<int, string>> wsesToSearch = isAnalysisField ?
 //				_analysisWsIdsAndNamesInSearchOrder :
 //				_vernacularWsIdsAndNamesInSearchOrder;
 
-			foreach (CoreWritingSystemDefinition ws in wsesToSearch)
+			foreach (IWritingSystem ws in wsesToSearch)
 			{
 				LfStringField field;
 				if (input.TryGetValue(ws.Id, out field) && !String.IsNullOrEmpty(field.Value))

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-
 using System.IO;
 using IniParser.Model;
 using LfMerge.Queues;
 using LfMerge.Settings;
+using Palaso.TestUtilities;
 using NUnit.Framework;
-using SIL.TestUtilities;
 
 namespace LfMerge.Tests
 {

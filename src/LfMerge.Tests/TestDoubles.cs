@@ -15,7 +15,7 @@ using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
-using SIL.Progress;
+using Palaso.Progress;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;

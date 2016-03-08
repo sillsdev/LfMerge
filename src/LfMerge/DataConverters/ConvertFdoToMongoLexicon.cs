@@ -56,8 +56,8 @@ namespace LfMerge.DataConverters
 		{
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
-			CoreWritingSystemDefinition VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			CoreWritingSystemDefinition AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			IWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			IWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
@@ -128,7 +128,7 @@ namespace LfMerge.DataConverters
 			return LfMultiText.FromFdoMultiString(fdoMultiString, Cache.ServiceLocator.WritingSystemManager);
 		}
 
-		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, WritingSystemManager fdoWritingSystemManager)
+		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, IWritingSystemManager fdoWritingSystemManager)
 		{
 			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
@@ -139,7 +139,7 @@ namespace LfMerge.DataConverters
 			if (fdoEntry == null) return null;
 			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
-			CoreWritingSystemDefinition AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultVernWs);
 
 			var lfEntry = new LfLexEntry();
@@ -267,8 +267,8 @@ namespace LfMerge.DataConverters
 		{
 			var lfSense = new LfSense();
 
-			CoreWritingSystemDefinition VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			CoreWritingSystemDefinition AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
@@ -408,7 +408,7 @@ namespace LfMerge.DataConverters
 		{
 			LfExample result = new LfExample();
 
-			CoreWritingSystemDefinition VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			result.Guid = fdoExample.Guid;
 			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
@@ -469,8 +469,8 @@ namespace LfMerge.DataConverters
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
-			IList<CoreWritingSystemDefinition> vernacularWSList = Cache.LanguageProject.CurrentVernacularWritingSystems;
-			IList<CoreWritingSystemDefinition> analysisWSList = Cache.LanguageProject.CurrentAnalysisWritingSystems;
+			IList<IWritingSystem> vernacularWSList = Cache.LanguageProject.CurrentVernacularWritingSystems;
+			IList<IWritingSystem> analysisWSList = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var fdoWs in Cache.LanguageProject.AllWritingSystems)
@@ -482,12 +482,13 @@ namespace LfMerge.DataConverters
 					Abbreviation = fdoWs.Abbreviation,
 					IsRightToLeft = fdoWs.RightToLeftScript,
 					LanguageName = fdoWs.LanguageName,
-					Tag = fdoWs.LanguageTag,
+					// Tag = fdoWs.LanguageTag,  // This is FDO 9.0+ only. In 8.2 it was fdoWs.Id
+					Tag = fdoWs.Id,
 					VernacularWS = vernacularWSList.Contains(fdoWs),
 					AnalysisWS = analysisWSList.Contains(fdoWs)
 				};
 
-				lfWsList.Add(fdoWs.LanguageTag, lfWs);
+				lfWsList.Add(fdoWs.Id, lfWs);
 			}
 			return lfWsList;
 		}

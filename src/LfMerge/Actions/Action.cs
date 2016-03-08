@@ -1,12 +1,11 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-
 using System;
 using Autofac;
 using LfMerge.Logging;
 using LfMerge.Settings;
+using Palaso.Progress;
 using SIL.FieldWorks.FDO;
-using SIL.Progress;
 
 namespace LfMerge.Actions
 {

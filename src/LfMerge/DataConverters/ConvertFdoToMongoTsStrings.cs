@@ -18,14 +18,14 @@ namespace LfMerge.DataConverters
 			_wsSearchOrder = wsPreferences.ToArray();
 		}
 
-		public ConvertFdoToMongoTsStrings(IEnumerable<CoreWritingSystemDefinition> wsPreferences)
+		public ConvertFdoToMongoTsStrings(IEnumerable<IWritingSystem> wsPreferences)
 		{
 			_wsSearchOrder = wsPreferences.Select(ws => ws.Handle).ToArray();
 		}
 
-		public ConvertFdoToMongoTsStrings(IEnumerable<string> wsPreferences, ILgWritingSystemFactory wsf)
+		public ConvertFdoToMongoTsStrings(IEnumerable<string> wsPreferences, IWritingSystemManager wsManager)
 		{
-			_wsSearchOrder = wsPreferences.Select(wsName => wsf.GetWsFromStr(wsName)).ToArray();
+			_wsSearchOrder = wsPreferences.Select(wsName => wsManager.GetWsFromStr(wsName)).ToArray();
 		}
 
 		public static string SafeTsStringText(ITsString tss)

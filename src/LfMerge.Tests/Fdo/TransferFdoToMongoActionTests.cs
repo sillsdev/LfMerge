@@ -68,13 +68,13 @@ namespace LfMerge.Tests.Fdo
 
 			foreach (var fdoVernacularWs in languageProj.CurrentVernacularWritingSystems)
 			{
-				if (fdoVernacularWs.LanguageTag != notVernacularWs)
-					Assert.That(lfWsList[fdoVernacularWs.LanguageTag].VernacularWS);
+				if (fdoVernacularWs.Id != notVernacularWs)
+					Assert.That(lfWsList[fdoVernacularWs.Id].VernacularWS);
 			}
 			Assert.That(languageProj.CurrentVernacularWritingSystems.Count, Is.EqualTo(expectedNumVernacularWS));
 
 			foreach (var fdoAnalysisWs in languageProj.CurrentAnalysisWritingSystems)
-				Assert.That(lfWsList[fdoAnalysisWs.LanguageTag].AnalysisWS);
+				Assert.That(lfWsList[fdoAnalysisWs.Id].AnalysisWS);
 			Assert.That(languageProj.CurrentAnalysisWritingSystems.Count, Is.EqualTo(expectedNumAnalysisWS));
 		}
 

@@ -43,8 +43,8 @@
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Core">
-      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    <Reference Include="Palaso">
+      <Package>libfieldworks-fdo</Package>
     </Reference>
     <Reference Include="LibFLExBridge-ChorusPlugin">
       <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
@@ -79,9 +79,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="INIFileParser">
       <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems">
-      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
       <Package>libfieldworks-fdo</Package>

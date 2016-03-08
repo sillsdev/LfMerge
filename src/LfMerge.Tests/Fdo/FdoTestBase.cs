@@ -4,11 +4,11 @@ using Autofac;
 using LfMerge.Actions;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
+using Palaso.IO;
+using Palaso.TestUtilities;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
-using SIL.IO;
-using SIL.TestUtilities;
 using System;
 using System.IO;
 

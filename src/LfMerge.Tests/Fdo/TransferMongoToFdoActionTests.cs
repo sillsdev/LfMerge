@@ -47,7 +47,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.IsNotNull(entry);
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 			Assert.That(entry.ShortName, Is.EqualTo(expectedShortName));
-			Assert.That(entry.SensesOS[0].DefinitionOrGloss.BestAnalysisAlternative.Text, Is.EqualTo(newDefinition));
+			Assert.That(entry.SensesOS[0].Definition.BestAnalysisAlternative.Text, Is.EqualTo(newDefinition));
 		}
 
 		[Test]
