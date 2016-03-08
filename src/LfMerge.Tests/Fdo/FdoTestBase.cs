@@ -127,7 +127,8 @@ namespace LfMerge.Tests.Fdo
 		[TearDown]
 		public void Teardown()
 		{
-			_undoHelper.Dispose(); // This executes the undo action on the FDO project
+			if (_undoHelper != null)
+				_undoHelper.Dispose(); // This executes the undo action on the FDO project
 			_conn.Reset();
 			_env.Dispose();
 		}

@@ -29,8 +29,8 @@ Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::PalasoPrecise64v26Cont]
-Name=palaso-precise64-libpalaso-2.6 Continuous
+[TC::PalasoPrecise64lfmergeContinuous]
+Name=palaso-precise64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux

@@ -46,9 +46,6 @@
     <Reference Include="LibFLExBridge-ChorusPlugin">
       <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso">
-      <Package>libfieldworks-fdo</Package>
-    </Reference>
     <Reference Include="Palaso.TestUtilities">
       <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
     </Reference>
@@ -56,7 +53,7 @@
       <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -80,16 +77,19 @@
       <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="BasicUtils">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="CoreImpl">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="COMInterfaces">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
+    </Reference>
+    <Reference Include="Palaso">
+      <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

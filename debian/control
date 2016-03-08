@@ -10,14 +10,14 @@ Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  wget,
  pkg-config,
  mono-sil,
- libfieldworks-fdo (>= 9.0.0~)
+ lfmerge-fdo
 
 Package: lfmerge
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  pkg-config,
  mono-sil,
- libfieldworks-fdo (>= 9.0.0~)
+ lfmerge-fdo
 Description: LanguageForge Send/Receive
  lfmerge is a tool that is used by the LanguageForge server
  to share data with language depot. Since this tool makes assumptions

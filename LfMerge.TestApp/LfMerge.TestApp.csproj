@@ -33,9 +33,7 @@
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="FDO">
-      <Package>libfieldworks-fdo</Package>
-    </Reference>
+    <Reference Include="FDO" />
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
