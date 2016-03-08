@@ -43,9 +43,6 @@
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso">
-      <Package>libfieldworks-fdo</Package>
-    </Reference>
     <Reference Include="LibFLExBridge-ChorusPlugin">
       <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
     </Reference>
@@ -53,16 +50,16 @@
       <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="BasicUtils">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="COMInterfaces">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="CoreImpl">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -81,10 +78,13 @@
       <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
-      <Package>libfieldworks-fdo</Package>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="SIL.Linux.Logging">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso">
+      <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
