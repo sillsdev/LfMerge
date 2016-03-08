@@ -210,7 +210,7 @@ namespace LfMerge.Tests.Fdo
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
-			var converter = new ConvertFdoToMongoOptionList(null, wsEn, MagicStrings.LfOptionListCodeForGrammaticalInfo, null);
+			var converter = new ConvertFdoToMongoOptionList(null, wsEn, MagicStrings.LfOptionListCodeForGrammaticalInfo, new LfMerge.Logging.NullLogger());
 			LfOptionList lfGrammar = converter.PrepareOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
 			LfOptionListItem itemForTest = lfGrammar.Items.First();
 			Guid g = itemForTest.Guid.Value;
