@@ -6,19 +6,22 @@ using System.Linq;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.Common.COMInterfaces;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Logging;
 
 namespace LfMerge.DataConverters
 {
 	public class ConvertFdoToMongoOptionList
 	{
 		protected int _wsForKeys;
-
 		protected LfOptionList _lfOptionList;
 		protected Dictionary<Guid, LfOptionListItem> _lfOptionListItemByGuid;
 		protected Dictionary<string, LfOptionListItem> _lfOptionListItemByStrKey;
+		protected Dictionary<Guid, string> _lfOptionListItemKeyByGuid;
+		protected ILogger _logger;
 
-		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode)
+		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger)
 		{
+			_logger = logger;
 			_wsForKeys = wsForKeys;
 			if (lfOptionList == null)
 				lfOptionList = MakeEmptyOptionList(listCode);
@@ -55,13 +58,46 @@ namespace LfMerge.DataConverters
 			}
 
 			var lfNewOptionList = CloneOptionListWithEmptyItems(_lfOptionList);
-			// We filter by "Does FDO have a PoS with corresponding GUID?" because if it doesn't,
-			// then that part of speech was probably deleted in FDO, so we should delete it here.
+			// We filter by "Does FDO have an option list item with corresponding GUID?" because if it doesn't,
+			// then that option list item was probably deleted in FDO, so we should delete it here.
 			lfNewOptionList.Items = _lfOptionListItemByGuid.Values
 				.Where(item => fdoOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
 				.ToList();
 
 			return lfNewOptionList;
+		}
+
+		public string LfItemKeyString(ICmPossibility fdoOptionListItem, int ws)
+		{
+			string result;
+			if (fdoOptionListItem == null)
+				return null;
+
+			if (_lfOptionList != null)
+			{
+				if (_lfOptionListItemKeyByGuid.TryGetValue(fdoOptionListItem.Guid, out result))
+					return result;
+
+				// We shouldn't get here, because the option list SHOULD be pre-populated.
+				_logger.Error("Got an option list item without a corresponding LF option list item. " +
+					"In option list name '{0}', list code '{1}': " +
+					"FDO option list item '{2}' had GUID {3} but no LF option list item was found",
+					_lfOptionList.Name, _lfOptionList.Code,
+					fdoOptionListItem.AbbrAndName, fdoOptionListItem.Guid
+				);
+				return null;
+			}
+
+			if (fdoOptionListItem.Abbreviation == null || fdoOptionListItem.Abbreviation.get_String(ws) == null)
+			{
+				// Last-ditch effort
+				char ORC = '\ufffc';
+				return fdoOptionListItem.AbbrevHierarchyString.Split(ORC).LastOrDefault();
+			}
+			else
+			{
+				return ConvertFdoToMongoTsStrings.SafeTsStringText(fdoOptionListItem.Abbreviation.get_String(ws));
+			}
 		}
 
 		protected LfOptionListItem CmPossibilityToOptionListItem(ICmPossibility pos)
@@ -78,6 +114,12 @@ namespace LfMerge.DataConverters
 				.ToDictionary(item => item.Guid.Value, item => item);
 			_lfOptionListItemByStrKey = lfOptionList.Items
 				.ToDictionary(item => item.Key, item => item);
+			_lfOptionListItemKeyByGuid = _lfOptionList.Items
+				.Where(item => item.Guid != null)
+				.ToDictionary(
+					item => item.Guid.GetValueOrDefault(),
+					item => item.Key
+				);
 		}
 
 		protected LfOptionList MakeEmptyOptionList(string listCode)

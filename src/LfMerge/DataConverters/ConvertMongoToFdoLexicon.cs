@@ -35,7 +35,7 @@ namespace LfMerge.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
-		private CustomFieldConverter _customFieldConverter;
+		private ConvertCustomField _convertCustomField;
 		private LfOptionList _lfGrammar;
 		private Dictionary<string, LfOptionListItem> _lfGrammarByKey;
 
@@ -55,7 +55,7 @@ namespace LfMerge.DataConverters
 			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
 
-			_customFieldConverter = new CustomFieldConverter(Cache);
+			_convertCustomField = new ConvertCustomField(Cache);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
 
 			_lfGrammar = Connection.GetLfOptionListByCode(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo);
@@ -85,7 +85,7 @@ namespace LfMerge.DataConverters
 			// Set English ws handle again in case it changed
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
 
-			_customFieldConverter = new CustomFieldConverter(Cache);
+			_convertCustomField = new ConvertCustomField(Cache);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
@@ -395,7 +395,7 @@ namespace LfMerge.DataConverters
 					LfSenseToFdoSense(lfSense, fdoEntry);
 			}
 
-			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
+			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 		}
 
 		public void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
@@ -420,7 +420,7 @@ namespace LfMerge.DataConverters
 			// TODO: Set t.AvailableWritingSystems appropriately
 			// Ignoring t.Status since LF won't touch it
 
-			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
+			_convertCustomField.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
 		}
 
 		/// <summary>
@@ -522,7 +522,7 @@ namespace LfMerge.DataConverters
 			// fdoSense.StatusRA = new PossibilityListConverter(Cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
 			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
 
-			_customFieldConverter.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
+			_convertCustomField.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 		}
 
 		public Guid GuidFromLiftId(string liftId)

@@ -12,15 +12,15 @@ using SIL.FieldWorks.FDO.Application;
 using SIL.FieldWorks.FDO.Infrastructure;
 using SIL.FieldWorks.Common.COMInterfaces;
 
-namespace LfMerge.FieldWorks
+namespace LfMerge.DataConverters
 {
-	public class CustomFieldConverter
+	public class ConvertCustomField
 	{
 		private FdoCache cache;
 		private IFdoServiceLocator servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 
-		public CustomFieldConverter(FdoCache cache)
+		public ConvertCustomField(FdoCache cache)
 		{
 			this.cache = cache;
 			servLoc = cache.ServiceLocator;
