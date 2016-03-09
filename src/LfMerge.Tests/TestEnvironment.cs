@@ -39,6 +39,7 @@ namespace LfMerge.Tests
 			else
 				_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
 					+ Path.GetRandomFileName());
+			Environment.SetEnvironmentVariable("FW_CommonAppData", _languageForgeServerFolder.Path);
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
 				_languageForgeServerFolder.Path).Build();
