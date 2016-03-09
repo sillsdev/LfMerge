@@ -94,6 +94,13 @@ namespace LfMerge.Tests.Fdo
 			return GetMongoDifferences(subDocumentBeforeTest.AsBsonDocument, subDocumentAfterTest.AsBsonDocument);
 		}
 
+		// Useful to call right before checking if difference dict is empty. Will only produce output if there are any differences.
+		protected void PrintDifferences(IDictionary<string, Tuple<string, string>> differences)
+		{
+			foreach (var diff in differences)
+				Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);
+		}
+
 		protected string Repr(object value)
 		{
 			if (value == null)

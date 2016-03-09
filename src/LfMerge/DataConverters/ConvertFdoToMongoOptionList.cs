@@ -40,7 +40,7 @@ namespace LfMerge.DataConverters
 		{
 			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
 				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
-				.ToDictionary(poss => poss.Guid, poss => poss);
+				.ToDictionary(poss => poss.Guid);
 
 			foreach (ICmPossibility poss in fdoOptionListByGuid.Values)
 			{
@@ -98,6 +98,13 @@ namespace LfMerge.DataConverters
 			{
 				return ConvertFdoToMongoTsStrings.SafeTsStringText(fdoOptionListItem.Abbreviation.get_String(ws));
 			}
+		}
+
+		// For multi-option lists; use like "LfStringArrayField.FromStrings(_converter.LfItemKeyStrings(PossibilityList), _wsEn)".
+		public IEnumerable<string> LfItemKeyStrings(IEnumerable<ICmPossibility> fdoOptionListItems, int ws)
+		{
+			foreach (ICmPossibility fdoOptionListItem in fdoOptionListItems)
+				yield return LfItemKeyString(fdoOptionListItem, ws);
 		}
 
 		protected LfOptionListItem CmPossibilityToOptionListItem(ICmPossibility pos)

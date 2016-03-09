@@ -32,9 +32,22 @@ namespace LfMerge.DataConverters
 
 		public ConvertCustomField _convertCustomField;
 
-		public ConvertFdoToMongoOptionList _convertGrammaticalCategoryOptionList;
-		public ConvertFdoToMongoOptionList _convertSenseTypeOptionList;
-		public ConvertFdoToMongoOptionList _convertLocationOptionList;
+		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
+		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+		public const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
+		public const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
+//		public const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
+		public const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
+		public const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
+//		public const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
+		public const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
+		public const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
+		public const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
+		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+
+		public IDictionary<string, ConvertFdoToMongoOptionList> ListConverters;
+
+		public ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
 		public ConvertFdoToMongoLexicon(ILfProject lfProject, bool initialClone, ILogger logger, IMongoConnection connection)
 		{
@@ -56,14 +69,16 @@ namespace LfMerge.DataConverters
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
-			var fdoPartsOfSpeech = Cache.LanguageProject.PartsOfSpeechOA;
-			_convertGrammaticalCategoryOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo, fdoPartsOfSpeech);
-
-			var fdoSenseType = Cache.LanguageProject.LexDbOA.SenseTypesOA;
-			_convertSenseTypeOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForSenseTypes, fdoSenseType);
-
-			var fdoLocation = Cache.LanguageProject.LocationsOA;
-			_convertLocationOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForLocations, fdoSenseType);
+			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
+			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
+			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, Cache.LanguageProject.SemanticDomainListOA);
+			ListConverters[AcademicDomainListCode] = ConvertOptionListFromFdo(LfProject, AcademicDomainListCode, Cache.LanguageProject.LexDbOA.DomainTypesOA);
+			ListConverters[LocationListCode] = ConvertOptionListFromFdo(LfProject, LocationListCode, Cache.LanguageProject.LocationsOA);
+			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, Cache.LanguageProject.LexDbOA.UsageTypesOA);
+			ListConverters[SenseTypeListCode] = ConvertOptionListFromFdo(LfProject, SenseTypeListCode, Cache.LanguageProject.LexDbOA.SenseTypesOA);
+			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, Cache.LanguageProject.AnthroListOA);
+			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, Cache.LanguageProject.LexDbOA.PublicationTypesOA);
+			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, Cache.LanguageProject.StatusOA);
 
 			//Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 
@@ -148,6 +163,22 @@ namespace LfMerge.DataConverters
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
 		}
 
+		public LfStringField ToStringField(string listCode, ICmPossibility fdoPoss)
+		{
+			return LfStringField.FromString(ListConverters[listCode].LfItemKeyString(fdoPoss, _wsEn));
+		}
+
+		public LfStringArrayField ToStringArrayField(string listCode, IEnumerable<ICmPossibility> fdoPossCollection)
+		{
+			return LfStringArrayField.FromStrings(ListConverters[listCode].LfItemKeyStrings(fdoPossCollection, _wsEn));
+		}
+
+		// Special case: LF sense Status field is a StringArray, but FDO sense status is single possibility
+		public LfStringArrayField ToStringArrayField(string listCode, ICmPossibility fdoPoss)
+		{
+			return LfStringArrayField.FromSingleString(ListConverters[listCode].LfItemKeyString(fdoPoss, _wsEn));
+		}
+
 		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
 		{
 			if (fdoEntry == null) return null;
@@ -215,8 +246,7 @@ namespace LfMerge.DataConverters
 				lfEntry.CvPattern = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.CVPattern);
 				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.Tone);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
-				//lfEntry.Location = LfStringField.FromString(fdoPronunciation.LocationRA.AbbrAndName);
-				lfEntry.Location = LfStringField.FromString(_convertLocationOptionList.LfItemKeyString(fdoPronunciation.LocationRA, _wsEn));
+				lfEntry.Location = ToStringField(LocationListCode, fdoPronunciation.LocationRA);
 			}
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
@@ -295,8 +325,8 @@ namespace LfMerge.DataConverters
 			lfSense.Definition = ToMultiText(fdoSense.Definition);
 
 			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
-			lfSense.AcademicDomains = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.DomainTypesRC);
-			lfSense.AnthropologyCategories = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.AnthroCodesRC);
+			lfSense.AcademicDomains = ToStringArrayField(AcademicDomainListCode, fdoSense.DomainTypesRC);
+			lfSense.AnthropologyCategories = ToStringArrayField(AnthroCodeListCode, fdoSense.AnthroCodesRC);
 			lfSense.AnthropologyNote = ToMultiText(fdoSense.AnthroNote);
 			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
@@ -309,20 +339,8 @@ namespace LfMerge.DataConverters
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
 				IPartOfSpeech pos = ConvertFdoToMongoPartsOfSpeech.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
-				// TODO: Write helper function to take BestVernacularAnalysisAlternative and/or other
-				// writing system alternatives, and simplify the process of getting a real string
-				// (as opposed to a TsString) from it.
-				if (pos == null || pos.Abbreviation == null)
-					lfSense.PartOfSpeech = null;
-				else
-					//lfSense.PartOfSpeech = LfStringField.FromString(ToStringOrNull(pos.Abbreviation.get_String(wsEn)));
-					lfSense.PartOfSpeech = LfStringField.FromString(
-						_convertGrammaticalCategoryOptionList.LfItemKeyString(pos, _wsEn));
-				if (secondaryPos == null || secondaryPos.Abbreviation == null)
-					lfSense.SecondaryPartOfSpeech = null;
-				else
-					lfSense.SecondaryPartOfSpeech = LfStringField.FromString(
-						_convertGrammaticalCategoryOptionList.LfItemKeyString(pos, _wsEn));
+				lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
+				lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
@@ -340,7 +358,7 @@ namespace LfMerge.DataConverters
 				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption.FirstNonEmptyString(), picture.FileName);
 			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
-			lfSense.SensePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.PublishIn);
+			lfSense.SensePublishIn = ToStringArrayField(PublishInListCode, fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
 
 			if (fdoSense.ReversalEntriesRC != null)
@@ -349,17 +367,18 @@ namespace LfMerge.DataConverters
 				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
 			}
 			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoSense.ScientificName);
-			lfSense.SemanticDomain = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.SemanticDomainsRC);
+			lfSense.SemanticDomain = ToStringArrayField(SemDomListCode, fdoSense.SemanticDomainsRC);
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
-			lfSense.SenseType = LfStringField.FromString(_convertSenseTypeOptionList.LfItemKeyString(fdoSense.SenseTypeRA, _wsEn));
+			lfSense.SenseType = ToStringField(SenseTypeListCode, fdoSense.SenseTypeRA);
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
 				lfSense.Source = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoSense.Source);
 			}
-			lfSense.Status = LfStringArrayField.FromSinglePossibilityAbbrev(fdoSense.StatusRA);
-			lfSense.Usages = LfStringArrayField.FromPossibilityAbbrevs(fdoSense.UsageTypesRC);
+			lfSense.Status = ToStringArrayField(StatusListCode, fdoSense.StatusRA);
+			lfSense.Usages = ToStringArrayField(UsageTypeListCode, fdoSense.UsageTypesRC);
+
 
 			/* Fields not mapped because it doesn't make sense to map them (e.g., Hvo, backreferences, etc):
 			fdoSense.AllOwnedObjects;
@@ -448,7 +467,7 @@ namespace LfMerge.DataConverters
 			CoreWritingSystemDefinition VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			result.Guid = fdoExample.Guid;
-			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
+			result.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			result.Sentence = ToMultiText(fdoExample.Example);
 			result.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoExample.Reference);
 			// ILexExampleSentence fields we currently do not convert:

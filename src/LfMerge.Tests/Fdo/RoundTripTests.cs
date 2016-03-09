@@ -56,6 +56,7 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
@@ -72,6 +73,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(lfEntry, Is.Not.Null);
 
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -101,8 +103,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
@@ -136,8 +140,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
@@ -191,6 +197,7 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
@@ -207,6 +214,7 @@ namespace LfMerge.Tests.Fdo
 			originalLfEntry.Lexeme[vernacularWS].Value = originalLexeme;
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("lexeme");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -269,8 +277,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
@@ -296,12 +306,15 @@ namespace LfMerge.Tests.Fdo
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), lfEntry.Senses[0].ToBsonDocument());
 			differencesByName.Remove("definition");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[1].ToBsonDocument(), lfEntry.Senses[1].ToBsonDocument());
 			differencesByName.Remove("definition");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -386,8 +399,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
@@ -413,15 +428,19 @@ namespace LfMerge.Tests.Fdo
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].Examples[0].ToBsonDocument(), lfEntry.Senses[0].Examples[0].ToBsonDocument());
 			differencesByName.Remove("translation");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].Examples[1].ToBsonDocument(), lfEntry.Senses[0].Examples[1].ToBsonDocument());
 			differencesByName.Remove("translation");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), lfEntry.Senses[0].ToBsonDocument());
 			differencesByName.Remove("examples");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -469,6 +488,7 @@ namespace LfMerge.Tests.Fdo
 			// FDO-to-Mongo direction populates LiftID even if it was null in original,
 			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
 			// Delete
@@ -551,8 +571,7 @@ namespace LfMerge.Tests.Fdo
 			differencesByName.Remove("liftId"); // Automatically set by FDO
 			differencesByName.Remove("guid"); // Automatically set by FDO
 			differencesByName.Remove("sensePublishIn"); // Automatically set by FDO
-			foreach (var diff in differencesByName)
-				Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
 			// Delete
