@@ -540,8 +540,6 @@ namespace LfMerge.DataConverters
 			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
 			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
-			foreach (LfExample lfExample in lfSense.Examples)
-				LfExampleToFdoExample(lfExample, fdoSense);
 			SetMultiStringFrom(fdoSense.GeneralNote, lfSense.GeneralNote);
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
@@ -589,6 +587,27 @@ namespace LfMerge.DataConverters
 			fdoSense.Source = BestTsStringFromMultiText(lfSense.Source);
 			fdoSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
 			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(fdoSense.UsageTypesRC, lfSense.Usages);
+
+			// Track examples for later deletion
+			var exampleGuidsFoundInLf = new HashSet<Guid>();
+			if (lfSense.Examples != null) {
+				foreach (LfExample lfExample in lfSense.Examples)
+				{
+					LfExampleToFdoExample(lfExample, fdoSense);
+					if (lfExample.Guid != null)
+						exampleGuidsFoundInLf.Add(lfExample.Guid.Value);
+				}
+			}
+
+			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
+			var examplesToDeleteFromFdo = new HashSet<ILexExampleSentence>();
+			foreach (ILexExampleSentence fdoExample in fdoSense.ExamplesOS)
+			{
+				if (!exampleGuidsFoundInLf.Contains(fdoExample.Guid))
+					examplesToDeleteFromFdo.Add(fdoExample);
+			}
+			foreach (ILexExampleSentence exampleToDelete in examplesToDeleteFromFdo)
+				exampleToDelete.Delete();
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 		}
