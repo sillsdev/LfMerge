@@ -50,8 +50,8 @@ namespace LfMerge.DataConverters
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
-			IWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			IWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
@@ -135,7 +135,7 @@ namespace LfMerge.DataConverters
 			return LfMultiText.FromFdoMultiString(fdoMultiString, Cache.ServiceLocator.WritingSystemManager);
 		}
 
-		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, IWritingSystemManager fdoWritingSystemManager)
+		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
 		{
 			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
@@ -152,7 +152,7 @@ namespace LfMerge.DataConverters
 			if (fdoEntry == null) return null;
 			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
-			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultVernWs);
 
 			var lfEntry = new LfLexEntry();
@@ -288,8 +288,8 @@ namespace LfMerge.DataConverters
 		{
 			var lfSense = new LfSense();
 
-			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
@@ -440,7 +440,7 @@ namespace LfMerge.DataConverters
 		{
 			var lfExample = new LfExample();
 
-			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = fdoExample.Guid;
 			lfExample.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);

@@ -18,7 +18,7 @@ namespace LfMerge.DataConverters
 			_wsSearchOrder = wsPreferences.ToArray();
 		}
 
-		public ConvertFdoToMongoTsStrings(IEnumerable<IWritingSystem> wsPreferences)
+		public ConvertFdoToMongoTsStrings(IEnumerable<ILgWritingSystem> wsPreferences)
 		{
 			_wsSearchOrder = wsPreferences.Select(ws => ws.Handle).ToArray();
 		}
