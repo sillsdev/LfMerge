@@ -49,9 +49,18 @@ namespace LfMerge.Tests.Fdo
 		[TearDown]
 		public void TearDownForFdoTests()
 		{
-			LanguageForgeProjectAccessor.Reset(); // This disposes of lfProj
-			LanguageForgeFolder.Dispose();
-			env.Dispose();
+			try
+			{
+				LanguageForgeProjectAccessor.Reset(); // This disposes of lfProj
+				LanguageForgeFolder.Dispose();
+				env.Dispose();
+			}
+			catch (Exception)
+			{
+				// This can happen if the objects already got disposed somewhere else.
+				// It doesn't really matter since we're in the process of doing cleanup anyways.
+				// So just ignore the exception.
+			}
 		}
 
 		// TODO: Consider whether these two utility functions belong in a different class

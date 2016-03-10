@@ -112,6 +112,11 @@
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="Build">
+		<ItemGroup>
+			<FdoFiles Include="/usr/lib/lfmerge/*" Condition="'$(OS)'=='Unix'"/>
+		</ItemGroup>
+		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
+			Condition="'$(OS)'=='Unix'"/>
 		<CallTarget Targets="TestOnly"/>
 	</Target>
 
