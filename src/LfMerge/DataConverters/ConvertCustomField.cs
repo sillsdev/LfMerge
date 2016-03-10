@@ -241,7 +241,7 @@ namespace LfMerge.DataConverters
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Select(para => para.Contents).ToList();
 			List<string> htmlParas = paras.Where(para => para != null).Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
-			WritingSystemManager wsManager = _cache.ServiceLocator.WritingSystemManager;
+			ILgWritingSystemFactory wsManager = _cache.ServiceLocator.WritingSystemManager;
 			int fieldWs = _cache.MetaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
 			if (wsStr == null) wsStr = wsManager.GetStrFromWs(_cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?

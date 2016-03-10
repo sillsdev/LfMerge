@@ -64,8 +64,8 @@ namespace LfMerge.DataConverters
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
-			CoreWritingSystemDefinition VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			CoreWritingSystemDefinition AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
@@ -157,7 +157,7 @@ namespace LfMerge.DataConverters
 			return LfMultiText.FromFdoMultiString(fdoMultiString, Cache.ServiceLocator.WritingSystemManager);
 		}
 
-		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, WritingSystemManager fdoWritingSystemManager)
+		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
 		{
 			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
@@ -184,7 +184,7 @@ namespace LfMerge.DataConverters
 			if (fdoEntry == null) return null;
 			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
-			CoreWritingSystemDefinition AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultVernWs);
 
 			var lfEntry = new LfLexEntry();
@@ -315,8 +315,8 @@ namespace LfMerge.DataConverters
 		{
 			var lfSense = new LfSense();
 
-			CoreWritingSystemDefinition VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			CoreWritingSystemDefinition AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 
 			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
@@ -464,7 +464,7 @@ namespace LfMerge.DataConverters
 		{
 			LfExample result = new LfExample();
 
-			CoreWritingSystemDefinition VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			result.Guid = fdoExample.Guid;
 			result.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
@@ -529,8 +529,8 @@ namespace LfMerge.DataConverters
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
-			IList<CoreWritingSystemDefinition> vernacularWSList = Cache.LanguageProject.CurrentVernacularWritingSystems;
-			IList<CoreWritingSystemDefinition> analysisWSList = Cache.LanguageProject.CurrentAnalysisWritingSystems;
+			IList<ILgWritingSystem> vernacularWSList = (IList<ILgWritingSystem>)Cache.LanguageProject.CurrentVernacularWritingSystems;
+			IList<ILgWritingSystem> analysisWSList = (IList<ILgWritingSystem>)Cache.LanguageProject.CurrentAnalysisWritingSystems;
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var fdoWs in Cache.LanguageProject.AllWritingSystems)

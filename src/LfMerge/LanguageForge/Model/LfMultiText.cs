@@ -14,7 +14,7 @@ namespace LfMerge.LanguageForge.Model
 	{
 		public bool IsEmpty { get { return Count <= 0; } }
 
-		public static LfMultiText FromFdoMultiString(IMultiAccessorBase other, WritingSystemManager wsManager)
+		public static LfMultiText FromFdoMultiString(IMultiAccessorBase other, ILgWritingSystemFactory wsManager)
 		{
 			LfMultiText newInstance = new LfMultiText();
 			foreach (int wsid in other.AvailableWritingSystemIds)
@@ -50,7 +50,7 @@ namespace LfMerge.LanguageForge.Model
 			return new LfMultiText { { key, new LfStringField { Value = value.Text } } };
 		}
 
-		public static LfMultiText FromSingleITsString(ITsString value, WritingSystemManager wsm)
+		public static LfMultiText FromSingleITsString(ITsString value, ILgWritingSystemFactory wsm)
 		{
 			if (value == null || value.Text == null) return null;
 			int wsId = value.get_WritingSystem(0);
@@ -104,7 +104,7 @@ namespace LfMerge.LanguageForge.Model
 		{
 			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
 			if (kv.Key == null) return new KeyValuePair<int, string>();
-			WritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
+			ILgWritingSystemFactory wsm = cache.ServiceLocator.WritingSystemManager;
 			int wsId = wsm.GetWsFromStr(kv.Key);
 			return new KeyValuePair<int, string>(wsId, kv.Value);
 		}
@@ -120,7 +120,7 @@ namespace LfMerge.LanguageForge.Model
 		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
 		public ITsString ToITsString(int wsId, FdoCache cache)
 		{
-			WritingSystemManager wsm = cache.ServiceLocator.WritingSystemManager;
+			ILgWritingSystemFactory wsm = cache.ServiceLocator.WritingSystemManager;
 			string wsStr = wsm.GetStrFromWs(wsId);
 			LfStringField valueField;
 			if (TryGetValue(wsStr, out valueField))
@@ -134,7 +134,7 @@ namespace LfMerge.LanguageForge.Model
 			return ToITsString(cache.DefaultAnalWs, cache);
 		}
 
-		public void WriteToFdoMultiString(IMultiAccessorBase dest, WritingSystemManager wsManager)
+		public void WriteToFdoMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
 		{
 			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{

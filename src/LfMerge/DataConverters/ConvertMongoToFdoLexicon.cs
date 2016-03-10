@@ -30,8 +30,8 @@ namespace LfMerge.DataConverters
 		public IMongoConnection Connection { get; set; }
 		public MongoProjectRecord ProjectRecord { get; set; }
 
-		public IEnumerable<CoreWritingSystemDefinition> AnalysisWritingSystems;
-		public IEnumerable<CoreWritingSystemDefinition> VernacularWritingSystems;
+		public IEnumerable<ILgWritingSystem> AnalysisWritingSystems;
+		public IEnumerable<ILgWritingSystem> VernacularWritingSystems;
 
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
@@ -156,7 +156,23 @@ namespace LfMerge.DataConverters
 		/// <param name="lfWsList">List of LF input systems.</param>
 		public void LfWsToFdoWs(Dictionary<string, LfInputSystemRecord> lfWsList)
 		{
+			// Between FW 8.2 and 9, a few classes and interfaces were renamed. The ones most relevant here are
+			// IWritingSystemManager (interface was removed and replaced with the WritingSystemManager concrete class),
+			// and PalasoWritingSystem which was replaced with CoreWritingSystemDefinition. Since their internals
+			// didn't change much (and the only changes were in areas we don't access), we can use a simple compiler
+			// define to choose the type of the wsm variable here (and the ws variable later) and we're fine.
+			// HOWEVER, if the code inside #if...#endif blocks starts to grow, this is not an ideal solution. A better
+			// solution if the code grows complex will be to write several classes to the same interface, each of which
+			// can deal with one particular version of FW or FDO. Register them all with Autofac with a way to choose among them
+			// (http://docs.autofac.org/en/stable/register/registration.html#selection-of-an-implementation-by-parameter-value)
+			// and then, at runtime, we can instantiate the particular class that's needed for dealing with *this* FW project.
+			//
+			// But for now, these #if...#endif blocks are enough. - 2016-03 RM
+#if FW8_COMPAT
+			IWritingSystemManager wsm = Cache.ServiceLocator.WritingSystemManager;
+#else
 			WritingSystemManager wsm = Cache.ServiceLocator.WritingSystemManager;
+#endif
 			if (wsm == null)
 			{
 				Logger.Error("Failed to find the writing system manager");
@@ -167,7 +183,11 @@ namespace LfMerge.DataConverters
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
+#if FW8_COMPAT
+				PalasoWritingSystem ws;
+#else
 				CoreWritingSystemDefinition ws;
+#endif
 
 				// It would be nice to call this to add to both analysis and vernacular WS.
 				// But we need the flexibility of bringing in LF WS properties.
@@ -215,14 +235,14 @@ namespace LfMerge.DataConverters
 				return null;
 			}
 
-			IEnumerable<CoreWritingSystemDefinition> wsesToSearch = isAnalysisField ?
+			IEnumerable<ILgWritingSystem> wsesToSearch = isAnalysisField ?
 				Cache.LanguageProject.AnalysisWritingSystems :
 				Cache.LanguageProject.VernacularWritingSystems;
 //			List<Tuple<int, string>> wsesToSearch = isAnalysisField ?
 //				_analysisWsIdsAndNamesInSearchOrder :
 //				_vernacularWsIdsAndNamesInSearchOrder;
 
-			foreach (CoreWritingSystemDefinition ws in wsesToSearch)
+			foreach (ILgWritingSystem ws in wsesToSearch)
 			{
 				LfStringField field;
 				if (input.TryGetValue(ws.Id, out field) && !String.IsNullOrEmpty(field.Value))
