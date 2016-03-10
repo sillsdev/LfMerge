@@ -149,7 +149,7 @@ namespace LfMerge.DataConverters
 			CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in FDO are GenDate, Integer, MultiString/MultiUnicode, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fdoFieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -171,6 +171,14 @@ namespace LfMerge.DataConverters
 					// LfMultiText.FromSingleStringMapping
 					fieldValue = LfMultiText.FromSingleStringMapping(
 						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString()).AsBsonDocument();
+				break;
+
+			case CellarPropertyType.MultiString:
+			case CellarPropertyType.MultiUnicode:
+				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
+				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, _servLoc.WritingSystemManager);
+				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsBsonDocument());
+				// No need to save GUIDs for multistrings
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -372,7 +380,7 @@ namespace LfMerge.DataConverters
 			if (fieldName == null)
 				return false;
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in FDO are GenDate, Integer, MultiString/MultiUnicode, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -403,6 +411,25 @@ namespace LfMerge.DataConverters
 						return true;
 					}
 					return false;
+				}
+
+			case CellarPropertyType.MultiString:
+			case CellarPropertyType.MultiUnicode:
+				{
+					LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
+					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
+					{
+						if (kv.Value == null)
+							continue;
+						string s = kv.Value.Value;
+						int wsId = _servLoc.WritingSystemManager.GetWsFromStr(kv.Key);
+						if (wsId == 0)
+							continue;
+						Console.WriteLine("  {0}: {1}", kv.Key, s);
+						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(s, wsId));
+					}
+					return true;
 				}
 
 			case CellarPropertyType.OwningAtomic:
