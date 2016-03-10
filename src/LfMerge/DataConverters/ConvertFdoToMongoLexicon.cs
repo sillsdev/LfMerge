@@ -529,8 +529,9 @@ namespace LfMerge.DataConverters
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
-			IList<ILgWritingSystem> vernacularWSList = (IList<ILgWritingSystem>)Cache.LanguageProject.CurrentVernacularWritingSystems;
-			IList<ILgWritingSystem> analysisWSList = (IList<ILgWritingSystem>)Cache.LanguageProject.CurrentAnalysisWritingSystems;
+			// Using var here so that we'll stay compatible with both FW 8 and 9 (the type of these two lists changed between 8 and 9).
+			var vernacularWSList = Cache.LanguageProject.CurrentVernacularWritingSystems;
+			var analysisWSList = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var fdoWs in Cache.LanguageProject.AllWritingSystems)
