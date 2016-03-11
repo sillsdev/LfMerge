@@ -134,17 +134,20 @@ namespace LfMerge
 					if (!Directory.Exists(model.ParentDirectoryToPutCloneIn) ||
 						model.TargetLocationIsUnused)
 					{
+						Logger.Notice("Initial clone");
 						project.State.SRState = ProcessingState.SendReceiveStates.RECEIVING;
 						model.DoClone();
 						if (!FinishClone(project))
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 
+						Logger.Notice("Initial transfer to mongo after clone");
 						TransferFdoToMongoAction.InitialClone = true;
 						LfMerge.Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
 					}
 				}
 				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)
 				{
+					Logger.Error("Initial clone authorization exception");
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;
 				}

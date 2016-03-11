@@ -32,9 +32,13 @@ namespace LfMerge.Actions
 				var syncResult = synchroniser.SyncNow(options);
 				if (!syncResult.Succeeded)
 				{
-					Logger.Error("Sync failed");
+					Logger.Error("Sync failed - {0}", syncResult.ErrorEncountered);
 					return;
 				}
+				if (syncResult.DidGetChangesFromOthers)
+					Logger.Notice("Received changes from others");
+				else
+					Logger.Notice("No changes from others");
 
 				GetAction(ActionNames.TransferFdoToMongo).Run(project);
 			}
