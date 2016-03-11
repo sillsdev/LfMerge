@@ -20,7 +20,7 @@ namespace LfMerge.Tests
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		private bool _resetLfProjectsDuringCleanup;
 		public LfMergeSettingsIni Settings;
-		public ILogger Logger;
+		public ILogger Logger { get { return MainClass.Logger; }}
 
 		static TestEnvironment()
 		{
@@ -44,7 +44,7 @@ namespace LfMerge.Tests
 				registerProcessingStateDouble,
 				_languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
-			Logger = MainClass.Container.Resolve<ILogger>();
+			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
 			Directory.CreateDirectory(Settings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
