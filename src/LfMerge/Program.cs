@@ -16,6 +16,7 @@ using LibTriboroughBridgeChorusPlugin;
 using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using Palaso.IO.FileLock;
 using Palaso.Progress;
+using SIL.FieldWorks.FDO;
 
 
 namespace LfMerge
@@ -167,7 +168,7 @@ namespace LfMerge
 			{
 				var helper = scope.Resolve<UpdateBranchHelperFlex>();
 				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(
-					MagicStrings.FDOModelVersion, actualCloneResult, cloneLocation))
+					FdoCache.ModelVersion, actualCloneResult, cloneLocation))
 				{
 					actualCloneResult.Message = "Flex version is too old";
 				}

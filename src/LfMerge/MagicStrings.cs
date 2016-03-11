@@ -79,7 +79,6 @@ namespace LfMerge
 
 		// Other magic strings that don't fall into any particular category
 		public const string UnknownString = "***";
-		public const string FDOModelVersion = "7000068";
 	}
 }
 
