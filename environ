@@ -30,7 +30,7 @@ else
 	PATH="${BASE}/output/${BUILD}:${PATH}"
 	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH}"
 	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
-	COMPONENTS_MAP_PATH="${BASE}/output/${BUILD}"
+	[ -f "${BASE}/output/${BUILD}/components.map" ] && COMPONENTS_MAP_PATH="${BASE}/output/${BUILD}"
 fi
 
 ################################################################################################
