@@ -31,7 +31,7 @@ override_dh_auto_install:
 	# Install binaries
 	install -d $(DESTDIR)/$(LIB)
 	install -m 644 output/$(BUILD)/*.* $(DESTDIR)/$(LIB)
-	cd $(DESTDIR)/$(LIB) && rm *.Tests.dll* *.TestApp.exe* SIL.TestUtilities.dll* nunit.framework.dll *Moq.dll
+	cd $(DESTDIR)/$(LIB) && rm *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll
 	install -d $(DESTDIR)/$(LIB)/Mercurial
 	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext
 	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial
