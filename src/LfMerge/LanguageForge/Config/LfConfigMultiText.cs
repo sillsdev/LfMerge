@@ -15,9 +15,9 @@ namespace LfMerge.LanguageForge.Config
 		public LfConfigMultiText()
 		{
 			Label = String.Empty;
-			DisplayMultiline = false;
 			Width = 20;
 			InputSystems = new List<string>();
+			DisplayMultiline = false;
 		}
 	}
 }

@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using SIL.CoreImpl;
@@ -19,7 +21,27 @@ namespace LfMerge.DataConverters
 		private FdoCache cache;
 		private IFdoServiceLocator servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
+		private ILogger logger;
 
+		/// <summary>
+		/// Mapping of FDO CellarProperty type enumeration to LF custom field type.
+		/// Refer to FDO SIL.CoreImpl.CellarPropertyType.
+		/// </summary>
+		private static readonly Dictionary<CellarPropertyType, string> CellarPropertyTypeToLfCustomFieldType = new Dictionary<CellarPropertyType, string>
+		{
+			{CellarPropertyType.ReferenceCollection, "Multi_ListRef"},
+			{CellarPropertyType.String, "Single_Line"},
+			{CellarPropertyType.MultiString, "MultiPara"},
+			{CellarPropertyType.MultiUnicode, "MultiPara"},
+			{CellarPropertyType.OwningAtom, "MultiPara"}, // Equivalent to MinObj
+			{CellarPropertyType.ReferenceAtomic, "Single_ListRef"},
+
+			// The following custom fields currently aren't displayed in LF
+			//{CellarPropertyType.Integer, "Number"},
+			//{CellarPropertyType.GenDate, "Date"},
+		};
+
+		// TODO: Remove this constructor when Logger.NullLogging() is merged back into master.  DDW 14-Mar-2016
 		public ConvertCustomField(FdoCache cache)
 		{
 			this.cache = cache;
@@ -27,10 +49,21 @@ namespace LfMerge.DataConverters
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 		}
 
+		public ConvertCustomField(FdoCache cache, ILogger logger)
+		{
+			this.cache = cache;
+			servLoc = cache.ServiceLocator;
+			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			this.logger = logger;
+		}
+
 		/// <summary>
 		/// Returns value of custom fields for this CmObject.
 		/// </summary>
-		/// <returns>Either null, or a BsonDocument with the following structure: <br />
+		/// <param name="cmObj">Cm object.</param>
+		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
+		/// <param name="lfCustomFields">Output returns either null or a BsonDocument with the following structure
+		///  <br />
 		/// { <br />
 		///     "customFields": { fieldName: fieldValue, fieldName2: fieldValue2, etc. } <br />
 		///     "customFieldGuids": { fieldName: "Guid-as-string", fieldName2: "Guid2-as-string", etc. } <br />
@@ -49,12 +82,12 @@ namespace LfMerge.DataConverters
 		/// and will not have a corresponding value in customFieldGuids.
 		/// If ALL custom fields are suppressed because of having null, default or empty values, then this function will return
 		/// null instead of returning a useless-but-not-actually-empty BsonDocument.
-		/// </returns>
-		/// <param name="cmObj">Cm object.</param>
-		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
-		public BsonDocument CustomFieldsForThisCmObject(ICmObject cmObj, string objectType = "entry")
+		/// <param name="lfCustomFieldList">List of Lf custom field configuration settings</param>
+		public void GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
+			out BsonDocument lfCustomFields, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			if (cmObj == null) return null;
+			lfCustomFields = null;
+			if (cmObj == null) return;
 
 			List<int> customFieldIds = new List<int>(
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
@@ -65,26 +98,65 @@ namespace LfMerge.DataConverters
 
 			foreach (int flid in customFieldIds)
 			{
-				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
-				if (fieldName == null)
-					return null;
-				fieldName = NormalizedFieldName(fieldName, objectType);
-				BsonDocument bsonForThisField = GetCustomFieldData(cmObj.Hvo, flid);
+				string label = fdoMetaData.GetFieldNameOrNull(flid);
+				if (label == null)
+					return;
+				string lfCustomFieldName = NormalizedFieldName(label, objectType);
+				BsonDocument bsonForThisField;
+				string lfCustomFieldType;
+				GetCustomFieldData(cmObj.Hvo, flid, objectType,
+					out bsonForThisField, out lfCustomFieldType);
+
+				// Get custom field configuration info
+				// TODO: Find listCode from fdo metadata?
+				if (label.Contains("ListRef"))
+				{
+					// Compute list code
+					string listCode = GetParentListCode(flid);
+					lfCustomFieldList[lfCustomFieldName] = GetLfCustomFieldSettings(label, listCode);
+				}
+				else if (!string.IsNullOrEmpty(lfCustomFieldType))
+				{
+					// Default to current analysis WS?
+					List<string>inputSystems = new List<string>();
+					foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
+						inputSystems.Add(fdoAnalysisWs.RFC5646);
+					lfCustomFieldList[lfCustomFieldName] =
+						GetLfCustomFieldSettings(label, lfCustomFieldType, inputSystems);
+				}
+
 				if (bsonForThisField != null)
 				{
-					customFieldData.Add(fieldName, bsonForThisField["value"]);
+					customFieldData.Add(label, bsonForThisField["value"]);
 					BsonValue guid;
 					if (bsonForThisField.TryGetValue("guid", out guid))
-						customFieldGuids.Add(fieldName, guid);
+					{
+						customFieldGuids.Add(lfCustomFieldName, guid);
+
+						LfConfigFieldBase lfCustomFieldSettings;
+						// Valid guid so we should be able to create custom field configuration info
+						if (lfCustomFieldName.Contains("ListRef"))
+							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName, "");
+						else
+							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName,
+								lfCustomFieldType, new List<string>{cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
+
+						lfCustomFieldList[lfCustomFieldName] = lfCustomFieldSettings;
+					}
 				}
 			}
 
-			BsonDocument result = new BsonDocument();
-			result.Add("customFields", customFieldData);
-			result.Add("customFieldGuids", customFieldGuids);
-			return result;
+			lfCustomFields = new BsonDocument();
+			lfCustomFields.Add("customFields", customFieldData);
+			lfCustomFields.Add("customFieldGuids", customFieldGuids);
 		}
 
+		/// <summary>
+		/// Normalizes a fieldName string so it can be stored in Mongo
+		/// </summary>
+		/// <returns>The normalized field name string.</returns>
+		/// <param name="fieldName">Field name.</param>
+		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
 		private string NormalizedFieldName(string fieldName, string fieldSourceType)
 		{
 			fieldName = fieldName.Replace(' ', '_');
@@ -92,9 +164,29 @@ namespace LfMerge.DataConverters
 		}
 
 		/// <summary>
+		/// Get the list code of the parent
+		/// </summary>
+		/// <returns>The list code.</returns>
+		/// <param name="flid">Flid.</param>
+		private string GetParentListCode(int flid)
+		{
+			string result = string.Empty;
+			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+			if (parentListGuid != Guid.Empty)
+			{
+				result = fdoMetaData.GetFieldNameOrNull(flid);
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Gets the data for one custom field, and any relevant GUIDs.
 		/// </summary>
-		/// <returns>A BsonDocument with the following structure: <br />
+		/// <param name="hvo">Hvo of object we're getting the field for.</param>
+		/// <param name="flid">Flid for this field.</param>
+		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
+		/// <param name="bsonForThisField">Output of a BsonDocument with the following structure: <br />
 		/// { fieldName: { "value": BsonValue, "guid": "some-guid-as-a-string" } } <br />
 		/// -OR- <br />
 		/// { fieldName: { "value": BsonValue, "guid": ["guid1", "guid2", "guid3"] } } <br />
@@ -103,20 +195,20 @@ namespace LfMerge.DataConverters
 		/// The type of the "guid" value (array or string) will determine whether there is a single GUID,
 		/// or a list of GUIDs that happens to contain only one entry.
 		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
-		/// </returns>
-		/// <param name="hvo">Hvo of object we're getting the field for.</param>
-		/// <param name="flid">Flid for this field.</param>
-		/// <param name="fieldSourceType">Either "entry", "senses" or "examples". Could also be "allomorphs", eventually.</param>
-		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType = "entry")
+		/// </param>
+		/// <param name="customFieldType">output string of LF custom field type</param>
+		private void GetCustomFieldData(int hvo, int flid, string fieldSourceType, out BsonDocument bsonForThisField, out string customFieldType)
 		{
+			bsonForThisField = null;
+			customFieldType = string.Empty;
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
-			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+			CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
 			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
-			switch (fieldType)
+			switch (fdoFieldType)
 			{
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
@@ -143,7 +235,7 @@ namespace LfMerge.DataConverters
 			case CellarPropertyType.ReferenceAtomic:
 				int ownedHvo = data.get_ObjectProp(hvo, flid);
 				fieldValue = GetCustomReferencedObject(ownedHvo, flid, ref dataGuids);
-				if (fieldValue != null && fieldType == CellarPropertyType.ReferenceAtomic)
+				if (fieldValue != null && fdoFieldType == CellarPropertyType.ReferenceAtomic)
 				{
 					// Single CmPossiblity reference - LF expects format like { "value": "name of possibility" }
 					fieldValue = new BsonDocument("value", fieldValue);
@@ -176,11 +268,14 @@ namespace LfMerge.DataConverters
 
 			default:
 				fieldValue = null;
+				if (logger != null)
+					logger.Warning("FDO CellarPropertyType.{0} not recognized for LF custom field", fdoFieldType.ToString());
 				break;
-				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
+
+			CellarPropertyTypeToLfCustomFieldType.TryGetValue(fdoFieldType, out customFieldType);
 			if (fieldValue == null)
-				return null;
+				return;
 			else
 			{
 				var result = new BsonDocument();
@@ -189,7 +284,7 @@ namespace LfMerge.DataConverters
 					result.Add("guid", fieldGuid, ((BsonArray)fieldGuid).Count > 0);
 				else
 					result.Add("guid", fieldGuid, fieldGuid != null);
-				return result;
+				bsonForThisField = result;
 			}
 		}
 
@@ -226,6 +321,37 @@ namespace LfMerge.DataConverters
 				.Select(para => para.StartsWith("<p>") ? para.Substring(3) : para));
 			// No need to trim trailing </p> as String.Split has already done that for us
 			return result;
+		}
+
+		private LfConfigMultiText GetLfCustomFieldSettings(string label, string lfCustomFieldType, List<string> inputSystems)
+		{
+			if (lfCustomFieldType == null)
+				return null;
+			return new LfConfigMultiText {
+				Label = label,
+				DisplayMultiline = !lfCustomFieldType.Contains("Single") && !label.Contains("Single"),
+				Width = 20,
+				InputSystems = inputSystems,
+			};
+		}
+
+		// TODO: assign the correct ListCode
+		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode = "TBD")
+		{
+			if (label.Contains("Multi ListRef"))
+			{
+				return new LfConfigMultiOptionList {
+					Label = label,
+					ListCode = listCode,
+				};
+			}
+			else
+			{
+				return new LfConfigOptionList {
+					Label = label,
+					ListCode = listCode,
+				};
+			}
 		}
 
 		/// <summary>
@@ -312,8 +438,8 @@ namespace LfMerge.DataConverters
 			}
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-			Console.WriteLine("This field type is {0}", fieldType.ToString());
 			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
 			if (fieldName == null)
 				return false;
 

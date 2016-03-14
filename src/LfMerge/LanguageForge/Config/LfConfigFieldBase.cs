@@ -8,8 +8,6 @@ namespace LfMerge.LanguageForge.Config
 	public abstract class LfConfigFieldBase
 	{
 
-		public ObjectId Id { get; set; }
-		public string Type { get; set; }
 		public bool HideIfEmpty { get; set; }
 
 		// Derived classes must override this to be the appropriate string from LfConfigFieldTypeNames

@@ -8,11 +8,11 @@ namespace LfMerge.LanguageForge.Config
 	{
 		public string Label { get; set;}
 		public string ListCode { get; set;}
-
 		public LfConfigOptionList()
 		{
 			Label = String.Empty;
 			ListCode = String.Empty;
+			HideIfEmpty = false;
 		}
 	}
 }

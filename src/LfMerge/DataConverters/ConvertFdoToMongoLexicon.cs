@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using LfMerge;
 using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
@@ -25,7 +27,7 @@ namespace LfMerge.DataConverters
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
-		public ConvertCustomField _converter;
+		public ConvertCustomField Converter { get; protected set; }
 
 		public bool InitialClone { get; set; }
 
@@ -34,6 +36,8 @@ namespace LfMerge.DataConverters
 		public ConvertFdoToMongoOptionList _convertGrammaticalCategoryOptionList;
 		public ConvertFdoToMongoOptionList _convertSenseTypeOptionList;
 		public ConvertFdoToMongoOptionList _convertLocationOptionList;
+
+		public ConvertCustomField _convertCustomField;
 
 		public ConvertFdoToMongoLexicon(ILfProject lfProject, bool initialClone, ILogger logger, IMongoConnection connection)
 		{
@@ -45,7 +49,9 @@ namespace LfMerge.DataConverters
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			_converter = new ConvertCustomField(Cache);
+			Converter = new ConvertCustomField(Cache, logger);
+
+			_convertCustomField = new ConvertCustomField(Cache, logger);
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
@@ -54,6 +60,7 @@ namespace LfMerge.DataConverters
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
+			// DDW use this to compute the list code
 			var fdoPartsOfSpeech = Cache.LanguageProject.PartsOfSpeechOA;
 			_convertGrammaticalCategoryOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo, fdoPartsOfSpeech);
 
@@ -74,9 +81,11 @@ namespace LfMerge.DataConverters
 				return;
 			}
 
+			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
-				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
+				LfLexEntry lfEntry;
+				FdoLexEntryToLfLexEntry(fdoEntry, out lfEntry, ref _lfCustomFieldList);
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
@@ -95,6 +104,25 @@ namespace LfMerge.DataConverters
 			{
 				Connection.RemoveRecord(LfProject, guid);
 			}
+
+
+			
+			lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
+			var LfCustomFieldEntryList = lfEntries.Select(e => e.CustomFields).Where(c => c != null && c.Count() > 0);
+			Console.WriteLine("custom fields is {0}", LfCustomFieldEntryList);
+			foreach (var LfCustomFieldEntryName in LfCustomFieldEntryList.First().Names)
+			{
+				Console.WriteLine("custom field entry name is {0}", LfCustomFieldEntryName);
+			}
+
+			// Update custom fields for project config
+			IEnumerable<LfLexEntry>lfCustomFieldEntries = lfEntries.Where(e => e.CustomFields.Count() > 0);
+			Console.WriteLine("lfCustomFieldEntries is [{0}]", String.Join(", ", lfCustomFieldEntries.Select(entry => entry.Lexeme.FirstNonEmptyString())));
+
+			// During initial clone, use initial FDO view preferences for custom fields.
+			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
+
+			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
@@ -121,15 +149,20 @@ namespace LfMerge.DataConverters
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
 		}
 
-		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
+		/// <summary>
+		/// Convert FDO lex entry to LF lex entry.
+		/// </summary>
+		/// <param name="fdoEntry">Fdo entry.</param>
+		/// <param name="lfEntry">Output - Lf entry.</param>
+		/// <param name="lfCustomFieldList">Ref - Dictionary of custom field type and custom field settings.</param>
+		public void FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, out LfLexEntry lfEntry, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			if (fdoEntry == null) return null;
+			lfEntry = new LfLexEntry();
+			if (fdoEntry == null) return;
 			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultVernWs);
-
-			var lfEntry = new LfLexEntry();
 
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
 			if (fdoLexeme == null)
@@ -194,17 +227,24 @@ namespace LfMerge.DataConverters
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
 				lfEntry.Senses = new List<LfSense>();
-			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
+			foreach (var fdoSense in fdoEntry.SensesOS)
+			{
+				LfSense lfSense;
+				FdoSenseToLfSense(fdoSense, out lfSense, ref lfCustomFieldList);
+				lfEntry.Senses.Add(lfSense);
+			}
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoEntry, "entry");
+			BsonDocument customFieldsAndGuids;
+			Converter.GetCustomFieldsForThisCmObject(fdoEntry, "entry",
+				out customFieldsAndGuids, ref lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			lfEntry.CustomFields = customFieldsBson;
 			lfEntry.CustomFieldGuids = customFieldGuids;
 
-			return lfEntry;
+			return;
 
 			/* Fields not mapped because it doesn't make sense to map them (e.g., Hvo, backreferences, etc):
 			fdoEntry.ComplexFormEntries;
@@ -250,9 +290,9 @@ namespace LfMerge.DataConverters
 			*/
 		}
 
-		public LfSense FdoSenseToLfSense(ILexSense fdoSense)
+		public void FdoSenseToLfSense(ILexSense fdoSense, out LfSense lfSense, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			var lfSense = new LfSense();
+			lfSense = new LfSense();
 
 			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 			IWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
@@ -270,7 +310,16 @@ namespace LfMerge.DataConverters
 			lfSense.DiscourseNote = ToMultiText(fdoSense.DiscourseNote);
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
 			if (fdoSense.ExamplesOS != null)
-				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(FdoExampleToLfExample));
+			{
+				lfSense.Examples = new List<LfExample>();
+				foreach (var fdoExample in fdoSense.ExamplesOS)
+				{
+					LfExample lfExample;
+					FdoExampleToLfExample(fdoExample, out lfExample, ref lfCustomFieldList);
+					lfSense.Examples.Add(lfExample);
+				}
+			}
+
 			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
 			lfSense.GrammarNote = ToMultiText(fdoSense.GrammarNote);
 			lfSense.LiftId = fdoSense.LIFTid;
@@ -379,7 +428,9 @@ namespace LfMerge.DataConverters
 			fdoSense.LexSenseOutline;
 			*/
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoSense, "senses");
+			BsonDocument customFieldsAndGuids;
+			_convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses",
+				out customFieldsAndGuids, ref lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -388,19 +439,19 @@ namespace LfMerge.DataConverters
 			//Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
 			//Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
-			return lfSense;
+			return;
 		}
 
-		public LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample)
+		public void FdoExampleToLfExample(ILexExampleSentence fdoExample, out LfExample lfExample, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			LfExample result = new LfExample();
+			lfExample = new LfExample();
 
 			IWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
-			result.Guid = fdoExample.Guid;
-			result.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
-			result.Sentence = ToMultiText(fdoExample.Example);
-			result.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoExample.Reference);
+			lfExample.Guid = fdoExample.Guid;
+			lfExample.ExamplePublishIn = LfStringArrayField.FromPossibilityAbbrevs(fdoExample.PublishIn);
+			lfExample.Sentence = ToMultiText(fdoExample.Example);
+			lfExample.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoExample.Reference);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
@@ -413,19 +464,21 @@ namespace LfMerge.DataConverters
 			// TODO: Once LF improves its data model for translations, persist all of them instead of just the first.
 			foreach (ICmTranslation translation in fdoExample.TranslationsOC.Take(1))
 			{
-				result.Translation = ToMultiText(translation.Translation);
-				result.TranslationGuid = translation.Guid;
+				lfExample.Translation = ToMultiText(translation.Translation);
+				lfExample.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids = _converter.CustomFieldsForThisCmObject(fdoExample, "examples");
+			BsonDocument customFieldsAndGuids;
+			_convertCustomField.GetCustomFieldsForThisCmObject(fdoExample, "examples",
+				out customFieldsAndGuids, ref lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
-			result.CustomFields = customFieldsBson;
-			result.CustomFieldGuids = customFieldGuids;
+			lfExample.CustomFields = customFieldsBson;
+			lfExample.CustomFieldGuids = customFieldGuids;
 			//Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
 			//Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
-			return result;
+			return;
 		}
 
 		public LfPicture FdoPictureToLfPicture(ICmPicture fdoPicture)

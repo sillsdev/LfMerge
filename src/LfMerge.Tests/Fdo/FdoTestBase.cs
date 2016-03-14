@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using Palaso.IO;

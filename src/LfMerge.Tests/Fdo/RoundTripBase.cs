@@ -4,7 +4,9 @@ using Autofac;
 using LfMerge.Actions;
 using LfMerge.DataConverters;
 using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
 using MongoDB.Bson;
@@ -158,8 +160,14 @@ namespace LfMerge.Tests.Fdo
 		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
-			var convertCustomField = new ConvertCustomField(cache);
-			return convertCustomField.CustomFieldsForThisCmObject(obj, objectType);
+			var convertCustomField = new ConvertCustomField(cache);// , new LfMerge.Logging.NullLogger());
+			// TODO: Put this back in when NullLogger is merged back: DDW 14-Mar-2016
+			//var convertCustomField = new ConvertCustomField(cache, new LfMerge.Logging.NullLogger());
+			BsonDocument result;
+			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+			convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType,
+				out result, ref lfCustomFieldList);
+			return result;
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)

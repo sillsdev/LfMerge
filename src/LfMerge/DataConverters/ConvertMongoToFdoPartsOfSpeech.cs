@@ -116,7 +116,7 @@ namespace LfMerge.DataConverters
 				// throw new ArgumentNullException("pos");
 				return; // TODO: Or throw an ArgumentNullException?
 			}
-			Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
+			//Console.WriteLine("Setting part of speech {0} ({1}) in msa {2}", pos.NameHierarchyString, pos.Guid, msa.Guid);
 			// TODO: Is the below switch statement REALLY complete? Or do we need to do more?
 			// See FdoFactoryAdditions.cs, lines 1603-1698: perhaps we should be using factories and SandboxMSA objects?
 			switch (msa.ClassID)

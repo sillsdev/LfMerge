@@ -192,6 +192,43 @@ namespace LfMerge.MongoConnector
 			return true;
 		}
 
+		/// <summary>
+		/// Writes project custom field configuration at the appropriate entry, senses, and examples level
+		/// </summary>
+		/// <param name="project">LF project</param>
+		/// <param name="lfCustomFieldList"> Dictionary of LF custom field settings</param>
+		/// <returns>True if mongodb was updated</returns>
+		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		{
+			Console.WriteLine("# custom field settings: {0}", lfCustomFieldList.Count());
+
+			var builder = Builders<MongoProjectRecord>.Update;
+			var updates = new List<UpdateDefinition<MongoProjectRecord>>();
+			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
+
+			IMongoDatabase mongoDb = GetMainDatabase();
+			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
+			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
+				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
+			};
+
+			foreach (var customFieldKVP in lfCustomFieldList)
+			{
+				Logger.Debug("Writing custom field config for {0}", customFieldKVP.Key);
+				if (customFieldKVP.Key.StartsWith("customField_entry"))
+					updates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+				else if (customFieldKVP.Key.StartsWith("customField_senses"))
+					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+				else if (customFieldKVP.Key.StartsWith("customField_example"))
+					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+			}
+
+			var update = builder.Combine(updates);
+			collection.FindOneAndUpdate(filter, update, updateOptions);
+
+			return true;
+		}
+
 		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
 			var builder = Builders<TDocument>.Update;
 			var updates = new List<UpdateDefinition<TDocument>>();

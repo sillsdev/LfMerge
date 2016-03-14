@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 
 namespace LfMerge.MongoConnector
@@ -21,6 +22,7 @@ namespace LfMerge.MongoConnector
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			bool initialClone = false, string vernacularWs = "", string analysisWs = "");
+		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 	}
 }
 

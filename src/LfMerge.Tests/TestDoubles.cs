@@ -8,8 +8,8 @@ using System.Linq;
 using System.Reflection;
 using Chorus.Model;
 using IniParser.Model;
-using LfMerge.LanguageForge.Model;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Model;
 using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
@@ -149,6 +149,11 @@ namespace LfMerge.Tests
 			{
 				// TODO: Update field input systems too?
 			}
+			return true;
+		}
+
+		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		{
 			return true;
 		}
 
