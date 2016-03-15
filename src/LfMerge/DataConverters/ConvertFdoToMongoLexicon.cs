@@ -87,7 +87,6 @@ namespace LfMerge.DataConverters
 
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
-
 		}
 
 		public void RunConversion()

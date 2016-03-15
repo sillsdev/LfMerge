@@ -35,7 +35,7 @@ namespace LfMerge.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
-		private ConvertFdoToMongoCustomField _convertCustomField; // TOOD: refactor this to ConvertMongoToFdoCustomField
+		private ConvertMongoToFdoCustomField _convertCustomField;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
 		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
@@ -70,7 +70,7 @@ namespace LfMerge.DataConverters
 			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
 
-			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, Logger);
+			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
 
 			_lfGrammar = Connection.GetLfOptionListByCode(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo);
@@ -117,7 +117,7 @@ namespace LfMerge.DataConverters
 			// Set English ws handle again in case it changed
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
 
-			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, Logger);
+			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
