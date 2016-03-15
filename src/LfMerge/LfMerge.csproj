@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>FW8_COMPAT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
