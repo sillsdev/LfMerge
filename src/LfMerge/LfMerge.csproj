@@ -162,6 +162,7 @@
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\TransferFdoToMongoAction.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoCustomField.cs" />
+    <Compile Include="DataConverters\ConvertMongoToFdoCustomField.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoPossibilityLists.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="DataConverters\ConvertFdoToMongoPartsOfSpeech.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoLexicon.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoLexicon.cs" />
+    <Compile Include="DataConverters\ConvertUtilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

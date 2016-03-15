@@ -66,7 +66,6 @@ namespace LfMerge.DataConverters
 			_convertLocationOptionList = ConvertOptionListFromFdo(LfProject, MagicStrings.LfOptionListCodeForLocations, fdoSenseType);
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
-
 		}
 
 		public void RunConversion()
