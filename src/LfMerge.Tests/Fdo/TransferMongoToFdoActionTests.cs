@@ -68,8 +68,14 @@ namespace LfMerge.Tests.Fdo
 				e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
 			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
 			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
+			string expectedGuidStrBefore = data.bsonTestData["guid"].AsString;
+			Guid expectedGuidBefore = Guid.Parse(expectedGuidStrBefore);
+			var entryBefore = cache.ServiceLocator.GetObject(expectedGuidBefore) as ILexEntry;
+			Assert.That(entryBefore.SensesOS.Count, Is.GreaterThan(0));
+			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 
-			// Exercise adding 1 picture with 2 captions
+			// Exercise adding 1 picture with 2 captions. Note that the picture that was previously attached
+			// to this FDO entry will end up being deleted, because it does not have a corresponding picture in LF.
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			sutMongoToFdo.Run(lfProj);
 
@@ -79,9 +85,12 @@ namespace LfMerge.Tests.Fdo
 			Assert.IsNotNull(entry);
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
-			// Verify "Added" picture is now a second picture on the sense, and has 2 captions
+			// Verify "Added" picture is now the only picture on the sense (because the "old" picture was deleted),
+			// and that it has 2 captions with the expected values.
+			Assert.That(entry.SensesOS.Count, Is.GreaterThan(0));
+			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.ToMultiText(
-				entry.SensesOS[0].PicturesOS[1].Caption, cache.ServiceLocator.WritingSystemManager);
+				entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
 

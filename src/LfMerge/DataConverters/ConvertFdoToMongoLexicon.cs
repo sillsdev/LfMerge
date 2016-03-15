@@ -507,10 +507,7 @@ namespace LfMerge.DataConverters
 			result.Caption = ToMultiText(fdoPicture.Caption);
 			if ((fdoPicture.PictureFileRA != null) && (!string.IsNullOrEmpty(fdoPicture.PictureFileRA.InternalPath)))
 			{
-				// Remove "Pictures" directory from internal path name
-				// If the incoming internal path doesn't begin with "Pictures", then preserve the full external path.
-				Regex regex = new Regex(@"^Pictures[/\\]");
-				result.FileName = regex.Replace(fdoPicture.PictureFileRA.InternalPath, "");
+				result.FileName = FdoPictureFilenameToLfPictureFilename(fdoPicture.PictureFileRA.InternalPath);
 			}
 			result.Guid = fdoPicture.Guid;
 			// Unmapped ICmPicture fields include:
@@ -521,6 +518,13 @@ namespace LfMerge.DataConverters
 			// fdoPicture.LocationRangeType;
 			// fdoPicture.ScaleFactor;
 			return result;
+		}
+
+		public static string FdoPictureFilenameToLfPictureFilename(string fdoInternalFilename)
+		{
+			// Remove "Pictures" directory from internal path name
+			// If the incoming internal path doesn't begin with "Pictures", then preserve the full external path.
+			return Regex.Replace(fdoInternalFilename, @"^Pictures[/\\]", "");
 		}
 
 		/// <summary>

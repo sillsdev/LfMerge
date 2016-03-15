@@ -567,8 +567,6 @@ namespace LfMerge.DataConverters
 			}
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
-			foreach (LfPicture lfPicture in lfSense.Pictures)
-				LfPictureToFdoPicture(lfPicture, fdoSense);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);
 			ListConverters[SemDomListCode].UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
@@ -608,6 +606,31 @@ namespace LfMerge.DataConverters
 			}
 			foreach (ILexExampleSentence exampleToDelete in examplesToDeleteFromFdo)
 				exampleToDelete.Delete();
+
+			// Same thing with pictures: track for later deletion
+			// Note that this is ALMOST a duplicate of the example-tracking code, but we have to track by filename instead of Guid.
+			// This is because the FDO ICmPictureFactory doesn't contain a .Create(Guid guid, ICmObject owner) function.
+			var pictureFilenamesFoundInLf = new HashSet<string>();
+			if (lfSense.Pictures != null) {
+				foreach (LfPicture lfPicture in lfSense.Pictures)
+				{
+					LfPictureToFdoPicture(lfPicture, fdoSense);
+					if (lfPicture.FileName != null)
+						pictureFilenamesFoundInLf.Add(lfPicture.FileName);
+				}
+			}
+
+			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
+			var picturesToDeleteFromFdo = new HashSet<ICmPicture>();
+			foreach (ICmPicture fdoPicture in fdoSense.PicturesOS)
+			{
+				string fdoPicturePath = fdoPicture.PictureFileRA.InternalPath;
+				string lfPicturePath = ConvertFdoToMongoLexicon.FdoPictureFilenameToLfPictureFilename(fdoPicturePath);
+				if (!pictureFilenamesFoundInLf.Contains(lfPicturePath))
+					picturesToDeleteFromFdo.Add(fdoPicture);
+			}
+			foreach (ICmPicture pictureToDelete in picturesToDeleteFromFdo)
+				pictureToDelete.Delete();
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 		}
