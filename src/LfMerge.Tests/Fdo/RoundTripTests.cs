@@ -56,6 +56,7 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
@@ -72,6 +73,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(lfEntry, Is.Not.Null);
 
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -101,8 +103,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
@@ -136,8 +140,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 		}
@@ -191,6 +197,7 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
@@ -207,6 +214,7 @@ namespace LfMerge.Tests.Fdo
 			originalLfEntry.Lexeme[vernacularWS].Value = originalLexeme;
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("lexeme");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -269,8 +277,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
@@ -296,12 +306,15 @@ namespace LfMerge.Tests.Fdo
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), lfEntry.Senses[0].ToBsonDocument());
 			differencesByName.Remove("definition");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[1].ToBsonDocument(), lfEntry.Senses[1].ToBsonDocument());
 			differencesByName.Remove("definition");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -386,8 +399,10 @@ namespace LfMerge.Tests.Fdo
 			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
 			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
+			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
 			Assert.That(customFieldValues[0], Is.EqualTo(customFieldValuesAfterTest[0]));
+			PrintDifferences(differencesByName2);
 			Assert.That(differencesByName2, Is.Empty);
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
@@ -413,15 +428,19 @@ namespace LfMerge.Tests.Fdo
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].Examples[0].ToBsonDocument(), lfEntry.Senses[0].Examples[0].ToBsonDocument());
 			differencesByName.Remove("translation");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].Examples[1].ToBsonDocument(), lfEntry.Senses[0].Examples[1].ToBsonDocument());
 			differencesByName.Remove("translation");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), lfEntry.Senses[0].ToBsonDocument());
 			differencesByName.Remove("examples");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
 
@@ -436,7 +455,7 @@ namespace LfMerge.Tests.Fdo
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
-			string vernacularWS = lfProject.FieldWorksProject.Cache.ServiceLocator.WritingSystemManager.GetStrFromWs(lfProject.FieldWorksProject.Cache.DefaultVernWs);
+			string vernacularWS = lfProject.FieldWorksProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
@@ -469,6 +488,7 @@ namespace LfMerge.Tests.Fdo
 			// FDO-to-Mongo direction populates LiftID even if it was null in original,
 			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId");
+			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
 			// Delete
@@ -487,5 +507,278 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 		}
 
+		[Test]
+		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewSense()
+		{
+			// Create
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
+			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
+			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
+			ILexEntryRepository entryRepo = servLoc.GetInstance<ILexEntryRepository>();
+			ILexSenseRepository senseRepo = servLoc.GetInstance<ILexSenseRepository>();
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			int originalNumOfFdoSenses = senseRepo.Count;
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
+			var fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			ILexSense[] senses = fdoEntry.SensesOS.ToArray();
+			Assert.That(senses.Length, Is.EqualTo(2));
+
+			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
+			string analysisWS = langProj.DefaultAnalysisWritingSystem.Id;
+			string newDefinition = "new definition for this test";
+			string newPartOfSpeech = "N"; // Noun
+			LfLexEntry lfEntry = _conn.GetLfLexEntries().First(e => e.Guid == entryGuid);
+			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
+			LfSense newSense = new LfSense();
+			newSense.Guid = Guid.NewGuid();
+			newSense.Definition = LfMultiText.FromSingleStringMapping(vernacularWS, newDefinition);
+			newSense.PartOfSpeech = LfStringField.FromString(newPartOfSpeech);
+			lfEntry.Senses.Add(newSense);
+			Assert.That(lfEntry.Senses.Count, Is.EqualTo(3));
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			string newEntryGuidStr = lfEntry.Guid.ToString();
+
+			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData, Is.Not.Null);
+			Assert.That(originalData, Is.Not.Empty);
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfFdoSenses + 1));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(3));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
+			Assert.That(receivedData, Is.Not.Null);
+			Assert.That(receivedData, Is.Not.Empty);
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
+			Assert.That(lfEntryAfterTest, Is.Not.Null);
+			Assert.That(lfEntryAfterTest.Senses.Count, Is.EqualTo(3));
+
+			IDictionary<string, Tuple<string, string>> differencesByName =
+				GetMongoDifferences(lfEntry.Senses.Last().ToBsonDocument(), lfEntryAfterTest.Senses.Last().ToBsonDocument());
+			// FDO-to-Mongo direction populates LiftID even if it was null in original,
+			// so don't consider that difference to be an error for this test.
+			differencesByName.Remove("liftId"); // Automatically set by FDO
+			differencesByName.Remove("guid"); // Automatically set by FDO
+			differencesByName.Remove("sensePublishIn"); // Automatically set by FDO
+			PrintDifferences(differencesByName);
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
+
+			// Delete
+			lfEntry.Senses.Remove(newSense);
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(lfEntry.Senses.Count(), Is.EqualTo(2));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfFdoSenses));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+		}
+
+		[Test]
+		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewExample()
+		{
+			// Create
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
+			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
+			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
+			ILexEntryRepository entryRepo = servLoc.GetInstance<ILexEntryRepository>();
+			ILexExampleSentenceRepository exampleRepo = servLoc.GetInstance<ILexExampleSentenceRepository>();
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			int originalNumOfFdoExamples = exampleRepo.Count;
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
+			var fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			ILexSense fdoSense = fdoEntry.SensesOS.First();
+			Assert.That(fdoSense, Is.Not.Null);
+			Assert.That(fdoSense.ExamplesOS.Count, Is.EqualTo(2));
+
+			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
+			string newSentence = "new sentence for this test";
+			string newTranslation = "new translation for this test";
+			LfLexEntry lfEntry = _conn.GetLfLexEntries().First(e => e.Guid == entryGuid);
+			Assert.That(lfEntry.Senses.Count, Is.GreaterThan(0));
+			LfSense lfSense = lfEntry.Senses.First();
+			Assert.That(lfSense, Is.Not.Null);
+			Assert.That(lfSense.Examples.Count, Is.EqualTo(2));
+			LfExample newExample = new LfExample();
+			newExample.Guid = Guid.NewGuid();
+			newExample.Sentence = LfMultiText.FromSingleStringMapping(vernacularWS, newSentence);
+			newExample.Translation = LfMultiText.FromSingleStringMapping(vernacularWS, newTranslation);
+			lfSense.Examples.Add(newExample);
+			Assert.That(lfSense.Examples.Count, Is.EqualTo(3));
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			string newEntryGuidStr = lfEntry.Guid.ToString();
+
+			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData, Is.Not.Null);
+			Assert.That(originalData, Is.Not.Empty);
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfFdoExamples + 1));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.First().ExamplesOS.Count, Is.EqualTo(3));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
+			Assert.That(receivedData, Is.Not.Null);
+			Assert.That(receivedData, Is.Not.Empty);
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
+			Assert.That(lfEntryAfterTest, Is.Not.Null);
+			LfSense lfSenseAfterTest = lfEntryAfterTest.Senses.First();
+			Assert.That(lfSenseAfterTest, Is.Not.Null);
+			Assert.That(lfSenseAfterTest.Examples.Count, Is.EqualTo(3));
+
+			IDictionary<string, Tuple<string, string>> differencesByName =
+				GetMongoDifferences(
+					lfSense         .Examples.Last().ToBsonDocument(),
+					lfSenseAfterTest.Examples.Last().ToBsonDocument()
+				);
+			// FDO-to-Mongo direction populates a few fields even if they were null in original,
+			// so don't consider that difference to be an error for this test.
+			differencesByName.Remove("translationGuid"); // Automatically set by FDO
+			PrintDifferences(differencesByName);
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
+
+			// Delete
+			lfSense.Examples.Remove(newExample);
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfFdoExamples));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+		}
+
+		[Test]
+		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewPicture()
+		{
+			// Create
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			sutFdoToMongo.Run(lfProject);
+			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
+			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
+			ILexEntryRepository entryRepo = servLoc.GetInstance<ILexEntryRepository>();
+			ICmPictureRepository pictureRepo = servLoc.GetInstance<ICmPictureRepository>();
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			int originalNumOfFdoPictures = pictureRepo.Count;
+			Guid entryGuid = Guid.Parse(testEntryGuidStr);
+			var fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			ILexSense fdoSense = fdoEntry.SensesOS.First();
+			Assert.That(fdoSense, Is.Not.Null);
+			Assert.That(fdoSense.PicturesOS.Count, Is.EqualTo(1));
+
+			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
+			string newCaption = "new caption for this test";
+			string newFilename = "DoesNotExist_ABCXYZ.jpg";
+			LfLexEntry lfEntry = _conn.GetLfLexEntries().First(e => e.Guid == entryGuid);
+			Assert.That(lfEntry.Senses.Count, Is.GreaterThan(0));
+			LfSense lfSense = lfEntry.Senses.First();
+			Assert.That(lfSense, Is.Not.Null);
+			Assert.That(lfSense.Pictures.Count, Is.EqualTo(1));
+			LfPicture newPicture = new LfPicture();
+			newPicture.Guid = Guid.NewGuid();
+			newPicture.Caption = LfMultiText.FromSingleStringMapping(vernacularWS, newCaption);
+			newPicture.FileName = newFilename;
+			lfSense.Pictures.Add(newPicture);
+			Assert.That(lfSense.Pictures.Count, Is.EqualTo(2));
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			string newEntryGuidStr = lfEntry.Guid.ToString();
+
+			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData, Is.Not.Null);
+			Assert.That(originalData, Is.Not.Empty);
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfFdoPictures + 1));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.First().PicturesOS.Count, Is.EqualTo(2));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
+			Assert.That(receivedData, Is.Not.Null);
+			Assert.That(receivedData, Is.Not.Empty);
+			Assert.That(receivedData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
+			Assert.That(lfEntryAfterTest, Is.Not.Null);
+			LfSense lfSenseAfterTest = lfEntryAfterTest.Senses.First();
+			Assert.That(lfSenseAfterTest, Is.Not.Null);
+			Assert.That(lfSenseAfterTest.Pictures.Count, Is.EqualTo(2));
+
+			IDictionary<string, Tuple<string, string>> differencesByName =
+				GetMongoDifferences(
+					lfSense         .Examples.Last().ToBsonDocument(),
+					lfSenseAfterTest.Examples.Last().ToBsonDocument()
+				);
+			// FDO-to-Mongo direction populates a few fields even if they were null in original,
+			// so don't consider that difference to be an error for this test.
+			//differencesByName.Remove("translationGuid"); // Automatically set by FDO
+			PrintDifferences(differencesByName);
+			Assert.That(differencesByName.Count(), Is.EqualTo(0));
+
+			// Delete
+			lfSense.Pictures.Remove(newPicture);
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
+			Assert.That(lfEntry.Senses.First().Pictures.Count, Is.EqualTo(1));
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			fdoEntry = servLoc.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null);
+			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfFdoPictures));
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			originalData = _conn.GetLfLexEntries();
+			Assert.That(originalData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+		}
 	}
 }

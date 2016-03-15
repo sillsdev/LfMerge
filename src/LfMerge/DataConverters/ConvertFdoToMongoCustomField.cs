@@ -18,8 +18,8 @@ namespace LfMerge.DataConverters
 {
 	public class ConvertFdoToMongoCustomField
 	{
-		private FdoCache cache;
-		private IFdoServiceLocator servLoc;
+		private FdoCache _cache;
+		private IFdoServiceLocator _servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
 
@@ -44,15 +44,15 @@ namespace LfMerge.DataConverters
 		// TODO: Remove this constructor when Logger.NullLogging() is merged back into master.  DDW 14-Mar-2016
 		public ConvertFdoToMongoCustomField(FdoCache cache)
 		{
-			this.cache = cache;
-			servLoc = cache.ServiceLocator;
+			_cache = cache;
+			_servLoc = cache.ServiceLocator;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 		}
 
 		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
-			this.cache = cache;
-			servLoc = cache.ServiceLocator;
+			this._cache = cache;
+			_servLoc = cache.ServiceLocator;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 		}
@@ -87,11 +87,13 @@ namespace LfMerge.DataConverters
 			out BsonDocument lfCustomFields, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			lfCustomFields = null;
-			if (cmObj == null) return;
+
+			if (cmObj == null)
+				return;
 
 			List<int> customFieldIds = new List<int>(
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
-				.Where(flid => cache.GetIsCustomField(flid)));
+				.Where(flid => _cache.GetIsCustomField(flid)));
 
 			var customFieldData = new BsonDocument();
 			var customFieldGuids = new BsonDocument();
@@ -119,7 +121,7 @@ namespace LfMerge.DataConverters
 				{
 					// Default to current analysis WS?
 					List<string>inputSystems = new List<string>();
-					foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
+					foreach (var fdoAnalysisWs in _cache.LangProject.CurrentAnalysisWritingSystems)
 						inputSystems.Add(fdoAnalysisWs.RFC5646);
 					lfCustomFieldList[lfCustomFieldName] =
 						GetLfCustomFieldSettings(label, lfCustomFieldType, inputSystems);
@@ -139,7 +141,7 @@ namespace LfMerge.DataConverters
 							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName, "");
 						else
 							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName,
-								lfCustomFieldType, new List<string>{cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
+								lfCustomFieldType, new List<string>{_cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
 
 						lfCustomFieldList[lfCustomFieldName] = lfCustomFieldSettings;
 					}
@@ -196,18 +198,18 @@ namespace LfMerge.DataConverters
 		/// or a list of GUIDs that happens to contain only one entry.
 		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
 		/// </param>
-		/// <param name="customFieldType">output string of LF custom field type</param>
+		/// <param name="customFieldType">Output -Type of lf custom field ["Multi_ListRef", "Date", "MultiPara", "Single_ListRef"].</param>
 		private void GetCustomFieldData(int hvo, int flid, string fieldSourceType, out BsonDocument bsonForThisField, out string customFieldType)
 		{
 			bsonForThisField = null;
 			customFieldType = string.Empty;
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
-			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)_cache.DomainDataByFlid;
 			CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in FDO are GenDate, Integer, MultiString/MultiUnicode, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fdoFieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -229,6 +231,14 @@ namespace LfMerge.DataConverters
 					// LfMultiText.FromSingleStringMapping
 					fieldValue = LfMultiText.FromSingleStringMapping(
 						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString()).AsBsonDocument();
+				break;
+
+			case CellarPropertyType.MultiString:
+			case CellarPropertyType.MultiUnicode:
+				var fdoMultiString = (IMultiAccessorBase)data.get_MultiStringProp(hvo, flid);
+				LfMultiText multiTextValue = LfMultiText.FromFdoMultiString(fdoMultiString, _servLoc.WritingSystemManager);
+				fieldValue = (multiTextValue == null || multiTextValue.Count == 0) ? null : new BsonDocument(multiTextValue.AsBsonDocument());
+				// No need to save GUIDs for multistrings
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -263,7 +273,7 @@ namespace LfMerge.DataConverters
 				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					fieldValue = null;
 				else
-					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromSingleITsString(iTsValue, _cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
 				break;
 
 			default:
@@ -293,10 +303,10 @@ namespace LfMerge.DataConverters
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Select(para => para.Contents).ToList();
 			List<string> htmlParas = paras.Where(para => para != null).Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
-			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int fieldWs = cache.MetaDataCacheAccessor.GetFieldWs(flid);
+			ILgWritingSystemFactory wsManager = _cache.ServiceLocator.WritingSystemManager;
+			int fieldWs = _cache.MetaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
-			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?
+			if (wsStr == null) wsStr = wsManager.GetStrFromWs(_cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?
 			return new BsonDocument(wsStr, new BsonDocument("value", new BsonString(String.Join("", htmlParas))));
 		}
 
@@ -314,7 +324,7 @@ namespace LfMerge.DataConverters
 			if (source.ElementCount <= 0)
 				return result;
 			LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(source);
-			KeyValuePair<int, string> kv = valueAsMultiText.WsIdAndFirstNonEmptyString(cache);
+			KeyValuePair<int, string> kv = valueAsMultiText.WsIdAndFirstNonEmptyString(_cache);
 			wsId = kv.Key;
 			string htmlContents = kv.Value;
 			result.AddRange(htmlContents.Split(new string[] { "</p>" }, StringSplitOptions.RemoveEmptyEntries)
@@ -368,13 +378,13 @@ namespace LfMerge.DataConverters
 		/// <param name="referencedObjectGuids">List to which referenced object's GUID will be added.</param>
 		private BsonValue GetCustomReferencedObject(int hvo, int flid, ref List<Guid> referencedObjectGuids)
 		{
-			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)_cache.DomainDataByFlid;
 			if (hvo == 0 || !data.get_IsValidObject(hvo))
 			{
 				referencedObjectGuids.Add(Guid.Empty);
 				return null;
 			}
-			ICmObject referencedObject = cache.GetAtomicPropObject(hvo);
+			ICmObject referencedObject = _cache.GetAtomicPropObject(hvo);
 			if (referencedObject == null)
 			{
 				referencedObjectGuids.Add(Guid.Empty);
@@ -407,7 +417,7 @@ namespace LfMerge.DataConverters
 				// TODO: If this happens, we're probably importing a newly-created possibility list, so we should
 				// probably create it in FDO. Implementation needed.
 			}
-			return (ICmPossibilityList)servLoc.GetObject(parentListGuid);
+			return (ICmPossibilityList)_servLoc.GetObject(parentListGuid);
 		}
 
 		/// <summary>
@@ -436,14 +446,14 @@ namespace LfMerge.DataConverters
 				else
 					fieldGuids.Add(ParseGuidOrDefault(guidOrGuids.AsString));
 			}
-			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)_cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
 			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
 			if (fieldName == null)
 				return false;
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in FDO are GenDate, Integer, MultiString/MultiUnicode, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -476,22 +486,41 @@ namespace LfMerge.DataConverters
 					return false;
 				}
 
+			case CellarPropertyType.MultiString:
+			case CellarPropertyType.MultiUnicode:
+				{
+					LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+					Console.WriteLine("Custom field {0} contained MultiText that looks like:", fieldName);
+					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
+					{
+						if (kv.Value == null)
+							continue;
+						string s = kv.Value.Value;
+						int wsId = _servLoc.WritingSystemManager.GetWsFromStr(kv.Key);
+						if (wsId == 0)
+							continue;
+						Console.WriteLine("  {0}: {1}", kv.Key, s);
+						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.MakeTss(s, wsId));
+					}
+					return true;
+				}
+
 			case CellarPropertyType.OwningAtomic:
 				{
 					// Custom field is a MultiparagraphText, which is an IStText object in FDO
-					IStTextRepository textRepo = cache.ServiceLocator.GetInstance<IStTextRepository>();
+					IStTextRepository textRepo = _cache.ServiceLocator.GetInstance<IStTextRepository>();
 					Guid fieldGuid = fieldGuids.FirstOrDefault();
 					IStText text;
 					if (!textRepo.TryGetObject(fieldGuid, out text))
 					{
 						int currentFieldContentsHvo = data.get_ObjectProp(hvo, flid);
 						if (currentFieldContentsHvo != FdoCache.kNullHvo)
-							text = (IStText)cache.GetAtomicPropObject(currentFieldContentsHvo);
+							text = (IStText)_cache.GetAtomicPropObject(currentFieldContentsHvo);
 						else
 						{
 							// NOTE: I don't like the "magic" -2 number below, but FDO doesn't seem to have an enum for this. 2015-11 RM
-							int newStTextHvo = data.MakeNewObject(cache.GetDestinationClass(flid), hvo, flid, -2);
-							text = (IStText)cache.GetAtomicPropObject(newStTextHvo);
+							int newStTextHvo = data.MakeNewObject(_cache.GetDestinationClass(flid), hvo, flid, -2);
+							text = (IStText)_cache.GetAtomicPropObject(newStTextHvo);
 						}
 					}
 					BsonValue currentFdoTextContents = GetCustomStTextValues(text, flid);
@@ -532,7 +561,7 @@ namespace LfMerge.DataConverters
 			case CellarPropertyType.ReferenceAtomic:
 				Console.WriteLine("ReferenceAtomic field named {0} with value {1}", fieldName, value.ToJson());
 				int log_fieldWs = fdoMetaData.GetFieldWs(flid);
-				string log_fieldWsStr = servLoc.WritingSystemManager.GetStrFromWs(log_fieldWs);
+				string log_fieldWsStr = _servLoc.WritingSystemManager.GetStrFromWs(log_fieldWs);
 				Console.WriteLine("Writing system for this field has ID {0} and name ({1})", log_fieldWs, log_fieldWsStr);
 				if (fieldGuids.First() != Guid.Empty)
 				{
@@ -552,7 +581,7 @@ namespace LfMerge.DataConverters
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
 					// Oddly, this can return 0 for some custom fields. TODO: Find out why: that seems like it would be an error.
 					if (fieldWs == 0)
-						fieldWs = cache.DefaultUserWs;
+						fieldWs = _cache.DefaultUserWs;
 					ICmPossibilityList parentList = GetParentListForField(flid);
 					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
 
@@ -567,7 +596,7 @@ namespace LfMerge.DataConverters
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
 					// TODO: Investigate why this is sometimes coming back as 0 instead of as a real writing system ID
 					if (fieldWs == 0)
-						fieldWs = cache.DefaultUserWs;
+						fieldWs = _cache.DefaultUserWs;
 					ICmPossibilityList parentList = GetParentListForField(flid);
 
 					LfStringArrayField valueAsStringArray = BsonSerializer.Deserialize<LfStringArrayField>(value.AsBsonDocument);
@@ -584,7 +613,7 @@ namespace LfMerge.DataConverters
 							return newPoss;
 						}
 						else {
-							newPoss = servLoc.GetObject(thisGuid) as ICmPossibility;
+							newPoss = _servLoc.GetObject(thisGuid) as ICmPossibility;
 							return newPoss;
 						}
 					});
@@ -621,12 +650,12 @@ namespace LfMerge.DataConverters
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-					int wsIdForField = cache.MetaDataCacheAccessor.GetFieldWs(flid);
-					string wsStrForField = cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
+					int wsIdForField = _cache.MetaDataCacheAccessor.GetFieldWs(flid);
+					string wsStrForField = _cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
 					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
 					string foundWs = kv.Key;
 					string foundData = kv.Value;
-					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
+					int foundWsId = _cache.WritingSystemFactory.GetWsFromStr(foundWs);
 					data.SetString(hvo, flid, TsStringUtils.MakeTss(foundData, foundWsId));
 					return true;
 				}
@@ -643,7 +672,7 @@ namespace LfMerge.DataConverters
 			if (customFieldValues == null) return;
 			List<int> customFieldIds = new List<int>(
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
-				.Where(flid => cache.GetIsCustomField(flid)));
+				.Where(flid => _cache.GetIsCustomField(flid)));
 
 			var remainingFieldNames = new HashSet<string>(customFieldValues.Select(elem => elem.Name));
 			foreach (int flid in customFieldIds)

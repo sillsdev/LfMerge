@@ -36,6 +36,21 @@ namespace LfMerge.DataConverters
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
 		private ConvertFdoToMongoCustomField _convertCustomField; // TOOD: refactor this to ConvertMongoToFdoCustomField
+
+		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
+		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+		public const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
+		public const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
+//		public const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
+		public const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
+		public const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
+//		public const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
+		public const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
+		public const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
+		public const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
+		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+
+		public IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
 		private LfOptionList _lfGrammar;
 		private Dictionary<string, LfOptionListItem> _lfGrammarByKey;
 
@@ -64,6 +79,17 @@ namespace LfMerge.DataConverters
 			else
 				_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
 
+			ListConverters = new Dictionary<string, ConvertMongoToFdoOptionList>();
+			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
+			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode);
+			ListConverters[AcademicDomainListCode] = PrepareOptionListConverter(AcademicDomainListCode);
+			ListConverters[LocationListCode] = PrepareOptionListConverter(LocationListCode);
+			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode);
+			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
+			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
+			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode);
+			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
+
 			if (Cache.LanguageProject != null && Cache.LanguageProject.TranslationTagsOA != null)
 			{
 				_freeTranslationType = Cache.ServiceLocator.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation) as ICmPossibility;
@@ -72,6 +98,12 @@ namespace LfMerge.DataConverters
 			}
 
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+		}
+
+		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
+		{
+			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
+			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), optionListToConvert, Logger);
 		}
 
 		public void RunConversion()
@@ -410,10 +442,25 @@ namespace LfMerge.DataConverters
 			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
 			*/
 
+			var senseGuidsFoundInLf = new HashSet<Guid>();
 			if (lfEntry.Senses != null) {
-				foreach(LfSense lfSense in lfEntry.Senses)
+				foreach (LfSense lfSense in lfEntry.Senses)
+				{
 					LfSenseToFdoSense(lfSense, fdoEntry);
+					if (lfSense.Guid != null)
+						senseGuidsFoundInLf.Add(lfSense.Guid.Value);
+				}
 			}
+
+			// If any FDO senses are *not* on the lfEntry at this point, it's because they were deleted from LF in the past.
+			var sensesToDeleteFromFdo = new HashSet<ILexSense>();
+			foreach (ILexSense fdoSense in fdoEntry.SensesOS)
+			{
+				if (!senseGuidsFoundInLf.Contains(fdoSense.Guid))
+					sensesToDeleteFromFdo.Add(fdoSense);
+			}
+			foreach (ILexSense senseToDelete in sensesToDeleteFromFdo)
+				senseToDelete.Delete();
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 		}
@@ -433,7 +480,9 @@ namespace LfMerge.DataConverters
 				fdoExample.Guid,
 				fdoExample.Hvo
 			);
-			// fdoExample.PublishIn = lfExample.ExamplePublishIn; // TODO: More complex than that.
+			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
+				fdoExample.DoNotPublishInRC, lfExample.ExamplePublishIn, Cache.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
+			);
 			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
@@ -480,22 +529,17 @@ namespace LfMerge.DataConverters
 			if (guid == Guid.Empty)
 				guid = GuidFromLiftId(lfSense.LiftId);
 			ILexSense fdoSense = GetOrCreateSenseByGuid(guid, owner);
-			// TODO: Set instance fields
 
-			// var converter = new PossibilityListConverter(Cache.LanguageProject.LocationsOA);
-			// fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
-			// TODO: Check if the compiler is happy with the below (creating an object and throwing it away after calling one method)
-			//			new PossibilityListConverter(Cache.LanguageProject.SemanticDomainListOA)
-			//				.UpdatePossibilitiesFromStringArray(fdoSense.DomainTypesRC, lfSense.AcademicDomains);
-			//			new PossibilityListConverter(Cache.LanguageProject.AnthroListOA)
-			//				.UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
+			// Set the Guid on the LfSense object, so we can later track it for deletion purposes (see LfEntryToFdoEntry)
+			lfSense.Guid = fdoSense.Guid;
+
+			ListConverters[AcademicDomainListCode].UpdatePossibilitiesFromStringArray(fdoSense.DomainTypesRC, lfSense.AcademicDomains);
+			ListConverters[AnthroCodeListCode].UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
 			SetMultiStringFrom(fdoSense.AnthroNote, lfSense.AnthropologyNote);
 			// lfSense.AuthorInfo; // TODO: Figure out if this should be copied too
 			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
 			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);
-			foreach (LfExample lfExample in lfSense.Examples)
-				LfExampleToFdoExample(lfExample, fdoSense);
 			SetMultiStringFrom(fdoSense.GeneralNote, lfSense.GeneralNote);
 			SetMultiStringFrom(fdoSense.Gloss, lfSense.Gloss);
 			SetMultiStringFrom(fdoSense.GrammarNote, lfSense.GrammarNote);
@@ -523,24 +567,70 @@ namespace LfMerge.DataConverters
 			}
 			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
-			foreach (LfPicture lfPicture in lfSense.Pictures)
-				LfPictureToFdoPicture(lfPicture, fdoSense);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);
-			//			new PossibilityListConverter(Cache.LanguageProject.SemanticDomainListOA)
-			//				.UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
+			ListConverters[SemDomListCode].UpdatePossibilitiesFromStringArray(fdoSense.SemanticDomainsRC, lfSense.SemanticDomain);
 			SetMultiStringFrom(fdoSense.SemanticsNote, lfSense.SemanticsNote);
 			SetMultiStringFrom(fdoSense.Bibliography, lfSense.SenseBibliography);
 
 			// lfSense.SenseId; // TODO: What do I do with this one?
 			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
-			// fdoSense.PublishIn = lfSense.SensePublishIn; // TODO: More complex than that. Handle it correctly.
+
+			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
+				fdoSense.DoNotPublishInRC, lfSense.SensePublishIn, Cache.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
+			);
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
-			fdoSense.SenseTypeRA = new ConvertMongoToFdoPossibilityLists(Cache.LanguageProject.LexDbOA.SenseTypesOA, _wsEn).GetByKey(lfSense.SenseType);
+			fdoSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			fdoSense.Source = BestTsStringFromMultiText(lfSense.Source);
-			// fdoSense.StatusRA = new PossibilityListConverter(Cache.LanguageProject.StatusOA).GetByName(lfSense.Status); // TODO: Nope, more complex.
-			// fdoSense.UsageTypesRC = lfSense.Usages; // TODO: More complex than that. Handle it correctly.
+			fdoSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
+			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(fdoSense.UsageTypesRC, lfSense.Usages);
+
+			// Track examples for later deletion
+			var exampleGuidsFoundInLf = new HashSet<Guid>();
+			if (lfSense.Examples != null) {
+				foreach (LfExample lfExample in lfSense.Examples)
+				{
+					LfExampleToFdoExample(lfExample, fdoSense);
+					if (lfExample.Guid != null)
+						exampleGuidsFoundInLf.Add(lfExample.Guid.Value);
+				}
+			}
+
+			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
+			var examplesToDeleteFromFdo = new HashSet<ILexExampleSentence>();
+			foreach (ILexExampleSentence fdoExample in fdoSense.ExamplesOS)
+			{
+				if (!exampleGuidsFoundInLf.Contains(fdoExample.Guid))
+					examplesToDeleteFromFdo.Add(fdoExample);
+			}
+			foreach (ILexExampleSentence exampleToDelete in examplesToDeleteFromFdo)
+				exampleToDelete.Delete();
+
+			// Same thing with pictures: track for later deletion
+			// Note that this is ALMOST a duplicate of the example-tracking code, but we have to track by filename instead of Guid.
+			// This is because the FDO ICmPictureFactory doesn't contain a .Create(Guid guid, ICmObject owner) function.
+			var pictureFilenamesFoundInLf = new HashSet<string>();
+			if (lfSense.Pictures != null) {
+				foreach (LfPicture lfPicture in lfSense.Pictures)
+				{
+					LfPictureToFdoPicture(lfPicture, fdoSense);
+					if (lfPicture.FileName != null)
+						pictureFilenamesFoundInLf.Add(lfPicture.FileName);
+				}
+			}
+
+			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
+			var picturesToDeleteFromFdo = new HashSet<ICmPicture>();
+			foreach (ICmPicture fdoPicture in fdoSense.PicturesOS)
+			{
+				string fdoPicturePath = fdoPicture.PictureFileRA.InternalPath;
+				string lfPicturePath = ConvertFdoToMongoLexicon.FdoPictureFilenameToLfPictureFilename(fdoPicturePath);
+				if (!pictureFilenamesFoundInLf.Contains(lfPicturePath))
+					picturesToDeleteFromFdo.Add(fdoPicture);
+			}
+			foreach (ICmPicture pictureToDelete in picturesToDeleteFromFdo)
+				pictureToDelete.Delete();
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
 		}
@@ -613,12 +703,7 @@ namespace LfMerge.DataConverters
 			fdoPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
 			fdoPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
-			if (lfEntry.Location != null)
-			{
-				// TODO: Cache this in the instance
-				var converter = new ConvertMongoToFdoPossibilityLists(Cache.LanguageProject.LocationsOA, _wsEn);
-				fdoPronunciation.LocationRA = (ICmLocation)converter.GetByName(lfEntry.Location.Value);
-			}
+			fdoPronunciation.LocationRA = (ICmLocation)ListConverters[LocationListCode].FromStringField(lfEntry.Location);
 			// Not handling fdoPronunciation.MediaFilesOS. TODO: At some point we may want to handle media files as well.
 			// Not handling fdoPronunciation.LiftResidue
 		}

@@ -157,6 +157,11 @@ namespace LfMerge.Tests
 			return true;
 		}
 
+		public bool SetCustomFieldConfig(ILfProject project)
+		{
+			return true;
+		}
+
 		public void UpdateMockLfLexEntry(BsonDocument mockData)
 		{
 			LfLexEntry data = BsonSerializer.Deserialize<LfLexEntry>(mockData);

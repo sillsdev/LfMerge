@@ -21,11 +21,12 @@ namespace LfMerge.LanguageForge.Model
 
 		public static LfStringArrayField FromStrings(IEnumerable<string> source)
 		{
-			return new LfStringArrayField { Values = new List<string>(source) };
+			return new LfStringArrayField { Values = new List<string>(source.Where(s => s != null)) };
 		}
 
 		public static LfStringArrayField FromSingleString(string source)
 		{
+			if (source == null) return null;
 			return new LfStringArrayField { Values = new List<string> { source } };
 		}
 
