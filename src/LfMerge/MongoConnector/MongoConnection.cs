@@ -193,7 +193,8 @@ namespace LfMerge.MongoConnector
 		}
 
 		/// <summary>
-		/// Writes project custom field configuration at the appropriate entry, senses, and examples level
+		/// Writes project custom field configuration at the appropriate entry, senses, and examples level.
+		/// Also adds these field names to the displayed fieldOrder
 		/// </summary>
 		/// <param name="project">LF project</param>
 		/// <param name="lfCustomFieldList"> Dictionary of LF custom field settings</param>
@@ -212,16 +213,34 @@ namespace LfMerge.MongoConnector
 				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
 			};
 
+			List<string> entryCustomFieldOrder = new List<string>();
+			List<string> senseCustomFieldOrder = new List<string>();
+			List<string> exampleCustomFieldOrder = new List<string>();
+
 			foreach (var customFieldKVP in lfCustomFieldList)
 			{
 				Logger.Debug("Writing custom field config for {0}", customFieldKVP.Key);
 				if (customFieldKVP.Key.StartsWith("customField_entry"))
+				{
 					updates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					entryCustomFieldOrder.Add(customFieldKVP.Key);
+				}
 				else if (customFieldKVP.Key.StartsWith("customField_senses"))
+				{
 					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					senseCustomFieldOrder.Add(customFieldKVP.Key);
+				}
 				else if (customFieldKVP.Key.StartsWith("customField_example"))
+				{
 					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					exampleCustomFieldOrder.Add(customFieldKVP.Key);
+				}
 			}
+
+			// Write the field names to the field order lists.
+			updates.Add(builder.AddToSetEach("config.entry.fieldOrder", entryCustomFieldOrder));
+			updates.Add(builder.AddToSetEach("config.entry.fields.senses.fieldOrder", senseCustomFieldOrder));
+			updates.Add(builder.AddToSetEach("config.entry.fields.senses.fields.examples.fieldOrder", exampleCustomFieldOrder));
 
 			var update = builder.Combine(updates);
 			collection.FindOneAndUpdate(filter, update, updateOptions);
