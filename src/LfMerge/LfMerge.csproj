@@ -161,7 +161,7 @@
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\TransferFdoToMongoAction.cs" />
-    <Compile Include="DataConverters\ConvertCustomField.cs" />
+    <Compile Include="DataConverters\ConvertFdoToMongoCustomField.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoPossibilityLists.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />

@@ -16,7 +16,7 @@ using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.DataConverters
 {
-	public class ConvertCustomField
+	public class ConvertFdoToMongoCustomField
 	{
 		private FdoCache cache;
 		private IFdoServiceLocator servLoc;
@@ -42,14 +42,14 @@ namespace LfMerge.DataConverters
 		};
 
 		// TODO: Remove this constructor when Logger.NullLogging() is merged back into master.  DDW 14-Mar-2016
-		public ConvertCustomField(FdoCache cache)
+		public ConvertFdoToMongoCustomField(FdoCache cache)
 		{
 			this.cache = cache;
 			servLoc = cache.ServiceLocator;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 		}
 
-		public ConvertCustomField(FdoCache cache, ILogger logger)
+		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
 			this.cache = cache;
 			servLoc = cache.ServiceLocator;
