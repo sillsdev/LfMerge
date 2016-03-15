@@ -39,13 +39,6 @@ namespace LfMerge.DataConverters
 			//{CellarPropertyType.GenDate, "Date"},
 		};
 
-		// TODO: Remove this constructor when Logger.NullLogging() is merged back into master.  DDW 14-Mar-2016
-		public ConvertFdoToMongoCustomField(FdoCache cache)
-		{
-			this.cache = cache;
-			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
-		}
-
 		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
 			this.cache = cache;
@@ -56,9 +49,7 @@ namespace LfMerge.DataConverters
 		/// <summary>
 		/// Returns value of custom fields for this CmObject.
 		/// </summary>
-		/// <param name="cmObj">Cm object.</param>
-		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
-		/// <param name="lfCustomFields">Output returns either null or a BsonDocument with the following structure
+		/// <returns>Either null or a BsonDocument with the following structure
 		///  <br />
 		/// { <br />
 		///     "customFields": { fieldName: fieldValue, fieldName2: fieldValue2, etc. } <br />
@@ -78,12 +69,14 @@ namespace LfMerge.DataConverters
 		/// and will not have a corresponding value in customFieldGuids.
 		/// If ALL custom fields are suppressed because of having null, default or empty values, then this function will return
 		/// null instead of returning a useless-but-not-actually-empty BsonDocument.
+		/// </returns>
+		/// <param name="cmObj">Cm object.</param>
+		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
 		/// <param name="lfCustomFieldList">List of Lf custom field configuration settings</param>
-		public void GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
-			out BsonDocument lfCustomFields, ref Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
+			Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			lfCustomFields = null;
-			if (cmObj == null) return;
+			if (cmObj == null) return null;
 
 			List<int> customFieldIds = new List<int>(
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
@@ -96,7 +89,7 @@ namespace LfMerge.DataConverters
 			{
 				string label = fdoMetaData.GetFieldNameOrNull(flid);
 				if (label == null)
-					return;
+					return null;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, objectType);
 				BsonDocument bsonForThisField;
 				string lfCustomFieldType;
@@ -142,9 +135,10 @@ namespace LfMerge.DataConverters
 				}
 			}
 
-			lfCustomFields = new BsonDocument();
-			lfCustomFields.Add("customFields", customFieldData);
-			lfCustomFields.Add("customFieldGuids", customFieldGuids);
+			BsonDocument result = new BsonDocument();
+			result.Add("customFields", customFieldData);
+			result.Add("customFieldGuids", customFieldGuids);
+			return result;
 		}
 
 

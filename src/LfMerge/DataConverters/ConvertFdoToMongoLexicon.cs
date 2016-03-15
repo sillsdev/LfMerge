@@ -62,7 +62,7 @@ namespace LfMerge.DataConverters
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
 
-			_convertCustomField = new ConvertFdoToMongoCustomField(Cache);
+			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
@@ -263,9 +263,7 @@ namespace LfMerge.DataConverters
 			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(s => FdoSenseToLfSense(s, lfCustomFieldList)));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			BsonDocument customFieldsAndGuids;
-			_convertCustomField.GetCustomFieldsForThisCmObject(fdoEntry, "entry",
-				out customFieldsAndGuids, ref lfCustomFieldList);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoEntry, "entry", lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -445,10 +443,7 @@ namespace LfMerge.DataConverters
 			fdoSense.LexSenseOutline;
 			*/
 
-			BsonDocument customFieldsAndGuids;
-			_convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses",
-				out customFieldsAndGuids, ref lfCustomFieldList);
-
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses", lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -504,9 +499,7 @@ namespace LfMerge.DataConverters
 				lfExample.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids;
-			_convertCustomField.GetCustomFieldsForThisCmObject(fdoExample, "examples",
-				out customFieldsAndGuids, ref lfCustomFieldList);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoExample, "examples", lfCustomFieldList);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
