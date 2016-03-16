@@ -193,6 +193,32 @@ namespace LfMerge.MongoConnector
 		}
 
 		/// <summary>
+		/// Get the config settings for all custom fields (and only custom fields).
+		/// </summary>
+		/// <returns>Dictionary of custom field settings, flattened so entry, sense and example custom fields are all at the dict's top level.</returns>
+		/// <param name="project">Project.</param>
+		public Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project)
+		{
+			var result = new Dictionary<string, LfConfigFieldBase>();
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null || projectRecord.Config == null)
+				return result;
+			LfConfigFieldList entryConfig = projectRecord.Config.Entry;
+			LfConfigFieldList senseConfig = null;
+			LfConfigFieldList exampleConfig = null;
+			if (entryConfig != null && entryConfig.Fields.ContainsKey("senses"))
+				senseConfig = entryConfig.Fields["senses"] as LfConfigFieldList;
+			if (senseConfig != null && senseConfig.Fields.ContainsKey("examples"))
+				exampleConfig = senseConfig.Fields["examples"] as LfConfigFieldList;
+			foreach (LfConfigFieldList fieldList in new LfConfigFieldList[]{ entryConfig, senseConfig, exampleConfig })
+				if (fieldList != null)
+					foreach (KeyValuePair<string, LfConfigFieldBase> fieldInfo in fieldList.Fields)
+						if (fieldInfo.Key.StartsWith("customField_"))
+							result[fieldInfo.Key] = fieldInfo.Value;
+			return result;
+		}
+
+		/// <summary>
 		/// Writes project custom field configuration at the appropriate entry, senses, and examples level.
 		/// Also adds these field names to the displayed fieldOrder
 		/// </summary>

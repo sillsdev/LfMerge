@@ -23,6 +23,7 @@ namespace LfMerge.MongoConnector
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			bool initialClone = false, string vernacularWs = "", string analysisWs = "");
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
+		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 	}
 }
 
