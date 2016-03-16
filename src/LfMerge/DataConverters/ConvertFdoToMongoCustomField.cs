@@ -146,7 +146,7 @@ namespace LfMerge.DataConverters
 		/// <summary>
 		/// Get the list code of the parent
 		/// </summary>
-		/// <returns>The list code.</returns>
+		/// <returns>The list code as used in LF (e.g., "sense-type" or "grammatical-info").</returns>
 		/// <param name="flid">Flid.</param>
 		private string GetParentListCode(int flid)
 		{
@@ -154,7 +154,39 @@ namespace LfMerge.DataConverters
 			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
 			if (parentListGuid != Guid.Empty)
 			{
-				result = fdoMetaData.GetFieldNameOrNull(flid);
+				//result = fdoMetaData.GetFieldNameOrNull(flid); // This won't be the right result
+				switch (parentListGuid) {
+				case cache.LanguageProject.LexDbOA.DomainTypesOA.Guid:
+					result = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
+					break;
+				case cache.LanguageProject.AnthroListOA.Guid:
+					result = MagicStrings.LfOptionListCodeForAnthropologyCodes;
+					break;
+				case cache.LanguageProject.LexDbOA.PublicationTypesOA.Guid:
+					result = MagicStrings.LfOptionListCodeForDoNotPublishIn;
+					break;
+				case cache.LanguageProject.PartsOfSpeechOA.Guid:
+					result = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+					break;
+				case cache.LanguageProject.LocationsOA.Guid:
+					result = MagicStrings.LfOptionListCodeForLocations;
+					break;
+				case cache.LanguageProject.SemanticDomainListOA.Guid:
+					result = MagicStrings.LfOptionListCodeForSemanticDomains;
+					break;
+				case cache.LanguageProject.LexDbOA.SenseTypesOA.Guid:
+					result = MagicStrings.LfOptionListCodeForSenseTypes;
+					break;
+				case cache.LanguageProject.StatusOA.Guid:
+					result = MagicStrings.LfOptionListCodeForStatus;
+					break;
+				case cache.LanguageProject.LexDbOA.UsageTypesOA.Guid:
+					result = MagicStrings.LfOptionListCodeForUsageTypes;
+					break;
+				default:
+					result = string.Empty;
+					break;
+				}
 			}
 
 			return result;
