@@ -122,8 +122,6 @@ namespace LfMerge.DataConverters
 				Connection.RemoveRecord(LfProject, guid);
 			}
 
-
-			
 			lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			var LfCustomFieldEntryList = lfEntries.Select(e => e.CustomFields).Where(c => c != null && c.Count() > 0);
 			foreach (var LfCustomFieldEntryName in LfCustomFieldEntryList.First().Names)
@@ -135,11 +133,6 @@ namespace LfMerge.DataConverters
 			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
 
 			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
-
-			#region custom field
-			#endregion
-
-
 		}
 
 		// Shorthand for getting an instance from the cache's service locator

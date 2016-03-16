@@ -72,7 +72,8 @@ namespace LfMerge.DataConverters
 		/// </returns>
 		/// <param name="cmObj">Cm object.</param>
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
-		/// <param name="lfCustomFieldList">List of Lf custom field configuration settings</param>
+		/// <param name="lfCustomFieldList">Dictionary to receive LF custom field configuration settings (keys are field names
+		/// as found in LF, e.g. customField_entry_MyCustomField)</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
 			Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{

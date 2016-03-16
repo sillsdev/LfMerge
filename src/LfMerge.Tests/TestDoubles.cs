@@ -122,12 +122,14 @@ namespace LfMerge.Tests
 		private Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
 		private Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
 		private Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
+		private Dictionary<string, LfConfigFieldBase> _storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
 
 		public void Reset()
 		{
 			_storedInputSystems.Clear();
 			_storedLfLexEntries.Clear();
 			_storedLfOptionLists.Clear();
+			_storedCustomFieldConfig.Clear();
 		}
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
@@ -149,12 +151,17 @@ namespace LfMerge.Tests
 
 		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
+			if (lfCustomFieldList == null)
+				_storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
+			else
+				// _storedCustomFieldConfig = lfCustomFieldList; // This would assign a reference; we want to clone instead, in case unit tests further modify this dict
+				_storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>(lfCustomFieldList); // Cloning better simulates writing to Mongo
 			return true;
 		}
 
-		public bool SetCustomFieldConfig(ILfProject project)
+		public Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project)
 		{
-			return true;
+			return _storedCustomFieldConfig;
 		}
 
 		public void UpdateMockLfLexEntry(BsonDocument mockData)
