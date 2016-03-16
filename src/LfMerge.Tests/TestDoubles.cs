@@ -123,11 +123,6 @@ namespace LfMerge.Tests
 		private Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
 		private Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 
-		// For use in unit tests that want to verify what was placed into Mongo
-		public Dictionary<string, LfInputSystemRecord> StoredInputSystems { get { return _storedInputSystems; } }
-		public Dictionary<Guid, LfLexEntry> StoredLfLexEntries { get { return _storedLfLexEntries; } }
-		public Dictionary<string, LfOptionList> StoredLfOptionLists { get { return _storedLfOptionLists; } }
-
 		public void Reset()
 		{
 			_storedInputSystems.Clear();
@@ -137,7 +132,7 @@ namespace LfMerge.Tests
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
-			return StoredInputSystems;
+			return _storedInputSystems;
 		}
 
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, bool initialClone = false, string vernacularWs = "", string analysisWs = "")

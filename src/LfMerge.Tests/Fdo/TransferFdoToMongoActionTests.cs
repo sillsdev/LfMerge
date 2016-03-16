@@ -89,7 +89,7 @@ namespace LfMerge.Tests.Fdo
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
-			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
 
@@ -114,7 +114,7 @@ namespace LfMerge.Tests.Fdo
 			string expectedLexeme = "zitʰɛstmen";
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 
-			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
@@ -127,7 +127,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			// Setup
 			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			IEnumerable<LfLexEntry> receivedData = _conn.StoredLfLexEntries.Values;
+			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			int originalNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(originalNumPictures, Is.EqualTo(0));
 
