@@ -131,7 +131,7 @@ namespace LfMerge.DataConverters
 
 				if (bsonForThisField != null)
 				{
-					customFieldData.Add(label, bsonForThisField["value"]);
+					customFieldData.Add(lfCustomFieldName, bsonForThisField["value"]);
 					BsonValue guid;
 					if (bsonForThisField.TryGetValue("guid", out guid))
 					{
