@@ -39,11 +39,26 @@ namespace LfMerge.DataConverters
 			//{CellarPropertyType.GenDate, "Date"},
 		};
 
+		private Dictionary<Guid, string> GuidToListCode;
+
 		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
 			this.cache = cache;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
+
+			GuidToListCode = new Dictionary<Guid, string>
+			{
+				{cache.LanguageProject.LexDbOA.DomainTypesOA.Guid, MagicStrings.LfOptionListCodeForAcademicDomainTypes},
+				{cache.LanguageProject.AnthroListOA.Guid, MagicStrings.LfOptionListCodeForAnthropologyCodes},
+				{cache.LanguageProject.LexDbOA.PublicationTypesOA.Guid, MagicStrings.LfOptionListCodeForDoNotPublishIn},
+				{cache.LanguageProject.PartsOfSpeechOA.Guid, MagicStrings.LfOptionListCodeForGrammaticalInfo},
+				{cache.LanguageProject.LocationsOA.Guid, MagicStrings.LfOptionListCodeForLocations},
+				{cache.LanguageProject.SemanticDomainListOA.Guid, MagicStrings.LfOptionListCodeForSemanticDomains},
+				{cache.LanguageProject.LexDbOA.SenseTypesOA.Guid, MagicStrings.LfOptionListCodeForSenseTypes},
+				{cache.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
+				{cache.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
+			};
 		}
 
 		/// <summary>
@@ -98,7 +113,6 @@ namespace LfMerge.DataConverters
 					out bsonForThisField, out lfCustomFieldType);
 
 				// Get custom field configuration info
-				// TODO: Find listCode from fdo metadata?
 				if (label.Contains("ListRef"))
 				{
 					// Compute list code
@@ -153,41 +167,7 @@ namespace LfMerge.DataConverters
 			string result = string.Empty;
 			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
 			if (parentListGuid != Guid.Empty)
-			{
-				//result = fdoMetaData.GetFieldNameOrNull(flid); // This won't be the right result
-				switch (parentListGuid) {
-				case cache.LanguageProject.LexDbOA.DomainTypesOA.Guid:
-					result = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
-					break;
-				case cache.LanguageProject.AnthroListOA.Guid:
-					result = MagicStrings.LfOptionListCodeForAnthropologyCodes;
-					break;
-				case cache.LanguageProject.LexDbOA.PublicationTypesOA.Guid:
-					result = MagicStrings.LfOptionListCodeForDoNotPublishIn;
-					break;
-				case cache.LanguageProject.PartsOfSpeechOA.Guid:
-					result = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-					break;
-				case cache.LanguageProject.LocationsOA.Guid:
-					result = MagicStrings.LfOptionListCodeForLocations;
-					break;
-				case cache.LanguageProject.SemanticDomainListOA.Guid:
-					result = MagicStrings.LfOptionListCodeForSemanticDomains;
-					break;
-				case cache.LanguageProject.LexDbOA.SenseTypesOA.Guid:
-					result = MagicStrings.LfOptionListCodeForSenseTypes;
-					break;
-				case cache.LanguageProject.StatusOA.Guid:
-					result = MagicStrings.LfOptionListCodeForStatus;
-					break;
-				case cache.LanguageProject.LexDbOA.UsageTypesOA.Guid:
-					result = MagicStrings.LfOptionListCodeForUsageTypes;
-					break;
-				default:
-					result = string.Empty;
-					break;
-				}
-			}
+				GuidToListCode.TryGetValue(parentListGuid, out result);
 
 			return result;
 		}
@@ -331,8 +311,13 @@ namespace LfMerge.DataConverters
 			};
 		}
 
-		// TODO: assign the correct ListCode
-		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode = "TBD")
+		/// <summary>
+		/// Gets the lf custom field settings.
+		/// </summary>
+		/// <returns>The lf custom field settings as LfConfigMultiOptionList or LfConfigOptionList.</returns>
+		/// <param name="label">Custom field label.</param>
+		/// <param name="listCode">Parent list code.</param>
+		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode)
 		{
 			if (label.Contains("Multi ListRef"))
 			{

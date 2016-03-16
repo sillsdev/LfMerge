@@ -71,7 +71,6 @@ namespace LfMerge.DataConverters
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
 			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
 
-			// DDW use this to compute the list code
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
 			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, Cache.LanguageProject.SemanticDomainListOA);
@@ -82,9 +81,6 @@ namespace LfMerge.DataConverters
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, Cache.LanguageProject.AnthroListOA);
 			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, Cache.LanguageProject.LexDbOA.PublicationTypesOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, Cache.LanguageProject.StatusOA);
-
-			//Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
 		}
@@ -122,12 +118,14 @@ namespace LfMerge.DataConverters
 				Connection.RemoveRecord(LfProject, guid);
 			}
 
+			/* For debugging custom field names
 			lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			var LfCustomFieldEntryList = lfEntries.Select(e => e.CustomFields).Where(c => c != null && c.Count() > 0);
 			foreach (var LfCustomFieldEntryName in LfCustomFieldEntryList.First().Names)
 			{
 				Console.WriteLine("custom field entry name is {0}", LfCustomFieldEntryName);
 			}
+			*/
 
 			// During initial clone, use initial FDO view preferences for custom fields.
 			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
@@ -440,10 +438,7 @@ namespace LfMerge.DataConverters
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
-			//if (customFieldsBson.Count() > 0)
-			//	_lfCustomFieldList.Add(customFieldsBson.Names.First(), new LfConfigMultiText());
-
-			// Role Views only set on initial clone
+			// TODO: Role Views only set on initial clone
 			if (InitialClone)
 			{
 				;
