@@ -42,7 +42,7 @@ namespace LfMerge.Actions
 		{
 			Settings = settings;
 			Logger = logger;
-			Progress = MainClass.Container.Resolve<ConsoleProgress>();
+			Progress = MainClass.Container.Resolve<IProgress>();
 		}
 
 		protected abstract ProcessingState.SendReceiveStates StateForCurrentAction { get; }

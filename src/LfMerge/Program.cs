@@ -39,7 +39,7 @@ namespace LfMerge
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
-			containerBuilder.RegisterType<ConsoleProgress>().AsSelf();
+			containerBuilder.RegisterType<ConsoleProgress>().As<IProgress>();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
@@ -115,7 +115,7 @@ namespace LfMerge
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
-				var Progress = scope.Resolve<ConsoleProgress>();
+				var Progress = scope.Resolve<IProgress>();
 				var model = scope.Resolve<InternetCloneSettingsModel>();
 				if (project.LanguageDepotProject.Repository != null && project.LanguageDepotProject.Repository.Contains("private"))
 					model.InitFromUri("http://hg-private.languagedepot.org");
@@ -190,7 +190,7 @@ namespace LfMerge
 				}
 
 				var projectUnifier = scope.Resolve<FlexHelper>();
-				var Progress = scope.Resolve<ConsoleProgress>();
+				var Progress = scope.Resolve<IProgress>();
 				projectUnifier.PutHumptyTogetherAgain(Progress, false, newFwProjectPathname);
 				return true;
 			}
