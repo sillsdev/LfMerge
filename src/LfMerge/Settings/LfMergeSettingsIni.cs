@@ -50,8 +50,9 @@ namespace LfMerge.Settings
 			string mongoPort = main["MongoPort"] ?? "27017";
 			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
 			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
+			string verboseProgress = main["VerboseProgress"] ?? "";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoDatabaseNamePrefix, mongoMainDatabaseName);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
@@ -59,13 +60,14 @@ namespace LfMerge.Settings
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix, string mongoMainDatabaseName)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix, string mongoMainDatabaseName, string verboseProgress)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
 			StateDirectory = Path.Combine(baseDir, "state");
 
 			CommitWhenDone = true;
+			VerboseProgress = LfMerge.LanguageForge.Model.ParseBoolean.FromString(verboseProgress);
 
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
 			QueueDirectories = new string[queueCount];
@@ -79,6 +81,8 @@ namespace LfMerge.Settings
 		}
 
 		public bool CommitWhenDone { get; protected set; }
+
+		public bool VerboseProgress { get; protected set; }
 
 		#region Equality and GetHashCode
 
@@ -96,6 +100,7 @@ namespace LfMerge.Settings
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
 				other.TemplateDirectory == TemplateDirectory &&
+				other.VerboseProgress == VerboseProgress &&
 				other.WebWorkDirectory == WebWorkDirectory;
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{
@@ -114,6 +119,7 @@ namespace LfMerge.Settings
 				ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^
 				TemplateDirectory.GetHashCode() ^
+				VerboseProgress.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
 			{

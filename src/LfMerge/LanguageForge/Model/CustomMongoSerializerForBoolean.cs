@@ -9,6 +9,26 @@ using MongoDB.Bson.IO;
 
 namespace LfMerge.LanguageForge.Model
 {
+	public static class ParseBoolean
+	{
+		public static bool FromString(string s)
+		{
+			switch (s.ToLowerInvariant())
+			{
+			case "false":
+			case "off":
+			case "no":
+			case "f":
+			case "n":
+			case "0":
+			case "": // Also consider the empty string to be false
+				return false;
+			default:
+				return true; // Non-empty strings are true unless they are a specifically "false-like" value
+			}
+		}
+	}
+
 	public class CustomMongoSerializerForBoolean : BooleanSerializer
 	{
 		public override bool Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
@@ -19,18 +39,7 @@ namespace LfMerge.LanguageForge.Model
 			if (bsonType == BsonType.String)
 			{
 				string token = bsonReader.ReadString();
-				switch (token.ToLowerInvariant())
-				{
-				case "false":
-				case "no":
-				case "f":
-				case "n":
-				case "0":
-				case "": // Also consider the empty string to be false
-					return false;
-				default:
-					return true; // Non-empty strings are true unless they are a specifically "false-like" value
-				}
+				return ParseBoolean.FromString(token);
 			}
 			else
 			{
