@@ -120,6 +120,32 @@ namespace LfMerge.MongoConnector
 			return projectRecord.InputSystems;
 		}
 
+		/// <summary>
+		/// Get the config settings for all custom fields (and only custom fields).
+		/// </summary>
+		/// <returns>Dictionary of custom field settings, flattened so entry, sense and example custom fields are all at the dict's top level.</returns>
+		/// <param name="project">LF Project.</param>
+		public Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project)
+		{
+			var result = new Dictionary<string, LfConfigFieldBase>();
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null || projectRecord.Config == null)
+				return result;
+			LfConfigFieldList entryConfig = projectRecord.Config.Entry;
+			LfConfigFieldList senseConfig = null;
+			LfConfigFieldList exampleConfig = null;
+			if (entryConfig != null && entryConfig.Fields.ContainsKey("senses"))
+				senseConfig = entryConfig.Fields["senses"] as LfConfigFieldList;
+			if (senseConfig != null && senseConfig.Fields.ContainsKey("examples"))
+				exampleConfig = senseConfig.Fields["examples"] as LfConfigFieldList;
+			foreach (LfConfigFieldList fieldList in new LfConfigFieldList[]{ entryConfig, senseConfig, exampleConfig })
+				if (fieldList != null)
+					foreach (KeyValuePair<string, LfConfigFieldBase> fieldInfo in fieldList.Fields)
+						if (fieldInfo.Key.StartsWith("customField_"))
+							result[fieldInfo.Key] = fieldInfo.Value;
+			return result;
+		}
+
 		public bool UpdateProjectRecord(ILfProject project, MongoProjectRecord projectRecord)
 		{
 			var filterBuilder = new FilterDefinitionBuilder<MongoProjectRecord>();
@@ -193,44 +219,20 @@ namespace LfMerge.MongoConnector
 		}
 
 		/// <summary>
-		/// Get the config settings for all custom fields (and only custom fields).
-		/// </summary>
-		/// <returns>Dictionary of custom field settings, flattened so entry, sense and example custom fields are all at the dict's top level.</returns>
-		/// <param name="project">Project.</param>
-		public Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project)
-		{
-			var result = new Dictionary<string, LfConfigFieldBase>();
-			MongoProjectRecord projectRecord = GetProjectRecord(project);
-			if (projectRecord == null || projectRecord.Config == null)
-				return result;
-			LfConfigFieldList entryConfig = projectRecord.Config.Entry;
-			LfConfigFieldList senseConfig = null;
-			LfConfigFieldList exampleConfig = null;
-			if (entryConfig != null && entryConfig.Fields.ContainsKey("senses"))
-				senseConfig = entryConfig.Fields["senses"] as LfConfigFieldList;
-			if (senseConfig != null && senseConfig.Fields.ContainsKey("examples"))
-				exampleConfig = senseConfig.Fields["examples"] as LfConfigFieldList;
-			foreach (LfConfigFieldList fieldList in new LfConfigFieldList[]{ entryConfig, senseConfig, exampleConfig })
-				if (fieldList != null)
-					foreach (KeyValuePair<string, LfConfigFieldBase> fieldInfo in fieldList.Fields)
-						if (fieldInfo.Key.StartsWith("customField_"))
-							result[fieldInfo.Key] = fieldInfo.Value;
-			return result;
-		}
-
-		/// <summary>
-		/// Writes project custom field configuration at the appropriate entry, senses, and examples level.
-		/// Also adds these field names to the displayed fieldOrder
+		/// Remove previous project custom field configurations that no longer exist,
+		/// and then update them at the appropriate entry, senses, and examples level.
+		/// Also adds these field names to the displayed fieldOrder.
 		/// </summary>
 		/// <param name="project">LF project</param>
 		/// <param name="lfCustomFieldList"> Dictionary of LF custom field settings</param>
 		/// <returns>True if mongodb was updated</returns>
 		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			Console.WriteLine("# custom field settings: {0}", lfCustomFieldList.Count());
+			Logger.Debug("Setting {0} custom field setting(s)", lfCustomFieldList.Count());
 
 			var builder = Builders<MongoProjectRecord>.Update;
-			var updates = new List<UpdateDefinition<MongoProjectRecord>>();
+			var previousUpdates = new List<UpdateDefinition<MongoProjectRecord>>();
+			var currentUpdates = new List<UpdateDefinition<MongoProjectRecord>>();
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
 
 			IMongoDatabase mongoDb = GetMainDatabase();
@@ -243,33 +245,68 @@ namespace LfMerge.MongoConnector
 			List<string> senseCustomFieldOrder = new List<string>();
 			List<string> exampleCustomFieldOrder = new List<string>();
 
+			// Clean out previous fields and fieldOrders that longer exist (removed from FDO)
+			foreach (string customFieldNameToRemove in GetCustomFieldConfig(project).Keys.Except(lfCustomFieldList.Keys.ToList()))
+			{
+				if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
+				{
+					previousUpdates.Add(builder.Unset(String.Format("config.entry.fields.{0}", customFieldNameToRemove)));
+					entryCustomFieldOrder.Add(customFieldNameToRemove);
+				}
+				else if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldSensesPrefix))
+				{
+					previousUpdates.Add(builder.Unset(String.Format("config.entry.fields.senses.fields.{0}", customFieldNameToRemove)));
+					senseCustomFieldOrder.Add(customFieldNameToRemove);
+				}
+				else if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldExamplePrefix))
+				{
+					previousUpdates.Add(builder.Unset(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldNameToRemove)));
+					exampleCustomFieldOrder.Add(customFieldNameToRemove);
+				}
+			}
+			if (entryCustomFieldOrder.Count > 0)
+				previousUpdates.Add(builder.PullAll("config.entry.fieldOrder", entryCustomFieldOrder));
+			if (senseCustomFieldOrder.Count > 0)
+				previousUpdates.Add(builder.PullAll("config.entry.fields.senses.fieldOrder", senseCustomFieldOrder));
+			if (exampleCustomFieldOrder.Count > 0)
+				previousUpdates.Add(builder.PullAll("config.entry.fields.senses.fields.examples.fieldOrder", exampleCustomFieldOrder));
+			var previousUpdate = builder.Combine(previousUpdates);
+
+			// Now update the current fields and fieldOrders
+			entryCustomFieldOrder = new List<string>();
+			senseCustomFieldOrder = new List<string>();
+			exampleCustomFieldOrder = new List<string>();
 			foreach (var customFieldKVP in lfCustomFieldList)
 			{
 				Logger.Debug("Writing custom field config for {0}", customFieldKVP.Key);
-				if (customFieldKVP.Key.StartsWith("customField_entry"))
+				if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
 				{
-					updates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
 					entryCustomFieldOrder.Add(customFieldKVP.Key);
 				}
-				else if (customFieldKVP.Key.StartsWith("customField_senses"))
+				else if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldSensesPrefix))
 				{
-					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
 					senseCustomFieldOrder.Add(customFieldKVP.Key);
 				}
-				else if (customFieldKVP.Key.StartsWith("customField_example"))
+				else if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldExamplePrefix))
 				{
-					updates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
+					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
 					exampleCustomFieldOrder.Add(customFieldKVP.Key);
 				}
 			}
+			if (entryCustomFieldOrder.Count > 0)
+				currentUpdates.Add(builder.AddToSetEach("config.entry.fieldOrder", entryCustomFieldOrder));
+			if (senseCustomFieldOrder.Count > 0)
+				currentUpdates.Add(builder.AddToSetEach("config.entry.fields.senses.fieldOrder", senseCustomFieldOrder));
+			if (exampleCustomFieldOrder.Count > 0)
+				currentUpdates.Add(builder.AddToSetEach("config.entry.fields.senses.fields.examples.fieldOrder", exampleCustomFieldOrder));
+			var currentUpdate = builder.Combine(currentUpdates);
 
-			// Write the field names to the field order lists.
-			updates.Add(builder.AddToSetEach("config.entry.fieldOrder", entryCustomFieldOrder));
-			updates.Add(builder.AddToSetEach("config.entry.fields.senses.fieldOrder", senseCustomFieldOrder));
-			updates.Add(builder.AddToSetEach("config.entry.fields.senses.fields.examples.fieldOrder", exampleCustomFieldOrder));
-
-			var update = builder.Combine(updates);
-			collection.FindOneAndUpdate(filter, update, updateOptions);
+			// Because removing and updating fieldOrders involved the same field names,
+			// we have to separate the Mongo operation into two updates
+			collection.FindOneAndUpdate(filter, previousUpdate, updateOptions);
+			collection.FindOneAndUpdate(filter, currentUpdate, updateOptions);
 
 			return true;
 		}

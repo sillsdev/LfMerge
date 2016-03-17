@@ -72,6 +72,9 @@ namespace LfMerge
 
 		// Collections found in main DB
 		public const string LfCollectionNameForProjectRecords = "projects";
+		public const string LfCustomFieldEntryPrefix = "customField_entry";
+		public const string LfCustomFieldSensesPrefix = "customField_senses";
+		public const string LfCustomFieldExamplePrefix = "customField_example";
 
 		// Fake language codes used in storing custom GenDate and int fields in Mongo
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
