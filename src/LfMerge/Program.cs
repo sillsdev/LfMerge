@@ -117,11 +117,7 @@ namespace LfMerge
 			{
 				var Progress = scope.Resolve<IProgress>();
 				var model = scope.Resolve<InternetCloneSettingsModel>();
-				if (project.LanguageDepotProject.Repository != null && project.LanguageDepotProject.Repository.Contains("private"))
-					model.InitFromUri("http://hg-private.languagedepot.org");
-				else
-					model.InitFromUri("http://hg-public.languagedepot.org");
-
+				model.InitFromUri(project.LanguageDepotProjectUri);
 				var settings = Container.Resolve<LfMergeSettingsIni>();
 				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;

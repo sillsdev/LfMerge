@@ -86,6 +86,17 @@ namespace LfMerge
 			}
 		}
 
+		public string LanguageDepotProjectUri
+		{
+			get
+			{
+				string uri = "http://hg-public.languagedepot.org";
+				if (LanguageDepotProject.Repository != null && LanguageDepotProject.Repository.Contains("private"))
+					uri = "http://hg-private.languagedepot.org";
+				return uri;
+			}
+		}
+
 		#endregion
 	}
 }

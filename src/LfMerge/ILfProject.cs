@@ -13,6 +13,7 @@ namespace LfMerge
 		FwProject FieldWorksProject { get; }
 		ProcessingState State { get; }
 		ILanguageDepotProject LanguageDepotProject { get; }
+		string LanguageDepotProjectUri { get; }
 	}
 }
 
