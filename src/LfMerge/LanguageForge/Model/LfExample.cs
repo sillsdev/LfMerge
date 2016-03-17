@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfExample : LfFieldBase
+	public class LfExample : LfFieldBase, IHasNullableGuid
 	{
 		// Metadata properties
 		[BsonElement("id")]

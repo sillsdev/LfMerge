@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfPicture : LfFieldBase
+	public class LfPicture : LfFieldBase, IHasNullableGuid
 	{
 		public string FileName { get; set; }
 		public LfMultiText Caption { get; set; }

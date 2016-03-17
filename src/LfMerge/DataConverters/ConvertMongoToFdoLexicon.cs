@@ -302,10 +302,8 @@ namespace LfMerge.DataConverters
 					captionWs = Cache.DefaultAnalWs;
 				}
 				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
-				// NOTE: The CmPictureFactory class doesn't allow us to specify the GUID of the
-				// created Picture object. So we can't rely on GUIDs for round-tripping pictures.
-				// TODO: Look into what we *can* rely on for round-tripping pictures.
-				result = GetInstance<ICmPictureFactory>().Create(pictureName, captionTss, CmFolderTags.LocalPictures);
+				result = GetInstance<ICmPictureFactory>().Create(guid);
+				result.UpdatePicture(pictureName, captionTss, CmFolderTags.LocalPictures, captionWs);
 				owner.PicturesOS.Add(result);
 			}
 			return result;
@@ -442,25 +440,8 @@ namespace LfMerge.DataConverters
 			lfEntry.MercurialSha; // Skip: We don't update this until we've committed to the Mercurial repo
 			*/
 
-			var senseGuidsFoundInLf = new HashSet<Guid>();
-			if (lfEntry.Senses != null) {
-				foreach (LfSense lfSense in lfEntry.Senses)
-				{
-					LfSenseToFdoSense(lfSense, fdoEntry);
-					if (lfSense.Guid != null)
-						senseGuidsFoundInLf.Add(lfSense.Guid.Value);
-				}
-			}
-
-			// If any FDO senses are *not* on the lfEntry at this point, it's because they were deleted from LF in the past.
-			var sensesToDeleteFromFdo = new HashSet<ILexSense>();
-			foreach (ILexSense fdoSense in fdoEntry.SensesOS)
-			{
-				if (!senseGuidsFoundInLf.Contains(fdoSense.Guid))
-					sensesToDeleteFromFdo.Add(fdoSense);
-			}
-			foreach (ILexSense senseToDelete in sensesToDeleteFromFdo)
-				senseToDelete.Delete();
+			// lfEntry.Senses -> fdoEntry.SensesOS
+			SetFdoListFromLfList(fdoEntry, fdoEntry.SensesOS, lfEntry.Senses, LfSenseToFdoSense);
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields, lfEntry.CustomFieldGuids);
 		}
@@ -586,53 +567,51 @@ namespace LfMerge.DataConverters
 			fdoSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
 			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(fdoSense.UsageTypesRC, lfSense.Usages);
 
-			// Track examples for later deletion
-			var exampleGuidsFoundInLf = new HashSet<Guid>();
-			if (lfSense.Examples != null) {
-				foreach (LfExample lfExample in lfSense.Examples)
-				{
-					LfExampleToFdoExample(lfExample, fdoSense);
-					if (lfExample.Guid != null)
-						exampleGuidsFoundInLf.Add(lfExample.Guid.Value);
-				}
-			}
+			// lfSense.Examples -> fdoSense.ExamplesOS
+			SetFdoListFromLfList(fdoSense, fdoSense.ExamplesOS, lfSense.Examples, LfExampleToFdoExample);
 
-			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
-			var examplesToDeleteFromFdo = new HashSet<ILexExampleSentence>();
-			foreach (ILexExampleSentence fdoExample in fdoSense.ExamplesOS)
-			{
-				if (!exampleGuidsFoundInLf.Contains(fdoExample.Guid))
-					examplesToDeleteFromFdo.Add(fdoExample);
-			}
-			foreach (ILexExampleSentence exampleToDelete in examplesToDeleteFromFdo)
-				exampleToDelete.Delete();
-
-			// Same thing with pictures: track for later deletion
-			// Note that this is ALMOST a duplicate of the example-tracking code, but we have to track by filename instead of Guid.
-			// This is because the FDO ICmPictureFactory doesn't contain a .Create(Guid guid, ICmObject owner) function.
-			var pictureFilenamesFoundInLf = new HashSet<string>();
-			if (lfSense.Pictures != null) {
-				foreach (LfPicture lfPicture in lfSense.Pictures)
-				{
-					LfPictureToFdoPicture(lfPicture, fdoSense);
-					if (lfPicture.FileName != null)
-						pictureFilenamesFoundInLf.Add(lfPicture.FileName);
-				}
-			}
-
-			// If any FDO examples are *not* on the lfSense at this point, it's because they were deleted from LF in the past.
-			var picturesToDeleteFromFdo = new HashSet<ICmPicture>();
-			foreach (ICmPicture fdoPicture in fdoSense.PicturesOS)
-			{
-				string fdoPicturePath = fdoPicture.PictureFileRA.InternalPath;
-				string lfPicturePath = ConvertFdoToMongoLexicon.FdoPictureFilenameToLfPictureFilename(fdoPicturePath);
-				if (!pictureFilenamesFoundInLf.Contains(lfPicturePath))
-					picturesToDeleteFromFdo.Add(fdoPicture);
-			}
-			foreach (ICmPicture pictureToDelete in picturesToDeleteFromFdo)
-				pictureToDelete.Delete();
+			// lfSense.Pictures -> fdoSense.PicturesOS
+			SetFdoListFromLfList(fdoSense, fdoSense.PicturesOS, lfSense.Pictures, LfPictureToFdoPicture);
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoSense, "senses", lfSense.CustomFields, lfSense.CustomFieldGuids);
+		}
+
+		// Given a list of LF objects that are "owned" by a parent object (e.g., LfSense.Examples) and the corresponding FDO
+		// list (e.g., ILexSense.ExamplesOS), convert the LF list to FDO (with the conversion function passed in as a parameter).
+		// Then go through the FDO list and look for any objects that were NOT in the LF list (identifying them by their Guid)
+		// and delete them, because their absence from LF means that they were deleted in LF at some point in the past.
+		// In addition to the two lists, the FDO parent object is also required, because the conversion needs it as a parameter.
+		//
+		// This is a pattern that we use several times in the Mongo->FDO conversion (LfSense.Examples, LfSense.Pictures, LfEntry.Senses),
+		// so this function exists to generalize that pattern.
+		public void SetFdoListFromLfList<TLfChild, TFdoParent, TFdoChild>(
+			TFdoParent fdoParent,
+			IList<TFdoChild> fdoChildList,
+			IList<TLfChild> lfChildList,
+			Action<TLfChild, TFdoParent> convertAction
+		)
+			where TFdoParent : ICmObject
+			where TFdoChild : ICmObject
+			where TLfChild : IHasNullableGuid
+		{
+			var guidsFoundInLf = new HashSet<Guid>();
+			var objectsToDeleteFromFdo = new HashSet<TFdoChild>();
+			foreach (TLfChild lfChild in lfChildList)
+			{
+				convertAction(lfChild, fdoParent);
+				if (lfChild.Guid != null)
+					guidsFoundInLf.Add(lfChild.Guid.Value);
+			}
+			// Any FDO objects that DON'T have a corresponding Guid in LF should now be deleted
+			foreach (TFdoChild fdoChild in fdoChildList)
+			{
+				if (!guidsFoundInLf.Contains(fdoChild.Guid))
+					// Don't delete them yet, as that could change the list we're iterating over
+					objectsToDeleteFromFdo.Add(fdoChild);
+			}
+			// Now it's safe to delete them
+			foreach (TFdoChild fdoChildToDelete in objectsToDeleteFromFdo)
+				fdoChildToDelete.Delete();
 		}
 
 		public Guid GuidFromLiftId(string liftId)
