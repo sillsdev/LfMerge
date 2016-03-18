@@ -38,6 +38,10 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
+			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			var data = new SampleData();
+			_conn.UpdateMockOptionList(data.bsonSemDomData);
+
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
 
@@ -91,6 +95,10 @@ namespace LfMerge.Tests.Fdo
 
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
+
+			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			var data = new SampleData();
+			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
@@ -183,6 +191,10 @@ namespace LfMerge.Tests.Fdo
 			originalLfEntry.Lexeme[vernacularWS].Value = changedLexeme;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 
+			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			var data = new SampleData();
+			_conn.UpdateMockOptionList(data.bsonSemDomData);
+
 			// Exercise
 			sutMongoToFdo.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by FdoToMongo";
@@ -237,6 +249,10 @@ namespace LfMerge.Tests.Fdo
 
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
+
+			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			var data = new SampleData();
+			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);

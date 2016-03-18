@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using System.IO;
 
 namespace LfMerge.Tests
 {
@@ -11,6 +12,7 @@ namespace LfMerge.Tests
 		public BsonDocument bsonConfigData;
 		public BsonDocument bsonProjectRecordData;
 		public BsonDocument bsonOptionListData;
+		public BsonDocument bsonSemDomData;
 
 		public SampleData()
 		{
@@ -18,6 +20,11 @@ namespace LfMerge.Tests
 			bsonConfigData = BsonSerializer.Deserialize<BsonDocument>(jsonConfigData);
 			bsonProjectRecordData = BsonSerializer.Deserialize<BsonDocument>(jsonProjectRecordData);
 			bsonOptionListData = BsonSerializer.Deserialize<BsonDocument>(jsonOptionListData);
+			// Semantic domain data is found in $GITROOT/data/semantic-domains/semdom.json
+			string gitRoot = Fdo.FdoTestFixture.FindGitRepoRoot();
+			string semDomFilename = Path.Combine(gitRoot, "data", "semantic-domains", "semdom.json");
+			string jsonSemDomData = File.ReadAllText(semDomFilename);
+			bsonSemDomData = BsonSerializer.Deserialize<BsonDocument>(jsonSemDomData);
 		}
 
 		#region JSON Test Data

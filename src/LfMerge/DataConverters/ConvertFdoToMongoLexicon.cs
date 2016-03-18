@@ -73,7 +73,7 @@ namespace LfMerge.DataConverters
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
-			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, Cache.LanguageProject.SemanticDomainListOA);
+			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, Cache.LanguageProject.SemanticDomainListOA, updateMongoList: false);
 			ListConverters[AcademicDomainListCode] = ConvertOptionListFromFdo(LfProject, AcademicDomainListCode, Cache.LanguageProject.LexDbOA.DomainTypesOA);
 			ListConverters[LocationListCode] = ConvertOptionListFromFdo(LfProject, LocationListCode, Cache.LanguageProject.LocationsOA);
 			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, Cache.LanguageProject.LexDbOA.UsageTypesOA);
@@ -555,12 +555,13 @@ namespace LfMerge.DataConverters
 			return lfWsList;
 		}
 
-		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList)
+		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
 			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
-			Connection.UpdateRecord(project, lfChangedOptionList, listCode);
+			if (updateMongoList)
+				Connection.UpdateRecord(project, lfChangedOptionList, listCode);
 			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger);
 		}
 	}
