@@ -305,10 +305,19 @@ namespace LfMerge.MongoConnector
 
 			// Because removing and updating fieldOrders involved the same field names,
 			// we have to separate the Mongo operation into two updates
-			collection.FindOneAndUpdate(filter, previousUpdate, updateOptions);
-			collection.FindOneAndUpdate(filter, currentUpdate, updateOptions);
-
-			return true;
+			try
+			{
+				if (previousUpdates.Count > 0)
+					collection.FindOneAndUpdate(filter, previousUpdate, updateOptions);
+				if (currentUpdates.Count > 0)
+					collection.FindOneAndUpdate(filter, currentUpdate, updateOptions);
+				return true;
+			}
+			catch (MongoCommandException e)
+			{
+				Logger.Error("Mongo exception writing custom fields: {0}", e);
+				return false;
+			}
 		}
 
 		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
