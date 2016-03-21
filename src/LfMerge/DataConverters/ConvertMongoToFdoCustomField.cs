@@ -78,7 +78,8 @@ namespace LfMerge.DataConverters
 		/// May be null or BsonNull.Value if no GUIDs associated with this value.</param>
 		public bool SetCustomFieldData(int hvo, int flid, BsonValue value, BsonValue guidOrGuids)
 		{
-			if (value == null || value == BsonNull.Value)
+			if ((value == null) || (value == BsonNull.Value) ||
+				((value.BsonType == BsonType.Array) && (value.AsBsonArray.Count == 0)))
 				return false;
 			List<Guid> fieldGuids = new List<Guid>();
 			if (guidOrGuids == null || guidOrGuids == BsonNull.Value)
@@ -281,9 +282,11 @@ namespace LfMerge.DataConverters
 					int wsIdForField = cache.MetaDataCacheAccessor.GetFieldWs(flid);
 					string wsStrForField = cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
 					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
-					string foundWs = kv.Key;
-					string foundData = kv.Value;
+					string foundWs = kv.Key ?? string.Empty;
+					string foundData = kv.Value ?? string.Empty;
 					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
+					if (foundWsId == 0)
+						return false; // Skip any unidentified writing systems
 					data.SetString(hvo, flid, TsStringUtils.MakeTss(foundData, foundWsId));
 					return true;
 				}
