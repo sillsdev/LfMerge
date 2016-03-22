@@ -47,6 +47,20 @@ namespace LfMerge
 			CachedProjects.Clear();
 		}
 
+		public static void DisposeProjectCache(string projectCode)
+		{
+			foreach (var item in CachedProjects)
+			{
+				LanguageForgeProject project = item.Value;
+				if (project.LfProjectCode == projectCode)
+				{
+					project._fieldWorksProject.Dispose();
+					CachedProjects.Remove(item.Key);
+					break;
+				}
+			}
+		}
+
 		#region ILfProject implementation
 
 		// TODO: ToLowerInvariant() won't necessarily be right in all cases. Find a better way.
