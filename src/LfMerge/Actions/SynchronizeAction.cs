@@ -2,7 +2,10 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
+using System.Reflection;
 using Autofac;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibTriboroughBridgeChorusPlugin;
 using LfMerge.Settings;
 using Chorus.sync;
 using Chorus.VcsDrivers;
@@ -26,14 +29,22 @@ namespace LfMerge.Actions
 			{
 				GetAction(ActionNames.TransferMongoToFdo).Run(project);
 
+				// Syncing of a new repo is not currently supported.
+				// For implementation, look in ~/fwrepo/flexbridge/src/FLEx-ChorusPlugin/Infrastructure/ActionHandlers/SendReceiveActionHandler.cs
 				Logger.Notice("Syncing");
-				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
-				var config = new ProjectFolderConfiguration(projectFolderPath);
-				var synchroniser = Synchronizer.FromProjectConfiguration(config, Progress);
-				var options = new SyncOptions();
+				string applicationName = Assembly.GetExecutingAssembly().GetName().Name;
+				string applicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 				var repoPath = RepositoryAddress.Create("Language Depot", getSyncUri(project));
-				options.RepositorySourcesToTry.Add(repoPath);
-				var syncResult = synchroniser.SyncNow(options);
+				var syncOptions = new SyncOptions();
+				syncOptions.CheckinDescription = "[" + applicationName  + ": " + applicationVersion + "] sync";
+				syncOptions.RepositorySourcesToTry.Add(repoPath);
+				string projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
+				var projectConfig = new ProjectFolderConfiguration(projectFolderPath);
+				FlexFolderSystem.ConfigureChorusProjectFolder(projectConfig);
+				var synchroniser = Synchronizer.FromProjectConfiguration(projectConfig, Progress);
+				string fwdataPathname = Path.Combine(projectFolderPath, project.LfProjectCode + SharedConstants.FwXmlExtension);
+				synchroniser.SynchronizerAdjunct = new LfMergeSychronizerAdjunct(fwdataPathname, MagicStrings.FwFixitAppName, true); // Settings.VerboseProgress);
+				SyncResults syncResult = synchroniser.SyncNow(syncOptions);
 				if (!syncResult.Succeeded)
 				{
 					Logger.Error("Sync failed - {0}", syncResult.ErrorEncountered);

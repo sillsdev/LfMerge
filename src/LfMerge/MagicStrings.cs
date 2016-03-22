@@ -80,6 +80,9 @@ namespace LfMerge
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
 		public const string LanguageCodeForIntFields = "qaa-Zmth";
 
+		// FW strings
+		public const string FwFixitAppName = "FixFwData.exe";
+
 		// Other magic strings that don't fall into any particular category
 		public const string UnknownString = "***";
 	}

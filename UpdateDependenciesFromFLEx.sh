@@ -47,6 +47,9 @@ cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/icu*.dll* output/${BUILD_CONFIG}/
 
 cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/components.map output/${BUILD_CONFIG}/
 
+cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/FixFwData.exe* output/${BUILD_CONFIG}/
+cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/FixFwDataDll.dll* output/${BUILD_CONFIG}/
+
 cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/ApplicationTransforms.dll* output/${BUILD_CONFIG}/
 cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/Autofac.dll* output/${BUILD_CONFIG}/
 cp ${FW_DIR}/Output_x86_64/${BUILD_CONFIG}/BasicUtils.dll* output/${BUILD_CONFIG}/
