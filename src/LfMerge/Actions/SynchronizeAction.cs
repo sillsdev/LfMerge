@@ -28,6 +28,7 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				GetAction(ActionNames.TransferMongoToFdo).Run(project);
+				LanguageForgeProject.DisposeProjectCache(project.LfProjectCode);
 
 				// Syncing of a new repo is not currently supported.
 				// For implementation, look in ~/fwrepo/flexbridge/src/FLEx-ChorusPlugin/Infrastructure/ActionHandlers/SendReceiveActionHandler.cs

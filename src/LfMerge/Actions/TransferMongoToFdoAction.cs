@@ -81,7 +81,6 @@ namespace LfMerge.Actions
 
 			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, _connection, _projectRecord);
 			converter.RunConversion();
-			LanguageForgeProject.DisposeProjectCache(project.LfProjectCode);
 		}
 
 		protected override ActionNames NextActionName
