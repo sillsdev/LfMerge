@@ -49,15 +49,11 @@ namespace LfMerge
 
 		public static void DisposeProjectCache(string projectCode)
 		{
-			foreach (var item in CachedProjects)
-			{
-				LanguageForgeProject project = item.Value;
-				if (project.LfProjectCode == projectCode)
-				{
-					project._fieldWorksProject.Dispose();
-					CachedProjects.Remove(item.Key);
-					break;
-				}
+			LanguageForgeProject project;
+			if (CachedProjects.TryGetValue(projectCode, out project)) {
+				project._fieldWorksProject.Dispose();
+				project._fieldWorksProject = null;
+				CachedProjects.Remove(projectCode);
 			}
 		}
 
