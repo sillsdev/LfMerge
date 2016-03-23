@@ -149,6 +149,7 @@ namespace LfMerge.Tests
 				{
 					""liftId"" : ""c07286a6-3e58-43f5-96ca-db445a5d26d6"",
 					""id"" : ""56332f6896f6d"",
+					""guid"" : ""c07286a6-3e58-43f5-96ca-db445a5d26d6"",
 					""sentence"" : {
 						""qaa-x-kal"" : {
 							""value"" : ""Vernacular example""
@@ -176,6 +177,7 @@ namespace LfMerge.Tests
 				{
 					""liftId"" : ""f387772c-48a0-4aeb-8211-345d329a10ea"",
 					""id"" : ""56332f68970d7"",
+					""guid"" : ""f387772c-48a0-4aeb-8211-345d329a10ea"",
 					""sentence"" : {
 						""qaa-x-kal"" : {
 							""value"" : ""Second vernacular example""

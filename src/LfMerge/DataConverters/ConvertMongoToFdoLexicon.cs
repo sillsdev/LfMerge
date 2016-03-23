@@ -291,6 +291,15 @@ namespace LfMerge.DataConverters
 			return result;
 		}
 
+		/// <summary>
+		/// Gets or create the FDO picture by GUID.
+		/// </summary>
+		/// <returns>The picture by GUID.</returns>
+		/// <param name="guid">GUID.</param>
+		/// <param name="owner">Owning sense</param>
+		/// <param name="pictureName">Picture path name.</param>
+		/// <param name="caption">Caption.</param>
+		/// <param name="captionWs">Caption writing system.</param>
 		public ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner, string pictureName, string caption, int captionWs)
 		{
 			ICmPicture result;

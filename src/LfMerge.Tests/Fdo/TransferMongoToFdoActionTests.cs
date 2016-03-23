@@ -101,6 +101,45 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
+		public void Action_RunTwice_ShouldNotDuplicatePictures()
+		{
+			// Setup initial Mongo project has 1 picture and 2 captions
+			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var data = new SampleData();
+			int newMongoPictures = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
+			int newMongoCaptions = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
+			Assert.That(newMongoPictures, Is.EqualTo(1));
+			Assert.That(newMongoCaptions, Is.EqualTo(2));
+
+			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			ILexEntryRepository entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			int originalNumOfFdoPictures = entryRepo.AllInstances().Count(
+				e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
+			Assert.That(entryRepo.Count, Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
+			string expectedGuidStrBefore = data.bsonTestData["guid"].AsString;
+			Guid expectedGuidBefore = Guid.Parse(expectedGuidStrBefore);
+			var entryBefore = cache.ServiceLocator.GetObject(expectedGuidBefore) as ILexEntry;
+			Assert.That(entryBefore.SensesOS.Count, Is.GreaterThan(0));
+			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
+
+			// Exercise running Action twice
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+			sutMongoToFdo.Run(lfProj);
+			sutMongoToFdo.Run(lfProj);
+
+			string expectedGuidStr = data.bsonTestData["guid"].AsString;
+			Guid expectedGuid = Guid.Parse(expectedGuidStr);
+			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
+			Assert.IsNotNull(entry);
+			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
+
+			Assert.That(entry.SensesOS.Count, Is.GreaterThan(0));
+			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
+		}
+
+		[Test]
 		public void Action_WithEmptyMongoGrammar_ShouldPreserveFdoGrammarEntries()
 		{
 			// Setup
