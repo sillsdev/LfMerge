@@ -1,16 +1,16 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using Autofac;
+using Chorus.sync;
+using Chorus.VcsDrivers;
+using LfMerge.Actions.Infrastructure;
+using LfMerge.Settings;
+using LibFLExBridgeChorusPlugin.Infrastructure;
+using LibTriboroughBridgeChorusPlugin;
+using Palaso.Progress;
 using System;
 using System.IO;
 using System.Reflection;
-using Autofac;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
-using LfMerge.Settings;
-using Chorus.sync;
-using Chorus.VcsDrivers;
-using Palaso.Progress;
-using Palaso.Network;
 
 namespace LfMerge.Actions
 {
@@ -35,7 +35,8 @@ namespace LfMerge.Actions
 				Logger.Notice("Syncing");
 				string applicationName = Assembly.GetExecutingAssembly().GetName().Name;
 				string applicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-				var repoPath = RepositoryAddress.Create("Language Depot", getSyncUri(project));
+				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+				var repoPath = RepositoryAddress.Create("Language Depot", chorusHelper.GetSyncUri(project));
 				var syncOptions = new SyncOptions();
 				syncOptions.CheckinDescription = "[" + applicationName  + ": " + applicationVersion + "] sync";
 				syncOptions.RepositorySourcesToTry.Add(repoPath);
@@ -43,8 +44,8 @@ namespace LfMerge.Actions
 				var projectConfig = new ProjectFolderConfiguration(projectFolderPath);
 				FlexFolderSystem.ConfigureChorusProjectFolder(projectConfig);
 				var synchroniser = Synchronizer.FromProjectConfiguration(projectConfig, Progress);
-				string fwdataPathname = Path.Combine(projectFolderPath, project.ProjectCode + SharedConstants.FwXmlExtension);
-				synchroniser.SynchronizerAdjunct = new LfMergeSychronizerAdjunct(fwdataPathname, MagicStrings.FwFixitAppName, true); // Settings.VerboseProgress);
+				string fwdataFilePath = Path.Combine(projectFolderPath, project.ProjectCode + SharedConstants.FwXmlExtension);
+				synchroniser.SynchronizerAdjunct = new LfMergeSychronizerAdjunct(fwdataFilePath, MagicStrings.FwFixitAppName, true); // Settings.VerboseProgress);
 				SyncResults syncResult = synchroniser.SyncNow(syncOptions);
 				if (!syncResult.Succeeded)
 				{
@@ -64,16 +65,6 @@ namespace LfMerge.Actions
 		{
 			get { return ActionNames.None; }
 		}
-
-		private string getSyncUri(ILfProject project)
-		{
-			string uri = project.LanguageDepotProjectUri;
-			string serverPath = uri.StartsWith("http://") ? uri.Replace("http://", "") : uri;
-			return "http://" +
-				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Username) + ":" +
-				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Password) + "@" + serverPath + "/" +
-				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Identifier);
-		}
-
+	
 	}
 }

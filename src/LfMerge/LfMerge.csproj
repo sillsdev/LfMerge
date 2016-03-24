@@ -176,6 +176,7 @@
     <Compile Include="DataConverters\ConvertMongoToFdoOptionList.cs" />
     <Compile Include="Actions\Infrastructure\LfMergeSychronizerAdjunct.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
+    <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />

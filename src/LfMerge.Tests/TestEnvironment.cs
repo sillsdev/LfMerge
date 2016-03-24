@@ -1,17 +1,18 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
-using System.IO;
 using Autofac;
 using Chorus.Model;
+using LfMerge.Actions.Infrastructure;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LibFLExBridgeChorusPlugin.Infrastructure;
+using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
-using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace LfMerge.Tests
 {
@@ -58,11 +59,12 @@ namespace LfMerge.Tests
 				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
 				.As<LfMergeSettingsIni>();
 
-			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>();
+			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
 
 			if (registerSettingsModel)
 			{
 				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
+				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>();
 				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
 				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
