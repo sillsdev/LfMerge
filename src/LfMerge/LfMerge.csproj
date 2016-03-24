@@ -38,9 +38,6 @@
     <Reference Include="LibChorus">
       <HintPath>..\..\lib\LibChorus.dll</HintPath>
     </Reference>
-    <Reference Include="Chorus">
-      <HintPath>..\..\lib\Chorus.exe</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
@@ -177,6 +174,7 @@
     <Compile Include="Actions\Infrastructure\LfMergeSychronizerAdjunct.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
+    <Compile Include="Actions\Infrastructure\SendReceiveActionHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.3.0\build\BuildDependencyTasks.targets')" />
