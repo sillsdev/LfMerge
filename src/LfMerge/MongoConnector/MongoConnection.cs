@@ -108,7 +108,7 @@ namespace LfMerge.MongoConnector
 		{
 			IMongoDatabase db = GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
-			return collection.Find(proj => proj.ProjectCode == project.LfProjectCode)
+			return collection.Find(proj => proj.ProjectCode == project.ProjectCode)
 				.Limit(1).FirstOrDefault();
 		}
 
@@ -167,7 +167,7 @@ namespace LfMerge.MongoConnector
 			bool initialClone = false, string vernacularWs = "", string analysisWs = "")
 		{
 			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
-			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
+			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
 
 			IMongoDatabase mongoDb = GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
@@ -233,7 +233,7 @@ namespace LfMerge.MongoConnector
 			var builder = Builders<MongoProjectRecord>.Update;
 			var previousUpdates = new List<UpdateDefinition<MongoProjectRecord>>();
 			var currentUpdates = new List<UpdateDefinition<MongoProjectRecord>>();
-			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.LfProjectCode);
+			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
 
 			IMongoDatabase mongoDb = GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);

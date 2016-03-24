@@ -123,7 +123,7 @@ namespace LfMerge
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
 				model.ProjectId = project.LanguageDepotProject.Identifier;
-				model.LocalFolderName = project.LfProjectCode;
+				model.LocalFolderName = project.ProjectCode;
 				model.AddProgress(Progress);
 
 				try
@@ -156,8 +156,8 @@ namespace LfMerge
 			var actualCloneResult = new ActualCloneResult();
 			var settings = Container.Resolve<LfMergeSettingsIni>();
 
-			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.LfProjectCode);
-			var newProjectFilename = Path.GetFileName(project.LfProjectCode) + SharedConstants.FwXmlExtension;
+			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
+			var newProjectFilename = Path.GetFileName(project.ProjectCode) + SharedConstants.FwXmlExtension;
 			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
 
 			using (var scope = MainClass.Container.BeginLifetimeScope())
@@ -177,7 +177,7 @@ namespace LfMerge
 						Directory.Delete(cloneLocation, true);
 					return false;
 				case FinalCloneResult.FlexVersionIsTooOld:
-					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.LfProjectCode);
+					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.ProjectCode);
 					if (Directory.Exists(cloneLocation))
 						Directory.Delete(cloneLocation, true);
 					return false;

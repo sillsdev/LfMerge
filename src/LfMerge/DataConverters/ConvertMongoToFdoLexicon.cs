@@ -725,7 +725,7 @@ namespace LfMerge.DataConverters
 				owner.Gloss,
 				(owner.Guid != null) ? owner.Guid.ToString() : "(no GUID)",
 				MagicStrings.LfOptionListCodeForGrammaticalInfo,
-				LfProject.LfProjectCode,
+				LfProject.ProjectCode,
 				posStr
 			);
 			return _posConverter.FromAbbrevAndName(posStr, null, userWs);

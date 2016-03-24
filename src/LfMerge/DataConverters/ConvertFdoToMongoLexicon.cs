@@ -91,7 +91,7 @@ namespace LfMerge.DataConverters
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
-				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.FwProjectCode);
+				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.ProjectCode);
 				return;
 			}
 

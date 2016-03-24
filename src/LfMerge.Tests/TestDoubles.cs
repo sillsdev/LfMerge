@@ -280,8 +280,8 @@ namespace LfMerge.Tests
 				},
 				InterfaceLanguageCode = "en",
 				LanguageCode = "fr",
-				ProjectCode = project.LfProjectCode,
-				ProjectName = project.FwProjectCode,
+				ProjectCode = project.ProjectCode,
+				ProjectName = project.ProjectCode,
 				Config = sampleConfig
 			};
 		}

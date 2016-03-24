@@ -22,7 +22,7 @@ namespace LfMerge.Tests.Fdo
 	[SetUpFixture]
 	public class FdoTestFixture
 	{
-		public const string testProjectCode = "TestLangProj";
+		public const string testProjectCode = "testlangproj";
 		public const int originalNumOfFdoEntries = 63;
 		public TestEnvironment env;
 		public LfMergeSettingsIni Settings;

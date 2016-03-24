@@ -46,21 +46,21 @@ namespace LfMerge.Actions
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
-				Logger.Error("Can't find FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
 			Logger.Notice("FdoToMongo: getting cache");
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
-				Logger.Error("Can't find cache for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find cache for FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
 			Logger.Notice("FdoToMongo: serviceLocator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
-				Logger.Error("Can't find service locator for FieldWorks project {0}", project.FwProjectCode);
+				Logger.Error("Can't find service locator for FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
 

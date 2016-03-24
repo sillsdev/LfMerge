@@ -24,7 +24,7 @@ namespace LfMerge.MongoConnector
 			IMongoDatabase db = Connection.GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> coll = db.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
 			MongoProjectRecord record =
-				coll.Find(proj => proj.ProjectCode == project.LfProjectCode)
+				coll.Find(proj => proj.ProjectCode == project.ProjectCode)
 					.Limit(1).FirstOrDefault();
 			return record;
 		}

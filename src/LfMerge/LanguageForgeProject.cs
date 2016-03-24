@@ -1,10 +1,9 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-
-using System.Collections.Generic;
 using Autofac;
 using LfMerge.FieldWorks;
 using LfMerge.Settings;
+using System.Collections.Generic;
 
 namespace LfMerge
 {
@@ -33,7 +32,7 @@ namespace LfMerge
 		protected LanguageForgeProject(LfMergeSettingsIni settings, string projectCode)
 		{
 			_settings = settings;
-			_projectCode = projectCode;
+			_projectCode = projectCode.ToLowerInvariant();
 			_state = ProcessingState.Deserialize(projectCode);
 		}
 
@@ -59,11 +58,9 @@ namespace LfMerge
 
 		#region ILfProject implementation
 
-		// TODO: ToLowerInvariant() won't necessarily be right in all cases. Find a better way.
-		public string LfProjectCode { get { return _projectCode.ToLowerInvariant(); } }
-		public string FwProjectCode { get { return _projectCode; } }
+		public string ProjectCode { get { return _projectCode; } }
 
-		public string MongoDatabaseName { get { return _settings.MongoDatabaseNamePrefix + LfProjectCode; } }
+		public string MongoDatabaseName { get { return _settings.MongoDatabaseNamePrefix + ProjectCode; } }
 
 		public FwProject FieldWorksProject
 		{
@@ -72,7 +69,7 @@ namespace LfMerge
 				if (_fieldWorksProject == null)
 				{
 					// for now we simply use the language forge project code as name for the fwdata file
-					_fieldWorksProject = new FwProject(_settings, FwProjectCode);
+					_fieldWorksProject = new FwProject(_settings, ProjectCode);
 				}
 				return _fieldWorksProject;
 			}
@@ -90,7 +87,7 @@ namespace LfMerge
 				if (_languageDepotProject == null)
 				{
 					_languageDepotProject = MainClass.Container.Resolve<ILanguageDepotProject>();
-					_languageDepotProject.Initialize(LfProjectCode);
+					_languageDepotProject.Initialize(ProjectCode);
 				}
 				return _languageDepotProject;
 			}

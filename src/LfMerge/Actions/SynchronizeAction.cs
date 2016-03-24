@@ -28,7 +28,7 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				GetAction(ActionNames.TransferMongoToFdo).Run(project);
-				LanguageForgeProject.DisposeProjectCache(project.LfProjectCode);
+				LanguageForgeProject.DisposeProjectCache(project.ProjectCode);
 
 				// Syncing of a new repo is not currently supported.
 				// For implementation, look in ~/fwrepo/flexbridge/src/FLEx-ChorusPlugin/Infrastructure/ActionHandlers/SendReceiveActionHandler.cs
@@ -39,11 +39,11 @@ namespace LfMerge.Actions
 				var syncOptions = new SyncOptions();
 				syncOptions.CheckinDescription = "[" + applicationName  + ": " + applicationVersion + "] sync";
 				syncOptions.RepositorySourcesToTry.Add(repoPath);
-				string projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.LfProjectCode);
+				string projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.ProjectCode);
 				var projectConfig = new ProjectFolderConfiguration(projectFolderPath);
 				FlexFolderSystem.ConfigureChorusProjectFolder(projectConfig);
 				var synchroniser = Synchronizer.FromProjectConfiguration(projectConfig, Progress);
-				string fwdataPathname = Path.Combine(projectFolderPath, project.LfProjectCode + SharedConstants.FwXmlExtension);
+				string fwdataPathname = Path.Combine(projectFolderPath, project.ProjectCode + SharedConstants.FwXmlExtension);
 				synchroniser.SynchronizerAdjunct = new LfMergeSychronizerAdjunct(fwdataPathname, MagicStrings.FwFixitAppName, true); // Settings.VerboseProgress);
 				SyncResults syncResult = synchroniser.SyncNow(syncOptions);
 				if (!syncResult.Succeeded)

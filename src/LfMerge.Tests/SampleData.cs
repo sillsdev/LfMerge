@@ -2224,7 +2224,7 @@ namespace LfMerge.Tests
 	""liftFilePath"" : ""/var/www/virtual/default_local/web-languageforge/src/assets/lexicon/sf_testlangproj/TestProj.lift"",
 	""ownerRef"" : ObjectId(""561b666c0f87096a35c3cf2d""),
 	""projectCode"" : ""testlangproj"",
-	""projectName"" : ""TestLangProj"",
+	""projectName"" : ""testlangproj"",
 	""siteName"" : ""languageforge.local"",
 	""userJoinRequests"" : { },
 	""userProperties"" : {

@@ -50,7 +50,7 @@ namespace LfMerge.Actions
 			_projectRecord = _projectRecordFactory.Create(_lfProject);
 			if (_projectRecord == null)
 			{
-				Logger.Warning("No project named {0}", _lfProject.LfProjectCode);
+				Logger.Warning("No project named {0}", _lfProject.ProjectCode);
 				Logger.Warning("If we are unit testing, this may not be an error");
 				return;
 			}
@@ -64,7 +64,7 @@ namespace LfMerge.Actions
 				return;
 			}
 			if (project.FieldWorksProject.IsDisposed)
-				Logger.Warning("Project {0} is already disposed; this shouldn't happen", project.FwProjectCode);
+				Logger.Warning("Project {0} is already disposed; this shouldn't happen", project.ProjectCode);
 			_cache = project.FieldWorksProject.Cache;
 			if (_cache == null)
 			{
