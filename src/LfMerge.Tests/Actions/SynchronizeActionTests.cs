@@ -35,6 +35,8 @@ namespace LfMerge.Tests.Actions
 		private const string testProjectCode2 = "testlangproj2";
 		private const int originalNumOfFdoEntries = 63;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
+		private const string testCreatedEntryGuidStr = "e670d0e8-c0f7-457d-a6d1-055c83663820";
+		private const string testDeletedEntryGuidStr = "c5f97698-dade-4ba0-9f91-580ab19ff411";
 		private TestEnvironment _env;
 		private MongoConnectionDouble _mongoConnection;
 		private MongoProjectRecordFactory _recordFactory;
@@ -155,6 +157,12 @@ namespace LfMerge.Tests.Actions
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string changedGloss = unchangedGloss + " - changed in FW";
 
+			lfEntry = originalMongoData.First(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
+			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("ken"));
+
+			int createdEntryCount = originalMongoData.Count(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
+			Assert.That(createdEntryCount, Is.EqualTo(0));
+
 			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
 			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
 			var cache = _lDProject.FieldWorksProject.Cache;
@@ -167,19 +175,25 @@ namespace LfMerge.Tests.Actions
 			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
-			Assert.That(receivedMongoData, Is.Not.Null);
-			Assert.That(receivedMongoData, Is.Not.Empty);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
-
 			cache = _lfProject.FieldWorksProject.Cache;
 			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lfFdoEntry, Is.Not.Null);
 			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
 
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(receivedMongoData, Is.Not.Null);
+			Assert.That(receivedMongoData, Is.Not.Empty);
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
+
+			lfEntry = receivedMongoData.First(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
+			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("Ira"));
+
+			int deletedEntryCount = receivedMongoData.Count(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
+			Assert.That(deletedEntryCount, Is.EqualTo(0));
 
 			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
 			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
