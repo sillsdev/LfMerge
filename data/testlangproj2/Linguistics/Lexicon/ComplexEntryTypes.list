@@ -1,0 +1,1374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComplexEntryTypes>
+	<CmPossibilityList
+		guid="be11e88f-5cc7-48ee-a105-f3edc92e2490">
+		<Abbreviation>
+			<AUni
+				ws="en">ComEnt</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2009-2-6 20:40:29.943" />
+		<DateModified
+			val="2009-2-6 20:40:29.943" />
+		<Depth
+			val="127" />
+		<Description>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">Complex entry types for lexicons.</Run>
+			</AStr>
+		</Description>
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5118" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Complex Form Types</AUni>
+			<AUni
+				ws="es">Tipos de forma compleja</AUni>
+			<AUni
+				ws="fa">شکلهای پیچیده</AUni>
+			<AUni
+				ws="fr">Types de forme complexe</AUni>
+			<AUni
+				ws="id">Tipe-tipe Bentuk Kompleks</AUni>
+			<AUni
+				ws="pt">Tipos de Forma Complexa</AUni>
+			<AUni
+				ws="ru">Тип сложной формы</AUni>
+			<AUni
+				ws="zh-CN">复合类型</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="LexEntryType"
+				guid="1f6ae209-141a-40db-983c-bee93af0ca3c">
+				<Abbreviation>
+					<AUni
+						ws="en">comp. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.720" />
+				<DateModified
+					val="2005-10-1 16:15:58.720" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A stem that is made up of more than one root.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="6cca0a33-d3f4-4771-9c6f-ee401489f8e0">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="78ea53fd-90cf-4f61-85e5-656c776d3bbf">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example (English)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="46b3795f-9b62-42e2-aa46-dfdb6c8c014b">
+								<Contents>
+									<Str>
+										<Run
+											ws="en" />
+										<Run
+											namedStyle="Emphasized Text"
+											ws="en">Blackboard</Run>
+										<Run
+											ws="en"> contains a stem that refers to "a large, smooth, usually dark surface on which to write or draw with chalk". However, the stem is made up of two roots, </Run>
+										<Run
+											namedStyle="Emphasized Text"
+											ws="en">black</Run>
+										<Run
+											ws="en"> and </Run>
+										<Run
+											namedStyle="Emphasized Text"
+											ws="en">board</Run>
+										<Run
+											ws="en">.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Compound</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">comp.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="98c273c4-f723-4fb0-80df-eede2204dfca">
+				<Abbreviation>
+					<AUni
+						ws="en">der. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.720" />
+				<DateModified
+					val="2005-10-1 16:15:58.720" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A stem that is made up of a root plus an affix that adds a non-inflectional component of meaning.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="7bb3553c-801b-4faf-929f-d4da3749a167">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="efa176ff-bf25-42a9-a420-a801fc442e3e">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">The derived word is often of a different word class from the original.  It may thus take the inflectional affixes of the new word class.  In contrast to inflection, derivation</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="caeaddbb-cf90-496e-9391-ebd82f5715c4">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        is not obligatory </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="5ec06985-db3a-402f-b2e3-657004e6de28">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        typically produces a greater change of meaning from the original form, and </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="09674f77-5c55-4f8a-b72d-f0907cdb3f56">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        is more likely to result in a form which has a somewhat idiosyncratic meaning. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b95d13a9-fb54-40f5-9aa9-9a19f46bf5eb">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        often changes the grammatical category of a root </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="c860ae94-7916-41af-8d69-748c8ef9e103">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Derivational operations</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="21ff11fb-c16c-4571-a36e-c6df5635163a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        tend to be idiosyncratic and non-productive </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="20ac9de6-dafd-4f7c-bde0-c0989da37a55">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        do not occur in well-defined 'paradigms,' and </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0cdb60ef-ffe3-4854-8a06-55abd5c561c1">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        are 'optional' insofar as they</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="4c76954e-7f98-402c-9fdf-7dfb1064b813">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                shape the basic semantic content of roots and </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="f44aad1d-1cc3-44b8-a626-3be02763401e">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                are not governed by some other syntactic operation or element. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="f421d4ef-dc71-44d2-b747-82a84eca6e3f">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Examples (English)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="12563ac3-bd1c-4bc4-9644-29e430875543">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Kindness is derived from kind. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="a88fbf0b-9577-432f-b5ca-8dc186bab1d7">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Joyful is derived from joy. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="7a4c0d35-ea5d-4dc9-8b8b-68693e65c2e3">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Amazement is derived from amaze. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="460cb60f-bf0b-49e4-88ab-bd3af3db314e">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Speaker is derived from speak. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="64d160d9-f974-40b8-be34-7fc3bea64940">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        National is derived from nation. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="98cbb93d-df01-4868-846e-5a0928829397">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Kinds</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0296d00c-94e1-4311-b838-57a752d6de07">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Here are some kinds of derivational operations:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="e8b901f2-3950-44f0-97e6-fd39defbe656">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Operations that change the grammatical category of a root</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0d02b430-149f-44a7-bf0e-a7a5440621b9">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: Nominalization (English) </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="070d7180-bf6e-4e62-b9bb-e4f467024e44">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Verbs and adjectives can be turned into nouns: amaze &gt; amazement, speak &gt; speaker, perform &gt; performance, soft &gt; softness, warm &gt; warmth</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="cb61397d-d427-4e7f-86f9-f14f6a66df0d">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Operations that change the valence (transitivity) of a root, and</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="dc0ef5ac-61c2-4226-9894-5eac879534d8">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: Causation (Swahili) </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="ef0f985f-ff33-4c8b-86ad-096a8b1c4518">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                kula 'to eat' &gt; kulisha, 'to feed'</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="68a8bb03-24e0-4464-a1e0-890edaa1d038">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Derivative</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">der.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="b2276dec-b1a6-4d82-b121-fd114c009c59">
+				<Abbreviation>
+					<AUni
+						ws="en">id. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.733" />
+				<DateModified
+					val="2005-10-1 16:15:58.733" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A multi-word expression that is recognized as a semantic unit.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="ce6d7e03-37c3-4eee-b992-4112485b2de8">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="df86f4d6-1e05-47d5-8bd2-43e3daf03491">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">An idiom is a multiword expression. Individual components of an idiom can often be inflected in the same way individual words in a phrase can be inflected. This inflection usually follows the same pattern of inflection as the idiom's literal counterpart.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0559cb9d-126d-4837-9176-4e8c93a4bf17">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Example: have a bee in one's bonnet </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="6c453472-b713-49db-999e-3e2fe5af18d0">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                        He has bees in his bonnet.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="715274c8-9955-4c2b-b1d8-c08f93a7154c">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">An idiom behaves as a single semantic unit. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="a1e9680d-db6b-47ee-b226-3f54d2502abe">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        It tends to have some measure of internal cohesion such that it can often be replaced by a literal counterpart that is made up of a single word.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="c5e64644-916c-4fb7-8b7d-21c3873afdad">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: kick the bucket</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="58beecd1-c200-4ec6-97d2-5cadecd05bb9">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                die</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="bc540a85-8f5b-4bbb-9673-f7fd735964a3">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        It resists interruption by other words whether they are semantically compatible or not.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="3679ff90-8470-4861-ad9b-966aafc1058f">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: pull one's leg</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="9f44534d-ec29-45f6-a445-9024801e75d2">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                *pull hard on one's leg</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="6bbf34f6-5266-4c01-a056-5d1f36d1eb9d">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                *pull on one's left leg</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="c8db0d92-9148-4c2c-b595-6d6822171da1">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        It resists reordering of its component parts.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0ea03fb4-0286-47e9-8b5f-059ace3f0a93">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: let the cat out of the bag</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="3c6ce4d3-7d82-4d40-9f6e-ed01a122186b">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                *the cat got left out of the bag</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0ed86506-fd85-4b08-a228-9ee71dbc283a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">An idiom has a non-productive syntactic structure. Only single particular lexemes can collocate in an idiomatic construction. Substituting other words from the same generic lexical relation set will destroy the idiomatic meaning of the expression. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="47a3615a-32e7-460e-bf4a-95f47375fbac">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: eat one's words</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="1fd7d3c6-1861-4776-94f9-4a4c3dab8959">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                *eat one's sentences</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="10734302-e310-430c-ad49-ed0e9340ced2">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                ?swallow one's words</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2e0f00c4-161a-4877-8daf-a42b2e64bd17">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">An idiom often shows the following characteristics:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="5d676bb3-3a9c-4642-82b0-a950e963776b">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        It is syntactically anomalous. It has an unusual grammatical structure .</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2621bf16-a478-4976-ac3d-5707b93a488a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: by and large</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="371adafb-80c3-4e32-a6a1-e20a0be13b0b">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        It contains unique, fossilized items.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="21afc812-3408-4808-ba03-b916b4c31364">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Examples: to and fro fro &lt; from = away (Scottish)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="58b5d237-328e-4363-aada-0221fe4c4171">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                  cobweb cob &lt; cop = spider (Middle English) </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="486955b1-15b0-4f84-b9f9-68741bc6a513">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Some linguists contend that compound words may qualify as idioms, while others maintan that an idiom must be more lexically complex.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="df64d24b-daba-4447-bae0-cfc5fb488f73">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Idioms contrast with the following:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="5fb80a6e-5bdb-4a01-91d6-dd076f0a85e7">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Metaphors satisfy the first requirement for an idiom, that their meaning be obscure, but not the second, that they not be productive.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="cdafa2b9-da3c-4303-8a3f-eee80d546799">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Examples: throw in the towel</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="8755faa0-ab3d-433f-a642-500ae7a57d67">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                  throw in the sponge</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="e0036f42-305b-4538-9bb7-59fd1ff93d06">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Collocates may have restricted lexical possibilities or use archaic vocabulary such that they are not productive, but their meaning is not opaque.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="7a9e019d-e12a-47a0-87af-c20a7b29a741">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Examples: heavy drinking</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="a9217040-36d8-43f5-b45f-accdce21706e">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                                  mete out</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Idiom</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">id.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="cce519d8-a9c5-4f28-9c7d-5370788bfbd5">
+				<Abbreviation>
+					<AUni
+						ws="en">kt. phr. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.733" />
+				<DateModified
+					val="2005-10-1 16:15:58.733" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A phrase equivalent for a key term for translation.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="29618cfb-e2f1-4d0f-a96f-590eb34458da">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="98c1eba2-407a-4a3c-8345-195f0c1bb1c5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Keyterm Phrase</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">kt. phr.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="35cee792-74c8-444e-a9b7-ed0461d4d3b7">
+				<Abbreviation>
+					<AUni
+						ws="en">ph. v. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.733" />
+				<DateModified
+					val="2005-10-1 16:15:58.733" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A combination of a lexical verb and a verbal particle that forms a single semantic and syntactic unit.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="f9e76741-8a7d-4413-b4f5-7136d0cb313a">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0b3741f5-6896-4e18-bbad-c4b6e1b97e3f">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example (English)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="0d6e9c9f-15ae-4c94-83fa-ab46dec011bb">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">         The item give up is a phrasal verb, as in the following:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="d9501369-c809-4e55-ae97-772c23eb7877">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        He gave up smoking. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="96266d95-d865-4413-adf9-4253ad29ef49">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        He gave smoking up. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2537def8-11bf-4b2a-a9a6-b6e6fe4c0690">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example (Akan)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="6671f1b0-999b-4a71-92cf-d0888b176043">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        The item gyee ... so ‘answered’ is a phrasal verb, as in the following:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="696a43f3-4a68-4123-a6ed-aff08fc2fb5c">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Kofi gyee Kwame so </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="af370486-2c71-4910-8d96-cc85efed43d3">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Kofi received Kwame on </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2a7c7794-2072-4c60-9330-5311d41232ef">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        ‘Kofi answered Kwame.’</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Phrasal Verb</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">ph. v.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="9466d126-246e-400b-8bba-0703e09bc567">
+				<Abbreviation>
+					<AUni
+						ws="en">say. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.750" />
+				<DateModified
+					val="2005-10-1 16:15:58.750" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Any pithy phrasal expression of wisdom or truth; esp., an adage, proverb, or maxim.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="cf91c21a-5e14-4e6b-9ece-fd1b1db18a65">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="cf3d9524-c05e-4c10-bd8f-4c2c665f2bcf">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Saying</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">say.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="73266a3a-48e8-4bd7-8c84-91c730340b7d">
+				<Abbreviation>
+					<AUni
+						ws="en">contr. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="1-1-1 0:0:0.0" />
+				<DateModified
+					val="1-1-1 0:0:0.0" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A combination of two lexemes that are phonologically reduced.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="b33653bc-ea5e-11de-9802-0013722f8dec">
+						<DateModified
+							val="2011-3-29 16:16:31.320" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b33fdd1a-ea5e-11de-8c86-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">A contraction is a combination of two lexemes, each of which maintains its own meaning.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b34bc8c8-ea5e-11de-8b9f-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example: hasn’t ‘has not’</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b357b480-ea5e-11de-875d-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Contractions are different from compounds. A compound, such as ‘hasbeen’, is a combination of two lexemes with an unpredictable change in meaning. There is no such change in meaning in a contraction.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b3613dd4-ea5e-11de-879d-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Contractions are different from clitics. A clitic is a lexeme that is grammatically independent but attaches phonologically to any adjacent word. An example of a clitic is the English possessive –’s in the phrases ‘Elizabeth’s hat’, ‘the queen’s hat’, and ‘the queen of England’s hat’. The clitic –’s obligatorily attaches to whatever word precedes it. In contrast a contraction is a specific pair of words that regularly combines. The combination may be obligatory, as in the case of ‘let’s’, as in “Let’s go” (“Let us go” has a different meaning), or it may be optional, as in the case of ‘we’ve’, as in “We’ve been honored,” or “We have been honored.”</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b36d298c-ea5e-11de-9bb0-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Contractions are different from portmanteau morphemes. A portmanteau morpheme is a single, indivisible morpheme that combines two meanings that are usually expressed by separate morphemes. An example of a portmanteau morpheme is the word ‘were’ which is a single morpheme expressing the meaning of the lexeme ‘be’ and the grammatical category ‘Past.tense’. ‘Were’ cannot be divided into two morphemes. (Note that ‘busted’ can be divided into bust-ed ‘bust-Past.tense’.) In contrast the contraction ‘we’re’ (we are) can be divided into ‘we-’re’.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b379153a-ea5e-11de-93cc-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">One or both members of a contraction can be shortened. Most English contractions only shorten the second member, as in ‘I’m’ (I am), ‘it’s’ (it is), ‘isn’t’ (is not). Others shorten both members, as in ‘won’t’ (will not), ‘shan’t’ (shall not), ‘ain’t’ (am not).</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b3829e98-ea5e-11de-807d-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">A contraction can combine more than two members, as in ‘wouldn’t’ve’ (would not have).</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b38e8a50-ea5e-11de-8870-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">English orthography uses the apostrophe to indicate the loss of a phoneme, as in ‘shouldn’t’ (should not). But when both words lose a phoneme, only one apostrophe is used, as in ‘shan’t’ (shall not). In writing sometimes a contraction is written out as two separate words, even when it would normally be shortened to the contracted form in speech. Other languages may or may not choose to follow these orthographic conventions.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Contraction</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">contr.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="true" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</ComplexEntryTypes>

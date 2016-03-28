@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Lexicon>
+	<LexEntry
+		guid="04758355-1e6c-49de-86f0-15d6347f25cd">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 17:17:20.323" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="bd771cf4-d7f4-4993-8399-f47217237d42">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ni</AUni>
+					<AUni
+						ws="qaa-x-kal">ni</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713db-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="069aee8f-8b79-4f8f-afb5-2c433ec4a9e1">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="42b52eed-0970-438d-9608-a03fc8c35855"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="f26405ee-9090-496c-b2b4-2180bb34201c">
+				<Gloss>
+					<AUni
+						ws="en">1SgSubj</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="069aee8f-8b79-4f8f-afb5-2c433ec4a9e1"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="0ef532e9-e312-40b6-ad6a-c0618820c3af">
+		<CitationForm>
+			<AUni
+				ws="qaa-x-kal">nadra</AUni>
+		</CitationForm>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:19:35.797" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="d3861892-1433-4dbd-a9ca-a57da70a5397">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">nad</AUni>
+					<AUni
+						ws="qaa-x-kal">nad</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="32018d1e-e107-4250-9394-e49f41d5645d">
+				<InflectionClass>
+					<objsur
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="abec2e30-ac89-4990-bbac-9f8a17716262">
+				<Gloss>
+					<AUni
+						ws="en">to.sleep</AUni>
+					<AUni
+						ws="es">dormir</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="32018d1e-e107-4250-9394-e49f41d5645d"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="1c2cbb5d-f0d9-47ff-86af-38d0aae0c765">
+		<AlternateForms>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="f370b536-5cc7-4a65-ae1b-92b8b4483230">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">sa</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</ownseq>
+		</AlternateForms>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 17:18:57.367" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="2184e638-4b1e-40f7-bcd5-28fb0dac1876">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ʁa</AUni>
+					<AUni
+						ws="qaa-x-kal">ra</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="d9487299-a9db-455d-922a-f5c95ae5eedd">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+			<MoInflAffMsa
+				guid="fa8d0d01-a92a-444d-be4d-f890aad342fa">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71542-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="0c7f9ffb-2fdd-4ba6-af2d-1b610d492fde"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="355d022b-bc29-4e5e-b2df-0d0bde07b418">
+				<Gloss>
+					<AUni
+						ws="en">Pres</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="271d373b-e4b7-4c92-80a5-9c36dc8cc810">
+		<AlternateForms>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="346339c0-46c3-4295-85ef-d037cceafac8">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">fi</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="1bd0464c-7c79-48c3-a9cf-7760c3a81f5e"
+						t="r" />
+					<refcol
+						guid="441be6a9-e5d5-43c4-bd89-ab335f80e46a"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</ownseq>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="2f528413-6ede-4959-90cc-e26639a38305">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">k</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="39b3605b-9384-48da-b16e-f9a4b5ff659a"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+				<PhoneEnv>
+					<refcol
+						guid="38658b87-6a90-4710-9f40-11e7e95c1762"
+						t="r" />
+				</PhoneEnv>
+			</ownseq>
+		</AlternateForms>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 17:17:41.600" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="d5af6e34-d0b1-4114-8a80-c598ae709dfa">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ɵ</AUni>
+					<AUni
+						ws="qaa-x-kal">or</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="39b3605b-9384-48da-b16e-f9a4b5ff659a"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+				<PhoneEnv>
+					<refcol
+						guid="88bf7a79-50fc-47d0-9883-c48cfda879ac"
+						t="r" />
+				</PhoneEnv>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="17e79a60-3539-4cbf-92ba-182bbda9de05">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="32bf0473-d3a8-40ba-b681-dbecfa10edd9"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="1f9081a4-0817-4610-8619-62db6d3791e2">
+				<Gloss>
+					<AUni
+						ws="en">2SgPoss</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="17e79a60-3539-4cbf-92ba-182bbda9de05"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="3133a72d-33c4-4b2b-a657-a33085e17465">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2004-9-16 19:4:49.153" />
+		<DateModified
+			val="2007-1-17 17:18:41.760" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="3" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="f0103dd1-398d-425e-a779-83e33cfa6422">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">pʰus</AUni>
+					<AUni
+						ws="qaa-x-kal">pus</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e8-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="ed77747e-40fd-4a00-b275-20c5114344fd">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71529-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="053de7da-da00-4ee2-accf-8daeb4ba0c17">
+				<Definition>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">ughly stuff from a wound</Run>
+					</AStr>
+				</Definition>
+				<Gloss>
+					<AUni
+						ws="en">blood</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="ed77747e-40fd-4a00-b275-20c5114344fd"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="47359e87-527f-4105-8589-029ed0a08532">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:18:41.57" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="ab629abb-2cdf-42a9-afe4-451e37d67219">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">kʰasa</AUni>
+					<AUni
+						ws="qaa-x-kal">kasa</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="bdc76042-5f07-4772-82ba-91fd08862535">
+				<InflectionClass>
+					<objsur
+						guid="441be6a9-e5d5-43c4-bd89-ab335f80e46a"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="3fa2cbb0-1218-4427-9288-b4c1ba298926">
+				<Gloss>
+					<AUni
+						ws="en">house</AUni>
+					<AUni
+						ws="es">casa</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="bdc76042-5f07-4772-82ba-91fd08862535"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="58a6c6c3-fdbd-4fef-b3de-43e849d6842f">
+		<AlternateForms>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="2026c102-2ed7-4a2b-aae2-d1f408f868dc">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">pe</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</ownseq>
+		</AlternateForms>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:16:27.943" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="883925ad-d74c-4895-874f-774975f8d53b">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">gu</AUni>
+					<AUni
+						ws="qaa-x-kal">gu</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="6be211bd-c7ae-4878-ac83-e43fa51f9a86">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="deb27c57-b391-453c-8a7f-37cf10686954">
+				<Gloss>
+					<AUni
+						ws="en">Future</AUni>
+					<AUni
+						ws="es">Futuro</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="6be211bd-c7ae-4878-ac83-e43fa51f9a86"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="5c77efd9-8d14-4f19-a049-162588265cad">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 17:22:5.423" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="c0778640-2ea7-4a2e-a5e5-3122a99f139b">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">yaɬɵ</AUni>
+					<AUni
+						ws="qaa-x-kal">yalo</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="7a913885-3d98-4c33-bf6b-cfaec62395b8">
+				<InflectionClass>
+					<objsur
+						guid="39b3605b-9384-48da-b16e-f9a4b5ff659a"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="9cadf7c5-dd4d-4f32-8430-ce81bf5076a2">
+				<Gloss>
+					<AUni
+						ws="en">mat</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="7a913885-3d98-4c33-bf6b-cfaec62395b8"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="e322312f-bcfb-42af-91fb-60973c86fea0">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2004-2-11 20:59:59.860" />
+		<DateModified
+			val="2007-1-17 19:24:21.750" />
+		<DoNotUseForParsing
+			val="False" />
+		<EntryRefs>
+			<ownseq
+				class="LexEntryRef"
+				guid="197d6e98-50b0-4df1-b625-82526ba0df7b">
+				<ComplexEntryTypes>
+					<refseq
+						guid="98c273c4-f723-4fb0-80df-eede2204dfca"
+						t="r" />
+				</ComplexEntryTypes>
+				<HideMinorEntry
+					val="0" />
+				<RefType
+					val="1" />
+			</ownseq>
+		</EntryRefs>
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="8e8ff051-607b-4be4-bef0-841f61084050">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">pʰalti</AUni>
+					<AUni
+						ws="qaa-x-kal">palti</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="3354a8dd-1aee-4834-a625-d05baca82451">
+				<InflectionClass>
+					<objsur
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="cac78a64-c311-4f87-a11b-0288edb15344">
+				<Gloss>
+					<AUni
+						ws="en">to.strengthen</AUni>
+					<AUni
+						ws="es">reforzar</AUni>
+					<AUni
+						ws="qaa-x-kal">to.strengthen</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="3354a8dd-1aee-4834-a625-d05baca82451"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="f61fc071-6b70-4375-9271-92a5fb04024c">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2004-9-16 20:12:50.187" />
+		<DateModified
+			val="2007-1-17 19:19:51.980" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="9043a334-1de2-4146-b6ff-4970b1e98192">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ni</AUni>
+					<AUni
+						ws="qaa-x-kal">ni</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713da-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoUnclassifiedAffixMsa
+				guid="51d80b28-2440-4ede-87e0-19a73ec93a9f" />
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="a469c4fd-2760-4c06-b203-31865e32022c">
+				<Gloss>
+					<AUni
+						ws="en">who.knows</AUni>
+					<AUni
+						ws="es">quien.sabe</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="51d80b28-2440-4ede-87e0-19a73ec93a9f"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+</Lexicon>

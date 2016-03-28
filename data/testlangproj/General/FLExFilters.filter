@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Filters>
+	<CmFilter
+		guid="199bd39f-7e9d-40b4-8669-a1b573315d39">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="7" />
+		<ColumnInfo>
+			<Uni>7,7007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>No Restrictions</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="fcb7b3e8-3b29-4306-8bc3-0a683aafcc80">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="4e11581f-8e02-4af5-9200-34fb8f1ff66e">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty or Matches </Run>
+								<Run
+									link="2BDD1123-F9B2-11D3-977B-00C04F186933"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+			<ownseq
+				class="CmRow"
+				guid="7a6d9cfc-31f0-495b-b22f-56aadb05ede1">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="04a986d7-931a-4208-aa03-0e3497758c82" />
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="1" />
+	</CmFilter>
+	<CmFilter
+		guid="250ad39e-404b-4860-9202-c6e9640fab36">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006004</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Event Type</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Event Type field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="b08c0c6f-9cd7-40d1-9ead-18be6ba7e857">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="39d215b7-d0f0-4855-a707-1147e2188afc">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="253c555e-bf71-402f-a707-ff3c043be39b">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4004007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Anthro Category</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Anthropology Categories field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="135fffa8-b70a-4b1f-bcdd-82ff437010ba">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="6987baa4-3d15-4fc3-913c-f6ed13ed5cf9">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="2a4b6e62-aa63-4c8f-9b9e-f67c8105bce2">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="12" />
+		<ColumnInfo>
+			<Uni>12,7008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Confidence</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Confidence field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="380e321a-7eca-4c4e-a3c1-770d18e9bf58">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="15388157-315b-475c-8d4f-567020fe0eb6">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="2e72e741-7d8a-46a2-b6e8-5a0516dd6524">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Month</Uni>
+		</Name>
+		<PromptText>
+			<Uni>Date of Event = the following month:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="99e6f854-a940-4d47-8929-1c5ac1298dd7">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="a44c8bf8-b602-4478-a4ca-d2908882c943">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">= Month(January)</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="2fddc903-acb1-49a6-93ee-160298ef6fd7">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4004,4004007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>No Anthro Category</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="1e114f49-1a5d-4156-ae6d-6593cab1e6ea">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="5b8f031a-5807-4cc3-9758-c22a12748c7f">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="43b768a7-14f5-40b3-b2f8-c188782da35a">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,13006</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Place of Birth</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Place of Birth field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="1a1e56cc-c88f-4466-816e-681223cc0205">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="651bbbaf-73b0-4f0b-b6ac-09a5dfbc0014">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="530c532c-e518-4e2e-aeac-6a482f071420">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,7008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Confidence</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Confidence field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="cb4cd44b-8c9d-496d-9451-3d538cd37a90">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="e84381a7-f811-4324-b343-6f03e4d923a0">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="58a80196-17d3-4b7b-a6c8-626a3b240cc1">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006001</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Description</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Description field contains the following text:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="5340d920-d967-4815-84d8-d2508a52a84a">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="a20a4a46-b394-4972-806a-5253463dfda5">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Contains ""</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="7b18aa41-cb27-4a74-a25b-1ca745f5a55e">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3018" />
+		<ColumnInfo>
+			<Uni>3018,34003</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>kstidTranslatorNoteFilter</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="47a43063-ba83-4be2-9604-46a7701a9385">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="9a942f8d-aa92-40c3-8163-ef3638192bf0">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+								<Run
+									link="80AE5729-9CD8-424D-8E71-96C1A8FD5821"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="7cec7eda-5cf6-4ff9-9427-6574ee37bfce">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,7007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>No Restrictions</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="609fd50d-7ef0-4299-be95-2119ce55adf9">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="98dd2042-1b70-4aa0-93a2-86f1b669991d">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty or Matches </Run>
+								<Run
+									link="2BDD1123-F9B2-11D3-977B-00C04F186933"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+			<ownseq
+				class="CmRow"
+				guid="19ea261e-8426-4161-8261-304ef2473fb9">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="e34748fc-ff08-4ba2-a2e4-184bc401997c" />
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="1" />
+	</CmFilter>
+	<CmFilter
+		guid="8a918635-0481-4be6-bdec-5f991c834f50">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006007,0</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Source</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Source field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="d99d4f29-e378-4b36-b002-d63531a2dcab">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="114a1152-455d-4dd5-aaec-ff4802e30e5c">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="a2b3d99c-b27e-402c-a3df-4d94c906704f">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,13008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Not Researcher</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="80ec9e36-b676-4efd-994e-1aa8ab11c90c">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="e54cb83f-4295-4e44-90c7-86fd9c9855fd">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">No</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="a5bd9244-4a55-4370-878a-bf35ddaf2930">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3018" />
+		<ColumnInfo>
+			<Uni>3018,34003</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>kstidConsultantNoteFilter</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="5b786787-2977-4103-9d71-3e38c636b1b0">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="cc15dfa6-a574-4099-8ed4-4adca765677f">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+								<Run
+									link="56DE9B1A-1CE7-42A1-AA76-512EBEFF0DDA"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="a5ffdc8f-2fca-4d8c-85e5-b122799dce19">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="26" />
+		<ColumnInfo>
+			<Uni>26,7007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>No Restrictions</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="64dfa791-3dbe-4a84-bd01-55553106fa81">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="dd1d2791-3a90-4f8f-be89-a5b780648fca">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty or Matches </Run>
+								<Run
+									link="2BDD1123-F9B2-11D3-977B-00C04F186933"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+			<ownseq
+				class="CmRow"
+				guid="804c675f-cfec-48ea-9852-899f3a4ca435">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="a07c1100-f755-4855-ab37-f428f8925c0a" />
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="1" />
+	</CmFilter>
+	<CmFilter
+		guid="a7bacdb4-b702-49dc-8d23-a6509987ff7a">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="12" />
+		<ColumnInfo>
+			<Uni>12,7007</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>No Restrictions</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="e672de03-affe-4201-91d3-42e05f72dde9">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="6b5bc946-71b3-4c32-8c47-d6e84c20416f">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty or Matches </Run>
+								<Run
+									link="2BDD1123-F9B2-11D3-977B-00C04F186933"
+									ws="en" />
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+			<ownseq
+				class="CmRow"
+				guid="20703208-ca52-4482-b430-bcea6e520fef">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="55209144-9d6f-4c2f-8561-8978ff7cf146" />
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="1" />
+	</CmFilter>
+	<CmFilter
+		guid="aa1fc855-4d83-44f9-8d26-1758c0c88683">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006003</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Location</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Location field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="2bd5a4f3-4905-459a-bb0d-e955b90a3e5f">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="c4c58a98-61a5-4204-b0ce-2a6070beef3c">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="aa8adce6-887c-429f-a0ff-e132dbedfa8d">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,13011</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Living</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="b0a7556e-669a-465e-97b1-770169a3daa7">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="8af936e3-6240-4c9c-8b94-06e8855ebf95">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Empty</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="b1e1cb88-3545-4531-9d21-f44c4bd99d10">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Before Date</Uni>
+		</Name>
+		<PromptText>
+			<Uni>Date of Event &lt;= the following date:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="46b6d131-1c7c-439a-b781-ad85be85b9f7">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="81096ef7-52ca-4419-a8a0-dbc86ffd5786">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">&lt;= Month and Year(January, 2000)</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="bac3956f-7968-4700-93a4-eb1f7966fc3f">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3018" />
+		<ColumnInfo>
+			<Uni>replace me</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>kstidNoteMultiFilter</Uni>
+		</Name>
+		<PromptText>
+			<Uni>Setup a filter that handles multiple criteria:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="2083f23e-99ee-4c57-8dbe-e0a57410915d" />
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="befefe60-43b7-42ff-8359-8b3c916c2b22">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3002" />
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Book</Uni>
+		</Name>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="d516f700-bcad-49b4-b111-514c5e5fb2e8">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="13" />
+		<ColumnInfo>
+			<Uni>13,13009</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Place of Residence</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Place of Residence field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="9705c367-f62f-4144-b3bd-963ecd944deb">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="50d1d3cc-75b3-4f33-b384-98679104aca9">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="f31a96ec-1d06-416c-9f07-7e66173eb72b">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="26" />
+		<ColumnInfo>
+			<Uni>26,7008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Confidence</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Confidence field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="2a51b5a4-9b71-41f5-a6db-71a53a0fcfd5">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="9b44aef1-c04f-45f3-882d-41e1877a05d8">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="f486017d-fa4d-4ea6-8c79-279450b9e08a">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3018" />
+		<ColumnInfo>
+			<Uni>3018,3018001</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>kstidOpenNoteFilter</Uni>
+		</Name>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="c2f0eb83-212b-4c1b-b357-f28bcd96053e">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="7bf38df2-e180-4d74-ae16-df959a81eea6">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">= 0</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="0" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="f6d48b2f-4430-4ba1-a73c-19c50f0961a1">
+		<App
+			val="a7d421e1-1dd3-11d5-b720-0010a4b54856" />
+		<ClassId
+			val="3018" />
+		<ColumnInfo>
+			<Uni>3018,3018002</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>kstidCategoryNoteFilter</Uni>
+		</Name>
+		<PromptText>
+			<Uni>Choose the category of note to display:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="0288b729-8eb0-41ad-b27c-9534c64900a5">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="a00ccf58-9159-471b-908f-2aaebda1b209">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches +subitems</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="faf74866-39ed-4fc1-a55e-51132215ab78">
+		<App
+			val="39886581-4dd5-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="4004" />
+		<ColumnInfo>
+			<Uni>4006,4006008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>After Date</Uni>
+		</Name>
+		<PromptText>
+			<Uni>Date of Event &gt;= the following date:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="9e0bc693-39bc-4062-82fa-7031f5355a7d">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="fbb2173e-8e55-46d0-a140-4f6f82609fb1">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">&gt;= Month and Year(January, 2000)</Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+	<CmFilter
+		guid="fe6699b0-870f-49a0-954d-62559e2870f5">
+		<App
+			val="5ea62d01-7a78-11d4-8078-0000c0fb81b5" />
+		<ClassId
+			val="7" />
+		<ColumnInfo>
+			<Uni>7,7008</Uni>
+		</ColumnInfo>
+		<FieldId
+			val="0" />
+		<Name>
+			<Uni>Confidence</Uni>
+		</Name>
+		<PromptText>
+			<Uni>The Confidence field matches the following reference:</Uni>
+		</PromptText>
+		<Rows>
+			<ownseq
+				class="CmRow"
+				guid="424d20e1-6d59-4594-82ee-5d6350e2be8b">
+				<Cells>
+					<ownseq
+						class="CmCell"
+						guid="6691fc73-60c3-4656-8a44-2494ca5fb27a">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Matches </Run>
+							</Str>
+						</Contents>
+					</ownseq>
+				</Cells>
+			</ownseq>
+		</Rows>
+		<ShowPrompt
+			val="1" />
+		<Type
+			val="0" />
+	</CmFilter>
+</Filters>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextInCorpus>
+	<Text
+		guid="bcabf849-473c-4902-957b-8de378248b7f">
+		<Contents>
+			<StText
+				guid="65d543ae-a904-4b10-9c8e-91169b681da6">
+				<DateModified
+					val="2011-2-2 19:39:28.929" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="a122d9bb-2d43-4e4c-b74f-6fe44d1c6cb2">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">pus yalola nihimbilira. nihimbilira pus yalola. hesyla nihimbilira.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="True" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="b405f3c0-58e1-4492-8a40-e955774a6911">
+								<Analyses>
+									<refseq
+										guid="45e6f056-98ac-45d6-858e-59450993f268"
+										t="r" />
+									<refseq
+										guid="936b326e-a83d-4c08-94cc-449d0a3380d0"
+										t="r" />
+									<refseq
+										guid="3245487d-cdc5-4a71-82ed-275a793e12b4"
+										t="r" />
+									<refseq
+										guid="de1210e5-51d8-4d0a-8a60-c97ef80079a6"
+										t="r" />
+								</Analyses>
+								<BeginOffset
+									val="0" />
+								<FreeTranslation>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">I see my green mat.</Run>
+									</AStr>
+								</FreeTranslation>
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="f1fe4d4a-3315-41fb-9421-fe159918636d">
+								<Analyses>
+									<refseq
+										guid="d14460dc-75b3-466c-9818-8c31b99d8662"
+										t="r" />
+									<refseq
+										guid="45e6f056-98ac-45d6-858e-59450993f268"
+										t="r" />
+									<refseq
+										guid="936b326e-a83d-4c08-94cc-449d0a3380d0"
+										t="r" />
+									<refseq
+										guid="de1210e5-51d8-4d0a-8a60-c97ef80079a6"
+										t="r" />
+								</Analyses>
+								<BeginOffset
+									val="24" />
+								<FreeTranslation>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">I perceive my green mat.</Run>
+									</AStr>
+								</FreeTranslation>
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="ca203e04-66cc-4f90-b9a8-c8986ca91b65">
+								<Analyses>
+									<refseq
+										guid="dcb3c83d-3dde-4e69-a06d-69e26ff77752"
+										t="r" />
+									<refseq
+										guid="3245487d-cdc5-4a71-82ed-275a793e12b4"
+										t="r" />
+									<refseq
+										guid="de1210e5-51d8-4d0a-8a60-c97ef80079a6"
+										t="r" />
+								</Analyses>
+								<BeginOffset
+									val="48" />
+							</ownseq>
+						</Segments>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Contents>
+		<DateCreated
+			val="2004-10-29 21:25:58.990" />
+		<DateModified
+			val="2004-10-29 21:25:58.990" />
+		<Description>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">This is a story about a green mat as told by my language assistant.</Run>
+			</AStr>
+		</Description>
+		<IsTranslated
+			val="False" />
+		<Name>
+			<AUni
+				ws="en">My Green Mat</AUni>
+		</Name>
+	</Text>
+</TextInCorpus>

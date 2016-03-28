@@ -1,0 +1,2648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceSystem>
+	<ScrRefSystem
+		guid="443eac03-16f9-4584-afd5-0630d55b8095">
+		<Books>
+			<ownseq
+				class="ScrBookRef"
+				guid="ca9a0798-8cf9-4c38-b1b3-6b54d2c6dc17">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Mos</AUni>
+					<AUni
+						ws="en">Gen</AUni>
+					<AUni
+						ws="es">Gén</AUni>
+					<AUni
+						ws="fr">Gn</AUni>
+					<AUni
+						ws="pt">Gn</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Mose</AUni>
+					<AUni
+						ws="en">Genesis</AUni>
+					<AUni
+						ws="es">Génesis</AUni>
+					<AUni
+						ws="fr">Genèse</AUni>
+					<AUni
+						ws="pt">Génesis</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="4cc9d1c3-0194-49d9-8d1d-38c3709649d0">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Mos</AUni>
+					<AUni
+						ws="en">Ex</AUni>
+					<AUni
+						ws="es">Ex</AUni>
+					<AUni
+						ws="fr">Ex</AUni>
+					<AUni
+						ws="pt">Ex</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Mose</AUni>
+					<AUni
+						ws="en">Exodus</AUni>
+					<AUni
+						ws="es">Éxodo</AUni>
+					<AUni
+						ws="fr">Exode</AUni>
+					<AUni
+						ws="pt">Éxodo</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b77eef6d-b1f5-4071-8af3-5513de9ed717">
+				<BookAbbrev>
+					<AUni
+						ws="de">3 Mos</AUni>
+					<AUni
+						ws="en">Lev</AUni>
+					<AUni
+						ws="es">Lev</AUni>
+					<AUni
+						ws="fr">Lv</AUni>
+					<AUni
+						ws="pt">Lv</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">3 Mose</AUni>
+					<AUni
+						ws="en">Leviticus</AUni>
+					<AUni
+						ws="es">Levítico</AUni>
+					<AUni
+						ws="fr">Lévitique</AUni>
+					<AUni
+						ws="pt">Levítico</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3ff30543-93f4-47c2-9a7a-c89ca76fb82f">
+				<BookAbbrev>
+					<AUni
+						ws="de">4 Mos</AUni>
+					<AUni
+						ws="en">Num</AUni>
+					<AUni
+						ws="es">Núm</AUni>
+					<AUni
+						ws="fr">Nb</AUni>
+					<AUni
+						ws="pt">Nm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">4 Mose</AUni>
+					<AUni
+						ws="en">Numbers</AUni>
+					<AUni
+						ws="es">Números</AUni>
+					<AUni
+						ws="fr">Nombres</AUni>
+					<AUni
+						ws="pt">Números</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b769e325-ec31-4a4d-a6d9-5d876962ec93">
+				<BookAbbrev>
+					<AUni
+						ws="de">5 Mos</AUni>
+					<AUni
+						ws="en">Dt</AUni>
+					<AUni
+						ws="es">Dt</AUni>
+					<AUni
+						ws="fr">Dt</AUni>
+					<AUni
+						ws="pt">Dt</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">5 Mose</AUni>
+					<AUni
+						ws="en">Deuteronomy</AUni>
+					<AUni
+						ws="es">Deuteronomio</AUni>
+					<AUni
+						ws="fr">Deutéronome</AUni>
+					<AUni
+						ws="pt">Deuteronômio</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="243dfc84-ca18-43e9-9fa9-8bd8a40d9c3f">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jos</AUni>
+					<AUni
+						ws="en">Jos</AUni>
+					<AUni
+						ws="es">Jos</AUni>
+					<AUni
+						ws="fr">Jos</AUni>
+					<AUni
+						ws="pt">Js</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Josua</AUni>
+					<AUni
+						ws="en">Joshua</AUni>
+					<AUni
+						ws="es">Josué</AUni>
+					<AUni
+						ws="fr">Josué</AUni>
+					<AUni
+						ws="pt">Josué</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="8cdf0e9d-f5ba-4443-bd5c-c38aba46616c">
+				<BookAbbrev>
+					<AUni
+						ws="de">Ri</AUni>
+					<AUni
+						ws="en">Jdg</AUni>
+					<AUni
+						ws="es">Jue</AUni>
+					<AUni
+						ws="fr">Jg</AUni>
+					<AUni
+						ws="pt">Jz</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Richter</AUni>
+					<AUni
+						ws="en">Judges</AUni>
+					<AUni
+						ws="es">Jueces</AUni>
+					<AUni
+						ws="fr">Juges</AUni>
+					<AUni
+						ws="pt">Juízes</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="80fba3cf-9780-4e1b-9258-6d20021f2a0f">
+				<BookAbbrev>
+					<AUni
+						ws="de">Rut</AUni>
+					<AUni
+						ws="en">Ru</AUni>
+					<AUni
+						ws="es">Rt</AUni>
+					<AUni
+						ws="fr">Rt</AUni>
+					<AUni
+						ws="pt">Rt</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Rut</AUni>
+					<AUni
+						ws="en">Ruth</AUni>
+					<AUni
+						ws="es">Rut</AUni>
+					<AUni
+						ws="fr">Ruth</AUni>
+					<AUni
+						ws="pt">Rute</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="60478be0-a8c9-4829-ac6e-6de52810e265">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Sam</AUni>
+					<AUni
+						ws="en">1Sa</AUni>
+					<AUni
+						ws="es">1 Sam</AUni>
+					<AUni
+						ws="fr">1 S</AUni>
+					<AUni
+						ws="pt">1 Sm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Samuel</AUni>
+					<AUni
+						ws="en">1 Samuel</AUni>
+					<AUni
+						ws="es">1 Samuel</AUni>
+					<AUni
+						ws="fr">1 Samuel</AUni>
+					<AUni
+						ws="pt">1 Samuel</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Samuel</AUni>
+					<AUni
+						ws="en">I Samuel</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="93baa49c-2900-41fa-9534-ca0717aee130">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Sam</AUni>
+					<AUni
+						ws="en">2Sa</AUni>
+					<AUni
+						ws="es">2 Sam</AUni>
+					<AUni
+						ws="fr">2 S</AUni>
+					<AUni
+						ws="pt">2 Sm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Samuel</AUni>
+					<AUni
+						ws="en">2 Samuel</AUni>
+					<AUni
+						ws="es">2 Samuel</AUni>
+					<AUni
+						ws="fr">2 Samuel</AUni>
+					<AUni
+						ws="pt">2 Samuel</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Samuel</AUni>
+					<AUni
+						ws="en">II Samuel</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="68758286-b25f-42d7-b3ff-8d011da0e73e">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Kön</AUni>
+					<AUni
+						ws="en">1Ki</AUni>
+					<AUni
+						ws="es">1 Re</AUni>
+					<AUni
+						ws="fr">1 R</AUni>
+					<AUni
+						ws="pt">1 Rs</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Könige</AUni>
+					<AUni
+						ws="en">1 Kings</AUni>
+					<AUni
+						ws="es">1 Reyes</AUni>
+					<AUni
+						ws="fr">1 Rois</AUni>
+					<AUni
+						ws="pt">1 Reis</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Könige</AUni>
+					<AUni
+						ws="en">I Kings</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3e22ef8e-21b5-41c2-a208-93b7be8feca7">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Kön</AUni>
+					<AUni
+						ws="en">2Ki</AUni>
+					<AUni
+						ws="es">2 Re</AUni>
+					<AUni
+						ws="fr">2 R</AUni>
+					<AUni
+						ws="pt">2 Rs</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Könige</AUni>
+					<AUni
+						ws="en">2 Kings</AUni>
+					<AUni
+						ws="es">2 Reyes</AUni>
+					<AUni
+						ws="fr">2 Rois</AUni>
+					<AUni
+						ws="pt">2 Reis</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Könige</AUni>
+					<AUni
+						ws="en">II Kings</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="c0c1f430-761a-4b5a-a014-9659a979088a">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Chr</AUni>
+					<AUni
+						ws="en">1Ch</AUni>
+					<AUni
+						ws="es">1 Cro</AUni>
+					<AUni
+						ws="fr">1 Ch</AUni>
+					<AUni
+						ws="pt">1 Cr</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Chronik</AUni>
+					<AUni
+						ws="en">1 Chronicles</AUni>
+					<AUni
+						ws="es">1 Crónicas</AUni>
+					<AUni
+						ws="fr">1 Chroniques</AUni>
+					<AUni
+						ws="pt">1 Crônicas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Chronik</AUni>
+					<AUni
+						ws="en">I Chronicles</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="be7ab516-a6a5-4bd7-ba28-6fc5a3905e4c">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Chr</AUni>
+					<AUni
+						ws="en">2Ch</AUni>
+					<AUni
+						ws="es">2 Cro</AUni>
+					<AUni
+						ws="fr">2 Ch</AUni>
+					<AUni
+						ws="pt">2 Cr</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Chronik</AUni>
+					<AUni
+						ws="en">2 Chronicles</AUni>
+					<AUni
+						ws="es">2 Crónicas</AUni>
+					<AUni
+						ws="fr">2 Chroniques</AUni>
+					<AUni
+						ws="pt">2 Crônicas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Chronik</AUni>
+					<AUni
+						ws="en">II Chronicles</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="76d109bb-c973-4fa1-95d6-5457d8da7d03">
+				<BookAbbrev>
+					<AUni
+						ws="de">Esra</AUni>
+					<AUni
+						ws="en">Ezr</AUni>
+					<AUni
+						ws="es">Esd</AUni>
+					<AUni
+						ws="fr">Esd</AUni>
+					<AUni
+						ws="pt">Ed</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Esra</AUni>
+					<AUni
+						ws="en">Ezra</AUni>
+					<AUni
+						ws="es">Esdras</AUni>
+					<AUni
+						ws="fr">Esdras</AUni>
+					<AUni
+						ws="pt">Esdras</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b46527af-38b2-40fe-9ccb-08b64c8a7389">
+				<BookAbbrev>
+					<AUni
+						ws="de">Neh</AUni>
+					<AUni
+						ws="en">Neh</AUni>
+					<AUni
+						ws="es">Neh</AUni>
+					<AUni
+						ws="fr">Ne</AUni>
+					<AUni
+						ws="pt">Ne</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Nehemia</AUni>
+					<AUni
+						ws="en">Nehemiah</AUni>
+					<AUni
+						ws="es">Nehemías</AUni>
+					<AUni
+						ws="fr">Néhémie</AUni>
+					<AUni
+						ws="pt">Neemias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="79ae4819-bfd6-45e9-a83d-f84e6f57c78c">
+				<BookAbbrev>
+					<AUni
+						ws="de">Est</AUni>
+					<AUni
+						ws="en">Est</AUni>
+					<AUni
+						ws="es">Est</AUni>
+					<AUni
+						ws="fr">Est</AUni>
+					<AUni
+						ws="pt">Et</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Ester</AUni>
+					<AUni
+						ws="en">Esther</AUni>
+					<AUni
+						ws="es">Ester</AUni>
+					<AUni
+						ws="fr">Esther</AUni>
+					<AUni
+						ws="pt">Ester</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="ce2a9485-26a8-49d3-956e-ad3c884ad2d8">
+				<BookAbbrev>
+					<AUni
+						ws="de">Ijob</AUni>
+					<AUni
+						ws="en">Job</AUni>
+					<AUni
+						ws="es">Job</AUni>
+					<AUni
+						ws="fr">Jb</AUni>
+					<AUni
+						ws="pt">Jó</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Ijob</AUni>
+					<AUni
+						ws="en">Job</AUni>
+					<AUni
+						ws="es">Job</AUni>
+					<AUni
+						ws="fr">Job</AUni>
+					<AUni
+						ws="pt">Jó</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">Job</AUni>
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="17d51df9-cccf-4f50-beb3-94091dbb78f6">
+				<BookAbbrev>
+					<AUni
+						ws="de">Ps</AUni>
+					<AUni
+						ws="en">Ps</AUni>
+					<AUni
+						ws="es">Sal</AUni>
+					<AUni
+						ws="fr">Ps</AUni>
+					<AUni
+						ws="pt">Sl</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Psalmen</AUni>
+					<AUni
+						ws="en">Psalms</AUni>
+					<AUni
+						ws="es">Salmos</AUni>
+					<AUni
+						ws="fr">Psaumes</AUni>
+					<AUni
+						ws="pt">Salmos</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="c45ff7ec-2ef4-4e88-b6c0-8ee8f15f408d">
+				<BookAbbrev>
+					<AUni
+						ws="de">Spr</AUni>
+					<AUni
+						ws="en">Prv</AUni>
+					<AUni
+						ws="es">Prov</AUni>
+					<AUni
+						ws="fr">Pr</AUni>
+					<AUni
+						ws="pt">Pv</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Sprichwörter</AUni>
+					<AUni
+						ws="en">Proverbs</AUni>
+					<AUni
+						ws="es">Proverbios</AUni>
+					<AUni
+						ws="fr">Proverbes</AUni>
+					<AUni
+						ws="pt">Provérbios</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">Sprüche Salomos</AUni>
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="16e506c6-b2cd-4a1f-8ca3-5b5fba77a970">
+				<BookAbbrev>
+					<AUni
+						ws="de">Koh</AUni>
+					<AUni
+						ws="en">Ecc</AUni>
+					<AUni
+						ws="es">Ecl</AUni>
+					<AUni
+						ws="fr">Eccl</AUni>
+					<AUni
+						ws="pt">Ec</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Kohelet</AUni>
+					<AUni
+						ws="en">Ecclesiastes</AUni>
+					<AUni
+						ws="es">Eclesiastés</AUni>
+					<AUni
+						ws="fr">Ecclésiaste</AUni>
+					<AUni
+						ws="pt">Eclesiastes</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">Ecclesiastes</AUni>
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr">Quohéleth</AUni>
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="a361ccc8-f4c0-4774-95a0-4e8c650328ed">
+				<BookAbbrev>
+					<AUni
+						ws="de">Hld</AUni>
+					<AUni
+						ws="en">Sng</AUni>
+					<AUni
+						ws="es">Cant</AUni>
+					<AUni
+						ws="fr">Cant</AUni>
+					<AUni
+						ws="pt">Ct</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Hohes Lied</AUni>
+					<AUni
+						ws="en">Song of Solomon</AUni>
+					<AUni
+						ws="es">Cantares</AUni>
+					<AUni
+						ws="fr">Cantique des Cantiques</AUni>
+					<AUni
+						ws="pt">Cantares</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">Hohelied Salomos</AUni>
+					<AUni
+						ws="en">Song of Songs</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="e99b2d9a-2243-4517-8c0e-087dbaad1bbc">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jes</AUni>
+					<AUni
+						ws="en">Isa</AUni>
+					<AUni
+						ws="es">Is</AUni>
+					<AUni
+						ws="fr">Es</AUni>
+					<AUni
+						ws="pt">Is</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Jesaja</AUni>
+					<AUni
+						ws="en">Isaiah</AUni>
+					<AUni
+						ws="es">Isaías</AUni>
+					<AUni
+						ws="fr">Ésaïe</AUni>
+					<AUni
+						ws="pt">Isaías</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3c34942b-1dc5-438a-b4a6-3557ece8b354">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jer</AUni>
+					<AUni
+						ws="en">Jer</AUni>
+					<AUni
+						ws="es">Jer</AUni>
+					<AUni
+						ws="fr">Jr</AUni>
+					<AUni
+						ws="pt">Jr</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Jeremia</AUni>
+					<AUni
+						ws="en">Jeremiah</AUni>
+					<AUni
+						ws="es">Jeremías</AUni>
+					<AUni
+						ws="fr">Jérémie</AUni>
+					<AUni
+						ws="pt">Jeremias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="2a8b9a6e-9ed5-4318-b9ac-0afc4cc68eba">
+				<BookAbbrev>
+					<AUni
+						ws="de">Klgl</AUni>
+					<AUni
+						ws="en">Lam</AUni>
+					<AUni
+						ws="es">Lam</AUni>
+					<AUni
+						ws="fr">Lm</AUni>
+					<AUni
+						ws="pt">Lm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Klagelieder</AUni>
+					<AUni
+						ws="en">Lamentations</AUni>
+					<AUni
+						ws="es">Lamentaciones</AUni>
+					<AUni
+						ws="fr">Lamentations</AUni>
+					<AUni
+						ws="pt">Lamentações</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt">Lamentações de Jeremias</AUni>
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="ceb1662a-321e-4348-9c97-98d9232443f7">
+				<BookAbbrev>
+					<AUni
+						ws="de">Ez</AUni>
+					<AUni
+						ws="en">Eze</AUni>
+					<AUni
+						ws="es">Ez</AUni>
+					<AUni
+						ws="fr">Ez</AUni>
+					<AUni
+						ws="pt">Ez</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Ezechiel</AUni>
+					<AUni
+						ws="en">Ezekiel</AUni>
+					<AUni
+						ws="es">Ezequiel</AUni>
+					<AUni
+						ws="fr">Ézéchiel</AUni>
+					<AUni
+						ws="pt">Ezequiel</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3b367fa6-e060-4e16-933c-672a1a0afde6">
+				<BookAbbrev>
+					<AUni
+						ws="de">Dan</AUni>
+					<AUni
+						ws="en">Dan</AUni>
+					<AUni
+						ws="es">Dan</AUni>
+					<AUni
+						ws="fr">Dn</AUni>
+					<AUni
+						ws="pt">Dn</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Daniel</AUni>
+					<AUni
+						ws="en">Daniel</AUni>
+					<AUni
+						ws="es">Daniel</AUni>
+					<AUni
+						ws="fr">Daniel</AUni>
+					<AUni
+						ws="pt">Daniel</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="0ffab3a1-4024-4a69-abd2-7aea77388da5">
+				<BookAbbrev>
+					<AUni
+						ws="de">Hos</AUni>
+					<AUni
+						ws="en">Hos</AUni>
+					<AUni
+						ws="es">Os</AUni>
+					<AUni
+						ws="fr">Os</AUni>
+					<AUni
+						ws="pt">Os</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Hosea</AUni>
+					<AUni
+						ws="en">Hosea</AUni>
+					<AUni
+						ws="es">Oseas</AUni>
+					<AUni
+						ws="fr">Osée</AUni>
+					<AUni
+						ws="pt">Oséias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="7cde78f6-4740-42fa-b4c7-8301211bad04">
+				<BookAbbrev>
+					<AUni
+						ws="de">Joel</AUni>
+					<AUni
+						ws="en">Joel</AUni>
+					<AUni
+						ws="es">Jl</AUni>
+					<AUni
+						ws="fr">Jl</AUni>
+					<AUni
+						ws="pt">Jl</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Joel</AUni>
+					<AUni
+						ws="en">Joel</AUni>
+					<AUni
+						ws="es">Joel</AUni>
+					<AUni
+						ws="fr">Joël</AUni>
+					<AUni
+						ws="pt">Joel</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="151a0315-6b6f-4c03-a226-a1c48c804679">
+				<BookAbbrev>
+					<AUni
+						ws="de">Am</AUni>
+					<AUni
+						ws="en">Am</AUni>
+					<AUni
+						ws="es">Am</AUni>
+					<AUni
+						ws="fr">Am</AUni>
+					<AUni
+						ws="pt">Am</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Amos</AUni>
+					<AUni
+						ws="en">Amos</AUni>
+					<AUni
+						ws="es">Amós</AUni>
+					<AUni
+						ws="fr">Amos</AUni>
+					<AUni
+						ws="pt">Amós</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="2ed3e3a6-03de-4e40-b1ac-9385fb07e67a">
+				<BookAbbrev>
+					<AUni
+						ws="de">Obj</AUni>
+					<AUni
+						ws="en">Ob</AUni>
+					<AUni
+						ws="es">Abd</AUni>
+					<AUni
+						ws="fr">Ab</AUni>
+					<AUni
+						ws="pt">Ob</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Obadja</AUni>
+					<AUni
+						ws="en">Obadiah</AUni>
+					<AUni
+						ws="es">Abdías</AUni>
+					<AUni
+						ws="fr">Abdias</AUni>
+					<AUni
+						ws="pt">Obadias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="c21d098b-c356-45d1-9d3c-f0791704dafe">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jona</AUni>
+					<AUni
+						ws="en">Jon</AUni>
+					<AUni
+						ws="es">Jon</AUni>
+					<AUni
+						ws="fr">Jon</AUni>
+					<AUni
+						ws="pt">Jn</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Jona</AUni>
+					<AUni
+						ws="en">Jonah</AUni>
+					<AUni
+						ws="es">Jonás</AUni>
+					<AUni
+						ws="fr">Jonas</AUni>
+					<AUni
+						ws="pt">Jonas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="55f0f38c-0587-4667-a873-fda92d1660b8">
+				<BookAbbrev>
+					<AUni
+						ws="de">Mi</AUni>
+					<AUni
+						ws="en">Mic</AUni>
+					<AUni
+						ws="es">Miq</AUni>
+					<AUni
+						ws="fr">Mi</AUni>
+					<AUni
+						ws="pt">Mq</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Micha</AUni>
+					<AUni
+						ws="en">Micah</AUni>
+					<AUni
+						ws="es">Miqueas</AUni>
+					<AUni
+						ws="fr">Michée</AUni>
+					<AUni
+						ws="pt">Miquéias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b2e9e051-8e80-4be5-904b-dfdf7fedbf80">
+				<BookAbbrev>
+					<AUni
+						ws="de">Nah</AUni>
+					<AUni
+						ws="en">Na</AUni>
+					<AUni
+						ws="es">Nah</AUni>
+					<AUni
+						ws="fr">Na</AUni>
+					<AUni
+						ws="pt">Na</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Nahum</AUni>
+					<AUni
+						ws="en">Nahum</AUni>
+					<AUni
+						ws="es">Nahúm</AUni>
+					<AUni
+						ws="fr">Nahoum</AUni>
+					<AUni
+						ws="pt">Naum</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr">Nahum</AUni>
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="8be8c1f6-8401-4b8e-966b-bb7cdbf83d12">
+				<BookAbbrev>
+					<AUni
+						ws="de">Hab</AUni>
+					<AUni
+						ws="en">Hab</AUni>
+					<AUni
+						ws="es">Hab</AUni>
+					<AUni
+						ws="fr">Ha</AUni>
+					<AUni
+						ws="pt">Hc</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Habakuk</AUni>
+					<AUni
+						ws="en">Habakkuk</AUni>
+					<AUni
+						ws="es">Habacuc</AUni>
+					<AUni
+						ws="fr">Habacuc</AUni>
+					<AUni
+						ws="pt">Habacuque</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr">Habaquq</AUni>
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="93f5105c-7212-4a3a-9a10-1159e970ceaf">
+				<BookAbbrev>
+					<AUni
+						ws="de">Zef</AUni>
+					<AUni
+						ws="en">Zep</AUni>
+					<AUni
+						ws="es">Sof</AUni>
+					<AUni
+						ws="fr">So</AUni>
+					<AUni
+						ws="pt">Sf</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Zefanja</AUni>
+					<AUni
+						ws="en">Zephaniah</AUni>
+					<AUni
+						ws="es">Sofonías</AUni>
+					<AUni
+						ws="fr">Sophonie</AUni>
+					<AUni
+						ws="pt">Sofonias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="98e94a09-6820-45d7-b1af-64a710ec5319">
+				<BookAbbrev>
+					<AUni
+						ws="de">Hag</AUni>
+					<AUni
+						ws="en">Hag</AUni>
+					<AUni
+						ws="es">Hag</AUni>
+					<AUni
+						ws="fr">Ag</AUni>
+					<AUni
+						ws="pt">Ag</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Haggai</AUni>
+					<AUni
+						ws="en">Haggai</AUni>
+					<AUni
+						ws="es">Hageo</AUni>
+					<AUni
+						ws="fr">Aggée</AUni>
+					<AUni
+						ws="pt">Ageu</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="d2a4a8fb-7b35-4f60-b5a2-8e6c19f37b78">
+				<BookAbbrev>
+					<AUni
+						ws="de">Sach</AUni>
+					<AUni
+						ws="en">Zec</AUni>
+					<AUni
+						ws="es">Zac</AUni>
+					<AUni
+						ws="fr">Za</AUni>
+					<AUni
+						ws="pt">Zc</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Sacharja</AUni>
+					<AUni
+						ws="en">Zechariah</AUni>
+					<AUni
+						ws="es">Zacarías</AUni>
+					<AUni
+						ws="fr">Zacharie</AUni>
+					<AUni
+						ws="pt">Zacarias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="5bb040ca-b716-4b14-8c81-668e96835826">
+				<BookAbbrev>
+					<AUni
+						ws="de">Mal</AUni>
+					<AUni
+						ws="en">Mal</AUni>
+					<AUni
+						ws="es">Mal</AUni>
+					<AUni
+						ws="fr">Ml</AUni>
+					<AUni
+						ws="pt">Ml</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Maleachi</AUni>
+					<AUni
+						ws="en">Malachi</AUni>
+					<AUni
+						ws="es">Malaquías</AUni>
+					<AUni
+						ws="fr">Malachie</AUni>
+					<AUni
+						ws="pt">Malaquias</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="d8da7ee5-1298-44cb-a9a0-734a5d7d2dac">
+				<BookAbbrev>
+					<AUni
+						ws="de">Mt</AUni>
+					<AUni
+						ws="en">Mt</AUni>
+					<AUni
+						ws="es">Mt</AUni>
+					<AUni
+						ws="fr">Mt</AUni>
+					<AUni
+						ws="pt">Mt</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Matthaeus</AUni>
+					<AUni
+						ws="en">Matthew</AUni>
+					<AUni
+						ws="es">Mateo</AUni>
+					<AUni
+						ws="fr">Matthieu</AUni>
+					<AUni
+						ws="pt">Mateus</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b2382b01-8416-4cb6-91e4-d8bed83c564e">
+				<BookAbbrev>
+					<AUni
+						ws="de">Mk</AUni>
+					<AUni
+						ws="en">Mk</AUni>
+					<AUni
+						ws="es">Mc</AUni>
+					<AUni
+						ws="fr">Mc</AUni>
+					<AUni
+						ws="pt">Mc</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Markus</AUni>
+					<AUni
+						ws="en">Mark</AUni>
+					<AUni
+						ws="es">Marcos</AUni>
+					<AUni
+						ws="fr">Marc</AUni>
+					<AUni
+						ws="pt">Marcos</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="32ef8d9d-5341-4a35-b015-2b6e3a00324c">
+				<BookAbbrev>
+					<AUni
+						ws="de">Lk</AUni>
+					<AUni
+						ws="en">Lk</AUni>
+					<AUni
+						ws="es">Lc</AUni>
+					<AUni
+						ws="fr">Lc</AUni>
+					<AUni
+						ws="pt">Lc</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Lukas</AUni>
+					<AUni
+						ws="en">Luke</AUni>
+					<AUni
+						ws="es">Lucas</AUni>
+					<AUni
+						ws="fr">Luc</AUni>
+					<AUni
+						ws="pt">Lucas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="90558dfa-b32b-40ca-8c3c-acbe0e3c4c86">
+				<BookAbbrev>
+					<AUni
+						ws="de">Joh</AUni>
+					<AUni
+						ws="en">Jn</AUni>
+					<AUni
+						ws="es">Jn</AUni>
+					<AUni
+						ws="fr">Jn</AUni>
+					<AUni
+						ws="pt">Jo</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Johannes</AUni>
+					<AUni
+						ws="en">John</AUni>
+					<AUni
+						ws="es">Juan</AUni>
+					<AUni
+						ws="fr">Jean</AUni>
+					<AUni
+						ws="pt">João</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="59004790-da4a-4dcf-abb8-5f4397a11074">
+				<BookAbbrev>
+					<AUni
+						ws="de">Apg</AUni>
+					<AUni
+						ws="en">Acts</AUni>
+					<AUni
+						ws="es">Hch</AUni>
+					<AUni
+						ws="fr">Ac</AUni>
+					<AUni
+						ws="pt">At</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Apostelgeschichte</AUni>
+					<AUni
+						ws="en">Acts</AUni>
+					<AUni
+						ws="es">Hechos</AUni>
+					<AUni
+						ws="fr">Actes</AUni>
+					<AUni
+						ws="pt">Atos</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="8c1f9aeb-c6ac-419b-85d5-a39fa5dba86d">
+				<BookAbbrev>
+					<AUni
+						ws="de">Röm</AUni>
+					<AUni
+						ws="en">Rom</AUni>
+					<AUni
+						ws="es">Rom</AUni>
+					<AUni
+						ws="fr">Rm</AUni>
+					<AUni
+						ws="pt">Rm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Roemer</AUni>
+					<AUni
+						ws="en">Romans</AUni>
+					<AUni
+						ws="es">Romanos</AUni>
+					<AUni
+						ws="fr">Romains</AUni>
+					<AUni
+						ws="pt">Romanos</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="e294dbb0-46e7-422c-b5e2-6a21602ce382">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Kor</AUni>
+					<AUni
+						ws="en">1Cor</AUni>
+					<AUni
+						ws="es">1 Cor</AUni>
+					<AUni
+						ws="fr">1 Co</AUni>
+					<AUni
+						ws="pt">1 Co</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Korinther</AUni>
+					<AUni
+						ws="en">1 Corinthians</AUni>
+					<AUni
+						ws="es">1 Corintios</AUni>
+					<AUni
+						ws="fr">1 Corinthiens</AUni>
+					<AUni
+						ws="pt">1 Coríntios</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Korinther</AUni>
+					<AUni
+						ws="en">I Corinthians</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="333e0b06-ad9e-4609-a971-ed42872b8e57">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Kor</AUni>
+					<AUni
+						ws="en">2Cor</AUni>
+					<AUni
+						ws="es">2 Cor</AUni>
+					<AUni
+						ws="fr">2 Co</AUni>
+					<AUni
+						ws="pt">2 Co</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Korinther</AUni>
+					<AUni
+						ws="en">2 Corinthians</AUni>
+					<AUni
+						ws="es">2 Corintios</AUni>
+					<AUni
+						ws="fr">2 Corinthiens</AUni>
+					<AUni
+						ws="pt">2 Coríntios</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Korinther</AUni>
+					<AUni
+						ws="en">II Corinthians</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="279c6d16-de84-4ac7-bcd9-028840d730ed">
+				<BookAbbrev>
+					<AUni
+						ws="de">Gal</AUni>
+					<AUni
+						ws="en">Gal</AUni>
+					<AUni
+						ws="es">Gál</AUni>
+					<AUni
+						ws="fr">Ga</AUni>
+					<AUni
+						ws="pt">Gl</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Galater</AUni>
+					<AUni
+						ws="en">Galatians</AUni>
+					<AUni
+						ws="es">Gálatas</AUni>
+					<AUni
+						ws="fr">Galates</AUni>
+					<AUni
+						ws="pt">Gálatas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="26ed203e-4388-40bf-bcd1-654af397b5b0">
+				<BookAbbrev>
+					<AUni
+						ws="de">Eph</AUni>
+					<AUni
+						ws="en">Eph</AUni>
+					<AUni
+						ws="es">Ef</AUni>
+					<AUni
+						ws="fr">Ep</AUni>
+					<AUni
+						ws="pt">Ef</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Epheser</AUni>
+					<AUni
+						ws="en">Ephesians</AUni>
+					<AUni
+						ws="es">Efesios</AUni>
+					<AUni
+						ws="fr">Éphésiens</AUni>
+					<AUni
+						ws="pt">Efésios</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="72d004cd-a0c9-40aa-a9df-7fa38b02f7d6">
+				<BookAbbrev>
+					<AUni
+						ws="de">Phil</AUni>
+					<AUni
+						ws="en">Php</AUni>
+					<AUni
+						ws="es">Flp</AUni>
+					<AUni
+						ws="fr">Ph</AUni>
+					<AUni
+						ws="pt">Fp</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Philipper</AUni>
+					<AUni
+						ws="en">Philippians</AUni>
+					<AUni
+						ws="es">Filipenses</AUni>
+					<AUni
+						ws="fr">Philippiens</AUni>
+					<AUni
+						ws="pt">Filipenses</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="1a67204f-8bf0-49e7-8162-7626352caa44">
+				<BookAbbrev>
+					<AUni
+						ws="de">Kol</AUni>
+					<AUni
+						ws="en">Col</AUni>
+					<AUni
+						ws="es">Col</AUni>
+					<AUni
+						ws="fr">Col</AUni>
+					<AUni
+						ws="pt">Cl</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Kolosser</AUni>
+					<AUni
+						ws="en">Colossians</AUni>
+					<AUni
+						ws="es">Colosenses</AUni>
+					<AUni
+						ws="fr">Colossiens</AUni>
+					<AUni
+						ws="pt">Colossenses</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="71247e67-fd36-42c8-9199-931f56b61fe9">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Thess</AUni>
+					<AUni
+						ws="en">1Th</AUni>
+					<AUni
+						ws="es">1 Tes</AUni>
+					<AUni
+						ws="fr">1 Th</AUni>
+					<AUni
+						ws="pt">1 Ts</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Thessalonicher</AUni>
+					<AUni
+						ws="en">1 Thessalonians</AUni>
+					<AUni
+						ws="es">1 Tesalonicenses</AUni>
+					<AUni
+						ws="fr">1 Thessaloniciens</AUni>
+					<AUni
+						ws="pt">1 Tessalonicenses</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Thessalonicher</AUni>
+					<AUni
+						ws="en">I Thessalonians</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b07ffc0f-a92e-4e96-b157-a486b0bd47f2">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Thess</AUni>
+					<AUni
+						ws="en">2Th</AUni>
+					<AUni
+						ws="es">2 Tes</AUni>
+					<AUni
+						ws="fr">2 Th</AUni>
+					<AUni
+						ws="pt">2 Ts</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Thessalonicher</AUni>
+					<AUni
+						ws="en">2 Thessalonians</AUni>
+					<AUni
+						ws="es">2 Tesalonicenses</AUni>
+					<AUni
+						ws="fr">2 Thessaloniciens</AUni>
+					<AUni
+						ws="pt">2 Tessalonicenses</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Thessalonicher</AUni>
+					<AUni
+						ws="en">II Thessalonians</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="5ee90773-3144-4117-b5f7-36dfda5cd56e">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Tim</AUni>
+					<AUni
+						ws="en">1Tim</AUni>
+					<AUni
+						ws="es">1 Tim</AUni>
+					<AUni
+						ws="fr">1 Tim</AUni>
+					<AUni
+						ws="pt">1 Tm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Timotheus</AUni>
+					<AUni
+						ws="en">1 Timothy</AUni>
+					<AUni
+						ws="es">1 Timoteo</AUni>
+					<AUni
+						ws="fr">1 Timothée</AUni>
+					<AUni
+						ws="pt">1 Timóteo</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Timotheus</AUni>
+					<AUni
+						ws="en">I Timothy</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3b873619-fbcb-4c49-aa94-e5a0c2f15204">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Tim</AUni>
+					<AUni
+						ws="en">2Tim</AUni>
+					<AUni
+						ws="es">2 Tim</AUni>
+					<AUni
+						ws="fr">2 Tim</AUni>
+					<AUni
+						ws="pt">2 Tm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Timotheus</AUni>
+					<AUni
+						ws="en">2 Timothy</AUni>
+					<AUni
+						ws="es">2 Timoteo</AUni>
+					<AUni
+						ws="fr">2 Timothée</AUni>
+					<AUni
+						ws="pt">2 Timóteo</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Timotheus</AUni>
+					<AUni
+						ws="en">II Timothy</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="8621ec21-cd41-42c8-b403-821e320a03e0">
+				<BookAbbrev>
+					<AUni
+						ws="de">Tit</AUni>
+					<AUni
+						ws="en">Tit</AUni>
+					<AUni
+						ws="es">Tit</AUni>
+					<AUni
+						ws="fr">Tt</AUni>
+					<AUni
+						ws="pt">Tt</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Titus</AUni>
+					<AUni
+						ws="en">Titus</AUni>
+					<AUni
+						ws="es">Tito</AUni>
+					<AUni
+						ws="fr">Tite</AUni>
+					<AUni
+						ws="pt">Tito</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="9f566cfa-83ff-470e-a8ff-8164620393a0">
+				<BookAbbrev>
+					<AUni
+						ws="de">Phlm</AUni>
+					<AUni
+						ws="en">Phm</AUni>
+					<AUni
+						ws="es">Flm</AUni>
+					<AUni
+						ws="fr">Phm</AUni>
+					<AUni
+						ws="pt">Fm</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Philemon</AUni>
+					<AUni
+						ws="en">Philemon</AUni>
+					<AUni
+						ws="es">Filemón</AUni>
+					<AUni
+						ws="fr">Philémon</AUni>
+					<AUni
+						ws="pt">Filemom</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="3eda1d74-4094-4920-95d4-1b509ed8adec">
+				<BookAbbrev>
+					<AUni
+						ws="de">Hebr</AUni>
+					<AUni
+						ws="en">Heb</AUni>
+					<AUni
+						ws="es">Heb</AUni>
+					<AUni
+						ws="fr">He</AUni>
+					<AUni
+						ws="pt">Hb</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Hebraeer</AUni>
+					<AUni
+						ws="en">Hebrews</AUni>
+					<AUni
+						ws="es">Hebreos</AUni>
+					<AUni
+						ws="fr">Hébreux</AUni>
+					<AUni
+						ws="pt">Hebreus</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="0914e14c-1545-4aab-a367-8880d429bfe3">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jak</AUni>
+					<AUni
+						ws="en">Jas</AUni>
+					<AUni
+						ws="es">Sant</AUni>
+					<AUni
+						ws="fr">Jc</AUni>
+					<AUni
+						ws="pt">Tg</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Jakobus</AUni>
+					<AUni
+						ws="en">James</AUni>
+					<AUni
+						ws="es">Santiago</AUni>
+					<AUni
+						ws="fr">Jacques</AUni>
+					<AUni
+						ws="pt">Tiago</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="6ccc8bc3-d5d3-44e3-9b0a-f4466c920890">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Petr</AUni>
+					<AUni
+						ws="en">1Pet</AUni>
+					<AUni
+						ws="es">1 Pe</AUni>
+					<AUni
+						ws="fr">1 P</AUni>
+					<AUni
+						ws="pt">1 Pe</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Petrus</AUni>
+					<AUni
+						ws="en">1 Peter</AUni>
+					<AUni
+						ws="es">1 Pedro</AUni>
+					<AUni
+						ws="fr">1 Pierre</AUni>
+					<AUni
+						ws="pt">1 Pedro</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Petrus</AUni>
+					<AUni
+						ws="en">I Peter</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="9b21e16e-57f7-4a08-932c-64610e64c8d2">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Petr</AUni>
+					<AUni
+						ws="en">2Pet</AUni>
+					<AUni
+						ws="es">2 Pe</AUni>
+					<AUni
+						ws="fr">2 P</AUni>
+					<AUni
+						ws="pt">2 Pe</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Petrus</AUni>
+					<AUni
+						ws="en">2 Peter</AUni>
+					<AUni
+						ws="es">2 Pedro</AUni>
+					<AUni
+						ws="fr">2 Pierre</AUni>
+					<AUni
+						ws="pt">2 Pedro</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Petrus</AUni>
+					<AUni
+						ws="en">II Peter</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="f250abc8-a03b-4560-9224-be5acabed663">
+				<BookAbbrev>
+					<AUni
+						ws="de">1 Joh</AUni>
+					<AUni
+						ws="en">1Jn</AUni>
+					<AUni
+						ws="es">1 Jn</AUni>
+					<AUni
+						ws="fr">1 Jn</AUni>
+					<AUni
+						ws="pt">1 Jo</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">1 Johannes</AUni>
+					<AUni
+						ws="en">1 John</AUni>
+					<AUni
+						ws="es">1 Juan</AUni>
+					<AUni
+						ws="fr">1 Jean</AUni>
+					<AUni
+						ws="pt">1 João</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">I Johannes</AUni>
+					<AUni
+						ws="en">I John</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="2b0b8860-4ef4-4cdc-ad51-c11b6ddafc22">
+				<BookAbbrev>
+					<AUni
+						ws="de">2 Joh</AUni>
+					<AUni
+						ws="en">2Jn</AUni>
+					<AUni
+						ws="es">2 Jn</AUni>
+					<AUni
+						ws="fr">2 Jn</AUni>
+					<AUni
+						ws="pt">2 Jo</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">2 Johannes</AUni>
+					<AUni
+						ws="en">2 John</AUni>
+					<AUni
+						ws="es">2 Juan</AUni>
+					<AUni
+						ws="fr">2 Jean</AUni>
+					<AUni
+						ws="pt">2 João</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">II Johannes</AUni>
+					<AUni
+						ws="en">II John</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="dc91cb47-4d00-4b67-8796-18b5cd770cf0">
+				<BookAbbrev>
+					<AUni
+						ws="de">3 Joh</AUni>
+					<AUni
+						ws="en">3Jn</AUni>
+					<AUni
+						ws="es">3 Jn</AUni>
+					<AUni
+						ws="fr">3 Jn</AUni>
+					<AUni
+						ws="pt">3 Jo</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">3 Johannes</AUni>
+					<AUni
+						ws="en">3 John</AUni>
+					<AUni
+						ws="es">3 Juan</AUni>
+					<AUni
+						ws="fr">3 Jean</AUni>
+					<AUni
+						ws="pt">3 João</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de">III Johannes</AUni>
+					<AUni
+						ws="en">III John</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="70c5a372-b3c6-4af6-aaee-ea707ff839ff">
+				<BookAbbrev>
+					<AUni
+						ws="de">Jud</AUni>
+					<AUni
+						ws="en">Jude</AUni>
+					<AUni
+						ws="es">Jds</AUni>
+					<AUni
+						ws="fr">Jude</AUni>
+					<AUni
+						ws="pt">Jd</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Judas</AUni>
+					<AUni
+						ws="en">Jude</AUni>
+					<AUni
+						ws="es">Judas</AUni>
+					<AUni
+						ws="fr">Jude</AUni>
+					<AUni
+						ws="pt">Judas</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en" />
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+			<ownseq
+				class="ScrBookRef"
+				guid="b70f4b00-d9b9-403d-821e-3316c0556cf9">
+				<BookAbbrev>
+					<AUni
+						ws="de">Offb</AUni>
+					<AUni
+						ws="en">Rev</AUni>
+					<AUni
+						ws="es">Ap</AUni>
+					<AUni
+						ws="fr">Ap</AUni>
+					<AUni
+						ws="pt">Ap</AUni>
+				</BookAbbrev>
+				<BookName>
+					<AUni
+						ws="de">Offenbarung</AUni>
+					<AUni
+						ws="en">Revelation</AUni>
+					<AUni
+						ws="es">Apocalipsis</AUni>
+					<AUni
+						ws="fr">Apocalypse</AUni>
+					<AUni
+						ws="pt">Apocalipse</AUni>
+				</BookName>
+				<BookNameAlt>
+					<AUni
+						ws="de" />
+					<AUni
+						ws="en">Apocalypse</AUni>
+					<AUni
+						ws="es" />
+					<AUni
+						ws="fr" />
+					<AUni
+						ws="pt" />
+				</BookNameAlt>
+			</ownseq>
+		</Books>
+	</ScrRefSystem>
+</ReferenceSystem>

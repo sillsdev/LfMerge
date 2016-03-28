@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfidenceLevels>
+	<CmPossibilityList
+		guid="2bdd10f9-f9b2-11d3-977b-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Conf</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Confidence Levels</AUni>
+			<AUni
+				ws="es">Niveles de confiabilidad</AUni>
+			<AUni
+				ws="fa">سطوح اطمینان</AUni>
+			<AUni
+				ws="fr">Niveaux de confiance</AUni>
+			<AUni
+				ws="id">Tingkat Kepercayaan</AUni>
+			<AUni
+				ws="pt">Níveis de Confiança</AUni>
+			<AUni
+				ws="ru">Уровни конфиденциальности</AUni>
+			<AUni
+				ws="zh-CN">信心水平</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">High</AUni>
+					<AUni
+						ws="es">sHigh</AUni>
+					<AUni
+						ws="fr">fHigh</AUni>
+				</Abbreviation>
+				<BackColor
+					val="255" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="ff445550-3269-43ba-b409-7ff8694e5d4f">
+						<DateModified
+							val="2011-2-2 19:39:28.823" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1534e093-8f43-494a-8eeb-cfac35a4d6b4">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">لا شك أن</AUni>
+					<AUni
+						ws="en">High</AUni>
+					<AUni
+						ws="es">sHigh</AUni>
+					<AUni
+						ws="fr">fHigh</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="6328367" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd1107-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Med</AUni>
+					<AUni
+						ws="es">sMed</AUni>
+					<AUni
+						ws="fr">fMed</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16736303" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="d18827c2-1c55-4b98-bfac-c6015ed70256">
+						<DateModified
+							val="2011-2-2 19:39:28.823" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2cbe834f-e05c-40e7-b8c5-8a6628d8647d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Medium</AUni>
+					<AUni
+						ws="es">sMedium</AUni>
+					<AUni
+						ws="fr">fMedium</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12632111" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd110e-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Low</AUni>
+					<AUni
+						ws="es">sLow</AUni>
+					<AUni
+						ws="fr">fLow</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12176" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="58824979-bb19-440a-a4eb-60461fcb5205">
+						<DateModified
+							val="2011-2-2 19:39:28.823" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="64f4357a-112d-434a-8325-ef6e1938dc45">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Low</AUni>
+					<AUni
+						ws="es">sLow</AUni>
+					<AUni
+						ws="fr">fLow</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16711935" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd1115-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Unk</AUni>
+					<AUni
+						ws="es">sUnk</AUni>
+					<AUni
+						ws="fr">fUnk</AUni>
+				</Abbreviation>
+				<BackColor
+					val="8323072" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="9d3e85fe-8163-484b-93e6-fc47e17f0b18">
+						<DateModified
+							val="2011-2-2 19:39:28.823" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3e63fbfe-957d-4494-a3d4-af658e836acb">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Unknown</AUni>
+					<AUni
+						ws="es">sUnknown</AUni>
+					<AUni
+						ws="fr">fUnknown</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="49296" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</ConfidenceLevels>

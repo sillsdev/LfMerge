@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PublicationTypes>
+	<CmPossibilityList
+		guid="48a4eaed-2ae3-4c81-8c9c-f79f2f3a1455">
+		<DateCreated
+			val="2011-05-27 15:38:36.131" />
+		<DateModified
+			val="2011-05-27 15:38:36.131" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Publications</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="70c0a758-5901-4884-b992-94ca31087607">
+				<Abbreviation>
+					<AUni
+						ws="en">Main</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2011-05-27 15:38:36.131" />
+				<DateModified
+					val="2011-05-27 15:38:36.131" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="True" />
+				<Name>
+					<AUni
+						ws="en">Main Dictionary</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="0" />
+	</CmPossibilityList>
+</PublicationTypes>

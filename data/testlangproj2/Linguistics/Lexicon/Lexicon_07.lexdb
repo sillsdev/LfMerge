@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Lexicon>
+	<LexEntry
+		guid="1a705846-a814-4289-8594-4b874faca6cc">
+		<AlternateForms>
+			<ownseq
+				class="MoStemAllomorph"
+				guid="bb464c5d-de15-494b-bc05-1ee92c3028e6">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">stem allomorph</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e8-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+				<PhoneEnv>
+					<refcol
+						guid="38658b87-6a90-4710-9f40-11e7e95c1762"
+						t="r" />
+				</PhoneEnv>
+			</ownseq>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="ad24269e-0e46-4be5-9279-266b4d3bf949">
+				<Custom
+					name="Cust Allomorph">
+					<AUni
+						ws="qaa-x-kal">Custom allomorph text</AUni>
+					<AUni
+						ws="qaa-fonipa-x-kal">Custom IPA allomorph text</AUni>
+				</Custom>
+				<Form>
+					<AUni
+						ws="qaa-x-kal">affix allomorph</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="56db04bf-3d58-44cc-b292-4c8aa68538f4"
+						t="r" />
+				</MorphType>
+				<PhoneEnv>
+					<refcol
+						guid="08ca1347-3af9-42d3-b7bd-97c668c5a896"
+						t="r" />
+				</PhoneEnv>
+			</ownseq>
+		</AlternateForms>
+		<Bibliography>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">English bibliography information</Run>
+			</AStr>
+			<AStr
+				ws="fr">
+				<Run
+					ws="fr">French bibliography information</Run>
+			</AStr>
+		</Bibliography>
+		<CitationForm>
+			<AUni
+				ws="qaa-x-kal">ztestmain</AUni>
+		</CitationForm>
+		<Custom
+			name="Cust Date"
+			val="201108283" />
+		<Custom
+			name="Cust MultiPara">
+			<StText
+				guid="cd05615d-c47b-4e6f-8b4e-29285ababcee">
+				<DateModified
+					val="2011-7-28 16:5:54.202" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="5c8fb347-d884-4db5-9415-64b139b663ff">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">This is the first paragraph.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="c8933753-debc-464d-91ce-b5f2eb6e02d3">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="061a4bad-eaa8-4365-9a19-8150621a9a44">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">This is the second paragraph.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="180e009c-b9dc-4ba0-a503-b013d79a878a">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Custom>
+		<Custom
+			name="Cust Number"
+			val="1971" />
+		<Custom
+			name="Cust Single Line">
+			<AStr
+				ws="en">
+				<Run
+					ws="en">Some single custom text</Run>
+			</AStr>
+		</Custom>
+		<Custom
+			name="Cust Single Line All">
+			<AUni
+				ws="en">Some custom text</AUni>
+			<AUni
+				ws="fr">French custom text</AUni>
+		</Custom>
+		<Custom
+			name="Cust Single ListRef">
+			<objsur
+				guid="d7f713ad-e8cf-11d3-9764-00c04f186933"
+				t="r" />
+		</Custom>
+		<DateCreated
+			val="2004-10-19 2:42:2.903" />
+		<DateModified
+			val="2016-3-28 6:35:21.288" />
+		<DoNotUseForParsing
+			val="False" />
+		<Etymology>
+			<LexEtymology
+				guid="d7d67133-0f3a-416c-ad71-8a7cd4b88376">
+				<Comment>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">English comment</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">French comment</Run>
+					</AStr>
+				</Comment>
+				<Form>
+					<AUni
+						ws="qaa-x-kal">etymology</AUni>
+				</Form>
+				<Gloss>
+					<AUni
+						ws="en">English gloss</AUni>
+					<AUni
+						ws="fr">French gloss</AUni>
+				</Gloss>
+				<Source>
+					<Uni>source</Uni>
+				</Source>
+			</LexEtymology>
+		</Etymology>
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="e5eed8d7-b79f-4efc-8173-3805ab4d38ba">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">zitʰɛstmen</AUni>
+					<AUni
+						ws="qaa-x-kal">underlying form - changed in FW</AUni>
+				</Form>
+				<IsAbstract
+					val="True" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<LiteralMeaning>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">The literal meaning</Run>
+			</AStr>
+		</LiteralMeaning>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="425ec2ef-f3be-4a00-be13-dbe678e6eb98">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+			<MoStemMsa
+				guid="cdbdf5ac-797d-4ccc-905d-6ad743379203">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71529-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Restrictions>
+			<AUni
+				ws="en">English restrictions</AUni>
+			<AUni
+				ws="fr">French restrictions</AUni>
+		</Restrictions>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="eea9c29f-244f-4891-81db-c8274cd61f0c">
+				<AnthroCodes>
+					<refcol
+						guid="4bd4508e-aeee-41ca-8680-9057a7946380"
+						t="r" />
+					<refcol
+						guid="75305ef0-0bb0-452e-96e1-b7545f0925dc"
+						t="r" />
+				</AnthroCodes>
+				<AnthroNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English anthropology notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French anthropology notes.</Run>
+					</AStr>
+				</AnthroNote>
+				<Bibliography>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">English bibliography information.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">French bibliography information.</Run>
+					</AStr>
+				</Bibliography>
+				<Custom
+					name="Cust Multi ListRef">
+					<refcol
+						guid="43b38fe1-706a-4288-9404-462daf8f283b"
+						t="r" />
+					<refcol
+						guid="85c48e72-218d-4fac-bb82-41a5eb9e268a"
+						t="r" />
+				</Custom>
+				<Definition>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">This is the English definition</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">This is the French definition</Run>
+					</AStr>
+				</Definition>
+				<DiscourseNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English discourse notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French discourse notes.</Run>
+					</AStr>
+				</DiscourseNote>
+				<DomainTypes>
+					<refcol
+						guid="d7f713a7-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+					<refcol
+						guid="d7f713a8-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</DomainTypes>
+				<EncyclopedicInfo>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">This is English encyclopedic information.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">This is French encyclopedic information.</Run>
+					</AStr>
+				</EncyclopedicInfo>
+				<Examples>
+					<ownseq
+						class="LexExampleSentence"
+						guid="c07286a6-3e58-43f5-96ca-db445a5d26d6">
+						<Custom
+							name="Cust Example">
+							<AUni
+								ws="qaa-x-kal">Custom example</AUni>
+							<AUni
+								ws="qaa-fonipa-x-kal">Custom IPA example</AUni>
+						</Custom>
+						<Example>
+							<AStr
+								ws="qaa-x-kal">
+								<Run
+									ws="qaa-x-kal">Vernacular example</Run>
+							</AStr>
+						</Example>
+						<Reference>
+							<Str>
+								<Run
+									ws="en">Example reference</Run>
+							</Str>
+						</Reference>
+						<Translations>
+							<CmTranslation
+								guid="d7a4bdcc-e38d-4fa1-92c8-74c314a10fbc">
+								<Translation>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">English translation</Run>
+									</AStr>
+									<AStr
+										ws="fr">
+										<Run
+											ws="fr">French translation</Run>
+									</AStr>
+								</Translation>
+								<Type>
+									<objsur
+										guid="d7f7164a-e8cf-11d3-9764-00c04f186933"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+					<ownseq
+						class="LexExampleSentence"
+						guid="f387772c-48a0-4aeb-8211-345d329a10ea">
+						<Example>
+							<AStr
+								ws="qaa-x-kal">
+								<Run
+									ws="qaa-x-kal">Second vernacular example</Run>
+							</AStr>
+						</Example>
+						<Reference>
+							<Str>
+								<Run
+									ws="en">Second example reference</Run>
+							</Str>
+						</Reference>
+						<Translations>
+							<CmTranslation
+								guid="6de93c5c-7b26-464b-8c75-55c2142a9dfc">
+								<Translation>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Second English translation</Run>
+									</AStr>
+									<AStr
+										ws="fr">
+										<Run
+											ws="fr">Second French translation</Run>
+									</AStr>
+								</Translation>
+								<Type>
+									<objsur
+										guid="d7f7164a-e8cf-11d3-9764-00c04f186933"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Examples>
+				<GeneralNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English general notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French general notes.</Run>
+					</AStr>
+				</GeneralNote>
+				<Gloss>
+					<AUni
+						ws="en">English gloss - changed in FW</AUni>
+					<AUni
+						ws="fr">French gloss</AUni>
+				</Gloss>
+				<GrammarNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English grammer notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French grammer notes.</Run>
+					</AStr>
+				</GrammarNote>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="425ec2ef-f3be-4a00-be13-dbe678e6eb98"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+				<PhonologyNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English phonology notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French phonology notes.</Run>
+					</AStr>
+				</PhonologyNote>
+				<Pictures>
+					<ownseq
+						class="CmPicture"
+						guid="4b026ffe-58b5-4b78-be76-6e3da6299a54">
+						<LayoutPos
+							val="0" />
+						<LocationMax
+							val="0" />
+						<LocationMin
+							val="0" />
+						<LocationRangeType
+							val="0" />
+						<PictureFile>
+							<objsur
+								guid="534e5cf1-db34-4d2e-8829-146acc78c46e"
+								t="r" />
+						</PictureFile>
+						<ScaleFactor
+							val="0" />
+					</ownseq>
+				</Pictures>
+				<Restrictions>
+					<AUni
+						ws="en">These are English restrictions.</AUni>
+					<AUni
+						ws="fr">These are French restrictions.</AUni>
+				</Restrictions>
+				<ReversalEntries>
+					<refcol
+						guid="18a596cb-ebaa-472a-81b3-66fd6b807513"
+						t="r" />
+					<refcol
+						guid="2d11054c-7a9d-4c0f-a08e-713ff5dfe429"
+						t="r" />
+				</ReversalEntries>
+				<ScientificName>
+					<Str>
+						<Run
+							ws="en">Scientific name</Run>
+					</Str>
+				</ScientificName>
+				<SemanticDomains>
+					<refcol
+						guid="63403699-07c1-43f3-a47c-069d6e4316e5"
+						t="r" />
+					<refcol
+						guid="d60faf11-cc6e-48db-8a13-82f86d78ab00"
+						t="r" />
+				</SemanticDomains>
+				<SemanticsNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English semantic notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French semantic notes.</Run>
+					</AStr>
+				</SemanticsNote>
+				<Senses>
+					<ownseq
+						class="LexSense"
+						guid="3efc1961-2392-4d63-b0ec-b2599303b8cd">
+						<Definition>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">English subsense definition for 1.1.</Run>
+							</AStr>
+							<AStr
+								ws="fr">
+								<Run
+									ws="fr">French subsense definition for 1.1.</Run>
+							</AStr>
+						</Definition>
+						<Gloss>
+							<AUni
+								ws="en">English subsense gloss1.1</AUni>
+							<AUni
+								ws="fr">French subsense gloss1.1</AUni>
+						</Gloss>
+						<MorphoSyntaxAnalysis>
+							<objsur
+								guid="cdbdf5ac-797d-4ccc-905d-6ad743379203"
+								t="r" />
+						</MorphoSyntaxAnalysis>
+					</ownseq>
+					<ownseq
+						class="LexSense"
+						guid="416836d2-f09d-4c15-8f22-087d1f1cc632">
+						<Definition>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">English subsense definition for 1.2.</Run>
+							</AStr>
+							<AStr
+								ws="fr">
+								<Run
+									ws="fr">French subsense definition for 1.2.</Run>
+							</AStr>
+						</Definition>
+						<Gloss>
+							<AUni
+								ws="en">English subsense gloss1.2</AUni>
+							<AUni
+								ws="fr">French subsense gloss</AUni>
+						</Gloss>
+					</ownseq>
+				</Senses>
+				<SenseType>
+					<objsur
+						guid="d7f71383-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</SenseType>
+				<SocioLinguisticsNote>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English sociolinguistic notes.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French sociolinguistic notes.</Run>
+					</AStr>
+				</SocioLinguisticsNote>
+				<Source>
+					<Str>
+						<Run
+							ws="en">Source information</Run>
+					</Str>
+				</Source>
+				<Status>
+					<objsur
+						guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Status>
+				<UsageTypes>
+					<refcol
+						guid="d7f7138a-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+					<refcol
+						guid="d7f7138e-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</UsageTypes>
+			</ownseq>
+			<ownseq
+				class="LexSense"
+				guid="59db2bec-d740-41c1-96df-f7843c5c6854">
+				<Definition>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">This is the English definition for 2.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">This is the French definition for 2.</Run>
+					</AStr>
+				</Definition>
+				<Gloss>
+					<AUni
+						ws="en">English gloss2</AUni>
+					<AUni
+						ws="fr">French gloss2</AUni>
+				</Gloss>
+			</ownseq>
+		</Senses>
+		<SummaryDefinition>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">English summary definition</Run>
+			</AStr>
+			<AStr
+				ws="fr">
+				<Run
+					ws="fr">French summary definition</Run>
+			</AStr>
+		</SummaryDefinition>
+	</LexEntry>
+	<LexEntry
+		guid="3c99c376-e6dc-45a5-aaa4-bde6808acdcb">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-15 20:7:28.460" />
+		<DateModified
+			val="2007-1-17 19:18:49.243" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="c537f739-b7d5-494c-a4fd-311e7af06057">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ke</AUni>
+					<AUni
+						ws="qaa-x-kal">ke</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e2-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="580a3aed-71bc-4f96-a179-e685c07d94f2">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7152d-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="85352e90-319f-4b63-98a3-ba3d9a094c52">
+				<Gloss>
+					<AUni
+						ws="en">Question</AUni>
+					<AUni
+						ws="es">Pregunta</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="580a3aed-71bc-4f96-a179-e685c07d94f2"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="7045f230-4b97-4f9c-9d5f-047e7d66a2df">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:25:39.703" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="e2e776be-321f-440b-bb22-90b19173aa44">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">pʰal</AUni>
+					<AUni
+						ws="qaa-x-kal">pal</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="a3e3e0c3-f3d0-464f-9b03-e6cd6713046a">
+				<InflectionClass>
+					<objsur
+						guid="441be6a9-e5d5-43c4-bd89-ab335f80e46a"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="a962f0d9-3162-4625-ba97-2e0fd2c5ecf0">
+				<Gloss>
+					<AUni
+						ws="en">tree</AUni>
+					<AUni
+						ws="es">arbol</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="a3e3e0c3-f3d0-464f-9b03-e6cd6713046a"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="b3693338-1690-4bf2-9424-009e1e75398c">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-15 20:7:28.460" />
+		<DateModified
+			val="2007-1-17 17:16:40.800" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="c2d263a8-0059-4ad2-9a0a-7773d047566f">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">ɬo</AUni>
+					<AUni
+						ws="qaa-x-kal">lo</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e1-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="3bd2934e-e68a-46a3-9cd7-d78c0b383fe2">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7152d-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="afb1bd7e-7a2b-4ece-b44d-5fba1cbd8bfc">
+				<Gloss>
+					<AUni
+						ws="en">PhraseFinal</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="3bd2934e-e68a-46a3-9cd7-d78c0b383fe2"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+</Lexicon>

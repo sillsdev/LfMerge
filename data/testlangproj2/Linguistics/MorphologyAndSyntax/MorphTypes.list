@@ -1,0 +1,1331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MorphTypes>
+	<CmPossibilityList
+		guid="d7f713d8-e8cf-11d3-9764-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">MjeTyp</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="true" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5042" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Morpheme Types</AUni>
+			<AUni
+				ws="es">Tipos de morfemas</AUni>
+			<AUni
+				ws="fa">انواع تکواژ</AUni>
+			<AUni
+				ws="fr">Types de morphèmes</AUni>
+			<AUni
+				ws="id">Jenis Morfem</AUni>
+			<AUni
+				ws="pt">Tipos de morfema</AUni>
+			<AUni
+				ws="ru">Типы морфем</AUni>
+			<AUni
+				ws="zh-CN">语素类型</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="MoMorphType"
+				guid="56db04bf-3d58-44cc-b292-4c8aa68538f4">
+				<Abbreviation>
+					<AUni
+						ws="en">part</AUni>
+					<AUni
+						ws="es">part</AUni>
+					<AUni
+						ws="fr">partFRN</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A particle is a word that does not belong to one of the main classes of words, is invariable in form, and typically has grammatical or pragmatic meaning.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="022ab639-a4ec-4097-9aeb-4b81fa6a297c">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="d6329d06-4fe7-4b76-861f-85b09074428d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">particle</AUni>
+					<AUni
+						ws="es">partículo</AUni>
+					<AUni
+						ws="fr">particleFRN</AUni>
+				</Name>
+				<SecondaryOrder
+					val="1" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713da-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">ifx</AUni>
+					<AUni
+						ws="es">ifj</AUni>
+					<AUni
+						ws="fr">ifx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An infix is an affix that is inserted within a root or stem.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="34c0d1c3-ed13-4087-9a32-c237dbb4ed6e">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="60e0d5d8-e589-49b7-97c6-9f866e6f916f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">infix</AUni>
+					<AUni
+						ws="es">infijo</AUni>
+					<AUni
+						ws="fr">infixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>-</Uni>
+				</Postfix>
+				<Prefix>
+					<Uni>-</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="5" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713db-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">pfx</AUni>
+					<AUni
+						ws="es">pfj</AUni>
+					<AUni
+						ws="fr">pfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A prefix is an affix that is joined before a root or stem.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="1f2fd17d-38c2-4d44-bc82-debdf397eddb">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="06cc2a0c-c1f5-4faa-886c-3a11a6ce083a">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">prefix</AUni>
+					<AUni
+						ws="es">prefijo</AUni>
+					<AUni
+						ws="fr">préfixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>-</Uni>
+				</Postfix>
+				<SecondaryOrder
+					val="3" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713dc-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">smfx</AUni>
+					<AUni
+						ws="es">smfj</AUni>
+					<AUni
+						ws="fr">smfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A simulfix is a change or replacement of vowels or consonants (usually vowels) which changes the meaning of a word.  (Note: the parser does not currently handle simulfixes.)</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="77e658c0-918b-477d-90bd-071c3b27a823">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="fe0af323-105d-4783-af4c-fdcfe9f48cf2">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">simulfix</AUni>
+					<AUni
+						ws="es">simulfijo</AUni>
+					<AUni
+						ws="fr">simulfixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>=</Uni>
+				</Postfix>
+				<Prefix>
+					<Uni>=</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="5" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713dd-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">sfx</AUni>
+					<AUni
+						ws="es">sfj</AUni>
+					<AUni
+						ws="fr">sfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A suffix is an affix that is attached to the end of a root or stem.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="945ae305-11b1-4a65-af2d-3a618ef9655a">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0b56d21e-e2ee-47ee-8e6e-e119aae1be95">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">suffix</AUni>
+					<AUni
+						ws="es">sufijo</AUni>
+					<AUni
+						ws="fr">suffixe</AUni>
+				</Name>
+				<Prefix>
+					<Uni>-</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="6" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713de-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">spfx</AUni>
+					<AUni
+						ws="es">spfj</AUni>
+					<AUni
+						ws="fr">spfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A suprafix is a kind of affix in which a suprasegmental is superimposed on one or more syllables of the root or stem, signalling a particular  morphosyntactic operation.  (Note: the parser does not currently handle suprafixes.)</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="65810694-0547-4285-ba4a-803bbcd3753c">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="d28c5b83-1055-4ced-97b6-c820e0eaca7e">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">suprafix</AUni>
+					<AUni
+						ws="es">suprafijo</AUni>
+					<AUni
+						ws="fr">suprafixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>~</Uni>
+				</Postfix>
+				<Prefix>
+					<Uni>~</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="5" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713df-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">cfx</AUni>
+					<AUni
+						ws="es">cfj</AUni>
+					<AUni
+						ws="fr">cfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A circumfix is an affix made up of two separate parts which surround and attach to a root or stem.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="f1a03fb3-2be2-4bd5-9927-53747462e777">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="6c67fdf8-1517-4a8c-addc-0266d8ba6e40">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">circumfix</AUni>
+					<AUni
+						ws="es">circumfijo</AUni>
+					<AUni
+						ws="fr">circonfixe</AUni>
+				</Name>
+				<SecondaryOrder
+					val="1" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="c2d140e5-7ca9-41f4-a69a-22fc7049dd2c">
+				<Abbreviation>
+					<AUni
+						ws="en">clit</AUni>
+					<AUni
+						ws="es">clit</AUni>
+					<AUni
+						ws="fr">clit</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2007-5-21 15:24:22.460" />
+				<DateModified
+					val="2007-5-21 15:24:22.460" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A clitic is a morpheme that has syntactic characteristics of a word, but shows evidence of being phonologically bound to another word. Orthographically, it stands alone.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="53d7200c-eba0-4079-9a01-2f5bacdb9951">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c2e01dfe-c18f-4a89-9d89-dff5d4552762">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">clitic</AUni>
+					<AUni
+						ws="es">clítico</AUni>
+					<AUni
+						ws="fr">clitique</AUni>
+				</Name>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e1-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">enclit</AUni>
+					<AUni
+						ws="es">enclit</AUni>
+					<AUni
+						ws="fr">enclit</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An enclitic is a clitic that is phonologically joined at the end of a preceding word to form a single unit. Orthographically, it may attach to the preceding word.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="cfa23838-525e-4570-9a9a-1694b57cb0e2">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ba5945ac-33cf-4737-880a-24fe22b31e95">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">enclitic</AUni>
+					<AUni
+						ws="es">enclítico</AUni>
+					<AUni
+						ws="fr">enclitique</AUni>
+				</Name>
+				<Prefix>
+					<Uni>=</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="7" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e2-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">proclit</AUni>
+					<AUni
+						ws="es">proclit</AUni>
+					<AUni
+						ws="fr">proclit</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A proclitic is a clitic that precedes the word to which it is phonologically joined. Orthographically, it may attach to the following word.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="360d79e5-137b-4fba-9db6-79ff1147a762">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="83c7c2e5-eb62-4d4c-b640-2828e903efaf">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">proclitic</AUni>
+					<AUni
+						ws="es">proclítico</AUni>
+					<AUni
+						ws="fr">proclitique</AUni>
+				</Name>
+				<Postfix>
+					<Uni>=</Uni>
+				</Postfix>
+				<SecondaryOrder
+					val="4" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e4-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">bd root</AUni>
+					<AUni
+						ws="es">rdc liga</AUni>
+					<AUni
+						ws="fr">rcn brn</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A bound root is a root which cannot occur as a separate word apart from any other morpheme.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="6069166e-5f4b-4eb3-be79-0fd127bcc7db">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="45eb830c-78eb-457a-a359-e4c076bf8ed8">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">bound root</AUni>
+					<AUni
+						ws="es">radical ligado</AUni>
+					<AUni
+						ws="fr">racine bornée</AUni>
+				</Name>
+				<Prefix>
+					<Uni>*</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="2" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e5-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">ubd root</AUni>
+					<AUni
+						ws="es">rdc inliga</AUni>
+					<AUni
+						ws="fr">rcn nbrn</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A root is the portion of a word that (i) is common to a set of derived or inflected forms, if any, when all affixes are removed, (ii) is not further analyzable into meaningful elements, being morphologically simple, and, (iii) carries the principle portion of meaning of the words in which it functions.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="cf201d11-34b4-488b-bd13-245fc9428600">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="dd568342-5499-4b1d-b41a-7b2f2c925943">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">root</AUni>
+					<AUni
+						ws="es">radical</AUni>
+					<AUni
+						ws="fr">racine</AUni>
+				</Name>
+				<SecondaryOrder
+					val="1" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e7-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">bd stem</AUni>
+					<AUni
+						ws="es">tem liga</AUni>
+					<AUni
+						ws="fr">rcl brn</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A bound stem is a stem  which cannot occur as a separate word apart from any other morpheme.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="a1b3ba29-bb9c-4747-8915-1b4a63486d39">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ac7f1111-1d37-4ce2-bdc3-5f8c6135bd05">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">bound stem</AUni>
+					<AUni
+						ws="es">tema ligado</AUni>
+					<AUni
+						ws="fr">radical borné</AUni>
+				</Name>
+				<Prefix>
+					<Uni>*</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="2" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="d7f713e8-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">ubd stem</AUni>
+					<AUni
+						ws="es">tem inliga</AUni>
+					<AUni
+						ws="fr">rcl nbrn</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">"A stem is the root or roots of a word, together with any derivational affixes, to which inflectional affixes are added." (LinguaLinks Library).  A stem "may consist solely of a single root morpheme (i.e. a 'simple' stem as in </Run>
+						<Run
+							namedStyle="Character Formatting 1"
+							ws="en">man</Run>
+						<Run
+							ws="en">), or of two root morphemes (e.g. a 'compound' stem, as in </Run>
+						<Run
+							namedStyle="Character Formatting 1"
+							ws="en">blackbird</Run>
+						<Run
+							ws="en">), or of a root morpheme plus a derivational affix (i.e. a 'complex' stem, as in </Run>
+						<Run
+							namedStyle="Character Formatting 1"
+							ws="en">manly</Run>
+						<Run
+							ws="en">, </Run>
+						<Run
+							namedStyle="Character Formatting 1"
+							ws="en">unmanly</Run>
+						<Run
+							ws="en">, </Run>
+						<Run
+							namedStyle="Character Formatting 1"
+							ws="en">manliness</Run>
+						<Run
+							ws="en">).  All have in common the notion that it is to the stem that inflectional affixes are attached." (Crystal, 1997:362)</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="c6bda760-7f25-4345-8219-abdc0eaa3395">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2d9a5b86-ded4-4de2-a832-51c61bb6e9d9">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">stem</AUni>
+					<AUni
+						ws="es">tema</AUni>
+					<AUni
+						ws="fr">radical</AUni>
+				</Name>
+				<SecondaryOrder
+					val="1" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="18d9b1c3-b5b6-4c07-b92c-2fe1d2281bd4">
+				<Abbreviation>
+					<AUni
+						ws="en">ifxnfx</AUni>
+					<AUni
+						ws="es">ifjnfj</AUni>
+					<AUni
+						ws="fr">ifxnfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-2-28 19:47:1.777" />
+				<DateModified
+					val="2005-2-28 19:47:1.777" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An infixing interfix is an infix that can occur between two roots or stems.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="0988d3b4-696b-4c7e-bbc3-46563aeac06b">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b6184033-c887-4310-8bd8-4a877c95425e">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">infixing interfix</AUni>
+					<AUni
+						ws="es">interfijo de tipo infijo</AUni>
+					<AUni
+						ws="fr">interfixe de infixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>-</Uni>
+				</Postfix>
+				<Prefix>
+					<Uni>-</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="af6537b0-7175-4387-ba6a-36547d37fb13">
+				<Abbreviation>
+					<AUni
+						ws="en">pfxnfx</AUni>
+					<AUni
+						ws="es">pfjnfj</AUni>
+					<AUni
+						ws="fr">pfxnfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-2-28 19:47:1.787" />
+				<DateModified
+					val="2005-2-28 19:47:1.787" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A prefixing interfix is a prefix that can occur between two roots or stems.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="7a9497de-f888-447b-bb69-4b3a538e1cfb">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="39ea347d-b420-4cd7-8962-c1a4d8e3f91d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">prefixing interfix</AUni>
+					<AUni
+						ws="es">interfijo de tipo prefijo</AUni>
+					<AUni
+						ws="fr">interfixe de préfixe</AUni>
+				</Name>
+				<Postfix>
+					<Uni>-</Uni>
+				</Postfix>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="3433683d-08a9-4bae-ae53-2a7798f64068">
+				<Abbreviation>
+					<AUni
+						ws="en">sfxnfx</AUni>
+					<AUni
+						ws="es">sfjnfj</AUni>
+					<AUni
+						ws="fr">sfxnfx</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-2-28 19:47:1.787" />
+				<DateModified
+					val="2005-2-28 19:47:1.787" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A suffixing interfix is an suffix that can occur between two roots or stems.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="8e2fee9f-74ad-4663-9f0d-56914c16ea15">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3c363a51-9ba0-4c82-88d6-36568c541f6c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">suffixing interfix</AUni>
+					<AUni
+						ws="es">interfijo de tipo sufijo</AUni>
+					<AUni
+						ws="fr">interfixe de suffixe</AUni>
+				</Name>
+				<Prefix>
+					<Uni>-</Uni>
+				</Prefix>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="a23b6faa-1052-4f4d-984b-4b338bdaf95f">
+				<Abbreviation>
+					<AUni
+						ws="en">phr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 19:23:36.540" />
+				<DateModified
+					val="2006-4-26 19:23:36.540" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A phrase is a syntactic structure that consists of more than one word but lacks the subject-predicate organization of a clause.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="943631f8-fac4-4910-9a0a-09b7a31001cb">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="29b760f8-dcab-43c7-863a-2a7f18caab13">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">phrase</AUni>
+				</Name>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="MoMorphType"
+				guid="0cc8c35a-cee9-434d-be58-5d29130fba5b">
+				<Abbreviation>
+					<AUni
+						ws="en">dis phr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 19:23:36.557" />
+				<DateModified
+					val="2006-4-26 19:23:36.557" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A discontiguous phrase has discontiguous constituents which (a) are separated from each other by one or more intervening constituents, and (b) are considered either (i) syntactically contiguous and unitary, or (ii) realizing the same, single meaning. An example is French ne...pas.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="9c7a95cc-aeea-49e6-8479-a3be3418c13d">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="698fdba9-b14d-4cc1-9a64-28e5c6f960ee">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">discontiguous phrase</AUni>
+				</Name>
+				<SecondaryOrder
+					val="0" />
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</MorphTypes>

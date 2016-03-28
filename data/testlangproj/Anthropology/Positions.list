@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Positions>
+	<CmPossibilityList
+		guid="3322c70a-fc3e-49a0-bb91-719ae4cc6e72">
+		<Abbreviation>
+			<AUni
+				ws="en">Posn</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Positions</AUni>
+			<AUni
+				ws="fa">شغلها</AUni>
+			<AUni
+				ws="fr">Positions</AUni>
+			<AUni
+				ws="id">Posisi</AUni>
+			<AUni
+				ws="pt">Posições</AUni>
+			<AUni
+				ws="ru">Позиции</AUni>
+			<AUni
+				ws="zh-CN">位置</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="72be626d-a574-4404-b452-be4744cfe546">
+				<Abbreviation>
+					<AUni
+						ws="en">boat</AUni>
+				</Abbreviation>
+				<BackColor
+					val="255" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="089599d6-d9e5-4000-80f1-60a7b52c11f0">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="bd482f46-b126-4a2f-8af7-8379c420274f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">boat builder</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="127" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="fd211ddc-d77d-44c0-ae0e-daa4c2858b5b">
+				<Abbreviation>
+					<AUni
+						ws="en">carp</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16711680" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="c2045f77-b74a-47fa-a700-de975641421e">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0b812579-d85a-43a0-a4e3-b80a316a263e">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">carpenter</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="49407" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="d3337261-f298-47d4-8b2e-ff9c3fb30595">
+				<Abbreviation>
+					<AUni
+						ws="en">doc</AUni>
+				</Abbreviation>
+				<BackColor
+					val="9502719" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="ad963bfa-d647-4b07-9a44-6154463f90d1">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3c841602-46e1-4cb0-a772-66749ed12ab5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">doctor</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="6303632" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="785ab50e-cc42-45ed-881b-093255244775">
+				<Abbreviation>
+					<AUni
+						ws="en">fish</AUni>
+				</Abbreviation>
+				<BackColor
+					val="8323199" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="022dee99-b787-4637-b34c-b87cf477691b">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="caebc647-e363-4b71-a7dd-fe8d24310a3f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">fisherman</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="47b66bbc-cb1e-4b86-8887-99f854f31307">
+				<Abbreviation>
+					<AUni
+						ws="en">gard</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12620031" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="d359c251-ed57-47c8-b453-82f078e31949">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3871ef1d-0138-4c4b-acf9-ccacdbdcd9f5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">gardener</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9502719" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="d9fa3370-9e91-40e4-9d52-94700e9292c9">
+				<Abbreviation>
+					<AUni
+						ws="en">gath</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6328367" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="9effc52a-d411-47f4-9ac9-45d6685d6af9">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f98835a3-0b60-4861-91b4-f768257ee6d5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">gatherer</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16777215" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="40073248-9dbb-4ad1-8a61-cd04b0382bb5">
+				<Abbreviation>
+					<AUni
+						ws="en">herd</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12620031" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="4b1aa69b-e5f5-4eec-bdb0-ae70acdcf0dd">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f3d89514-47e1-426c-b99c-f2ee2f61724b">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">herder</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="37119" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2c645c93-a09b-44ae-9cfb-907032bea610">
+				<Abbreviation>
+					<AUni
+						ws="en">hunt</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16736303" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="cf3049c9-d37d-4d18-81a9-3dd887728cc8">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="edfb0c46-fbc6-41b2-bc08-d3eba567e236">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">hunter</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16711680" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="0b4b3dc8-8509-41aa-a7e0-98d4b6137a3d">
+				<Abbreviation>
+					<AUni
+						ws="en">med</AUni>
+				</Abbreviation>
+				<BackColor
+					val="127" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="0e8d0141-d81d-45bd-91e3-a9bc90b8dcb2">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3fc65af4-59fc-48bc-ae70-cfa507523197">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">medium</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="6303488" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="3ed13f7a-41fd-4381-a226-be402385ae57">
+				<Abbreviation>
+					<AUni
+						ws="en">mid</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12620031" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="166544a6-821a-45cb-bee8-ed83b3effbf1">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1a679f4d-101b-4cd8-923b-e2bcc5712dca">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">midwife</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8323199" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="ad281e0d-972d-4d87-b35d-9cd531063832">
+				<Abbreviation>
+					<AUni
+						ws="en">nur</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6303632" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="3a9afa41-c9f4-46ab-ad5c-ba430f0e115a">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="7dc8befb-7b0e-45f7-b5be-d838aaa0ed8a">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">nurse</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="49407" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="323f80a8-1c8b-44ca-8609-731d3641a7ec">
+				<Abbreviation>
+					<AUni
+						ws="en">pri</AUni>
+				</Abbreviation>
+				<BackColor
+					val="24831" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="e9815707-8353-4f21-9ee9-a978966f5418">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="5d1d1c41-3d4b-424d-b89d-5a888346fcfc">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">priest</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="6328367" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="0c35ecdc-aa61-462f-b468-317282447036">
+				<Abbreviation>
+					<AUni
+						ws="en">heal</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16736303" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="4f1ab67d-7ca9-4120-b706-13a4ae776815">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="849c30ed-04c2-4a88-bf6a-876f1d6d4682">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">traditional healer</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="49407" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="4f1170f0-e3d9-461a-9f63-e7d5dd225856">
+				<Abbreviation>
+					<AUni
+						ws="en">head</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12176" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="95e41276-58bb-4fa9-b92d-1910af32c67f">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="368f2840-8d81-48a0-881a-882dafd56461">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">village head</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12176" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</Positions>

@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Lexicon>
+	<header>
+		<LexDb
+			guid="d7f71381-e8cf-11d3-9764-00c04f186933">
+			<ComplexEntryTypes />
+			<DateCreated
+				val="2001-7-24 19:33:9.563" />
+			<DateModified
+				val="2007-12-20 22:13:32.950" />
+			<DomainTypes />
+			<Introduction>
+				<StText
+					guid="45b78bcf-2400-48d5-a9c1-973447d36d4e">
+					<DateModified
+						val="2011-2-2 19:39:28.829" />
+					<Paragraphs>
+						<ownseq
+							class="StTxtPara"
+							guid="9edbb6e1-2bdd-481c-b84d-26c69f22856c">
+							<ParseIsCurrent
+								val="False" />
+						</ownseq>
+					</Paragraphs>
+					<RightToLeft
+						val="False" />
+				</StText>
+			</Introduction>
+			<IsBodyInSeparateSubentry
+				val="False" />
+			<IsHeadwordCitationForm
+				val="False" />
+			<MorphTypes />
+			<Name>
+				<AUni
+					ws="en">Kalaba Dictionary</AUni>
+			</Name>
+			<PublicationTypes />
+			<References />
+			<Resources>
+				<CmResource
+					guid="26f4a8c0-3786-413f-9718-b0059795711d">
+					<Name>
+						<Uni>FlexStyles</Uni>
+					</Name>
+					<Version
+						val="59d5d68e-8509-4e6d-854a-7480dafd2a27" />
+				</CmResource>
+			</Resources>
+			<ReversalIndexes />
+			<SenseTypes />
+			<UsageTypes />
+			<VariantEntryTypes />
+		</LexDb>
+	</header>
+	<LexEntry
+		guid="0bfa5f0e-c655-46a3-9047-05bc21547002">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-9-16 19:9:26.480" />
+		<DateModified
+			val="2007-1-17 17:15:44.763" />
+		<DoNotUseForParsing
+			val="False" />
+		<EntryRefs>
+			<ownseq
+				class="LexEntryRef"
+				guid="596d4e7c-86d6-45ab-b50b-0cad78a91a25">
+				<HideMinorEntry
+					val="0" />
+				<RefType
+					val="0" />
+				<VariantEntryTypes>
+					<refseq
+						guid="fcc61889-00e6-467b-9cf0-8c4f48b9a486"
+						t="r" />
+				</VariantEntryTypes>
+			</ownseq>
+		</EntryRefs>
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="7e676746-acf4-4ae0-a829-ea977114c740">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">kʰalo</AUni>
+					<AUni
+						ws="qaa-x-kal">kalo</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e8-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+				<PhoneEnv>
+					<refcol
+						guid="9d482960-d7c3-4f3a-8b93-1c42e4f90e0a"
+						t="r" />
+				</PhoneEnv>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="833e5c0e-f62f-4ed1-ad00-1ccab13dfc16">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="ac2c6727-1d63-46e9-9115-152ec84bb959">
+				<Gloss>
+					<AUni
+						ws="en">to.be.3SgSubj.Present</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="833e5c0e-f62f-4ed1-ad00-1ccab13dfc16"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="c5b7c026-5f8f-4971-adc1-daf76422632f">
+		<AlternateForms>
+			<ownseq
+				class="MoAffixAllomorph"
+				guid="b70998be-e888-46b3-8087-ab50c75e8916">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">ko</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</ownseq>
+		</AlternateForms>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:13:53.587" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="c4471efc-0fc3-425c-bf79-05ed3814ae6a">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">bi</AUni>
+					<AUni
+						ws="qaa-x-kal">bi</AUni>
+				</Form>
+				<InflectionClasses>
+					<refcol
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClasses>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713dd-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="50e06993-ccd3-4edc-9140-9e25cde6d90f">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+			<MoInflAffMsa
+				guid="c274b2d9-740e-423f-a81f-cc06450a7061">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71542-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="0c7f9ffb-2fdd-4ba6-af2d-1b610d492fde"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="b630d938-a976-40f5-b632-b40f5107db54">
+				<Gloss>
+					<AUni
+						ws="en">Past</AUni>
+					<AUni
+						ws="es">Pasado</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="c274b2d9-740e-423f-a81f-cc06450a7061"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+				<SemanticDomains>
+					<refcol
+						guid="191ca5a5-0a67-426e-adfc-6fdf7c2aaa2c"
+						t="r" />
+					<refcol
+						guid="23bc906d-c15a-4368-b0ca-7443d5e37b83"
+						t="r" />
+					<refcol
+						guid="349f0278-7998-422a-9c3b-6053989cbb20"
+						t="r" />
+					<refcol
+						guid="3a2c0773-6b3e-4f8b-909d-c8f84d66d4f4"
+						t="r" />
+				</SemanticDomains>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="cd97ed84-5265-4971-843c-72a1e2ae5add">
+		<CitationForm>
+			<AUni
+				ws="qaa-x-kal">hiŋgabira</AUni>
+		</CitationForm>
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 19:22:0.530" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="de88c8da-ca64-4951-bb34-faa101a1f01b">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">gabi</AUni>
+					<AUni
+						ws="qaa-x-kal">gabi</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e4-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="dbbbe324-8e8c-4a21-84f3-467df33e3b7a">
+				<InflectionClass>
+					<objsur
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</InflectionClass>
+				<PartOfSpeech>
+					<objsur
+						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+			</MoStemMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="9a833399-1859-4620-b888-fe92b93a34a9">
+				<Gloss>
+					<AUni
+						ws="es">pegar</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="dbbbe324-8e8c-4a21-84f3-467df33e3b7a"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
+		guid="f8b09b4c-9017-4db7-a70b-1a7be236e742">
+		<Custom
+			name="Cust Date"
+			val="-000000000" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<DateCreated
+			val="2003-8-7 13:42:42.127" />
+		<DateModified
+			val="2007-1-17 17:22:9.533" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoAffixAllomorph
+				guid="b3a11d22-1904-435f-986f-b5d152cdeb37">
+				<Form>
+					<AUni
+						ws="qaa-fonipa-x-kal">yu</AUni>
+					<AUni
+						ws="qaa-x-kal">yu</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713db-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoAffixAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoInflAffMsa
+				guid="99b44a20-3fc6-43d7-9271-bffb30c2d66c">
+				<PartOfSpeech>
+					<objsur
+						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</PartOfSpeech>
+				<Slots>
+					<refcol
+						guid="395e7178-199d-415a-a5b4-f8f3196a93f2"
+						t="r" />
+				</Slots>
+			</MoInflAffMsa>
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="d13df39d-c749-4925-addf-67fdfc35d393">
+				<Gloss>
+					<AUni
+						ws="en">2SgObj</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="99b44a20-3fc6-43d7-9271-bffb30c2d66c"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+</Lexicon>

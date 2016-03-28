@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Reversal>
+	<header>
+		<ReversalIndex
+			guid="85795e5e-ba03-4d3a-9a2f-58402124794b">
+			<DateCreated
+				val="2006-6-26 15:44:43.33" />
+			<DateModified
+				val="2006-6-26 15:44:43.33" />
+			<Name>
+				<AUni
+					ws="en">French (International Phonetic Alphabet)</AUni>
+			</Name>
+			<PartsOfSpeech />
+			<WritingSystem>
+				<Uni>fr-fonipa</Uni>
+			</WritingSystem>
+		</ReversalIndex>
+	</header>
+</Reversal>

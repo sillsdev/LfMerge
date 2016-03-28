@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Reversal>
+	<header>
+		<ReversalIndex
+			guid="64b2ed2f-6cea-403d-a81b-addcfa85985b">
+			<DateCreated
+				val="2006-6-26 15:44:43.300" />
+			<DateModified
+				val="2006-6-26 15:44:43.300" />
+			<Name>
+				<AUni
+					ws="en">Chinese (China)</AUni>
+			</Name>
+			<PartsOfSpeech />
+			<WritingSystem>
+				<Uni>zh-CN</Uni>
+			</WritingSystem>
+		</ReversalIndex>
+	</header>
+</Reversal>

@@ -1,0 +1,5401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NoteCategories>
+	<CmPossibilityList
+		guid="eb96e6b1-4761-4550-89ff-ff57c462bd5c">
+		<DateCreated
+			val="2006-4-26 20:20:48.883" />
+		<DateModified
+			val="2006-4-26 20:20:48.883" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="b41ff27f-5caf-4eac-92de-0f92acb0caa3" />
+		<Name>
+			<AUni
+				ws="en">Scripture Note Categories</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="fd7d3a68-4787-4445-b4e3-2866425003ca">
+				<Abbreviation>
+					<AUni
+						ws="en">D</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:50.87" />
+				<DateModified
+					val="2006-4-26 20:20:50.87" />
+				<Discussion>
+					<StText
+						guid="d1938cc1-046e-4959-90ac-10a7b00fa6a1">
+						<DateModified
+							val="2011-2-2 19:39:28.930" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4ae51373-7421-4d5d-9e83-591ae4dc8e92">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Discourse</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="32b203d2-b937-4059-bbef-0fba9f75c5cd">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Chia</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:50.837" />
+						<DateModified
+							val="2006-4-26 20:20:50.837" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An arrangement of a series of statements in which there is a correspondence between the first and the last, between the second and the second to last, and so on. This is symbolized ABBA, ABCCBA, using as many letters as there are levels of correspondence.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="91396c8a-471e-4a36-82e5-20f9060096c3">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="9f3b7eed-2501-4a83-af07-47b00c102d7b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Chiasmus</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="f37102b3-35d6-4374-9722-c27486861f45">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Chron</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.260" />
+						<DateModified
+							val="2006-4-26 20:20:51.260" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The sequence of events in the order in which they occurred. Events are commonly reported in the order in which they occurred, but sometimes they can be reported in a different order.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="20f37e58-013a-4fa2-a539-89499b371b63">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5747ea69-be43-4599-8c7f-bb719eae0eca">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Chronological order of events</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a919f860-80c0-4720-bb9d-f4a4aede1ff2">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Cohes</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.337" />
+						<DateModified
+							val="2006-4-26 20:20:51.337" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This category includes all that refers to the proper relationship and connection between higher-level discourse units, i.e., units above the propositional level. It includes deictic reference (apart from participant reference for which there is a specific category).</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="406778d6-5c74-49dc-8200-7f183e701fd2">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="200c8fca-2ae8-4af1-ae76-0bd734216244">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Cohesion/transition</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="c09e7a53-4d99-4299-b5b9-6950aa468851">
+						<Abbreviation>
+							<AUni
+								ws="en">D-DisUn</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.400" />
+						<DateModified
+							val="2006-4-26 20:20:51.400" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Various levels of discourse units are defined by formal features. These help identify the boundaries of larger discourse units, such as sentences, paragraphs, sections, and other divisions.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="313d82fb-99aa-441e-9f48-e0727f4b13fc">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="e0a573ce-c6c1-496e-8a5b-c212e099fb30">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Discourse unit</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="041b25b4-34b2-473a-8ff8-5971066e0722">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Form</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.463" />
+						<DateModified
+							val="2006-4-26 20:20:51.463" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Set forms used to mark certain discourse forms. This includes prophetic announcement ("Thus says the Lord") and Paul's epistle openings.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ed573c9d-f15c-4ee7-9e42-aa66ce9481e0">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="92b862ec-47f9-416d-a8ca-e2bdf96f904c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Formula</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="fe716ece-e5d4-4d75-bf90-bc1b637e1e2a">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Gen</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.540" />
+						<DateModified
+							val="2006-4-26 20:20:51.540" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A distinctive type of literary composition. Different types of speech are appropriate in different situations. If the writer is exhorting his readers, certain linguistic forms are appropriate; if he is arguing or passing on information, other forms need to be used. The main genre types are (1) narrative discourse, which recounts events, (2) procedural discourse, which tells how to do something, (3) expository discourse, which explains or argues, (4) descriptive discourse, which describes some topic, (5) hortatory discourse, which suggests or commands actions, and (6) repartee or conversational discourse, which recounts speech exchanges. A long text will probably have a mixture of genres. A Gospel is basically a narrative discourse which includes repartee. In its speech quotations, there are expository and hortatory discourses. The expository discourse of Galatians includes a section of narrative discourse.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ba696435-210a-47dc-8371-457519038e60">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="900b8242-05c8-4cfc-a879-ed9017ceb53e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Genre</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="c1d82367-b8ee-4c14-ab9f-77dd7923c4c0">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Info</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.620" />
+						<DateModified
+							val="2006-4-26 20:20:51.620" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The rate at which new information is presented in a text. Different languages communicate information at different rates and a translation should present information at the rate readers are accustomed to receive it. Whether information is new to the hearers or already known by them is also a factor.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="e4d3b34f-fafc-4903-8d73-a1c307ca7f3b">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="8d89e68b-651e-4ba5-ba8d-45f43039dc21">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Information load</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="189d6742-fb22-45d1-a1ec-6bcc39191984">
+						<Abbreviation>
+							<AUni
+								ws="en">D-PartRef</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.680" />
+						<DateModified
+							val="2006-4-26 20:20:51.680" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The references to the people involved in an account may be direct or indirect.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="fa413d6f-9aa9-4873-833b-025d52e76a40">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5c31fb58-d1fa-4a7b-9f94-cc63c517a144">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Participant reference</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="74dfffea-deca-4e49-976c-f4c6adefacc6">
+								<Abbreviation>
+									<AUni
+										ws="en">D-PrtIntro</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:51.713" />
+								<DateModified
+									val="2006-4-26 20:20:51.713" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Languages have their own ways of introducing participants into a narrative. Some require that all participants be introduced at the beginning. Others allow them to be introduced into the flow of the narrative. There may be special clause types to introduce them. Sometimes there is a difference between the ways major and minor participants are introduced.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="a86ff9fc-585c-4b44-9752-f2d5be4d70f8">
+										<DateModified
+											val="2011-2-2 19:39:28.930" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="f253d005-0a27-4647-ae92-5b1fbe77c3f0">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Introduction of a new participant.</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="5f87f8e6-3401-4d00-86d7-d108ac98b6ba">
+								<Abbreviation>
+									<AUni
+										ws="en">D-BckRef</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:51.777" />
+								<DateModified
+									val="2006-4-26 20:20:51.777" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Once introduced, there are differences among languages concerning how to refer to the participants. Perhaps a pronoun is used until a noun is needed to avoid confusion about the reference. But some languages might distinguish between participants with proper names, demonstratives, or generic words. A problem arises when readers refer a pronoun to the wrong person or do not know to whom it refers.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="88534881-5555-4881-bd2a-10bbe747cd44">
+										<DateModified
+											val="2011-2-2 19:39:28.930" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="6d951ebc-8b82-4df4-a0c7-ff458b4a506e">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Back reference</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="e411a26b-e1a2-4feb-96c3-3ab8c98d895b">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Persp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.837" />
+						<DateModified
+							val="2006-4-26 20:20:51.837" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The perspective of the author is revealed in his choice of words. In many languages, the direction of the action, away from or towards the position of the writer, is a stylistic feature.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="d6d752fb-198b-422c-afac-ee0694d47df9">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="7b189cb0-52cc-40e4-aa23-49c9b5beb494">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Perspective/direction</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="7c71babe-21b9-408f-915c-107518ee6a66">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Ptry</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.870" />
+						<DateModified
+							val="2006-4-26 20:20:51.870" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Poetry is a particular genre of speech. Ideas with a high emotional content are often expressed in poetry form as distinct from prose, for example, praise songs or lamentations. Different languages use different forms for poetry, for example, parallelism (as in much biblical poetry), rhyme, rhythm, alliteration, chiasmus, onomatopoeia, acrostic patterns, repetition, and recurrent phrases. Poetry is often characterized by extensive use of figurative language. Special format may help present the poetic structure.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="28692955-2643-4961-8eaf-ec9f99523c37">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="64eeab22-a4e5-46e9-ab64-059aca6ef3ae">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Poetry</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a3e30cf2-6585-48c3-8d99-7b1d14aace91">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Prom</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.900" />
+						<DateModified
+							val="2006-4-26 20:20:51.900" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The discourse features of the language make parts of the material more important than other parts. This is concerned with the focus of a passage or the emphasis of some feature of it. Often this is indicated by word order, repetition, figures of speech, or phrases that direct attention to the item. Peak, foregrounding, and backgrounding are involved in the way material is presented.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ed54cefc-4974-4c00-aaec-101c7da1d4f7">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="4acdcd86-b0e3-48a1-8020-b345a2ac9e6c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Prominence</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d00a2113-d45a-40be-9f06-55b41df8747e">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Rel</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:51.963" />
+						<DateModified
+							val="2006-4-26 20:20:51.963" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The semantic relationships between propositions, such as chronological relationship, restatement (e.g., generic-specific, negative-positive), clarification (e.g., nucleus-comparison, nucleus-manner), logic (e.g., result-reason, means-purpose, condition-consequence), and others. Relationships between propositions may be signaled by relational words (e.g., and, but, if, because, therefore), by the form of the verbs, or simply by other grammatical or semantic features.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ad583017-d091-48d2-abe2-23ff61a2449e">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="15e8ebec-a935-46ef-87ac-f9aee05ad1c7">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Relationship between propositions</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="1f2ef45f-5d02-4606-8748-6ef61dc0f98a">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Spch</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.40" />
+						<DateModified
+							val="2006-4-26 20:20:52.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The words spoken by a person taking the form of direct or indirect quotation, or, in some languages, semi-direct quotation. Some languages prefer one type of speech quotation and use another type only under specific conditions. For example, one language always uses indirect speech forms except at the climax of a narrative or when the main participant is speaking.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ed9d5c17-4dab-41ea-beab-2bb220b6b4cd">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="f6a5e9c0-4d2e-424e-901c-ddc9e6914065">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Speech quotation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="f1a2d275-b4fd-4df3-a80d-f67e0e4cae85">
+						<Abbreviation>
+							<AUni
+								ws="en">D-Thm</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.103" />
+						<DateModified
+							val="2006-4-26 20:20:52.103" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The main events or statements in the development of the narrative or argument. It is in contrast to the material that supports the theme of a unit.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4e20438c-36bb-46aa-9592-97a4c29ad540">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="007f1344-0abd-4ef9-9cce-d84b0506b88a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Theme</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="24f543d8-1fe2-41be-999f-8e3b9059abf9">
+				<Abbreviation>
+					<AUni
+						ws="en">E</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:52.133" />
+				<DateModified
+					val="2006-4-26 20:20:52.133" />
+				<Discussion>
+					<StText
+						guid="2a0b345a-cd53-4c37-9c2f-28d0a012469b">
+						<DateModified
+							val="2011-2-2 19:39:28.930" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="dce81773-a577-4244-b158-bb4ec44447b7">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Exegesis and text</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="7492da26-07a2-466a-81bc-b06386b364d4">
+						<Abbreviation>
+							<AUni
+								ws="en">E-DblMean</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.167" />
+						<DateModified
+							val="2006-4-26 20:20:52.167" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The author has deliberately used a word or phrase with a double meaning.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="fcd85dd6-027e-4b0b-9a13-a96346fc800a">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b6411a37-0b7c-47a7-b7f5-f8be462cde46">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Double meaning (author intended ambiguity)</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d55763a1-3625-44f1-b756-aabac2315c70">
+						<Abbreviation>
+							<AUni
+								ws="en">E-Interp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.213" />
+						<DateModified
+							val="2006-4-26 20:20:52.213" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The meaning of the source text may not be obvious, or there may be alternative possible interpretations and the translator has to discern which is the meaning that the author intended.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="a2243005-956f-4389-a376-ee6a818583e0">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6d6c7ce4-be49-4170-8478-52d6812f401f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Interpretation of source text</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d79dc456-4a95-4a98-8bd8-88ac5dd4a5d3">
+						<Abbreviation>
+							<AUni
+								ws="en">E-OTQt</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.277" />
+						<DateModified
+							val="2006-4-26 20:20:52.277" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The New Testament text often includes a quotation of an Old Testament passage. The quotation may be virtually word for word or it may give the general sense of the passage.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="bb030eaa-faea-4de3-a4bb-50197a78dd6a">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="4305b9e3-9686-48d7-a830-de23294b3e2b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Old Testament quotation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="58d09427-e903-4a85-9e56-37bdc805562a">
+						<Abbreviation>
+							<AUni
+								ws="en">E-TV</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.337" />
+						<DateModified
+							val="2006-4-26 20:20:52.337" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An addition, omission, or alternative reading occurring in another Hebrew or Greek manuscript. The original biblical texts were copied by hand and then, over many centuries, these copies were copied again. Each time a text was copied, a few mistakes might be made. Because of this, there are now many differences among the thousands of existing manuscripts. Scholars have evaluated these differences and have tried to determine which reading most likely represents what the author originally wrote. Many of the variations do not make a significant difference in the meaning. Some do, however, and in these cases the translator has to decide which meaning to translate.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="48804a57-92da-4027-925a-04d9a3c002a0">
+								<DateModified
+									val="2011-2-2 19:39:28.930" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="88768267-6144-402b-b6e6-79ddda2244e5">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Textual variant</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="23b31db6-c6ec-4e62-a9ca-603ff666ab70">
+				<Abbreviation>
+					<AUni
+						ws="en">Co</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:52.400" />
+				<DateModified
+					val="2006-4-26 20:20:52.400" />
+				<Discussion>
+					<StText
+						guid="b60b3b65-5bd6-4c73-9562-9283d5af9b41">
+						<DateModified
+							val="2011-2-2 19:39:28.930" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b50ac6c6-1ce9-40c2-9ee3-a704542ce6db">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Communication</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="fb945e95-4267-4dc0-9514-114f961771e0">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Acc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.447" />
+						<DateModified
+							val="2006-4-26 20:20:52.447" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This includes discussion relating to whether or not a given rendering in the receptor language accurately communicates the meaning of the original text.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="515dc318-bb16-436a-9dd2-f9c9dfd689a0">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="e3d11ff8-6bc4-4d2e-8b65-cdb479d101f3">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Accuracy in translation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="fedc4862-3b9d-49d7-ae45-8fd29edd97aa">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Amb</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.493" />
+						<DateModified
+							val="2006-4-26 20:20:52.493" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This includes discussion of whether a given rendering in the receptor language may allow the audience to understand a meaning that was not intended and which is not accurate to the author's intended meaning.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f9efcf3b-3085-4d10-a926-0a471a5ae9dd">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="36b742e8-470e-4b51-a9ad-e1fbb988d0b0">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Ambiguity in translation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="9f9fca85-7995-4f23-b5e3-9522dce57246">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-AInfo</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.573" />
+						<DateModified
+							val="2006-4-26 20:20:52.573" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The facts that the author of the original message expected the readers to know. He mentions things that are culturally specific, refers to historical incidents and locations, and draws on information contained in the Old Testament. Since such material was known to his readers, the author could leave implicit some points that are vital for understanding his message.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="5ed15c6a-519d-495d-b4ec-516f94e6ea34">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="27946796-204b-4b89-b5cb-0f8b97ab02d0">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Assumed information</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="4c980364-1945-4689-8290-d041639c7078">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Clrty</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.620" />
+						<DateModified
+							val="2006-4-26 20:20:52.620" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The quality of a translation to plainly communicate the same message that the source text communicated to its original readers. The message needs to be in a form that can be easily understood by its readers.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="02f28d89-1028-43c4-a5fb-69e9ff97e3a1">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="9cf4bf6a-42ed-492d-a5f4-e337418d51d1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Clarity in translation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a6cd5d00-b89c-4107-966d-64da7e40317f">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Emot</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.667" />
+						<DateModified
+							val="2006-4-26 20:20:52.667" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The effect or impact that the translation has on the emotions of the reader or hearer. If the original message was dramatic and exciting, the translation should also be dramatic and exciting. If the original message made people feel sad, the translation should also make people feel sad.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="d4965d44-ad38-4846-be2c-5419b23a52aa">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c690baaa-d549-4e97-a46e-a1696b19d222">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Emotive focus</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b6b45477-4cf5-442c-9728-45b9a72b35d6">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-IllFrce</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.713" />
+						<DateModified
+							val="2006-4-26 20:20:52.713" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The purpose for a clause or sentence, that is, its function in making a statement, asking a question, making a request, giving an order, making a promise, etc. Normally, the illocutionary force is the same as the grammatical mood of the sentence: a statement occurs as a declarative sentence, a question occurs as an interrogative sentence, and a command occurs as an imperative sentence. Languages may skew these correspondences so that declarative sentences will sometimes communicate commands or questions, interrogative sentences may communicate statements or commands, and imperative sentences may communicate statements or questions.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="efd93e55-7998-48ee-a666-a1e9a1d2f40a">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="34a12240-48dd-43e7-a326-4afeac8ba36b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Illocutionary force</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="60629974-d5a8-4cc0-951c-09dd7416d2bb">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Imp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:52.980" />
+						<DateModified
+							val="2006-4-26 20:20:52.980" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Information that is not overtly stated in words in the source text, but which nevertheless is communicated as part of the total message. This may include implications communicated through figures of speech, or through the description of a sequence of events. Some languages may make each step of an argument explicit, others may jump some logical steps but the hearer must know that they are implied.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="2efd5afc-c257-429f-abf5-88cd008c3134">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="3be12f74-00a5-45af-a425-b57993aa3c3c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Implicature</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="9afc6e0a-1c48-4318-ba9b-d67a35ff8d3b">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Nat</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.40" />
+						<DateModified
+							val="2006-4-26 20:20:53.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A quality of the translation that corresponds to actual usage of the receptor language and is considered normal by receptor language speakers.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c56d6b98-ac64-453c-882b-5111b1a10d08">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b1a040c8-2636-4f2e-9087-bcf70fd938d3">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Naturalness in translation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="7db870dc-e896-4f59-b36c-00f9a2eeb104">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Om</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.133" />
+						<DateModified
+							val="2006-4-26 20:20:53.133" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Information included in the source text is omitted in the translation.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="15e8f6de-8f08-48ca-994c-bd2e30786166">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="29a99fc5-b2cf-45d8-9d40-992e53cd4b34">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Omission of information in translation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="76fb0fe6-7beb-44fa-beda-a27b5e2b5124">
+						<Abbreviation>
+							<AUni
+								ws="en">Co-Soc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.197" />
+						<DateModified
+							val="2006-4-26 20:20:53.197" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Some kinds of language are appropriate in certain contexts, but not in others. For example, there may be a distinction between formal and informal levels of language, or between literary and technical versus common language. Certain speech is appropriate for a senior person addressing a junior person, or vice versa. Certain expressions may be used only by a man, or only by a woman.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="fa7e5437-d045-49b1-ba87-ee3e7cab58ba">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2bd4786f-9d19-4cb5-b6ab-3f517dd97c66">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Sociolinguistic setting</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="65ac5499-fc6e-47ab-aa4a-9ba013017ed5">
+				<Abbreviation>
+					<AUni
+						ws="en">G</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:53.243" />
+				<DateModified
+					val="2006-4-26 20:20:53.243" />
+				<Discussion>
+					<StText
+						guid="46594479-f0be-4bae-9eab-f9f43208b5dc">
+						<DateModified
+							val="2011-2-2 19:39:28.931" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0fba3a88-509c-47f9-a5fb-236ed07b8301">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Grammar</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="7221cfcb-842c-4a28-80ab-bb1208056924">
+						<Abbreviation>
+							<AUni
+								ws="en">G-ComRel</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.290" />
+						<DateModified
+							val="2006-4-26 20:20:53.290" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The comparison of two items when one has more of something than the other. The grammatical devices used to signal comparative relation in the receptor language may be quite different than the devices found in the source language.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="aca253df-c669-4fbd-a639-30928bf2ebd1">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="908ffe3b-7a46-4902-812f-ef713fc72b67">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Comparative relation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="94b58e40-c0ca-4b35-91db-abca92201fde">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Ellp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.370" />
+						<DateModified
+							val="2006-4-26 20:20:53.370" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A grammatical and semantic shortcut in which words or phrases are omitted from a discourse when the context makes it clear what they would be. Some information is implied by the grammar of the passage. Information that already has been explicitly given can later be left implicit by an incomplete grammatical construction. Grammatical omissions allowed in the source language are not necessarily allowed in the receptor language. If ellipsis is used inappropriately in the translation, the reader of the translation might not get enough information from the text to understand it correctly.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="0059b788-60c9-45ef-8e31-89339b0c50b3">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="22d4cb6e-9b9f-4d98-85a6-b00f8babaa76">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Ellipsis</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d2e5fd49-bbac-4e96-b81c-4fc6592a44d6">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Gen</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.430" />
+						<DateModified
+							val="2006-4-26 20:20:53.430" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Two words or phrases occurring together in Hebrew or Greek (or in an immediate source language), one of which is in the genitive case to indicate that it is related in some way to the other. This construction is often symbolized A of B, with of B indicating that B is in the genitive case. Genitive constructions in the source text may signal various meanings other than ownership (e.g. identification, kinship, location, content, etc.) It is important that the translation communicate the meaning intended in the source text.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="447b4aca-dc7a-4562-af91-19593ef6e458">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="7be31c9b-85da-4470-9c46-58c91f9f1908">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Genitive in source text</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="e4c487de-2147-449d-8303-d8406a038a76">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Mod</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.463" />
+						<DateModified
+							val="2006-4-26 20:20:53.463" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Conditional clauses begin with if and have a consequence connected with them. The condition may have a potential fact for a specific instance or a potential fact in a general or universal statement. The condition may state an obvious fact or it may be a condition that never took place nor ever will take place.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="d8622403-e510-45c8-abe9-924650920d18">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ae2fbd5d-d14f-4282-bee7-8d77a28bea51">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Modality</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b0084b90-d7ba-49fd-addd-1ed002f0f737">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Neg</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.493" />
+						<DateModified
+							val="2006-4-26 20:20:53.493" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A grammatical marker that indicates denial, prohibition, or refusal. Whole propositions or only certain parts of a proposition may be negated. Double negatives may occur. In Greek, there are two forms of negation in questions, one expecting a positive answer  (ou) and the other assuming a negative response (mj).</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ad755d17-f6ee-4506-bf92-67f327762ba4">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="f95bfeed-7565-4eee-b6fd-8ff321f4b4bb">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Negation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="6eb79425-0532-4772-9791-85ac8970040d">
+						<Abbreviation>
+							<AUni
+								ws="en">G-OthGram</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.557" />
+						<DateModified
+							val="2006-4-26 20:20:53.557" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Other relationships between words or phrases within a clause or proposition. This includes all lower-level grammatical relationships except for those that are separately labeled.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="31a69ab9-3ffa-47b7-abba-5d5e61784fad">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6098ff62-6531-4255-af2a-49c3d8a5587c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Other grammatical relationships (within a clause or proposition)</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="8b9a80f7-a98e-4ee6-8dae-5a617f420143">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Pass</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.633" />
+						<DateModified
+							val="2006-4-26 20:20:53.633" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A verb form which indicates that the grammatical subject is the person or thing to which the action is done. It differs from the active verb form in that the subject of the active form is the one who does the action. A passive form often puts the focus on the receiver of the action. A passive form may be used when the agent is irrelevant or unknown. It was a Jewish custom to use the passive form in order to avoid using God's name: </Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ae4bb367-874d-401e-b1f0-070f0af5579c">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="624be720-5785-4703-81da-288ba383e0d2">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Passive voice</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="fc74907b-3bef-4dda-8785-6e7fe584c2cc">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Pron</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:53.667" />
+						<DateModified
+							val="2006-4-26 20:20:53.667" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Pronouns indicate first, second, or third person, and singular or plural number.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="594b89ed-b41a-4800-8af1-0ec100efd383">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="a675d464-0dfb-4efe-947d-5ff296e0689e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Pronominal reference</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="b044e228-83b1-4113-b046-3b25909e3388">
+								<Abbreviation>
+									<AUni
+										ws="en">G-Ext</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.697" />
+								<DateModified
+									val="2006-4-26 20:20:53.697" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">In extended usage, the stated person and number do not agree with who is actually referred to: (1) I may also mean we, anyone, or everyone; (2) we may mean I; (3) you (singular) may mean you all, anyone, or everyone; (4) he may mean they, you, anyone, or I; (5) they may mean you all or he.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="0bf1477c-6148-4120-8f6e-61e65bb0cd33">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="ca86ed01-287c-4a22-8e21-55d1f2d56619">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Extended use</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="6a105d2c-9200-4c05-ace8-40a2cfc22693">
+								<Abbreviation>
+									<AUni
+										ws="en">G-Dual</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.743" />
+								<DateModified
+									val="2006-4-26 20:20:53.743" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Some languages have three categories of number for pronouns and verbs: singular, dual, and plural. Greek distinguishes only between singular and plural.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="96c437af-5cce-44fc-8afa-f117594bd41a">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="8d35429c-c85a-4f0a-b1e5-be3d8d79eb6c">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Dual-plural</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="04de9e0c-f9ef-4278-91b5-b2ccc4a4b653">
+								<Abbreviation>
+									<AUni
+										ws="en">G-IncExcl</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.837" />
+								<DateModified
+									val="2006-4-26 20:20:53.837" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Some languages require that forms for we, our, and us specify whether it includes or excludes the person or persons addressed.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="9fc529d9-eb65-4851-a589-8f334aa9fa64">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="81b5a17c-8437-4370-b6d1-053253f7be0e">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Inclusive/exclusive 1st person plural</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="3b91650e-717d-4deb-9da7-c20bb051ac99">
+								<Abbreviation>
+									<AUni
+										ws="en">G-ImExcl</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.870" />
+								<DateModified
+									val="2006-4-26 20:20:53.870" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">When stating something is true for those referred to by the person of the pronoun or verb, it may be implied in some languages that this is not true for anyone other than those referred to (while other languages leave this open).</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="24720fbc-2a53-49b2-b1e2-801c0a6a0c28">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="b0496f93-b280-4580-a60b-0df848b3daa3">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Implied exclusion</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="bdfd35ed-6e91-43dc-b157-e19dbde57236">
+								<Abbreviation>
+									<AUni
+										ws="en">G-PronMism</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.917" />
+								<DateModified
+									val="2006-4-26 20:20:53.917" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Some languages have other systems that do not have equivalents in the biblical pronoun system. There might be separate sets of pronouns which are determined by the shapes and sizes of the objects they refer to. There might be different pronouns used according to the importance and rank of the person referred to. There might be an indefinite third person pronoun. These all require the translator to make a decision about which form to use in harmony with the context.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="8c23752f-59fc-44b8-9919-639ce06f3589">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="dad57c43-95e3-409c-9057-41aa562dc5b2">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Pronoun system mismatch</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="f4246b98-5ec5-4ec9-81d9-ad994ae7cbed">
+								<Abbreviation>
+									<AUni
+										ws="en">G-Gend</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:53.980" />
+								<DateModified
+									val="2006-4-26 20:20:53.980" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">In some languages the masculine forms of pronouns are used in contexts where the reference is general, i.e., to either a man or a woman. Where the reference in the original text is to both men and women, the rendering in the translation should be such that the same meaning will be understood by the audience.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="ca030fe3-ee4a-4c47-b35d-c9c2fb90d59b">
+										<DateModified
+											val="2011-2-2 19:39:28.931" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="0ca3efb1-02d9-46b3-8ba5-09956ce50c5b">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Gender appropriate</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="79a6d86b-f8ed-4df1-8cd5-6c3856282800">
+						<Abbreviation>
+							<AUni
+								ws="en">G-RelCl</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.40" />
+						<DateModified
+							val="2006-4-26 20:20:54.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A clause that is embedded in a sentence to make a comment about a noun. In some languages the clause may often begin with a relative pronoun.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ba5b6457-b76a-45e0-879b-dfba39de3f4a">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="62b5c692-d147-4473-a68d-f6ecb3ac314b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Relative clause</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b207fb36-18ed-4448-a7ae-6ca71b626fc9">
+						<Abbreviation>
+							<AUni
+								ws="en">G-Skew</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.73" />
+						<DateModified
+							val="2006-4-26 20:20:54.73" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Grammatical word classes (nouns, verbs, adjectives, adverbs, conjunctions) may not always correspond with semantic word classes (things, events, attributes, and relations). Sometimes skewing of word classes is permitted in the source language but may not be permitted in the receptor language. For example, the meaning of a noun that expresses an event idea may need to be re-expressed as a verb.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f85cd37a-aa32-4ba3-afe3-f8b45800f443">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="7a8630ab-960e-4bd1-870c-15a7fe016fd8">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Skewing between grammar and semantics</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="ce3c353f-47b5-42d8-864a-be72bb8539ac">
+						<Abbreviation>
+							<AUni
+								ws="en">G-TA</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.150" />
+						<DateModified
+							val="2006-4-26 20:20:54.150" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Tense indicates the time of an event, whether past, present, or future. Aspect indicates the viewpoint of the speaker with respect to an event: whether the action is completed or incomplete, beginning, continuing, or ending, realis or irrealis (i.e., actual versus imaginary or future), etc. Sometimes a verb may refer to an event or aspect that is different than what is suggested by the surface form. The same skewing may not be possible or appropriate in the receptor language.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f79cc3eb-447a-46df-b81a-b9f50305aefd">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c5859bd5-5a0a-43fc-98f9-4bc46f734916">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Tense and aspect</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="1e0ccdad-4e1a-48e3-86bd-e9d6a1e954fc">
+				<Abbreviation>
+					<AUni
+						ws="en">Cu</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:54.213" />
+				<DateModified
+					val="2006-4-26 20:20:54.213" />
+				<Discussion>
+					<StText
+						guid="35c9dc7a-ff7f-432e-9356-ac9befffb879">
+						<DateModified
+							val="2011-2-2 19:39:28.931" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4d082fb6-6cec-4517-8b75-2f1ae8aaa2c1">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Culture</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="8baf534c-6fc9-4156-8ed4-4203fcf5fcc5">
+						<Abbreviation>
+							<AUni
+								ws="en">Cu-Ana</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.260" />
+						<DateModified
+							val="2006-4-26 20:20:54.260" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Something that is out of place in respect to the historical setting. This happens when something is referred to in a translation that did not exist at the time of the original setting, or, if in existence, had not yet become known or used in that setting.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="28fe345d-3003-4cb1-84a7-620255f24324">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="eb03ea16-1590-49f3-b03e-f2a551ec0a7d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Anachronism</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="7f1d2e30-d152-4914-a009-902a7d6ec73f">
+						<Abbreviation>
+							<AUni
+								ws="en">Cu-CCMsm</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.290" />
+						<DateModified
+							val="2006-4-26 20:20:54.290" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The difference between the culture of the original writer and the culture of the people who read the translation.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="8b360933-f0dc-40e7-95c5-9a0255083306">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="956d8492-a8d1-4543-a04d-5df34be0c88d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Cross-cultural mismatch</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="0a0b59a3-5b24-491d-93f5-82912a7cbf53">
+						<Abbreviation>
+							<AUni
+								ws="en">Cu-Sym</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.353" />
+						<DateModified
+							val="2006-4-26 20:20:54.353" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Linguistic forms or cultural actions to which people of a particular culture ascribe a special meaning.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="06abe323-4d07-41d8-82d9-38726e2c268c">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="d225555c-3d61-4fbc-9bcd-47b3368899c7">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Symbolism</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="f0233c59-f94a-4a38-ae68-101f16ff9ad0">
+						<Abbreviation>
+							<AUni
+								ws="en">Cu-UId</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.400" />
+						<DateModified
+							val="2006-4-26 20:20:54.400" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The many animals, plants, artifacts, articles of clothing, customs, religious ceremonies, and features of geography of the biblical setting that are unknown to readers of the translation. Various solutions are tried by translators: (a) use a more specific term, (b) use a more generic term, (c) use a descriptive phrase, (d) use a cultural substitute, or (e) use a loan word borrowed from the national language.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="abe0c254-95ab-4760-9a74-39dc7a4fcfa5">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="3d1af2e0-c8b7-4f64-8b1b-7dd471f7aa09">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Unknown idea</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="211e6950-026e-4ba2-9e6f-10dceee26f5a">
+				<Abbreviation>
+					<AUni
+						ws="en">L</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:54.430" />
+				<DateModified
+					val="2006-4-26 20:20:54.430" />
+				<Discussion>
+					<StText
+						guid="204827cb-f8bf-4493-85a5-934bd323a71d">
+						<DateModified
+							val="2011-2-2 19:39:28.931" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4c5d796e-bd49-4367-93ee-0e61003d7b7a">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Lexicon</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="58ba2242-cc9b-4b3d-8f85-3c3f566bd429">
+						<Abbreviation>
+							<AUni
+								ws="en">L-Col</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.480" />
+						<DateModified
+							val="2006-4-26 20:20:54.480" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The co-occurrence of words in a proper and meaningful way. In any language, each word has a limited range of words with which it may properly occur. It is not to be expected that a word in the source language will have the same collocational range as a word in the receptor language.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ebd48b8f-f7db-4050-8f99-ca6ac601bbd8">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c335cd74-d1b9-4b23-872b-76001b60187f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Collocation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="946845c2-0109-477b-b809-7009df7fb7a7">
+						<Abbreviation>
+							<AUni
+								ws="en">L-Con</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.540" />
+						<DateModified
+							val="2006-4-26 20:20:54.540" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The emotional reaction to words and phrases. This reaction is often conditioned by the context in which the word is normally used, by the people associated with the word, or by the previous experiences of the reader.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="24239f7c-0613-4acb-9e6b-df56559b65b4">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="8e23a587-9ca8-49d6-8fb0-5a78e1e2c743">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Connotation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="ba347404-cf78-414b-863c-6d3e44b82988">
+						<Abbreviation>
+							<AUni
+								ws="en">L-Id</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.573" />
+						<DateModified
+							val="2006-4-26 20:20:54.573" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A fixed combination of words, the meaning of which is derived from perceiving the unit as a whole rather than as individual words. These are often dead metaphors and a comparison is no longer intended.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="7995d1ee-9ed4-452a-b6a9-2c129687fd3e">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="0a2e5370-f207-455e-b76f-31be2ba2e106">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Idiom</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a07c01de-56de-4457-acc5-c42ccde473d0">
+						<Abbreviation>
+							<AUni
+								ws="en">L-KT</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.633" />
+						<DateModified
+							val="2006-4-26 20:20:54.633" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An important word or expression that refers to Jewish or Christian beliefs and religious systems, or is used in a special way in the Bible. The proper translation of such terms is very important for communicating the biblical message without distorting it. It is helpful to include the specific term as a subcategory in the category field: e.g. Key biblical term: Kingdom of God; Key biblical term: Son of Man.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="53788fd8-14ad-4a73-95ee-1180194e9b82">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ea46f6fe-f82c-4d3c-a2f9-42147fe7511a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Key biblical term</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="84d64dbc-85b2-4327-89ff-05ecd4ba0a13">
+						<Abbreviation>
+							<AUni
+								ws="en">L-Lex</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.730" />
+						<DateModified
+							val="2006-4-26 20:20:54.730" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The range of meaning of a word in one language does not match with the range of meaning of words in another language. Different senses of a source language word may sometimes need to be translated by different expressions in the receptor language. However, the same words in the source language should be translated consistently by the same words in the receptor language, except where there is a reason for not doing so.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="de047f0c-2e06-457e-81fd-eb1ed40d2244">
+								<DateModified
+									val="2011-2-2 19:39:28.931" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5f04d973-2a52-492c-9c07-ee8cc3f37196">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Lexical correspondence</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="4569802b-b382-4554-8d24-3a4167eb2769">
+						<Abbreviation>
+							<AUni
+								ws="en">L-PN</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.760" />
+						<DateModified
+							val="2006-4-26 20:20:54.760" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Names are often transliterated from a major language or from the original biblical language.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="282a98dd-3860-434b-b757-0d07af1dede7">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6e0940c5-a07d-4885-a92e-395d9f3131df">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Proper name</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="c8ec361a-2445-47c6-a954-265edf907c7f">
+				<Abbreviation>
+					<AUni
+						ws="en">Rh</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:54.823" />
+				<DateModified
+					val="2006-4-26 20:20:54.823" />
+				<Discussion>
+					<StText
+						guid="3d5c03f7-8c23-4936-9bde-97bf4fd5e637">
+						<DateModified
+							val="2011-2-2 19:39:28.932" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="be9d4f86-5088-4db3-95c2-71d5c0f9979d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Rhetoric and highlighting</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="57acb820-786e-417c-b242-c556fd13dd54">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Apos</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.870" />
+						<DateModified
+							val="2006-4-26 20:20:54.870" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Inanimate or abstract ideas are addressed directly as if they were people. People are addressed directly, even though they are not present.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f2c66e5a-47e1-4789-be8e-f75f1ca56beb">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b0025beb-b220-45d3-ae7f-adf5a3c7f64d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Apostrophe</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a5a1686e-81da-4c89-95ad-5dc6ff0ad6e2">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Euph</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:54.930" />
+						<DateModified
+							val="2006-4-26 20:20:54.930" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The use of an agreeable and inoffensive word or expression in place of one that is indelicate, offensive, or taboo. Included is the Jewish custom of showing reverence for God by avoiding the use of the word God and substituting heaven or some attribute of God.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="1a0c9780-0de4-4a8e-a50f-80ccdf59bcc6">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ebda3026-1302-4efd-8d86-697f37e85a18">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Euphemism</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="72e4efe6-308f-4728-878e-dac65c98b6f2">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-FigEx</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.167" />
+						<DateModified
+							val="2006-4-26 20:20:55.167" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A word or expression that stands for another because of some connection to it.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="99ace22e-6a97-4d16-8914-f80a5ae353f8">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5881ca1c-e78d-48d8-bb30-65c94173eea6">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Figurative extension</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="10645a40-fb3f-4500-b4f5-b2ffbbee7116">
+								<Abbreviation>
+									<AUni
+										ws="en">Rh-Met</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:55.417" />
+								<DateModified
+									val="2006-4-26 20:20:55.417" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">This occurs when one expression is used for another because the two are associated in some way or because one suggests the other.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="282b24d5-53e8-468e-8753-05db7d8c5167">
+										<DateModified
+											val="2011-2-2 19:39:28.932" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="55be138e-f88c-48c9-b236-63855e954617">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Metonymy</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="a85e654f-46d2-46fd-90cf-d4da1a2adbfc">
+								<Abbreviation>
+									<AUni
+										ws="en">Rh-Syn</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:55.510" />
+								<DateModified
+									val="2006-4-26 20:20:55.510" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">This occurs when a part of something is used to refer to the whole thing, or (less commonly) when the whole is used to refer to a part of that thing.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="aceb0ca4-60be-43cd-8281-c33c77b408df">
+										<DateModified
+											val="2011-2-2 19:39:28.932" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="9c0a6a2c-da3b-4161-8425-76bdd38421ab">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Synecdoche</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="9c8926e9-8ff3-4b98-950a-dce775b07a02">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Frm</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.557" />
+						<DateModified
+							val="2006-4-26 20:20:55.557" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This is where form in the source text has meaning in itself, including acrostics and paronomasia.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c461581b-36f9-4fc3-a317-a30a61fcb92a">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="a5e31e63-abda-423e-aa64-15c5da306ea4">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Form</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="05ebb315-d4fc-445a-a531-186fa6122ff8">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Hen</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.603" />
+						<DateModified
+							val="2006-4-26 20:20:55.603" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Two nouns connected by and when one is in a subordinate, instead of coordinate, relationship with the other.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="8e3fd642-d362-4908-b3e7-32f82120020e">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="fb9e8713-912d-4fb4-9699-363ab1e8700e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Hendiadys</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="ee0aec87-6c1c-43e8-81e6-6ff8556f6f90">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Hyp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.633" />
+						<DateModified
+							val="2006-4-26 20:20:55.633" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A statement that exaggerates for the sake of emphasis.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="525ebb9b-021b-4ff3-baef-f635ca4a0ac7">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="894d87a4-73aa-406f-9b7d-ed3636bd6e3d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Hyperbole</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="235d5883-da4f-47fb-ad17-212f73a7570a">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Irny</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.697" />
+						<DateModified
+							val="2006-4-26 20:20:55.697" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A statement that expresses the speaker's attitude as being the opposite of the literal sense of the words. (1) It may be used to point out the foolishness of the one addressed, in order to teach or rebuke him; (2) It may be sarcasm with the elements of bitterness or the desire to hurt; (3) It may be jeering with the desire to make one appear foolish by taunting him.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="3a69cd72-d39d-4419-bdc7-b4ce530c5309">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="36aeb5d1-9b5b-44d8-be6d-0b75d5b74030">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Irony</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="e8619aeb-225a-41ae-8fcb-42cef56b4648">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Lit</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.790" />
+						<DateModified
+							val="2006-4-26 20:20:55.790" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An emphatic affirmation of a fact by denying its opposite.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4b0caa2e-8bda-45a7-a709-05b50d295cec">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c1a4a29a-98f2-4f85-83fe-9b5a3fd07ead">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Litotes</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="8ec2b8d9-b722-43fa-bc75-8198109da4d6">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Met</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.823" />
+						<DateModified
+							val="2006-4-26 20:20:55.823" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An implied comparison of two things or events based upon an explicit or implied point of similarity.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4cc06cd6-ad20-4c0a-87b4-d192c241ed17">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="dd578143-2a83-4a95-b9ca-473cdf8893f3">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Metaphor</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="cc863e93-9ca4-4408-a4ed-620ec141952e">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Par</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.883" />
+						<DateModified
+							val="2006-4-26 20:20:55.883" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A short story that is used to illustrate a spiritual truth or principle. It may be an extended simile or metaphor.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f54244a1-cc9d-44dc-9725-012a7876658b">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ce051fa0-8876-40c9-bbdd-dd19499033a1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Parable and allegory</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="06f659ca-8b7f-4240-8749-34c200f6a1b3">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Paral</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:55.917" />
+						<DateModified
+							val="2006-4-26 20:20:55.917" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The occurrence of two or more items whose meanings are either partially or totally the same.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="9875db80-10bf-45d1-9b13-ac020be10374">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="d684d0d9-82db-4d64-a2d6-265d0dc6d793">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Parallelism</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="9407df38-7cc2-4be3-8bac-682f8ed633c5">
+								<Abbreviation>
+									<AUni
+										ws="en">Rh-SynPar</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:55.947" />
+								<DateModified
+									val="2006-4-26 20:20:55.947" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Occurs when the meaning of one proposition is expressed by a second proposition in different words, sometimes in a slightly modified form. This type of parallelism is commonly found in Hebrew poetry (see POETRY).</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="90d7436a-a4f0-465f-ada6-31143c22de65">
+										<DateModified
+											val="2011-2-2 19:39:28.932" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="e9428959-bac7-4799-bceb-f6f79e57bdf3">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Syntactic parallelism</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="c90cb91f-e52c-4a0a-bf3b-a6af87f2bf97">
+								<Abbreviation>
+									<AUni
+										ws="en">Rh-LexPar</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2006-4-26 20:20:56.10" />
+								<DateModified
+									val="2006-4-26 20:20:56.10" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Occurs when two lexical items form a doublet. The first term may be repeated with an identical term or with an almost synonymous term which adds little further meaning. Some doublets may form genericspecific pairs, positivenegative pairs, or literalfigurative pairs.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="357060ea-e818-4419-a699-aa555647106f">
+										<DateModified
+											val="2011-2-2 19:39:28.932" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="bba86a05-b385-4501-81c4-9b61ed8c1bb2">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Lexical parallelism</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="0bbe5fa6-354f-4439-a4bf-38fe4b925251">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Per</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.87" />
+						<DateModified
+							val="2006-4-26 20:20:56.87" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Inanimate objects or abstract ideas are spoken of as if they were people.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="85898c0c-a96a-47c2-83fe-0af1cc9cb729">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="d0089add-3a00-4e4b-9617-49ed1bf94e63">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Personification</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="ba0fd142-b349-4511-b35b-7247c8771d7e">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Rep</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.150" />
+						<DateModified
+							val="2006-4-26 20:20:56.150" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A redundant expression in which information is explicit more than once in the immediate context and is not necessary for understanding.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="56529273-7e52-4b05-a2a7-6f015af7f034">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="f3d51852-7ec3-4068-b62a-fc2976c21748">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Repetition</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="39b55e4f-784d-4689-a4e1-80e2d1eff7f8">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-RhQu</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.213" />
+						<DateModified
+							val="2006-4-26 20:20:56.213" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A real question expects an answer while the rhetorical question does not. The function of a rhetorical question is discovered from the context: (1) It may emphasize a fact that is obviously true; (2) It may focus on a particular condition; (3) It may direct attention to a new topic, a new aspect of a topic, or a conclusion; (4) It may express surprise and amazement; (5) It may express disapproval, rebuke, or prohibition; (6) It may express uncertainty; (7) It may express exhortation.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="9a723f54-c215-4cf4-9736-7ce0a8c16c01">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="91c08e84-fb62-4599-8eeb-f9d4be604153">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Rhetorical question</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="4b2d42d7-b861-4d4b-8a54-035af1c8a0e4">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Sim</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.323" />
+						<DateModified
+							val="2006-4-26 20:20:56.323" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An explicitly stated comparison of two things or events based upon an explicit or implied resemblance between them. Because of the use of the words like or as, there is not the collocational clash when considered literally that there is in a metaphor, but the point of comparison may not be apparent.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="b1e2d33f-7800-437b-8295-13673f6682ff">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="05f6b179-f1d8-4e7e-a9f0-5a64d26d66c8">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Simile</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="58cb31b9-8aed-4123-ba16-d69c41c95c00">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-SndSym</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.417" />
+						<DateModified
+							val="2006-4-26 20:20:56.417" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Sound communicates meaning. This includes ideophones, onomatopoeia, and alliteration).</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="0be0b44f-e681-41e7-af64-0e7a31cbc946">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="3be2eba4-bd9a-4752-8a65-afd53068da62">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Sound symbolism</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="837a4675-9dbd-42a9-996c-6cf6b3d03eca">
+						<Abbreviation>
+							<AUni
+								ws="en">Rh-Voc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.447" />
+						<DateModified
+							val="2006-4-26 20:20:56.447" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A term of address, indicating the relationship between the speaker and the person or people to whom he is speaking.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="fb584f17-77d1-471a-bcac-e0a6873fd9fd">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="210bddc4-bbb1-40b1-a204-90ba485ce08f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Vocative</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="c0e3f950-dd48-4bab-8285-85fecfec7414">
+				<Abbreviation>
+					<AUni
+						ws="en">RL</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:56.573" />
+				<DateModified
+					val="2006-4-26 20:20:56.573" />
+				<Discussion>
+					<StText
+						guid="675f0802-4721-4b6e-86c2-9dab47220782">
+						<DateModified
+							val="2011-2-2 19:39:28.932" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ed826e89-c6e8-471e-8c33-f20ca5253b0f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Receptor language and setting</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="fc7f8392-ab55-40d4-b4d9-5dc61f45d887">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-BkIntr</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.680" />
+						<DateModified
+							val="2006-4-26 20:20:56.680" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An introduction to a particular book of the Bible presents information that is relevant and helpful for correctly understanding the book. It may describe who wrote the book, to whom it was written, the main theme of the book, and background informationthe historical situation, additional cultural or historical background information that the author assumes that the readers already know (such as Old Testament history, Jewish religious practices, and Jewish culture).</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c16e8e35-cd46-43b7-8c0a-560046e7c57c">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="cfc71682-f720-488f-bbde-6d5aa34eb91e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Book introduction</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="47e71949-5bea-4058-9064-ba054fb58e63">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-BkTtl</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.853" />
+						<DateModified
+							val="2006-4-26 20:20:56.853" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Any issue relating to the translation of the title of a Scripture volume (such as a Bible or New Testament) or of any individual Bible book title.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="a4184d51-7ae9-487e-a1f9-9208a11921c7">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6054ce8c-1276-42e4-81f4-9fdc2b095c0f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Book title</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="eb378125-bf62-4965-a95c-cd5d97539d66">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-CR</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.930" />
+						<DateModified
+							val="2006-4-26 20:20:56.930" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A reference to another passage that has some connection with the text. The connection may be to a word, phrase, or a whole section. Note that references to parallel passages, i.e., passages in another Bible book that describe the same event or have essentially the same content, are in a separate category.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="dbd46f73-7ed6-42d1-a6f0-20597800299b">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ec4e5911-44f1-4959-905f-7de26bd4ab85">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Cross-reference</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="9b5c147a-1bdf-413f-97d2-5a2e311e69ad">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-FtNt</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:56.980" />
+						<DateModified
+							val="2006-4-26 20:20:56.980" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A note at the bottom of the page that gives information needed for a better understanding of the text or information on alternative interpretations and variant manuscript readings. Footnotes need to be brief and easy to distinguish from the main part of the text.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4fd4e849-b977-4f30-bef0-29bccda2e27d">
+								<DateModified
+									val="2011-2-2 19:39:28.932" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="25b1fe71-ca2f-440e-990a-e6f784be5f01">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Footnote</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="379fca28-657c-435e-8a38-ce9921657e62">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-FrntBck</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.27" />
+						<DateModified
+							val="2006-4-26 20:20:57.27" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Supplementary information is often helpful for understanding books of the Bible. This includes maps, tables, and contents.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c5f02d8a-ac43-4edf-8bda-6e5b5d0e1b9e">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="bb8bb4f3-43ea-4b6a-b32e-1e769970bf38">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Front and back matter</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="16917f62-c4fd-4b42-be75-a88b5aeaf364">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Gl</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.87" />
+						<DateModified
+							val="2006-4-26 20:20:57.87" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A section at the back of the book that explains unknown ideas used in the translation. The list can include people (Aaron, Isaac, Moses), festivals (Pentecost, Passover), professions (prophet, scribe, lawyer), titles (Messiah, Son of Man, Son of David), customs (circumcision, fasting, washing hands), and other unknown things (myrrh, phylactery, wreath).</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="ce9d0ba3-d3cf-4adb-8c92-b028216b78cb">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="15895ea6-7ab8-4931-8955-737cc7f5ef67">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Glossary</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="6f5a599d-808b-48ea-a506-a41eac841cdf">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Inf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.133" />
+						<DateModified
+							val="2006-4-26 20:20:57.133" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Factors that seem to be affecting the translation, e.g., theological bias, translation philosophy, third-language interference, and sociolinguistic setting of the translation project.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="e6a729be-f20b-49d8-a0cc-9ca2fc5a2c44">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="9a5971ce-ed9e-4efb-bdeb-d1691b63a22d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Influence</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="bc0b084e-25cd-4f14-8946-d42c0c82d634">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Lay</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.180" />
+						<DateModified
+							val="2006-4-26 20:20:57.180" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The appearance of the publication in the receptor language. This includes the number of columns on a page, the font size of the various elements, the addition of a bilingual text, and the placement of page numbers and verse references.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="3253900c-c386-48f1-adf9-a60641767770">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="eb7fccf4-c559-4f23-a94a-b621bd19c1a6">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Layout in RL</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="9e84e9b1-8e28-4112-88fa-6035d412e2f7">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Num</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.213" />
+						<DateModified
+							val="2006-4-26 20:20:57.213" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The identification of chapters and verses in the Bible by numbers. Sometimes they disrupt the discourse. Notes relating to different chapter-verse numbering traditions should also be included in this category.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4aa3b0c2-fa10-4773-8662-ca2e238925a8">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="bc2c695b-1229-49b5-84af-9ea6d7ec9bf7">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Numbering</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="2ab7a53d-ba84-45fa-a5fa-fe5c8833cc85">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Orth</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.243" />
+						<DateModified
+							val="2006-4-26 20:20:57.243" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This pertains to the spelling system used in the translation. It includes capitalization, punctuation, and word breaks.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="0dc3df16-1d1f-4441-8246-785d8f0fb175">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="8142f3a0-207e-4276-b665-3c2bb3efd71e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Orthography issues</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d68183f4-86a8-4ccb-9d7c-13c1b44930b9">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-Paral</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.307" />
+						<DateModified
+							val="2006-4-26 20:20:57.307" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Reference to another unit of text, often a passage in a different book of the Bible, that describes the same incident or which is identical or very similar in content.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="3b24d8eb-e774-4923-b8cd-29be89869405">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2b304c4d-9f9b-4a71-bd1c-1f951fd7f109">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Parallel passage</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="7a9782bd-a987-460a-888f-8807d78e4e28">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-PicSel</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.353" />
+						<DateModified
+							val="2006-4-26 20:20:57.353" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A drawing that illustrates the text or provides background information about the biblical culture. Pictures can acquaint the reader with unknown animals, plants, objects, and activities. In addition, pictures can be used to stimulate interest in the content of the text. They can illustrate incidents in the narration that will encourage someone to read the text to learn more about it. To be useful, pictures must be culturally and historically accurate and selected for the needs of the receptor language audience.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="180eaae4-963c-4903-9e20-1f33ff8ec0aa">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="d757f474-9285-4c4e-9722-10a7c6e07075">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Picture selection</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="f27c73aa-12dd-46dd-b457-3a38b7c50a6d">
+						<Abbreviation>
+							<AUni
+								ws="en">RL-SecHd</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2006-4-26 20:20:57.430" />
+						<DateModified
+							val="2006-4-26 20:20:57.430" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A title inserted into the text to divide it into meaningful units. Section headings identify the topic or theme of the following unit of text. They make it easy to locate passages and they encourage people to read complete semantic units, breaking the text at the appropriate places in the larger discourse.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="b6359746-704d-449e-8570-543023609b2f">
+								<DateModified
+									val="2011-2-2 19:39:28.933" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="28e4002a-36d4-4e6e-be6f-c9db5e1a90d6">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Section heading</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="3da29652-ecba-4e8e-a49d-80395729e4d4">
+				<Abbreviation>
+					<AUni
+						ws="en">M</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-4-26 20:20:57.480" />
+				<DateModified
+					val="2006-4-26 20:20:57.480" />
+				<Discussion>
+					<StText
+						guid="790fe18b-398e-40f9-a441-f8b2f5d79847">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="58626835-4187-477f-9946-fe09a5158427">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Miscellaneous</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</NoteCategories>

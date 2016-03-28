@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AnalyzingAgents>
+	<CmAgent
+		guid="1257a971-fcef-4f06-a5e2-c289de5aaf72">
+		<Approves>
+			<CmAgentEvaluation
+				guid="74909567-2065-4f3d-b8ed-5e70a673e42e" />
+		</Approves>
+		<Disapproves>
+			<CmAgentEvaluation
+				guid="112935bd-ca20-40c6-8a00-d575a0b7a2f5" />
+		</Disapproves>
+		<Human
+			val="False" />
+		<Name>
+			<AUni
+				ws="en">M3Parser</AUni>
+		</Name>
+		<Notes>
+			<StText
+				guid="f307c2c2-3a3a-403c-9279-77047ee196fe">
+				<DateModified
+					val="2011-2-2 19:39:28.364" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="9fe9780f-10cc-4e9a-99f9-817cf2ea4ff8">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Notes>
+		<Version>
+			<Uni>Normal</Uni>
+		</Version>
+	</CmAgent>
+	<CmAgent
+		guid="5093d7d7-4f18-4aad-8c86-88389476df15">
+		<Approves>
+			<CmAgentEvaluation
+				guid="e984a057-1dae-4625-8ad1-669f58b4e0bd" />
+		</Approves>
+		<Disapproves>
+			<CmAgentEvaluation
+				guid="0ad004eb-f8c0-44f6-aca0-a3c790725143" />
+		</Disapproves>
+		<Human
+			val="False" />
+		<Name>
+			<AUni
+				ws="en">HCParser</AUni>
+		</Name>
+		<Notes>
+			<StText
+				guid="d25415f0-2d28-4cf1-8f98-d5523b690fcc">
+				<DateModified
+					val="2011-2-2 19:39:28.364" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="001464a5-4203-4f9b-ba5b-575145a7880e">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Notes>
+		<Version>
+			<Uni>Normal</Uni>
+		</Version>
+	</CmAgent>
+	<CmAgent
+		guid="67e9b8bf-c312-458e-89c3-6e9326e48aa0">
+		<Approves>
+			<CmAgentEvaluation
+				guid="ce2588eb-108e-4d7f-8edc-e4024a49e1ab" />
+		</Approves>
+		<Disapproves>
+			<CmAgentEvaluation
+				guid="34366e63-dd48-46c9-9954-4f08e8f5b675" />
+		</Disapproves>
+		<Human
+			val="False" />
+		<Name>
+			<AUni
+				ws="en">Computer</AUni>
+		</Name>
+		<Notes>
+			<StText
+				guid="a8598f47-d5c9-4256-9300-9f0c87950cdc">
+				<DateModified
+					val="2011-2-2 19:39:28.364" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="e3d31769-12d2-46ad-bc35-df22e83dceff">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Notes>
+	</CmAgent>
+	<CmAgent
+		guid="9303883a-ad5c-4ccf-97a5-4add391f8dcb">
+		<Approves>
+			<CmAgentEvaluation
+				guid="bb61360e-48cc-4eb8-a3d4-1ab10f981be0" />
+		</Approves>
+		<Disapproves>
+			<CmAgentEvaluation
+				guid="4d55efab-0ba0-4981-ae3b-8580ef97e8ae" />
+		</Disapproves>
+		<Human
+			val="true" />
+		<Name>
+			<AUni
+				ws="en">default user</AUni>
+		</Name>
+		<Notes>
+			<StText
+				guid="643c7d6d-d38b-4cd2-8064-05f582c7c5db">
+				<DateModified
+					val="2011-2-2 19:39:28.364" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="f21f5501-546c-4e51-8075-deedae3fc23c">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Notes>
+	</CmAgent>
+</AnalyzingAgents>

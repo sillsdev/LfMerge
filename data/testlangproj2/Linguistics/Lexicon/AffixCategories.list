@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AffixCategories>
+	<CmPossibilityList
+		guid="37dc8e52-abda-4092-aff9-33bca6669cfa">
+		<DateCreated
+			val="2003-7-9 14:59:47.183" />
+		<DateModified
+			val="2003-7-9 14:59:47.183" />
+		<Depth
+			val="0" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Affix Categories</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</AffixCategories>

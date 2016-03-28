@@ -1,0 +1,1647 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenreList>
+	<CmPossibilityList
+		guid="c284680a-bdfa-4370-a95f-f1bda3b182bf">
+		<Abbreviation>
+			<AUni
+				ws="en">gnrs</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2007-5-31 18:57:28.40" />
+		<DateModified
+			val="2007-5-31 18:57:28.40" />
+		<Depth
+			val="127" />
+		<Description>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">This list holds genre by which interlinear texts can be classified.</Run>
+			</AStr>
+		</Description>
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Genres</AUni>
+			<AUni
+				ws="es">Géneros</AUni>
+			<AUni
+				ws="fa">انواع</AUni>
+			<AUni
+				ws="fr">Genres</AUni>
+			<AUni
+				ws="id">Jenis Teks</AUni>
+			<AUni
+				ws="pt">Gêneros</AUni>
+			<AUni
+				ws="ru">Жанры</AUni>
+			<AUni
+				ws="zh-CN">体裁</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="65447a8c-69d4-4aaa-afe3-0c806470f520">
+				<Abbreviation>
+					<AUni
+						ws="en">mnlg</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2007-5-31 18:57:28.40" />
+				<DateModified
+					val="2007-5-31 18:57:28.40" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A text with a single participant, typically a narrator addressing an audience</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="703e1357-fbd3-4387-9b15-cedc1c93846e">
+						<DateModified
+							val="2011-2-2 19:39:28.826" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="8f5b1cfe-5f9e-4e50-a1ad-4056752f5c6c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Monologue</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="ec3d90b0-1c43-4f15-be9e-24b378dc14ef">
+						<Abbreviation>
+							<AUni
+								ws="en">nar</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">An account of events, a text that describes or projects a contingent succession of actions</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="977e9879-4593-45fc-a042-afaf3e5e7720">
+								<DateModified
+									val="2011-2-2 19:39:28.826" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5d715ef2-72e1-493b-856c-1e02a285ec7e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Narrative</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="603b160e-85f7-4f38-8d72-40bf46d5a679">
+								<Abbreviation>
+									<AUni
+										ws="en">his</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">An account of real events</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="3d64aabd-6e04-41b4-a002-de8715c21570">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="ff0dfe6d-f245-43d7-b54c-2983fea83737">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">History</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="4c64b22c-e0c4-41b4-aef3-fb4ee6ee4999">
+								<Abbreviation>
+									<AUni
+										ws="en">fict</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">An account of invented events</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="198dd67a-1c2d-4738-b2ba-ce7e8efee730">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="474c48d5-00e8-4814-a9d6-06219648f888">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Fiction</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="0c86814c-3894-4ae7-b2ff-671b10823c47">
+								<Abbreviation>
+									<AUni
+										ws="en">tr. nar</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A traditional account of events of unknown historicity</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="13e92bce-9d02-4735-b6f2-4b6a53b18de8">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="6dcbee08-71d5-44a2-b837-7e2d8542d00a">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Traditional Narrative</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="5899db4f-26a0-4e71-901e-61638e3e902c">
+								<Abbreviation>
+									<AUni
+										ws="en">proph</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">An account of events that are projected to happen at a later time, typically involving a supernatural agency</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="123e512e-c0a0-4f07-a6e4-d3511622b861">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="a5f5053e-0c0f-4042-a798-a259a3d4c477">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Prophecy</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="eae7ec68-85f4-496e-b71d-ca9e0b43355c">
+						<Abbreviation>
+							<AUni
+								ws="en">proc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A text that describes or explains a process</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="8c30477f-f954-4cdc-9e67-29cf4f8b7b0f">
+								<DateModified
+									val="2011-2-2 19:39:28.826" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="98a71fad-81e5-431b-8fd3-9ad2f196eb36">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Procedure</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="1f750f75-740c-4068-bc35-b5f13e1225ae">
+								<Abbreviation>
+									<AUni
+										ws="en">desc. proc</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Describes how something was done</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="1705b008-eb38-4e6e-997a-f1cbe0782d1c">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="a92ba961-0f5a-4a4e-9338-1db3445d1467">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Descriptive Procedure</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="2fb42af5-efe1-441d-a84b-ff97acab7b1c">
+								<Abbreviation>
+									<AUni
+										ws="en">pres. proc</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Gives instructions about how to do something</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="dd7c9545-2c67-4a0e-9c38-0edcb46b81a4">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="309404e0-622f-4364-8cfa-01dde36ebaab">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Prescriptive Procedure</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="d8efee43-d88d-4935-aaf9-4b989924089b">
+						<Abbreviation>
+							<AUni
+								ws="en">beh. txt</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A text that motivates or describes behavior without a framework of contingent succession</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="38401de3-cc5c-4614-b18f-621cf8f01db6">
+								<DateModified
+									val="2011-2-2 19:39:28.826" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="22c19ad5-cf77-4ef6-84c6-dcef5cb7a02d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Behavioral Text</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="0e928391-5d81-4756-aa75-4f095050c7bc">
+								<Abbreviation>
+									<AUni
+										ws="en">hor. txt</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A text intended to motivate the audience to do something or to act or to believe in a particular way; a.k.a. Motivational Text</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="3647ca8f-4f3b-4e05-98a3-f4ccf7bf4a8d">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="c036981e-8a99-4fdc-9a2a-7824ba54abfc">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Hortatory Text</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="a9033578-0860-44e2-b005-38bf9c7e548f">
+								<Abbreviation>
+									<AUni
+										ws="en">norm. txt</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A text intended to express the norms of a society for the purpose of motivating someone to conform to those norms</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="f897cfc1-7d12-4965-b2c1-85b74e0fedda">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="0b540be8-5108-42d1-8ff6-eabc69d99610">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Normative Text</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="d1533f58-870e-4ef5-8479-a49abb257ef6">
+								<Abbreviation>
+									<AUni
+										ws="en">pro. txt</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2010-10-5 21:51:18.450" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A text in which the originator promises to do something or to act or to believe in a particular way</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="d8def42a-1ea6-4ab2-86e4-614f01e7a4e8">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="a1f5d5d9-5fa1-4874-823e-0efd140065fc">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Promissory Text</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="220e8f70-19f6-47d8-a6b9-9bb8dcc6e0dd">
+								<Abbreviation>
+									<AUni
+										ws="en">beh. desc</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A text, such as a Eulogy, that describes the accomplishments of a person without a contingent succession of actions</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="c9bce90b-eec6-41fd-8062-5540f75fee29">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="c6316377-89e4-4a5a-b158-6d76d089ae2d">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Behavioral Description</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="18c7f048-23a8-4a5b-a92f-78cecac71b5c">
+						<Abbreviation>
+							<AUni
+								ws="en">expo</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A text that explains something other than a behavior, a process or a succession of events; typically it explains facts or ideas</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f7b846ff-89b0-4d76-8425-4b8fd5330a9b">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="cb6da852-bfce-49e0-b777-d2ab7e3ab33b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Exposition</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="bf3c1643-f242-4d6c-ac82-dcee65e6da59">
+								<Abbreviation>
+									<AUni
+										ws="en">proj</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A text dealing with projected facts or planned status (not a proposal for action, which would be Hortatory; not focusing on human or divine agency, which would be Prophecy)</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="cab21b2a-8a24-474e-8fe3-61f7787f663d">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="b6f6ab62-6308-4b3d-861f-0c40c962e11e">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Projection</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="b73e5cdd-5ae2-4dfc-bfec-65473f262e2e">
+								<Abbreviation>
+									<AUni
+										ws="en">desc. expo</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Exposition that describes an object, location or situation in static terms</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="21360233-ebd3-4b81-989f-26cb6664fb9e">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="6a79f8af-eb89-44ef-9e64-64da135c8b63">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Descriptive Exposition</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="fa2743b8-635b-4b89-a4cc-3f8258419517">
+								<Abbreviation>
+									<AUni
+										ws="en">did. expo</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2007-5-31 18:57:28.40" />
+								<DateModified
+									val="2007-5-31 18:57:28.40" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Exposition specifically intended for teaching another person about a body of facts</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="fea7c926-beac-4363-a28c-17634d55ecf7">
+										<DateModified
+											val="2011-2-2 19:39:28.827" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="f3178f13-4343-4a70-9a1d-fd4806030215">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Didactic Exposition</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="730b6d67-e444-4a92-b45f-9f381d6edaba">
+				<Abbreviation>
+					<AUni
+						ws="en">dia</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2007-5-31 18:57:28.40" />
+				<DateModified
+					val="2007-5-31 18:57:28.40" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Literal speech between individuals or quoted text that uses quotation formulas (typically using the verb 'to say')</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="bd623111-8c3b-463c-adcf-2da4ca9e74b5">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="745ef64c-3be1-4da2-8615-5875978d2347">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Dialogue</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="21af46de-8189-4293-a943-310754f71e2e">
+						<Abbreviation>
+							<AUni
+								ws="en">conv</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Dialogue involving mutual cooperation between the speakers</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c203e5c0-51d2-4201-bb4d-a7f7a7f9f741">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="683ae44f-5f9d-4e93-9a78-f0285b9187b6">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Conversation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="a52902fc-f414-42b0-a7d3-ef0164dfbb11">
+						<Abbreviation>
+							<AUni
+								ws="en">verb. confl</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Dialogue in which the speakers resist mutual resolution of one or more propositions</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="c5a9f77f-02dd-4363-844d-b5e84ed129b8">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="bc19aac5-235a-428d-af46-6e897da876ae">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Verbal Conflict</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="ca078c79-db59-4659-9966-3108959d0a44">
+						<Abbreviation>
+							<AUni
+								ws="en">neg</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Dialogue in which a speaker seeks to obtain a benefit from the other speaker</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="7e137d80-d409-4b6d-9148-fa9dca1e5e4b">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="88791a4a-fbe4-4309-a057-17ffe5927f99">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Negotiation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="e99a7baf-5ddf-4431-97b5-ec363d601362">
+						<Abbreviation>
+							<AUni
+								ws="en">dram</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Acted out speech or quoted text that does not use quotation formulas</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="7b7dbd4a-2745-4067-acfb-0bcc58658794">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="4f4a400b-ef8e-462c-9def-81fcf0d7db3f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Drama</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="a783c30d-6172-4760-8c50-67c1de44a2f9">
+				<Abbreviation>
+					<AUni
+						ws="en">wd. lst</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2007-5-31 18:57:28.40" />
+				<DateModified
+					val="2007-5-31 18:57:28.40" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A list of words used for language research or documentation</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="94ca1522-8519-447f-b71e-ef8d00baa042">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="eb6ae5bf-46f0-4d8f-b733-3aa5d8b0620c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Word List</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="f5140ebb-a7c3-4269-9d62-65f18ac8f24d">
+						<Abbreviation>
+							<AUni
+								ws="en">para</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A list of well-formed words, typically arranged according to inflection</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="707ff2a3-1931-4023-8189-3fe076be73c7">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="93f555e3-4d21-4f6b-80ce-fce13e6cb541">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Paradigm</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="4ff807f7-7b37-4b57-9c0b-be1a3a8c437c">
+						<Abbreviation>
+							<AUni
+								ws="en">ill. wds</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A list of words that are not well-formed in the language, e.g. an anti-paradigm or list of common misspellings</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="371cbbff-3185-4494-804b-745045e27bd6">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="18cbea59-7b40-4439-8bbc-6845aee4f20b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Ill-formed Words</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="ed35134e-2243-4486-a271-692b80d6ad98">
+				<Abbreviation>
+					<AUni
+						ws="en">met. cat</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2007-5-31 18:57:28.40" />
+				<DateModified
+					val="2007-5-31 18:57:28.40" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Genre according to metrical form (versus content)</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="e82c8bb9-a083-40f6-8328-a92403f218cd">
+						<DateModified
+							val="2011-2-2 19:39:28.827" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c9570ae0-3b79-429a-8d3b-bafc48079721">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Metrical Category</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="013568f8-b437-488b-bb9f-586644fa86ec">
+						<Abbreviation>
+							<AUni
+								ws="en">pros</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Non-metrical arrangement of the text, typically using the grammar of ordinary speech</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="cc369dcb-f932-4077-936e-85152fcf3797">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="cf7cc971-bdcd-42e1-bff8-583d81cfcb2a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Prose</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="185a9681-6010-4cf6-a57f-94d7df465a17">
+						<Abbreviation>
+							<AUni
+								ws="en">poet</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2007-5-31 18:57:28.40" />
+						<DateModified
+							val="2007-5-31 18:57:28.40" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Metrical arrangement of the text, typically employing rules for rhyme and rhythm</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="a650eada-dd0d-4e29-af35-1a9159def247">
+								<DateModified
+									val="2011-2-2 19:39:28.827" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ed10512a-f00a-4bb3-a3aa-6c0e1cd1aae9">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Poetry</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</GenreList>

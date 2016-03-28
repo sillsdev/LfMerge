@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Reversal>
+	<header>
+		<ReversalIndex
+			guid="68e21a28-0861-46b6-bc34-53697dce09de">
+			<DateCreated
+				val="2006-6-26 15:44:43.220" />
+			<DateModified
+				val="2006-6-26 15:44:43.220" />
+			<Name>
+				<AUni
+					ws="en">Divehi</AUni>
+			</Name>
+			<PartsOfSpeech />
+			<WritingSystem>
+				<Uni>dv</Uni>
+			</WritingSystem>
+		</ReversalIndex>
+	</header>
+</Reversal>

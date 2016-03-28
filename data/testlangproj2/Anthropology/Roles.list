@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Roles>
+	<CmPossibilityList
+		guid="2bdd113f-f9b2-11d3-977b-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Role</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Roles</AUni>
+			<AUni
+				ws="es">sRoles</AUni>
+			<AUni
+				ws="fr">fRoles</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd1146-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Accsd</AUni>
+					<AUni
+						ws="es">sAccsd</AUni>
+					<AUni
+						ws="fr">fAccsd</AUni>
+				</Abbreviation>
+				<BackColor
+					val="3092271" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="b70fbd96-7028-49af-a2d4-86504db1c7e0">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f8309f08-0a78-40c8-b4cb-b078e7e6a88f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Accused</AUni>
+					<AUni
+						ws="es">sAccused</AUni>
+					<AUni
+						ws="fr">fAccused</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16777152" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd114d-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Accsr</AUni>
+					<AUni
+						ws="es">sAccsr</AUni>
+					<AUni
+						ws="fr">fAccsr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12632111" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="3d1ed1e1-8585-45fb-885a-a3bee4e16035">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="de243684-8c6f-4b8c-84a8-4ea3dd3964eb">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Accuser</AUni>
+					<AUni
+						ws="es">sAccuser</AUni>
+					<AUni
+						ws="fr">fAccuser</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd1153-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Arbtr</AUni>
+					<AUni
+						ws="es">sArbtr</AUni>
+					<AUni
+						ws="fr">fArbtr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12032" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="1139986f-fd13-4c0d-ba49-8483c0e633eb">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9f1a53ae-6a89-4ed2-a0bc-fcdf87e9e477">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Arbitrator</AUni>
+					<AUni
+						ws="es">sArbitrator</AUni>
+					<AUni
+						ws="fr">fArbitrator</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="65280" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="cbd80452-b929-4041-9443-d414181910fd">
+				<Abbreviation>
+					<AUni
+						ws="en">Aud</AUni>
+					<AUni
+						ws="es">sAud</AUni>
+					<AUni
+						ws="fr">fAud</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16760976" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="d2916aab-9703-4579-9309-d209b8839e0f">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="66cf79ec-7677-4aa8-8148-8fcd09a7ae81">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Audience</AUni>
+					<AUni
+						ws="es">sAudience</AUni>
+					<AUni
+						ws="fr">fAudience</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9449263" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="bbee2b97-b558-48cf-a229-c0dc2662a1c8">
+				<Abbreviation>
+					<AUni
+						ws="en">Ben</AUni>
+					<AUni
+						ws="es">sBen</AUni>
+					<AUni
+						ws="fr">fBen</AUni>
+				</Abbreviation>
+				<BackColor
+					val="9486591" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="c0aa292a-3d4e-458a-a12a-0a4c8c0bf53e">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="a4bcd325-3b72-46a7-b88a-6590bec42d33">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Benefactor</AUni>
+					<AUni
+						ws="es">sBenefactor</AUni>
+					<AUni
+						ws="fr">fBenefactor</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8355584" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="93197b5e-f637-4eca-8501-affa1b04a4f3">
+				<Abbreviation>
+					<AUni
+						ws="en">Eye</AUni>
+					<AUni
+						ws="es">sEye</AUni>
+					<AUni
+						ws="fr">fEye</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="d389bbe9-bbe7-41ae-865f-d8afd5cb75f8">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="a0b57f20-51f8-4600-b4eb-474574871c18">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Eyewitness</AUni>
+					<AUni
+						ws="es">sEyewitness</AUni>
+					<AUni
+						ws="fr">fEyewitness</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8323072" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="32b6ba17-807d-4958-a189-1b78b9ac0cf4">
+				<Abbreviation>
+					<AUni
+						ws="en">Initr</AUni>
+					<AUni
+						ws="es">sInitr</AUni>
+					<AUni
+						ws="fr">fInitr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16736303" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="bf8dbb14-0908-4308-8c21-efc7bd8261bb">
+						<DateModified
+							val="2011-2-2 19:39:28.838" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2b78e41b-58b4-45b8-8ffc-0083d1d23187">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Initiator</AUni>
+					<AUni
+						ws="es">sInitiator</AUni>
+					<AUni
+						ws="fr">fInitiator</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="24831" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="49d7624a-d78b-4cf9-a863-86e43b0b589b">
+				<Abbreviation>
+					<AUni
+						ws="en">Mdtr</AUni>
+					<AUni
+						ws="es">sMdtr</AUni>
+					<AUni
+						ws="fr">fMdtr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16748736" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="e10bfb73-b1a8-48c3-b29e-981e76f42711">
+						<DateModified
+							val="2011-2-2 19:39:28.842" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="fb873f62-cad0-412e-aae1-995158b8204b">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Mediator</AUni>
+					<AUni
+						ws="es">sMediator</AUni>
+					<AUni
+						ws="fr">fMediator</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9502719" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="df921dc8-164c-4bbf-b55c-3673ecd82ed1">
+				<Abbreviation>
+					<AUni
+						ws="en">Narrtr</AUni>
+					<AUni
+						ws="es">sNarrtr</AUni>
+					<AUni
+						ws="fr">fNarrtr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16748736" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="04668eca-9495-411b-a13c-3622f1fd43f8">
+						<DateModified
+							val="2011-2-2 19:39:28.842" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="266cb123-174b-4a39-a164-7ab104bfd56b">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Narrator</AUni>
+					<AUni
+						ws="es">sNarrator</AUni>
+					<AUni
+						ws="fr">fNarrator</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12079" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="1f8c39a8-11f9-4acc-8ef4-7a752c2a5d80">
+				<Abbreviation>
+					<AUni
+						ws="en">Rptr</AUni>
+					<AUni
+						ws="es">sRptr</AUni>
+					<AUni
+						ws="fr">fRptr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="3092271" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="6f37565c-6c62-4fd7-83f7-88ff15d180c9">
+						<DateModified
+							val="2011-2-2 19:39:28.842" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1b7712b5-a5a7-4789-9d61-c61f63f00de6">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Reporter</AUni>
+					<AUni
+						ws="es">sReporter</AUni>
+					<AUni
+						ws="fr">fReporter</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9502719" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</Roles>

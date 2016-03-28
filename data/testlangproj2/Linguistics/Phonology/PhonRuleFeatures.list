@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PhonRuleFeats>
+	<CmPossibilityList
+		guid="e491e5d5-d569-41f2-a9c1-23c048d55d59">
+		<DateCreated
+			val="2012-3-30 18:48:18.679" />
+		<DateModified
+			val="2012-3-30 18:48:18.679" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Phonological Rule Features</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="0" />
+	</CmPossibilityList>
+</PhonRuleFeats>

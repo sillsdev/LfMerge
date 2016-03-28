@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="utf-8"?>
+<People>
+	<CmPossibilityList
+		guid="2bdd1201-f9b2-11d3-977b-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Part</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="13" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">People</AUni>
+			<AUni
+				ws="es">sPeople</AUni>
+			<AUni
+				ws="fa">اشخاص</AUni>
+			<AUni
+				ws="fr">Gens</AUni>
+			<AUni
+				ws="id">Orang</AUni>
+			<AUni
+				ws="pt">Pessoas</AUni>
+			<AUni
+				ws="ru">Люди</AUni>
+			<AUni
+				ws="zh-CN">民族</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPerson"
+				guid="5d543e4f-50d7-41fe-93a7-cf851c1d229e">
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2006-1-30 19:47:49.693" />
+				<DateModified
+					val="2006-1-30 19:47:49.693" />
+				<DateOfBirth
+					val="-000000000" />
+				<DateOfDeath
+					val="-000000000" />
+				<Discussion>
+					<StText
+						guid="dd15bffa-6be6-41a1-8c91-c958a4a060ac">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="db64b098-bdae-436c-934e-a38083a3c1bb">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Gender
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Default User</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e83-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">001</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">big chief</AUni>
+				</Alias>
+				<BackColor
+					val="65535" />
+				<Confidence>
+					<objsur
+						guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="193000000" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">chief</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="35aeb062-ecce-4b9b-afbc-b43279208b7f">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="432c1d75-74b1-4a55-b445-954b2484b2e2">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="1" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">تصل مئات</AUni>
+					<AUni
+						ws="en">Satu</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Positions>
+					<refcol
+						guid="72be626d-a574-4404-b452-be4744cfe546"
+						t="r" />
+					<refcol
+						guid="d3337261-f298-47d4-8b2e-ff9c3fb30595"
+						t="r" />
+				</Positions>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16776960" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">2</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">Istri Satu</AUni>
+				</Alias>
+				<BackColor
+					val="3092271" />
+				<Confidence>
+					<objsur
+						guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="193500002" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">first wife of Satu (the chief)</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="3a3ee5fa-a26d-4294-98cd-7f00930ea4d1">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="50b3fe42-7180-4c78-962b-d6ef42490703">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="2" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">ماسّة</AUni>
+					<AUni
+						ws="en">Dua</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Positions>
+					<refcol
+						guid="0b4b3dc8-8509-41aa-a7e0-98d4b6137a3d"
+						t="r" />
+				</Positions>
+				<Restrictions>
+					<refcol
+						guid="2bdd1131-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12632111" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e8d-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">3</AUni>
+				</Abbreviation>
+				<BackColor
+					val="65280" />
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="-000000000" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">#1 son of chief Satu</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="86983a82-c5c4-4daf-9aa5-24fb521eddf7">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c21e9ec6-8818-4106-a44a-fea7781fbcd0">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">يدة مبوبة</AUni>
+					<AUni
+						ws="en">Tiga</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Positions>
+					<refcol
+						guid="0b4b3dc8-8509-41aa-a7e0-98d4b6137a3d"
+						t="r" />
+					<refcol
+						guid="40073248-9dbb-4ad1-8a61-cd04b0382bb5"
+						t="r" />
+				</Positions>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16777152" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e91-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">4</AUni>
+				</Abbreviation>
+				<BackColor
+					val="12632111" />
+				<Confidence>
+					<objsur
+						guid="2bdd1115-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="198004002" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">daughter of chief Satu and his second wife Enam</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="2b2d671d-9bd0-479f-9505-31a4fcb23faa">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="349248b8-6a1d-4b78-b62f-31c3696fdd9d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="2" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">الحاجة</AUni>
+					<AUni
+						ws="en">Empat</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1138-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="32512" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e92-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">5</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6303632" />
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="198201011" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Son of chief Satu and second wife Enam</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="0e19ad44-0269-42cd-8127-3144b18fedd9">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f05d0282-e1ad-4df1-8b74-02411b70e12e">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="1" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">تصل مئات</AUni>
+					<AUni
+						ws="en">Lima</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9461856" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e93-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">6</AUni>
+				</Abbreviation>
+				<BackColor
+					val="37119" />
+				<Confidence>
+					<objsur
+						guid="2bdd1115-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="196007282" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">second wife of chief Satu</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="8de95c6a-4c82-4456-aa8c-3f289e133efd">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0498bc04-77a5-4c1b-a0d6-6e02e0706f3d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="2" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">الجدير</AUni>
+					<AUni
+						ws="en">Enam</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1138-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="13631439" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">BTR</AUni>
+				</Abbreviation>
+				<BackColor
+					val="8355584" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="195011151" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Linguist</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="69e7acb7-a2b2-410a-8fda-731fed17d04f">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3197bab1-2afc-4c35-a9a1-bd4f486af0ce">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="1" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="true" />
+				<Name>
+					<AUni
+						ws="ar-IQ">لا شك أن</AUni>
+					<AUni
+						ws="en">D. Livingston</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="255" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e94-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">7</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">main hunter</AUni>
+				</Alias>
+				<BackColor
+					val="16777152" />
+				<Confidence>
+					<objsur
+						guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="195000002" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Strong and agile man in his 50's Main hunter</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="6e05cdd6-7888-4bdf-925a-308cf7054e99">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="cbd490db-9f1c-4424-9f4e-afc0318340e8">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="1" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">الإنجليزي</AUni>
+					<AUni
+						ws="en">Tujuh</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16711935" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e95-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">8</AUni>
+				</Abbreviation>
+				<BackColor
+					val="49407" />
+				<Confidence>
+					<objsur
+						guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="195500002" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">wife of Tujuh, the main hunter</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="cca0b9c7-53de-490a-a885-ac661789d443">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="352007ed-6c00-4e49-996e-8f5931eef767">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="2" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">الإلكترونية</AUni>
+					<AUni
+						ws="en">Delapan</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12032" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPerson"
+				guid="2bdd0e96-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">9</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16777152" />
+				<Confidence>
+					<objsur
+						guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfBirth
+					val="197006003" />
+				<DateOfDeath
+					val="-000000000" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Firstborn son of Tujuh (the main hunter) and his wife Delapan</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="5984431d-e083-4f8d-ad8e-06143e410dcd">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4c75dbf0-4c8e-46d9-a9fd-0fff226d2032">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Gender
+					val="1" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<IsResearcher
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">المواقع</AUni>
+					<AUni
+						ws="en">Sembilan</AUni>
+				</Name>
+				<PlaceOfBirth>
+					<objsur
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</PlaceOfBirth>
+				<Restrictions>
+					<refcol
+						guid="2bdd1123-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8323199" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="true" />
+		<WsSelector
+			val="-6" />
+	</CmPossibilityList>
+</People>

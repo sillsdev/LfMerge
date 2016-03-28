@@ -1,0 +1,4036 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Anthropology>
+	<header>
+		<RnResearchNbk
+			guid="2bdd10d6-f9b2-11d3-977b-00c04f186933">
+			<DateCreated
+				val="2001-7-24 19:33:9.563" />
+			<DateModified
+				val="2004-3-13 1:40:45.687" />
+			<Name>
+				<AUni
+					ws="en">Data Notebook on the French People</AUni>
+			</Name>
+			<Records />
+			<RecTypes />
+			<Reminders>
+				<Reminder
+					guid="2bdd0ea5-f9b2-11d3-977b-00c04f186933">
+					<Date
+						val="199901051" />
+					<Description>
+						<Str>
+							<Run
+								ws="en">Ask Tiga if there are pirana fish in the river all the time or just during certain seasons.</Run>
+						</Str>
+					</Description>
+				</Reminder>
+				<Reminder
+					guid="2bdd0eb1-f9b2-11d3-977b-00c04f186933">
+					<Date
+						val="199901151" />
+					<Description>
+						<Str>
+							<Run
+								ws="en">Ask Dua about the special foods that were prepared for the wedding.</Run>
+						</Str>
+					</Description>
+				</Reminder>
+				<Reminder
+					guid="2bdd0eb2-f9b2-11d3-977b-00c04f186933">
+					<Date
+						val="199901161" />
+					<Description>
+						<Str>
+							<Run
+								ws="en">Ask Sembilan if I could look at the wedding costumes more closely.</Run>
+						</Str>
+					</Description>
+				</Reminder>
+				<Reminder
+					guid="2bdd0eb3-f9b2-11d3-977b-00c04f186933">
+					<Date
+						val="199901161" />
+					<Description>
+						<Str>
+							<Run
+								ws="en">Ask Sembilam and Empat if I could see their wedding gifts.</Run>
+						</Str>
+					</Description>
+				</Reminder>
+			</Reminders>
+		</RnResearchNbk>
+	</header>
+	<RnGenericRec
+		guid="2bdd0e8e-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+				t="r" />
+			<refcol
+				guid="721d8749-b505-49a7-b871-8a5042b46223"
+				t="r" />
+		</AnthroCodes>
+		<Conclusions>
+			<StText
+				guid="338584b0-cfde-4ce0-86a6-9b35d18f5043">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="78fdde81-30e1-402f-9eac-39ac388f9f5c">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Conclusions>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="1999-1-6 0:0:0.0" />
+		<DateModified
+			val="2004-10-18 20:41:0.0" />
+		<DateOfEvent
+			val="193112111" />
+		<Description>
+			<StText
+				guid="2bdd0e8f-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0e90-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Went fishing with </Run>
+								<Run
+									tags="2BDD0E8D-F9B2-11D3-977B-00C04F186933"
+									ws="en">Tiga</Run>
+								<Run
+									ws="en"> at the </Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5"
+									ws="en">river. </Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5 CED1521C-C3E0-4687-83D6-2F1CF393A984"
+									ws="en">Within no </Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5 F68975D7-E225-4F8E-9506-92128C673FEF CED1521C-C3E0-4687-83D6-2F1CF393A984"
+									ws="en">time</Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5 F68975D7-E225-4F8E-9506-92128C673FEF"
+									ws="en">, he </Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5 343A99A4-FEBA-470B-935D-18D9045806FA F68975D7-E225-4F8E-9506-92128C673FEF"
+									ws="en">had</Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5 343A99A4-FEBA-470B-935D-18D9045806FA"
+									ws="en"> caught</Run>
+								<Run
+									tags="2121F090-4744-4BC0-AE46-3E0D48C071B5"
+									ws="en"> about</Run>
+								<Run
+									ws="en"> 10 fierce looking </Run>
+								<Run
+									namedStyle="Emphasized Text"
+									ws="en">pirana</Run>
+								<Run
+									tags="CED1521C-C3E0-4687-83D6-2F1CF393A984"
+									ws="en"> which we</Run>
+								<Run
+									ws="en"> subsequently </Run>
+								<Run
+									tags="343A99A4-FEBA-470B-935D-18D9045806FA"
+									ws="en">cleaned and</Run>
+								<Run
+									ws="en"> ate for breakfast.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Fishing for Pirana</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Normal" />
+						</StyleRules>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ea0-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">When cleaning the pirana fish, </Run>
+								<Run
+									tags="F68975D7-E225-4F8E-9506-92128C673FEF"
+									ws="en">special care</Run>
+								<Run
+									ws="en"> was taken to avoid being cut by the razor sharp teeth</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Cleaning the Pirana</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Normal" />
+						</StyleRules>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ea1-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									tags="2BDD0E8D-F9B2-11D3-977B-00C04F186933"
+									ws="en">Tiga</Run>
+								<Run
+									ws="en">'s family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Roasting and eating the pirana</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Normal" />
+						</StyleRules>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<Discussion>
+			<StText
+				guid="20b44b4e-e7f0-4875-8a5d-4c8dfee93a5c">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="f62b1662-41dd-4af1-89d8-2e14f3b64232">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="355f0a9b-4e94-4e6e-ac97-afe1fcf72561">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2cef6d53-0f60-4405-b9db-f648aef002a9">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="8bdb0b08-f1ac-43f6-8eb9-ae752048da7e">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="a96c96a4-1615-4b9c-9cc4-709dfb5acfb1">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">What nutritional value does the pirana have?</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Hypothesis>
+			<StText
+				guid="0615f57d-b4cf-4d38-8c34-477094b05af3">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="39e3b03b-df33-4a68-a92c-faa4361efdd5">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Hypothesis>
+		<Locations>
+			<refcol
+				guid="2bdd0e85-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Locations>
+		<Participants>
+			<RnRoledPartic
+				guid="2bdd0ea3-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0e8d-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+			<RnRoledPartic
+				guid="2bdd0ea4-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd114d-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+			<RnRoledPartic
+				guid="c4e5c788-8ff2-48bc-b6bb-ac02e351606b" />
+		</Participants>
+		<PersonalNotes>
+			<StText
+				guid="fba9ca56-965f-4415-9e40-469f5a09d660">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="7e198d85-4c86-41ff-bc7a-0538510407ec">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">This is a very very personal note that I don't want anyone to read, so I'll use invisible ink.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Private information</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<PhraseTags>
+			<refcol
+				guid="2121f090-4744-4bc0-ae46-3e0d48c071b5"
+				t="r" />
+			<refcol
+				guid="2bdd0e8d-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+			<refcol
+				guid="343a99a4-feba-470b-935d-18d9045806fa"
+				t="r" />
+			<refcol
+				guid="ced1521c-c3e0-4687-83d6-2f1cf393a984"
+				t="r" />
+			<refcol
+				guid="f68975d7-e225-4f8e-9506-92128c673fef"
+				t="r" />
+		</PhraseTags>
+		<Reminders>
+			<refcol
+				guid="2bdd0ea5-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Reminders>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<ResearchPlan>
+			<StText
+				guid="8df8f620-5868-4302-b14e-47ebc02a3383">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="fea0ec82-122b-4595-b4b4-cdee459bb82d">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ResearchPlan>
+		<SeeAlso>
+			<refcol
+				guid="deb87ffc-5384-4df9-9c3b-fe34334a8c33"
+				t="r" />
+		</SeeAlso>
+		<Sources>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Sources>
+		<TimeOfEvent>
+			<refcol
+				guid="3e8bb722-da48-41a0-96e1-194a9f38ef41"
+				t="r" />
+			<refcol
+				guid="c9eced51-59cd-44c6-883f-7d4dc8044a89"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Fishing in the river for pirana</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="27c7d761-b585-4ebb-9291-36f68ed00154">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="0faf99ab-2feb-4dcb-9b4f-eaf51e33f954">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+		<Custom
+			name="Weather">
+			<refcol
+				guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Custom>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0e97-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="36d6b697-0eaa-4fb3-ab84-42659778d211"
+				t="r" />
+			<refcol
+				guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+				t="r" />
+			<refcol
+				guid="a9bafdb5-9a6b-427c-bb00-8b9e1b8086d6"
+				t="r" />
+		</AnthroCodes>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="1999-1-15 15:0:0.0" />
+		<DateModified
+			val="2003-9-8 18:30:0.0" />
+		<DateOfEvent
+			val="196000000" />
+		<Description>
+			<StText
+				guid="2bdd0e98-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0e99-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Contains information on the preparation, ceremony, and reception of wedding.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Wedding of Sembilan and Empat</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<ExternalMaterials>
+			<StText
+				guid="23c67276-5d78-4de7-b53a-cd812a816087">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="ebc4223b-564a-4ed1-9f8a-ecf2619a12e9">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="4acbdf60-e27e-4c58-be0c-726024015d72">
+				<DateModified
+					val="2011-2-2 19:39:28.834" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="9fdb8e69-3a22-4796-b2bb-e4ef5a90172b">
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 1" />
+						</StyleRules>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Locations>
+			<refcol
+				guid="2bdd0e8b-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Locations>
+		<Participants>
+			<RnRoledPartic
+				guid="1807e41d-30e9-43fa-be15-61ad7b8930a8">
+				<Participants>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+			</RnRoledPartic>
+			<RnRoledPartic
+				guid="2bdd0e9a-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0e83-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+					<refcol
+						guid="2bdd0e91-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+					<refcol
+						guid="2bdd0e96-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+			<RnRoledPartic
+				guid="2bdd0e9d-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+					<refcol
+						guid="2bdd0e94-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd114d-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+			<RnRoledPartic
+				guid="2bdd0e9f-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0e95-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd1153-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+		</Participants>
+		<PersonalNotes>
+			<StText
+				guid="5324b3bd-2148-4983-b5c4-2818afe941e7">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="cf59df70-245b-4897-a11d-cefad1a1dbe2">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<Sources>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Sources>
+		<SubRecords>
+			<ownseq
+				class="RnGenericRec"
+				guid="be122646-438d-4c62-92eb-ea124988283e">
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<DateOfEvent
+					val="-000000000" />
+				<Description>
+					<StText
+						guid="5c1c82af-8eb1-4371-8a11-af020380ab47">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3b682ec3-8c12-4036-b870-c443955be04f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Description>
+				<ExternalMaterials>
+					<StText
+						guid="3d60a383-3f9a-4ab6-a163-8e699b74487f">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ad004abc-dc1b-4f9d-aca9-3d6501bdbaf4">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ExternalMaterials>
+				<FurtherQuestions>
+					<StText
+						guid="5c03c737-0979-4324-a5a2-b1d4211e9b2a">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3fc51c37-1f79-49f2-8799-2ba9846353c0">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</FurtherQuestions>
+				<PersonalNotes>
+					<StText
+						guid="81796a6f-8877-4df9-ac56-9f030a0320b5">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="5adfc69b-8902-4c26-b9cf-361dc239602a">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</PersonalNotes>
+				<VersionHistory>
+					<StText
+						guid="7acf4458-401e-4649-a552-46eef5488b6b">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="06b42ced-40c2-446c-8afd-f91b24f88e23">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</VersionHistory>
+			</ownseq>
+			<ownseq
+				class="RnGenericRec"
+				guid="2bdd0eab-f9b2-11d3-977b-00c04f186933">
+				<AnthroCodes>
+					<refcol
+						guid="3d9a4ea0-ba13-45ad-8c61-71a0fb4b1530"
+						t="r" />
+					<refcol
+						guid="721d8749-b505-49a7-b871-8a5042b46223"
+						t="r" />
+				</AnthroCodes>
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="1999-1-16 2:0:0.0" />
+				<DateModified
+					val="1999-1-17 4:5:1.0" />
+				<DateOfEvent
+					val="194002002" />
+				<Description>
+					<StText
+						guid="2bdd0e8f-5332-11d3-977b-00c04f186933">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2bdd0e90-3224-11d3-977b-00c04f186933">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Went fishing with Tiga at the river.  Within no time, he had caught about 10 fierce looking pirana which we subsequently cleaned and ate for breakfast.</Run>
+									</Str>
+								</Contents>
+								<Label>
+									<Str>
+										<Run
+											ws="en">Fishing for Pirana</Run>
+									</Str>
+								</Label>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2bdd0ea0-3323-11d3-977b-00c04f186933">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">This is a very long paragraph that is over 4K characters. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fi sh, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. This is a long paragraph. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fi sh, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth. When cleaning the pirana fish, special care was taken to avoid being cut by the razor sharp teeth.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="2bdd0ea1-4432-11d3-977b-00c04f186933">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Another long paragraph. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fis h after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. Tiga's family and I enjoyed eating the pirana fish after we roasted them on sticks over the fire. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Description>
+				<Discussion>
+					<StText
+						guid="4a83c10f-e474-446b-b58c-d394331e24ab">
+						<DateModified
+							val="2011-2-2 19:39:28.935" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4d327532-bcff-4e1b-8ce4-8fe9bf60f9a1">
+								<Contents>
+									<Str>
+										<Run
+											ws="en" />
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ExternalMaterials>
+					<StText
+						guid="efee8542-2547-43cf-8f1e-74335f65bf51">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="debf8277-111c-40f0-a61e-b8c8ca540403">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ExternalMaterials>
+				<FurtherQuestions>
+					<StText
+						guid="2fa66ac7-2a48-4a03-afbd-d81aadaa34d4">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="85afffa1-5887-4005-bf37-36e45b4779f5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</FurtherQuestions>
+				<Locations>
+					<refcol
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Locations>
+				<Participants>
+					<RnRoledPartic
+						guid="2bdd0eae-f9b2-11d3-977b-00c04f186933">
+						<Participants>
+							<refcol
+								guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refcol
+								guid="2bdd0e91-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refcol
+								guid="2bdd0e95-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Participants>
+						<Role>
+							<objsur
+								guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Role>
+					</RnRoledPartic>
+				</Participants>
+				<PersonalNotes>
+					<StText
+						guid="a4ae7565-320e-45e1-996d-3d6277df3c0c">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="63c7360f-8e8e-4a5a-85e1-d9074c699979">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</PersonalNotes>
+				<Reminders>
+					<refcol
+						guid="2bdd0eb1-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Reminders>
+				<Researchers>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Researchers>
+				<Sources>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Sources>
+				<SubRecords>
+					<ownseq
+						class="RnGenericRec"
+						guid="2bdd0eb4-f9b2-11d3-977b-00c04f186933">
+						<AnthroCodes>
+							<refcol
+								guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+								t="r" />
+						</AnthroCodes>
+						<Confidence>
+							<objsur
+								guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Confidence>
+						<DateCreated
+							val="1999-1-15 16:15:28.0" />
+						<DateModified
+							val="1999-1-16 4:55:59.0" />
+						<DateOfEvent
+							val="016503203" />
+						<Description>
+							<StText
+								guid="2bdd0eb5-f9b2-11d3-977b-00c04f186933">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2bdd0eb6-f9b2-11d3-977b-00c04f186933">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Special foods were made for the wedding.  Not sure about the exact recipes at this time though.</Run>
+											</Str>
+										</Contents>
+										<Label>
+											<Str>
+												<Run
+													ws="en">Food Preparation for Wedding</Run>
+											</Str>
+										</Label>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4d37de21-8c17-474e-a6f8-d55bb0e49d89">
+								<DateModified
+									val="2011-2-2 19:39:28.935" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="da919444-bf23-461f-9ef8-4a8ff19ea306">
+										<Contents>
+											<Str>
+												<Run
+													ws="en" />
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ExternalMaterials>
+							<StText
+								guid="34fdca76-8901-4dda-92de-d8d2bd600dbf">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="164d96db-8739-4f42-b285-60aa2bd997b1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</ExternalMaterials>
+						<FurtherQuestions>
+							<StText
+								guid="059e1716-001b-4f16-9a62-148fff3918a7">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="19e3fddc-caf5-477e-826b-803ba27882e1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</FurtherQuestions>
+						<Locations>
+							<refcol
+								guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Locations>
+						<Participants>
+							<RnRoledPartic
+								guid="2bdd0eb7-f9b2-11d3-977b-00c04f186933">
+								<Participants>
+									<refcol
+										guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+									<refcol
+										guid="2bdd0e95-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Participants>
+								<Role>
+									<objsur
+										guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Role>
+							</RnRoledPartic>
+						</Participants>
+						<PersonalNotes>
+							<StText
+								guid="d5aa4e1d-0a43-472c-8720-d6926c0ab39a">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="1b74011c-3ddc-46cd-8ca6-8fe855bb1fd5">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</PersonalNotes>
+						<Reminders>
+							<refcol
+								guid="2bdd0eb1-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Reminders>
+						<Researchers>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Researchers>
+						<Sources>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Sources>
+						<TimeOfEvent>
+							<refcol
+								guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+								t="r" />
+						</TimeOfEvent>
+						<Title>
+							<Str>
+								<Run
+									ws="en">Food Preparation for Wedding</Run>
+							</Str>
+						</Title>
+						<Type>
+							<objsur
+								guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+								t="r" />
+						</Type>
+						<VersionHistory>
+							<StText
+								guid="ac71e315-c950-4fd0-a6fb-67c51ec097b7">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c7e3ee1c-d686-4373-86fb-2078f519108f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</VersionHistory>
+						<Custom
+							name="Weather">
+							<refcol
+								guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Custom>
+					</ownseq>
+					<ownseq
+						class="RnGenericRec"
+						guid="2bdd0eb9-f9b2-11d3-977b-00c04f186933">
+						<AnthroCodes>
+							<refcol
+								guid="4c941b92-0708-4b4c-b116-b8514369971e"
+								t="r" />
+						</AnthroCodes>
+						<Confidence>
+							<objsur
+								guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Confidence>
+						<DateCreated
+							val="1999-1-15 16:40:0.0" />
+						<DateModified
+							val="1999-1-16 4:50:9.0" />
+						<DateOfEvent
+							val="-700000002" />
+						<Description>
+							<StText
+								guid="2bdd0eba-f9b2-11d3-977b-00c04f186933">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2bdd0ebb-f9b2-11d3-977b-00c04f186933">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Brightly colored clothing was created for the wedding.</Run>
+											</Str>
+										</Contents>
+										<Label>
+											<Str>
+												<Run
+													ws="en">Preparation of wedding costumes</Run>
+											</Str>
+										</Label>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Description>
+						<Discussion>
+							<StText
+								guid="6a9a44d4-4d02-410a-8e46-10aff69a979a">
+								<DateModified
+									val="2011-2-2 19:39:28.935" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="492da532-694a-4a09-b424-e059b3d4ad32">
+										<Contents>
+											<Str>
+												<Run
+													ws="en" />
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ExternalMaterials>
+							<StText
+								guid="cde66cde-859a-4c4d-915d-ac23a1b1a093">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="61769f2e-121f-4c27-adc5-683e7d8a8e4c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</ExternalMaterials>
+						<FurtherQuestions>
+							<StText
+								guid="edfb2f90-98dc-429e-a2d4-309bf18a1510">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="18360401-6c37-4e40-9bd5-12a40b2c313f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</FurtherQuestions>
+						<Locations>
+							<refcol
+								guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Locations>
+						<Participants>
+							<RnRoledPartic
+								guid="2bdd0ebc-f9b2-11d3-977b-00c04f186933">
+								<Participants>
+									<refcol
+										guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+									<refcol
+										guid="2bdd0e91-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Participants>
+								<Role>
+									<objsur
+										guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Role>
+							</RnRoledPartic>
+						</Participants>
+						<PersonalNotes>
+							<StText
+								guid="f4ee54ea-2042-42c1-a10a-5b68cf85333e">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="91541c68-80b5-467b-97b0-75ba59243454">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</PersonalNotes>
+						<Reminders>
+							<refcol
+								guid="2bdd0eb2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Reminders>
+						<Researchers>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Researchers>
+						<Sources>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Sources>
+						<TimeOfEvent>
+							<refcol
+								guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+								t="r" />
+						</TimeOfEvent>
+						<Title>
+							<Str>
+								<Run
+									ws="en">Preparing wedding costumes.</Run>
+							</Str>
+						</Title>
+						<Type>
+							<objsur
+								guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+								t="r" />
+						</Type>
+						<VersionHistory>
+							<StText
+								guid="7e99d99a-e1b2-49a8-b729-7926fcaacf8a">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="f7c7a509-e281-4d98-a861-f83935f6f300">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</VersionHistory>
+						<Custom
+							name="Weather">
+							<refcol
+								guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Custom>
+					</ownseq>
+					<ownseq
+						class="RnGenericRec"
+						guid="2bdd0ebe-f9b2-11d3-977b-00c04f186933">
+						<AnthroCodes>
+							<refcol
+								guid="c676cf39-d451-48e7-908f-9ed282bf50d8"
+								t="r" />
+						</AnthroCodes>
+						<Confidence>
+							<objsur
+								guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Confidence>
+						<DateCreated
+							val="1999-1-16 4:30:51.0" />
+						<DateModified
+							val="1999-1-16 4:35:7.0" />
+						<DateOfEvent
+							val="199012001" />
+						<Description>
+							<StText
+								guid="2bdd0ebf-f9b2-11d3-977b-00c04f186933">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2bdd0ec0-f9b2-11d3-977b-00c04f186933">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Lima (the groom's half-brother) explained how the dowry and wedding gifts were prepared for exchange.</Run>
+											</Str>
+										</Contents>
+										<Label>
+											<Str>
+												<Run
+													ws="en">Preparation of wedding gifts and dowry.</Run>
+											</Str>
+										</Label>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Description>
+						<Discussion>
+							<StText
+								guid="6e72f9d4-6d7d-4938-9e34-5957889caaae">
+								<DateModified
+									val="2011-2-2 19:39:28.936" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="9f4e1634-9cf3-4ff3-89cc-9ae5ba99664a">
+										<Contents>
+											<Str>
+												<Run
+													ws="en" />
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ExternalMaterials>
+							<StText
+								guid="e7aa7915-3c81-450d-a506-c98bc6074923">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="fd886e36-c003-4f28-9cbf-351c56e39b6d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</ExternalMaterials>
+						<FurtherQuestions>
+							<StText
+								guid="4ff4d246-8911-4ea3-a751-d152c06a5f6f">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="3536a23f-5093-4de6-9029-ef45e36865de">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</FurtherQuestions>
+						<Locations>
+							<refcol
+								guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Locations>
+						<Participants>
+							<RnRoledPartic
+								guid="2bdd0ec1-f9b2-11d3-977b-00c04f186933">
+								<Participants>
+									<refcol
+										guid="2bdd0e96-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Participants>
+								<Role>
+									<objsur
+										guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+										t="r" />
+								</Role>
+							</RnRoledPartic>
+						</Participants>
+						<PersonalNotes>
+							<StText
+								guid="13b2fba9-c72a-44e4-b0e1-564a42439746">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ed6228a6-a10a-44c3-9644-a9ed0fcf542e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</PersonalNotes>
+						<Researchers>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Researchers>
+						<Sources>
+							<refcol
+								guid="2bdd0e92-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Sources>
+						<TimeOfEvent>
+							<refcol
+								guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+								t="r" />
+						</TimeOfEvent>
+						<Title>
+							<Str>
+								<Run
+									ws="en">Preparation of the wedding gifts and dowry.</Run>
+							</Str>
+						</Title>
+						<Type>
+							<objsur
+								guid="b7c8f092-ea5e-11de-8d7d-0013722f8dec"
+								t="r" />
+						</Type>
+						<VersionHistory>
+							<StText
+								guid="93d99397-80f9-49b5-8b71-9886d6fde7b6">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="a61a2b89-7ae3-4f20-b98a-25938b67fd55">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</VersionHistory>
+					</ownseq>
+					<ownseq
+						class="RnGenericRec"
+						guid="deb87ffc-5384-4df9-9c3b-fe34334a8c33">
+						<AnthroCodes>
+							<refcol
+								guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+								t="r" />
+						</AnthroCodes>
+						<Conclusions>
+							<StText
+								guid="365f10d0-8b5e-4b87-a74b-f939e6d55b77">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="0ed1765d-bd52-42df-834d-3e7bb0d33ba9">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Based on the fact that fish are eaten regularly, and that there are no fish gods or spirits, I suspect that fish are simply regarded as food.</Run>
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Conclusions>
+						<Confidence>
+							<objsur
+								guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Confidence>
+						<CounterEvidence>
+							<refseq
+								guid="2bdd0eea-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</CounterEvidence>
+						<DateCreated
+							val="1999-1-8 21:0:0.0" />
+						<DateModified
+							val="1999-1-7 21:20:57.0" />
+						<DateOfEvent
+							val="0" />
+						<Description>
+							<StText
+								guid="a3aff43b-99b1-49f2-bb74-f497c8660241">
+								<DateModified
+									val="2011-2-2 19:39:28.936" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="5ad6a6d5-2084-4690-b025-34342c410c7e">
+										<Contents>
+											<Str>
+												<Run
+													ws="en" />
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Description>
+						<Discussion>
+							<StText
+								guid="f77f47a9-e930-4d1f-be29-04620b260ce0">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="07c5974a-cdd7-4fef-bced-3e9c27a4a7c2">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Results of fish Analysis</Run>
+											</Str>
+										</Contents>
+										<Label>
+											<Str>
+												<Run
+													ws="en">hmmmm...</Run>
+											</Str>
+										</Label>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ExternalMaterials>
+							<StText
+								guid="5ebe9b7a-ac8f-4e45-b784-e710b44ee926">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="1498efe3-e58d-4242-a621-928551509ccd">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</ExternalMaterials>
+						<FurtherQuestions>
+							<StText
+								guid="fd9028fb-7e24-4ea9-a20d-3606cf001dd7">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="09da01b4-06bd-4438-af51-626a40ae9a24">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</FurtherQuestions>
+						<Hypothesis>
+							<StText
+								guid="a19b0fcf-bd4e-486a-9fdc-b6cec7cd6f1f">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="be9ba534-35ae-4f47-b3ac-0291f9f4b635">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Fish are simply regarded as food and are neither worshipped nor regarded highly amongst the Orang people.</Run>
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Hypothesis>
+						<Researchers>
+							<refcol
+								guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Researchers>
+						<ResearchPlan>
+							<StText
+								guid="4357104d-4531-4da9-a3d6-cc28dee9823d">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="58649cf4-cd06-4a78-9cbd-ad3c70cde0b9">
+										<Contents>
+											<Str>
+												<Run
+													ws="en">Examine mountain shrine (with permission) for any images or carvings of fish.</Run>
+											</Str>
+										</Contents>
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</ResearchPlan>
+						<SeeAlso>
+							<refcol
+								guid="2bdd0e8e-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</SeeAlso>
+						<Status>
+							<objsur
+								guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Status>
+						<SupersededBy>
+							<refcol
+								guid="2bdd0edd-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</SupersededBy>
+						<SupportingEvidence>
+							<refseq
+								guid="2bdd0e8e-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refseq
+								guid="be122646-438d-4c62-92eb-ea124988283e"
+								t="r" />
+							<refseq
+								guid="2bdd0ebe-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</SupportingEvidence>
+						<Title>
+							<Str>
+								<Run
+									ws="en">Fish are regarded simply as food.</Run>
+							</Str>
+						</Title>
+						<Type>
+							<objsur
+								guid="82290763-1633-4998-8317-0ec3f5027fbd"
+								t="r" />
+						</Type>
+						<VersionHistory>
+							<StText
+								guid="2592c796-ddfe-40b2-bf11-67f3e29611b5">
+								<DateModified
+									val="2011-2-2 19:39:28.835" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="40f9c7f6-071c-452e-9074-8bcd98a144d5">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</VersionHistory>
+					</ownseq>
+				</SubRecords>
+				<TimeOfEvent>
+					<refcol
+						guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+						t="r" />
+				</TimeOfEvent>
+				<Title>
+					<Str>
+						<Run
+							ws="en">Wedding Preparations</Run>
+					</Str>
+				</Title>
+				<Type>
+					<objsur
+						guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+						t="r" />
+				</Type>
+				<VersionHistory>
+					<StText
+						guid="d60cd919-e64c-439f-8129-f87f00f2034b">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2a015530-55a7-4b12-8067-112c5291550d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</VersionHistory>
+				<Custom
+					name="Weather">
+					<refcol
+						guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Custom>
+			</ownseq>
+			<ownseq
+				class="RnGenericRec"
+				guid="2bdd0ec2-f9b2-11d3-977b-00c04f186933">
+				<AnthroCodes>
+					<refcol
+						guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+						t="r" />
+				</AnthroCodes>
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="1999-1-16 4:20:23.0" />
+				<DateModified
+					val="1999-1-16 0:0:0.0" />
+				<DateOfEvent
+					val="199901111" />
+				<Description>
+					<StText
+						guid="2bdd0ec3-f9b2-11d3-977b-00c04f186933">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2bdd0ec4-f9b2-11d3-977b-00c04f186933">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">The wedding ceremony was performed in the village square.</Run>
+									</Str>
+								</Contents>
+								<Label>
+									<Str>
+										<Run
+											ws="en">Wedding Ceremony</Run>
+									</Str>
+								</Label>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Description>
+				<ExternalMaterials>
+					<StText
+						guid="10d0813b-13d7-4c7a-ba0f-f6baec23b8c0">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0e353c97-1062-4bc0-a9b6-eb59dfeb9196">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ExternalMaterials>
+				<FurtherQuestions>
+					<StText
+						guid="834a202b-73f5-4cde-b553-03813b9ae6fa">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="8a034c9f-68c2-49e6-8eff-240487065987">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</FurtherQuestions>
+				<Locations>
+					<refcol
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Locations>
+				<Participants>
+					<RnRoledPartic
+						guid="2bdd0ec5-f9b2-11d3-977b-00c04f186933">
+						<Participants>
+							<refcol
+								guid="2bdd0e83-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refcol
+								guid="2bdd0e91-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refcol
+								guid="2bdd0e96-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Participants>
+						<Role>
+							<objsur
+								guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Role>
+					</RnRoledPartic>
+					<RnRoledPartic
+						guid="2bdd0ec6-f9b2-11d3-977b-00c04f186933">
+						<Participants>
+							<refcol
+								guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Participants>
+						<Role>
+							<objsur
+								guid="2bdd1153-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Role>
+					</RnRoledPartic>
+				</Participants>
+				<PersonalNotes>
+					<StText
+						guid="6134ec44-ac3b-4957-a51c-ba348711f0ea">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3d929bde-0a1e-40b1-90c0-410904b1b673">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</PersonalNotes>
+				<Researchers>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Researchers>
+				<Sources>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Sources>
+				<TimeOfEvent>
+					<refcol
+						guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+						t="r" />
+				</TimeOfEvent>
+				<Title>
+					<Str>
+						<Run
+							ws="en">Wedding ceremony</Run>
+					</Str>
+				</Title>
+				<Type>
+					<objsur
+						guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+						t="r" />
+				</Type>
+				<VersionHistory>
+					<StText
+						guid="7de0ad91-3896-489e-b9c9-5ebb398b3393">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4eac9826-2bc6-4de4-83ec-6a0d6b612476">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</VersionHistory>
+				<Custom
+					name="Weather">
+					<refcol
+						guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Custom>
+			</ownseq>
+			<ownseq
+				class="RnGenericRec"
+				guid="2bdd0ec9-f9b2-11d3-977b-00c04f186933">
+				<AnthroCodes>
+					<refcol
+						guid="721d8749-b505-49a7-b871-8a5042b46223"
+						t="r" />
+				</AnthroCodes>
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="1999-1-17 2:15:5.0" />
+				<DateModified
+					val="1999-1-17 2:0:5.0" />
+				<DateOfEvent
+					val="199812111" />
+				<Description>
+					<StText
+						guid="2bdd0eca-f9b2-11d3-977b-00c04f186933">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2bdd0ecb-f9b2-11d3-977b-00c04f186933">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">After the wedding ceremony, there was a feast with dancing and singing.</Run>
+									</Str>
+								</Contents>
+								<Label>
+									<Str>
+										<Run
+											ws="en">Wedding Reception/Feast/Celebration</Run>
+									</Str>
+								</Label>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Description>
+				<ExternalMaterials>
+					<StText
+						guid="c621938a-dfc3-4fa2-824c-f129f93a06bc">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2f1972aa-e863-42ec-861e-138966cc8a82">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ExternalMaterials>
+				<FurtherQuestions>
+					<StText
+						guid="820df85e-cc65-4d13-a652-2f405fa5ab1f">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="eb536f29-b760-43e7-b151-66ed2527cc6f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</FurtherQuestions>
+				<Locations>
+					<refcol
+						guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Locations>
+				<Participants>
+					<RnRoledPartic
+						guid="2bdd0ecc-f9b2-11d3-977b-00c04f186933">
+						<Participants>
+							<refcol
+								guid="2bdd0e91-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+							<refcol
+								guid="2bdd0e96-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Participants>
+						<Role>
+							<objsur
+								guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+								t="r" />
+						</Role>
+					</RnRoledPartic>
+				</Participants>
+				<PersonalNotes>
+					<StText
+						guid="0de25994-9ea4-40ee-9d65-d21945070052">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1dd36246-4232-4698-bafa-fc6acda6c677">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</PersonalNotes>
+				<Reminders>
+					<refcol
+						guid="2bdd0eb3-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Reminders>
+				<Researchers>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Researchers>
+				<Restrictions>
+					<refcol
+						guid="2bdd112a-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Restrictions>
+				<Sources>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Sources>
+				<TimeOfEvent>
+					<refcol
+						guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+						t="r" />
+				</TimeOfEvent>
+				<Title>
+					<Str>
+						<Run
+							ws="en">Wedding Reception/Feast/Celebration</Run>
+					</Str>
+				</Title>
+				<Type>
+					<objsur
+						guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+						t="r" />
+				</Type>
+				<VersionHistory>
+					<StText
+						guid="53984869-7c84-4f83-b801-afeead05be67">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1da95e18-092d-4490-ada6-6d81f1de9e4c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</VersionHistory>
+				<Custom
+					name="Weather">
+					<refcol
+						guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Custom>
+			</ownseq>
+			<ownseq
+				class="RnGenericRec"
+				guid="fc2affa8-8a47-4245-b17a-933a17048b53">
+				<AnthroCodes>
+					<refcol
+						guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+						t="r" />
+				</AnthroCodes>
+				<Conclusions>
+					<StText
+						guid="906a9e88-051f-4dea-accc-6cfb85aa3943">
+						<DateModified
+							val="2011-2-2 19:39:28.836" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="705c58e7-d83c-4ca9-a8dd-28ba7faae4ef">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Based on the fact that fish are eaten regularly, and that there are no fish gods or spirits, I suspect that fish are simply regarded as food.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Conclusions>
+				<Confidence>
+					<objsur
+						guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Confidence>
+				<DateCreated
+					val="1999-1-8 21:0:0.0" />
+				<DateModified
+					val="1999-1-7 21:20:57.0" />
+				<DateOfEvent
+					val="-000000000" />
+				<Discussion>
+					<StText
+						guid="de99b40c-5285-4b46-928e-f405a703b0e9">
+						<DateModified
+							val="2011-2-2 19:39:28.836" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="89687135-c64b-4a62-89fc-12480b2dd41f">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Results of fish Analysis</Run>
+									</Str>
+								</Contents>
+								<Label>
+									<Str>
+										<Run
+											ws="en">hmmmm...</Run>
+									</Str>
+								</Label>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ExternalMaterials>
+					<StText
+						guid="f710a5e2-49a9-4103-9d05-a0d8a1ee456d">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="10e9c4e1-a3c7-45c5-a8fd-72b6dab5fcc6">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ExternalMaterials>
+				<FurtherQuestions>
+					<StText
+						guid="56402335-1c15-4aaa-ad55-ec4c1d1a1458">
+						<DateModified
+							val="2011-2-2 19:39:28.835" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="cf0cef33-5db0-4b62-9bbe-6a4c6039d2a7">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</FurtherQuestions>
+				<Hypothesis>
+					<StText
+						guid="37130ec5-b17e-4f5b-9aa0-4133be29a4b9">
+						<DateModified
+							val="2011-2-2 19:39:28.836" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0dbd7323-540a-46f9-81c7-8449a17de82a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Fish are simply regarded as food and are neither worshipped nor regarded highly amongst the Orang people.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Hypothesis>
+				<Researchers>
+					<refcol
+						guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Researchers>
+				<ResearchPlan>
+					<StText
+						guid="da84d19d-5fe1-4eaf-9198-d5dc1b40362f">
+						<DateModified
+							val="2011-2-2 19:39:28.836" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="a27089e1-adaf-4f94-aea7-d38ea5a41bf6">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Examine mountain shrine (with permission) for any images or carvings of fish.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</ResearchPlan>
+				<Status>
+					<objsur
+						guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Status>
+				<SupportingEvidence>
+					<refseq
+						guid="2bdd0e8e-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</SupportingEvidence>
+				<Title>
+					<Str>
+						<Run
+							ws="en">Fish are regarded simply as food.</Run>
+					</Str>
+				</Title>
+				<Type>
+					<objsur
+						guid="82290763-1633-4998-8317-0ec3f5027fbd"
+						t="r" />
+				</Type>
+				<VersionHistory>
+					<StText
+						guid="c260f1df-9999-4124-bb17-ccff0d6c4bba">
+						<DateModified
+							val="2011-2-2 19:39:28.836" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0fd2269a-26e4-4ca4-b2f7-32d475665061">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</VersionHistory>
+			</ownseq>
+		</SubRecords>
+		<TimeOfEvent>
+			<refcol
+				guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Wedding of the son of the main hunter to the chief's daughter</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="6ca0de85-a12b-403e-9d2c-3574c3e8fec0">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="d715d725-ec8e-414e-b0af-3de2d834a634">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+		<Custom
+			name="Weather">
+			<refcol
+				guid="2bdd1165-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Custom>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0eaa-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="a9bafdb5-9a6b-427c-bb00-8b9e1b8086d6"
+				t="r" />
+			<refcol
+				guid="c676cf39-d451-48e7-908f-9ed282bf50d8"
+				t="r" />
+		</AnthroCodes>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="1999-7-15 13:0:0.0" />
+		<DateModified
+			val="1999-7-20 20:15:23.0" />
+		<DateOfEvent
+			val="199711111" />
+		<Description>
+			<StText
+				guid="2bdd0ece-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ecf-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">It was a sad time for the tribe when chief Satu died.  He was highly respected by the people.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Death and Funeral of Chief Satu</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<Discussion>
+			<StText
+				guid="5b6e0f2c-974a-4039-a26d-1425303d3257">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="277b877b-06d0-4c06-bb45-e06d0ee6db4f">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="39250105-14e9-49c1-95ba-360c1cccf8d6">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="6fffb010-9c79-4aaa-932d-215f4ed1075b">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="0e2058e4-849b-4180-9e7e-e189534a0673">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="16020947-d60a-4104-bbfe-3db27e9ff0f9">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Locations>
+			<refcol
+				guid="2bdd0e8a-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Locations>
+		<Participants>
+			<RnRoledPartic
+				guid="2bdd0ed0-f9b2-11d3-977b-00c04f186933">
+				<Participants>
+					<refcol
+						guid="2bdd0e8d-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+				<Role>
+					<objsur
+						guid="2bdd1146-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Role>
+			</RnRoledPartic>
+		</Participants>
+		<PersonalNotes>
+			<StText
+				guid="889acca2-3101-4f49-8ea7-d9a807a92505">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="d123b83b-9a1a-44d4-8a02-a70ebec863c3">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<Sources>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Sources>
+		<TimeOfEvent>
+			<refcol
+				guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Funeral of chief</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="3cbbafec-c012-4c21-baf1-1dc141ffcf88">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="7b65ab9d-1190-47d2-a21a-b90ae34c7849">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+		<Custom
+			name="Weather">
+			<refcol
+				guid="2bdd1171-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Custom>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0ed1-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+				t="r" />
+		</AnthroCodes>
+		<Conclusions>
+			<StText
+				guid="2bdd0ed2-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ed3-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Based on the fact that fish are eaten regularly, and that there are no fish gods or spirits, I suspect that fish are simply regarded as food.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Conclusions>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<CounterEvidence>
+			<refseq
+				guid="2bdd0eea-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</CounterEvidence>
+		<DateCreated
+			val="1999-1-8 21:0:0.0" />
+		<DateModified
+			val="2004-3-13 1:41:0.0" />
+		<DateOfEvent
+			val="-000000000" />
+		<Discussion>
+			<StText
+				guid="2bdd0ed6-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ed7-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Results of fish Analysis</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">hmmmm...</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="761ebdb5-f142-40c6-8960-d33795b89c28">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="32c95e12-428c-4b50-8d1b-7319ba8d7185">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="640dc929-597d-4451-9365-125e5592d054">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="6541846a-ea31-4d70-9165-41d6453030fb">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="en">French IPA: </Run>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="fr-fonipa">wɛlkʰəm tʰu wʊ˞ldpʰæd</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="a0c76625-d497-41e1-9364-a74837c3ba68">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="en">Stacked diacritics: </Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">We</Run>
+								<Run
+									namedStyle="Character Formatting 4"
+									ws="qaa-x-sta">̥</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">̖</Run>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="qaa-x-sta">̋</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">lc̘̠o</Run>
+								<Run
+									namedStyle="Character Formatting 5"
+									ws="qaa-x-sta">̂</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">m̼</Run>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="qaa-x-sta">̀</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">̈̄è tö</Run>
+								<Run
+									namedStyle="Character Formatting 6"
+									ws="qaa-x-sta">̂</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta"> Wȯ</Run>
+								<Run
+									namedStyle="Character Formatting 6"
+									ws="qaa-x-sta">̑</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">r̻l</Run>
+								<Run
+									namedStyle="Character Formatting 5"
+									ws="qaa-x-sta">̃</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">d</Run>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="qaa-x-sta">̞</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">̰Pȧ</Run>
+								<Run
+									namedStyle="Character Formatting 2"
+									ws="qaa-x-sta">̅</Run>
+								<Run
+									namedStyle="Character Formatting 6"
+									ws="qaa-x-sta">̋</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">d</Run>
+								<Run
+									namedStyle="Character Formatting 6"
+									ws="qaa-x-sta">̗</Run>
+								<Run
+									namedStyle="Character Formatting 3"
+									ws="qaa-x-sta">!</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="783d7781-ddd0-42d4-8227-8d8f4af6b546">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 7"
+									ws="en">Pig latin: </Run>
+								<Run
+									namedStyle="Character Formatting 8"
+									ws="en">Welcome to WorldPad!</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="9e5ee513-0cf3-4433-a298-0c581c03c349">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 9"
+									ws="en">Fieldworks Test SIL font (plane 0 PUA and plane 15 PUA): </Run>
+								<Run
+									namedStyle="Character Formatting 9"
+									ws="qaa-x-fwt">   󰀀󰀁󰀂 󰀃󰀄󰀅󰀆 󰀏󰀇󰀈󰀉󰀊󰀐 󰀋󰀌 󰀑󰀒 󰀎󰀍</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="3b603d3e-3006-4886-a26d-c3e2dc85fc83">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 10"
+									ws="en">Chinese: </Run>
+								<Run
+									namedStyle="Character Formatting 10"
+									ws="zh-CN">把草药敷在痛处。 一种舞蹈。起源于意大利，用音乐、舞蹈、相配合，女演员时常用脚趾尖点在地上而舞</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="3d55b2ac-1dd3-41ca-8a81-18bb3ead1718">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 11"
+									ws="en">Code2001 Gothic (Plane 1): </Run>
+								<Run
+									namedStyle="Character Formatting 12"
+									ws="en">𐌰𐌱𐌲𐌳𐌴 𐌵𐌶𐌷𐌸𐌹 𐌺𐌻𐌼𐌽𐌾 𐌿𐍀𐍁𐍂𐍃 𐍄𐍅𐍆𐍇𐍈 𐍉𐍊</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="09a6e82a-0ef3-411a-b66b-478ba4a466ed">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="en">French: </Run>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="fr">Les Français cuisinent souvent avec du vin. Toc, toc. «Qui est là?–Cést votre fille le petit chaperon rouge.» Est-il gêné? amusé? étonné? naïf?</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="296aaa46-bd1c-4267-9da4-467cee2c8392">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="en">Spanish: </Run>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="es">Bolívar era el genio de la ambición delirante, con el temple férreo de los varones fuertes, con el corazón lleno de pasiones sin freno.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="f058d6ea-f7ad-40de-b1ec-d21f9bbccd42">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="en">German: </Run>
+								<Run
+									namedStyle="Character Formatting 13"
+									ws="de">Niclauß augspurger wiedertäufer gebürtig von Conolfingen zu der Kirch Münßingen im Canton Bern in der Schweitz gehörig, nach deme er sich daselbster verheÿrathet, und säßhaft geweßen.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="9d660a3f-b462-49ed-b58d-851eed762300">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">لا شك أن كثرة المواقع الإلكترونية والصفحات الشخصية والتي تصل مئات الملايين، بالإضافة إلى لا شك أن كثرة المواقع الإلكترونية والصفحات١٢٣٤٥ الشخصية والتي تصل مئات الملايين، بالإضافة إلى خلو معظمها من المحتوى الحقيقي والمفيد، يشكل عبئاً على الباحث عن المعلومات. من هذا المنطلق، </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some English. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">فإن الحاجة إلى فهرسة مركزية للمواقع العربية ماسّة جداً وقد أخذنا ذلك على عاتقنا حيث تجدون المواقع الجادة والمفيدة مبوبة حسب الموضوع لسهولة التصفح. ومن الجدير بالملاحظة أن المواقع المدرجة هنا تقتصر على تلك التي </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some more English. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">تستخدم النصوص العربية فقط. تجدون المواقع الأخرى من خلال القسم الإنجليزي في هذا الموقع.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 1" />
+						</StyleRules>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="af0e2d35-2067-43be-9f61-0e707ca26ce1">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some English in a left-to-right paragraph. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="dv">މިކަންތައްތައް ހިނގާދިޔަގޮތް ފެށުނީއްސުރެން ނިމެންދެން ލޮލުންދުށް މީހުން އެ ޚަބަރުތައް ފެތުރުމަށް މަސައްކަތްކުރިއެވެ. އެހެންކަމުން މިކަންތައްތައް ހިނގާދިޔަގޮތުގެ ވާހަކަ ލިޔާ މީހުން އެވާހަކަތައް އެލިޔަނީ އެކަންތައްތައް ފެށުނީއްސުރެ ނިމެންދެން ލޮލުންދުށް މީހުން ދިން ހެކިތަކާއި އެއްގޮތަށެވެ. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">(The insertion was verse 2 below.) The quick brown fox jumped over the lazy dog's back many times before it got too tired and went back to its den.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 2" />
+						</StyleRules>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="c60dac54-92a1-43cf-989f-b06b3bb28c06">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="dv">މިކަންތައްތައް ހިނގާދިޔަގޮތް ފެށުނީއްސުރެން ނިމެންދެން ލޮލުންދުށް މީހުން އެ ޚަބަރުތައް ފެތުރުމަށް މަސައްކަތްކުރިއެވެ. އެހެންކަމުން މިކަންތައްތައް </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some English text in the middle of a right-to-left Divehi paragraph (verse 2 below). We hope it will work.</Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="dv"> ހިނގާދިޔަގޮތުގެ ވާހަކަ ލިޔާ މީހުން އެވާހަކަތައް އެލިޔަނީ އެކަންތައްތައް ފެށުނީއްސުރެ ނިމެންދެން ލޮލުންދުށް މީހުން ދިން ހެކިތަކާއި އެއްގޮތަށެވެ.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 3" />
+						</StyleRules>
+					</ownseq>
+					<ownseq
+						class="StTxtPara"
+						guid="f71da1ba-32b5-42bc-8277-9bb261651d6f">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="dv">1 އިއްޒަތްތެރި *ތިޔޯފިލުސްގެ އަރިހަށް، އަހަރުމެންގެ ތެރޭގައި އީސާގެފާނާމެދު ކަންތައްތައް ހިނގާމިދިޔަ ގޮތުގެ ވާހަކަ ފުރިހަމަޔަށް ލިޔެ ބަޔާން ކުރެވޭތޯ އެތައް ބަޔަކުވެސް ވަނީ ވަރަށް ބޮޑަށް މަސައްކަތްކޮށްފައެވެ. 2 މިކަންތައްތައް ހިނގާދިޔަގޮތް ފެށުނީއްސުރެން ނިމެންދެން ލޮލުންދުށް މީހުން އެ ޚަބަރުތައް ފެތުރުމަށް މަސައްކަތްކުރިއެވެ. އެހެންކަމުން މިކަންތައްތައް ހިނގާދިޔަގޮތުގެ ވާހަކަ ލިޔާ މީހުން އެވާހަކަތައް އެލިޔަނީ އެކަންތައްތައް ފެށުނީއްސުރެ ނިމެންދެން ލޮލުންދުށް މީހުން ދިން ހެކިތަކާއި އެއްގޮތަށެވެ. 3 އަޅުގަނޑު ވެސް މިކަންތައްތައް ހިނގާދިޔަ ގޮތް ވަރަށް ރަނގަޅަށް ހޯދާ ބަލައިފީމެވެ. ވީމާ މިހުރިހާ ކަމެއް ހިނގާދިޔަގޮތް ތަރުތީބުން ލިޔެ ތިޔަބޭފުޅާގެ ފަރާތްޕުޅަށް ފޮނުވުން އެއީ އަޅުގަނޑު ދެކެނީ ރަނގަޅު ކަމެއްގެ ގޮތުގައެވެ. 4 ތިޔަބޭފުޅާއަށް އީސާގެފާނާއިމެދު އިވިވަޑައިގެންފައިވާ ޚަބަރުތަކުގެ ތެދު ދޮގު ތިޔަބޭފުޅާއަށްވެސް އޭރުން ސާބިތުވެ އެނގިވަޑައިގަންނަވާނެއެވެ.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 3" />
+						</StyleRules>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Hypothesis>
+			<StText
+				guid="fde5bac3-1514-44e6-802c-9e7698058080">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="7c4312dc-7d65-4058-b452-c585f1952597">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Fish are simply regarded as food and are neither worshipped nor regarded highly amongst the Orang people.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Hypothesis>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<ResearchPlan>
+			<StText
+				guid="b1b3f1e5-0f5c-43c0-b7c0-1ee7ee89b37a">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="002d6baf-8d31-403b-84bc-f34babaa2816">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">لا شك أن كثرة المواقع الإلكترونية والصفحات الشخصية والتي تصل مئات الملايين، بالإضافة إلى لا شك أن كثرة المواقع الإلكترونية والصفحات١٢٣٤٥ الشخصية والتي تصل مئات الملايين، بالإضافة إلى خلو معظمها من المحتوى الحقيقي والمفيد، يشكل عبئاً على الباحث عن المعلومات. من هذا المنطلق، </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some English. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">فإن الحاجة إلى فهرسة مركزية للمواقع العربية ماسّة جداً وقد أخذنا ذلك على عاتقنا حيث تجدون المواقع الجادة والمفيدة مبوبة حسب الموضوع لسهولة التصفح. ومن الجدير بالملاحظة أن المواقع المدرجة هنا تقتصر على تلك التي </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="en">This is some more English. </Run>
+								<Run
+									namedStyle="Character Formatting 14"
+									ws="ar-IQ">تستخدم النصوص العربية فقط. تجدون المواقع الأخرى من خلال القسم الإنجليزي في هذا الموقع.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Paragraph Formatting 1" />
+						</StyleRules>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="true" />
+			</StText>
+		</ResearchPlan>
+		<Status>
+			<objsur
+				guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Status>
+		<SupersededBy>
+			<refcol
+				guid="2bdd0edd-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</SupersededBy>
+		<SupportingEvidence>
+			<refseq
+				guid="2bdd0e8e-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+			<refseq
+				guid="be122646-438d-4c62-92eb-ea124988283e"
+				t="r" />
+			<refseq
+				guid="2bdd0ebe-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</SupportingEvidence>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Fish are regarded simply as food.</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="82290763-1633-4998-8317-0ec3f5027fbd"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="acfaebcb-d412-4afa-bb23-87f31cccd762">
+				<DateModified
+					val="2011-2-2 19:39:28.836" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="9b3cf060-8ee0-4528-819e-2a400fb81db2">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0ed8-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="48a1cebe-ea1f-4ba0-bdd8-294dbb848bb4"
+				t="r" />
+		</AnthroCodes>
+		<Conclusions>
+			<StText
+				guid="2bdd0ed9-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0eda-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Regard of a married woman is related to the bride price</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Conclusions>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="1999-3-3 2:0:0.0" />
+		<DateModified
+			val="1999-3-4 4:0:23.0" />
+		<DateOfEvent
+			val="-000000000" />
+		<Discussion>
+			<StText
+				guid="d52b4524-b3e6-4f1e-854c-66c69235509b">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="5de5dbbc-9954-46ee-a517-be3ffde5e3e2">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="049ec209-0b6c-440f-a5d8-cb9f38d37ab8">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="33568c3f-00e8-484b-96ef-b21284558a82">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="d4310b71-cfd5-4ad3-9d8e-1db132ca8688">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2cab7b2b-e839-4b53-ad46-0488fdf74e68">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Hypothesis>
+			<StText
+				guid="2ec54f52-e335-4eff-bf6a-226f8a00805d">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="7e1d4ee6-5719-4593-9578-659ffad214f3">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">A woman is regarded more highly by the tribe if the bride price is higher.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Hypothesis>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<ResearchPlan>
+			<StText
+				guid="2bdd0edb-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0edc-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Ask Dua what the bride price for each woman is and also ask people of the tribe how much they respect a given woman.</Run>
+							</Str>
+						</Contents>
+						<Label>
+							<Str>
+								<Run
+									ws="en">Correlate opinion survery with bride price</Run>
+							</Str>
+						</Label>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ResearchPlan>
+		<Status>
+			<objsur
+				guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Status>
+		<SupportingEvidence>
+			<refseq
+				guid="2bdd0e97-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</SupportingEvidence>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Regard of a married woman is directly related to the bride price.</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="82290763-1633-4998-8317-0ec3f5027fbd"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="3a42ecf1-6fb1-402c-99b7-668075993918">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="c997d872-d981-41b7-9281-518cf4da684c">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0edd-f9b2-11d3-977b-00c04f186933">
+		<AnthroCodes>
+			<refcol
+				guid="721d8749-b505-49a7-b871-8a5042b46223"
+				t="r" />
+		</AnthroCodes>
+		<Conclusions>
+			<StText
+				guid="2bdd0ede-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0edf-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Based on the rites performed at the funeral, it would appear as if the Orang people believe that chief Satu will return to earth as some type of animal.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Conclusions>
+		<Confidence>
+			<objsur
+				guid="2bdd1115-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="1999-7-21 3:50:12.0" />
+		<DateModified
+			val="1999-7-21 4:1:24.0" />
+		<DateOfEvent
+			val="-000000000" />
+		<Discussion>
+			<StText
+				guid="2bdd0ee2-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ee3-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">Opinion seems divided as to the exact type of animal that chief Satu will return as, however, the general consensus is that he will come back as a type of bird.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<StyleRules>
+							<Prop
+								namedStyle="Normal" />
+						</StyleRules>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="789d8788-544b-4b2b-866f-f9007ca1f0e2">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="e7f98fb7-bea8-43bd-ba0c-a8296e6ecb33">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="63a8e83c-1720-4a5d-a582-571d6a3c83cd">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="185a3ff4-3378-4326-9397-92d0f3d0d99c">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Hypothesis>
+			<StText
+				guid="f538e804-402c-4a64-8a5a-095e700147cb">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="b8810515-e64c-432e-8ee9-c8be15adf890">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">The Orang people believe that the spirits of dead people become animals.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Hypothesis>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<ResearchPlan>
+			<StText
+				guid="2bdd0ee0-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2bdd0ee1-f9b2-11d3-977b-00c04f186933">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">After a few days, ask various people what became of chief Satu.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ResearchPlan>
+		<Status>
+			<objsur
+				guid="2bdd10e4-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Status>
+		<SupportingEvidence>
+			<refseq
+				guid="2bdd0eaa-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</SupportingEvidence>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Destiny of a person's spirit after death</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="82290763-1633-4998-8317-0ec3f5027fbd"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="8a3016cd-ca9d-4fbd-b789-f290c5ca9ab9">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="1ae4aa0e-6a14-43e8-8af9-98cd30026aac">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0eea-f9b2-11d3-977b-00c04f186933">
+		<DateCreated
+			val="1999-2-6 2:0:23.0" />
+		<DateModified
+			val="1999-2-6 2:20:12.0" />
+		<DateOfEvent
+			val="198112111" />
+		<Description>
+			<StText
+				guid="2bdd0eeb-f9b2-11d3-977b-00c04f186933">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<Discussion>
+			<StText
+				guid="c6a4dce8-9a29-4ba8-9d06-3144954e999a">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="e8089554-f9d6-4301-9aa4-5944739ff744">
+						<Contents>
+							<Str>
+								<Run
+									ws="en" />
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Discussion>
+		<ExternalMaterials>
+			<StText
+				guid="8bb11244-3bc3-4a8a-8d9c-ce68e0e7fc46">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="65a8fba5-8d42-4134-b80f-03be3e7094da">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="3b6e4f58-ad85-4081-a26d-7e6c11b5f5c1">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="e1ccee43-7bac-4563-b12f-09c3e4c6b1fa">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<PersonalNotes>
+			<StText
+				guid="b0feb99b-4c86-40b5-b71e-74bbca880b91">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="b88cca31-605f-4054-962d-decc0c47cacf">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<TimeOfEvent>
+			<refcol
+				guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">(Lunar) New Year's Celebration</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="aef0f3b4-0123-4ee8-95f3-391377afe3b5">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="5846356e-ff61-4815-b7b6-10bae4dbdfc0">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2bdd0eec-f9b2-11d3-977b-00c04f186933">
+		<DateCreated
+			val="1999-4-20 3:23:59.0" />
+		<DateModified
+			val="1999-4-20 3:42:4.0" />
+		<DateOfEvent
+			val="199000003" />
+		<Description>
+			<StText
+				guid="cdff124c-70ba-4bb6-bfa2-7c30a050b2d9">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="f0b67368-8436-480f-968a-def43441b592">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<ExternalMaterials>
+			<StText
+				guid="4fc83fb4-92e7-4110-a707-827b672abb0f">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="0aa88655-2792-4a8a-b322-4fd80642a285">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="69db0cea-104d-4d77-8039-dd8f6b441ff0">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="927b0b28-662f-40ba-85fd-087fec389c94">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Participants>
+			<RnRoledPartic
+				guid="82010af3-fb52-4548-8c4c-0ae56836b555">
+				<Participants>
+					<refcol
+						guid="2bdd0e83-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+					<refcol
+						guid="2bdd0e8c-f9b2-11d3-977b-00c04f186933"
+						t="r" />
+				</Participants>
+			</RnRoledPartic>
+		</Participants>
+		<PersonalNotes>
+			<StText
+				guid="52efafb8-2a30-4148-9402-8f2b06084fbb">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="88ea4e2d-d3b3-4886-8e22-67aa4ee23765">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<TimeOfEvent>
+			<refcol
+				guid="6af8ece1-540e-4952-b62f-aa1c26954c81"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Obtaining salt from the ocean</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="844a10f3-29aa-4ee6-bc7a-95c2a7e6797e">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="e4fd14af-0dc6-4a7b-a5a1-58f73f4e4ec8">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="2ff5c47f-8bab-4b55-939b-8ea8366d4d8f">
+		<AnthroCodes>
+			<refcol
+				guid="6bdd640f-a2a5-48ea-8b82-8efc5b4ecf15"
+				t="r" />
+		</AnthroCodes>
+		<Confidence>
+			<objsur
+				guid="2bdd1100-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="2000-10-30 18:14:30.170" />
+		<DateModified
+			val="2000-10-30 18:14:30.170" />
+		<DateOfEvent
+			val="199610301" />
+		<Description>
+			<StText
+				guid="83ce7aaf-6acf-46ce-a3e8-78b1cda08131">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="0396a93d-bcef-4c7a-8b1e-e0014e4e2ae5">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">I talked with a man named Larry today. He has a reputation in the village (both the chief and the doctor told me about this man) for going to as many social functions as possible so that he partake in the fish meals. These are commonly served up at weddings and other rites of passage here. I decided that I would ask him myself if this is true. I initially asked him if he liked to eat fish at which point he began a long treatise on the different types of fish that live in the area and how to go about catching them.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<ExternalMaterials>
+			<StText
+				guid="f371ed91-3379-4947-8d06-f231da3ff866">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="3301c449-9221-4b60-ac88-842c74139e48">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="f633afd8-9c89-4904-a0a5-04136c67e870">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="f8e2ccd9-5523-4d44-8506-678b6b7cad8f">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Locations>
+			<refcol
+				guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Locations>
+		<PersonalNotes>
+			<StText
+				guid="18efc17f-354d-4dfe-8bc7-cc1c0a7fe7c1">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="721d3fee-3ffc-437a-8315-559e147180a0">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Fish Fanatic</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7bf673e-ea5e-11de-9c4d-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="748eb5f9-c7e1-4e72-a682-7e53b80bbae1">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="cf865ebe-50d6-4163-a196-593f2a0d9002">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+	<RnGenericRec
+		guid="74368ae6-7015-4ce1-aed8-bfc7af80450a">
+		<AnthroCodes>
+			<refcol
+				guid="36d6b697-0eaa-4fb3-ab84-42659778d211"
+				t="r" />
+		</AnthroCodes>
+		<Confidence>
+			<objsur
+				guid="2bdd1107-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Confidence>
+		<DateCreated
+			val="2000-10-30 19:24:53.717" />
+		<DateModified
+			val="2000-10-30 19:24:53.717" />
+		<DateOfEvent
+			val="199711251" />
+		<Description>
+			<StText
+				guid="b1bc9ac1-0a3a-4a54-aa1f-636f75d3869f">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="40f245b1-6866-4a2f-b771-413c87c6a792">
+						<Contents>
+							<Str>
+								<Run
+									ws="en">I attended the wedding banquet of my host's family daughter - Kaija - to Roberto. The main course was fish.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Description>
+		<ExternalMaterials>
+			<StText
+				guid="92cc088e-0ca3-4887-836e-c382ab85062d">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="9ad764de-f681-4dde-a307-93004f3362b9">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</ExternalMaterials>
+		<FurtherQuestions>
+			<StText
+				guid="8b6397fb-1384-4a0f-be00-bebd50538447">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="2b512e01-b130-43c5-9705-0e06d17d0e3a">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</FurtherQuestions>
+		<Locations>
+			<refcol
+				guid="2bdd0e84-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Locations>
+		<PersonalNotes>
+			<StText
+				guid="c08c5e67-3765-4462-96a2-1cf13d5f5acd">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="525aff87-e8cb-4a90-a32f-69d58b4edf2b">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</PersonalNotes>
+		<Researchers>
+			<refcol
+				guid="2bdd0ea2-f9b2-11d3-977b-00c04f186933"
+				t="r" />
+		</Researchers>
+		<TimeOfEvent>
+			<refcol
+				guid="3e8bb722-da48-41a0-96e1-194a9f38ef41"
+				t="r" />
+		</TimeOfEvent>
+		<Title>
+			<Str>
+				<Run
+					ws="en">Post-wedding meal</Run>
+			</Str>
+		</Title>
+		<Type>
+			<objsur
+				guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec"
+				t="r" />
+		</Type>
+		<VersionHistory>
+			<StText
+				guid="cbc9483e-7454-4eef-855a-cbec708e804b">
+				<DateModified
+					val="2011-2-2 19:39:28.837" />
+				<Paragraphs>
+					<ownseq
+						class="StTxtPara"
+						guid="224a7a01-1f16-4583-9093-4d7148df4bf7">
+						<ParseIsCurrent
+							val="False" />
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</VersionHistory>
+	</RnGenericRec>
+</Anthropology>

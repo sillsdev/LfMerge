@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Reversal>
+	<header>
+		<ReversalIndex
+			guid="5ed7f7ae-596d-4f5b-9d21-1c3fca025b34">
+			<DateCreated
+				val="2006-6-26 15:44:42.970" />
+			<DateModified
+				val="2006-6-26 15:44:42.970" />
+			<Name>
+				<AUni
+					ws="en">Spanish</AUni>
+			</Name>
+			<PartsOfSpeech />
+			<WritingSystem>
+				<Uni>es</Uni>
+			</WritingSystem>
+		</ReversalIndex>
+	</header>
+</Reversal>

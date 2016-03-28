@@ -1,0 +1,1193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Book>
+	<ScrBook
+		guid="740c01ce-24fc-452a-b16f-328347632e20">
+		<Abbrev>
+			<AUni
+				ws="en">Phm</AUni>
+			<AUni
+				ws="es">Flm</AUni>
+		</Abbrev>
+		<BookId>
+			<objsur
+				guid="9f566cfa-83ff-470e-a8ff-8164620393a0"
+				t="r" />
+		</BookId>
+		<CanonicalNum
+			val="57" />
+		<IdText>
+			<Uni>TOB REVU SBF JDW 29.SBF mise a jour auto 19.5.93</Uni>
+		</IdText>
+		<Name>
+			<AUni
+				ws="en">Philemon</AUni>
+			<AUni
+				ws="es">Filemón</AUni>
+			<AUni
+				ws="qaa-x-kal">PHILÉMON</AUni>
+		</Name>
+		<Sections>
+			<ownseq
+				class="ScrSection"
+				guid="05c9ea68-f4af-4edd-a4f0-608fbb355cdc">
+				<Content>
+					<StText
+						guid="7ca13600-fc11-49f8-ad7b-a26e2dcaf6e0">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="e56d6c08-dce1-48e0-bafc-00ca0bf9f505">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">De toutes les lettres de Paul parvenues jusqu'à nous, l'Epître à Philémon est la plus brève, la plus personnelle aussi. Pour autant, elle n'est pas une &lt;&lt;lettre privée&gt;&gt;. Paul s'adresse en effet aussi à l'&lt;&lt;Eglise qui s'assemble dans la maison de Philémon&gt;&gt; (v. 2).</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="34b2bfab-a0c4-4580-a061-3b7bb570a693">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="db2aca88-97d1-4f3f-a5dd-a0e559814328">
+										<BeginOffset
+											val="125" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="9cabcc98-5bc4-4e3d-a64a-9f17876f76e5">
+										<BeginOffset
+											val="177" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="c9278fb4-11c7-4fe8-8613-93c4ccf719a5">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="b5d5a218-6edf-4772-a1a4-4126d6a218e3">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">C'est sans doute de Rome ou de Césarée que Paul écrit cette lettre. Elle est en tout cas contemporaine de l'épître aux Colossiens: Paul est alors prisonnier (Col 4.3,10,18; Phm 9,10,13,18) et se trouve entouré des mêmes compagnons (Col 3.7-14; Phm 23-24). Philémon est un converti de Paul (v. 19), et Paul l'appelle &lt;&lt;son bien-aimé collaborateur&gt;&gt; (v. 1).</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="bee32baf-814d-449b-8441-12bfa3b45938">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="63738018-739b-48f9-8e40-c690bc23d07d">
+										<BeginOffset
+											val="71" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="40225479-7eeb-4c37-b8c7-aba2eb71d5ca">
+										<BeginOffset
+											val="263" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="47d38504-1c74-4f20-a3ac-9fa17db041ba">
+										<BeginOffset
+											val="301" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="00e48beb-4a5b-458c-ba1a-53657150da63">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="76c64d63-cedf-4a85-b41b-febd101da1f1">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="a3c684ac-d975-48dc-9088-67a60bff93a0">
+								<ParseIsCurrent
+									val="False" />
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="5493a9af-fa61-42e9-8fbd-47611158a426">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="57001000" />
+				<VerseRefMax
+					val="57001000" />
+				<VerseRefMin
+					val="57001000" />
+				<VerseRefStart
+					val="57001000" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="a0ea3780-e258-4111-be2c-b34c5ec7500e">
+				<Content>
+					<StText
+						guid="d1dc85c6-d678-4e3f-a1fa-998544924942">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="5087ec11-350c-4aa1-b9cc-7eeda22cd497">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Les circonstances de la lettre demeurent quelque peu obscures. Il semble qu'Onésime, esclave de Philémon, se soit enfui de chez son maître et ait trouvé refuge auprès de Paul, qui s'est attaché à lui et en a fait son collaborateur. Il l'appelle &lt;&lt;ce frère fidèle et très cher&gt;&gt; (Col 4.9). Peut-être pour des raisons juridiques, Paul s'est décidé à renvoyer Onésime à son maître. Mais en même temps, il adresse à Philémon ce billet dans lequel il le prie d'accueillir l'esclave non seulement comme &lt;&lt;un frère bien-aimé&gt;&gt; mais, plus encore, comme si c'était Paul lui-même (v. 17). Paul ne demande pas en termes exprès à Philémon d'affranchir Onésime, mais il ne doute pas que Philémon fera plus encore qu'il ne lui est demandé (v. 21).</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="e0a733f4-b7e0-4ae1-8d1c-3ef49f0fcd9d">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d3889df8-4411-4d29-be09-0e9a69756fdf">
+										<BeginOffset
+											val="63" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="42bbd8e0-ef8b-4a40-9136-df555e4c66f5">
+										<BeginOffset
+											val="239" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b0172bd8-c3f4-4df0-8c35-445869703eae">
+										<BeginOffset
+											val="299" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="76e7dd37-dee6-4961-93f4-0c5c2d6a372b">
+										<BeginOffset
+											val="396" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="7402f6cd-5559-4eb2-9539-13d0a3eba93a">
+										<BeginOffset
+											val="598" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="21955cf7-df26-41c8-ac27-87fec6ef6d15">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="5b09028e-bfdc-4657-abe8-4b349c99a01e">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="faa549b8-44a8-4b18-b2d5-3708e526f276">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Circonstances</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="3cf8e061-e6bf-4c52-9792-dfe7c079255f">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="993d19bf-f470-4161-ba24-ac828a809e4d">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="57001000" />
+				<VerseRefMax
+					val="57001000" />
+				<VerseRefMin
+					val="57001000" />
+				<VerseRefStart
+					val="57001000" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="d3a1f642-8552-44af-bc13-91fd5b6916f7">
+				<Content>
+					<StText
+						guid="f11024c3-dba9-462a-8b9a-85d519deaf3d">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="fada586b-2871-4b20-82c0-9292a62ab234">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Les divers passages où Paul, dans ses épîtres, aborde le problème des relations entre les maîtres et les esclaves peuvent paraître timides (1 Co 7.20-24; Ep 6.5-9; Col 3.22 - 4.1). S'il assure bien que, dans le Christ, toutes les frontières sont abolies, qu'il n'y a plus &lt;&lt;ni esclave ni homme libre&gt;&gt; (Ga 3.28), il semble n'en tirer aucune conséquence sur le plan extérieur et juridique, celui de la vie civile.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="8e10b759-87a5-43a0-979b-15081d5ef341">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="baf208f9-422c-4d81-a067-235b83c78955">
+										<BeginOffset
+											val="187" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="a9f68090-1784-4bd0-85c5-132128cdc162">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="4264183d-5290-4461-b644-20900b601161">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">L'Epître à Philémon interdit toutefois une interprétation dualiste de la pensée de Paul, et c'est son originalité. Comme le relève Théo Preiss: &lt;&lt;En fait, Paul ne juxtapose pas du tout le spirituel et le social: la fraternité, l'unité en Christ, s'empare plutôt de cette relation maître-esclave, la brise et l'accomplit sur un tout autre plan. Onésime sera considéré, non seulement comme un égal, un autre membre de la famille de Philémon, il sera pleinement frère. Il ne reste donc aucune marge de paternalisme: ce sera une totale fraternité.&gt;&gt;</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="f3da42eb-243f-46b5-b6d1-bb02259ef496">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b9801e0c-62d5-4132-a9af-fc38ffdb5fc8">
+										<BeginOffset
+											val="121" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d267a37e-b933-4199-b0fb-8d8591c95f5f">
+										<BeginOffset
+											val="356" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="6a82121d-6f63-49bb-8b76-31376796da0c">
+										<BeginOffset
+											val="484" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="d1a29439-ae6b-421e-9c7c-ff9692f659bd">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="a4a2502b-871d-40b9-8bc0-d452d0e6da93">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Si le Nouveau Testament n'est pas révolutionnaire, il ne saurait être qualifié de conservateur: tout ordre social se trouve radicalement mis en question par l'Evangile du Christ et son message d'amour.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="8c7f63ea-2be9-463a-9a11-b6cbf0cdba61">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="8acf8de5-9605-4c9b-a57c-dcbece8afd08">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="ffc1df9a-4dab-47e7-95c0-2992b926f775">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="4c744b21-423f-4a7f-b898-04cee3aeaaf9">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Intérêt doctrinal</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="852c88e3-e935-40ce-97d2-8245199f690e">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="3fb8ba96-12ca-421f-bb13-dbc11b74ebd0">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="57001000" />
+				<VerseRefMax
+					val="57001000" />
+				<VerseRefMin
+					val="57001000" />
+				<VerseRefStart
+					val="57001000" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="f6aacdfc-e3c1-4dad-b945-9f8780f9cc5f">
+				<Content>
+					<StText
+						guid="81208d03-77aa-4156-a4b3-289792cb89eb">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="e3dd9936-90eb-47c7-8a6c-4c3799ae37de">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">1</Run>
+										<Run
+											ws="qaa-x-kal">Paul, prisonnier de Jésus Christ et Timothée, le frère, à Philémon, notre bien-aimé collaborateur, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">2</Run>
+										<Run
+											ws="qaa-x-kal">et à Apphia, notre soeur, et à Archippe, notre compagnon d'armes, et à l'Eglise qui s'assemble dans ta maison. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">3</Run>
+										<Run
+											ws="qaa-x-kal">A vous grâce et paix, de la part de Dieu notre Père et du Seigneur Jésus Christ.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="150cda45-4734-409c-8911-db87dbfafecc">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="67d44309-9389-48da-bf12-9af9f08ff59f">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="7aafe2d4-85ef-4d30-9196-b7da0525f431">
+										<BeginOffset
+											val="106" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="394e5425-20a8-40f4-a12f-1cf424261e04">
+										<BeginOffset
+											val="107" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="c20432d4-20a0-4f0a-8a6d-9d439ea188cb">
+										<BeginOffset
+											val="221" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="10d8443d-1d4e-4553-ae9d-ba2f1c0dd15b">
+										<BeginOffset
+											val="222" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="be0a0587-606b-4126-92ab-a609c502150d">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="7eacdc9f-dc77-4eae-97d6-1b38ffdb075c">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">4</Run>
+										<Run
+											ws="qaa-x-kal">Je rends grâce à mon Dieu en faisant continuellement mention de toi dans mes prières, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">5</Run>
+										<Run
+											ws="qaa-x-kal">car j'entends parler de l'amour et de la foi que tu as envers le Seigneur Jésus et en faveur de tous les saints. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">6</Run>
+										<Run
+											ws="qaa-x-kal">Que ta participation à la foi soit efficace: fais donc connaître tout le bien que nous pouvons accomplir pour la cause du Christ. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">7</Run>
+										<Run
+											ws="qaa-x-kal">Grande joie et consolation m'ont déjà été apportées: par ton amour, frère, tu as réconforté le coeur des saints.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="70f2dd1c-b803-4da4-9e5f-0bf5f3cfdb26">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="33363018-a467-4267-ac60-a8fd35905da7">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="98356630-75f5-432d-8881-2eae07242fa5">
+										<BeginOffset
+											val="90" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="c12d5773-c1dd-49a8-a7d4-51b9a58260b0">
+										<BeginOffset
+											val="91" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b61ff41b-d8b4-4c2e-84d4-d873a05ed3b6">
+										<BeginOffset
+											val="205" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="bd9153e9-fc07-4c40-8d4a-1ca2e3afe2fc">
+										<BeginOffset
+											val="206" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="c6bb9442-05b4-416e-a463-b319de1589d5">
+										<BeginOffset
+											val="338" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="af0fd912-d2d2-4298-8b12-185bb3e45f2d">
+										<BeginOffset
+											val="339" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="a2944a51-c5b2-49f1-92ae-117216981e38">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="ab02de02-b5a6-4f40-aeea-1fbbde1361ea">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">8</Run>
+										<Run
+											ws="qaa-x-kal">Aussi, bien que j'aie, en Christ, toute liberté de te prescrire ton devoir, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">9</Run>
+										<Run
+											ws="qaa-x-kal">c'est de préférence au nom de l'amour que je t'adresse une requête. Oui, moi Paul, qui suis un vieillard, moi qui suis maintenant prisonnier de Jésus Christ, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">10</Run>
+										<Run
+											ws="qaa-x-kal">je te prie pour mon enfant, celui que j'ai engendré en prison, Onésime, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">11</Run>
+										<Run
+											ws="qaa-x-kal">qui jadis t'a été inutile et qui, maintenant, nous est utile, à toi comme à moi. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">12</Run>
+										<Run
+											ws="qaa-x-kal">Je te le renvoie, lui qui est comme mon propre coeur. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">13</Run>
+										<Run
+											ws="qaa-x-kal">Je l'aurais volontiers gardé près de moi, afin qu'il me serve à ta place dans la prison où je suis à cause de l'Evangile; </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">14</Run>
+										<Run
+											ws="qaa-x-kal">mais je n'ai rien voulu faire sans ton accord, afin que ce bienfait n'ait pas l'air forcé, mais qu'il vienne de ton bon gré. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">15</Run>
+										<Run
+											ws="qaa-x-kal">Peut-être Onésime n'a-t-il été séparé de toi pour un temps qu'afin de t'être rendu pour l'éternité, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">16</Run>
+										<Run
+											ws="qaa-x-kal">non plus comme un esclave mais comme bien mieux qu'un esclave: un frère bien-aimé. Il l'est tellement pour moi, combien plus le sera-t-il pour toi, et en tant qu'homme et en tant que chrétien.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="3628061d-b859-4825-b768-a4d13a0ecba4">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="207fb35b-1703-4fca-9853-b0b4ae2e09ee">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="87ed7039-15a3-49b3-a4ed-cae5992c2cb7">
+										<BeginOffset
+											val="78" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d9317ee4-1d11-4d7e-8b33-196bcf474405">
+										<BeginOffset
+											val="79" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="1a5fb2da-d546-4400-b4fb-a9287fb8374b">
+										<BeginOffset
+											val="150" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="ca76ba02-8b82-4629-bbd9-1d84a86fcacd">
+										<BeginOffset
+											val="241" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="79cf15d0-6621-484c-aa36-3472b1cc4547">
+										<BeginOffset
+											val="243" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="ffbb775e-e59e-40f0-8190-0728e63567f5">
+										<BeginOffset
+											val="317" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="e247512c-3c1e-4ed4-b134-0171fff8ce8c">
+										<BeginOffset
+											val="319" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="e099550f-36be-4134-8c73-54a765a9f46e">
+										<BeginOffset
+											val="404" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="5f6bbadc-8934-4a7d-acd6-fdd95c879ea6">
+										<BeginOffset
+											val="406" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="528320fa-6480-4c1b-a4c0-1837b646a43c">
+										<BeginOffset
+											val="460" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="46f0cb63-faaa-4920-9ea3-f829dbc0de92">
+										<BeginOffset
+											val="462" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="05f25417-2512-4506-aa20-d33ef9fccada">
+										<BeginOffset
+											val="589" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="70a21cd7-29a7-443d-9733-c18758798059">
+										<BeginOffset
+											val="591" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="88891284-96f1-491b-b554-41a3bd3dc29f">
+										<BeginOffset
+											val="718" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="ec4f739f-933d-4956-9790-4418c4906115">
+										<BeginOffset
+											val="720" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="f8cd5054-10a3-4517-a344-40fea55bda45">
+										<BeginOffset
+											val="829" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="495a4e35-57d3-4c43-ab5a-88074fcdac1c">
+										<BeginOffset
+											val="831" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="23fa2730-737c-4bd1-a187-98e1cad4a7ff">
+										<BeginOffset
+											val="916" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="e8081a7b-c8bd-499b-aee1-a3d76b4ecd1d">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="71512f17-df72-4e23-91d2-8cbb36dff8c1">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">17</Run>
+										<Run
+											ws="qaa-x-kal">Si donc tu me tiens pour ton frère en la foi, reçois-le comme si c'était moi. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">18</Run>
+										<Run
+											ws="qaa-x-kal">Et s'il t'a fait quelque tort ou s'il a quelque dette envers toi, porte cela à mon compte. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">19</Run>
+										<Run
+											ws="qaa-x-kal">- C'est moi, Paul, qui l'écris de ma propre main: c'est moi qui paierai... Et je ne te rappelle pas que toi, tu as aussi une dette envers moi, et c'est toi-même! </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">20</Run>
+										<Run
+											ws="qaa-x-kal">Allons, frère, rends-moi ce service dans le Seigneur; donne à mon coeur son réconfort en Christ! </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">21</Run>
+										<Run
+											ws="qaa-x-kal">C'est en me fiant à ton obéissance que je t'écris: je sais que tu feras plus encore que je ne dis.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="ee77e1d1-1216-4a40-82de-d5475de571a1">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="172e9209-5f99-4549-af84-e6c64c11dfb5">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="38919612-a310-485b-8a2b-fd173f1b6d2b">
+										<BeginOffset
+											val="83" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="039d8cee-a0c1-42ae-89ab-51acbc77d886">
+										<BeginOffset
+											val="85" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="591561d1-da0c-4b12-a896-0913688b7910">
+										<BeginOffset
+											val="177" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="424f4bcc-5505-43d0-ab65-d838943c5001">
+										<BeginOffset
+											val="179" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="e59c98c9-3121-4f58-abd1-942a3f69c2d1">
+										<BeginOffset
+											val="343" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="fb5a0e76-8ce0-41d8-8a6a-dd6b910b568c">
+										<BeginOffset
+											val="345" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="013bf692-dbcb-4daa-b358-3516cbfbadc4">
+										<BeginOffset
+											val="445" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="0853f47d-58cd-4501-b06a-7401c2800953">
+										<BeginOffset
+											val="447" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="0c35a7d0-4687-485d-a302-2f4965d0ed8f">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="f0761997-b915-4aa5-b782-bedf2aaf10f9">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">22</Run>
+										<Run
+											ws="qaa-x-kal">En même temps, prépare-moi un logement: j'espère en effet, grâce à vos prières, vous être rendu. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">23</Run>
+										<Run
+											ws="qaa-x-kal">Epaphras, mon compagnon de captivité en Jésus Christ, te salue, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">24</Run>
+										<Run
+											ws="qaa-x-kal">ainsi que Marc, Aristarque, Démas et Luc, mes collaborateurs. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">25</Run>
+										<Run
+											ws="qaa-x-kal">La grâce du Seigneur Jésus Christ soit avec vous.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="0a6937bf-14ca-47e8-9eef-6598687c6df7">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="70bcec06-5d59-41b4-83fa-d380fddb2dd9">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="42554e8a-6ff9-4170-9e7d-827d597a35e6">
+										<BeginOffset
+											val="106" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d1c79712-e744-4b01-82dd-ece9084cd1ca">
+										<BeginOffset
+											val="108" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="a7c4c59f-82d7-4ebe-adbd-de9b96a80037">
+										<BeginOffset
+											val="174" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d4200e3c-8576-4175-8215-99057f333d0d">
+										<BeginOffset
+											val="176" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="7439e94b-3447-4b94-a985-06aa6c82e660">
+										<BeginOffset
+											val="239" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="3be5515f-4c67-4556-b8e3-06899da302a0">
+										<BeginOffset
+											val="241" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="ae1e04f0-36f9-4033-87cb-934e6b0cb544">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="f2c971f0-2799-49ae-836f-460f577237f7">
+						<DateModified
+							val="2011-2-2 19:39:28.933" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="7a38b46a-5a6b-4abe-9093-32e94e552fce">
+								<ParseIsCurrent
+									val="False" />
+								<StyleRules>
+									<Prop
+										namedStyle="Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="b9eba8e4-9b38-49e6-a9d5-95293843d585">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="57001025" />
+				<VerseRefMax
+					val="57001025" />
+				<VerseRefMin
+					val="57001001" />
+				<VerseRefStart
+					val="57001001" />
+			</ownseq>
+		</Sections>
+		<Title>
+			<StText
+				guid="b5dc5292-5c82-4793-ae53-d23adb1c16fd">
+				<DateModified
+					val="2011-2-2 19:39:28.933" />
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="3246ccdc-dbf1-4869-8b1e-3e83a109e332">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">ÉPÎTRE À PHILÉMON </Run>
+								<Run
+									namedStyle="Title Secondary"
+									ws="qaa-x-kal">INTRODUCTION</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="7e6d1ac1-6b66-49a1-b4e9-71fe16bc7b1a">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="1bfb6d0d-9887-4031-bfca-3a9239917cfb">
+								<BeginOffset
+									val="21" />
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="526a0a3b-5f22-46f0-9d09-bb86af2363e7">
+								<BeginOffset
+									val="22" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Title Main" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="87b60dd2-57a7-4edd-aa3d-867b5c0da745">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Title>
+		<UseChapterNumHeading
+			val="False" />
+	</ScrBook>
+</Book>

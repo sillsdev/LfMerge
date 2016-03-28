@@ -1,0 +1,3494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PartsOfSpeech>
+	<CmPossibilityList
+		guid="d7f7150c-e8cf-11d3-9764-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Pos</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2003-8-14 14:13:34.207" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5049" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Parts Of Speech</AUni>
+			<AUni
+				ws="es">Categorías Gramáticas</AUni>
+			<AUni
+				ws="fr">Parties du Discours</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7150d-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">adjunct</AUni>
+					<AUni
+						ws="es">adjunto</AUni>
+					<AUni
+						ws="fr">accessoire</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6328367" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="44b09546-7f31-4fc2-88c7-d523b8e47915">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="99f867ce-9810-462f-a36c-3fb9d32787a8">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">adjunct</AUni>
+					<AUni
+						ws="es">adjunto</AUni>
+					<AUni
+						ws="fr">accessoire</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="49407" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7150e-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">art</AUni>
+					<AUni
+						ws="es">art</AUni>
+					<AUni
+						ws="fr">art</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6328367" />
+				<CatalogSourceId>
+					<Uni>Article</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="2fc82fb3-6a52-4cfa-b169-891b05fb40cb">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f6171780-2f85-479a-a692-f5e8326bcba8">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">article</AUni>
+					<AUni
+						ws="es">artículo</AUni>
+					<AUni
+						ws="fr">article</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7150f-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">def</AUni>
+							<AUni
+								ws="es">def</AUni>
+							<AUni
+								ws="fr">déf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="49407" />
+						<CatalogSourceId>
+							<Uni>DefiniteArticle</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="303d187c-f240-44f2-bb97-06a00e5cea24">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="581268fd-1842-47b1-b588-fc7d54a2920f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">definite article</AUni>
+							<AUni
+								ws="es">artículo definido</AUni>
+							<AUni
+								ws="fr">article défini</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="16736303" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71510-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">indef</AUni>
+							<AUni
+								ws="es">indef</AUni>
+							<AUni
+								ws="fr">indéf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="12176" />
+						<CatalogSourceId>
+							<Uni>IndefiniteArticle</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="b73b72e4-8731-4da0-83a8-911d7b741b13">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="076ee11c-916d-48c9-944a-4c1b7931c2ad">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">indefinite article</AUni>
+							<AUni
+								ws="es">artículo indefinido</AUni>
+							<AUni
+								ws="fr">article indéfini</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="12176" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="24831" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71511-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">disc</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16777215" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="b5971e1e-e42e-4490-be9c-8270ad64506a">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="29ab1513-e07d-4767-833a-ca2a88e3df45">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">disc</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9474192" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71512-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">interj</AUni>
+					<AUni
+						ws="es">interj</AUni>
+					<AUni
+						ws="fr">interj</AUni>
+				</Abbreviation>
+				<BackColor
+					val="9486591" />
+				<CatalogSourceId>
+					<Uni>Interjection</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="b218050e-9049-4999-bf8b-57480a42ae57">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="374ad586-ee78-453e-9ac0-e4b4b9592d9d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">interjection</AUni>
+					<AUni
+						ws="es">interjección</AUni>
+					<AUni
+						ws="fr">interjection</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16736303" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71513-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">mkr</AUni>
+					<AUni
+						ws="es">indic</AUni>
+					<AUni
+						ws="fr">idctr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="255" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="a3450954-2973-49af-9e75-1c76a5c1756a">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="8f098bc4-1d07-46e2-b9c6-4ad9e3e9b920">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">marker</AUni>
+					<AUni
+						ws="es">indicador</AUni>
+					<AUni
+						ws="fr">indicateur</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71514-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">asp</AUni>
+							<AUni
+								ws="es">asp</AUni>
+							<AUni
+								ws="fr">asp</AUni>
+						</Abbreviation>
+						<BackColor
+							val="12620031" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="45045607-463a-4f96-a80f-77378f6383a4">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="fdca815c-adc3-402b-b767-2d43695a57ee">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">aspectual</AUni>
+							<AUni
+								ws="es">aspectual</AUni>
+							<AUni
+								ws="fr">aspectuel</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="16777152" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71515-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">case</AUni>
+							<AUni
+								ws="es">indic cas</AUni>
+							<AUni
+								ws="fr">cas</AUni>
+						</Abbreviation>
+						<BackColor
+							val="12632256" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="86d75e14-6e69-46f0-8d6d-8daaf603af8f">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="292b33f3-7820-4cea-8bae-1354f3bf674f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">case marker</AUni>
+							<AUni
+								ws="es">indicador de caso</AUni>
+							<AUni
+								ws="fr">indicateur de cas</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="6303488" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71516-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">foc</AUni>
+							<AUni
+								ws="es">indic foc</AUni>
+							<AUni
+								ws="fr">foc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="8355711" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="af120de6-f064-4a76-9d92-d670c3de884a">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="adbd1a26-e9ee-4da9-b69f-a7a6847e08e1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">focus marker</AUni>
+							<AUni
+								ws="es">indicador de foco</AUni>
+							<AUni
+								ws="fr">indicateur de focus</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="12620031" />
+						<UnderStyle
+							val="4" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71517-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">hon</AUni>
+							<AUni
+								ws="es">indic hon</AUni>
+							<AUni
+								ws="fr">hon</AUni>
+						</Abbreviation>
+						<BackColor
+							val="6303488" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="3b421c73-95ad-41d5-81c8-954c90b850c5">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="339e92ff-6db6-4026-8195-ffa419bc312d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">honorific marker</AUni>
+							<AUni
+								ws="es">indicador de honorífico</AUni>
+							<AUni
+								ws="fr">indicateur honorifique</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="9449263" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71518-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">mod</AUni>
+							<AUni
+								ws="es">mod</AUni>
+							<AUni
+								ws="fr">mod</AUni>
+						</Abbreviation>
+						<BackColor
+							val="0" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="067de585-e149-45cf-a4f0-de95fafca92c">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="82ff9048-04f5-4334-b283-b0a1c69295ab">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">modal</AUni>
+							<AUni
+								ws="es">modal</AUni>
+							<AUni
+								ws="fr">modal</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="3092271" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71519-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">mood</AUni>
+							<AUni
+								ws="es">modo</AUni>
+							<AUni
+								ws="fr">mode</AUni>
+						</Abbreviation>
+						<BackColor
+							val="24831" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="97a7aee3-0ff1-46df-a1eb-648a578934ad">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="09a458c9-b1b3-49b6-b3ea-a3b952d021e3">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">mood</AUni>
+							<AUni
+								ws="es">modo</AUni>
+							<AUni
+								ws="fr">mode</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="12032" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151a-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">neg</AUni>
+							<AUni
+								ws="es">neg</AUni>
+							<AUni
+								ws="fr">nég</AUni>
+						</Abbreviation>
+						<BackColor
+							val="9502719" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="f07b80ad-55dc-41aa-8028-4759458acbf3">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="d8430424-8920-4550-9b94-51e64055ce2d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">negation</AUni>
+							<AUni
+								ws="es">negativación</AUni>
+							<AUni
+								ws="fr">négation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="65280" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151b-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">num</AUni>
+							<AUni
+								ws="es">num</AUni>
+							<AUni
+								ws="fr">num</AUni>
+						</Abbreviation>
+						<BackColor
+							val="6303632" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="40251ad1-d115-4b98-aab0-78cde72facf9">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="96e55dd7-5c2d-4e9b-bd69-dc561ae9021c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">number</AUni>
+							<AUni
+								ws="es">número</AUni>
+							<AUni
+								ws="fr">numéro</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="16777215" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151c-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">pers</AUni>
+							<AUni
+								ws="es">pers</AUni>
+							<AUni
+								ws="fr">pers</AUni>
+						</Abbreviation>
+						<BackColor
+							val="6328367" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="eaa8b82e-f25c-49a4-997a-f25893cf5c3f">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="8aafe325-aafc-4d38-8375-12db563a0142">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">person</AUni>
+							<AUni
+								ws="es">persona</AUni>
+							<AUni
+								ws="fr">personne</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="16760832" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151d-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">quo</AUni>
+							<AUni
+								ws="es">cita</AUni>
+							<AUni
+								ws="fr">cit</AUni>
+						</Abbreviation>
+						<BackColor
+							val="6303632" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="c2ff0ed3-2311-472e-ada7-1c582ecdfaa9">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="9ea3665e-7030-4bdd-8a21-a8a81994fb41">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">quotative</AUni>
+							<AUni
+								ws="es">margen de cita</AUni>
+							<AUni
+								ws="fr">de citation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="12079" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151e-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">rank</AUni>
+							<AUni
+								ws="es">grad</AUni>
+							<AUni
+								ws="fr">rang</AUni>
+						</Abbreviation>
+						<BackColor
+							val="16776960" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="4a1ddc11-1b83-48fd-b18b-943d520725be">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="242996c0-6921-4aa0-9d25-d03144af9b4d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">rank marker</AUni>
+							<AUni
+								ws="es">indicador de grado</AUni>
+							<AUni
+								ws="fr">indicateur de rang</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="13631439" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7151f-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">sw ref</AUni>
+							<AUni
+								ws="es">camb ref</AUni>
+							<AUni
+								ws="fr">ch réf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="12632111" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="4d20a351-e8e1-4b33-8768-28c2c72ed164">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="48cf72a3-04cd-4cd8-9a24-ac99d39a0bc6">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">switch reference marker</AUni>
+							<AUni
+								ws="es">indicador de cambio de referencia</AUni>
+							<AUni
+								ws="fr">indicateur de changement de référence</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="12632256" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71520-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">tens</AUni>
+							<AUni
+								ws="es">tens</AUni>
+							<AUni
+								ws="fr">tmps</AUni>
+						</Abbreviation>
+						<BackColor
+							val="32639" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="b1ffbd76-63e3-4e6b-a20a-147e99e1f7be">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6fd3fd66-7073-4032-a36e-0afb2188f02d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">tense marker</AUni>
+							<AUni
+								ws="es">indicador de tensa</AUni>
+							<AUni
+								ws="fr">indicateur du temps grammatical</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="6303632" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71521-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">top</AUni>
+							<AUni
+								ws="es">tóp</AUni>
+							<AUni
+								ws="fr">top</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="2a1b12d3-3751-43f0-ac07-d4e76fa71d8e">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="410504d8-2e85-42df-9aa2-edbe332842b0">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9502719" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">topic marker</AUni>
+							<AUni
+								ws="es">indicador de tópico</AUni>
+							<AUni
+								ws="fr">indicateur de topique</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71522-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">voice</AUni>
+							<AUni
+								ws="es">voz</AUni>
+							<AUni
+								ws="fr">voix</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="9803f6a3-97fe-4889-ae83-ed38c66eadeb">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="add6c34b-1625-49d5-b332-847a0d03889f">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="8355711" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">voice marker</AUni>
+							<AUni
+								ws="es">indicador de voz</AUni>
+							<AUni
+								ws="fr">indicateur de voix</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="16760832" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71523-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">mod</AUni>
+					<AUni
+						ws="es">mod</AUni>
+					<AUni
+						ws="fr">mod</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="a652d7a9-944d-4803-b7e5-0ac2345008e3">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c0ba138e-7216-486f-b28e-67331077b1e4">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="6303632" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">modifier</AUni>
+					<AUni
+						ws="es">modificador</AUni>
+					<AUni
+						ws="fr">modificateur</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71524-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">adj</AUni>
+							<AUni
+								ws="es">adj</AUni>
+							<AUni
+								ws="fr">adj</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Adjective</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="17d2b325-a1f8-4e09-8e30-2c32aec0c22e">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="afe5d25b-63e1-49b0-9fdd-78f2a8eea3ea">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="49407" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">adjective</AUni>
+							<AUni
+								ws="es">adjetivo</AUni>
+							<AUni
+								ws="fr">adjectif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71525-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">Adv</AUni>
+							<AUni
+								ws="es">Adv</AUni>
+							<AUni
+								ws="fr">Adv</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Adverb</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="7ca00537-b018-416d-b773-8cca36e6dc90">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="e6d9963b-0c2f-484b-9c44-6e791ac8ac0c">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="6303632" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">adverb</AUni>
+							<AUni
+								ws="es">adverbio</AUni>
+							<AUni
+								ws="fr">adverbe</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71526-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">neg</AUni>
+					<AUni
+						ws="es">neg</AUni>
+					<AUni
+						ws="fr">nég</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="ec618a71-9630-402a-bb22-2844de2d02b7">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="0f824591-fe0d-461e-a967-c5b8530e62ab">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="49296" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">negator</AUni>
+					<AUni
+						ws="es">negativador</AUni>
+					<AUni
+						ws="fr">négateur</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71527-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">N</AUni>
+					<AUni
+						ws="es">Sus</AUni>
+					<AUni
+						ws="fr">N</AUni>
+				</Abbreviation>
+				<AffixSlots>
+					<MoInflAffixSlot
+						guid="32bf0473-d3a8-40ba-b681-dbecfa10edd9">
+						<Name>
+							<AUni
+								ws="en">Possessor</AUni>
+						</Name>
+						<Optional
+							val="true" />
+					</MoInflAffixSlot>
+				</AffixSlots>
+				<AffixTemplates>
+					<ownseq
+						class="MoInflAffixTemplate"
+						guid="3e2e6b4e-cbc5-46d6-a198-77415ecce02a">
+						<Disabled
+							val="False" />
+						<Final
+							val="true" />
+						<Name>
+							<AUni
+								ws="en">Possessed noun</AUni>
+						</Name>
+						<Slots>
+							<refseq
+								guid="32bf0473-d3a8-40ba-b681-dbecfa10edd9"
+								t="r" />
+						</Slots>
+						<SuffixSlots>
+							<refseq
+								guid="32bf0473-d3a8-40ba-b681-dbecfa10edd9"
+								t="r" />
+						</SuffixSlots>
+					</ownseq>
+				</AffixTemplates>
+				<BackColor
+					val="-1073741824" />
+				<CatalogSourceId>
+					<Uni>Noun</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2003-7-10 20:18:19.460" />
+				<Discussion>
+					<StText
+						guid="7f503cb0-8a8a-4fc8-b8ee-a0b0467e59f7">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c9eda188-30bc-43d8-8030-65c7ff068790">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777152" />
+				<Hidden
+					val="False" />
+				<InflectionClasses>
+					<MoInflClass
+						guid="1bd0464c-7c79-48c3-a9cf-7760c3a81f5e">
+						<Abbreviation>
+							<AUni
+								ws="en">III</AUni>
+						</Abbreviation>
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">third nominal declension</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">3rd nominal declension</AUni>
+						</Name>
+					</MoInflClass>
+					<MoInflClass
+						guid="39b3605b-9384-48da-b16e-f9a4b5ff659a">
+						<Abbreviation>
+							<AUni
+								ws="en">I</AUni>
+						</Abbreviation>
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">first nominal declension</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">1st nominal declension</AUni>
+						</Name>
+					</MoInflClass>
+					<MoInflClass
+						guid="441be6a9-e5d5-43c4-bd89-ab335f80e46a">
+						<Abbreviation>
+							<AUni
+								ws="en">II</AUni>
+						</Abbreviation>
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">second nominal declension</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">2nd nominal declension</AUni>
+						</Name>
+					</MoInflClass>
+				</InflectionClasses>
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">noun</AUni>
+					<AUni
+						ws="es">nombre</AUni>
+					<AUni
+						ws="fr">nom</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71528-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">comm</AUni>
+							<AUni
+								ws="es">sus com</AUni>
+							<AUni
+								ws="fr">comm</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="f340fe6f-f7d7-4074-a1e7-ea1527b2c61d">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="3dc6154e-4a05-4417-b806-30562fc1ae4a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9474192" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">common noun</AUni>
+							<AUni
+								ws="es">sustantivo común</AUni>
+							<AUni
+								ws="fr">nom commun</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71529-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">conc</AUni>
+							<AUni
+								ws="es">sus conc</AUni>
+							<AUni
+								ws="fr">conc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="bc9f6dbf-d001-4a77-815b-747aa56ba0c3">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="e73517bd-4563-4e90-91f9-68054e8c84bc">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="32639" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">concrete noun</AUni>
+							<AUni
+								ws="es">sustantivo concreto</AUni>
+							<AUni
+								ws="fr">nom concret</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7152a-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">nom</AUni>
+							<AUni
+								ws="es">nom</AUni>
+							<AUni
+								ws="fr">nom</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Nominal</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="20a7cbb8-3106-4a9f-a372-9a3312154fbf">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="a8395882-aec4-4081-8490-dc76526b0909">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="255" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">nominal</AUni>
+							<AUni
+								ws="es">nominal</AUni>
+							<AUni
+								ws="fr">nominal</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7152b-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">poss</AUni>
+							<AUni
+								ws="es">pos</AUni>
+							<AUni
+								ws="fr">poss</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="137898e2-8bab-47c5-8ffe-6b0f3b6cf66a">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="afb7683b-130d-40a9-99f9-22b274637b29">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="65535" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">possessive noun</AUni>
+							<AUni
+								ws="es">sustantivo posesivo</AUni>
+							<AUni
+								ws="fr">nom possessif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7152c-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">prop</AUni>
+							<AUni
+								ws="es">prop</AUni>
+							<AUni
+								ws="fr">prop</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="9330cd8b-6395-4a5f-8c49-fa197e85064e">
+								<DateModified
+									val="2011-2-2 19:39:28.832" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="1f39f152-8274-439c-8770-772151e2d66d">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9502719" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">proper noun</AUni>
+							<AUni
+								ws="es">sustantivo propio</AUni>
+							<AUni
+								ws="fr">nom propre</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="4" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7152d-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">part</AUni>
+					<AUni
+						ws="es">part</AUni>
+					<AUni
+						ws="fr">ptcl</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<CatalogSourceId>
+					<Uni>Particle</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="71e4453e-d271-45fb-8f28-2734c3dbc937">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="1990ec9b-6c2d-440c-8a90-f775bdf6caec">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="12079" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">particle</AUni>
+					<AUni
+						ws="es">partículo</AUni>
+					<AUni
+						ws="fr">particule</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7152e-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">precat</AUni>
+					<AUni
+						ws="es">precat</AUni>
+					<AUni
+						ws="fr">précat</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="c3665b6f-e3d4-4378-bb4f-eb690839dd27">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f26c0c6e-e835-4c69-b065-937682de1136">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="65280" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">precategorial</AUni>
+					<AUni
+						ws="es">precategorial</AUni>
+					<AUni
+						ws="fr">précatégoriel</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7152f-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Pro</AUni>
+					<AUni
+						ws="es">Pro</AUni>
+					<AUni
+						ws="fr">Pro</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<CatalogSourceId>
+					<Uni>Pronoun</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="4fc9611b-347f-4e3b-9b29-0c149b0bab25">
+						<DateModified
+							val="2011-2-2 19:39:28.832" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9786949d-c00f-46ff-80df-34e4ba1fe8ce">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="49407" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">pronoun</AUni>
+					<AUni
+						ws="es">pronombre</AUni>
+					<AUni
+						ws="fr">pronom</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71530-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">dem</AUni>
+							<AUni
+								ws="es">dem</AUni>
+							<AUni
+								ws="fr">dém</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Demonstrative</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="92e32795-d3d1-4755-9be5-c778bfc0cebe">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6b0e4b3c-2582-4873-a58b-488b875e9340">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9449263" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">demonstrative pronoun</AUni>
+							<AUni
+								ws="es">pronombre demostrativo</AUni>
+							<AUni
+								ws="fr">pronom démonstratif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71531-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">ind</AUni>
+							<AUni
+								ws="es">ind</AUni>
+							<AUni
+								ws="fr">ind</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>IndefinitePronoun</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="16743686-4351-443b-82a1-a18cb4ce29d7">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="a181c46c-63cf-4951-9896-bd71fc7669a2">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="37119" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">indefinite pronoun</AUni>
+							<AUni
+								ws="es">pronombre indefinido</AUni>
+							<AUni
+								ws="fr">pronom indéfini</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71532-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">int</AUni>
+							<AUni
+								ws="es">int</AUni>
+							<AUni
+								ws="fr">int</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>InterrogativeProform</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="17eb9247-9a09-4290-a3cb-50813e123a05">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2b0b8b55-960c-4425-a3c0-884827cab3aa">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="12079" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">interrogative pronoun</AUni>
+							<AUni
+								ws="es">pronombre interrogativo</AUni>
+							<AUni
+								ws="fr">pronom interrogatif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71533-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">pers</AUni>
+							<AUni
+								ws="es">pers</AUni>
+							<AUni
+								ws="fr">pers</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>PersonalPronoun</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="e7d51acd-f8f0-426d-8c0f-fbfe86e64d91">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="0ed311b2-691c-4ee9-aeee-cd9056a5ef2e">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="12079" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">personal pronoun</AUni>
+							<AUni
+								ws="es">pronombre personal</AUni>
+							<AUni
+								ws="fr">pronom personnel</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71534-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">pos pron</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>PossessivePronoun</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="fd642680-5fe0-43a5-b6da-a227929d176d">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6f0f4b45-9a0f-4add-9687-7d28229905f1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="12032" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">posessive pronoun</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71535-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">rel</AUni>
+							<AUni
+								ws="es">rel</AUni>
+							<AUni
+								ws="fr">rel</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>RelativePronoun</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="2521ac56-1a04-4368-a702-1090697d9614">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="e1934ce4-5e6a-4bdd-beb6-c62dde78a9f8">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9486591" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">relative pronoun</AUni>
+							<AUni
+								ws="es">pronombre relativo</AUni>
+							<AUni
+								ws="fr">pronom relatif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f71536-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">rel</AUni>
+					<AUni
+						ws="es">relac</AUni>
+					<AUni
+						ws="fr">rltr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="f99fcd39-efb1-43e1-b5d5-fef110b875ff">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b84c021e-1d47-4b64-9dbe-80072945dea1">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">relator</AUni>
+					<AUni
+						ws="es">relacioante</AUni>
+					<AUni
+						ws="fr">relateur</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71537-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">adpos</AUni>
+							<AUni
+								ws="es">adpos</AUni>
+							<AUni
+								ws="fr">adpos</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Adposition</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="aa7fe097-e2a2-4d9e-b469-e3499a17f2ff">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="942ff64e-ed41-493b-93bd-6fdacceb8c43">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">adposition</AUni>
+							<AUni
+								ws="es">adposición</AUni>
+							<AUni
+								ws="fr">adposition</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="PartOfSpeech"
+								guid="d7f71538-e8cf-11d3-9764-00c04f186933">
+								<Abbreviation>
+									<AUni
+										ws="en">post</AUni>
+									<AUni
+										ws="es">post</AUni>
+									<AUni
+										ws="fr">post</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<CatalogSourceId>
+									<Uni>Postposition</Uni>
+								</CatalogSourceId>
+								<DateCreated
+									val="2001-7-24 19:33:9.563" />
+								<DateModified
+									val="2001-7-24 19:33:9.563" />
+								<Discussion>
+									<StText
+										guid="c9f865b0-8440-41ef-9d5d-3ff99665099b">
+										<DateModified
+											val="2011-2-2 19:39:28.833" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="4aa88483-d51c-4a99-b440-42ee54a116e9">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="0" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">postposition</AUni>
+									<AUni
+										ws="es">postposición</AUni>
+									<AUni
+										ws="fr">postposition</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="2" />
+							</ownseq>
+							<ownseq
+								class="PartOfSpeech"
+								guid="d7f71539-e8cf-11d3-9764-00c04f186933">
+								<Abbreviation>
+									<AUni
+										ws="en">prep</AUni>
+									<AUni
+										ws="es">prep</AUni>
+									<AUni
+										ws="fr">prép</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<CatalogSourceId>
+									<Uni>Preposition</Uni>
+								</CatalogSourceId>
+								<DateCreated
+									val="2001-7-24 19:33:9.563" />
+								<DateModified
+									val="2001-7-24 19:33:9.563" />
+								<Discussion>
+									<StText
+										guid="4bcaee4e-8985-46a4-bec6-8495b15f8a24">
+										<DateModified
+											val="2011-2-2 19:39:28.833" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="911d8c35-ca89-4f7e-9815-67dfd343051d">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="16760976" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">preposition</AUni>
+									<AUni
+										ws="es">preposición</AUni>
+									<AUni
+										ws="fr">préposition</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="3" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7153a-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">conj</AUni>
+							<AUni
+								ws="es">conj</AUni>
+							<AUni
+								ws="fr">conj</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>Connective</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="952e037d-6ed7-4df2-afa0-39f57622c6b5">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="bbb39368-97f4-441b-a3a8-b5e84d45b6e1">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="0" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">conjunction</AUni>
+							<AUni
+								ws="es">conjuntivo</AUni>
+							<AUni
+								ws="fr">conjonction</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="PartOfSpeech"
+				guid="d7f7153b-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">V</AUni>
+					<AUni
+						ws="es">V</AUni>
+					<AUni
+						ws="fr">V</AUni>
+				</Abbreviation>
+				<AffixSlots>
+					<MoInflAffixSlot
+						guid="395e7178-199d-415a-a5b4-f8f3196a93f2">
+						<Name>
+							<AUni
+								ws="en">Object</AUni>
+						</Name>
+						<Optional
+							val="False" />
+					</MoInflAffixSlot>
+					<MoInflAffixSlot
+						guid="42b52eed-0970-438d-9608-a03fc8c35855">
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">subject prefixes</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">Subject</AUni>
+						</Name>
+						<Optional
+							val="true" />
+					</MoInflAffixSlot>
+					<MoInflAffixSlot
+						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba">
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">tense suffixes</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">Tense</AUni>
+						</Name>
+						<Optional
+							val="False" />
+					</MoInflAffixSlot>
+				</AffixSlots>
+				<BackColor
+					val="-1073741824" />
+				<CatalogSourceId>
+					<Uni>Verb</Uni>
+				</CatalogSourceId>
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2003-8-13 14:17:0.0" />
+				<DefaultInflectionClass>
+					<objsur
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
+						t="r" />
+				</DefaultInflectionClass>
+				<Discussion>
+					<StText
+						guid="032e8831-6daa-428e-b920-52456d650f3b">
+						<DateModified
+							val="2011-2-2 19:39:28.833" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="056fbeea-5c2a-4c30-9db6-741863d947d6">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="13631439" />
+				<Hidden
+					val="False" />
+				<InflectionClasses>
+					<MoInflClass
+						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de">
+						<Abbreviation>
+							<AUni
+								ws="en">1</AUni>
+						</Abbreviation>
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">First verbal conjugation</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">1st verbal conjugation</AUni>
+						</Name>
+					</MoInflClass>
+					<MoInflClass
+						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772">
+						<Abbreviation>
+							<AUni
+								ws="en">2</AUni>
+						</Abbreviation>
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Second verbal conjugation</Run>
+							</AStr>
+						</Description>
+						<Name>
+							<AUni
+								ws="en">2nd verbal conjugation</AUni>
+						</Name>
+					</MoInflClass>
+				</InflectionClasses>
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">verb</AUni>
+					<AUni
+						ws="es">verbo</AUni>
+					<AUni
+						ws="fr">verbe</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7153c-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">aux</AUni>
+							<AUni
+								ws="es">aux</AUni>
+							<AUni
+								ws="fr">aux</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="0f7636c8-f52a-47f7-99c5-04b428889638">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6deee06c-543c-4724-af54-949c248d6898">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="12079" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">auxiliary verb</AUni>
+							<AUni
+								ws="es">verbo auxiliar</AUni>
+							<AUni
+								ws="fr">verbe auxiliaire</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7153e-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">inf</AUni>
+							<AUni
+								ws="es">inf</AUni>
+							<AUni
+								ws="fr">inf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="a05d3f26-8c0e-450e-90e0-3b1f3bef6dbb">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b73b6077-0cd0-407e-84d3-a5363691ead3">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="9486591" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">infinitive</AUni>
+							<AUni
+								ws="es">infinitivo</AUni>
+							<AUni
+								ws="fr">infinitif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7153f-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">intrans</AUni>
+							<AUni
+								ws="es">intrans</AUni>
+							<AUni
+								ws="fr">intrans</AUni>
+						</Abbreviation>
+						<AffixTemplates>
+							<ownseq
+								class="MoInflAffixTemplate"
+								guid="4abcc54f-332a-4b81-b1d6-ed7a3c42db1b">
+								<Disabled
+									val="False" />
+								<Final
+									val="true" />
+								<Name>
+									<AUni
+										ws="en">Intransitive verb</AUni>
+								</Name>
+								<PrefixSlots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+								</PrefixSlots>
+								<Slots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</Slots>
+								<SuffixSlots>
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</SuffixSlots>
+							</ownseq>
+						</AffixTemplates>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>IntransitiveVerb</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2003-7-12 18:45:0.0" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">verb with one participant</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="4d9c1ea4-02cc-4718-a9dc-d1ea3a36007e">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="2bc83893-f004-4387-b84b-a81c71a059d9">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="49296" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">intransitive verb</AUni>
+							<AUni
+								ws="es">verbo intransitivo</AUni>
+							<AUni
+								ws="fr">verbe intransitif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71540-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">part</AUni>
+							<AUni
+								ws="es">part</AUni>
+							<AUni
+								ws="fr">part</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="612ec4aa-33be-4eeb-9935-ca6bac239421">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c5d12623-aa80-458a-bc5b-c3a6a95bbf23">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="12079" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">participle</AUni>
+							<AUni
+								ws="es">participio</AUni>
+							<AUni
+								ws="fr">participe</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71541-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">ref</AUni>
+							<AUni
+								ws="es">ref</AUni>
+							<AUni
+								ws="fr">réf</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="107852ac-a14b-4a09-a260-d7843dd97dd5">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="c46a5369-b2fc-44dd-9214-26486d3167ae">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="65280" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">reflexive</AUni>
+							<AUni
+								ws="es">reflexivo/a</AUni>
+							<AUni
+								ws="fr">réfléchi</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="4" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71542-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">sta</AUni>
+							<AUni
+								ws="es">est</AUni>
+							<AUni
+								ws="fr">état</AUni>
+						</Abbreviation>
+						<AffixSlots>
+							<MoInflAffixSlot
+								guid="0c7f9ffb-2fdd-4ba6-af2d-1b610d492fde">
+								<Name>
+									<AUni
+										ws="en">Tense</AUni>
+								</Name>
+								<Optional
+									val="False" />
+							</MoInflAffixSlot>
+						</AffixSlots>
+						<AffixTemplates>
+							<ownseq
+								class="MoInflAffixTemplate"
+								guid="9e2f0090-61c3-4c37-b3ca-a7b7abd4ca0c">
+								<Disabled
+									val="False" />
+								<Final
+									val="true" />
+								<Name>
+									<AUni
+										ws="en">Stative verb</AUni>
+								</Name>
+								<PrefixSlots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+								</PrefixSlots>
+								<Slots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="0c7f9ffb-2fdd-4ba6-af2d-1b610d492fde"
+										t="r" />
+								</Slots>
+								<SuffixSlots>
+									<refseq
+										guid="0c7f9ffb-2fdd-4ba6-af2d-1b610d492fde"
+										t="r" />
+								</SuffixSlots>
+							</ownseq>
+						</AffixTemplates>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Discussion>
+							<StText
+								guid="d90e15fa-8415-4fea-9adc-26d96910037a">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="8dcd3a94-7963-48bc-b414-6f8596f7eb76">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777152" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">stative</AUni>
+							<AUni
+								ws="es">estativo/a</AUni>
+							<AUni
+								ws="fr">d'état</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="2" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f71543-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">trans</AUni>
+							<AUni
+								ws="es">trans</AUni>
+							<AUni
+								ws="fr">trans</AUni>
+						</Abbreviation>
+						<AffixTemplates>
+							<ownseq
+								class="MoInflAffixTemplate"
+								guid="0e42bd7d-6e4f-47b9-a88b-8afe38d2d2fc">
+								<Disabled
+									val="False" />
+								<Final
+									val="true" />
+								<Name>
+									<AUni
+										ws="en">Transitive verb</AUni>
+								</Name>
+								<PrefixSlots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="395e7178-199d-415a-a5b4-f8f3196a93f2"
+										t="r" />
+								</PrefixSlots>
+								<Slots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="395e7178-199d-415a-a5b4-f8f3196a93f2"
+										t="r" />
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</Slots>
+								<SuffixSlots>
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</SuffixSlots>
+							</ownseq>
+						</AffixTemplates>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>TransitiveVerb</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2003-7-14 20:35:0.0" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">verb with two participants</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="15fcb145-3a06-4d06-bc87-5ff1957fb2c4">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="df9034b8-c9b7-4745-8253-3d5d04107524">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="49296" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">transitive verb</AUni>
+							<AUni
+								ws="es">verbo transitivo</AUni>
+							<AUni
+								ws="fr">verbe transitif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+					<ownseq
+						class="PartOfSpeech"
+						guid="d7f7153d-e8cf-11d3-9764-00c04f186933">
+						<Abbreviation>
+							<AUni
+								ws="en">bitrans</AUni>
+							<AUni
+								ws="es">bitrans</AUni>
+							<AUni
+								ws="fr">bitrans</AUni>
+						</Abbreviation>
+						<AffixTemplates>
+							<ownseq
+								class="MoInflAffixTemplate"
+								guid="3ff09630-b36d-47dc-874f-26e298756241">
+								<Disabled
+									val="False" />
+								<Final
+									val="true" />
+								<Name>
+									<AUni
+										ws="en">Bitransitive verb</AUni>
+								</Name>
+								<PrefixSlots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="395e7178-199d-415a-a5b4-f8f3196a93f2"
+										t="r" />
+								</PrefixSlots>
+								<Slots>
+									<refseq
+										guid="42b52eed-0970-438d-9608-a03fc8c35855"
+										t="r" />
+									<refseq
+										guid="395e7178-199d-415a-a5b4-f8f3196a93f2"
+										t="r" />
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</Slots>
+								<SuffixSlots>
+									<refseq
+										guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
+										t="r" />
+								</SuffixSlots>
+							</ownseq>
+						</AffixTemplates>
+						<BackColor
+							val="-1073741824" />
+						<CatalogSourceId>
+							<Uni>DitransitiveVerb</Uni>
+						</CatalogSourceId>
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2003-8-14 14:13:0.0" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">verb with three participants </Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="b8eb6452-b2c1-4e57-bcc2-8819ede9323f">
+								<DateModified
+									val="2011-2-2 19:39:28.833" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="db5ec9b5-f611-4dd5-90dc-e913e0b3c47b">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">bitransitive verb</AUni>
+							<AUni
+								ws="es">verbo bitransitivo</AUni>
+							<AUni
+								ws="fr">verbe bitransitif</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="true" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</PartsOfSpeech>

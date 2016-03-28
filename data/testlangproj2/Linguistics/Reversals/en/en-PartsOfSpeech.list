@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PartsOfSpeech>
+	<CmPossibilityList
+		guid="b30aa28d-7510-49e6-b9ac-bc1902398ce6">
+		<Abbreviation>
+			<AUni
+				ws="en">Pos-Eng</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2005-11-23 21:38:57.987" />
+		<DateModified
+			val="2005-11-23 21:38:57.987" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5049" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Parts Of Speech-English</AUni>
+			<AUni
+				ws="es">Categorías Gramáticas-ingles</AUni>
+			<AUni
+				ws="fr">Parties du Discours-en</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="true" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</PartsOfSpeech>

@@ -1,0 +1,2015 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Book>
+	<ScrBook
+		guid="236cee6c-e488-4e2b-a1aa-f2eaa2d49683">
+		<Abbrev>
+			<AUni
+				ws="en">Jud</AUni>
+			<AUni
+				ws="es">Jds</AUni>
+		</Abbrev>
+		<BookId>
+			<objsur
+				guid="70c5a372-b3c6-4af6-aaee-ea707ff839ff"
+				t="r" />
+		</BookId>
+		<CanonicalNum
+			val="65" />
+		<Footnotes>
+			<ownseq
+				class="ScrFootnote"
+				guid="6630c991-e040-45dd-a2f4-2f572c85c542">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">a</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="27b44d49-40fd-4024-8b85-f05fa94d8ca6"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="6d942d74-401d-4415-871f-637649bbe574">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- Mat 13.55; Mrk 6.3.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="fd20c4c1-3cbb-4585-bcfb-bd87c141c6d6">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="638690d4-7e47-42d3-9021-326588d4d148">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="460fdea7-6d20-4b81-81c0-10929a69e12b">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">b</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="db60de4f-4acd-4ae0-a294-d715e728685d"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="f9135885-3256-4845-a198-6c6a33b78cb5">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- a Exo 12.51; b Num 14.29,30.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="14f8dc49-5dee-4cab-bb27-cd0b9cffbca3">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="4d27a8e4-cc82-4d8b-bc59-492b087095b3">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="56e790c2-72d7-4b85-adca-0f1cccb2eb83">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">c</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="db60de4f-4acd-4ae0-a294-d715e728685d"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="486589e9-7b6d-4d99-a16f-a0168b333c3d">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">a </Run>
+								<Run
+									namedStyle="Alternate Reading"
+									ws="qaa-x-kal">the Lord; </Run>
+								<Run
+									ws="qaa-x-kal">some manuscripts have </Run>
+								<Run
+									namedStyle="Alternate Reading"
+									ws="qaa-x-kal">Jesus, </Run>
+								<Run
+									ws="qaa-x-kal">which in Greek is the same as </Run>
+								<Run
+									namedStyle="Alternate Reading"
+									ws="qaa-x-kal">Joshua.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="9b252419-8215-493b-abbd-b6fc2664b2bf">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="747a18d2-a7ac-4965-b926-183c6aad485c">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="10d40cd3-d473-4ac2-9708-f54376a9049f">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">d</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="db60de4f-4acd-4ae0-a294-d715e728685d"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="cf2ac3cb-bc87-40e3-b97d-96516effa32e">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- Gen 19.1-24.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="f7f8df41-7075-4aff-950d-ba7a7300bc03">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="ae70935a-27bc-4517-9338-ecde60a25532">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="3cb6430c-a109-4d99-8391-ea595e009bfd">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">e</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="3f82a729-536b-4fef-8d84-4f0d0e3ce6f4"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="d94ca3fd-96c6-41b7-a7c8-79fb2592794d">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- a Dan 10.13,21; 12.1; Rev 12.7; b Deu 34.6; c Zec 3.2.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="f57f1689-cdec-4c88-b636-53d1c391b892">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="6eec0b92-c438-4801-9bf3-8bdcf02b2e49">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="c15ab3e0-7040-46a9-9c71-06818c28adfc">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">f</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="3f82a729-536b-4fef-8d84-4f0d0e3ce6f4"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="108e3e72-411e-4347-92dd-65b73c970f1e">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- a Gen 4.3-8; b Num 22.1-35; c Num 16.1-35.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="208a6a59-a17e-4b09-b6ed-9fc2569ee955">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="c8b62ce5-8d6f-4f53-884d-dcf8e678be6a">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="b0409af0-c61c-4c3b-b150-6bd6a74c1210">
+				<DateModified
+					val="2011-2-2 19:39:28.937" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">g</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="fd79eadd-2848-41d7-9b23-cf9e29de54ee"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="fa07935e-bbae-4921-ad32-eb0194303339">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- Gen 5.18,21-24.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="e87273a7-82de-49a8-80c9-fd5e99ca0569">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="3ed51a1d-58f2-4885-9ccf-10618492de88">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="bcaa894c-003a-4245-9599-35389dadd226">
+				<DateModified
+					val="2011-2-2 19:39:28.938" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">h</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="fd79eadd-2848-41d7-9b23-cf9e29de54ee"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="51cb8093-f8d0-4872-abc1-01b3d56095b3">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">b </Run>
+								<Run
+									namedStyle="Referenced Text"
+									ws="qaa-x-kal">seventh: </Run>
+								<Run
+									ws="qaa-x-kal">This numbering includes both the first and the last in the series of seven names from Adam to Enoch.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="ef411d2f-8e17-4464-97c2-47d410a44a82">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="df953c06-e1e6-476c-adc9-8e915e282967">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+			<ownseq
+				class="ScrFootnote"
+				guid="e5f2c961-65d1-4457-9afd-6a063abf6fee">
+				<DateModified
+					val="2011-2-2 19:39:28.938" />
+				<FootnoteMarker>
+					<Str>
+						<Run
+							namedStyle="Note Marker"
+							ws="qaa-x-kal">i</Run>
+					</Str>
+				</FootnoteMarker>
+				<ParaContainingOrc>
+					<objsur
+						guid="4a2e42c2-2970-4703-be2f-8f8c161b82b6"
+						t="r" />
+				</ParaContainingOrc>
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="561b44d8-c916-4e73-8eab-fec4ca22b7be">
+						<Contents>
+							<Str>
+								<Run
+									ws="qaa-x-kal">- 2Pe 3.3.</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="6fb72bb4-c32e-4c9f-8fee-9c3f5979ff02">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Note General Paragraph" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="48695b25-c8f3-4bbf-b429-135f2b584e85">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</ownseq>
+		</Footnotes>
+		<IdText>
+			<Uni>66JUD.TEV updatedzzz to USFM JULY 30, 2002 epeters FOR PREDISTRIBUTION USE ONLY</Uni>
+		</IdText>
+		<Name>
+			<AUni
+				ws="en">Jude</AUni>
+			<AUni
+				ws="es">Judas</AUni>
+			<AUni
+				ws="qaa-x-kal">JUDE</AUni>
+		</Name>
+		<Sections>
+			<ownseq
+				class="ScrSection"
+				guid="8aacc796-f8c4-4342-8a27-3aa1d392273e">
+				<Content>
+					<StText
+						guid="61d95fb7-c635-41c8-854f-4be9db6d170b">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="e5df7bb3-6b76-4145-9f02-bc79055865a1">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Emphasis"
+											ws="qaa-x-kal">The Letter from Jude</Run>
+										<Run
+											ws="qaa-x-kal"> was written to warn against false teachers who claimed to be believers. In this brief letter, which is similar in content to </Run>
+										<Run
+											namedStyle="Emphasis"
+											ws="qaa-x-kal">2 Peter</Run>
+										<Run
+											ws="qaa-x-kal"> the writer encourages his readers “to fight on for the faith which once and for all God has given to his people.”</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="90fb037c-b8ef-4bd8-a600-2dfc573941ea">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d35a40e9-ab02-4ec2-a663-a4bad886558a">
+										<BeginOffset
+											val="93" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="0db3bd53-0567-4dcd-b5f7-1870c4bd9e17">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="bab3a3bb-0156-4c3c-a0be-639dd6e2dba7">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="c2c02f6d-bf2c-40c1-8419-82f7620bbbdc">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Introduction</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="5ea3f61e-1384-449e-93ca-5bf9edf62f54">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="1098cdd3-65c6-42e3-865a-a416cbca726f">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001000" />
+				<VerseRefMax
+					val="65001000" />
+				<VerseRefMin
+					val="65001000" />
+				<VerseRefStart
+					val="65001000" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="f090fb0c-7747-4950-ba11-606e7f8eec9c">
+				<Content>
+					<StText
+						guid="60fb5980-6e42-414d-86d9-00f03894242a">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="ef437780-68eb-4037-a71b-48f925c68a5a">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Introduction (1-2)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="c53efe7c-a0b1-4289-bee5-d562a9e32d91">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro List Item1" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="f476fd11-1628-40b0-a53d-953b36bed364">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="57bc7f49-21b1-45af-abb9-1f95854269b5">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Character, teaching, and doom of the false teachers (3-16)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="05b1f010-36fa-4d67-9f31-24b77d6628ca">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro List Item1" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="65a08314-a51b-4bc1-95e3-678e08a6a06c">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="f0480441-70ac-4fcd-9ff3-e9b55f1f8563">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Admonition to keep the faith (17-23)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="bab1b0a4-e6a5-4cfc-93d2-0847e620a242">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro List Item1" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="3b6bf60e-eaf3-446d-a655-99e734f91519">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="4b3488f5-57f4-44f2-b5ed-154c5b26a1f7">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Benediction (24-25)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="3ba7f912-83b3-402f-a804-cb7c83d62363">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro List Item1" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="919c7a91-4654-494c-998f-9d5658803dc9">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="c458e5a9-81d0-47d7-8d15-c3c9e44921db">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="fbb19c63-a29f-4405-bf76-a74581e5820f">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Outline of Contents</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="03d626e8-253b-430e-a4b4-54e70ae1d663">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Intro Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="7f82ad50-9d8c-4a8f-9486-0a6488d17a1a">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001000" />
+				<VerseRefMax
+					val="65001000" />
+				<VerseRefMin
+					val="65001000" />
+				<VerseRefStart
+					val="65001000" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="66dc9808-5ea5-4559-b7ce-743906fa06ee">
+				<Content>
+					<StText
+						guid="7d337e0f-52a8-4362-bdd3-9e3bdbf7596c">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="27b44d49-40fd-4024-8b85-f05fa94d8ca6">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Chapter Number"
+											ws="qaa-x-kal">1</Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">1</Run>
+										<Run
+											ownlink="6630C991-E040-45DD-A2F4-2F572C85C542"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> From Jude, servant of Jesus Christ, and brother of James—</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="2261599f-1e97-4105-8104-73d438c7db15">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="5d9939c8-e2da-46cc-a585-5e1a8b51c843">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="db6649c1-c698-4a9a-924d-0fe1b1750002">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="e2c69c41-62f9-4cf4-9e59-f6183945eb40">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">To those who have been called by God, who live in the love of God the Father and the protection of Jesus Christ:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="4cf6bfb7-0f51-40b4-89c8-04593c995e18">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="78859a50-f45b-49ef-bbf8-a7fbc03a5618">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="cf7ebe2d-eabd-4ab4-ac37-6603b5ff346b">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">2</Run>
+										<Run
+											ws="qaa-x-kal">May mercy, peace, and love be yours in full measure.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="4efb2624-cab7-48c3-8df9-65e124e0d36f">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="1a0e7d88-286f-412b-9ca5-e2771306007b">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="7a7a7296-9158-428a-a74a-9cc8909a6490">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="9df499f4-c886-45e5-9f93-afc882f4a489">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="581e2d57-9a89-43e9-8c8f-ac0f57c1e2da">
+								<ParseIsCurrent
+									val="False" />
+								<StyleRules>
+									<Prop
+										namedStyle="Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="7bd3dada-c9d2-416c-ab06-360637de00a0">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001002" />
+				<VerseRefMax
+					val="65001002" />
+				<VerseRefMin
+					val="65001001" />
+				<VerseRefStart
+					val="65001001" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="3b6d3d8c-093a-45d0-9f45-5bf316610dd3">
+				<Content>
+					<StText
+						guid="49b58ab5-aabf-4a50-a879-70233c1ba47f">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="9fb6be51-9c31-4842-bad9-4b87aab2b30c">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">3</Run>
+										<Run
+											ws="qaa-x-kal">My dear friends, I was doing my best to write to you about the salvation we share in common, when I felt the need of writing at once to encourage you to fight on for the faith which once and for all God has given to his people. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">4</Run>
+										<Run
+											ws="qaa-x-kal">For some godless people have slipped in unnoticed among us, persons who distort the message about the grace of our God in order to excuse their immoral ways, and who reject Jesus Christ, our only Master and Lord. Long ago the Scriptures predicted the condemnation they have received.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="b9c6a0b1-a3c2-426f-a614-c03cb79c1aa9">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="490cc198-eb6f-4cac-8ca4-5141fe81f968">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="8d014edd-f8d8-4ffb-a7a0-f2cdef9a5982">
+										<BeginOffset
+											val="229" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="eb80dd47-4e3c-4c72-8726-d49d305fdc4e">
+										<BeginOffset
+											val="230" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="10bf50cf-0362-4633-b6dc-9f59fd6d28bf">
+										<BeginOffset
+											val="443" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="02245d89-80fc-4628-b407-e3d527b3b7f9">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="db60de4f-4acd-4ae0-a294-d715e728685d">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">5</Run>
+										<Run
+											ownlink="460FDEA7-6D20-4B81-81C0-10929A69E12B"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> For even though you know all this, I want to remind you of how the Lord </Run>
+										<Run
+											ownlink="56E790C2-72D7-4B85-ADCA-0F1CCCB2EB83"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> once rescued the people of Israel from Egypt, but afterward destroyed those who did not believe. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">6</Run>
+										<Run
+											ws="qaa-x-kal">Remember the angels who did not stay within the limits of their proper authority, but abandoned their own dwelling place: they are bound with eternal chains in the darkness below, where God is keeping them for that great Day on which they will be condemned. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">7</Run>
+										<Run
+											ownlink="10D40CD3-D473-4AC2-9708-F54376A9049F"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> Remember Sodom and Gomorrah, and the nearby towns, whose people acted as those angels did and indulged in sexual immorality and perversion: they suffer the punishment of eternal fire as a plain warning to all.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="0e785912-28a7-4735-84b1-a472f21efbe3">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="84410c9f-73e4-4a3a-b53a-4e51a241744d">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="a5bfeead-dc03-456a-a902-f9ef5157a235">
+										<BeginOffset
+											val="174" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="fa29bed4-4c1f-47e8-be47-8458e035660e">
+										<BeginOffset
+											val="175" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="4b6081a9-fc0c-43ac-8880-0c115f958c2b">
+										<BeginOffset
+											val="433" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b85b17cc-f6a2-4dda-8b2e-f46d11d74daa">
+										<BeginOffset
+											val="434" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="86ee6db6-4744-4789-b5fd-7f2b333f3f2d">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="3f82a729-536b-4fef-8d84-4f0d0e3ce6f4">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">8</Run>
+										<Run
+											ws="qaa-x-kal">In the same way also, these people have visions which make them sin against their own bodies; they despise God's authority and insult the glorious beings above. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">9</Run>
+										<Run
+											ownlink="3CB6430C-A109-4D99-8391-EA595E009BFD"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> Not even the chief angel Michael did this. In his quarrel with the Devil, when they argued about who would have the body of Moses, Michael did not dare condemn the Devil with insulting words, but said, “The Lord rebuke you!” </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">10</Run>
+										<Run
+											ws="qaa-x-kal">But these people attack with insults anything they do not understand; and those things that they know by instinct, like wild animals, are the very things that destroy them. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">11</Run>
+										<Run
+											ownlink="C15AB3E0-7040-46A9-9C71-06818C28ADFC"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> How terrible for them! They have followed the way that Cain took. For the sake of money they have given themselves over to the error that Balaam committed. They have rebelled as Korah rebelled, and like him they are destroyed. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">12</Run>
+										<Run
+											ws="qaa-x-kal">With their shameless carousing they are like dirty spots in your fellowship meals. They take care only of themselves. They are like clouds carried along by the wind, but bringing no rain. They are like trees that bear no fruit, even in autumn, trees that have been pulled up by the roots and are completely dead. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">13</Run>
+										<Run
+											ws="qaa-x-kal">They are like wild waves of the sea, with their shameful deeds showing up like foam. They are like wandering stars, for whom God has reserved a place forever in the deepest darkness.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="7149ea6e-19d4-4eaa-8929-386961fdc2fb">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="991d74af-f239-4002-8352-ee49a4583690">
+										<BeginOffset
+											val="1" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="1f306c24-1fe8-472a-8faa-098029aafbcb">
+										<BeginOffset
+											val="162" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="97aa1da9-3cbd-4a8a-8e2b-e4fb68b24747">
+										<BeginOffset
+											val="163" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="ffa6c68c-f5e9-4a0a-9cfa-43497950154b">
+										<BeginOffset
+											val="208" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="2044e596-bc2a-4dd1-8626-2583ddd94a69">
+										<BeginOffset
+											val="390" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="4ed78554-4578-4f26-bb88-1907ea5eb530">
+										<BeginOffset
+											val="392" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="6884e136-7505-4556-a448-ef0f43fbb5cb">
+										<BeginOffset
+											val="565" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="1525cf1d-4f55-4510-b8ed-f8c05d6cac83">
+										<BeginOffset
+											val="567" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="ea894ce6-3c89-4332-b102-e1b4c2bf3779">
+										<BeginOffset
+											val="592" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="4853488f-e4cd-412d-a38c-8a7b7036f5d0">
+										<BeginOffset
+											val="635" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b8d6cebe-b5d8-4844-abb9-efe83923c71a">
+										<BeginOffset
+											val="725" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="11ae6976-b936-472f-9cc6-0a66432dc717">
+										<BeginOffset
+											val="796" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="55b5117e-f269-4a4d-822a-ae077cecfc46">
+										<BeginOffset
+											val="798" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d1a8c234-9408-492f-bd0d-47428c76d78a">
+										<BeginOffset
+											val="881" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="48191098-3090-479c-92cb-055a46568a83">
+										<BeginOffset
+											val="916" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="1ec1a3a5-292c-40ce-8266-23c54324a351">
+										<BeginOffset
+											val="986" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="a5453c1d-9b2f-4d76-8535-c3fb18ddcd08">
+										<BeginOffset
+											val="1111" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="00b55070-fff8-4881-861c-b2712b8853b0">
+										<BeginOffset
+											val="1113" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="d8f159f8-56fe-4a1c-9d58-ad7938c78f80">
+										<BeginOffset
+											val="1198" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="ea212080-094c-4e16-a738-a41a3bb3a4a6">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="fd79eadd-2848-41d7-9b23-cf9e29de54ee">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">14</Run>
+										<Run
+											ownlink="B0409AF0-C61C-4C3B-B150-6BD6A74C1210"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> It was Enoch, the seventh </Run>
+										<Run
+											ownlink="BCAA894C-003A-4245-9599-35389DADD226"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> direct descendant from Adam, who long ago prophesied this about them: “The Lord will come with many thousands of his holy angels </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">15</Run>
+										<Run
+											ws="qaa-x-kal">to bring judgment on all, to condemn them all for the godless deeds they have performed and for all the terrible words that godless sinners have spoken against him!”</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="5c9f0596-174d-437e-9780-4745442db480">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="82601c56-56cc-4483-b6be-4599aec12337">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="6d1bc00a-dc46-4a13-9751-48fb773467b9">
+										<BeginOffset
+											val="161" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="cb97ba92-bd7d-49ab-842b-cea298f80670">
+										<BeginOffset
+											val="163" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="e7a2c4db-aa67-4d89-ac57-0a0fe455f244">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="52ff4744-1b8f-4023-afde-c7ef08381590">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">16</Run>
+										<Run
+											ws="qaa-x-kal">These people are always grumbling and blaming others; they follow their own evil desires; they brag about themselves and flatter others in order to get their own way.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="3b1e3107-98f0-4acf-bb02-09b618fa01e2">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="bbc43a5f-8598-45ef-9e01-81f205832ce4">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="af399cc0-6bcc-4b32-96d4-484c6dc5c45e">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="be6ef6ce-aca9-406d-9282-d79f61309945">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="74499a6e-3025-4709-bc2b-11b0d8ae6972">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">False Teachers</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="621e069a-9a19-4f1f-b459-d84a7bc7f2bc">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="dcd2d9e3-1e34-419d-937e-e940b808f9ae">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001016" />
+				<VerseRefMax
+					val="65001016" />
+				<VerseRefMin
+					val="65001003" />
+				<VerseRefStart
+					val="65001003" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="4d7de402-bf48-4bd8-a284-3bea547c99bf">
+				<Content>
+					<StText
+						guid="27cfa615-a263-46fa-8775-e603851e4d25">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="4a2e42c2-2970-4703-be2f-8f8c161b82b6">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">17</Run>
+										<Run
+											ws="qaa-x-kal">But remember, my friends, what you were told in the past by the apostles of our Lord Jesus Christ. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">18</Run>
+										<Run
+											ownlink="E5F2C961-65D1-4457-9AFD-6A063ABF6FEE"
+											ws="qaa-x-kal" />
+										<Run
+											ws="qaa-x-kal"> They said to you, “When the last days come, people will appear who will make fun of you, people who follow their own godless desires.” </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">19</Run>
+										<Run
+											ws="qaa-x-kal">These are the people who cause divisions, who are controlled by their natural desires, who do not have the Spirit. </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">20</Run>
+										<Run
+											ws="qaa-x-kal">But you, my friends, keep on building yourselves up on your most sacred faith. Pray in the power of the Holy Spirit, </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">21</Run>
+										<Run
+											ws="qaa-x-kal">and keep yourselves in the love of God, as you wait for our Lord Jesus Christ in his mercy to give you eternal life.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="6fbefa92-708c-4f28-b9b3-3bf2a8c374d6">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="3d9e3de3-8a4b-424f-bf18-a6fce763140a">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="e78d0d4f-b2b3-491b-8585-60fa5412e33f">
+										<BeginOffset
+											val="101" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="97253224-ea58-4eb5-b803-79abb0104179">
+										<BeginOffset
+											val="103" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="0524b2b8-1222-4aad-8dad-c54b1c670149">
+										<BeginOffset
+											val="240" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="6d685246-dae8-4aa1-af0e-1ab676ac08f6">
+										<BeginOffset
+											val="242" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="5e011026-27b8-4ba9-a510-915735e03fbc">
+										<BeginOffset
+											val="357" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="b0e3d0fd-4b1c-4efb-9511-7c39a08d3f01">
+										<BeginOffset
+											val="359" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="c881b469-e7cc-482f-8d16-a63719c29b08">
+										<BeginOffset
+											val="438" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="4741265d-1f62-4c25-8acf-6a16c858b4b4">
+										<BeginOffset
+											val="476" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="eb129ff2-8f3a-4427-9f68-3974c1132d48">
+										<BeginOffset
+											val="478" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="4a28055d-18d8-4d65-ac04-ebe9dd9e5cbe">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+							<ownseq
+								class="ScrTxtPara"
+								guid="3d8d5463-db4f-40d2-9391-2845572b0a2b">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">22</Run>
+										<Run
+											ws="qaa-x-kal">Show mercy toward those who have doubts; </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">23</Run>
+										<Run
+											ws="qaa-x-kal">save others by snatching them out of the fire; and to others show mercy mixed with fear, but hate their very clothes, stained by their sinful lusts.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="12f05619-d598-4124-8702-544f5a527d06">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="9a8f094b-20cc-49e5-80c0-45ec7e78ae6a">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="8695d90d-f558-444c-a39b-c565ce7d0bb7">
+										<BeginOffset
+											val="43" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="9994ce05-c7f1-4a5a-a5ff-1ead615710db">
+										<BeginOffset
+											val="45" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="d29d8865-336c-49b5-9494-1bfe226dea77">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="17b75cb4-3e52-411a-901b-43a835c4d49e">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="82312041-bde3-48d3-a0e6-7625098fd372">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Warnings and Instructions</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="4b0b1d2f-574d-43bf-99e4-b20940a9e26b">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="375beaa1-d84b-401e-813e-fa17ba44f6d8">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001023" />
+				<VerseRefMax
+					val="65001023" />
+				<VerseRefMin
+					val="65001017" />
+				<VerseRefStart
+					val="65001017" />
+			</ownseq>
+			<ownseq
+				class="ScrSection"
+				guid="00146136-80ec-4dee-ab2b-9cf44d459e4a">
+				<Content>
+					<StText
+						guid="d7785f67-c6c7-4175-9e63-dcfd5d500d95">
+						<DateModified
+							val="2011-2-2 19:39:28.934" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="45d28e80-41c6-4dab-93c9-bfce27abe0c3">
+								<Contents>
+									<Str>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">24</Run>
+										<Run
+											ws="qaa-x-kal">To him who is able to keep you from falling and to bring you faultless and joyful before his glorious presence— </Run>
+										<Run
+											namedStyle="Verse Number"
+											ws="qaa-x-kal">25</Run>
+										<Run
+											ws="qaa-x-kal">to the only God our Savior, through Jesus Christ our Lord, be glory, majesty, might, and authority, from all ages past, and now, and forever and ever! Amen.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="06ce2b50-fe44-442a-bbe1-4b9806bfd1ba">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="479ae983-292a-4d5a-be37-9143e2468eb0">
+										<BeginOffset
+											val="2" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="4084099c-a175-4491-b8a9-17067bb75813">
+										<BeginOffset
+											val="114" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="2b035647-7ed9-477b-ba2a-690150545b15">
+										<BeginOffset
+											val="116" />
+									</ownseq>
+									<ownseq
+										class="Segment"
+										guid="e625707d-034c-4a38-bd95-a3df48089bba">
+										<BeginOffset
+											val="267" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Paragraph" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="83b203cb-b8ff-4a46-be5a-495a06176a79">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Content>
+				<Heading>
+					<StText
+						guid="bed1221f-a9c5-4d60-a0f4-40f97beec838">
+						<DateModified
+							val="2011-2-2 19:39:28.935" />
+						<Paragraphs>
+							<ownseq
+								class="ScrTxtPara"
+								guid="f799f520-bea3-41fc-a89e-fff153b47d27">
+								<Contents>
+									<Str>
+										<Run
+											ws="qaa-x-kal">Prayer of Praise</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+								<Segments>
+									<ownseq
+										class="Segment"
+										guid="925719fd-0efc-44e6-9073-182060b32b45">
+										<BeginOffset
+											val="0" />
+									</ownseq>
+								</Segments>
+								<StyleRules>
+									<Prop
+										namedStyle="Section Head" />
+								</StyleRules>
+								<Translations>
+									<CmTranslation
+										guid="d794f65b-e09d-46d5-9164-494d9c25c588">
+										<Type>
+											<objsur
+												guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+												t="r" />
+										</Type>
+									</CmTranslation>
+								</Translations>
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Heading>
+				<VerseRefEnd
+					val="65001025" />
+				<VerseRefMax
+					val="65001025" />
+				<VerseRefMin
+					val="65001024" />
+				<VerseRefStart
+					val="65001024" />
+			</ownseq>
+		</Sections>
+		<Title>
+			<StText
+				guid="cfe0dd79-5fcd-4fad-9b5c-80f5e76a6f45">
+				<DateModified
+					val="2011-2-2 19:39:28.935" />
+				<Paragraphs>
+					<ownseq
+						class="ScrTxtPara"
+						guid="b9f7a122-bc07-4316-bf98-609b92c6ec84">
+						<Contents>
+							<Str>
+								<Run
+									namedStyle="Title Secondary"
+									ws="qaa-x-kal">The Letter from</Run>
+								<Run
+									ws="qaa-x-kal"> JUDE</Run>
+							</Str>
+						</Contents>
+						<ParseIsCurrent
+							val="False" />
+						<Segments>
+							<ownseq
+								class="Segment"
+								guid="1069fa2a-a9d3-4ee1-85e9-4280ac60245d">
+								<BeginOffset
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="046527e7-fba4-49ef-93c0-c864b184569e">
+								<BeginOffset
+									val="15" />
+							</ownseq>
+							<ownseq
+								class="Segment"
+								guid="79ecbda2-74c9-4c50-88fa-44b11804e0ff">
+								<BeginOffset
+									val="16" />
+							</ownseq>
+						</Segments>
+						<StyleRules>
+							<Prop
+								namedStyle="Title Main" />
+						</StyleRules>
+						<Translations>
+							<CmTranslation
+								guid="c6bb923b-3b5f-443e-90c3-ba4150a35837">
+								<Type>
+									<objsur
+										guid="80a0dddb-8b4b-4454-b872-88adec6f2aba"
+										t="r" />
+								</Type>
+							</CmTranslation>
+						</Translations>
+					</ownseq>
+				</Paragraphs>
+				<RightToLeft
+					val="False" />
+			</StText>
+		</Title>
+		<UseChapterNumHeading
+			val="False" />
+	</ScrBook>
+</Book>

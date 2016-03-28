@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecTypes>
+	<CmPossibilityList
+		guid="d9d55b12-ea5e-11de-95ef-0013722f8dec">
+		<Abbreviation>
+			<AUni
+				ws="en">Type</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Notebook Record Types</AUni>
+			<AUni
+				ws="fr">Types d'enregistrement de carnet</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="00951e6f-2523-4ac9-a649-ad42c659cf83">
+				<Abbreviation>
+					<AUni
+						ws="en">Evnt</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2010-4-6 15:4:13.852" />
+				<DateModified
+					val="2010-4-6 15:4:13.852" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Event</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="b7ea5156-ea5e-11de-9f9c-0013722f8dec">
+						<Abbreviation>
+							<AUni
+								ws="en">Obs</AUni>
+						</Abbreviation>
+						<BackColor
+							val="9474192" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">This will be one of your richest sources of information. It entails activities and conversations that you witness, but do not control. You may participate actively or passively in the activity you observe. The point is to be curious and approach the activity with questions. Important skills to develop that will make your observations more useful are memory and awareness.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="643581a1-d824-41b1-b243-9907d26e9611">
+								<DateModified
+									val="2011-2-2 19:39:28.834" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="80029e0c-7427-4974-bb40-720ec451683a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Observation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="16711935" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b7b37b86-ea5e-11de-80e9-0013722f8dec">
+						<Abbreviation>
+							<AUni
+								ws="en">Con</AUni>
+						</Abbreviation>
+						<BackColor
+							val="12176" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">In a conversation, all participants are free to direct and change the course of the activity; a dialogue is egalitarian. Most of your interaction with people is in the form of conversations. Conversations carry few expectations except an assumption of mutual cooperation. Conversations are a good place to start in order to build friendships and establish trust with people.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="9f1946bb-bbcd-46b4-ae69-60fcaa753e9c">
+								<DateModified
+									val="2011-2-2 19:39:28.834" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="1dd84ca6-ebb0-4fbd-a50d-45e758ca9d12">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Conversation</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="1" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b7bf673e-ea5e-11de-9c4d-0013722f8dec">
+						<Abbreviation>
+							<AUni
+								ws="en">Intv</AUni>
+						</Abbreviation>
+						<BackColor
+							val="9486591" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">Interviews involve an intentional request for information on a predetermined topic. The interviewer asks questions and the interviewee(s) provides answers. For this reason an interview is different from a conversation. It is more one-sided. Interviews range from "unstructured" to "structured." The more focus and structure in an interview, the more structured it becomes.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="47cb99e3-045d-4f56-aa76-986fcd92f4ac">
+								<DateModified
+									val="2011-2-2 19:39:28.834" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="def8d621-aed9-4c93-8ed2-eb7e5853a265">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Interview</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="b7c8f092-ea5e-11de-8d7d-0013722f8dec">
+								<Abbreviation>
+									<AUni
+										ws="en">Str</AUni>
+								</Abbreviation>
+								<BackColor
+									val="0" />
+								<DateCreated
+									val="2001-7-24 19:33:9.563" />
+								<DateModified
+									val="2001-7-24 19:33:9.563" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">A structured interview is used to obtain comparative data and is therefore intended to be given to more than one person. Consistency is important. The interviewer should ask questions the same way each time and the interviewee should be cued as to the appropriate way to respond (yes/no, multiple choice, short sentence answer, etc.).</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="5e99d147-7ec7-4622-8d5c-06332fa9939e">
+										<DateModified
+											val="2011-2-2 19:39:28.834" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="9e9702d0-163c-4789-8789-2e6d71a80fd7">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="16777215" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Structured</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="16777152" />
+								<UnderStyle
+									val="1" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="b7d4dc4a-ea5e-11de-867c-0013722f8dec">
+								<Abbreviation>
+									<AUni
+										ws="en">Uns</AUni>
+								</Abbreviation>
+								<BackColor
+									val="12176" />
+								<DateCreated
+									val="2001-7-24 19:33:9.563" />
+								<DateModified
+									val="2001-7-24 19:33:9.563" />
+								<Description>
+									<AStr
+										ws="en">
+										<Run
+											ws="en">Unstructured interviews will likely be the most common type of interview you use. In unstructured interviews, you are usually not concerned with comparing responses and may only give the interview to one person. The goal is to get basic information. The topic is usually approached in a general way, without restricting the how of the respondent answers. Questions are generally open-ended.</Run>
+									</AStr>
+								</Description>
+								<Discussion>
+									<StText
+										guid="941c7550-2ac3-48a3-b48c-e9820c79606f">
+										<DateModified
+											val="2011-2-2 19:39:28.834" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="5edda523-82f8-4618-bd83-2dbbd1290e93">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="16777215" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Unstructured</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="12032" />
+								<UnderStyle
+									val="4" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="49407" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="b7f63d0e-ea5e-11de-9f02-0013722f8dec">
+						<Abbreviation>
+							<AUni
+								ws="en">Per</AUni>
+						</Abbreviation>
+						<BackColor
+							val="49407" />
+						<DateCreated
+							val="2001-7-24 19:33:9.563" />
+						<DateModified
+							val="2001-7-24 19:33:9.563" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">A "performance" is a type of observation, but one where the performer(s) expects the performance to be evaluated based on culturally appropriate criteria. One example of a "performance" is a play. Gossip is less obvious but also falls into the performance category.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="e4efa72b-ab51-41d3-9ed8-8675b2182f96">
+								<DateModified
+									val="2011-2-2 19:39:28.834" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="0f664668-ec3c-448c-8831-55342e11535a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="16777215" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Performance</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="37119" />
+						<UnderStyle
+							val="3" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="b7e0c7f8-ea5e-11de-82cc-0013722f8dec">
+				<Abbreviation>
+					<AUni
+						ws="en">Lit</AUni>
+				</Abbreviation>
+				<BackColor
+					val="6328367" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Literature summaries are not limited to books. You may run across newspaper and magazine articles that have important information. Other sources of information are unpublished manuscripts like MA theses and PhD dissertations, brochures, field notes from other researchers, and letters. Still, don't forget the books. You can make use of this information by appending it directly into the Data Notebook.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="377cca78-607b-441a-bc67-1c72152563e1">
+						<DateModified
+							val="2011-2-2 19:39:28.834" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="5f9b59fd-f69a-44a2-a752-e4ad956da48b">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Literature Summary</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="16736303" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="82290763-1633-4998-8317-0ec3f5027fbd">
+				<Abbreviation>
+					<AUni
+						ws="en">Ana</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16711680" />
+				<DateCreated
+					val="2009-9-23 20:53:23.390" />
+				<DateModified
+					val="2009-9-23 20:53:23.390" />
+				<Discussion>
+					<StText
+						guid="347fcfc9-0c29-4ea8-8c0f-f6442a385ec0">
+						<DateModified
+							val="2011-2-2 19:39:28.936" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ab4c2515-d460-4c31-a99a-3f546db1bcdf">
+								<Contents>
+									<Str>
+										<Run
+											ws="en" />
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Analysis</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="255" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="bcb1cf88-582d-463a-b96f-0023f6ac2395">
+				<Abbreviation>
+					<AUni
+						ws="en">Method</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2010-4-6 15:4:13.852" />
+				<DateModified
+					val="2010-4-6 15:4:13.852" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Methodology</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="06974d9a-ff86-4e1c-a3e5-7ce8c961dcb9">
+				<Abbreviation>
+					<AUni
+						ws="en">Wthr</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2010-4-6 15:4:13.852" />
+				<DateModified
+					val="2010-4-6 15:4:13.852" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Weather</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</RecTypes>

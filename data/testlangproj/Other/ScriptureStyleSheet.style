@@ -1,0 +1,3655 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles>
+	<StStyle
+		guid="00e2b15c-1c67-4a36-9219-94d2e4fb3f49">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Inscription</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Inscription identifies the text of an inscription.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="02c456b9-9204-48b1-842d-0fd73de7e0a4">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Gloss</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Gloss identifies a simple definition of a word or phrase in the text.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="05580fcd-663e-4f27-b759-8fa49c105075">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Section Head Major</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Section Head Major identifies the start of a major section.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="0bf514f2-a2c2-49f0-9e3d-f33134218558">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Emphasis</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Emphasis identifies words or phrases that are stressed or emphasized for linguistic or rhetorical effect.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="0c328d88-fcf3-4b9b-aadf-488a3e6d76c1">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Section Head Minor</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				bold="off"
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Section Head Minor identifies the start of a subsection.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="0c973ed0-26e1-40e9-84b1-ec06cfbcfc67">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Hand</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Hand identifies text that is written by a person different from the scribe writing the letter.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="0f7380e4-0bd3-41f8-b8a5-99cefc1baf87">
+		<BasedOn>
+			<objsur
+				guid="b397e863-0a42-41b4-bb00-ad7fa5aac7d4"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Line3</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="b397e863-0a42-41b4-bb00-ad7fa5aac7d4"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-12000"
+				leadingIndent="36000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Line3 identifies a third-level line that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="120601e3-2cde-4c11-be39-0465a9b1b962">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Alluded Text</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Alluded Text identifies text that is an allusion to a passage, usually from the Old Testament.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="13317d9f-f607-4961-8030-e04d81a5c4b9">
+		<Context
+			val="3" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Untranslated Word</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Untranslated Word identifies vernacular words in a back translation that are not translated into the analysis language.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="152d574b-357b-4c2a-b3e0-b75967842ea9">
+		<BasedOn>
+			<objsur
+				guid="91f05b8f-7fa9-433c-a6b4-af0514d7e15e"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="8" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Note Cross-Reference Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="152d574b-357b-4c2a-b3e0-b75967842ea9"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Note Cross-Reference Paragraph identifies a note that contains canonical (book-chapter-verse) cross-references.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="15fce9f9-bf1a-4686-918b-340afc71e62d">
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Chapter Number Alternate</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Chapter Number Alternate identifies the start of a chapter using an alternate numbering system (for example, Hebrew).</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="170d2d9f-a1aa-452a-80c4-bff3298051f3">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Closing</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Closing identifies a paragraph that names the author of a communication.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="204e7fbf-d107-4e95-8cbf-512bb9938705">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Variant Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="204e7fbf-d107-4e95-8cbf-512bb9938705"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Variant Paragraph identifies a textual reading that can be regarded as part of the text, but textual scholarship cannot be taken as certain.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="20abc011-1977-4ca0-a9f6-a7ccc115836d">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Attribution</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				leadingIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Attribution identifies the speaker (usually the Lord) when it is in the original text.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="2294bef3-6fb3-4fdc-a167-6fc0492dc024">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Section Head Series</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="2294bef3-6fb3-4fdc-a167-6fc0492dc024"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Section Head Series identifies the start of a section in a list of sections.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="2393bebc-f3a8-4a77-ae80-5cc2416aa059">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Key Word</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Key Word identifies a word or phrase that is important for translation consistency.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="242b1677-849b-4b6d-9b4b-b316d7c853d6">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="3" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Table Cell</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="242b1677-849b-4b6d-9b4b-b316d7c853d6"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Table Cell identifies a cell in a table.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="26c5accd-aa70-495c-8ca6-dc46934fb46b">
+		<BasedOn>
+			<objsur
+				guid="3d3534c3-b326-4c85-abe6-2f8e322143a2"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Caption</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="26c5accd-aa70-495c-8ca6-dc46934fb46b"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				fontsize="9000"
+				fontsizeUnit="mpt"
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Caption identifies the caption of a picture (for example, an illustration or map).</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="298fcea2-fb6c-4256-a84a-7032d967799f">
+		<BasedOn>
+			<objsur
+				guid="3d3534c3-b326-4c85-abe6-2f8e322143a2"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Paragraph identifies a paragraph of prose.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="2d6be7bb-5149-446b-be74-d2b703858320">
+		<BasedOn>
+			<objsur
+				guid="528c2d2b-6728-4036-850b-9d7e499ddcb7"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="3" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Table Cell Head Last</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="c8fba4f8-e997-4584-ac62-79d3cddb4c3c"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Table Cell Head Last identifies the last cell in a row that contains a heading in a table.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="2d6edcc4-f45f-42ff-b05a-d718165f8ba6">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Refrain</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				italic="invert"
+				leadingIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Refrain identifies a line that is repeated.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="2f89134f-fb4d-46de-8377-cda950a431b2">
+		<BasedOn>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Intro Cross-Reference</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				trailingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Cross-Reference identifies the canonical (book-chapter-verse) reference for a quoted passage in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="30ad215c-ade0-4d15-ae4f-ffafcdafb229">
+		<Context
+			val="8" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Referenced Text</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Referenced Text identifies the text that is referenced in a note (that is, words from the text that the note is about).</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="322a59e4-f41c-4d88-8e9a-7f8ac5211462">
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Notation Tag</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert"
+				fontsize="9000"
+				fontsizeUnit="mpt" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Annotation Tag is an internal style used for labeling texts in the annotation view.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="377f0627-4d5d-404d-a597-b96aa9d63696">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Mentioned</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Mentioned identifies words, phrases, or letters that are mentioned, not used.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="3908ea36-4eb0-47ed-afa5-71f7e294f85d">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>See In Glossary</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">See In Glossary identifies words that are defined in the Glossary.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="3a122ab8-f4cc-4f99-b808-558aadaf51db">
+		<BasedOn>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Closing</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Closing identifies a paragraph that names the author of a communication that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="3cb434af-aa3d-4e4c-9818-882227c48b3d">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Citation Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="3cb434af-aa3d-4e4c-9818-882227c48b3d"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				leadingIndent="12000"
+				spaceAfter="12000"
+				spaceBefore="12000"
+				trailingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Citation Paragraph identifies a paragraph of prose that is quoted, usually from the Old Testament.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="3d3534c3-b326-4c85-abe6-2f8e322143a2">
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Normal</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				fontsize="10000"
+				fontsizeUnit="mpt"
+				lineHeight="12000"
+				lineHeightType="exact"
+				lineHeightUnit="mpt"
+				widowOrphan="1" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Normal is a parent style that other paragraph styles are based on, but you never apply it to a paragraph in the translated Scripture.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="4226286d-719e-480a-98a6-9f7f1980925b">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Words Of Christ</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				forecolor="red" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Words Of Christ identifies words or phrases that are spoken by Jesus.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="49ef5e23-20a2-41e5-aaa1-9c3bb75ebb13">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Paragraph Continuation</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Paragraph Continuation identifies the continuation of a paragraph of prose.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="4c2aa4bb-c1b3-4dc8-9ba7-b60a3b3d4bd0">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="7" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Stanza Break</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Stanza Break identifies the break (blank line) between stanzas of poetry.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="4c92a269-618b-4a5a-ad13-5076de74b9c0">
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Note Marker</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert"
+				spellcheck="doNotCheck"
+				superscript="super" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Note Marker identifies the location of a note (for example, a footnote).</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="4d1cdc55-4b28-4119-9519-e8e76fdabd28">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Speech Speaker</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ac32d778-0581-45fc-bcfa-48594634a9f6"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				bold="off"
+				fontsize="10000"
+				fontsizeUnit="mpt"
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Speech Speaker identifies the speaker (usually in drama) in a heading when it is not in the original text.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="4da91cb4-dbfd-40e6-922b-13951ffd26ff">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Inscription Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Inscription Paragraph identifies a paragraph of an inscription.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="4fc99266-6b07-455a-8338-0225a3c8218f">
+		<BasedOn>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Refrain</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Refrain identifies repeated text that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="50329f7f-dab2-4f8c-a081-a7560ccd9eab">
+		<BasedOn>
+			<objsur
+				guid="d7aad3f4-148f-4388-aea9-51b873b4bafb"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Variant Section Tail</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="50329f7f-dab2-4f8c-a081-a7560ccd9eab"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				borderBottom="500"
+				spaceAfter="12000"
+				spaceBefore="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Variant Section Tail identifies the end of a long variant passage.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="528c2d2b-6728-4036-850b-9d7e499ddcb7">
+		<BasedOn>
+			<objsur
+				guid="242b1677-849b-4b6d-9b4b-b316d7c853d6"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="3" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Table Cell Head</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="528c2d2b-6728-4036-850b-9d7e499ddcb7"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Table Cell Head identifies a cell that contains a heading in a table.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="5418f5ea-0358-4bc1-ba03-5c95fc163e93">
+		<Context
+			val="11" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Title Tertiary</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				fontsize="12000"
+				fontsizeUnit="mpt" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Title Tertiary identifies a part of the title that is of third-level importance.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="5796dc31-24db-4689-90a1-58b11e2521f6">
+		<BasedOn>
+			<objsur
+				guid="3d3534c3-b326-4c85-abe6-2f8e322143a2"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="1" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Remark</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="5796dc31-24db-4689-90a1-58b11e2521f6"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="12000" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Remark identifies a private note by the translator.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="5d476d23-7280-4e84-bb86-477fabb34462">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Label</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Label identifies text that is a type of heading.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="6c45ff6a-26df-4699-be9f-67f8d423fde6">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Supplied</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Supplied identifies words that are not literally in the original text, but that are supplied to make the original meaning clear.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="74120030-88d3-4f35-a811-b7b726e4f23d">
+		<BasedOn>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Paragraph Continuation</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Paragraph Continuation identifies the continuation of a paragraph of prose that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="7e639b08-7b82-4520-b6c8-04c47fc11391">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Quoted Text</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert"
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Quoted Text identifies less than a complete line or paragraph that is quoted, usually from the Old Testament.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="7f2563e2-cade-472c-bbef-832cd8454da3">
+		<Context
+			val="8" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Alternate Reading</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Alternate Reading identifies an alternate translation for a passage in a note.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="80fbf6f7-7dc0-45c4-a230-6346fa09283c">
+		<BasedOn>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Opening</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				spaceAfter="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Opening identifies the formal beginning of a letter that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="8301640e-ff63-460c-bafb-cae7b5ca1011">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Parallel Passage Reference</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				bold="off"
+				italic="invert"
+				spaceAfter="4000"
+				spaceBefore="-4000" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Parallel Passage Reference identifies canonical (book-chapter-verse) references to parallel passages.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="83d9594e-23e0-4718-b101-e2834c5be994">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Ordinal Number Ending</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				superscript="super" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Ordinal Number Ending identifies an abbreviation for the ending of an ordinal number.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="847dd5a3-c467-4095-acd5-7be56d6ee9c0">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Chapter Head</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				italic="off" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Chapter Head identifies a heading that contains the chapter number and the word for Chapter or Psalm.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="849d4852-d4d7-4f2b-9728-107ab8a43f7b">
+		<BasedOn>
+			<objsur
+				guid="f1c1d447-369e-4ee5-b832-471d864031bc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Intro List Item2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="f1c1d447-369e-4ee5-b832-471d864031bc"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-24000"
+				leadingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro List Item2 identifies a second-level item in a list in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="871b6e7c-9b00-49af-9188-cfbea866493b">
+		<Context
+			val="8" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Verse Number In Note</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck"
+				superscript="super" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Verse Number In Note identifies the start of a verse in a note.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="88c5fd86-bbda-4011-9c3e-94c025cc2f62">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Intro Section Head</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				fontsize="8000"
+				fontsizeUnit="mpt"
+				lineHeight="11000"
+				lineHeightType="exact"
+				lineHeightUnit="mpt" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Section Head identifies the start of a normal section in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="8abb38e0-618a-4531-8947-8f886c51d799">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				leadingIndent="12000"
+				trailingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Paragraph identifies a paragraph of prose that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="8fe4ffe6-f01b-43f6-8456-b9045272ddd3">
+		<BasedOn>
+			<objsur
+				guid="3d3534c3-b326-4c85-abe6-2f8e322143a2"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Header</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="8fe4ffe6-f01b-43f6-8456-b9045272ddd3"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				fontsize="9000"
+				fontsizeUnit="mpt" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Header identifies the generated text at the top of each page, but you never apply it to a paragraph in the translated Scripture.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="91f05b8f-7fa9-433c-a6b4-af0514d7e15e">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="8" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Note General Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="91f05b8f-7fa9-433c-a6b4-af0514d7e15e"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				fontsize="8000"
+				fontsizeUnit="mpt"
+				lineHeight="10000"
+				lineHeightType="atLeast"
+				lineHeightUnit="mpt" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Note General Paragraph identifies a note.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="969e384b-ff24-4068-9fd3-7d0d987052d2">
+		<Context
+			val="6" />
+		<Function
+			val="6" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Note Target Reference</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Note Target Reference identifies the verse (or range of verses) that is referenced in a note.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="9d7b3597-8e74-4e50-9525-5287ae63c64a">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Congregational Response</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				bold="invert"
+				spaceAfter="12000"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Congregational Response identifies the part that the congregation speaks in a liturgical work.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="9e43a265-a2f6-49a3-ae6c-26cda0766acd">
+		<BasedOn>
+			<objsur
+				guid="d20f5ce1-2a98-4904-a86e-b15e69543449"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>List Item2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="9e43a265-a2f6-49a3-ae6c-26cda0766acd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				leadingIndent="24000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">List Item2 identifies a second-level item in a list.</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="9f09968f-3e5e-4a72-96f4-c72f4ee4d2bf">
+		<BasedOn>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Intro Citation Line1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ab386db8-ce16-418e-84f6-b288ca948246"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				firstIndent="-24000"
+				leadingIndent="12000"
+				trailingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Citation Line1 identifies a first-level line that is quoted in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="a1e5842e-c7df-4cbb-bfaf-378f1c534741">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>So Called</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">So Called identifies text where the author or narrator of the original text distances himself from the words in question without attributing them to any other voice in particular.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="a2c2860b-0f55-403a-9cac-15097773d17e">
+		<BasedOn>
+			<objsur
+				guid="b397e863-0a42-41b4-bb00-ad7fa5aac7d4"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Line2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="b397e863-0a42-41b4-bb00-ad7fa5aac7d4"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-24000"
+				leadingIndent="24000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Line2 identifies a second-level line that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="a422a70e-a61f-4088-b83d-902be86f3ead">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="11" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Title Main</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="a422a70e-a61f-4088-b83d-902be86f3ead"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				bold="invert"
+				fontsize="20000"
+				fontsizeUnit="mpt"
+				italic="off"
+				lineHeight="24000"
+				lineHeightType="exact"
+				lineHeightUnit="mpt"
+				spaceAfter="12000"
+				spaceBefore="36000" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Title Main identifies the main title of a book.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="a72c3460-f0a9-4800-843a-4f35875998e1">
+		<Context
+			val="6" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Canonical Reference</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Canonical Reference identifies a book-chapter-verse reference.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="ab386db8-ce16-418e-84f6-b288ca948246">
+		<BasedOn>
+			<objsur
+				guid="9f09968f-3e5e-4a72-96f4-c72f4ee4d2bf"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Intro Citation Line2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="9f09968f-3e5e-4a72-96f4-c72f4ee4d2bf"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-12000"
+				leadingIndent="24000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Citation Line2 identifies a second-level line that is quoted in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="ac32d778-0581-45fc-bcfa-48594634a9f6">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Speech Line1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="b15a08ed-c725-4646-8be0-84fc7956962e"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Speech Line1 identifies a first-level line that is spoken by a particular speaker, usually in drama (for example, in Job and Song of Solomon).</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="b15a08ed-c725-4646-8be0-84fc7956962e">
+		<BasedOn>
+			<objsur
+				guid="ac32d778-0581-45fc-bcfa-48594634a9f6"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Speech Line2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ac32d778-0581-45fc-bcfa-48594634a9f6"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-24000"
+				leadingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Speech Line2 identifies a second-level line that is spoken by a particular speaker, usually in drama (for example, in Job and Song of Solomon).</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="b1703197-5daa-461a-9caf-19c24940d0e8">
+		<BasedOn>
+			<objsur
+				guid="f1c1d447-369e-4ee5-b832-471d864031bc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Intro List Item3</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="f1c1d447-369e-4ee5-b832-471d864031bc"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-12000"
+				leadingIndent="24000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro List Item3 identifies a third-level item in a list in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="b25be3f1-3566-42bc-99d8-616fe6c2567a">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Hebrew Title</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				firstIndent="0"
+				fontsize="8000"
+				fontsizeUnit="mpt"
+				keepTogether="1"
+				keepWithNext="1"
+				leadingIndent="0" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Hebrew Title identifies a title that is in the original Hebrew text.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="b35cfc5c-ae82-4bb5-a526-c43a8be23f7e">
+		<BasedOn>
+			<objsur
+				guid="d20f5ce1-2a98-4904-a86e-b15e69543449"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>List Item3</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d20f5ce1-2a98-4904-a86e-b15e69543449"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				leadingIndent="36000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">List Item3 identifies a third-level item in a list.</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="b38ad138-2796-4ac9-a129-a6d48ed9b73d">
+		<BasedOn>
+			<objsur
+				guid="242b1677-849b-4b6d-9b4b-b316d7c853d6"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="3" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Table Cell Last</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="c8fba4f8-e997-4584-ac62-79d3cddb4c3c"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Table Cell Last identifies the last cell in a row in a table.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="b397e863-0a42-41b4-bb00-ad7fa5aac7d4">
+		<BasedOn>
+			<objsur
+				guid="8abb38e0-618a-4531-8947-8f886c51d799"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Embedded Text Line1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="a2c2860b-0f55-403a-9cac-15097773d17e"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				firstIndent="-36000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Embedded Text Line1 identifies a first-level line that is embedded in the main text.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="b5b17bf1-3a86-4473-b0b7-47a4d3253d27">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Line2</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-24000"
+				leadingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Line2 identifies a second-level line.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="b7b82f43-467e-4e11-bf4f-d19cfa2178bf">
+		<Context
+			val="10" />
+		<Function
+			val="4" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Chapter Number</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Chapter Number identifies the start of a chapter.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="bb81b046-0e4f-4746-8410-9a9e2b8c32a2">
+		<Context
+			val="10" />
+		<Function
+			val="5" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Verse Number</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck"
+				superscript="super" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Verse Number identifies the start of a verse.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="be9e6c5e-8bfd-4d20-9348-b53f0f31d1ad">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Interlude</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				italic="invert"
+				leadingIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Interlude identifies a line that suggests a pause to reflect.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="c079c83e-18df-45c5-b975-71e3e87f2b9e">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Name Of God</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Name Of God identifies the name of God when the original Hebrew text is YHWH.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="c085f1bf-f761-45b9-bcff-90bbbc9709a8">
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Verse Number Alternate</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				spellcheck="doNotCheck"
+				superscript="super" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Verse Number Alternate identifies the start of a verse using an alternate numbering system (for example, Hebrew).</AUni>
+		</Usage>
+		<UserLevel
+			val="4" />
+	</StStyle>
+	<StStyle
+		guid="c62b39a5-9383-4bdb-94fe-7c80daa20245">
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Hyperlink</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				forecolor="blue"
+				undercolor="blue"
+				underline="single" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Hyperlink identifies links to other material via URLs</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="c8fba4f8-e997-4584-ac62-79d3cddb4c3c">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="3" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Table Row</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="242b1677-849b-4b6d-9b4b-b316d7c853d6"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				firstIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Table Row identifies the start of a row in a table.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Line1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="b5b17bf1-3a86-4473-b0b7-47a4d3253d27"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="leading"
+				firstIndent="-36000"
+				leadingIndent="0" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Line1 identifies a first-level line.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="cbe3b220-84fa-40ca-84ee-0adf22282cbe">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Section Range Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="cbe3b220-84fa-40ca-84ee-0adf22282cbe"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				spaceAfter="4000"
+				spaceBefore="-4000" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Section Range Paragraph identifies the chapter-verse range of a major section on a separate line.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="cc8b445a-c1f9-4d53-a1c5-96a6fe05eb96">
+		<Context
+			val="11" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Title Secondary</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				fontsize="14000"
+				fontsizeUnit="mpt" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Title Secondary identifies a part of the title that is of second-level importance.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="d20f5ce1-2a98-4904-a86e-b15e69543449">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>List Item1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d20f5ce1-2a98-4904-a86e-b15e69543449"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-24000"
+				leadingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">List Item1 identifies a first-level item in a list.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="d4393837-ba50-4bcd-b18f-82d22015a876">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Intro Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				fontsize="9000"
+				fontsizeUnit="mpt"
+				lineHeight="11000"
+				lineHeightType="exact"
+				lineHeightUnit="mpt" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Paragraph identifies a paragraph of prose in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="d698764a-bd9d-4a4f-ba97-057212819306">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Variant</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Variant identifies a textual reading in a note that can be regarded as part of the text, but textual scholarship cannot be taken as certain.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="d7aad3f4-148f-4388-aea9-51b873b4bafb">
+		<BasedOn>
+			<objsur
+				guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Variant Section Head</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				bold="off"
+				borderTop="500"
+				fontsize="10000"
+				fontsizeUnit="mpt"
+				spaceAfter="12000"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Variant Section Head identifies the start of a long variant passage.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="d809ad1f-da6c-40b5-9efd-738de8a254e3">
+		<BasedOn>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Intro Citation Paragraph</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="d809ad1f-da6c-40b5-9efd-738de8a254e3"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				leadingIndent="12000"
+				trailingIndent="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro Citation Paragraph identifies a paragraph of prose that is quoted in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="dc214fc8-f857-4344-927a-c2f9561cb5ae">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Doxology</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				firstIndent="0"
+				leadingIndent="0"
+				spaceAfter="12000"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Doxology identifies a line that glorifies God.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="ddf26511-acea-4623-924a-db0cf890d1cc">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Book Title In Text</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Book Title In Text identifies a book title in the text or in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="e03cd370-101c-4b83-aeb9-6a7d041e4189">
+		<BasedOn>
+			<objsur
+				guid="9e43a265-a2f6-49a3-ae6c-26cda0766acd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>List Item2 Additional</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="e03cd370-101c-4b83-aeb9-6a7d041e4189"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="12000"
+				leadingIndent="48000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">List Item2 Additional identifies an additional paragraph of prose in a second-level item in a list.</AUni>
+		</Usage>
+		<UserLevel
+			val="5" />
+	</StStyle>
+	<StStyle
+		guid="ea5ff482-7128-4bb2-872d-a1edee912270">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Foreign</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Foreign identifies text in a different language that has no other identifying feature.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="ee88b096-a48b-427d-bef8-dbc7048bfdfc">
+		<BasedOn>
+			<objsur
+				guid="3d3534c3-b326-4c85-abe6-2f8e322143a2"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Section Head</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="center"
+				bold="invert"
+				fontsize="9000"
+				fontsizeUnit="mpt"
+				keepTogether="1"
+				keepWithNext="1"
+				spaceAfter="4000"
+				spaceBefore="8000" />
+		</Rules>
+		<Structure
+			val="1" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Section Head identifies the start of a normal section.</AUni>
+		</Usage>
+		<UserLevel
+			val="0" />
+	</StStyle>
+	<StStyle
+		guid="f1c1d447-369e-4ee5-b832-471d864031bc">
+		<BasedOn>
+			<objsur
+				guid="d4393837-ba50-4bcd-b18f-82d22015a876"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="7" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Intro List Item1</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="f1c1d447-369e-4ee5-b832-471d864031bc"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-36000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Intro List Item1 identifies a first-level item in a list in the introduction.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="f4dc78ea-f0ad-4d6a-a186-8d419ec87f8b">
+		<BasedOn>
+			<objsur
+				guid="d20f5ce1-2a98-4904-a86e-b15e69543449"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="2" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>List Item1 Additional</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="f4dc78ea-f0ad-4d6a-a186-8d419ec87f8b"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="12000"
+				leadingIndent="36000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">List Item1 Additional identifies an additional paragraph of prose in a first-level item in a list.</AUni>
+		</Usage>
+		<UserLevel
+			val="5" />
+	</StStyle>
+	<StStyle
+		guid="f8fcc4d0-eb7d-4b91-8838-b1335863954d">
+		<BasedOn>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="1" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Line3</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="ca02b8f5-9651-4501-86f0-a26d3debe3fd"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				firstIndent="-12000"
+				leadingIndent="24000" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Line3 identifies a third-level line.</AUni>
+		</Usage>
+		<UserLevel
+			val="2" />
+	</StStyle>
+	<StStyle
+		guid="fc3eeb9b-18ec-4b9b-907d-26c3c550fcdf">
+		<Context
+			val="0" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="True" />
+		<Name>
+			<Uni>Abbreviation</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Abbreviation identifies an abbreviation (usually in a note or introduction).</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+	<StStyle
+		guid="fedfe391-5a9f-4177-b1b9-30192f059c7f">
+		<BasedOn>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="10" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="true" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="true" />
+		<Name>
+			<Uni>Cross-Reference</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="298fcea2-fb6c-4256-a84a-7032d967799f"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				align="trailing"
+				firstIndent="0"
+				fontsize="9000"
+				fontsizeUnit="mpt"
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="2" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Cross-Reference identifies canonical (book-chapter-verse) cross-references for a passage.</AUni>
+		</Usage>
+		<UserLevel
+			val="3" />
+	</StStyle>
+</Styles>

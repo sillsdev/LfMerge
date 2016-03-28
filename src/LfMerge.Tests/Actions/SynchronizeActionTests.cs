@@ -29,154 +29,162 @@ namespace LfMerge.Tests.Actions
 	[TestFixture, Explicit, Category("LongRunning")]
 	public class SynchronizeActionTests
 	{
-		public static string ProjectFolderPath;
+		public static string LDProjectFolderPath;
 
 		private const string testProjectCode = "testlangproj";
+		private const string testProjectCode2 = "testlangproj2";
 		private const int originalNumOfFdoEntries = 63;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-		private TestEnvironment env;
-		private MongoConnectionDouble mongoConnection;
+		private TestEnvironment _env;
+		private MongoConnectionDouble _mongoConnection;
 		private MongoProjectRecordFactory _recordFactory;
-		private HgRepository _hgRepo;
-		private LanguageForgeProject lfProject;
-		private LanguageForgeProject lDProject;
-		private TemporaryFolder languageDepotFolder;
-		private string lDProjectFolderPath;
-		private Guid testEntryGuid;
-		private TransferFdoToMongoAction transferFdoToMongo;
-		private SynchronizeAction sutSynchronize;
+		private LanguageForgeProject _lfProject;
+		private LanguageForgeProject _lDProject;
+		private LfMergeSettingsIni _lDSettings;
+		private TemporaryFolder _languageDepotFolder;
+		private Guid _testEntryGuid;
+		private TransferFdoToMongoAction _transferFdoToMongo;
+		private SynchronizeAction _sutSynchronize;
 
 		[SetUp]
 		public void Setup()
 		{
-			env = new TestEnvironment();
-			lfProject = LanguageForgeProject.Create(env.Settings, testProjectCode);
-			ProjectFolderPath = Path.Combine(env.Settings.WebWorkDirectory, testProjectCode);
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, env.Settings.WebWorkDirectory);
-			testEntryGuid = Guid.Parse(testEntryGuidStr);
+			_env = new TestEnvironment();
+			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			FdoTestFixture.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
+			_testEntryGuid = Guid.Parse(testEntryGuidStr);
 
-			languageDepotFolder = new TemporaryFolder("SyncTestLD");
-			LfMergeSettingsIni lDSettings = new LfMergeSettingsDouble(languageDepotFolder.Path);
-			lDProject = LanguageForgeProject.Create(lDSettings, testProjectCode);
-			lDProjectFolderPath = Path.Combine(lDSettings.WebWorkDirectory, testProjectCode);
-			Directory.CreateDirectory(lDSettings.WebWorkDirectory);
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, lDSettings.WebWorkDirectory);
-			_hgRepo = new HgRepository(lDProjectFolderPath, false, new NullProgress());
-			_hgRepo.Init();
+			_languageDepotFolder = new TemporaryFolder("SyncTestLD");
+			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
+			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
+			LDProjectFolderPath = Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode);
 
-			mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			if (mongoConnection == null)
+			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			if (_mongoConnection == null)
 				throw new AssertionException("Sync tests need a mock MongoConnection that stores data in order to work.");
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
 			if (_recordFactory == null)
 				throw new AssertionException("Sync tests need a mock MongoProjectRecordFactory in order to work.");
 
-			transferFdoToMongo = new TransferFdoToMongoAction(env.Settings, env.Logger, mongoConnection);
-			sutSynchronize = new SynchronizeAction(env.Settings, env.Logger);
+			_transferFdoToMongo = new TransferFdoToMongoAction(_env.Settings, _env.Logger, _mongoConnection);
+			_sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			env.Dispose();
-			Directory.Delete(languageDepotFolder.Path, true);
+			_env.Dispose();
+			Directory.Delete(_languageDepotFolder.Path, true);
 		}
 
 		[Test]
 		public void SynchronizeAction_NoCloneNoChangedData_GlossUnchanged()
 		{
+			//Setup
+			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+
 			// Exercise
-			sutSynchronize.Run(lfProject);
+			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			IEnumerable<LfLexEntry> receivedMongoData = mongoConnection.GetLfLexEntries();
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
-			LfLexEntry lfEntry = receivedMongoData.First(e => e.Guid == testEntryGuid);
+			LfLexEntry lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo("English gloss"));
 		}
 
 		[Test]
-		public void SynchronizeAction_MongoChangedData_GlossChanged()
+		public void SynchronizeAction_MongoDataChanged_GlossChanged()
 		{
 			// Setup
+			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+
 			TransferFdoToMongoAction.InitialClone = true;
-			transferFdoToMongo.Run(lfProject);
-			IEnumerable<LfLexEntry> originalMongoData = mongoConnection.GetLfLexEntries();
-			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == testEntryGuid);
+			_transferFdoToMongo.Run(_lfProject);
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string changedGloss = unchangedGloss + " - changed in LF";
 			lfEntry.Senses[0].Gloss["en"].Value = changedGloss;
 
-			var cache = lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
+			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
+			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			var cache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
-			LanguageForgeProject.DisposeProjectCache(lDProject.ProjectCode);
+			LanguageForgeProject.DisposeProjectCache(_lDProject.ProjectCode);
+			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			sutSynchronize.Run(lfProject);
+			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			IEnumerable<LfLexEntry> receivedMongoData = mongoConnection.GetLfLexEntries();
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
-			lfEntry = receivedMongoData.First(e => e.Guid == testEntryGuid);
+			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
 
-			cache = lDProject.FieldWorksProject.Cache;
-			lDFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
+			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
+			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			cache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
 		}
 
 		[Test]
-		public void SynchronizeAction_LDChangedData_GlossChanged()
+		public void SynchronizeAction_LDDataChanged_GlossChanged()
 		{
 			// Setup
-			TransferFdoToMongoAction.InitialClone = true;
-			transferFdoToMongo.Run(lfProject);
-			IEnumerable<LfLexEntry> originalMongoData = mongoConnection.GetLfLexEntries();
-			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == testEntryGuid);
-			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
-			string changedGloss = unchangedGloss + " - changed in LD";
+			FdoTestFixture.CopyFwProjectTo(testProjectCode2, _lDSettings.WebWorkDirectory);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode2), LDProjectFolderPath);
 
-			var cache = lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
-			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
-			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
-				{
-					lDFdoEntry.SensesOS[0].Gloss.set_String(wsEn, changedGloss);
-				});
-			cache.ActionHandlerAccessor.Commit();
+			TransferFdoToMongoAction.InitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
+			string changedGloss = unchangedGloss + " - changed in FW";
+
+			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
+			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			var cache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
-			LanguageForgeProject.DisposeProjectCache(lDProject.ProjectCode);
-			string fwdataFilePath = Path.Combine(lDProjectFolderPath, lDProject.ProjectCode + SharedConstants.FwXmlExtension);
-			var projectConfig = new ProjectFolderConfiguration(lDProjectFolderPath);
-			FlexFolderSystem.ConfigureChorusProjectFolder(projectConfig);
-			FLEx.ProjectSplitter.PushHumptyOffTheWall(new NullProgress(), false, fwdataFilePath);
-			_hgRepo.AddAndCheckinFiles(projectConfig.IncludePatterns, projectConfig.ExcludePatterns, "changed test gloss");
+			LanguageForgeProject.DisposeProjectCache(_lDProject.ProjectCode);
+			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
-			sutSynchronize.Run(lfProject);
+			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			IEnumerable<LfLexEntry> receivedMongoData = mongoConnection.GetLfLexEntries();
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
-			lfEntry = receivedMongoData.First(e => e.Guid == testEntryGuid);
+			cache = _lfProject.FieldWorksProject.Cache;
+			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lfFdoEntry, Is.Not.Null);
+			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
+
+			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
 
-			cache = lDProject.FieldWorksProject.Cache;
-			lDFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
+			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
+			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			cache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Reversal>
+	<header>
+		<ReversalIndex
+			guid="62105696-da6c-405e-b87f-a2a0294bb179">
+			<DateCreated
+				val="2005-5-24 13:38:58.560" />
+			<DateModified
+				val="2006-6-26 15:44:43.427" />
+			<Entries />
+			<Name>
+				<AUni
+					ws="en">English</AUni>
+			</Name>
+			<PartsOfSpeech />
+			<WritingSystem>
+				<Uni>en</Uni>
+			</WritingSystem>
+		</ReversalIndex>
+	</header>
+	<ReversalIndexEntry
+		guid="18a596cb-ebaa-472a-81b3-66fd6b807513">
+		<ReversalForm>
+			<AUni
+				ws="en">bungalo</AUni>
+		</ReversalForm>
+	</ReversalIndexEntry>
+	<ReversalIndexEntry
+		guid="2d11054c-7a9d-4c0f-a08e-713ff5dfe429">
+		<ReversalForm>
+			<AUni
+				ws="en">house</AUni>
+		</ReversalForm>
+	</ReversalIndexEntry>
+</Reversal>

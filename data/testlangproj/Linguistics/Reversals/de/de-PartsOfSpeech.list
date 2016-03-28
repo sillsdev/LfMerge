@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PartsOfSpeech>
+	<CmPossibilityList
+		guid="310bff25-fc83-4ac1-ba73-c75ae61ad313">
+		<DateCreated
+			val="2006-6-26 15:44:42.940" />
+		<DateModified
+			val="2006-6-26 15:44:42.940" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5049" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Parts of Speech for German Reversal Index</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="0" />
+	</CmPossibilityList>
+</PartsOfSpeech>

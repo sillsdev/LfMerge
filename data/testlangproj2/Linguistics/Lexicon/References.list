@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<References>
+	<CmPossibilityList
+		guid="49335bf4-b37d-416b-8911-9252bef3eff2">
+		<Abbreviation>
+			<AUni
+				ws="en">RefTyp</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2009-7-8 17:6:30.80" />
+		<DateModified
+			val="2009-7-8 17:6:30.80" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5119" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Lexical Relations</AUni>
+			<AUni
+				ws="es">Relaciones léxicas</AUni>
+			<AUni
+				ws="fa">روابط واژه‌ای</AUni>
+			<AUni
+				ws="fr">Relations lexicales</AUni>
+			<AUni
+				ws="id">Hubungan Kata</AUni>
+			<AUni
+				ws="pt">Relações Lexicais</AUni>
+			<AUni
+				ws="ru">Лексические отношения</AUni>
+			<AUni
+				ws="zh-CN">语义关系</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="LexRefType"
+				guid="37cc43e2-04d6-41a6-b857-14735fbde826">
+				<Abbreviation>
+					<AUni
+						ws="en">pt</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.50" />
+				<DateModified
+					val="2009-7-8 17:6:38.50" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A part/whole relation establishes a link between the sense for the whole (e.g., room), and senses for the parts (e.g., ceiling, wall, floor).</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="ddaa87fd-df95-40a7-947a-076b36e79bce">
+						<DateModified
+							val="2011-2-2 19:39:28.829" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ebeb3b07-0deb-4904-95ce-a1940ab8ccfa">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="3" />
+				<Name>
+					<AUni
+						ws="en">Part</AUni>
+					<AUni
+						ws="zh-CN">部分</AUni>
+				</Name>
+				<ReverseAbbreviation>
+					<AUni
+						ws="en">wh</AUni>
+				</ReverseAbbreviation>
+				<ReverseName>
+					<AUni
+						ws="en">Whole</AUni>
+				</ReverseName>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="932aa3a6-a989-4d31-b946-40a61a3fa3cc">
+				<Abbreviation>
+					<AUni
+						ws="en">spec</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">A generic/specific relation establishes a link between the sense for the generic (e.g., bird), and senses for the specifics (e.g., robin, cardinal, dove).</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="b354c78e-3e26-4cc9-820a-82f4d5b0d6a2">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9fd8fde3-cdd1-41ee-8443-fcfb47219bce">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="3" />
+				<Name>
+					<AUni
+						ws="en">Specific</AUni>
+					<AUni
+						ws="zh-CN">具体</AUni>
+				</Name>
+				<ReverseAbbreviation>
+					<AUni
+						ws="en">gen</AUni>
+				</ReverseAbbreviation>
+				<ReverseName>
+					<AUni
+						ws="en">Generic</AUni>
+				</ReverseName>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="977981a1-084c-48e4-88ae-1751f55d392c">
+				<Abbreviation>
+					<AUni
+						ws="en">syn</AUni>
+					<AUni
+						ws="ko">동</AUni>
+					<AUni
+						ws="zh-CN">同</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Use this type for synonym relationships (e.g., fast, fleet, hasty).</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="6c1650a1-03d4-42e7-8faa-44b9935077f2">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="75ee52e9-8c06-4c20-ae7a-046229f5bc11">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="0" />
+				<Name>
+					<AUni
+						ws="en">Synonyms</AUni>
+					<AUni
+						ws="ko">동의어</AUni>
+					<AUni
+						ws="zh-CN">同义词</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="40de3dfc-c55e-4f79-80c9-bbcc41e1ab4c">
+				<Abbreviation>
+					<AUni
+						ws="en">ant</AUni>
+					<AUni
+						ws="ko">반</AUni>
+					<AUni
+						ws="zh-CN">反</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Use this type for antonym relationships (e.g., fast, slow).</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="afae213a-9e2e-44c5-a27a-23e90b5b9778">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="4cb3eaf3-b443-409a-807b-4ca9a11499f5">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="1" />
+				<Name>
+					<AUni
+						ws="en">Antonym</AUni>
+					<AUni
+						ws="ko">반의어</AUni>
+					<AUni
+						ws="zh-CN">反义词</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="2e362635-9204-4264-9f38-ae92df0082d8">
+				<Abbreviation>
+					<AUni
+						ws="en">cal</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Use this type for calendar relationships (e.g., days of week, months in year).</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="c4e05c36-1b66-4936-b6f4-e9ea4a4f0af9">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9838f125-e390-4974-b423-e758586aac09">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="4" />
+				<Name>
+					<AUni
+						ws="en">Calendar</AUni>
+					<AUni
+						ws="zh-CN">日历</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="82023861-7b0e-4ab4-9e0a-1f342c9f9cbc">
+				<Abbreviation>
+					<AUni
+						ws="en">cf</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Use this type for relationships that cannot be classified by a specific label, or of which there are too few examples to warrant creating a custom lexical relation.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="d3ae5944-bb89-46a8-8bea-ce4efde953f9">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="2d874baa-ca4e-4687-98b0-5d4956306b91">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="5" />
+				<Name>
+					<AUni
+						ws="en">Compare</AUni>
+					<AUni
+						ws="zh-CN">比较</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexRefType"
+				guid="6c033767-202c-4132-82c0-18ac4c8a4ef6">
+				<Abbreviation>
+					<AUni
+						ws="en">clf. for</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2009-7-8 17:6:38.67" />
+				<DateModified
+					val="2009-7-8 17:6:38.67" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Use this relation for linking classifiers to the words that they classify.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="84dea984-1203-4a54-9921-a27afd00c3d0">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9fe0e089-f86a-4357-8faa-5a218ad6e3ac">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<MappingType
+					val="3" />
+				<Name>
+					<AUni
+						ws="en">Classified Noun</AUni>
+				</Name>
+				<ReverseAbbreviation>
+					<AUni
+						ws="en">clf</AUni>
+				</ReverseAbbreviation>
+				<ReverseName>
+					<AUni
+						ws="en">Classifier</AUni>
+				</ReverseName>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="true" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</References>

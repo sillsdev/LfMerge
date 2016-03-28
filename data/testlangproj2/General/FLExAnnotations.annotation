@@ -1,0 +1,1829 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Annotations>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="04ebd095-6f08-4dc5-a8b9-680a48f6f2f3">
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>Maximum permitted analyses (448) reached.</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-2-28 19:46:49.37" />
+		<DateModified
+			val="2005-2-28 19:46:49.37" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<Source>
+			<objsur
+				guid="1257a971-fcef-4f06-a5e2-c289de5aaf72"
+				t="r" />
+		</Source>
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="0561d629-851c-4c1a-bd81-6fdae7020133">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>705973</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:23.170" />
+		<DateModified
+			val="2008-12-10 0:32:23.170" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="05b34fe9-6666-4c5e-a312-1ccd8e252914">
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>Maximum internal buffer size (117) reached.</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-2-28 19:46:49.47" />
+		<DateModified
+			val="2005-2-28 19:46:49.47" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<Source>
+			<objsur
+				guid="1257a971-fcef-4f06-a5e2-c289de5aaf72"
+				t="r" />
+		</Source>
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="061b17fc-02b9-4a5d-ba2d-34a04b0ff3e4">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>712788</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:32.577" />
+		<DateModified
+			val="2008-12-10 0:33:32.577" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="0ae6c375-8fa2-4420-80a4-2d5bec3643c7">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>704404</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:6.200" />
+		<DateModified
+			val="2008-12-10 0:32:6.200" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="0f226587-8a3d-4802-8d84-02bfcbf0a812">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>696868</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:49.327" />
+		<DateModified
+			val="2008-12-10 0:30:49.327" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="15589553-d1c8-44fa-b394-c3db36c6aad8">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>706861</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:31.907" />
+		<DateModified
+			val="2008-12-10 0:32:31.907" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="160701b2-748b-47f9-9aa0-e60aacb1ab0f">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>707621</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:39.500" />
+		<DateModified
+			val="2008-12-10 0:32:39.500" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="163842e7-fbb0-414c-b6af-975451b6b6fb">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>699450</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:15.530" />
+		<DateModified
+			val="2008-12-10 0:31:15.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="1bf93e4d-cd28-4be0-b83e-6deaa5dee344">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>692779</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:14.140" />
+		<DateModified
+			val="2008-12-10 0:30:14.140" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="249ea1af-5c13-402f-88e1-fad790cefd7b">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>716049</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:34:5.860" />
+		<DateModified
+			val="2008-12-10 0:34:5.860" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="27256c2f-8e6a-44e2-af56-11d28d568c6d">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>702007</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:41.217" />
+		<DateModified
+			val="2008-12-10 0:31:41.217" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="2747041c-b1f2-4f60-8e68-eb0a9d836415">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>701998</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:41.217" />
+		<DateModified
+			val="2008-12-10 0:31:41.217" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="285aee2c-2505-4ff2-9f99-226990499ab4">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>714551</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:49.670" />
+		<DateModified
+			val="2008-12-10 0:33:49.670" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="2aa3a73c-a5e9-466d-a3d4-f28db309bf12">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>709940</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:4.0" />
+		<DateModified
+			val="2008-12-10 0:33:4.0" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="2e7ddd8d-44e8-4dc5-b014-be2a3d00acc2">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>706870</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:31.907" />
+		<DateModified
+			val="2008-12-10 0:32:31.907" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="3c7fe430-3918-4f4c-8a68-3a2b8c4ac96c">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>711946</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:23.623" />
+		<DateModified
+			val="2008-12-10 0:33:23.623" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="3d2f7bff-1e11-4cb1-97d2-00306ab6e35d">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>700289</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:23.653" />
+		<DateModified
+			val="2008-12-10 0:31:23.653" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="4ad8be33-f56e-42c1-814a-8877c2530399">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>710700</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:14.530" />
+		<DateModified
+			val="2008-12-10 0:33:14.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="4db476e3-1c83-47ce-ae22-d6b15b107c50">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>713711</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:41.360" />
+		<DateModified
+			val="2008-12-10 0:33:41.360" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="4e1d6f7b-077f-4a64-b79e-53b51c20692c">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>702878</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:49.373" />
+		<DateModified
+			val="2008-12-10 0:31:49.373" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="4f08cca3-53e3-41fc-8cdc-d96b5b53d5aa">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>696859</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:49.327" />
+		<DateModified
+			val="2008-12-10 0:30:49.327" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="5c6a1e08-93cf-42a7-8321-a6704d5c9965">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>716702</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:34:13.610" />
+		<DateModified
+			val="2008-12-10 0:34:13.610" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="5ce2cc93-0a52-476a-a76d-a51152edbb25">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>716040</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:34:5.860" />
+		<DateModified
+			val="2008-12-10 0:34:5.860" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="5d8d88a8-ebb0-4842-a694-ab9aa4bed462">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>708363</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:46.983" />
+		<DateModified
+			val="2008-12-10 0:32:46.983" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="5f69c69f-4031-4450-93d3-2e2d36bde577">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>701142</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:32.390" />
+		<DateModified
+			val="2008-12-10 0:31:32.390" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="72145866-cae3-41dc-852d-5cb81d428b58">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>694015</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:23.730" />
+		<DateModified
+			val="2008-12-10 0:30:23.730" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="72d8324a-285e-4974-bf8a-2e53ef2ef853">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>709082</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:55.80" />
+		<DateModified
+			val="2008-12-10 0:32:55.80" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="73254f54-d325-4a11-beb4-9b610d2524c4">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>703704</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:57.607" />
+		<DateModified
+			val="2008-12-10 0:31:57.607" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="74f706b8-781f-4a52-8bb6-0b0edbda5013">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>697719</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:57.763" />
+		<DateModified
+			val="2008-12-10 0:30:57.763" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="7a049acc-2133-4cc7-bfa7-96b9a55de6aa">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>695876</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:40.530" />
+		<DateModified
+			val="2008-12-10 0:30:40.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="7aa66c7b-2657-4eb8-ace5-6ac7b66a85b8">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>694025</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:23.730" />
+		<DateModified
+			val="2008-12-10 0:30:23.730" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="7b35ac2e-b3ce-44ea-a44a-cadbc9926233">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>695867</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:40.530" />
+		<DateModified
+			val="2008-12-10 0:30:40.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="800ba90c-2285-4b84-abc9-c38a592fce76">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>701151</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:32.390" />
+		<DateModified
+			val="2008-12-10 0:31:32.390" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="827e08df-502f-4cb9-b0fc-df8443972194">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginObject>
+			<objsur
+				guid="a122d9bb-2d43-4e4c-b74f-6fe44d1c6cb2"
+				t="r" />
+		</BeginObject>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>589836</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-6-17 14:37:31.830" />
+		<DateModified
+			val="2005-6-17 14:37:31.830" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="8a80551c-ccaa-407e-92bb-70e51c635256">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>712797</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:32.577" />
+		<DateModified
+			val="2008-12-10 0:33:32.577" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="900c6447-5d5e-4b7b-ae03-ad77443709c5">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>698615</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:6.700" />
+		<DateModified
+			val="2008-12-10 0:31:6.700" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="9299e1ce-2d5e-425f-83c3-b96fd730c686">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>700280</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:23.653" />
+		<DateModified
+			val="2008-12-10 0:31:23.653" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="9400f7d7-0d4f-4238-95db-7c2b476e2d2d">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>705095</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:14.560" />
+		<DateModified
+			val="2008-12-10 0:32:14.560" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="94a376ec-8e24-48a3-a2c8-c90611eabbc4">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>685688</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:27:42.417" />
+		<DateModified
+			val="2008-12-10 0:27:42.417" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="952529ad-26f1-4c85-8c50-721f6265ea1a">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>692788</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:14.140" />
+		<DateModified
+			val="2008-12-10 0:30:14.140" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="9c8112da-99d0-4d7f-86a3-c2cd822923ce">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>707612</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:39.500" />
+		<DateModified
+			val="2008-12-10 0:32:39.500" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="9f5af4d4-f825-4b7e-bc1a-5126a25f0086">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>705086</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:14.560" />
+		<DateModified
+			val="2008-12-10 0:32:14.560" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="a0bdad3a-04c1-4584-877c-2a194aca8dca">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>714542</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:49.670" />
+		<DateModified
+			val="2008-12-10 0:33:49.670" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="a1d58100-02a0-45cf-8f71-fcd72dfc44f9">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>715374</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:58.47" />
+		<DateModified
+			val="2008-12-10 0:33:58.47" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="a1fc26f4-3346-4cd4-aab7-58d562f0ab4c">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>703713</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:57.607" />
+		<DateModified
+			val="2008-12-10 0:31:57.607" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="ae2dd7a6-a6e2-4f94-94c0-1f516c0c205d">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>709073</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:55.80" />
+		<DateModified
+			val="2008-12-10 0:32:55.80" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="c3b5ea36-3e89-4c90-812f-4ee2064a096a">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>704395</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:6.187" />
+		<DateModified
+			val="2008-12-10 0:32:6.187" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="da09842d-c7d8-40d4-8100-bcdb7086602e">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>709931</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:4.0" />
+		<DateModified
+			val="2008-12-10 0:33:4.0" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="dc747a85-ceb6-491e-8b54-7fc37d7b2f80">
+		<BeginObject>
+			<objsur
+				guid="89ada552-0f08-4fca-bbf0-da744250d30e"
+				t="r" />
+		</BeginObject>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>&lt;phonEnv status="syntax" pos="6" syntaxErrType="unknown"&gt;/ _ i _
+&lt;/phonEnv&gt;</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-2-28 19:46:48.907" />
+		<DateModified
+			val="2005-2-28 19:46:48.907" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="dc8de2a5-c780-4923-908e-0a8badf9390e">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>697710</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:57.763" />
+		<DateModified
+			val="2008-12-10 0:30:57.763" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="de1d0755-6e72-4ea6-b6f6-a3cf11dd2c4b">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>699768</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:15.530" />
+		<DateModified
+			val="2008-12-10 0:31:15.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="e19d7b57-a052-49f6-bca8-acaf9bf9629e">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>705982</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:23.170" />
+		<DateModified
+			val="2008-12-10 0:32:23.170" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="e2357f8c-e747-4e42-b637-9f8932078906">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>710709</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:14.530" />
+		<DateModified
+			val="2008-12-10 0:33:14.530" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="e47bfc46-108e-4405-878b-c7d81ea85c8a">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>711937</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:23.623" />
+		<DateModified
+			val="2008-12-10 0:33:23.623" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="e828a9e1-5078-4c9e-b63c-aa2607940757">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>708372</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:32:46.983" />
+		<DateModified
+			val="2008-12-10 0:32:46.983" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="e9c947d1-f5c5-42f4-98ce-c871e6fa3c89">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>702869</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:49.373" />
+		<DateModified
+			val="2008-12-10 0:31:49.373" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="ea492598-e247-400b-aedf-39404a52da74">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>713720</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:41.360" />
+		<DateModified
+			val="2008-12-10 0:33:41.360" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="ecef0cba-9269-41ab-a20b-524e8e0b54d5">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>698625</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:31:6.700" />
+		<DateModified
+			val="2008-12-10 0:31:6.700" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="ef7ad7ee-29f0-4d0b-bc54-4e286874cc4e">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>716693</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:34:13.597" />
+		<DateModified
+			val="2008-12-10 0:34:13.597" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="f06362ed-e58c-4ebf-a7b0-d8b71cdf7d48">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>695108</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:32.607" />
+		<DateModified
+			val="2008-12-10 0:30:32.607" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="f06d7726-3101-4185-9c25-7f26feb5915c">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>695117</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:30:32.623" />
+		<DateModified
+			val="2008-12-10 0:30:32.623" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="f3cd8800-9830-459b-83df-f28986d29a0f">
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>Maximum internal buffer size (117) reached.</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-2-28 19:46:49.37" />
+		<DateModified
+			val="2005-2-28 19:46:49.37" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<Source>
+			<objsur
+				guid="1257a971-fcef-4f06-a5e2-c289de5aaf72"
+				t="r" />
+		</Source>
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="f591ccdd-b2dc-4e25-a237-83c0d8a6f21d">
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>Maximum permitted analyses (448) reached.</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2005-2-28 19:46:49.37" />
+		<DateModified
+			val="2005-2-28 19:46:49.37" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<Source>
+			<objsur
+				guid="1257a971-fcef-4f06-a5e2-c289de5aaf72"
+				t="r" />
+		</Source>
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+	<CmAnnotation
+		class="CmBaseAnnotation"
+		guid="f71a24a3-001f-45ef-ad84-f960f88e9aec">
+		<AnnotationType>
+			<objsur
+				guid="20cf6c1c-9389-4380-91f5-dfa057003d51"
+				t="r" />
+		</AnnotationType>
+		<BeginOffset
+			val="0" />
+		<BeginRef
+			val="0" />
+		<CompDetails>
+			<Uni>715365</Uni>
+		</CompDetails>
+		<DateCreated
+			val="2008-12-10 0:33:58.47" />
+		<DateModified
+			val="2008-12-10 0:33:58.47" />
+		<EndOffset
+			val="0" />
+		<EndRef
+			val="0" />
+		<Flid
+			val="0" />
+		<WsSelector
+			val="0" />
+	</CmAnnotation>
+</Annotations>

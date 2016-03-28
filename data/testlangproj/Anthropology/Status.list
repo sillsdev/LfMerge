@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Status>
+	<CmPossibilityList
+		guid="2bdd10dd-f9b2-11d3-977b-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Stat</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Status</AUni>
+			<AUni
+				ws="es">Estado</AUni>
+			<AUni
+				ws="fa">وضعیت</AUni>
+			<AUni
+				ws="fr">Statut</AUni>
+			<AUni
+				ws="id">Status</AUni>
+			<AUni
+				ws="pt">Status</AUni>
+			<AUni
+				ws="ru">Состояние</AUni>
+			<AUni
+				ws="zh-CN">状态</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd10e4-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Conf</AUni>
+					<AUni
+						ws="es">sConf</AUni>
+					<AUni
+						ws="fr">fConf</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16760976" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="1ca4c82e-d4dd-40b0-a289-4b693c39a80c">
+						<DateModified
+							val="2011-2-2 19:39:28.362" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="f44c0ea3-fe21-4f0a-912a-67adec1f07d7">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="ar-IQ">لا شك أن</AUni>
+					<AUni
+						ws="en">Confirmed</AUni>
+					<AUni
+						ws="es">sConfirmed</AUni>
+					<AUni
+						ws="fr">fConfirmed</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="24831" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd10eb-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Dis</AUni>
+					<AUni
+						ws="es">sDis</AUni>
+					<AUni
+						ws="fr">fDis</AUni>
+				</Abbreviation>
+				<BackColor
+					val="9461856" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="7cc557d8-c331-4bf0-9375-3aeee3acdb21">
+						<DateModified
+							val="2011-2-2 19:39:28.364" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="fef8a63f-0bde-45a9-b46b-2da70b77733f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Disproved</AUni>
+					<AUni
+						ws="es">sDisproved</AUni>
+					<AUni
+						ws="fr">fDisproved</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8355584" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="2bdd10f2-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">Pend</AUni>
+					<AUni
+						ws="es">sPend</AUni>
+					<AUni
+						ws="fr">fPend</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="a53f0ceb-b3e8-4184-94a3-b20c96d639f9">
+						<DateModified
+							val="2011-2-2 19:39:28.364" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="fde8c177-3afd-4a7c-afb6-308a6d640de4">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Pending</AUni>
+					<AUni
+						ws="es">sPending</AUni>
+					<AUni
+						ws="fr">fPending</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8355711" />
+				<UnderStyle
+					val="3" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="33bff305-6de5-4946-b983-4dbffeddfc28">
+				<Abbreviation>
+					<AUni
+						ws="en">Tent</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2004-9-11 20:51:5.467" />
+				<DateModified
+					val="2004-9-11 20:53:0.0" />
+				<Discussion>
+					<StText
+						guid="14dd664b-becb-4f7b-86c6-a33a3c495d70">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="62fb0e09-20e2-4acb-9233-e0e993e5165f">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Tentative</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</Status>

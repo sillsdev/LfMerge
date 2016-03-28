@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SenseTypes>
+	<CmPossibilityList
+		guid="d7f71382-e8cf-11d3-9764-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">SenTyp</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Sense Types</AUni>
+			<AUni
+				ws="es">Tipos de acepción</AUni>
+			<AUni
+				ws="fa">انواع معنی</AUni>
+			<AUni
+				ws="fr">Types de sens</AUni>
+			<AUni
+				ws="id">Jenis Pengertian</AUni>
+			<AUni
+				ws="pt">Tipos de Significado</AUni>
+			<AUni
+				ws="ru">Типы значений</AUni>
+			<AUni
+				ws="zh-CN">词义类型</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="d7f71383-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">fig</AUni>
+					<AUni
+						ws="es">fig</AUni>
+					<AUni
+						ws="fr">fig</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="9fbbb8c0-14c4-40c8-8c9e-c9190535ac26">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="087ac623-42d9-4806-950d-a3842e940a2b">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">figurative</AUni>
+					<AUni
+						ws="es">figurativo</AUni>
+					<AUni
+						ws="fr">figuratif</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="d7f71384-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">prim</AUni>
+					<AUni
+						ws="es">prim</AUni>
+					<AUni
+						ws="fr">prim</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Discussion>
+					<StText
+						guid="95ebd415-6301-4b6f-9539-254fdfd0ae88">
+						<DateModified
+							val="2011-2-2 19:39:28.830" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="40cda37f-44eb-41e7-8786-6eb221d01a72">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">primary</AUni>
+					<AUni
+						ws="es">primario</AUni>
+					<AUni
+						ws="fr">primaire</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</SenseTypes>

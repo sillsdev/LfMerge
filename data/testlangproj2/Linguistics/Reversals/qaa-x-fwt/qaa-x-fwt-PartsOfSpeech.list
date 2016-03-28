@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PartsOfSpeech>
+	<CmPossibilityList
+		guid="441a1e88-a4fa-4633-90ce-13b4479c8025">
+		<DateCreated
+			val="2006-6-26 15:44:43.347" />
+		<DateModified
+			val="2006-6-26 15:44:43.347" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5049" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Parts of Speech for FwTest Reversal Index</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="0" />
+	</CmPossibilityList>
+</PartsOfSpeech>

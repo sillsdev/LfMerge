@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TranslationTags>
+	<CmPossibilityList
+		guid="d7f71649-e8cf-11d3-9764-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Type</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2004-9-11 2:19:15.403" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Translation Types</AUni>
+			<AUni
+				ws="es">Tipos de traducción</AUni>
+			<AUni
+				ws="fa">انواع ترجمه</AUni>
+			<AUni
+				ws="fr">Types de traduction</AUni>
+			<AUni
+				ws="id">Jenis Terjemahan</AUni>
+			<AUni
+				ws="pt">Tipos de Tradução</AUni>
+			<AUni
+				ws="ru">Типы перевода</AUni>
+			<AUni
+				ws="zh-CN">翻译类型</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="80a0dddb-8b4b-4454-b872-88adec6f2aba">
+				<Abbreviation>
+					<AUni
+						ws="en">BT</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2004-9-11 2:17:31.153" />
+				<DateModified
+					val="2004-9-11 2:19:0.0" />
+				<Discussion>
+					<StText
+						guid="3aeef2e2-9466-41d5-afa7-d569f667fc79">
+						<DateModified
+							val="2011-2-2 19:39:28.935" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9555b62c-51f6-4b2a-ba51-944c5d69f4c1">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Back translation</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="d7f7164a-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">FT</AUni>
+					<AUni
+						ws="es">TB:</AUni>
+					<AUni
+						ws="fr">TL:</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2004-9-11 2:19:0.0" />
+				<Discussion>
+					<StText
+						guid="29e3616a-89cd-4530-b33e-7b930bc0559c">
+						<DateModified
+							val="2011-2-2 19:39:28.935" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="648e96fb-7d5e-4592-8325-2bdadfee55a0">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Free translation</AUni>
+					<AUni
+						ws="es">Traducción libre</AUni>
+					<AUni
+						ws="fr">Traduction libre</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmPossibility"
+				guid="d7f7164b-e8cf-11d3-9764-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">LT</AUni>
+					<AUni
+						ws="es">TT:</AUni>
+					<AUni
+						ws="fr">TP:</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2004-9-11 2:19:0.0" />
+				<Discussion>
+					<StText
+						guid="bbc806d9-c56c-417d-919c-2a952615e410">
+						<DateModified
+							val="2011-2-2 19:39:28.935" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="c3b65267-997d-45dc-a845-1b59335896ca">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Literal translation</AUni>
+					<AUni
+						ws="es">Traducción literal</AUni>
+					<AUni
+						ws="fr">Traduction littérale</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</TranslationTags>

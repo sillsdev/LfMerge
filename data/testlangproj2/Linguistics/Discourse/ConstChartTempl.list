@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstChartTempl>
+	<CmPossibilityList
+		guid="3a2a22fd-e440-4433-97a8-30ecc460c9cd">
+		<Abbreviation>
+			<AUni
+				ws="en">ConChrtTempl</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2008-1-11 21:8:55.380" />
+		<DateModified
+			val="2008-1-11 21:8:55.380" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Text Constituent Chart Templates</AUni>
+			<AUni
+				ws="es">Plantillas para tabla de texto</AUni>
+			<AUni
+				ws="fa">الگوهای جدول ساختار متن</AUni>
+			<AUni
+				ws="fr">Modèles pour tableaux des constituants d’un texte</AUni>
+			<AUni
+				ws="id">Pola-pola Acuan untuk Bagan Unsur Teks</AUni>
+			<AUni
+				ws="pt">Modelos de Quadros de Constituintes do Texto</AUni>
+			<AUni
+				ws="ru">Шаблоны схемы НС текста</AUni>
+			<AUni
+				ws="zh-CN">文本成分图表模板</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmPossibility"
+				guid="3a747cea-b283-4a62-bc64-c11d5e962d7e">
+				<Abbreviation>
+					<AUni
+						ws="en">def</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2008-1-11 21:8:55.380" />
+				<DateModified
+					val="2008-1-28 19:44:23.77" />
+				<Discussion>
+					<StText
+						guid="d18e82ea-6610-4bdc-bbfe-73ec5664ccfb">
+						<DateModified
+							val="2011-2-2 19:39:28.825" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="7c438137-040c-408b-afbf-00c322744ebc">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Default</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="CmPossibility"
+						guid="0cfa9ba1-313e-4a92-a869-c3ceac35d8cd">
+						<Abbreviation>
+							<AUni
+								ws="en">prenuc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2008-1-11 21:8:55.380" />
+						<DateModified
+							val="2008-1-28 19:43:14.227" />
+						<Discussion>
+							<StText
+								guid="2d1f2111-da90-4fa0-8add-64ef097ba340">
+								<DateModified
+									val="2011-2-2 19:39:28.825" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="ab03161e-6434-4aa0-a3a5-c634fc614cbb">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Pre-nuclear</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="392e7053-355b-4afa-80f2-55e65310faaf">
+								<Abbreviation>
+									<AUni
+										ws="en">out</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-11 21:8:55.380" />
+								<Discussion>
+									<StText
+										guid="83796ca3-2a05-41fd-9b1f-f34678d02111">
+										<DateModified
+											val="2011-2-2 19:39:28.825" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="fa3ad358-ca8e-45e2-ad6c-1f85bc6f1226">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Outer</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="6323ead2-805c-4e43-b777-ac5b26cf676f">
+								<Abbreviation>
+									<AUni
+										ws="en">in</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-11 21:8:55.380" />
+								<Discussion>
+									<StText
+										guid="3b62006b-9866-4528-b9ce-31fb9c7c53db">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="6286a67c-b3f9-4c4b-a795-2ae140c7f295">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Inner</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="bd7f7a3b-bac4-46fb-a25e-37886eab5b82">
+						<Abbreviation>
+							<AUni
+								ws="en">nuc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2008-1-11 21:8:55.380" />
+						<DateModified
+							val="2008-1-28 19:43:25.683" />
+						<Discussion>
+							<StText
+								guid="438046c3-8345-4799-afef-650258d7226e">
+								<DateModified
+									val="2011-2-2 19:39:28.826" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="fcdb57c6-a1e6-4a23-ab98-99ce3ccee4d0">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Nucleus</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="b5b4bc0a-3aec-478a-a856-6b271a103bc0">
+								<Abbreviation>
+									<AUni
+										ws="en">subj</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-11 21:8:55.380" />
+								<Discussion>
+									<StText
+										guid="3f086c43-5513-48db-b5f6-9789ff8a95cd">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="6e7a0aca-9d92-4dd1-b58d-ef9ea32701ff">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Subject</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="993966ae-1584-4d87-b86d-8f6cd9a7dbdb">
+								<Abbreviation>
+									<AUni
+										ws="en">v</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-11 21:8:55.380" />
+								<Discussion>
+									<StText
+										guid="afc2741a-ffc4-4671-b709-61f84cfc87dd">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="b958aec3-46a5-4b8c-9a16-37d79472e325">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Verb</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="780e9800-4042-4179-99ee-7b9243128664">
+								<Abbreviation>
+									<AUni
+										ws="en">o/c</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-28 19:46:2.550" />
+								<Discussion>
+									<StText
+										guid="ba2fdf39-c276-4f2e-a35e-ef0417cf28c2">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="f45fe46a-e7b8-4435-8772-0eefd8d90811">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Object/Complement</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="CmPossibility"
+						guid="46ba274d-acfe-4a76-b585-0a3623056ce7">
+						<Abbreviation>
+							<AUni
+								ws="en">postnuc</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2008-1-28 19:44:22.997" />
+						<DateModified
+							val="2008-1-28 19:45:23.860" />
+						<Discussion>
+							<StText
+								guid="0db15018-c973-4cee-b493-e04c26590282">
+								<DateModified
+									val="2011-2-2 19:39:28.826" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="843fcc5b-7aa1-4bd8-a10c-24be554af85a">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="False" />
+						<Name>
+							<AUni
+								ws="en">Post-nuclear</AUni>
+						</Name>
+						<SortSpec
+							val="0" />
+						<SubPossibilities>
+							<ownseq
+								class="CmPossibility"
+								guid="0831a755-1450-45f7-84f8-ef91270b3637">
+								<Abbreviation>
+									<AUni
+										ws="en">in</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-11 21:8:55.380" />
+								<DateModified
+									val="2008-1-28 19:45:1.860" />
+								<Discussion>
+									<StText
+										guid="bfaf1151-ba53-4134-aa0a-ba0f5c810d02">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="0f25daf1-86c2-4707-9081-1c57c08ef1c5">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Inner</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+							<ownseq
+								class="CmPossibility"
+								guid="c657a11f-723b-4c64-9b84-953c9ddc1e31">
+								<Abbreviation>
+									<AUni
+										ws="en">out</AUni>
+								</Abbreviation>
+								<BackColor
+									val="-1073741824" />
+								<DateCreated
+									val="2008-1-28 19:45:38.110" />
+								<DateModified
+									val="2008-1-28 19:45:38.110" />
+								<Discussion>
+									<StText
+										guid="334f5196-a4be-416c-b952-15f268b73096">
+										<DateModified
+											val="2011-2-2 19:39:28.826" />
+										<Paragraphs>
+											<ownseq
+												class="StTxtPara"
+												guid="7175b3f6-2280-4230-a532-34a7694dcd70">
+												<ParseIsCurrent
+													val="False" />
+											</ownseq>
+										</Paragraphs>
+										<RightToLeft
+											val="False" />
+									</StText>
+								</Discussion>
+								<ForeColor
+									val="-1073741824" />
+								<Hidden
+									val="False" />
+								<IsProtected
+									val="False" />
+								<Name>
+									<AUni
+										ws="en">Outer</AUni>
+								</Name>
+								<SortSpec
+									val="0" />
+								<UnderColor
+									val="-1073741824" />
+								<UnderStyle
+									val="0" />
+							</ownseq>
+						</SubPossibilities>
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</ConstChartTempl>

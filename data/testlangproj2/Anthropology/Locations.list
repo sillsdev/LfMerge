@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Locations>
+	<CmPossibilityList
+		guid="2bdd11fb-f9b2-11d3-977b-00c04f186933">
+		<Abbreviation>
+			<AUni
+				ws="en">Loc</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2001-7-24 19:33:9.563" />
+		<DateModified
+			val="2001-7-24 19:33:9.563" />
+		<Depth
+			val="127" />
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="12" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Locations</AUni>
+			<AUni
+				ws="es">Ubicaciones</AUni>
+			<AUni
+				ws="fa">مکانها</AUni>
+			<AUni
+				ws="fr">Emplacements</AUni>
+			<AUni
+				ws="id">Lokasi-lokasi</AUni>
+			<AUni
+				ws="pt">Localizações</AUni>
+			<AUni
+				ws="ru">Места</AUni>
+			<AUni
+				ws="zh-CN">地点</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e84-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">VIL</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">kota</AUni>
+				</Alias>
+				<BackColor
+					val="12176" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Located 135 deg east, 3 deg south</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="395d7fb3-d06b-4e4d-b78f-12eceea36e1e">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="5d7ea545-f1d1-4423-80c5-e48df5a61ef3">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">village</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="8323199" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e85-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">RIV</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">Swanson River</AUni>
+				</Alias>
+				<BackColor
+					val="16777152" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">large river, somewhat silty</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="6de211c0-7f35-4d0f-a311-ef7f65f60522">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b3652b88-14d2-4722-8767-bbbe0354f558">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">river</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e86-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">SHR</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">big scarry place</AUni>
+				</Alias>
+				<BackColor
+					val="49407" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">just past the witch doctor's house</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="681cc58a-082f-4155-b30d-377bc8eb7e83">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="dccd7c35-db2e-44d4-9218-0b9af3811939">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">mountain shrine</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="12632256" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e87-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">WIT</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">rumah passik</AUni>
+				</Alias>
+				<BackColor
+					val="13631439" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Watch out for the leg snares on the path to the hut.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="a04cbac9-dc3c-4504-ad1b-9dc6d634cb74">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="fb664fc8-0dec-4c6b-8308-474e679312ef">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">witch doctor's house</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e88-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">RIC</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16776960" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">flooding of the field sometimes occurs during the rainy season</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="7902dd55-4c0c-4f57-8752-0a5625182d11">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b3fc7920-c6da-4ad6-9821-9d3a892d3d8d">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">rice field</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="9449263" />
+				<UnderStyle
+					val="1" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e89-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">JGL</AUni>
+				</Abbreviation>
+				<Alias>
+					<AUni
+						ws="en">hutan</AUni>
+				</Alias>
+				<BackColor
+					val="49296" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">avoid the mangrove swamps, they are real ankle turners</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="4ae05f4a-5bd1-4d0e-a77c-9c79177e242e">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b8d2523b-daeb-472f-a369-9e8b30f6455c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">jungle</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="32512" />
+				<UnderStyle
+					val="4" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e8a-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">PLN</AUni>
+				</Abbreviation>
+				<BackColor
+					val="16711680" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Often there are hooved animals grazing here</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="fef41278-233b-40a7-9399-2bcb8fe6205f">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="162e5548-b011-4d63-a29f-4da6b3ba2fc3">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">plain</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="255" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmLocation"
+				guid="2bdd0e8b-f9b2-11d3-977b-00c04f186933">
+				<Abbreviation>
+					<AUni
+						ws="en">OCN</AUni>
+				</Abbreviation>
+				<BackColor
+					val="8355711" />
+				<DateCreated
+					val="2001-7-24 19:33:9.563" />
+				<DateModified
+					val="2001-7-24 19:33:9.563" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">coastline is protected from severe waves by coral reef</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="160a885d-636a-4df7-84f1-6503b7e9de81">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="3fc725cf-992c-4621-ba12-5fedac496ddb">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="16777215" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">ocean</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="6303488" />
+				<UnderStyle
+					val="2" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-6" />
+	</CmPossibilityList>
+</Locations>

@@ -1,0 +1,2669 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MorphAndSynData>
+	<MoMorphData
+		guid="de9f4186-f10f-4128-a3d8-7dcfd0329127">
+		<AdhocCoProhibitions>
+			<MoAlloAdhocProhib
+				guid="10447dc2-00aa-4855-932d-38cfb2b0c16d">
+				<Adjacency
+					val="1" />
+				<Disabled
+					val="False" />
+				<FirstAllomorph>
+					<objsur
+						guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+						t="r" />
+				</FirstAllomorph>
+				<RestOfAllos>
+					<refseq
+						guid="5e15569e-b60b-430c-8777-785eecc6ab80"
+						t="r" />
+				</RestOfAllos>
+			</MoAlloAdhocProhib>
+			<MoAlloAdhocProhib
+				guid="1d1a8382-86b0-4f03-bc81-c0dc71106405">
+				<Adjacency
+					val="2" />
+				<Disabled
+					val="False" />
+				<FirstAllomorph>
+					<objsur
+						guid="f72d6a4e-d591-4ad2-bbdc-ec9d39cc54c7"
+						t="r" />
+				</FirstAllomorph>
+				<RestOfAllos>
+					<refseq
+						guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+						t="r" />
+				</RestOfAllos>
+			</MoAlloAdhocProhib>
+			<MoAdhocProhibGr
+				guid="1d68e7dc-c93c-4ef7-900c-10b5adee0b48">
+				<Adjacency
+					val="0" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">these are not supposed to make sense, it's just for testing</Run>
+					</AStr>
+				</Description>
+				<Disabled
+					val="False" />
+				<Members>
+					<MoAlloAdhocProhib
+						guid="8d413d82-56f3-4693-8189-95b9a319c547">
+						<Adjacency
+							val="1" />
+						<Disabled
+							val="False" />
+						<FirstAllomorph>
+							<objsur
+								guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+								t="r" />
+						</FirstAllomorph>
+						<RestOfAllos>
+							<refseq
+								guid="37442f21-a4d5-4f8e-a59b-8b1b3b16019c"
+								t="r" />
+						</RestOfAllos>
+					</MoAlloAdhocProhib>
+					<MoAlloAdhocProhib
+						guid="e2ebe85b-c2e2-40e4-b551-138e7afb1df2">
+						<Adjacency
+							val="2" />
+						<Disabled
+							val="False" />
+						<FirstAllomorph>
+							<objsur
+								guid="5d2239fb-c480-4316-affe-5fe7bcebdc6a"
+								t="r" />
+						</FirstAllomorph>
+						<RestOfAllos>
+							<refseq
+								guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+								t="r" />
+						</RestOfAllos>
+					</MoAlloAdhocProhib>
+				</Members>
+				<Name>
+					<AUni
+						ws="en">3rd Objects</AUni>
+				</Name>
+			</MoAdhocProhibGr>
+			<MoMorphAdhocProhib
+				guid="216f2b6e-d1ac-421f-9b66-d9589640d8c7">
+				<Adjacency
+					val="3" />
+				<Disabled
+					val="False" />
+				<FirstMorpheme>
+					<objsur
+						guid="bfd7f99b-bc6d-4926-acee-0c1583c9170c"
+						t="r" />
+				</FirstMorpheme>
+				<RestOfMorphs>
+					<refseq
+						guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
+						t="r" />
+				</RestOfMorphs>
+			</MoMorphAdhocProhib>
+			<MoAlloAdhocProhib
+				guid="3e253672-1fa8-4d51-b70c-2e36bd4c7184">
+				<Adjacency
+					val="4" />
+				<Disabled
+					val="False" />
+				<FirstAllomorph>
+					<objsur
+						guid="de88c8da-ca64-4951-bb34-faa101a1f01b"
+						t="r" />
+				</FirstAllomorph>
+				<RestOfAllos>
+					<refseq
+						guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+						t="r" />
+				</RestOfAllos>
+			</MoAlloAdhocProhib>
+			<MoAlloAdhocProhib
+				guid="4c6d2c3d-3539-421c-8def-6495d0f34021">
+				<Adjacency
+					val="3" />
+				<Disabled
+					val="False" />
+				<FirstAllomorph>
+					<objsur
+						guid="5e15569e-b60b-430c-8777-785eecc6ab80"
+						t="r" />
+				</FirstAllomorph>
+				<RestOfAllos>
+					<refseq
+						guid="f72d6a4e-d591-4ad2-bbdc-ec9d39cc54c7"
+						t="r" />
+				</RestOfAllos>
+			</MoAlloAdhocProhib>
+			<MoAdhocProhibGr
+				guid="611c9883-60f2-4a4b-b0cd-60f3cd99150c">
+				<Adjacency
+					val="0" />
+				<Disabled
+					val="False" />
+				<Members>
+					<MoMorphAdhocProhib
+						guid="73889f8a-6ccc-4f33-aa2d-025d5bf2beb3">
+						<Adjacency
+							val="0" />
+						<Disabled
+							val="False" />
+						<FirstMorpheme>
+							<objsur
+								guid="069aee8f-8b79-4f8f-afb5-2c433ec4a9e1"
+								t="r" />
+						</FirstMorpheme>
+						<RestOfMorphs>
+							<refseq
+								guid="8c98c459-33a4-41ad-9f06-217348bb18e5"
+								t="r" />
+						</RestOfMorphs>
+					</MoMorphAdhocProhib>
+					<MoMorphAdhocProhib
+						guid="783ab6dc-41d3-49b1-ad97-aac078f1ae67">
+						<Adjacency
+							val="0" />
+						<Disabled
+							val="False" />
+						<FirstMorpheme>
+							<objsur
+								guid="3c2b9e2f-405c-4416-bae8-e50b95fb3b6d"
+								t="r" />
+						</FirstMorpheme>
+						<RestOfMorphs>
+							<refseq
+								guid="cf730e86-e5a8-4405-956e-e66417e51d68"
+								t="r" />
+						</RestOfMorphs>
+					</MoMorphAdhocProhib>
+					<MoMorphAdhocProhib
+						guid="78e7df77-dc49-44bb-8cad-700af2a8722b">
+						<Adjacency
+							val="0" />
+						<Disabled
+							val="False" />
+						<FirstMorpheme>
+							<objsur
+								guid="1af70026-0364-402d-9937-246ca89cfdab"
+								t="r" />
+						</FirstMorpheme>
+						<RestOfMorphs>
+							<refseq
+								guid="99b44a20-3fc6-43d7-9271-bffb30c2d66c"
+								t="r" />
+						</RestOfMorphs>
+					</MoMorphAdhocProhib>
+					<MoMorphAdhocProhib
+						guid="94df94ed-539a-42d5-9e4c-21b652583e64">
+						<Adjacency
+							val="0" />
+						<Disabled
+							val="False" />
+						<FirstMorpheme>
+							<objsur
+								guid="d4ec9b02-9a91-418f-ac42-9a79438b88e2"
+								t="r" />
+						</FirstMorpheme>
+						<RestOfMorphs>
+							<refseq
+								guid="e4f26931-0e18-42a6-b898-8dc0d3746276"
+								t="r" />
+						</RestOfMorphs>
+					</MoMorphAdhocProhib>
+				</Members>
+				<Name>
+					<AUni
+						ws="en">Co-indexed subject and object prefixes</AUni>
+				</Name>
+			</MoAdhocProhibGr>
+			<MoMorphAdhocProhib
+				guid="6ace8fef-9336-4634-b656-44a8358d4093">
+				<Adjacency
+					val="4" />
+				<Disabled
+					val="False" />
+				<FirstMorpheme>
+					<objsur
+						guid="b656833a-b8e9-44a2-992a-5462d49fe67b"
+						t="r" />
+				</FirstMorpheme>
+				<RestOfMorphs>
+					<refseq
+						guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
+						t="r" />
+				</RestOfMorphs>
+			</MoMorphAdhocProhib>
+			<MoMorphAdhocProhib
+				guid="b364bb90-4358-45d5-836c-a76453754c52">
+				<Adjacency
+					val="1" />
+				<Disabled
+					val="False" />
+				<FirstMorpheme>
+					<objsur
+						guid="bfd7f99b-bc6d-4926-acee-0c1583c9170c"
+						t="r" />
+				</FirstMorpheme>
+				<RestOfMorphs>
+					<refseq
+						guid="f17bfe28-abef-40c8-b747-0367ac06c620"
+						t="r" />
+				</RestOfMorphs>
+			</MoMorphAdhocProhib>
+			<MoMorphAdhocProhib
+				guid="babc00cd-3688-4fe0-9ce6-c766cd4fd125">
+				<Adjacency
+					val="2" />
+				<Disabled
+					val="False" />
+				<FirstMorpheme>
+					<objsur
+						guid="f17bfe28-abef-40c8-b747-0367ac06c620"
+						t="r" />
+				</FirstMorpheme>
+				<RestOfMorphs>
+					<refseq
+						guid="bfd7f99b-bc6d-4926-acee-0c1583c9170c"
+						t="r" />
+				</RestOfMorphs>
+			</MoMorphAdhocProhib>
+			<MoAlloAdhocProhib
+				guid="d5e9bc84-7b72-4e37-92c2-fd5b55f26194">
+				<Adjacency
+					val="0" />
+				<Disabled
+					val="False" />
+				<FirstAllomorph>
+					<objsur
+						guid="3cbec368-e525-45b3-afd6-ff295b7ac96d"
+						t="r" />
+				</FirstAllomorph>
+				<RestOfAllos>
+					<refseq
+						guid="b2c43ab8-8597-4d00-9994-075f619c7436"
+						t="r" />
+				</RestOfAllos>
+			</MoAlloAdhocProhib>
+		</AdhocCoProhibitions>
+		<CompoundRules>
+			<ownseq
+				class="MoExoCompound"
+				guid="3e4b40e8-1fad-4884-8fe6-d2206a30875c">
+				<Disabled
+					val="False" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="27ae1791-568e-4395-8cd1-9fab1c420f6c">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Name>
+					<AUni
+						ws="en">noun-adverb -&gt; intransitive verb, ic:2</AUni>
+				</Name>
+				<RightMsa>
+					<MoStemMsa
+						guid="55156c92-cb83-4187-aeaa-ca8ac8bc7a0c">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71525-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+				<ToMsa>
+					<MoStemMsa
+						guid="dc3e7eaa-eadb-4706-8e85-eab8f0ac4aaf">
+						<InflectionClass>
+							<objsur
+								guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
+								t="r" />
+						</InflectionClass>
+						<PartOfSpeech>
+							<objsur
+								guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</ToMsa>
+			</ownseq>
+			<ownseq
+				class="MoExoCompound"
+				guid="98fd86d7-6333-4a50-ab18-5dda7631ba93">
+				<Disabled
+					val="False" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="aaeb01f0-c66f-46ce-b214-6b4b2c612f52">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71525-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Linker>
+					<MoAffixAllomorph
+						guid="f2575fd5-7b4f-4138-aa29-b9ca9c67fe8e">
+						<Form>
+							<AUni
+								ws="qaa-x-kal">t</AUni>
+						</Form>
+						<IsAbstract
+							val="False" />
+					</MoAffixAllomorph>
+				</Linker>
+				<Name>
+					<AUni
+						ws="en">adverb-noun --&gt; intransitive verb, ic:2</AUni>
+				</Name>
+				<RightMsa>
+					<MoStemMsa
+						guid="9bf77e61-2a58-48f1-86ee-2a7e1b387f24">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+				<ToMsa>
+					<MoStemMsa
+						guid="329cbe58-dad7-406d-a5a1-dd6a4c19deae">
+						<InflectionClass>
+							<objsur
+								guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
+								t="r" />
+						</InflectionClass>
+						<PartOfSpeech>
+							<objsur
+								guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</ToMsa>
+			</ownseq>
+			<ownseq
+				class="MoEndoCompound"
+				guid="2a784607-2cb5-4d11-9521-32ba927e1003">
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">adjective with noun and an "a" linker </Run>
+					</AStr>
+				</Description>
+				<Disabled
+					val="False" />
+				<HeadLast
+					val="true" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="51f61708-ffc6-494b-9cf4-2c58492570b1">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71524-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Linker>
+					<MoAffixAllomorph
+						guid="17309c87-7f64-4fd0-969a-4a31f457175c">
+						<Form>
+							<AUni
+								ws="qaa-x-kal">a</AUni>
+						</Form>
+						<IsAbstract
+							val="False" />
+					</MoAffixAllomorph>
+				</Linker>
+				<Name>
+					<AUni
+						ws="en">adj-noun with linker </AUni>
+				</Name>
+				<OverridingMsa>
+					<MoStemMsa
+						guid="63c40219-b3d7-475d-8c0a-3ede7f537d5e" />
+				</OverridingMsa>
+				<RightMsa>
+					<MoStemMsa
+						guid="77f1f77a-4f35-4de7-911b-62e3cb30cade">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+			</ownseq>
+			<ownseq
+				class="MoEndoCompound"
+				guid="ef8a159f-dabc-403d-a928-6eaac070331d">
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">adverb incorporation </Run>
+					</AStr>
+				</Description>
+				<Disabled
+					val="False" />
+				<HeadLast
+					val="False" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="e037915b-9111-4674-ab37-88aa77c0e9eb">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Name>
+					<AUni
+						ws="en">verb-adverb </AUni>
+				</Name>
+				<OverridingMsa>
+					<MoStemMsa
+						guid="40621054-c9b3-4d94-8ad9-0d064f4a5880" />
+				</OverridingMsa>
+				<RightMsa>
+					<MoStemMsa
+						guid="158a8bf2-79db-4395-80d8-1a474f0a15b3">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71525-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+			</ownseq>
+			<ownseq
+				class="MoEndoCompound"
+				guid="6ee29822-7ef2-4b1a-aa50-9fa9996d6540">
+				<Disabled
+					val="False" />
+				<HeadLast
+					val="true" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="2948d47b-43b6-436f-af3b-969607648611">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Name>
+					<AUni
+						ws="en">noun-transitive verb </AUni>
+				</Name>
+				<OverridingMsa>
+					<MoStemMsa
+						guid="710e12b5-b61a-4782-b4d6-ed2748bda620" />
+				</OverridingMsa>
+				<RightMsa>
+					<MoStemMsa
+						guid="262a34a9-71d2-4e72-b197-f5b53814f366">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71543-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+			</ownseq>
+			<ownseq
+				class="MoEndoCompound"
+				guid="533fd4ea-334f-4f16-a91e-feba34883496">
+				<Disabled
+					val="False" />
+				<HeadLast
+					val="true" />
+				<LeftMsa>
+					<MoStemMsa
+						guid="b433be29-cc3f-461e-b419-a973aea038fb">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f71527-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</LeftMsa>
+				<Name>
+					<AUni
+						ws="en">noun-Intransitive verb </AUni>
+				</Name>
+				<OverridingMsa>
+					<MoStemMsa
+						guid="3b5a04f6-af38-4406-88a6-705aaa0a0dc7" />
+				</OverridingMsa>
+				<RightMsa>
+					<MoStemMsa
+						guid="59ea81de-7416-4d11-b333-4000b99f167a">
+						<PartOfSpeech>
+							<objsur
+								guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
+								t="r" />
+						</PartOfSpeech>
+					</MoStemMsa>
+				</RightMsa>
+			</ownseq>
+		</CompoundRules>
+		<ParserParameters>
+			<Uni>
+&lt;ParserParameters&gt;&lt;XAmple&gt;&lt;MaxNulls&gt;1&lt;/MaxNulls&gt;&lt;MaxPrefixes&gt;5&lt;/MaxPrefixes&gt;&lt;MaxInfixes&gt;1&lt;/MaxInfixes&gt;&lt;MaxRoots&gt;3&lt;/MaxRoots&gt;&lt;MaxSuffixes&gt;5&lt;/MaxSuffixes&gt;&lt;MaxAnalysesToReturn&gt;10&lt;/MaxAnalysesToReturn&gt;&lt;/XAmple&gt;&lt;/ParserParameters&gt;
+</Uni>
+		</ParserParameters>
+		<ProdRestrict />
+		<TestSets>
+			<WfiWordSet
+				guid="3ebf121c-899c-4920-b868-c4ad79fb286b">
+				<Cases>
+					<refcol
+						guid="006394fe-b92a-455d-ab36-acd75cabaa57"
+						t="r" />
+					<refcol
+						guid="00b6d3f5-bfe1-41ce-892a-8f0b1d441bb0"
+						t="r" />
+					<refcol
+						guid="00ffcd58-e0e9-44e1-a031-d79a5200f14f"
+						t="r" />
+					<refcol
+						guid="011b8688-9010-4af5-9f1b-2aacb3f20b81"
+						t="r" />
+					<refcol
+						guid="013071af-8e84-4066-ae6a-cd7689e7cff0"
+						t="r" />
+					<refcol
+						guid="01b86e4b-a1f3-46d0-9537-fc35f46e094a"
+						t="r" />
+					<refcol
+						guid="023c0882-d355-415b-adbb-e4bd148d7c1f"
+						t="r" />
+					<refcol
+						guid="02710208-5524-4d60-8f1c-d38de8571bdf"
+						t="r" />
+					<refcol
+						guid="0290162a-27e3-44b9-a80b-cfeb761a6e39"
+						t="r" />
+					<refcol
+						guid="03a40942-913a-4f7c-afdf-366e253db1f6"
+						t="r" />
+					<refcol
+						guid="041a47c3-cee8-49de-8f74-dc292529906f"
+						t="r" />
+					<refcol
+						guid="0587f266-e004-4337-b02e-766480f34cb7"
+						t="r" />
+					<refcol
+						guid="058e09bc-7d25-441b-9c0a-4c73950352ce"
+						t="r" />
+					<refcol
+						guid="05e250f1-8412-435c-bd2a-8f52cdf4cf4f"
+						t="r" />
+					<refcol
+						guid="0673e2b9-17b2-4737-9210-c002b3932b86"
+						t="r" />
+					<refcol
+						guid="06a66463-ef33-41e4-884d-74865527e539"
+						t="r" />
+					<refcol
+						guid="071a77c8-4e34-4e87-ac8e-73aa36dc8ead"
+						t="r" />
+					<refcol
+						guid="074983db-7a7e-40e9-a683-d753e9d4e0e7"
+						t="r" />
+					<refcol
+						guid="07bc091c-2990-4c98-8824-3ca909dd6099"
+						t="r" />
+					<refcol
+						guid="07deeed7-889d-497c-bf3a-aaeb32e2949c"
+						t="r" />
+					<refcol
+						guid="08ddaac0-6826-4cd0-b62c-2a53775b59f0"
+						t="r" />
+					<refcol
+						guid="08e69279-560a-41d5-947e-9474182d6261"
+						t="r" />
+					<refcol
+						guid="093c1502-96ec-4acc-83e9-517a88c12593"
+						t="r" />
+					<refcol
+						guid="09ef5414-06e3-45a0-932d-50188eead639"
+						t="r" />
+					<refcol
+						guid="0a410bc5-d1c3-4c13-b9d5-cedc3696b3e5"
+						t="r" />
+					<refcol
+						guid="0aa495bf-65c7-4fdf-a42e-70a36212594d"
+						t="r" />
+					<refcol
+						guid="0b973e9e-4976-4bb3-b245-85171dfee27e"
+						t="r" />
+					<refcol
+						guid="0b97aa7e-89e2-44a5-ba50-9d7de16f01b8"
+						t="r" />
+					<refcol
+						guid="0baf23d6-6e3a-412c-a164-846d59f6aac2"
+						t="r" />
+					<refcol
+						guid="0beb7780-180e-4b92-a875-571bc2793f0c"
+						t="r" />
+					<refcol
+						guid="0d7e4340-75d6-4d29-93d5-e0d372908b86"
+						t="r" />
+					<refcol
+						guid="0ddf0698-cd40-4986-ab23-552083393cb3"
+						t="r" />
+					<refcol
+						guid="0e69e495-e214-4a18-a306-161a2ffbd9de"
+						t="r" />
+					<refcol
+						guid="0eae5c69-c2ae-4803-ad76-22530987c43b"
+						t="r" />
+					<refcol
+						guid="0efb2f0c-8b91-4d1c-8853-574a7df89c01"
+						t="r" />
+					<refcol
+						guid="0f11169c-5870-4436-8d13-060412a8532f"
+						t="r" />
+					<refcol
+						guid="0f4aa2d6-eafb-45b8-9934-15411c2c8d3e"
+						t="r" />
+					<refcol
+						guid="0f81458b-6ed9-4bc5-8a3e-c32eb5ec9863"
+						t="r" />
+					<refcol
+						guid="0f88458d-43d0-454b-a326-f06a05e6e030"
+						t="r" />
+					<refcol
+						guid="0ff20dcb-18fa-4e9c-9bc9-c64d457fff9b"
+						t="r" />
+					<refcol
+						guid="10133988-02fb-4a1d-b8b3-542ded799472"
+						t="r" />
+					<refcol
+						guid="102caaad-507b-41f2-8f8d-39dea35e7b65"
+						t="r" />
+					<refcol
+						guid="10b1f38e-dc8d-455b-b6de-79f3de97b30f"
+						t="r" />
+					<refcol
+						guid="110125ad-f4af-4493-81ba-ff6864917499"
+						t="r" />
+					<refcol
+						guid="114c4998-2a78-40ec-ae8a-5d71e643f9dc"
+						t="r" />
+					<refcol
+						guid="116fd210-7138-412e-8c83-b87368f1948f"
+						t="r" />
+					<refcol
+						guid="119292a4-54e5-47a8-a299-c250cf25eed7"
+						t="r" />
+					<refcol
+						guid="12a6e3ac-0880-4fcb-b0a6-272964572476"
+						t="r" />
+					<refcol
+						guid="12bb8375-2300-489e-a6a4-cae14a4f7c49"
+						t="r" />
+					<refcol
+						guid="13748fc1-3af9-46bb-9a3a-d321510eaa82"
+						t="r" />
+					<refcol
+						guid="13e66ed6-33c6-45b0-b9a4-1097d55a99d9"
+						t="r" />
+					<refcol
+						guid="141d7f99-34bf-4de4-9f24-dff222aa576c"
+						t="r" />
+					<refcol
+						guid="14dc9145-a4ae-465c-968a-a4162078789c"
+						t="r" />
+					<refcol
+						guid="15034d9b-3c83-4f3e-8330-d227297c815a"
+						t="r" />
+					<refcol
+						guid="164d3d24-5b15-4c20-a485-1143b9b277c4"
+						t="r" />
+					<refcol
+						guid="171877fe-7f33-44eb-b148-2e2b9fcdfd4d"
+						t="r" />
+					<refcol
+						guid="171a3a38-4849-4715-b4ff-46c52a01bf08"
+						t="r" />
+					<refcol
+						guid="1752816f-9c44-4da3-82c3-ba6ddffc3459"
+						t="r" />
+					<refcol
+						guid="17ec7825-d20c-4b8c-8094-0a2340047f36"
+						t="r" />
+					<refcol
+						guid="17ee10b0-79bb-4c0c-8b6d-fb42cd1f311f"
+						t="r" />
+					<refcol
+						guid="1837102f-a6b6-48b8-a87e-ef2dc4ab3d07"
+						t="r" />
+					<refcol
+						guid="197a3eb2-ede0-4094-ad4c-65dcefb3e03f"
+						t="r" />
+					<refcol
+						guid="19e1b1eb-06f1-4698-9ddb-0e7515a08d64"
+						t="r" />
+					<refcol
+						guid="1b09eab3-e085-4bab-b6b3-447d5d913c1f"
+						t="r" />
+					<refcol
+						guid="1b6a74e1-50fc-428e-ae34-8bce7d405f33"
+						t="r" />
+					<refcol
+						guid="1bc6404d-8344-4b2d-bedd-bbf92915f9b4"
+						t="r" />
+					<refcol
+						guid="1be766a7-1965-474c-9c86-cd7492e56eb5"
+						t="r" />
+					<refcol
+						guid="1cc5d16a-bc57-47c5-a5dd-2a497ecd1ef3"
+						t="r" />
+					<refcol
+						guid="1dc8e5d3-207c-4935-9a77-bd935d18d14f"
+						t="r" />
+					<refcol
+						guid="1e322280-c23c-47f8-9627-14c23ad0c979"
+						t="r" />
+					<refcol
+						guid="1e601b45-6a8f-420e-bfb6-bcde2041c4ed"
+						t="r" />
+					<refcol
+						guid="1ec0f98a-1242-4740-ba66-4b11ede33310"
+						t="r" />
+					<refcol
+						guid="20f1c73a-5606-4ddb-8021-437b18c23d60"
+						t="r" />
+					<refcol
+						guid="21a3716f-cb63-4b7f-9083-ce223b17ea25"
+						t="r" />
+					<refcol
+						guid="21d8e468-91f3-4f49-9687-ab3bd73271da"
+						t="r" />
+					<refcol
+						guid="223aedbd-35db-480b-b03f-709fd95d0ba3"
+						t="r" />
+					<refcol
+						guid="22411d27-e5c5-4b78-b751-7d9f496214cc"
+						t="r" />
+					<refcol
+						guid="22ca35b6-fd9e-4459-b6dd-97d7a9ab4c06"
+						t="r" />
+					<refcol
+						guid="22f40036-b674-4339-b492-56caafee48ac"
+						t="r" />
+					<refcol
+						guid="24848de5-1957-48f5-97f3-897c8cb05d29"
+						t="r" />
+					<refcol
+						guid="24e7becd-c100-4f78-9973-f61d95ee38b3"
+						t="r" />
+					<refcol
+						guid="2534cd3c-98ab-4670-9e20-727c7e73dd28"
+						t="r" />
+					<refcol
+						guid="25511f1f-4816-44c7-ac41-319bc6ecc875"
+						t="r" />
+					<refcol
+						guid="2554edd2-683e-4059-bdc2-761f406a782b"
+						t="r" />
+					<refcol
+						guid="266d0abe-6261-4891-be3e-944932465b0d"
+						t="r" />
+					<refcol
+						guid="2671ba0e-0601-441a-935d-9539881f3a95"
+						t="r" />
+					<refcol
+						guid="272b6d8f-a552-4c0a-87ec-18386d0777c9"
+						t="r" />
+					<refcol
+						guid="27423284-47c9-4e12-aae2-f59c8f0756d2"
+						t="r" />
+					<refcol
+						guid="27aca3a8-9fe4-4af1-a746-9d7f69f030fd"
+						t="r" />
+					<refcol
+						guid="27f31e4c-2226-4add-8c3b-9c769b6db466"
+						t="r" />
+					<refcol
+						guid="2880ba9a-dd61-43b0-acaa-06ca28c9570a"
+						t="r" />
+					<refcol
+						guid="28c55fec-cca6-41c4-aee4-b2cfaf54f175"
+						t="r" />
+					<refcol
+						guid="299f4151-6f03-46aa-a77c-7f3593eb6093"
+						t="r" />
+					<refcol
+						guid="2a05468e-dd8c-4a6b-a361-d2534b991542"
+						t="r" />
+					<refcol
+						guid="2a91a8df-62cf-4075-aa6f-901ef3063f90"
+						t="r" />
+					<refcol
+						guid="2ab951c6-39de-433c-8a9d-b12cb50b91c6"
+						t="r" />
+					<refcol
+						guid="2ae122ec-3c41-4c4d-8ae5-e8f1c7c020aa"
+						t="r" />
+					<refcol
+						guid="2b6b68af-cafb-43a0-a87a-21cc0b76fa96"
+						t="r" />
+					<refcol
+						guid="2c045bd3-28ff-4d54-9a0b-f5f775a732e0"
+						t="r" />
+					<refcol
+						guid="2c12b748-d266-44e8-a951-6936d697086f"
+						t="r" />
+					<refcol
+						guid="2c2dbb03-5dd5-4e16-9b55-ecfc1a59b9c2"
+						t="r" />
+					<refcol
+						guid="2cc90fec-05ab-4bf1-ac6e-6749c724af56"
+						t="r" />
+					<refcol
+						guid="2cec9eda-aaa7-4ced-a451-777a66762e88"
+						t="r" />
+					<refcol
+						guid="2d08c90e-7055-4d17-bb40-ac5883b6af7f"
+						t="r" />
+					<refcol
+						guid="2d441186-63e4-493b-afe0-70e20bb0ffd9"
+						t="r" />
+					<refcol
+						guid="2d86d041-3e7a-4624-b517-93cadc5e45d5"
+						t="r" />
+					<refcol
+						guid="2db1add3-3dc7-441b-8ccf-2051e982f8b4"
+						t="r" />
+					<refcol
+						guid="2de579a1-5fe4-4239-befa-8b0cd3d45f22"
+						t="r" />
+					<refcol
+						guid="2e52f15e-4f8e-43e0-9db7-72f935bd89af"
+						t="r" />
+					<refcol
+						guid="2f709af7-284f-4bc8-a3f0-2bdd45d37e43"
+						t="r" />
+					<refcol
+						guid="2fa818f9-a94d-4ff7-ab21-b11f1f8957d3"
+						t="r" />
+					<refcol
+						guid="2fb4d9ca-1e64-41bf-a138-ba5793bba3a0"
+						t="r" />
+					<refcol
+						guid="3011b625-e7b0-4f9b-a546-67691b63ae2d"
+						t="r" />
+					<refcol
+						guid="3180ab50-b39f-4709-9f7a-2276783ca294"
+						t="r" />
+					<refcol
+						guid="319f24fb-176e-48a5-88cf-4a9edf118ba4"
+						t="r" />
+					<refcol
+						guid="31ab428e-8027-4d92-8815-7545a64c484b"
+						t="r" />
+					<refcol
+						guid="31eb1d02-1896-45c5-aefe-926511f308b3"
+						t="r" />
+					<refcol
+						guid="326f1188-2a95-48a2-821d-3a7b4982c7c9"
+						t="r" />
+					<refcol
+						guid="3295720c-955c-4ec8-b2c9-29a8819347f5"
+						t="r" />
+					<refcol
+						guid="33130d65-c8e0-44e4-98e6-068bfdfe547e"
+						t="r" />
+					<refcol
+						guid="3344b548-4f40-42d6-97b9-4f6cfd20a7e0"
+						t="r" />
+					<refcol
+						guid="349c2608-f2b7-41db-a4af-420e5a8c5cba"
+						t="r" />
+					<refcol
+						guid="34a84aff-7e29-4690-94f7-3f4133639c72"
+						t="r" />
+					<refcol
+						guid="34e081aa-709c-4439-8fdf-aa17c6b6feb3"
+						t="r" />
+					<refcol
+						guid="355ceaca-5201-42bf-beee-a84e45a6f8be"
+						t="r" />
+					<refcol
+						guid="359c5475-8eb4-4aa9-99c2-5c95a6e9bfb0"
+						t="r" />
+					<refcol
+						guid="375592b0-3439-40dc-8626-0ef3935d14be"
+						t="r" />
+					<refcol
+						guid="3790e746-74a6-4139-985f-239ff0a6d0ee"
+						t="r" />
+					<refcol
+						guid="37b9c62b-12b7-43b3-b7d5-7c6033bb4935"
+						t="r" />
+					<refcol
+						guid="38aca384-08e5-41c6-8a81-6285b123b767"
+						t="r" />
+					<refcol
+						guid="38bcc7a6-7643-447b-b71c-4e509396a74c"
+						t="r" />
+					<refcol
+						guid="38f04b03-3ed3-48dd-877f-9f9c9946f2e6"
+						t="r" />
+					<refcol
+						guid="3ac521a4-c08b-407d-a925-592c6ed0e3f4"
+						t="r" />
+					<refcol
+						guid="3acc5c58-dd2a-42ea-8bae-92b753e983ce"
+						t="r" />
+					<refcol
+						guid="3adcbb63-8b04-41c4-a909-8adbc0599b8f"
+						t="r" />
+					<refcol
+						guid="3b552d39-33b8-4f12-a5e2-c11217cfeabf"
+						t="r" />
+					<refcol
+						guid="3b7b7933-a8ee-45d1-9d31-62a7abe7df21"
+						t="r" />
+					<refcol
+						guid="3ca9fb48-1169-43dc-b776-8255901333f8"
+						t="r" />
+					<refcol
+						guid="3cc0703d-d19c-40e3-bb0d-512c73a93908"
+						t="r" />
+					<refcol
+						guid="3da3da24-b9b0-44b3-b41c-2e878f6d9fd9"
+						t="r" />
+					<refcol
+						guid="3e062a48-8350-4b1f-85db-8fa57c006b12"
+						t="r" />
+					<refcol
+						guid="4021851e-7332-43e8-be5b-174049deb652"
+						t="r" />
+					<refcol
+						guid="4113cfd3-68d7-4d4c-bdbb-fe4a0b71da9e"
+						t="r" />
+					<refcol
+						guid="4131732c-3978-46e4-a552-f0d309601c30"
+						t="r" />
+					<refcol
+						guid="41e3fe6b-9883-4b14-bb79-f4be97f0b033"
+						t="r" />
+					<refcol
+						guid="42e8d5dc-2e71-4146-b0df-0a43df4b83da"
+						t="r" />
+					<refcol
+						guid="435294c7-c01c-4f05-94d4-17b9515bddd3"
+						t="r" />
+					<refcol
+						guid="4438b490-b006-46ed-afcd-8bb89e61973c"
+						t="r" />
+					<refcol
+						guid="452aebb2-e9ca-4dc8-a9ed-c72a2b77443a"
+						t="r" />
+					<refcol
+						guid="46345a1e-dd81-4808-9a2f-63406a8cf007"
+						t="r" />
+					<refcol
+						guid="46c9c53a-9c09-4388-a6cf-848b91320f5b"
+						t="r" />
+					<refcol
+						guid="484cc144-dd3c-41e1-8c38-44a24fc8cd20"
+						t="r" />
+					<refcol
+						guid="48851ed0-8bc8-4ed8-91b0-0e15c869bd3b"
+						t="r" />
+					<refcol
+						guid="48ee9000-dd7c-4b26-8b4e-c00e8e876962"
+						t="r" />
+					<refcol
+						guid="48ef350e-fd51-477b-9a68-733ed19cfd04"
+						t="r" />
+					<refcol
+						guid="4973407f-dd68-4e47-a124-20fd8485d275"
+						t="r" />
+					<refcol
+						guid="49aca301-e979-4104-8dfe-67c9967a1d23"
+						t="r" />
+					<refcol
+						guid="4ae15c58-c98d-4b9f-9d60-17bfd40f5472"
+						t="r" />
+					<refcol
+						guid="4b3470e4-e17e-40c7-8660-f08d4a5f74c2"
+						t="r" />
+					<refcol
+						guid="4b56a9ef-5cfd-45a8-890b-09f809f4a999"
+						t="r" />
+					<refcol
+						guid="4b80ba4f-f32c-4eec-b9a4-1d26d1525ee0"
+						t="r" />
+					<refcol
+						guid="4d56b27b-5e5b-45e6-8d3b-ee933b93da79"
+						t="r" />
+					<refcol
+						guid="4dad0162-bd78-4030-b64c-316e5ef78b7f"
+						t="r" />
+					<refcol
+						guid="4f517b9d-17e8-46ca-ace2-42d5fbb2db08"
+						t="r" />
+					<refcol
+						guid="500c770b-2aa4-446b-b965-3ffdae79a69f"
+						t="r" />
+					<refcol
+						guid="502806c2-ba78-4ac8-8cd5-fc05697b4d2d"
+						t="r" />
+					<refcol
+						guid="50aa212b-7ea1-49c1-b382-5bb3718b5fab"
+						t="r" />
+					<refcol
+						guid="50d68d31-00df-4384-9308-c0cb94ffd3e9"
+						t="r" />
+					<refcol
+						guid="5119deb1-98c7-4050-8976-a0286783138a"
+						t="r" />
+					<refcol
+						guid="512fa741-980d-4805-85e5-524c3947d987"
+						t="r" />
+					<refcol
+						guid="516b3b5e-ef79-45a6-b684-1afee2662843"
+						t="r" />
+					<refcol
+						guid="51eda82c-3606-4845-baaa-aed902c1f1cf"
+						t="r" />
+					<refcol
+						guid="539fe152-5484-4ed3-88c1-208119c0fa7f"
+						t="r" />
+					<refcol
+						guid="5406dd53-a298-4825-a0f7-48faa65e430c"
+						t="r" />
+					<refcol
+						guid="54aaba98-4559-4582-accc-1eb4aec96ba8"
+						t="r" />
+					<refcol
+						guid="5553634d-23fc-4eec-bb1a-9814a414cac0"
+						t="r" />
+					<refcol
+						guid="562de85a-9195-4599-bd93-747877073636"
+						t="r" />
+					<refcol
+						guid="56a1b32b-0262-4bd7-8c20-bc012f1aec15"
+						t="r" />
+					<refcol
+						guid="570a3361-247a-4c8f-b7d0-318047ce1a99"
+						t="r" />
+					<refcol
+						guid="5720de28-bda7-4727-b5f3-08f97ddf0e5b"
+						t="r" />
+					<refcol
+						guid="579c01b0-5bb6-47b4-b496-6a28d2e6ff5b"
+						t="r" />
+					<refcol
+						guid="57a5efdf-d59a-4842-bad6-0530a4730c20"
+						t="r" />
+					<refcol
+						guid="57ab64e4-0926-47f9-bfa9-4a6b27ff4d51"
+						t="r" />
+					<refcol
+						guid="581d654e-2f0d-44ee-a3d1-d092eb048dbb"
+						t="r" />
+					<refcol
+						guid="58ff8881-b28b-4d81-9924-6093657ba724"
+						t="r" />
+					<refcol
+						guid="59203e3a-52b3-4a1b-bf87-52889574dc73"
+						t="r" />
+					<refcol
+						guid="5a0d0581-60f0-41a6-83f6-2a898e38038a"
+						t="r" />
+					<refcol
+						guid="5a761953-3cd3-4435-a027-5270e705bcad"
+						t="r" />
+					<refcol
+						guid="5ac97dac-bc40-471c-9264-cb8c8d67b7fe"
+						t="r" />
+					<refcol
+						guid="5dedabf0-e252-48f0-ae17-1015c1e2eb15"
+						t="r" />
+					<refcol
+						guid="5e07ba11-8499-4c15-b067-2e1c0cd357f9"
+						t="r" />
+					<refcol
+						guid="5e255ae7-3ef3-4241-a594-14c0d5e7fb15"
+						t="r" />
+					<refcol
+						guid="5fa0bc45-1638-463a-b965-249db8471aca"
+						t="r" />
+					<refcol
+						guid="5fec229e-74f5-47b5-8511-84a64e2f559f"
+						t="r" />
+					<refcol
+						guid="602189a5-64f2-40ec-ad6f-446733c8e316"
+						t="r" />
+					<refcol
+						guid="605939e7-1479-4395-87ac-4aaa75654c05"
+						t="r" />
+					<refcol
+						guid="607366c1-3208-494c-8f57-4883bb571825"
+						t="r" />
+					<refcol
+						guid="61addc43-7114-497a-b08f-b444494a6ca6"
+						t="r" />
+					<refcol
+						guid="61cdc658-51b2-4bf8-8de0-e2e284237bd6"
+						t="r" />
+					<refcol
+						guid="61efd883-e801-4f0f-949b-314045e9fe0d"
+						t="r" />
+					<refcol
+						guid="622400fe-8ddb-4b6c-8999-b7fb48bf31b8"
+						t="r" />
+					<refcol
+						guid="6269dafc-8868-4ac8-926e-b530dd7a47e6"
+						t="r" />
+					<refcol
+						guid="629e70b8-db18-43e7-becf-6474979c9085"
+						t="r" />
+					<refcol
+						guid="62d6843e-da86-4300-82ad-e1cab2b295cb"
+						t="r" />
+					<refcol
+						guid="636737dc-9194-4276-b883-0782e461dd53"
+						t="r" />
+					<refcol
+						guid="63fca2d1-9866-4ec5-92ac-11328bb78258"
+						t="r" />
+					<refcol
+						guid="64fc9bfc-5664-4ade-a234-d1f57d19cc27"
+						t="r" />
+					<refcol
+						guid="65166c06-8761-4765-8368-dce4c05d08cf"
+						t="r" />
+					<refcol
+						guid="654c299f-ccf1-4be2-9d34-40e22eaaf2a5"
+						t="r" />
+					<refcol
+						guid="658bff87-ba13-4ea7-b2fa-54f6643aa4c0"
+						t="r" />
+					<refcol
+						guid="659e6363-c935-4f9e-af91-557164e23779"
+						t="r" />
+					<refcol
+						guid="66bd3182-16e1-4589-b107-c0f4a491f35b"
+						t="r" />
+					<refcol
+						guid="66ff56ef-06c3-4202-8d20-dcd105153237"
+						t="r" />
+					<refcol
+						guid="676734ea-8334-4160-a157-a7b4d01e5b78"
+						t="r" />
+					<refcol
+						guid="67b106d7-beb4-4d02-9488-e98b8cfae045"
+						t="r" />
+					<refcol
+						guid="680487e1-30dd-444f-90d6-68bbf5bc0cb8"
+						t="r" />
+					<refcol
+						guid="6830652f-2bc5-46cb-9c7d-ea3b24b6959b"
+						t="r" />
+					<refcol
+						guid="6902e04a-c00b-4626-8a3e-aaf198d6ed10"
+						t="r" />
+					<refcol
+						guid="69463908-b15f-42c6-aac0-144551dfd44b"
+						t="r" />
+					<refcol
+						guid="6986782e-a79c-4176-a107-e71cd9baf4dc"
+						t="r" />
+					<refcol
+						guid="6993c283-c03a-423d-9ee5-eda570d1fdba"
+						t="r" />
+					<refcol
+						guid="6a3c1564-2575-45ac-837b-e72a801256a2"
+						t="r" />
+					<refcol
+						guid="6ac28796-f264-4dbd-b163-71e2fee14cd4"
+						t="r" />
+					<refcol
+						guid="6ad81b0e-79a4-46af-8a14-2195bc71fa99"
+						t="r" />
+					<refcol
+						guid="6af63998-e3ff-4c45-ad66-5a74fe565af6"
+						t="r" />
+					<refcol
+						guid="6b0ebba2-59c3-492a-bd75-b470e221eb65"
+						t="r" />
+					<refcol
+						guid="6b202943-7c8e-4f76-8dae-31c426295c47"
+						t="r" />
+					<refcol
+						guid="6b37c56a-3091-4bf1-b3ae-608d4f482058"
+						t="r" />
+					<refcol
+						guid="6e07c356-8d17-4532-ba97-ea563f7fe249"
+						t="r" />
+					<refcol
+						guid="6e12fedd-590f-46d4-afa8-61bbf33f114f"
+						t="r" />
+					<refcol
+						guid="6eb4356c-c9be-49f7-8e83-5d232ecb2cac"
+						t="r" />
+					<refcol
+						guid="6f380f57-b7ee-4662-b462-12192fc260d5"
+						t="r" />
+					<refcol
+						guid="6f4b620a-ec5a-41b0-8e2d-8ee97ac86d80"
+						t="r" />
+					<refcol
+						guid="6fa0e378-cfbf-4e49-a05d-be11f2e03a44"
+						t="r" />
+					<refcol
+						guid="70b4b963-840d-4d8f-8346-d39fe8d39376"
+						t="r" />
+					<refcol
+						guid="71030323-9b02-4317-beb0-b72fa2d79b5e"
+						t="r" />
+					<refcol
+						guid="71b91dfd-0881-4667-8f94-0083d51fecdb"
+						t="r" />
+					<refcol
+						guid="71e58856-914b-4169-b462-b5e5bf6cdded"
+						t="r" />
+					<refcol
+						guid="7211dff9-4662-480c-83c9-1b0f2e88ab40"
+						t="r" />
+					<refcol
+						guid="7232e76f-8536-4dff-9a4a-cf1fffc8d7f1"
+						t="r" />
+					<refcol
+						guid="7245d138-d5dc-47f3-bed9-c40a2d3fd3f2"
+						t="r" />
+					<refcol
+						guid="72c67d59-ceee-478e-adcd-e199291c3046"
+						t="r" />
+					<refcol
+						guid="734fa2c5-d7b9-4519-a376-50f40144c397"
+						t="r" />
+					<refcol
+						guid="73979caf-d2e9-4b38-ae3e-2bd4166b30c6"
+						t="r" />
+					<refcol
+						guid="739e58c0-cec3-4a81-982d-3c8d1f18e168"
+						t="r" />
+					<refcol
+						guid="73f0ec3f-90ba-4d9f-9b7c-c96e6d0eaead"
+						t="r" />
+					<refcol
+						guid="7492c223-11fb-4b3a-a50e-09d1dbe78e60"
+						t="r" />
+					<refcol
+						guid="75162faf-a1f1-43f7-bc41-ca9b83b350ab"
+						t="r" />
+					<refcol
+						guid="7638fd20-7e59-40ba-ab08-b050c472ae9d"
+						t="r" />
+					<refcol
+						guid="77361d41-bfa4-41de-aea1-5ee93e16c933"
+						t="r" />
+					<refcol
+						guid="7860e555-a36a-4453-b2ec-58485d5645da"
+						t="r" />
+					<refcol
+						guid="788ee83c-339c-4fd4-a577-d1c3891da689"
+						t="r" />
+					<refcol
+						guid="798c19e0-3627-4278-b3c6-49a4c9ee7834"
+						t="r" />
+					<refcol
+						guid="79991729-57a6-4eea-a8e9-cc39423dd9b8"
+						t="r" />
+					<refcol
+						guid="7a1cf576-338c-4ac1-a144-976ce6241bd3"
+						t="r" />
+					<refcol
+						guid="7b94528e-5775-44b9-8b22-d378a062e2a2"
+						t="r" />
+					<refcol
+						guid="7c572c3e-e0fd-44aa-ac5a-18211bce64f4"
+						t="r" />
+					<refcol
+						guid="7c5d9e99-ed08-4f3b-bc7e-2e7fa574ffca"
+						t="r" />
+					<refcol
+						guid="7d213aa7-b2d9-46d3-a95f-828a9dc7172c"
+						t="r" />
+					<refcol
+						guid="7ff32047-a1cc-4b31-978a-4c49bedbd7ce"
+						t="r" />
+					<refcol
+						guid="8007c80d-47d5-4674-8cc4-c854a0c40044"
+						t="r" />
+					<refcol
+						guid="800d4c38-545f-4fe1-96ea-90414d78c702"
+						t="r" />
+					<refcol
+						guid="81cb2d4b-de62-45ff-b3e2-905ac7282ece"
+						t="r" />
+					<refcol
+						guid="81e08794-1a41-4ae7-99ca-199e43ed757a"
+						t="r" />
+					<refcol
+						guid="8227a45e-00fc-4131-977f-2e2bb5411293"
+						t="r" />
+					<refcol
+						guid="828ac56d-6bfd-47ab-ae6f-98fb420ca98a"
+						t="r" />
+					<refcol
+						guid="82cb6a7f-5f45-46d6-9b8e-b218d928a154"
+						t="r" />
+					<refcol
+						guid="82eef67e-7f5b-4e74-8654-7387f61b4b80"
+						t="r" />
+					<refcol
+						guid="84183904-acb6-403c-86d6-366def079ec8"
+						t="r" />
+					<refcol
+						guid="843e3989-a181-4442-b082-6d310c6bcb8c"
+						t="r" />
+					<refcol
+						guid="8465e711-0db9-485a-985b-3265d421952e"
+						t="r" />
+					<refcol
+						guid="865129d9-3129-4a1f-8a15-d696b8a76c37"
+						t="r" />
+					<refcol
+						guid="86a0e47f-9a2b-4cc6-8a2c-2d7521c157bd"
+						t="r" />
+					<refcol
+						guid="870cc9d2-4172-47bd-b67a-40978a710bed"
+						t="r" />
+					<refcol
+						guid="873cffde-7494-4c1c-8eba-fb6d381872f5"
+						t="r" />
+					<refcol
+						guid="87941186-7586-4b57-905d-2721a70cb918"
+						t="r" />
+					<refcol
+						guid="879b0d1a-617f-4ec8-9ff5-887bca99aa23"
+						t="r" />
+					<refcol
+						guid="87f14b8a-31ae-4501-99d2-2631c1f9ba88"
+						t="r" />
+					<refcol
+						guid="87f61ea1-2b1a-4171-bad7-ea4d3dcceec8"
+						t="r" />
+					<refcol
+						guid="884898b8-bea6-4fd8-9485-4c71a47fb214"
+						t="r" />
+					<refcol
+						guid="88570414-c3fa-42f5-a4be-8a7f6b066966"
+						t="r" />
+					<refcol
+						guid="8984c5b3-36a5-4a96-a05e-f5088db5996d"
+						t="r" />
+					<refcol
+						guid="89902f6e-dbbd-465c-bbb5-8869119ddd8a"
+						t="r" />
+					<refcol
+						guid="8ab6e67e-1e69-41de-9e66-8d06dbe8ba51"
+						t="r" />
+					<refcol
+						guid="8b664e5b-1dbf-421a-ad3d-f797b51f76b6"
+						t="r" />
+					<refcol
+						guid="8c17bc70-6fd5-49ac-ad41-3c38c3341108"
+						t="r" />
+					<refcol
+						guid="8c67b293-2186-45d8-8231-0f4be755fa67"
+						t="r" />
+					<refcol
+						guid="8dfe4285-ecee-4ef5-bb7f-1ad2d2b91e02"
+						t="r" />
+					<refcol
+						guid="8e44a078-8c15-4c26-8d82-bfd6a5c4473d"
+						t="r" />
+					<refcol
+						guid="8e600cb3-00ad-412b-99a4-b029c4dd26a2"
+						t="r" />
+					<refcol
+						guid="8f8b416b-28fa-41bf-afbf-8ec13b44603e"
+						t="r" />
+					<refcol
+						guid="90792fb4-627b-46ca-9307-b074a1b51f5f"
+						t="r" />
+					<refcol
+						guid="90ade799-743a-4927-b370-3a12073aa37a"
+						t="r" />
+					<refcol
+						guid="90c1dc41-1de0-4768-98fc-1ed1902f7e60"
+						t="r" />
+					<refcol
+						guid="9194d6b0-265d-497b-b489-58dd97143d82"
+						t="r" />
+					<refcol
+						guid="91bdde16-75df-453a-9679-661b93ee38a2"
+						t="r" />
+					<refcol
+						guid="91cca046-db25-491d-921b-ca44ac1f203d"
+						t="r" />
+					<refcol
+						guid="92032f60-d036-48b7-b435-a538ee3be42c"
+						t="r" />
+					<refcol
+						guid="92997dbc-ffbd-45d1-9cab-7c0d36df9f90"
+						t="r" />
+					<refcol
+						guid="931132cf-5e60-4243-a01e-ce51d008cd20"
+						t="r" />
+					<refcol
+						guid="93271c22-6863-4f5b-be64-53726042c8a0"
+						t="r" />
+					<refcol
+						guid="935ba7ab-78b7-40ca-9acf-0de43d89d107"
+						t="r" />
+					<refcol
+						guid="93b78932-b41a-430d-b580-87db8bcae0e1"
+						t="r" />
+					<refcol
+						guid="96e0d7f9-63e3-4c5f-8d42-10bfbc79a320"
+						t="r" />
+					<refcol
+						guid="97533893-af48-4576-8a31-166cfbc30939"
+						t="r" />
+					<refcol
+						guid="975bd64e-7668-4466-b92f-0357735058db"
+						t="r" />
+					<refcol
+						guid="97afba29-357f-4912-8dc8-8841de99fa7c"
+						t="r" />
+					<refcol
+						guid="986825ae-ebf7-41a2-ac51-1ee923f5f12d"
+						t="r" />
+					<refcol
+						guid="9877285a-ba12-486a-b810-fd2c353da781"
+						t="r" />
+					<refcol
+						guid="98a70c82-2886-4d52-83cc-06efaee933b7"
+						t="r" />
+					<refcol
+						guid="99907ce3-8341-4438-8874-3688ef24541d"
+						t="r" />
+					<refcol
+						guid="9a442ce3-7356-4ed1-b884-82c3aeaf7070"
+						t="r" />
+					<refcol
+						guid="9a824d27-b88c-414e-99e4-083575d7c325"
+						t="r" />
+					<refcol
+						guid="9b04f1d8-117a-4b78-bc02-526cd826d42e"
+						t="r" />
+					<refcol
+						guid="9b9826cb-4d87-472c-9ea6-4c48342f8f4e"
+						t="r" />
+					<refcol
+						guid="9ba98a0f-8805-4f00-b35e-7438b05c4b5d"
+						t="r" />
+					<refcol
+						guid="9bc30c11-65b0-4d8e-8467-95a92aa4d5e8"
+						t="r" />
+					<refcol
+						guid="9be1aa8b-42fe-484c-af68-a26ca41361e1"
+						t="r" />
+					<refcol
+						guid="9c07d6d1-ef29-4e8a-a1f6-98feb684556e"
+						t="r" />
+					<refcol
+						guid="9c47e413-95be-4088-9c61-a6234bf1e52f"
+						t="r" />
+					<refcol
+						guid="9d3696c7-d6df-4aa1-ab18-5c2d77ea6d9f"
+						t="r" />
+					<refcol
+						guid="9d8583e4-3a79-4996-870e-13f41ba44f27"
+						t="r" />
+					<refcol
+						guid="9e39aaba-04ea-4c60-82ef-fc67f1948b69"
+						t="r" />
+					<refcol
+						guid="9e6155ec-8f25-4e3d-bffc-309f2a6f7de4"
+						t="r" />
+					<refcol
+						guid="9f3bd72c-1d57-40c6-8b55-79f753cbcf79"
+						t="r" />
+					<refcol
+						guid="9fde4888-43b2-4311-b443-7d1a43296718"
+						t="r" />
+					<refcol
+						guid="9fee31af-993c-4e77-9b23-080a5c90ef4c"
+						t="r" />
+					<refcol
+						guid="a01acedb-d37f-45c7-9620-2628032eefd9"
+						t="r" />
+					<refcol
+						guid="a023f9a5-ac13-414d-8d5d-857cd4ae3a5a"
+						t="r" />
+					<refcol
+						guid="a0692a3b-2ef8-4ab9-9ffc-5811797cac11"
+						t="r" />
+					<refcol
+						guid="a122d61b-0ea8-462f-8f80-a8a207cdeac9"
+						t="r" />
+					<refcol
+						guid="a1c402ea-acba-44f5-8b40-9efe0eff6a8f"
+						t="r" />
+					<refcol
+						guid="a20d4053-bb03-4595-b47c-f14ee042aa2a"
+						t="r" />
+					<refcol
+						guid="a2101d09-620e-43f9-9f80-822932c17209"
+						t="r" />
+					<refcol
+						guid="a316f25d-2414-4b07-8ff5-47a6d76f5418"
+						t="r" />
+					<refcol
+						guid="a492773e-fcc6-4c83-9585-4556a89056bf"
+						t="r" />
+					<refcol
+						guid="a5523495-c139-4814-84f3-474a8300c366"
+						t="r" />
+					<refcol
+						guid="a7183380-4415-43e6-8eea-79e00249684b"
+						t="r" />
+					<refcol
+						guid="a9951cf1-b139-438f-be11-c0dda267202d"
+						t="r" />
+					<refcol
+						guid="aa30f7b2-67ad-4d57-aa3f-ecbdfc7210d7"
+						t="r" />
+					<refcol
+						guid="aa5b05c0-58b0-4927-b94f-2bd1de176338"
+						t="r" />
+					<refcol
+						guid="aa7b69e2-b811-49f5-a285-c31a2eade63c"
+						t="r" />
+					<refcol
+						guid="aad427a8-c9d5-42d6-a297-ccdc3a44cfb6"
+						t="r" />
+					<refcol
+						guid="ab6f6c98-d710-4609-876a-213ad808df33"
+						t="r" />
+					<refcol
+						guid="aba8f6db-3476-49fa-85e5-d03feebba358"
+						t="r" />
+					<refcol
+						guid="ac8cb034-81fa-4386-a258-c159cdf09f0a"
+						t="r" />
+					<refcol
+						guid="aca439ad-996a-41be-ad73-b084601bf966"
+						t="r" />
+					<refcol
+						guid="ad9808dc-574e-40ec-a74f-c3b5c3073a6a"
+						t="r" />
+					<refcol
+						guid="ae08c7ef-54d7-438c-8dda-dc3db48f924b"
+						t="r" />
+					<refcol
+						guid="ae26d800-a67b-42ee-9316-291c61de96f9"
+						t="r" />
+					<refcol
+						guid="af0b1344-7428-452d-afe4-ff4a5f6f8629"
+						t="r" />
+					<refcol
+						guid="af19d533-9e50-43c2-9649-e788dff10822"
+						t="r" />
+					<refcol
+						guid="afb630fb-40e4-4163-b8e8-252993ab9f2f"
+						t="r" />
+					<refcol
+						guid="b00250e1-1a6a-4c16-9a78-b1e642f6a1f9"
+						t="r" />
+					<refcol
+						guid="b0b26c86-d4d7-445b-a6a2-3cf01e2deb9a"
+						t="r" />
+					<refcol
+						guid="b11bce38-d336-4f62-b0ae-77fca5a7619d"
+						t="r" />
+					<refcol
+						guid="b1d7d8b4-b557-4927-8b7d-79295c6e0ca3"
+						t="r" />
+					<refcol
+						guid="b2d1cae4-ad78-4cc7-9123-9b343a3da81b"
+						t="r" />
+					<refcol
+						guid="b300e510-ad57-4b19-badb-151332ec300e"
+						t="r" />
+					<refcol
+						guid="b3249601-af02-4f00-9d92-8511418a4b8c"
+						t="r" />
+					<refcol
+						guid="b33b2d2e-9f55-4375-8a19-ea91e8806c73"
+						t="r" />
+					<refcol
+						guid="b44ccd7a-e946-4f4e-9a57-e40b99108141"
+						t="r" />
+					<refcol
+						guid="b49064bb-fe50-485f-985a-de5905bf9907"
+						t="r" />
+					<refcol
+						guid="b4e79ae9-ab40-4e90-b88b-f3de3a655e79"
+						t="r" />
+					<refcol
+						guid="b5318263-c232-4e34-aae6-9006de347f45"
+						t="r" />
+					<refcol
+						guid="b598a661-46fc-48b9-b986-c6202ef64fdb"
+						t="r" />
+					<refcol
+						guid="b59d2b30-5e23-48d2-8466-1ec3504e3413"
+						t="r" />
+					<refcol
+						guid="b6032d1e-3541-4393-84bb-47aa87a00d32"
+						t="r" />
+					<refcol
+						guid="b605cec9-765e-4e92-ad4a-9ec6cb50c310"
+						t="r" />
+					<refcol
+						guid="b662b148-3671-4589-9527-caa049d78675"
+						t="r" />
+					<refcol
+						guid="b69a66ad-4be1-45cc-af86-8e1a13caba58"
+						t="r" />
+					<refcol
+						guid="b6ae1e4d-101e-41b7-a04b-eaa23a6eaf3a"
+						t="r" />
+					<refcol
+						guid="b7bfd87a-995e-46f2-88cf-46c68cd609e0"
+						t="r" />
+					<refcol
+						guid="b8c39b6e-8360-4302-ba79-9750a4fc9b26"
+						t="r" />
+					<refcol
+						guid="b90ed7e8-7432-42ad-b83a-9f983c9c0536"
+						t="r" />
+					<refcol
+						guid="b9760e87-f91a-4057-a055-92c187786b70"
+						t="r" />
+					<refcol
+						guid="b9e0a18a-4e78-4bc4-84e2-a0c8d6817858"
+						t="r" />
+					<refcol
+						guid="ba0a9b38-8ce3-4cfd-bbbc-fed7e411b084"
+						t="r" />
+					<refcol
+						guid="babfcf5f-50df-4097-8513-78e0f95b2c2b"
+						t="r" />
+					<refcol
+						guid="bad847bd-d155-4015-aedc-73650e0db700"
+						t="r" />
+					<refcol
+						guid="badf2595-4eda-40f2-9047-726744c472fe"
+						t="r" />
+					<refcol
+						guid="bba4e04c-1fa8-4423-9c12-a4223e1ca6ef"
+						t="r" />
+					<refcol
+						guid="bce34d13-a8fc-4ad1-a93e-bfdd6893476e"
+						t="r" />
+					<refcol
+						guid="be2f26dd-a4cb-4648-a7e2-b31bf149c733"
+						t="r" />
+					<refcol
+						guid="bf0ab3a9-7b40-4368-a0ec-ba5a119ddd8c"
+						t="r" />
+					<refcol
+						guid="bf483f9e-9892-4838-a346-e6acd84c01b9"
+						t="r" />
+					<refcol
+						guid="bf9ff727-9044-4005-9192-d597eccb53bc"
+						t="r" />
+					<refcol
+						guid="c018918f-b449-49cf-8717-daa241dc5c09"
+						t="r" />
+					<refcol
+						guid="c05589d9-3c81-41d9-aa69-4f6e2c1611e7"
+						t="r" />
+					<refcol
+						guid="c098cebb-1ee1-4e88-96a8-0ec126546e42"
+						t="r" />
+					<refcol
+						guid="c1110ec1-5ff4-4df1-94c3-66918d90599f"
+						t="r" />
+					<refcol
+						guid="c17d75eb-da84-4300-8dae-19fc8fc46e8b"
+						t="r" />
+					<refcol
+						guid="c1fc2cf7-5ec7-49d5-b2d2-9e60eea37848"
+						t="r" />
+					<refcol
+						guid="c2e5bc3c-5c75-4a34-aadb-8fe4d4c4fb77"
+						t="r" />
+					<refcol
+						guid="c384dceb-b1da-4cb9-9f5f-e6b3e6265b07"
+						t="r" />
+					<refcol
+						guid="c445354a-d928-4c1b-9935-d30394f242c3"
+						t="r" />
+					<refcol
+						guid="c4756ee7-5da3-4003-9004-bcd2c189f512"
+						t="r" />
+					<refcol
+						guid="c492fcf6-fef2-4e65-aab1-bd7c05544a66"
+						t="r" />
+					<refcol
+						guid="c5fa6479-4c24-4bae-bb19-ce8e1cf13585"
+						t="r" />
+					<refcol
+						guid="c5faab1f-5e6b-4228-a657-7d097f465d5b"
+						t="r" />
+					<refcol
+						guid="c630a505-b8fc-48c2-add2-627c496198de"
+						t="r" />
+					<refcol
+						guid="c680abf0-4932-4678-a14d-d484b17c4156"
+						t="r" />
+					<refcol
+						guid="c6d4363a-3c61-4c63-8612-fa1d833c9606"
+						t="r" />
+					<refcol
+						guid="c736a77e-53c2-46eb-8b20-62f3c746bf29"
+						t="r" />
+					<refcol
+						guid="c863d6a2-6de9-4ba8-997e-c9895be208b4"
+						t="r" />
+					<refcol
+						guid="c98bed13-bf20-4374-a65b-f6157e59d749"
+						t="r" />
+					<refcol
+						guid="c9a611e2-83f1-4415-81bd-7007168a822b"
+						t="r" />
+					<refcol
+						guid="c9e92496-2395-48df-8039-9e30cf92e2c7"
+						t="r" />
+					<refcol
+						guid="ca6a6ae3-2ddf-428b-a511-299a924e79de"
+						t="r" />
+					<refcol
+						guid="caa97a3a-5db0-40fd-ad10-3f1e6eb905d7"
+						t="r" />
+					<refcol
+						guid="cac77aa1-d048-4b41-82a2-3eb9520b0590"
+						t="r" />
+					<refcol
+						guid="cb5f6f60-e43c-464c-9f36-e4338397397e"
+						t="r" />
+					<refcol
+						guid="cc3b1e99-d7ba-4322-ad75-14d0e50ab81c"
+						t="r" />
+					<refcol
+						guid="cc3bfc5d-7519-443c-8503-69d72ba0b0d7"
+						t="r" />
+					<refcol
+						guid="cd88d7b6-773e-43fc-b9fa-15866908120a"
+						t="r" />
+					<refcol
+						guid="cea5b1ba-bb03-4277-9ffe-91897e4ac1cd"
+						t="r" />
+					<refcol
+						guid="cfa62cd1-614f-4e3e-a9a7-7901986ac060"
+						t="r" />
+					<refcol
+						guid="d00dc764-1d7d-4271-b74f-a5077bcc998d"
+						t="r" />
+					<refcol
+						guid="d0c4c016-2c5d-435f-9182-ad0f7026b4fd"
+						t="r" />
+					<refcol
+						guid="d1d48b41-7885-4f18-be39-06615fedfb06"
+						t="r" />
+					<refcol
+						guid="d1f6afff-ca02-4cf2-9565-8f3cd8f7e5e3"
+						t="r" />
+					<refcol
+						guid="d2dc34fc-d0c8-4df7-b35a-87ce8e660d1e"
+						t="r" />
+					<refcol
+						guid="d2eb8216-e95e-4b0f-9264-30f3da9d7e01"
+						t="r" />
+					<refcol
+						guid="d30f727e-e5de-406a-bcaf-1cc94ef53cab"
+						t="r" />
+					<refcol
+						guid="d33263b1-8d6c-4177-b191-9c994ea463c6"
+						t="r" />
+					<refcol
+						guid="d3d8a924-dc0b-421a-8839-765364498616"
+						t="r" />
+					<refcol
+						guid="d4907649-b67e-431a-8f00-fafe9f6062a8"
+						t="r" />
+					<refcol
+						guid="d4979d12-c0d8-4846-b1a7-cdaf75469d3f"
+						t="r" />
+					<refcol
+						guid="d4b3bea5-5fe3-4d52-a601-9a7c902b5b75"
+						t="r" />
+					<refcol
+						guid="d4d3bb82-dfae-434a-aa46-395eca59bb9d"
+						t="r" />
+					<refcol
+						guid="d55fcd0a-8ca5-419a-afff-71127d25f286"
+						t="r" />
+					<refcol
+						guid="d6659d02-29bc-471b-acd6-d23190256812"
+						t="r" />
+					<refcol
+						guid="d851a91f-ce69-4c24-96cd-c570a7533991"
+						t="r" />
+					<refcol
+						guid="d8c8421b-8c58-4ed2-bcec-17cb6ee75531"
+						t="r" />
+					<refcol
+						guid="d8f9dccc-813e-41cf-956e-14445ccebe49"
+						t="r" />
+					<refcol
+						guid="da1156a0-2604-4782-b71e-7915c4d67a16"
+						t="r" />
+					<refcol
+						guid="da6e4cb9-7427-4a88-a4af-42d01e582eea"
+						t="r" />
+					<refcol
+						guid="da827005-ac1e-456b-8d15-45445b34e58e"
+						t="r" />
+					<refcol
+						guid="dab9ef5c-ee50-457d-874c-dc0a7cb51920"
+						t="r" />
+					<refcol
+						guid="daddd58f-b21f-4635-9b57-b2ae7e0e6898"
+						t="r" />
+					<refcol
+						guid="db6a34e5-fc17-49a9-a4ef-b8fa6bd7839f"
+						t="r" />
+					<refcol
+						guid="dc983444-a3ee-4005-9902-3f66fdeec275"
+						t="r" />
+					<refcol
+						guid="dd7bab19-cd5a-40d0-8738-c5625d1b2d77"
+						t="r" />
+					<refcol
+						guid="de284f6b-9d76-4b94-a3f1-13228ecddc49"
+						t="r" />
+					<refcol
+						guid="de317f80-3b3f-492f-ac76-4921b06591e8"
+						t="r" />
+					<refcol
+						guid="de37bb63-e874-441b-85dd-739d10454c17"
+						t="r" />
+					<refcol
+						guid="de98d5c0-f402-4d2e-8a17-ae5da87dd726"
+						t="r" />
+					<refcol
+						guid="df31ed23-d0c9-444c-b1a2-ab108cd8f04e"
+						t="r" />
+					<refcol
+						guid="dfb8ec95-98b2-417e-a6e3-db3ea06d09e6"
+						t="r" />
+					<refcol
+						guid="dfe54e89-3c31-4028-8b88-203010c9ebe2"
+						t="r" />
+					<refcol
+						guid="e09781f1-0c2b-400c-9f49-7a75d0cf5370"
+						t="r" />
+					<refcol
+						guid="e0b6423a-94af-40b7-9277-c4762373c2fd"
+						t="r" />
+					<refcol
+						guid="e14267c6-e6f3-4240-abdc-91b4b0db86da"
+						t="r" />
+					<refcol
+						guid="e1724b5b-8819-4fd4-ba46-e72d1076937e"
+						t="r" />
+					<refcol
+						guid="e1c73b17-954d-4256-ad7d-7b9569d978a1"
+						t="r" />
+					<refcol
+						guid="e1fe5ce1-d8f4-4fa3-a10f-f359562496ee"
+						t="r" />
+					<refcol
+						guid="e231ed9f-494b-4b35-bbfa-6b169f2e5302"
+						t="r" />
+					<refcol
+						guid="e2bf3e7a-0a7e-4907-b248-83263b141ffd"
+						t="r" />
+					<refcol
+						guid="e2ec8bea-9e95-49cf-91c2-b5e5d5f44dae"
+						t="r" />
+					<refcol
+						guid="e37cdd78-6a60-4cd1-a524-0149303c7567"
+						t="r" />
+					<refcol
+						guid="e3908fe1-d04f-4379-aad7-6d2c18e69819"
+						t="r" />
+					<refcol
+						guid="e3e4b6a1-2e24-490a-a458-8f05a77ca234"
+						t="r" />
+					<refcol
+						guid="e3eaac93-dfd0-420b-aa91-59a82af930f9"
+						t="r" />
+					<refcol
+						guid="e51480e8-81d7-43ea-81e7-0135f60d12d7"
+						t="r" />
+					<refcol
+						guid="e55a6a34-7434-445b-acb9-a5ce8c84ce85"
+						t="r" />
+					<refcol
+						guid="e5f7a6ea-6ee0-4496-ab1f-65c721106f22"
+						t="r" />
+					<refcol
+						guid="e7266e25-14fa-4aec-a22d-5f2a151d4fde"
+						t="r" />
+					<refcol
+						guid="e865ba04-cb8f-4359-8e54-6ae06d78d0af"
+						t="r" />
+					<refcol
+						guid="e8e50c6d-d141-469c-bc80-cc14d65f606a"
+						t="r" />
+					<refcol
+						guid="e949bdd2-941d-4975-8d4a-096899209073"
+						t="r" />
+					<refcol
+						guid="e98b25f3-0843-45fc-8fa6-72577698dec7"
+						t="r" />
+					<refcol
+						guid="e9d362c8-0a31-442f-9059-172a140883c6"
+						t="r" />
+					<refcol
+						guid="eaee02ba-0c24-4bb6-a6ab-1bbd4340a5f3"
+						t="r" />
+					<refcol
+						guid="eb143202-9c3d-48a7-8091-90492b1d84d3"
+						t="r" />
+					<refcol
+						guid="eb46724d-b490-4f16-b27d-cf8d85c23066"
+						t="r" />
+					<refcol
+						guid="eb4df44b-5208-4b25-92b1-dd02a5e19e3d"
+						t="r" />
+					<refcol
+						guid="eb4e2803-16c6-47aa-8833-7f66ba87c240"
+						t="r" />
+					<refcol
+						guid="ebca895c-d177-4b4d-b426-8aeb79b76689"
+						t="r" />
+					<refcol
+						guid="ec365e3d-ef6e-4a6a-b446-725536c24910"
+						t="r" />
+					<refcol
+						guid="edb16d03-e622-4be2-aa26-d4e949844cf5"
+						t="r" />
+					<refcol
+						guid="ee9be618-60c7-46a6-b124-31f493fb2631"
+						t="r" />
+					<refcol
+						guid="eea96ad6-0241-409f-a439-ccc59cb60a3b"
+						t="r" />
+					<refcol
+						guid="efffd409-051c-42de-ab75-ec94c0bdb1d8"
+						t="r" />
+					<refcol
+						guid="f0e5e720-5c54-4bed-8ca3-b9c6d202b5c5"
+						t="r" />
+					<refcol
+						guid="f2071147-e3f3-4a66-96b3-4bca6510b585"
+						t="r" />
+					<refcol
+						guid="f22c0db2-3f07-40c1-af22-507b60586a22"
+						t="r" />
+					<refcol
+						guid="f22ffc91-ce18-42e8-8fd9-e4658f4e2c08"
+						t="r" />
+					<refcol
+						guid="f242aba4-e6b7-4827-a60d-d4964aca3072"
+						t="r" />
+					<refcol
+						guid="f29bacde-0486-40a9-bdc8-e8a035294ca5"
+						t="r" />
+					<refcol
+						guid="f2a0422d-54df-4943-984b-16a17148d306"
+						t="r" />
+					<refcol
+						guid="f2de14b6-1fcf-4917-b798-a729510642d6"
+						t="r" />
+					<refcol
+						guid="f3c01078-3d98-4c8f-8c92-ae83e1bd01d2"
+						t="r" />
+					<refcol
+						guid="f3d7a734-1f13-439b-96fd-f11b63545a20"
+						t="r" />
+					<refcol
+						guid="f3f25f4b-0466-4c16-a956-a440958ecc1e"
+						t="r" />
+					<refcol
+						guid="f5609e2e-ccb4-4eff-b9da-229c30f74436"
+						t="r" />
+					<refcol
+						guid="f57c3d17-eeb3-46df-80f1-ed40c69602f6"
+						t="r" />
+					<refcol
+						guid="f6d7ae17-d37c-46d0-9899-2424e20afe7f"
+						t="r" />
+					<refcol
+						guid="f6e7b617-2887-47be-83ba-80a285a77c3e"
+						t="r" />
+					<refcol
+						guid="f6fee650-e00d-46e5-bac6-b2af013291f2"
+						t="r" />
+					<refcol
+						guid="f716bc0c-035f-4005-a7b3-3aada49b2e22"
+						t="r" />
+					<refcol
+						guid="f7921978-8663-4d04-b2ef-f410bbc3b375"
+						t="r" />
+					<refcol
+						guid="f7ac17f7-666f-40da-8928-851088a2b3b5"
+						t="r" />
+					<refcol
+						guid="f7f8b8d5-07e0-48d0-b1b3-07d5b88764b2"
+						t="r" />
+					<refcol
+						guid="f802ec29-11bb-4665-a526-921bc761318e"
+						t="r" />
+					<refcol
+						guid="f8748bd3-b39e-4cd2-ae72-ccf43609fbab"
+						t="r" />
+					<refcol
+						guid="f876ef25-8a24-4f72-b048-e7c6035cedff"
+						t="r" />
+					<refcol
+						guid="f8d13f8e-b04e-4905-b76d-b6703a44fee8"
+						t="r" />
+					<refcol
+						guid="f8e833b6-6834-4904-9c8d-641850f1d219"
+						t="r" />
+					<refcol
+						guid="faaae4cf-6838-4ee3-80d8-ff4a1f94d3ca"
+						t="r" />
+					<refcol
+						guid="fae9e0d2-25d1-421d-a6d5-8939fa0fb328"
+						t="r" />
+					<refcol
+						guid="fbf69ba7-7b89-4ca8-b3fc-b4911aafc566"
+						t="r" />
+					<refcol
+						guid="fc31604c-cac3-4429-b525-9664afc224c7"
+						t="r" />
+					<refcol
+						guid="fd20b97e-8aec-471c-b0c6-456c6993b0a7"
+						t="r" />
+					<refcol
+						guid="fdc4076e-e65c-4bb2-b1c3-cf4114db7ddf"
+						t="r" />
+					<refcol
+						guid="fe5cb372-d8fe-45b8-8cba-7f1516b68a03"
+						t="r" />
+					<refcol
+						guid="fea4eeb1-cbad-4be0-bb0f-b730a7c088e6"
+						t="r" />
+					<refcol
+						guid="febfa26a-7a74-483b-8ff0-a3c02509fffd"
+						t="r" />
+					<refcol
+						guid="ff473dbf-8e23-4664-89cd-93b64344acae"
+						t="r" />
+				</Cases>
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Wordforms which should parse</Run>
+					</AStr>
+				</Description>
+				<Name>
+					<AUni
+						ws="en">Well-formed words</AUni>
+				</Name>
+			</WfiWordSet>
+			<WfiWordSet
+				guid="c5e30309-f6b5-46d3-b5df-0a30960c4a0b">
+				<Cases>
+					<refcol
+						guid="0003e952-e0cd-4693-a17e-f2a6c95fe6f0"
+						t="r" />
+					<refcol
+						guid="00670b2d-f26a-40a0-a3e3-dbb7910ea950"
+						t="r" />
+					<refcol
+						guid="006754b9-a140-4273-a6b8-24d1d3444d0d"
+						t="r" />
+					<refcol
+						guid="02f63639-c32a-4ef0-a78c-c37ae276c115"
+						t="r" />
+					<refcol
+						guid="03557a93-6983-4067-9693-a6e70e78a0b5"
+						t="r" />
+					<refcol
+						guid="051a4ea9-3dbf-46e8-96c5-9f0f7eb50669"
+						t="r" />
+					<refcol
+						guid="070d9f6a-cfc4-4724-ac7b-b75c602974c9"
+						t="r" />
+					<refcol
+						guid="09308371-58b5-4b1f-8cc1-70d7c5262f7f"
+						t="r" />
+					<refcol
+						guid="0a063ccf-2a27-4f42-b06c-1287ab434756"
+						t="r" />
+					<refcol
+						guid="0aa26ce4-cd5e-479e-9647-304978015f27"
+						t="r" />
+					<refcol
+						guid="112c345d-7e6e-445b-a947-e3404782e231"
+						t="r" />
+					<refcol
+						guid="139da623-4544-4363-bc97-987bb8e0d401"
+						t="r" />
+					<refcol
+						guid="1446806d-aca0-4188-87d1-984993579a3c"
+						t="r" />
+					<refcol
+						guid="146ec3f2-0a98-4276-a70e-b67f22a21c7a"
+						t="r" />
+					<refcol
+						guid="15d03dad-ede0-4df6-a3db-34b688096ce8"
+						t="r" />
+					<refcol
+						guid="16e5c401-7a58-4286-9748-8d2854f6bf5a"
+						t="r" />
+					<refcol
+						guid="184826d1-9549-49fc-83b6-245938dcb10b"
+						t="r" />
+					<refcol
+						guid="1a5e6b81-0ca4-4623-b855-0f758f7f3e96"
+						t="r" />
+					<refcol
+						guid="1fec3039-f7fe-43e8-98ab-6450069bc2d3"
+						t="r" />
+					<refcol
+						guid="2218d649-4ee9-45d0-b2bc-d2b841183244"
+						t="r" />
+					<refcol
+						guid="25622f96-5e55-4458-bade-c272b0de4e4d"
+						t="r" />
+					<refcol
+						guid="28c83b89-8c2d-4805-9d9a-52a4b023d8db"
+						t="r" />
+					<refcol
+						guid="29a3ee70-28fc-46fe-827b-c77541f0a064"
+						t="r" />
+					<refcol
+						guid="2a826297-0139-4adb-a176-4c7f62e4fb9f"
+						t="r" />
+					<refcol
+						guid="2c74d337-e592-406c-98cd-4d912be0f351"
+						t="r" />
+					<refcol
+						guid="2d1cea55-9ae4-44a7-8f55-db021f6ef086"
+						t="r" />
+					<refcol
+						guid="30520b92-2937-463d-a5dc-721a575ca216"
+						t="r" />
+					<refcol
+						guid="307e5b4f-260d-43b6-8bfa-48e2c7f6d510"
+						t="r" />
+					<refcol
+						guid="3268fd0b-8f25-4a8c-82e2-72c213517930"
+						t="r" />
+					<refcol
+						guid="34dfbb92-5d72-474a-bd3c-d1ba7db053f2"
+						t="r" />
+					<refcol
+						guid="3583fd94-c9a5-44b4-962f-755325cd5c1f"
+						t="r" />
+					<refcol
+						guid="37007681-c915-4229-95ac-5daed71fd7e0"
+						t="r" />
+					<refcol
+						guid="374e5cca-b78c-4c8d-8a57-fd677ffe3e39"
+						t="r" />
+					<refcol
+						guid="394ccefc-b7b8-460f-8ec1-78af16d1ecb2"
+						t="r" />
+					<refcol
+						guid="3995a64d-c8ec-46db-8708-b73ae18f6bdf"
+						t="r" />
+					<refcol
+						guid="3aaa174c-7050-493f-9238-ae57a6105d1a"
+						t="r" />
+					<refcol
+						guid="3adda210-8208-4b95-91fd-15c9cb3d037a"
+						t="r" />
+					<refcol
+						guid="3adfbdaa-3cf5-4d46-8272-a63c1ed5ab7d"
+						t="r" />
+					<refcol
+						guid="3cc455e5-6fc2-422d-8a1d-2cfa92775272"
+						t="r" />
+					<refcol
+						guid="4219ff7e-ea71-4355-ab27-30823153c510"
+						t="r" />
+					<refcol
+						guid="4663476c-5423-4364-8df2-8e9cd80cca11"
+						t="r" />
+					<refcol
+						guid="491ee8b1-1ada-4b79-9f91-2eb59d1743de"
+						t="r" />
+					<refcol
+						guid="4bcfc547-214a-4b7e-a705-c6ad1fddc635"
+						t="r" />
+					<refcol
+						guid="4e09cf46-f6ae-4cd2-bad9-bcc2a54ee995"
+						t="r" />
+					<refcol
+						guid="4fa9adc5-0b01-4a58-a2e4-7ed017df2711"
+						t="r" />
+					<refcol
+						guid="501686bf-3a2f-4d80-94e6-225020d6940d"
+						t="r" />
+					<refcol
+						guid="5064fb49-cc34-450a-bfc3-a4f9e5bd8ce9"
+						t="r" />
+					<refcol
+						guid="50bbb0b4-3752-42d6-a754-0a65359905e8"
+						t="r" />
+					<refcol
+						guid="518fabe4-6a04-43af-baed-b96b8a8104ea"
+						t="r" />
+					<refcol
+						guid="51a7664a-4137-4465-a9ba-b64813f85dcb"
+						t="r" />
+					<refcol
+						guid="53c2cb6a-5dc5-4da9-a098-59547956bf84"
+						t="r" />
+					<refcol
+						guid="54a6faea-179c-4ae3-8e04-ed74a63f7008"
+						t="r" />
+					<refcol
+						guid="54fea6b0-da30-4034-982a-2f2bd8aaf047"
+						t="r" />
+					<refcol
+						guid="5647992f-8cb0-4f85-ae65-e934f7928b3e"
+						t="r" />
+					<refcol
+						guid="570d8a95-cdf8-4e55-be55-a1eb258a9a3a"
+						t="r" />
+					<refcol
+						guid="57bb19e7-f2f9-491a-a40d-7e2a45a158df"
+						t="r" />
+					<refcol
+						guid="598cfe89-d1a8-43a7-a512-bb691ef20a0c"
+						t="r" />
+					<refcol
+						guid="5c4cb43d-39c5-40e9-b64f-295338cb6787"
+						t="r" />
+					<refcol
+						guid="5c9de749-44f0-4dad-9029-68ceaf9209cf"
+						t="r" />
+					<refcol
+						guid="5e89a003-cfb7-4fe5-b39c-c033080ff499"
+						t="r" />
+					<refcol
+						guid="62198e58-282a-4f35-8d6c-c08abb664ebf"
+						t="r" />
+					<refcol
+						guid="6e5c44ab-c131-4b54-be18-24b9b80fc64d"
+						t="r" />
+					<refcol
+						guid="6fd1f943-dfd2-480d-9a33-b703c5f15752"
+						t="r" />
+					<refcol
+						guid="739ed23f-388b-4dc1-8cf0-a87e37b45907"
+						t="r" />
+					<refcol
+						guid="763ba491-33b4-4c5a-8838-faa64de87cb2"
+						t="r" />
+					<refcol
+						guid="77027bb1-ada3-4d3f-b43b-20772fee4b51"
+						t="r" />
+					<refcol
+						guid="77ccc693-6e0c-45cf-9038-863eb13cc8a9"
+						t="r" />
+					<refcol
+						guid="7864c8fe-d0f7-46cc-83d3-3477cdc0cbce"
+						t="r" />
+					<refcol
+						guid="78b32ab2-179a-4c70-b9c3-d2078e0a2241"
+						t="r" />
+					<refcol
+						guid="78c93dd4-0a8b-4455-bcef-628db27d3ef7"
+						t="r" />
+					<refcol
+						guid="7a7548e4-1c30-421c-ad7d-e8ec6ad37ac1"
+						t="r" />
+					<refcol
+						guid="7ba7e5bc-1b87-419f-96b8-0fd0a5dbae59"
+						t="r" />
+					<refcol
+						guid="7dde77da-112a-4ca9-9d89-5afb1871673f"
+						t="r" />
+					<refcol
+						guid="7e292990-a884-4d2b-b9db-7443ab9878c1"
+						t="r" />
+					<refcol
+						guid="82419a27-ddd5-4f7a-8121-0de4c6d6216d"
+						t="r" />
+					<refcol
+						guid="8423a3c9-5297-4ae3-972a-a5abc1ee1f49"
+						t="r" />
+					<refcol
+						guid="859e20ef-5e20-4ec4-98c7-bb39aa9812af"
+						t="r" />
+					<refcol
+						guid="8607e19a-911c-4f38-947c-fe4790526dae"
+						t="r" />
+					<refcol
+						guid="864bb211-38c1-4e99-b036-9c4b45cdf2f1"
+						t="r" />
+					<refcol
+						guid="8669cac1-e51f-450c-8fe0-5c4b9df358d6"
+						t="r" />
+					<refcol
+						guid="86ee87ae-2f1c-4b18-a081-6c710c095b15"
+						t="r" />
+					<refcol
+						guid="8733478d-5007-47c3-ac40-0f65b5cbb434"
+						t="r" />
+					<refcol
+						guid="87dee8ac-dc9e-476e-951e-1a34bfa484e0"
+						t="r" />
+					<refcol
+						guid="8b4e1b20-8dcd-4886-91e2-3837b764024d"
+						t="r" />
+					<refcol
+						guid="8b91aff9-64ec-4263-98ff-8560cea6ba64"
+						t="r" />
+					<refcol
+						guid="8c595a57-78ba-4f8f-a237-e8b6eaa29808"
+						t="r" />
+					<refcol
+						guid="8d86495b-9923-4abc-87ac-8350093b05ab"
+						t="r" />
+					<refcol
+						guid="8dd55dfb-3379-43bd-b7ed-73a5fad1edf3"
+						t="r" />
+					<refcol
+						guid="8e5becf4-968b-438f-abe3-ad483eb4a31e"
+						t="r" />
+					<refcol
+						guid="8ec5e637-8f78-45c3-b042-fb44309ef617"
+						t="r" />
+					<refcol
+						guid="8f09c415-a136-4a7e-b3be-d229e3b4ae7b"
+						t="r" />
+					<refcol
+						guid="909b398b-b1dc-4d0e-9737-f472c55cda68"
+						t="r" />
+					<refcol
+						guid="92fbb3c9-cccf-4ce7-aa84-f9a7c675046a"
+						t="r" />
+					<refcol
+						guid="93aabf9a-d9f2-4119-8e31-da9e38270d9c"
+						t="r" />
+					<refcol
+						guid="93b38532-6b22-4df1-83dd-b7a7fae168a8"
+						t="r" />
+					<refcol
+						guid="94514b42-14b1-45d6-ab46-c783ac7401a8"
+						t="r" />
+					<refcol
+						guid="946002e4-860b-49cf-a7a0-643786666bc9"
+						t="r" />
+					<refcol
+						guid="94da1abb-3b56-41ec-81be-82c359264f5e"
+						t="r" />
+					<refcol
+						guid="95b86c9f-eb09-4a65-add0-bfdaa54ae0c6"
+						t="r" />
+					<refcol
+						guid="95c8739f-07fa-41aa-adf8-d877eddf6792"
+						t="r" />
+					<refcol
+						guid="96443a33-00b2-4779-877d-9407f5d6b436"
+						t="r" />
+					<refcol
+						guid="9a8fa25f-9de5-481e-b1f5-b0db1819ac87"
+						t="r" />
+					<refcol
+						guid="9a94215b-740e-441c-afb8-b5dc8054fafc"
+						t="r" />
+					<refcol
+						guid="9c51c7d6-9e4a-4fbb-ad79-a2702e4d4f1a"
+						t="r" />
+					<refcol
+						guid="9e9e98a7-5855-42cc-9638-428da9e17543"
+						t="r" />
+					<refcol
+						guid="9fe1c2bb-cd40-44ec-ba3f-f863295a930f"
+						t="r" />
+					<refcol
+						guid="a43ef014-6200-47be-9bae-a62357f90202"
+						t="r" />
+					<refcol
+						guid="a4ca4b33-70e4-4d6e-8edd-b1eda7ee6457"
+						t="r" />
+					<refcol
+						guid="a4fc9a03-4ae7-409f-bf8c-c428a8968cb8"
+						t="r" />
+					<refcol
+						guid="a5433695-58ff-47de-b81f-d5ad35eca4a2"
+						t="r" />
+					<refcol
+						guid="a66181b3-6e5f-4e3d-9e1e-7e3595c0adac"
+						t="r" />
+					<refcol
+						guid="a7baa8c3-89ef-479c-8d24-4f9dc1220068"
+						t="r" />
+					<refcol
+						guid="a87bee8b-292d-4e4e-a909-a58f9b0485fd"
+						t="r" />
+					<refcol
+						guid="aa082ceb-74cf-448d-a076-a2c59e5a90ae"
+						t="r" />
+					<refcol
+						guid="ab98e908-6028-41fa-ae17-d0488e054665"
+						t="r" />
+					<refcol
+						guid="ac668d28-6a88-4293-b148-e0d9ed07fedc"
+						t="r" />
+					<refcol
+						guid="acc9ed23-af9b-4f84-8164-2a1d6a469397"
+						t="r" />
+					<refcol
+						guid="af9463cf-dd82-4cc7-8bf9-b7b7dad850a0"
+						t="r" />
+					<refcol
+						guid="b033acf8-b105-477c-9400-5e1e36089e9e"
+						t="r" />
+					<refcol
+						guid="b36d6a3d-d1c6-42d3-b994-75c58f407139"
+						t="r" />
+					<refcol
+						guid="b4431635-0e07-4f49-b183-f5606876d032"
+						t="r" />
+					<refcol
+						guid="b79760ff-06f0-473c-832c-d8475c3576c5"
+						t="r" />
+					<refcol
+						guid="b8d77124-0b99-418f-8673-f9b2afa0cfec"
+						t="r" />
+					<refcol
+						guid="b9a74113-63ad-4221-92ed-46db3182ba42"
+						t="r" />
+					<refcol
+						guid="b9b62de3-aac1-46d7-a9e7-f4739555b399"
+						t="r" />
+					<refcol
+						guid="ba6e8fd1-7017-4e66-80f6-e5efcbe15f79"
+						t="r" />
+					<refcol
+						guid="baa1b3c0-57ba-488b-8424-1d9838bf0b16"
+						t="r" />
+					<refcol
+						guid="bd664d2d-0c97-4502-b41b-f617e6d27c06"
+						t="r" />
+					<refcol
+						guid="c070ade4-b955-4292-8d19-8cafd2e36bc6"
+						t="r" />
+					<refcol
+						guid="c27f878a-e32b-496b-97b1-9abbe43f473c"
+						t="r" />
+					<refcol
+						guid="c2fe9852-5db5-438c-a99d-cd093c7845dc"
+						t="r" />
+					<refcol
+						guid="c402cad2-48e2-48b0-9efa-9f3277d5750c"
+						t="r" />
+					<refcol
+						guid="c7c4a4c0-e1c3-4915-8245-da0102d2414e"
+						t="r" />
+					<refcol
+						guid="c87c0ab2-28be-4e9a-8bff-f3ee3fefab17"
+						t="r" />
+					<refcol
+						guid="ca4bf81b-09ec-4748-b13f-24456595a443"
+						t="r" />
+					<refcol
+						guid="ce0ad0b5-dc6b-4394-8756-bf141b34958f"
+						t="r" />
+					<refcol
+						guid="ce85721e-4d85-4df6-85e8-18b302ae7bff"
+						t="r" />
+					<refcol
+						guid="cea6b495-a25a-477e-8d0d-a2b480b18483"
+						t="r" />
+					<refcol
+						guid="d141c9ed-47c4-499c-bc06-9efdd95f5ecf"
+						t="r" />
+					<refcol
+						guid="d1bec046-67f8-4485-ae5d-7de70ff70388"
+						t="r" />
+					<refcol
+						guid="d2f86ded-f043-4925-88fd-c33df4b9b9cb"
+						t="r" />
+					<refcol
+						guid="d3055d17-d4be-4d5a-bf01-b5b46f7d88f9"
+						t="r" />
+					<refcol
+						guid="d3d4d72a-36ea-4a90-9a3f-25a1fed5b3c8"
+						t="r" />
+					<refcol
+						guid="d555fbc7-3d34-42f4-b047-e51d0ee2d6ab"
+						t="r" />
+					<refcol
+						guid="e1f52891-381a-4cc4-9073-28613b9c8067"
+						t="r" />
+					<refcol
+						guid="e27288ea-348c-45da-b346-d5be2c80238c"
+						t="r" />
+					<refcol
+						guid="e3a9731e-e65b-4602-95fb-8806080956da"
+						t="r" />
+					<refcol
+						guid="e4100ec1-1834-47f5-bd58-39e201e270dc"
+						t="r" />
+					<refcol
+						guid="e4dead61-e935-4faa-a352-b46837914e7e"
+						t="r" />
+					<refcol
+						guid="e659261b-b269-49ab-968d-4a02d3f87983"
+						t="r" />
+					<refcol
+						guid="e7d6d156-58f8-4937-a248-b1515d2ad2dd"
+						t="r" />
+					<refcol
+						guid="e7f21fee-4a1b-4d61-9728-643883cb7e44"
+						t="r" />
+					<refcol
+						guid="ea52b980-2e86-42cb-8d1a-48373eda3b52"
+						t="r" />
+					<refcol
+						guid="ea541af2-c6c1-4d66-8b56-f16b479d07ce"
+						t="r" />
+					<refcol
+						guid="eb50e210-c6bc-46b9-8903-b04279653b9e"
+						t="r" />
+					<refcol
+						guid="eca84cec-88f4-4ba4-945d-c869f6344c35"
+						t="r" />
+					<refcol
+						guid="ede36cee-1476-4bda-936d-6f608a4d7717"
+						t="r" />
+					<refcol
+						guid="edf67f6e-1e98-441d-8c95-3777923b36de"
+						t="r" />
+					<refcol
+						guid="ef6c3dd4-7507-4aeb-948b-2e1d3fc9b8e0"
+						t="r" />
+					<refcol
+						guid="ef6d9c98-323e-4801-9db2-34346af0a478"
+						t="r" />
+					<refcol
+						guid="f158b848-2965-4915-8f01-7f37f581ccf6"
+						t="r" />
+					<refcol
+						guid="f3317313-6ca2-4a75-a864-562726e45148"
+						t="r" />
+					<refcol
+						guid="f447219c-9dcf-4ee3-b39c-63d2933274c9"
+						t="r" />
+					<refcol
+						guid="f4ff8dda-610e-4792-beb3-4e0c0bd78393"
+						t="r" />
+					<refcol
+						guid="f931b083-2056-4563-adcb-bd6b1d8cbbd9"
+						t="r" />
+					<refcol
+						guid="f93537da-326f-4d86-9dbf-7e02cde04c3d"
+						t="r" />
+					<refcol
+						guid="fc8e18f7-9965-4387-8c80-e8f3198654d4"
+						t="r" />
+					<refcol
+						guid="fe392559-6807-40bd-8667-eabfa91fedf9"
+						t="r" />
+					<refcol
+						guid="ff66af09-6d16-47af-9315-675b8addb724"
+						t="r" />
+				</Cases>
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">Wordforms which should not parse</Run>
+					</AStr>
+				</Description>
+				<Name>
+					<AUni
+						ws="en">Ill-formed words</AUni>
+				</Name>
+			</WfiWordSet>
+		</TestSets>
+	</MoMorphData>
+</MorphAndSynData>

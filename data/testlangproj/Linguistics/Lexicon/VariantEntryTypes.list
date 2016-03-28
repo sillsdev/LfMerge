@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VariantEntryTypes>
+	<CmPossibilityList
+		guid="56b1d62b-ba17-42b0-90c7-f7cd85184e0e">
+		<Abbreviation>
+			<AUni
+				ws="en">VarEnt</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2009-2-6 20:40:29.910" />
+		<DateModified
+			val="2009-2-6 20:40:29.910" />
+		<Depth
+			val="127" />
+		<Description>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">Variant entry types for lexicons.</Run>
+			</AStr>
+		</Description>
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="true" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="5118" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Variant Types</AUni>
+			<AUni
+				ws="es">Tipos de variante</AUni>
+			<AUni
+				ws="fa">انواع گونۀ متبوع</AUni>
+			<AUni
+				ws="fr">Types de variante</AUni>
+			<AUni
+				ws="id">Tipe-tipe Varian</AUni>
+			<AUni
+				ws="pt">Tipos de Variante</AUni>
+			<AUni
+				ws="ru">Типы вариантов</AUni>
+			<AUni
+				ws="zh-CN">变体类型</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="LexEntryType"
+				guid="024b62c9-93b3-41a0-ab19-587a0030219a">
+				<Abbreviation>
+					<AUni
+						ws="en">dial. var. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.720" />
+				<DateModified
+					val="2005-10-1 16:15:58.720" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An irregular variant of a major entry lexeme characteristic of a specific demographic subset of the language.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="8d725d7a-86eb-4433-87f4-2bb430f6ec4b">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="9a0ed573-60f8-4aeb-8c00-b2612ee47f3c">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Dialectal Variant</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">dial. var.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="4343b1ef-b54f-4fa4-9998-271319a6d74c">
+				<Abbreviation>
+					<AUni
+						ws="en">fr. var. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.720" />
+				<DateModified
+					val="2005-10-1 16:15:58.720" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An irregular variant which may substitute for a major entry lexeme in the same environment without causing a change in meaning.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="1a87a904-2ea2-4760-a18f-2038e8b90f88">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="eeded35b-6863-4d45-aaec-2b7f5fd62ed0">
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Free Variant</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">fr. var.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="fcc61889-00e6-467b-9cf0-8c4f48b9a486">
+				<Abbreviation>
+					<AUni
+						ws="en">inf. var. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.733" />
+				<DateModified
+					val="2005-10-1 16:15:58.733" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An irregular variant of a major entry lexeme that expresses a grammatical contrast which is obligatory for the stem's word class in some given grammatical context.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="7d88a5a5-8a81-43a4-a802-e3cc11c1c57a">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="ea101185-7acc-4e4c-8ca2-14d86a4644cf">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">An inflectional variant is a minor entry in the lexical database that is related to a major entry. It contains minimal phonological, semantic, and grammatical information about the variant.  </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="fa254695-0795-49b3-a9b6-2a9f0c1a5dbd">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">In contrast to derivation, inflection</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="d9a0960e-062a-4605-8c02-40807b739da6">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        does not result in a change of word class, and </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="45e95ed3-ceed-4e07-8aa3-d9d2e182f47a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        usually produces a predictable, non-idiosyncratic change of meaning. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="fa542763-8e57-4044-9a7b-821449b69163">
+								<Contents>
+									<Str>
+										<Run
+											ws="en"> Inflectional operations ground the semantic content of a root according to place, time, and participant reference, without substantially affecting the basic semantic content of the root. They often specify when an event or situation took place, who or what were the participants, and sometimes where, how or whether an event or situation really took place. In other words, roots can be inflected for such things as:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="cdddd331-014c-40f9-ad54-ad1f8f5627af">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">         Agreement: person, number, and gender </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="6ae2b8d5-669c-48fc-ad48-6dcfc3256799">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        Sequential, temporal or epistemological grounding: tense, aspect, mode </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="40e1f38f-48a5-45aa-8254-3c251a681d9d">
+								<Contents>
+									<Str>
+										<Run
+											ws="en"> Inflectional operations</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="50f80f20-393e-472d-b636-865b1ed01a2d">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        are grammatically required in certain syntactic environments</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="ab1a788b-a82d-4934-a77b-3a0bb0458ad4">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">                Example: The main verb of an English sentence must be inflected for subject and tense.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="d7ec6393-342a-4b49-93bc-e4b9523f665f">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        tend to be regular and productive, in comparison to derivational operations, and </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="f2dd6d84-0429-4c51-85e6-a71f4bfb7a07">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        tend to occur in paradigms. </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="e3630132-d61f-4d08-9c7f-a4c8b29d85b5">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example (English)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="7a46d8f3-0aa8-44a0-b753-3c13adba1b5a">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        In the following English sentence, come is inflected for person and number by the suffix -s:</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="9d698e5a-92a6-4806-80f1-e5b85735ccdf">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        The mailman comes about noon.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="da70f2b4-b980-4e99-84dc-5ed914e53ac4">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Example (Spanish)</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="33039bab-e403-419d-b10d-27e6d2ee90be">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        In the following Spanish noun phrase, las and rojas are inflected for agreement with manzanas in grammatical gender by -a and in number by -s: </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="173d84f5-cb21-4aff-a0e3-e6671d5dafa4">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">        las manzanas rojas ‘the red apples’ </Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Inflectional Variant</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">inf. var.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="LexEntryType"
+						guid="8b623214-15dc-431e-92aa-6bed9168a5da">
+						<Abbreviation>
+							<AUni
+								ws="en">1pl</AUni>
+						</Abbreviation>
+						<BackColor
+							val="-1073741824" />
+						<DateCreated
+							val="2004-10-30 1:6:38.193" />
+						<DateModified
+							val="2004-10-30 1:6:38.193" />
+						<Discussion>
+							<StText
+								guid="3065263f-33af-4ce5-aee6-89572f842d46">
+								<DateModified
+									val="2011-2-2 19:39:28.831" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="6ab8455b-9a35-4857-b8e7-2d0495793da7">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="-1073741824" />
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="true" />
+						<Name>
+							<AUni
+								ws="en">first person plural</AUni>
+						</Name>
+						<ReverseAbbr>
+							<AUni
+								ws="en">1pl</AUni>
+						</ReverseAbbr>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="-1073741824" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="0c4663b3-4d9a-47af-b9a1-c8565d8112ed">
+				<Abbreviation>
+					<AUni
+						ws="en">sp. var. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2005-10-1 16:15:58.750" />
+				<DateModified
+					val="2005-10-1 16:15:58.750" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An irregularly spelled variant of a major entry lexeme, not attributable to variety of speech.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="525f1442-3299-4482-8a21-0504fbef1798">
+						<DateModified
+							val="2011-2-2 19:39:28.831" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="a0615a1c-f669-47ce-8e00-7d4317e17d8c">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">A spelling variant is a minor entry in the lexical database that is related to a major entry. It contains minimal phonological, semantic, and grammatical information about the variant.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Spelling Variant</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">sp. var.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryInflType"
+				guid="01d4fbc1-3b0c-4f52-9163-7ab0d4f4711c">
+				<Abbreviation>
+					<AUni
+						ws="en">irreg. infl. of</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="1-1-1 0:0:0.0" />
+				<DateModified
+					val="1-1-1 0:0:0.0" />
+				<Description>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">An Irregularly Inflected Form is an inflected form of the lexeme that is different from what you would expect from the normal rules of the grammar.</Run>
+					</AStr>
+				</Description>
+				<Discussion>
+					<StText
+						guid="b6f4c056-ea5e-11de-8a9c-0013722f8dec">
+						<DateModified
+							val="2011-3-29 16:16:31.321" />
+						<Paragraphs>
+							<ownseq
+								class="StTxtPara"
+								guid="b700ac0e-ea5e-11de-8890-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">The English verb 'hit' is irregular. From the normal rules of grammar we would expect the past tense to be 'hitted', since the normal way to form the past tense is to add the -ed suffix. Instead the correct past tense form is 'hit', as in, "He hit me yesterday." Likewise the past tense of 'break' is 'broke' rather than 'breaked'. So 'hit' (past) and 'broke' are irregularly inflected forms. In the same way the plural form of 'fish' is 'fish' rather than 'fishes', as in "There are many fish in the lake." The plural of 'man' is 'men', not 'mans'. So 'fish' (plural) and 'men' are irregularly inflected forms.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+							<ownseq
+								class="StTxtPara"
+								guid="b70c97bc-ea5e-11de-803e-0013722f8dec">
+								<Contents>
+									<Str>
+										<Run
+											ws="en">Many dictionaries indicate irregularly inflected forms in the dictionary entry for the lexeme. Generally a minor entry for the irregularly inflected form is also included, especially in dictionaries for language learners who would not know where to find the entry for the basic (uninflected) form of the lexeme.</Run>
+									</Str>
+								</Contents>
+								<ParseIsCurrent
+									val="False" />
+							</ownseq>
+						</Paragraphs>
+						<RightToLeft
+							val="False" />
+					</StText>
+				</Discussion>
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="true" />
+				<Name>
+					<AUni
+						ws="en">Irregularly Inflected Form</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">irreg. infl.</AUni>
+				</ReverseAbbr>
+				<SortSpec
+					val="0" />
+				<SubPossibilities>
+					<ownseq
+						class="LexEntryInflType"
+						guid="a32f1d1c-4832-46a2-9732-c2276d6547e8">
+						<Abbreviation>
+							<AUni
+								ws="en">pl. of</AUni>
+						</Abbreviation>
+						<BackColor
+							val="0" />
+						<DateCreated
+							val="1-1-1 0:0:0.0" />
+						<DateModified
+							val="1-1-1 0:0:0.0" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The plural form of a noun that does not take the regular inflectional affix for plural.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="b716211a-ea5e-11de-8768-0013722f8dec">
+								<DateModified
+									val="2011-3-29 16:16:31.321" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b7220cc8-ea5e-11de-8bbc-0013722f8dec">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="0" />
+						<GlossAppend>
+							<AUni
+								ws="en">.pl</AUni>
+						</GlossAppend>
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="true" />
+						<Name>
+							<AUni
+								ws="en">Plural</AUni>
+						</Name>
+						<ReverseAbbr>
+							<AUni
+								ws="en">pl.</AUni>
+						</ReverseAbbr>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="0" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+					<ownseq
+						class="LexEntryInflType"
+						guid="837ebe72-8c1d-4864-95d9-fa313c499d78">
+						<Abbreviation>
+							<AUni
+								ws="en">pst. of</AUni>
+						</Abbreviation>
+						<BackColor
+							val="0" />
+						<DateCreated
+							val="1-1-1 0:0:0.0" />
+						<DateModified
+							val="1-1-1 0:0:0.0" />
+						<Description>
+							<AStr
+								ws="en">
+								<Run
+									ws="en">The past tense form of a verb that does not take the regular inflectional affix for past tense.</Run>
+							</AStr>
+						</Description>
+						<Discussion>
+							<StText
+								guid="b72df880-ea5e-11de-8e18-0013722f8dec">
+								<DateModified
+									val="2011-3-29 16:16:31.321" />
+								<Paragraphs>
+									<ownseq
+										class="StTxtPara"
+										guid="b73781de-ea5e-11de-9216-0013722f8dec">
+										<ParseIsCurrent
+											val="False" />
+									</ownseq>
+								</Paragraphs>
+								<RightToLeft
+									val="False" />
+							</StText>
+						</Discussion>
+						<ForeColor
+							val="0" />
+						<GlossAppend>
+							<AUni
+								ws="en">.pst</AUni>
+						</GlossAppend>
+						<Hidden
+							val="False" />
+						<IsProtected
+							val="true" />
+						<Name>
+							<AUni
+								ws="en">Past</AUni>
+						</Name>
+						<ReverseAbbr>
+							<AUni
+								ws="en">pst.</AUni>
+						</ReverseAbbr>
+						<SortSpec
+							val="0" />
+						<UnderColor
+							val="0" />
+						<UnderStyle
+							val="0" />
+					</ownseq>
+				</SubPossibilities>
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="true" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</VariantEntryTypes>

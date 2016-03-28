@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserDefinedList>
+	<CmPossibilityList
+		guid="66911672-9396-4130-b1ef-c495ae60e6fe">
+		<DateCreated
+			val="2011-7-28 16:1:27.854" />
+		<DateModified
+			val="2011-7-28 16:1:56.981" />
+		<Depth
+			val="1" />
+		<Description>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">My custom list</Run>
+			</AStr>
+		</Description>
+		<DisplayOption
+			val="0" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="False" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="27" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Cust List</AUni>
+		</Name>
+		<Possibilities>
+			<ownseq
+				class="CmCustomItem"
+				guid="85c48e72-218d-4fac-bb82-41a5eb9e268a">
+				<Abbreviation>
+					<AUni
+						ws="en">fci</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2011-7-28 16:1:37.673" />
+				<DateModified
+					val="2011-7-28 16:1:53.816" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">First Custom Item</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+			<ownseq
+				class="CmCustomItem"
+				guid="43b38fe1-706a-4288-9404-462daf8f283b">
+				<Abbreviation>
+					<AUni
+						ws="en">sci</AUni>
+				</Abbreviation>
+				<BackColor
+					val="0" />
+				<DateCreated
+					val="2011-7-28 16:1:56.966" />
+				<DateModified
+					val="2011-7-28 16:2:6.17" />
+				<ForeColor
+					val="0" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="False" />
+				<Name>
+					<AUni
+						ws="en">Second Custom Item</AUni>
+				</Name>
+				<SortSpec
+					val="0" />
+				<UnderColor
+					val="0" />
+				<UnderStyle
+					val="0" />
+			</ownseq>
+		</Possibilities>
+		<PreventChoiceAboveLevel
+			val="0" />
+		<PreventDuplicates
+			val="False" />
+		<PreventNodeChoices
+			val="False" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</UserDefinedList>

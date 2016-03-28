@@ -318,7 +318,7 @@ namespace LfMerge.Tests
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
-			return SynchronizeActionTests.ProjectFolderPath;
+			return SynchronizeActionTests.LDProjectFolderPath;
 		}
 	}
 
