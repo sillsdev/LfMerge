@@ -27,7 +27,7 @@ namespace LfMerge.Tests
 		public void Serialization_Roundtrip()
 		{
 			var expectedState = new ProcessingState("ProjA", _env.Settings) {
-				SRState = ProcessingState.SendReceiveStates.QUEUED,
+				SRState = ProcessingState.SendReceiveStates.SYNCING,
 				LastStateChangeTicks = DateTime.Now.Ticks,
 				PercentComplete = 50,
 				ElapsedTimeSeconds = 10,
@@ -48,14 +48,14 @@ namespace LfMerge.Tests
 		{
 			var state = ProcessingState.Deserialize("ProjB");
 			Assert.That(state.ProjectCode, Is.EqualTo("ProjB"));
-			Assert.That(state.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.QUEUED));
+			Assert.That(state.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONING));
 		}
 
 		[Test]
 		public void Deserialization_FromFile()
 		{
 			var expectedState = new ProcessingState("ProjC", _env.Settings) {
-				SRState = ProcessingState.SendReceiveStates.QUEUED,
+				SRState = ProcessingState.SendReceiveStates.SYNCING,
 				LastStateChangeTicks = 635683277459459160,
 				PercentComplete = 30,
 				ElapsedTimeSeconds = 40,
@@ -65,7 +65,7 @@ namespace LfMerge.Tests
 				RetryCounter = 1,
 				UncommittedEditCounter = 0
 			};
-			const string json = "{\"SRState\":0,\"LastStateChangeTicks\":635683277459459160," +
+			const string json = "{\"SRState\":\"SYNCING\",\"LastStateChangeTicks\":635683277459459160," +
 				"\"PercentComplete\":30,\"ElapsedTimeSeconds\":40,\"TimeRemainingSeconds\":50," +
 				"\"TotalSteps\":3,\"CurrentStep\":2,\"RetryCounter\":1,\"UncommittedEditCounter\":0," +
 				"\"ErrorMessage\":null,\"ErrorCode\":0,\"ProjectCode\":\"ProjC\"}";
@@ -84,7 +84,7 @@ namespace LfMerge.Tests
 			// Setup
 			var ticks = DateTime.Now.Ticks;
 			var sut = new ProcessingState("proja", _env.Settings) {
-				SRState = ProcessingState.SendReceiveStates.QUEUED,
+				SRState = ProcessingState.SendReceiveStates.SYNCING,
 				LastStateChangeTicks = ticks,
 				PercentComplete = 50,
 				ElapsedTimeSeconds = 10,
@@ -107,10 +107,10 @@ namespace LfMerge.Tests
   ""ErrorMessage"": null,
   ""ErrorCode"": 0,
   ""ProjectCode"": ""proja""
-}}", ProcessingState.SendReceiveStates.MERGING, ticks);
+}}", ProcessingState.SendReceiveStates.SYNCING, ticks);
 
 			// Exercise
-			sut.SRState = ProcessingState.SendReceiveStates.MERGING;
+			sut.SRState = ProcessingState.SendReceiveStates.SYNCING;
 
 			// Verify
 			Directory.CreateDirectory(_env.Settings.StateDirectory);

@@ -12,14 +12,29 @@ namespace LfMerge
 {
 	public class ProcessingState
 	{
+		/// <summary>
+		/// LfMerge project send/receive state as defined in "Language Forge Send/Receive technical design and scenarios"
+		/// </summary>
 		public enum SendReceiveStates
 		{
-			QUEUED,
+			/// <summary>
+			/// Initial clone for the LF project is being performed.
+			/// </summary>
+			CLONING,
+
+			/// <summary>
+			/// Synchronize action is being performed
+			/// </summary>
+			SYNCING,
+
+			/// <summary>
+			/// LfMerge is idle for the current project. No errors
+			/// </summary>
 			IDLE,
-			MERGING,
-			SENDING,
-			RECEIVING,
-			UPDATING,
+
+			/// <summary>
+			/// A project in this state is skipped from processing due to previous failed merge
+			/// </summary>
 			HOLD,
 		}
 
@@ -38,7 +53,7 @@ namespace LfMerge
 
 		protected ProcessingState()
 		{
-			_state = SendReceiveStates.QUEUED;
+			_state = SendReceiveStates.CLONING;
 			_lastStateChangeTicks = DateTime.Now.ToUniversalTime().Ticks;
 			ProjectCode = string.Empty;
 		}

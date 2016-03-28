@@ -23,7 +23,7 @@ namespace LfMerge.Actions
 	{
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
-			get { return ProcessingState.SendReceiveStates.UPDATING; }
+			get { return ProcessingState.SendReceiveStates.SYNCING; }
 		}
 
 		private FdoCache _cache;

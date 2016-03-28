@@ -20,7 +20,7 @@ namespace LfMerge.Actions
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{
-			get { return ProcessingState.SendReceiveStates.RECEIVING; }
+			get { return ProcessingState.SendReceiveStates.SYNCING; }
 		}
 
 		protected override void DoRun(ILfProject project)

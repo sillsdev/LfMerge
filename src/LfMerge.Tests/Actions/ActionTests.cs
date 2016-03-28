@@ -64,11 +64,10 @@ namespace LfMerge.Tests.Actions
 			Assert.That(actions, Is.EquivalentTo(expectedActionNames));
 		}
 
-		[TestCase(ActionNames.TransferMongoToFdo, ProcessingState.SendReceiveStates.QUEUED)]
-		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.QUEUED)]
-//		[TestCase(ActionNames.Synchronize, ProcessingState.SendReceiveStates.RECEIVING)]
-		[TestCase(ActionNames.Edit, ProcessingState.SendReceiveStates.MERGING)]
-		[TestCase(ActionNames.TransferFdoToMongo, ProcessingState.SendReceiveStates.UPDATING)]
+		[TestCase(ActionNames.TransferMongoToFdo, ProcessingState.SendReceiveStates.SYNCING)]
+		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.SYNCING)]
+		[TestCase(ActionNames.Edit, ProcessingState.SendReceiveStates.SYNCING)]
+		[TestCase(ActionNames.TransferFdoToMongo, ProcessingState.SendReceiveStates.SYNCING)]
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup

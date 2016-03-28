@@ -113,29 +113,49 @@ namespace LfMerge
 			Logger.Notice("LfMerge finished");
 		}
 
+		/// <summary>
+		/// Ensures a Send/Receive project from Language Depot is properly
+		/// cloned into the WebWork directory for LfMerge.
+		/// A project will be cloned if:
+		/// 1) The LfMerge state file doesn't exist OR
+		/// 2) The current LfMerge state is ProcessingState.SendReceiveStates.CLONING OR
+		/// 3) The project directory is empty
+		/// </summary>
+		/// <param name="project">LF Project.</param>
 		public static void EnsureClone(ILfProject project)
 		{
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
-				var Progress = scope.Resolve<IProgress>();
+				var progress = scope.Resolve<IProgress>();
+				var settings = Container.Resolve<LfMergeSettingsIni>();
 				var model = scope.Resolve<InternetCloneSettingsModel>();
 				model.InitFromUri(project.LanguageDepotProjectUri);
-				var settings = Container.Resolve<LfMergeSettingsIni>();
 				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
 				model.AccountName = project.LanguageDepotProject.Username;
 				model.Password = project.LanguageDepotProject.Password;
 				model.ProjectId = project.LanguageDepotProject.Identifier;
 				model.LocalFolderName = project.ProjectCode;
-				model.AddProgress(Progress);
+				model.AddProgress(progress);
 
 				try
 				{
-					if (!Directory.Exists(model.ParentDirectoryToPutCloneIn) ||
+					// Check if an initial clone needs to be performed
+					if (!File.Exists(settings.GetStateFileName(project.ProjectCode)) ||
+						(project.State.SRState == ProcessingState.SendReceiveStates.CLONING) ||
 						model.TargetLocationIsUnused)
 					{
 						Logger.Notice("Initial clone");
-						project.State.SRState = ProcessingState.SendReceiveStates.RECEIVING;
+						// Since we're in here, the previous clone was not finished, so remove and start over
+						var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
+						if (Directory.Exists(cloneLocation))
+						{
+							Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
+							Directory.Delete(cloneLocation, true);
+						}
+						project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 						model.DoClone();
+						if (model.LocalFolderName != project.ProjectCode)
+							Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}", project.ProjectCode, model.TargetDestination);
 						if (!FinishClone(project))
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 
