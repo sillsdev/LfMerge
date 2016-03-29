@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using LfMerge.Settings;
 using Palaso.Progress;
 
 namespace LfMerge.Logging
@@ -9,10 +10,10 @@ namespace LfMerge.Logging
 	{
 		public ILogger Logger { get; private set; }
 
-		public SyslogProgress(ILogger logger, bool verbose = false)
+		public SyslogProgress(ILogger logger, LfMergeSettingsIni settings)
 		{
 			Logger = logger;
-			ShowVerbose = verbose;
+			ShowVerbose = settings.VerboseProgress;
 		}
 
 		public override void WriteMessage(string message, params object[] args)

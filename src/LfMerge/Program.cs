@@ -41,7 +41,7 @@ namespace LfMerge
 			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
-			containerBuilder.RegisterType<ConsoleProgress>().As<IProgress>();
+			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
 			LfMerge.Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
