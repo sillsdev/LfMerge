@@ -80,7 +80,7 @@ namespace LfMerge.Settings
 			MongoMainDatabaseName = mongoMainDatabaseName;
 		}
 
-		public bool CommitWhenDone { get; protected set; }
+		public bool CommitWhenDone { get; internal set; }
 
 		public bool VerboseProgress { get; protected set; }
 

@@ -52,6 +52,7 @@ namespace LfMerge.Tests.Actions
 		public void Setup()
 		{
 			_env = new TestEnvironment();
+			_env.Settings.CommitWhenDone = true;
 			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			FdoTestFixture.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
 			_testEntryGuid = Guid.Parse(testEntryGuidStr);
@@ -76,7 +77,8 @@ namespace LfMerge.Tests.Actions
 		public void Teardown()
 		{
 			_env.Dispose();
-			Directory.Delete(_languageDepotFolder.Path, true);
+			_languageDepotFolder.Dispose();
+			_mongoConnection.Reset();
 		}
 
 		[Test]
@@ -111,6 +113,7 @@ namespace LfMerge.Tests.Actions
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string changedGloss = unchangedGloss + " - changed in LF";
 			lfEntry.Senses[0].Gloss["en"].Value = changedGloss;
+			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
 			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
 			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
@@ -126,6 +129,12 @@ namespace LfMerge.Tests.Actions
 			_sutSynchronize.Run(_lfProject);
 
 			// Verify
+			cache = _lfProject.FieldWorksProject.Cache;
+			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lfFdoEntry, Is.Not.Null);
+			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
+
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
@@ -136,6 +145,8 @@ namespace LfMerge.Tests.Actions
 
 			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
 			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);
+			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
 			cache = _lDProject.FieldWorksProject.Cache;
 			lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
@@ -147,6 +158,7 @@ namespace LfMerge.Tests.Actions
 		public void SynchronizeAction_LDDataChanged_GlossChanged()
 		{
 			// Setup
+			_env.Settings.CommitWhenDone = false; // TODO: remove when multipara is no longer changing GUIDs when there are no changes. IJH 2016-03
 			FdoTestFixture.CopyFwProjectTo(testProjectCode2, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode2), LDProjectFolderPath);
 
