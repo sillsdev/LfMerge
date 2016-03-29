@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using SIL.FieldWorks.FixData;
-//using Palaso.UI.WindowsForms.HotSpot;
+using SIL.Linux.Logging;
 using SIL.Utils;
 
 namespace FixFwData
@@ -24,9 +24,9 @@ namespace FixFwData
 		{
 			SetUpErrorHandling();
 			var pathname = args[0];
-			using (var prog = new NullProgress())
+			using (var prog = new LoggingProgress())
 			{
-				var data = new FwDataFixer(pathname, prog, logger);
+				var data = new FwDataFixer(pathname, prog, logError);
 				data.FixErrorsAndSave();
 			}
 			if (errorsOccurred)
@@ -34,11 +34,15 @@ namespace FixFwData
 			return 0;
 		}
 
+		private static SyslogLogger logger = null;
 		private static bool errorsOccurred;
 
-		private static void logger(string guid, string date, string description)
+		private static void logError(string guid, string date, string description)
 		{
-			Console.WriteLine(description);
+			if (logger == null)
+				Console.WriteLine(description);
+			else
+				logger.Error("Error in GUID {0}: {1} (on {2})", guid, description, date);
 			errorsOccurred = true;
 		}
 
@@ -47,12 +51,14 @@ namespace FixFwData
 			ErrorReport.EmailAddress = "flex_errors@sil.org";
 			ErrorReport.AddStandardProperties();
 			if (MiscUtils.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
-				ExceptionHandler.Init(new SIL.Linux.Logging.SyslogExceptionHandler("FixFwData"));
+				ExceptionHandler.Init(new SyslogExceptionHandler("FixFwData"));
 			else
 				ExceptionHandler.Init();
+			if (MiscUtils.IsUnix)
+				logger = new SyslogLogger("FixFwData");
 		}
 
-		private sealed class NullProgress : IProgress, IDisposable
+		private sealed class LoggingProgress : IProgress, IDisposable
 		{
 			public event CancelEventHandler Canceling;
 
@@ -70,7 +76,13 @@ namespace FixFwData
 			public string Message
 			{
 				get { return null; }
-				set { Console.Out.WriteLine(value); }
+				set
+				{
+					if (logger == null)
+						Console.Out.WriteLine(value);
+					else
+						logger.Info(value);
+				}
 			}
 
 			public int Position { get; set; }
@@ -92,7 +104,7 @@ namespace FixFwData
 			#region Gendarme required cruft
 #if DEBUG
 			/// <summary/>
-			~NullProgress()
+			~LoggingProgress()
 			{
 				Dispose(false);
 			}
