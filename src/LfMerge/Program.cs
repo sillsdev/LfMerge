@@ -160,8 +160,9 @@ namespace LfMerge
 							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 
 						Logger.Notice("Initial transfer to mongo after clone");
-						TransferFdoToMongoAction.InitialClone = true;
+						project.IsInitialClone = true;
 						LfMerge.Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
+						project.IsInitialClone = false;
 					}
 				}
 				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)

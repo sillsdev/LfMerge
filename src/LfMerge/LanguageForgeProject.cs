@@ -34,6 +34,7 @@ namespace LfMerge
 			_settings = settings;
 			_projectCode = projectCode.ToLowerInvariant();
 			_state = ProcessingState.Deserialize(projectCode);
+			IsInitialClone = false;
 		}
 
 		public static void DisposeProjectCache()
@@ -102,6 +103,12 @@ namespace LfMerge
 					uri = "http://hg-private.languagedepot.org";
 				return uri;
 			}
+		}
+
+		public bool IsInitialClone
+		{
+			get;
+			set;
 		}
 
 		#endregion

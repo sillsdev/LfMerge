@@ -104,7 +104,7 @@ namespace LfMerge.Tests.Actions
 			// Setup
 			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
-			TransferFdoToMongoAction.InitialClone = true;
+			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
@@ -150,7 +150,7 @@ namespace LfMerge.Tests.Actions
 			FdoTestFixture.CopyFwProjectTo(testProjectCode2, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode2), LDProjectFolderPath);
 
-			TransferFdoToMongoAction.InitialClone = true;
+			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);

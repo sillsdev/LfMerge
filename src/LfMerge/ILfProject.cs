@@ -12,5 +12,6 @@ namespace LfMerge
 		ProcessingState State { get; }
 		ILanguageDepotProject LanguageDepotProject { get; }
 		string LanguageDepotProjectUri { get; }
+		bool IsInitialClone { get; set; }
 	}
 }

@@ -49,7 +49,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			TransferFdoToMongoAction.InitialClone = true;
+			lfProject.IsInitialClone = true;
 			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProject);
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
 
@@ -83,7 +83,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			TransferFdoToMongoAction.InitialClone = true;
+			lfProject.IsInitialClone = true;
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);

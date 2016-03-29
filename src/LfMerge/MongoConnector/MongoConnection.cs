@@ -160,11 +160,10 @@ namespace LfMerge.MongoConnector
 		/// <returns>True if mongodb was updated</returns>
 		/// <param name="project">Language forge Project.</param>
 		/// <param name="inputSystems">List of input systems to add to the project configuration.</param>
-		/// <param name="initialClone">If set to <c>true</c>, also update associated field view input systems. Default false</param>
 		/// <param name="vernacularWs">Default vernacular writing system. Default blank</param>
 		/// <param name="analysisWs">Default analysis writing system. Default blank</param>
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
-			bool initialClone = false, string vernacularWs = "", string analysisWs = "")
+			string vernacularWs = "", string analysisWs = "")
 		{
 			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
@@ -177,7 +176,7 @@ namespace LfMerge.MongoConnector
 			collection.FindOneAndUpdate(filter, update, updateOptions);
 
 			// For initial clone, also update field writing systems accordingly
-			if (initialClone)
+			if (project.IsInitialClone)
 			{
 				var builder = Builders<MongoProjectRecord>.Update;
 				var updates = new List<UpdateDefinition<MongoProjectRecord>>();

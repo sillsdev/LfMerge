@@ -32,8 +32,6 @@ namespace LfMerge.Actions
 
 		private ConvertFdoToMongoLexicon _lexiconConverter;
 
-		public static bool InitialClone { get; set; }
-
 		public TransferFdoToMongoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
 		{
 			_connection = conn;
@@ -64,7 +62,7 @@ namespace LfMerge.Actions
 				return;
 			}
 
-			_lexiconConverter = new ConvertFdoToMongoLexicon(project, InitialClone, Logger, _connection);
+			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection);
 			_lexiconConverter.RunConversion();
 		}
 

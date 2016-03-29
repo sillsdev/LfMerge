@@ -27,8 +27,6 @@ namespace LfMerge.DataConverters
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
-		public bool InitialClone { get; set; }
-
 		public int _wsEn;
 
 
@@ -51,10 +49,9 @@ namespace LfMerge.DataConverters
 
 		public ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
-		public ConvertFdoToMongoLexicon(ILfProject lfProject, bool initialClone, ILogger logger, IMongoConnection connection)
+		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection)
 		{
 			LfProject = lfProject;
-			InitialClone = initialClone;
 			Logger = logger;
 			Connection = connection;
 
@@ -69,7 +66,7 @@ namespace LfMerge.DataConverters
 			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
 			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
-			Connection.SetInputSystems(LfProject, lfWsList, InitialClone, VernacularWs.Id, AnalysisWs.Id);
+			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
@@ -102,7 +99,7 @@ namespace LfMerge.DataConverters
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
-			InitialClone = false;
+			LfProject.IsInitialClone = false;
 
 			IEnumerable<LfLexEntry> lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			List<Guid> entryGuidsToRemove = new List<Guid>();
@@ -207,7 +204,7 @@ namespace LfMerge.DataConverters
 
 			lfEntry.DateCreated = fdoEntry.DateCreated;
 			lfEntry.DateModified = fdoEntry.DateModified;
-			if (InitialClone)
+			if (LfProject.IsInitialClone)
 			{
 				var now = DateTime.Now;
 				lfEntry.DateCreated = now;
@@ -439,7 +436,7 @@ namespace LfMerge.DataConverters
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
 			// TODO: Role Views only set on initial clone
-			if (InitialClone)
+			if (LfProject.IsInitialClone)
 			{
 				;
 			}
