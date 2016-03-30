@@ -195,10 +195,21 @@ namespace LfMerge
 				{
 					var json = File.ReadAllText(fileName);
 					// TODO: Use http://stackoverflow.com/a/8312048/2314532 instead of this hack
-					ProcessingState state = JsonConvert.DeserializeObject<ProcessingState>(json);
-					state.SetSettings(Settings);
-					return state;
+					try
+					{
+						ProcessingState state = JsonConvert.DeserializeObject<ProcessingState>(json);
+						if (state != null)
+						{
+							state.SetSettings(Settings);
+							return state;
+						}
+					}
+					catch (JsonReaderException)
+					{
+					}
 				}
+				// If the state file is nonexistent or invalid Json, set the project back to CLONING
+				MainClass.Logger.Error("State file was invalid Json, so setting the project back to CLONING");
 				return new ProcessingState(projectCode, Settings);
 			}
 		}

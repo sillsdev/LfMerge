@@ -44,7 +44,7 @@ namespace LfMerge.Tests
 		}
 
 		[Test]
-		public void Deserialization_NonexistingStateFile_ReturnsDefault()
+		public void Deserialize_NonexistingStateFile_ReturnsCloning()
 		{
 			var state = ProcessingState.Deserialize("ProjB");
 			Assert.That(state.ProjectCode, Is.EqualTo("ProjB"));
@@ -52,7 +52,37 @@ namespace LfMerge.Tests
 		}
 
 		[Test]
-		public void Deserialization_FromFile()
+		public void Deserialize_InvalidStateFile_DoesntThrow()
+		{
+			const string json = "badJson";
+
+			Directory.CreateDirectory(_env.Settings.StateDirectory);
+			var filename = _env.Settings.GetStateFileName("ProjC");
+			File.WriteAllText(filename, json);
+			Assert.DoesNotThrow(() =>
+			{
+				var state = ProcessingState.Deserialize("ProjC");
+				Assert.That(state.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONING));
+			});
+		}
+
+		[Test]
+		public void Deserialize_EmptyStateFile_DoesntThrow()
+		{
+			const string json = "";
+
+			Directory.CreateDirectory(_env.Settings.StateDirectory);
+			var filename = _env.Settings.GetStateFileName("ProjC");
+			File.WriteAllText(filename, json);
+			Assert.DoesNotThrow(() =>
+			{
+				var state = ProcessingState.Deserialize("ProjC");
+				Assert.That(state.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONING));
+			});
+		}
+
+		[Test]
+		public void Deserialize_ValidStateFile_MatchesState()
 		{
 			var expectedState = new ProcessingState("ProjC", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.SYNCING,
@@ -79,7 +109,7 @@ namespace LfMerge.Tests
 		}
 
 		[Test]
-		public void State_SettingPropertySerializesState()
+		public void State_SettingProperty_SerializesState()
 		{
 			// Setup
 			var ticks = DateTime.Now.Ticks;
