@@ -16,7 +16,10 @@ namespace LfMerge.Actions
 {
 	public class SynchronizeAction: Action
 	{
-		public SynchronizeAction(LfMergeSettingsIni settings, LfMerge.Logging.ILogger logger) : base(settings, logger) {}
+		public SynchronizeAction(LfMergeSettingsIni settings, LfMerge.Logging.ILogger logger)
+			: base(settings, logger)
+		{
+		}
 
 		protected override ProcessingState.SendReceiveStates StateForCurrentAction
 		{

@@ -40,10 +40,7 @@ namespace LfMerge
 		public static void DisposeProjectCache()
 		{
 			foreach (LanguageForgeProject project in CachedProjects.Values)
-			{
-				if (project._fieldWorksProject != null)
-					project._fieldWorksProject.Dispose();
-			}
+				DisposeFwProject(project);
 			CachedProjects.Clear();
 		}
 
@@ -51,9 +48,17 @@ namespace LfMerge
 		{
 			LanguageForgeProject project;
 			if (CachedProjects.TryGetValue(projectCode, out project)) {
+				DisposeFwProject(project);
+				CachedProjects.Remove(projectCode);
+			}
+		}
+
+		public static void DisposeFwProject(LanguageForgeProject project)
+		{
+			if (project._fieldWorksProject != null)
+			{
 				project._fieldWorksProject.Dispose();
 				project._fieldWorksProject = null;
-				CachedProjects.Remove(projectCode);
 			}
 		}
 

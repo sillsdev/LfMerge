@@ -41,7 +41,7 @@ namespace LfMerge.Tests.Actions
 		private MongoConnectionDouble _mongoConnection;
 		private MongoProjectRecordFactory _recordFactory;
 		private LanguageForgeProject _lfProject;
-		private LanguageForgeProject _lDProject;
+		private LanguageDepotMock _lDProject;
 		private LfMergeSettingsIni _lDSettings;
 		private TemporaryFolder _languageDepotFolder;
 		private Guid _testEntryGuid;
@@ -76,8 +76,10 @@ namespace LfMerge.Tests.Actions
 		[TearDown]
 		public void Teardown()
 		{
-			_env.Dispose();
+			LanguageForgeProject.DisposeFwProject(_lfProject);
+			LanguageDepotMock.DisposeFwProject(_lDProject);
 			_languageDepotFolder.Dispose();
+			_env.Dispose();
 			_mongoConnection.Reset();
 		}
 
@@ -115,21 +117,18 @@ namespace LfMerge.Tests.Actions
 			lfEntry.Senses[0].Gloss["en"].Value = changedGloss;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
-			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
-			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
-			var cache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
-			LanguageForgeProject.DisposeProjectCache(_lDProject.ProjectCode);
-			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
 			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			cache = _lfProject.FieldWorksProject.Cache;
+			var cache = _lfProject.FieldWorksProject.Cache;
 			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lfFdoEntry, Is.Not.Null);
 			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
@@ -143,12 +142,11 @@ namespace LfMerge.Tests.Actions
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
 
-			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
-			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
 			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);
 			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
-			cache = _lDProject.FieldWorksProject.Cache;
-			lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			lDcache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
@@ -175,19 +173,16 @@ namespace LfMerge.Tests.Actions
 			int createdEntryCount = originalMongoData.Count(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
 			Assert.That(createdEntryCount, Is.EqualTo(0));
 
-			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
-			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
-			var cache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
-			LanguageForgeProject.DisposeProjectCache(_lDProject.ProjectCode);
-			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 
 			// Exercise
 			_sutSynchronize.Run(_lfProject);
 
 			// Verify
-			cache = _lfProject.FieldWorksProject.Cache;
+			var cache = _lfProject.FieldWorksProject.Cache;
 			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lfFdoEntry, Is.Not.Null);
 			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
@@ -207,10 +202,9 @@ namespace LfMerge.Tests.Actions
 			int deletedEntryCount = receivedMongoData.Count(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
 			Assert.That(deletedEntryCount, Is.EqualTo(0));
 
-			LanguageForgeProject.DisposeProjectCache(_lfProject.ProjectCode);
-			_lDProject = LanguageForgeProject.Create(_lDSettings, testProjectCode);
-			cache = _lDProject.FieldWorksProject.Cache;
-			lDFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			lDcache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
