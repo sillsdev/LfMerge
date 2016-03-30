@@ -45,7 +45,7 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_InitialClone_ShouldPopulateMongoInputSystems()
+		public void Action_IsInitialClone_ShouldPopulateMongoInputSystems()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
@@ -79,7 +79,7 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_InitialClone_ShouldUpdateDates()
+		public void Action_IsInitialClone_ShouldUpdateDates()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
