@@ -10,6 +10,7 @@ using MongoDB.Bson.Serialization;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
+using SIL.FieldWorks.FDO.DomainServices;
 using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.DataConverters
@@ -49,6 +50,22 @@ namespace LfMerge.DataConverters
 			result.AddRange(htmlContents.Split(new string[] { "</p>" }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(para => para.StartsWith("<p>") ? para.Substring(3) : para));
 			// No need to trim trailing </p> as String.Split has already done that for us
+			return result;
+		}
+
+		private List<Guid> ParseCustomStTextGuidsFromBson(BsonDocument source)
+		{
+			var result = new List<Guid>();
+			if (source.ElementCount <= 0)
+				return result;
+			BsonElement foo = source.GetElement(0);
+			if (foo.Value.BsonType != BsonType.Document || !foo.Value.AsBsonDocument.Contains("guids"))
+				return result;
+			BsonValue bar = foo.Value.AsBsonDocument["guids"];
+			if (bar.BsonType != BsonType.Array)
+				return result;
+			IEnumerable<string> guidStrs = bar.AsBsonArray.Where(item => item.BsonType == BsonType.String).Select(item => item.AsString);
+			result.AddRange(guidStrs.Select(ParseGuidOrDefault));
 			return result;
 		}
 
@@ -160,30 +177,22 @@ namespace LfMerge.DataConverters
 						// No changes needed.
 						return true;
 					}
-					// TODO: In the future when we don't create a new object but re-use the existing one, we'll need
-					// to compare paragraph contents and call newStText.AddNewTextPara() or newStText.DeleteParagraph() as many
-					// times as needed to have the right # of paras. Then set the contents of each paragraph to their new values.
-					//
-					// For now, though, we just clear out all the current paragraphs, then add a number of paragraphs to the newly-empty object.
+					// BsonDocument passed in contains "value", and MAY contain "guids". ParseCustomStTextValuesFromBson
+					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
+					BsonDocument doc = value.AsBsonDocument;
+					if (doc.ElementCount <= 0)
+						return true;
+					if (doc.GetElement(0).Value.BsonType != BsonType.Document || !doc.GetElement(0).Value.AsBsonDocument.Contains("value"))
+						return true;
+					List<Guid> paragraphGuids = ParseCustomStTextGuidsFromBson(doc);
+					//BsonDocument valueOnly = new BsonDocument(wsStr, new BsonDocument("value", doc.GetElement(0).Value.AsBsonDocument["value"]));
 					int wsId;
-					List<string> newParagraphs = ParseCustomStTextValuesFromBson(value.AsBsonDocument, out wsId);
-					// Keep styles even though we're replacing contents. If we've added new paragraphs in LF, give them the same
-					// style as the first paragraph. This should work most of the time.
-					List<string> currentStyles = text.ParagraphsOS.Select(stPara => stPara.StyleName).ToList();
-					if (currentStyles.Count > 0 && currentStyles.Count < newParagraphs.Count)
-					{
-						int countDifference = newParagraphs.Count - currentStyles.Count;
-						currentStyles.AddRange(Enumerable.Repeat(currentStyles.First(), countDifference));
-					}
-					// Clear contents, keep styles
-					text.ParagraphsOS.Clear();
-					foreach (Tuple<string,string> textAndStyle in newParagraphs.Zip(currentStyles, (a,b) => new Tuple<string,string>(a,b)))
-					{
-						string paraContents = textAndStyle.Item1;
-						string styleName = textAndStyle.Item2;
-						IStTxtPara newPara = text.AddNewTextPara(styleName);
-						newPara.Contents = TsStringUtils.MakeTss(paraContents, wsId);
-					}
+					List<string> newParagraphs = ParseCustomStTextValuesFromBson(doc, out wsId);
+					// Make sure we have as many GUIDs as paragraphs
+					while (paragraphGuids.Count < newParagraphs.Count)
+						paragraphGuids.Add(Guid.Empty);
+					ConvertUtilities.SetCustomStTextValues(text, paragraphGuids, newParagraphs, wsId, StyleServices.NormalStyleName);
+
 					return true;
 				}
 
