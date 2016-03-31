@@ -37,6 +37,8 @@ cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Chorus.exe* output/${BUILD_CONFIG}/
 
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/ChorusMerge.exe* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/ChorusMerge.exe* output/${BUILD_CONFIG}/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/chorusmerge lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/chorusmerge output/${BUILD_CONFIG}/
 
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* output/${BUILD_CONFIG}/
