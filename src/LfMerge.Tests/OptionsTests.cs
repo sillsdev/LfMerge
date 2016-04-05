@@ -30,17 +30,16 @@ namespace LfMerge.Tests
 		}
 
 		[TestCase(new string[0],
-			null, false, TestName = "No arguments")]
+			null, TestName = "No arguments")]
 		[TestCase(new[] { "-p", "ProjA" },
-			"ProjA", false, TestName = "Prio project specified")]
+			"ProjA", TestName = "Prio project specified")]
 		public void FirstProjectAndStopAfterFirstProject(string[] args,
-			string expectedFirstProject, bool expectedStop)
+			string expectedFirstProject)
 		{
 			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(sut.FirstProject, Is.EqualTo(expectedFirstProject));
-			Assert.That(sut.StopAfterFirstProject, Is.EqualTo(expectedStop));
+			Assert.That(sut.PriorityProject, Is.EqualTo(expectedFirstProject));
 		}
 
 		[TestCase(QueueNames.None, ActionNames.None)]

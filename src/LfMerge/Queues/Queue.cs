@@ -41,7 +41,7 @@ namespace LfMerge.Queues
 		{
 			bool firstLoop = true;
 			var action = currentAction;
-			while ((action != currentAction && !Options.Current.StopAfterFirstAction) || firstLoop)
+			while (action != currentAction || firstLoop)
 			{
 				firstLoop = false;
 				var queueName = Options.GetQueueForAction(action);

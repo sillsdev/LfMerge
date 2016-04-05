@@ -20,54 +20,23 @@ namespace LfMerge
 		[Option('p', "project", HelpText = "Process the specified project first")]
 		public string PriorityProject { get; set; }
 
-		[Option('h', "help", HelpText = "Display this help")]
-		public bool ShowHelp { get; set; }
-
+		[HelpOption('h', "help")]
 		public string GetUsage()
 		{
-			var help = new HelpText
-			{
-				Heading = new HeadingInfo("LfMerge"),
-				Copyright = new CopyrightInfo("SIL International", 2016),
-				AdditionalNewLineAfterOption = false,
-				AddDashesToOption = true
-			};
-			help.AddOptions(this);
-			return help;
+			return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
 		}
 
-		public string FirstProject
-		{
-			get { return string.IsNullOrEmpty(PriorityProject) ? PriorityProject : PriorityProject; }
-		}
-
-		public bool StopAfterFirstProject
-		{
-			get { return false; }
-		}
+		[ParserState]
+		public IParserState LastParserState { get; set; }
 
 		public ActionNames FirstAction
 		{
 			get { return GetActionForQueue(QueueNames.Edit); }
 		}
 
-		public bool StopAfterFirstAction
-		{
-			get { return false; }
-		}
-
-		private bool AllArgumentsValid(string[] args)
-		{
-			return (!string.IsNullOrEmpty(PriorityProject) ||
-				(args == null) ||
-				(args.Length == 0));
-		}
-
 		public ActionNames GetNextAction(ActionNames currentAction)
 		{
-			int nextAction = 0;
-			if (!StopAfterFirstAction)
-				nextAction = ((int)currentAction) + 1;
+			int nextAction = ((int)currentAction) + 1;
 
 			if (nextAction > (int)ActionNames.TransferFdoToMongo)
 				nextAction = 0;
@@ -109,14 +78,10 @@ namespace LfMerge
 			var options = new Options();
 			if (Parser.Default.ParseArguments(args, options))
 			{
-				if (options.AllArgumentsValid(args) && !options.ShowHelp)
-				{
-					Current = options;
-					return options;
-				}
+				Current = options;
+				return options;
 			}
-			// Display the default usage information
-			Console.WriteLine(options.GetUsage());
+			// CommandLineParser automagically handles displaying help
 			return null;
 		}
 	}
