@@ -55,7 +55,7 @@ namespace LfMerge
 
 		public static void DisposeFwProject(LanguageForgeProject project)
 		{
-			if (project._fieldWorksProject != null)
+			if (project != null && project._fieldWorksProject != null)
 			{
 				project._fieldWorksProject.Dispose();
 				project._fieldWorksProject = null;
