@@ -44,7 +44,8 @@ namespace LfMerge.Tests
 	""customFields"" : {
 		""customField_entry_Cust_MultiPara"" : {
 			""en"" : {
-				""value"" : ""<p>This is the first paragraph.</p><p>This is the second paragraph.</p>""
+				""value"" : ""<p>This is the first paragraph.</p><p>This is the second paragraph.</p>"",
+				""guids"" : [""5c8fb347-d884-4db5-9415-64b139b663ff"", ""061a4bad-eaa8-4365-9a19-8150621a9a44""]
 			}
 		},
 		""customField_entry_Cust_Single_Line"" : {

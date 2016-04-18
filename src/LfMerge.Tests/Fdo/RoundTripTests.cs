@@ -211,7 +211,7 @@ namespace LfMerge.Tests.Fdo
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
-			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
+			Assert.That(customFieldValuesAfterTest, Is.EqualTo(customFieldValues));
 
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);

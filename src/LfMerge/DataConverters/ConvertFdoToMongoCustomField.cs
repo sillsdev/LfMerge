@@ -319,7 +319,7 @@ namespace LfMerge.DataConverters
 		/// <param name="listCode">Parent list code.</param>
 		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode)
 		{
-			if (label.Contains("Multi ListRef"))
+			if (label.Contains("Multi ListRef"))  // TODO: This won't work. The label is based on the field name, which can be set by the user, so it could be anything.
 			{
 				return new LfConfigMultiOptionList {
 					Label = label,

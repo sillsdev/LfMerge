@@ -47,7 +47,7 @@ namespace LfMerge.DataConverters
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			// Get paragraph contents and GUIDs
 			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => para.Contents).ToList();
-			List<Guid> guids = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => para.Guid).ToList();
+			List<string> guids = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => para.Guid.ToString()).ToList();
 			List<string> htmlParas = paras.Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
 			// Prepare the inner BsonDocument
 			var bsonParas = new BsonString(String.Join("", htmlParas));
