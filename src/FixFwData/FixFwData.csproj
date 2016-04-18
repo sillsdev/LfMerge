@@ -68,7 +68,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="FixFwDataDll">
-      <HintPath>..\..\lib\FixFwDataDll.dll</HintPath>
+      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="SIL.Linux.Logging">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
