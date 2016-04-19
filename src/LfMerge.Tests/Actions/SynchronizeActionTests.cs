@@ -31,12 +31,15 @@ namespace LfMerge.Tests.Actions
 	{
 		public static string LDProjectFolderPath;
 
+		// testlangproj is the original LD repo
+		// testlangproj-modified contains a modified entry, deleted entry, and added entry
 		private const string testProjectCode = "testlangproj";
-		private const string testProjectCode2 = "testlangproj2";
+		private const string testProjectModifiedCode = "testlangproj-modified";
 		private const int originalNumOfFdoEntries = 63;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 		private const string testCreatedEntryGuidStr = "e670d0e8-c0f7-457d-a6d1-055c83663820";
 		private const string testDeletedEntryGuidStr = "c5f97698-dade-4ba0-9f91-580ab19ff411";
+
 		private TestEnvironment _env;
 		private MongoConnectionDouble _mongoConnection;
 		private MongoProjectRecordFactory _recordFactory;
@@ -157,8 +160,8 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			_env.Settings.CommitWhenDone = false; // TODO: remove when multipara is no longer changing GUIDs when there are no changes. IJH 2016-03
-			FdoTestFixture.CopyFwProjectTo(testProjectCode2, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode2), LDProjectFolderPath);
+			FdoTestFixture.CopyFwProjectTo(testProjectModifiedCode, _lDSettings.WebWorkDirectory);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectModifiedCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
