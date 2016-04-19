@@ -98,7 +98,7 @@ namespace LfMerge
 			}
 			catch (Exception e)
 			{
-				Logger.Debug("Unhandled Exception: \n" + e.ToString());
+				Logger.Debug("Unhandled Exception: \n{0}", e);
 				throw;
 			}
 			finally

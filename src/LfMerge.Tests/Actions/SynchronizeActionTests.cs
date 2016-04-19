@@ -1,28 +1,23 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Autofac;
-using Chorus.sync;
-using Chorus.VcsDrivers.Mercurial;
-using LibFLExBridgeChorusPlugin;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
 using LfMerge;
 using LfMerge.Actions;
-using LfMerge.DataConverters;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests;
 using LfMerge.Tests.Fdo;
+using LibFLExBridgeChorusPlugin;
+using LibTriboroughBridgeChorusPlugin;
 using NUnit.Framework;
 using Palaso.Progress;
 using Palaso.TestUtilities;
 using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace LfMerge.Tests.Actions
 {
@@ -49,7 +44,6 @@ namespace LfMerge.Tests.Actions
 		private TemporaryFolder _languageDepotFolder;
 		private Guid _testEntryGuid;
 		private TransferFdoToMongoAction _transferFdoToMongo;
-		private SynchronizeAction _sutSynchronize;
 
 		[SetUp]
 		public void Setup()
@@ -73,15 +67,17 @@ namespace LfMerge.Tests.Actions
 				throw new AssertionException("Sync tests need a mock MongoProjectRecordFactory in order to work.");
 
 			_transferFdoToMongo = new TransferFdoToMongoAction(_env.Settings, _env.Logger, _mongoConnection);
-			_sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			LanguageForgeProject.DisposeFwProject(_lfProject);
-			LanguageDepotMock.DisposeFwProject(_lDProject);
-			_languageDepotFolder.Dispose();
+			if (_lfProject != null)
+				LanguageForgeProject.DisposeFwProject(_lfProject);
+			if (_lDProject != null)
+				LanguageDepotMock.DisposeFwProject(_lDProject);
+			if (_languageDepotFolder != null)
+				_languageDepotFolder.Dispose();
 			_env.Dispose();
 			_mongoConnection.Reset();
 		}
@@ -93,7 +89,8 @@ namespace LfMerge.Tests.Actions
 			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			// Exercise
-			_sutSynchronize.Run(_lfProject);
+			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			sutSynchronize.Run(_lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
@@ -128,7 +125,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
 
 			// Exercise
-			_sutSynchronize.Run(_lfProject);
+			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			sutSynchronize.Run(_lfProject);
 
 			// Verify
 			var cache = _lfProject.FieldWorksProject.Cache;
@@ -182,7 +180,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
 
 			// Exercise
-			_sutSynchronize.Run(_lfProject);
+			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			sutSynchronize.Run(_lfProject);
 
 			// Verify
 			var cache = _lfProject.FieldWorksProject.Cache;
