@@ -12,7 +12,8 @@ namespace LfMerge.LanguageForge.Model
 		public string Value { get; set; }
 
 		[BsonRepresentation(BsonType.String)]  // Yes, this works with List<Guid>. Very nice.
-		public List<Guid> Guids { get; set; }
+		public List<Guid> Guids { get; set; }  // Used only for custom MultiPara fields. Empty or missing otherwise.
+		public bool ShouldSerializeGuids() { return (Guids != null) && (Guids.Count > 0); }
 
 		public bool IsEmpty { get { return String.IsNullOrEmpty(Value); } }
 
