@@ -121,7 +121,7 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId, string defaultParagraphStyle)
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId)
 		{
 			// Output format:
 			// { "ws": "en",
@@ -165,7 +165,7 @@ namespace LfMerge.DataConverters
 				#if false
 				if (String.IsNullOrEmpty(lfPara.StyleName))
 				{
-					lfPara.StyleName = defaultParagraphStyle;
+					lfPara.StyleName = defaultParagraphStyle; // NOTE: The "defaultParagraphStyle" parameter has been removed
 				}
 				#endif
 				if (!String.IsNullOrEmpty(lfPara.StyleName)) // Not allowed to set an empty style name on an FDO paragraph
@@ -177,15 +177,10 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		// Convenience overloads
-		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, string defaultParagraphStyle)
-		{
-			SetCustomStTextValues(fdoStText, lfParas, fdoStText.MainWritingSystem, defaultParagraphStyle);
-		}
-
+		// Convenience overload
 		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas)
 		{
-			SetCustomStTextValues(fdoStText, lfParas, StyleServices.NormalStyleName);
+			SetCustomStTextValues(fdoStText, lfParas, fdoStText.MainWritingSystem);
 		}
 	}
 }

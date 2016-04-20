@@ -152,7 +152,7 @@ namespace LfMerge.DataConverters
 					//BsonDocument valueOnly = new BsonDocument(wsStr, new BsonDocument("value", doc.GetElement(0).Value.AsBsonDocument["value"]));
 					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.Ws);
 					// Make sure we have as many GUIDs as paragraphs
-					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paras, wsId, StyleServices.NormalStyleName);
+					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paras, wsId);
 
 					return true;
 				}
