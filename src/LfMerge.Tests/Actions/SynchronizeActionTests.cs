@@ -336,57 +336,5 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
 		}
-
-
-			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
-			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
-			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
-			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
-			string changedGloss = unchangedGloss + " - changed in FW";
-
-			lfEntry = originalMongoData.First(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
-			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("ken"));
-
-			int createdEntryCount = originalMongoData.Count(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
-			Assert.That(createdEntryCount, Is.EqualTo(0));
-
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
-			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
-
-			// Exercise
-			_sutSynchronize.Run(_lfProject);
-
-			// Verify
-			var cache = _lfProject.FieldWorksProject.Cache;
-			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lfFdoEntry, Is.Not.Null);
-			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
-
-			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
-			Assert.That(receivedMongoData, Is.Not.Null);
-			Assert.That(receivedMongoData, Is.Not.Empty);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
-
-			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
-			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
-
-			lfEntry = receivedMongoData.First(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
-			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("Ira"));
-
-			int deletedEntryCount = receivedMongoData.Count(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
-			Assert.That(deletedEntryCount, Is.EqualTo(0));
-
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
-			lDcache = _lDProject.FieldWorksProject.Cache;
-			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry, Is.Not.Null);
-			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
-		}
-
 	}
 }
