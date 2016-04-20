@@ -38,9 +38,6 @@
     <Reference Include="LibChorus">
       <HintPath>..\..\lib\LibChorus.dll</HintPath>
     </Reference>
-    <Reference Include="Chorus">
-      <HintPath>..\..\lib\Chorus.exe</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
@@ -86,6 +83,9 @@
     </Reference>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
+    </Reference>
+    <Reference Include="LfMergeBridge">
+      <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +174,6 @@
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="DataConverters\ConvertUtilities.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoOptionList.cs" />
-    <Compile Include="Actions\Infrastructure\LfMergeSychronizerAdjunct.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
     <Compile Include="Logging\SyslogProgress.cs" />

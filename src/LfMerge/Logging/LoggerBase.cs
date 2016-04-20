@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace LfMerge.Logging
 {
-	public abstract class LoggerBase : ILogger
+	public abstract class LoggerBase : ILogger, LfMergeBridge.ILogger
 	{
-		public LoggerBase()
+		protected LoggerBase()
 		{
 		}
 

@@ -38,7 +38,7 @@ namespace LfMerge.Actions
 
 		#endregion
 
-		public Action(LfMergeSettingsIni settings, ILogger logger)
+		protected Action(LfMergeSettingsIni settings, ILogger logger)
 		{
 			Settings = settings;
 			Logger = logger;
