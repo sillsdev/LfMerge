@@ -496,6 +496,7 @@ namespace LfMerge.MongoConnector
 			return true;
 		}
 
+		// Don't use this to remove LF entries.  Set IsDeleted field instead
 		public bool RemoveRecord(ILfProject project, Guid guid)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);

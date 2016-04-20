@@ -34,7 +34,7 @@ namespace LfMerge.Tests.Actions
 		// testlangproj is the original LD repo
 		// testlangproj-modified contains a modified entry, deleted entry, and added entry
 		private const string testProjectCode = "testlangproj";
-		private const string testProjectModifiedCode = "testlangproj-modified";
+		private const string modifiedTestProjectCode = "testlangproj-modified";
 		private const int originalNumOfFdoEntries = 63;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 		private const string testCreatedEntryGuidStr = "e670d0e8-c0f7-457d-a6d1-055c83663820";
@@ -89,7 +89,7 @@ namespace LfMerge.Tests.Actions
 		[Test]
 		public void SynchronizeAction_NoCloneNoChangedData_GlossUnchanged()
 		{
-			//Setup
+			// Setup
 			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			// Exercise
@@ -106,7 +106,7 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		public void SynchronizeAction_MongoDataChanged_GlossChanged()
+		public void SynchronizeAction_LFDataChanged_GlossChanged()
 		{
 			// Setup
 			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
@@ -116,8 +116,8 @@ namespace LfMerge.Tests.Actions
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
-			string changedGloss = unchangedGloss + " - changed in LF";
-			lfEntry.Senses[0].Gloss["en"].Value = changedGloss;
+			string lfChangedGloss = unchangedGloss + " - changed in LF";
+			lfEntry.Senses[0].Gloss["en"].Value = lfChangedGloss;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
@@ -135,7 +135,7 @@ namespace LfMerge.Tests.Actions
 			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lfFdoEntry, Is.Not.Null);
 			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
+			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
 
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
@@ -143,7 +143,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
-			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(changedGloss));
+			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
 			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);
@@ -152,7 +152,7 @@ namespace LfMerge.Tests.Actions
 			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(changedGloss));
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
 		}
 
 		[Test]
@@ -160,6 +160,183 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			_env.Settings.CommitWhenDone = false; // TODO: remove when multipara is no longer changing GUIDs when there are no changes. IJH 2016-03
+			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
+			string ldChangedGloss = unchangedGloss + " - changed in FW";
+
+			lfEntry = originalMongoData.First(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
+			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("ken"));
+
+			int createdEntryCount = originalMongoData.Count(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
+			Assert.That(createdEntryCount, Is.EqualTo(0));
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
+
+			// Exercise
+			_sutSynchronize.Run(_lfProject);
+
+			// Verify
+			var cache = _lfProject.FieldWorksProject.Cache;
+			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lfFdoEntry, Is.Not.Null);
+			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
+
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(receivedMongoData, Is.Not.Null);
+			Assert.That(receivedMongoData, Is.Not.Empty);
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
+			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(ldChangedGloss));
+
+			lfEntry = receivedMongoData.First(e => e.Guid == Guid.Parse(testCreatedEntryGuidStr));
+			Assert.That(lfEntry.Lexeme["qaa-x-kal"].Value, Is.EqualTo("Ira"));
+
+			int deletedEntryCount = receivedMongoData.Count(e => e.Guid == Guid.Parse(testDeletedEntryGuidStr));
+			Assert.That(deletedEntryCount, Is.EqualTo(0));
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			lDcache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry, Is.Not.Null);
+			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
+		}
+
+		[Test]
+		public void SynchronizeAction_LFDataChangedLDDataChanged_LFWins()
+		{
+			//Setup
+			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
+			string fwChangedGloss = unchangedGloss + " - changed in FW";
+			string lfChangedGloss = unchangedGloss + " - changed in LF";
+			lfEntry.Senses[0].Gloss["en"].Value = lfChangedGloss;
+			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+
+			// Exercise
+			_sutSynchronize.Run(_lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(receivedMongoData, Is.Not.Null);
+			Assert.That(receivedMongoData, Is.Not.Empty);
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+
+			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
+			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
+		}
+
+		[Test]
+		public void SynchronizeAction_LFDataDeleted_EntryRemoved()
+		{
+			// Setup
+			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+
+			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
+
+			// Don't use _mongoConnection.RemoveRecord to delete the entry.  LF uses the "IsDeleted" field
+			lfEntry.IsDeleted = true;
+			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
+			IEnumerable<LfLexEntry> updatedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
+
+			// Exercise
+			_sutSynchronize.Run(_lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(receivedMongoData, Is.Not.Null);
+			Assert.That(receivedMongoData, Is.Not.Empty);
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries-1));
+			Assert.IsFalse(receivedMongoData.Any(e => e.Guid ==_testEntryGuid));
+
+			var cache = _lfProject.FieldWorksProject.Cache;
+			Assert.Throws<KeyNotFoundException>(()=> cache.ServiceLocator.GetObject(_testEntryGuid));
+		}
+
+		[Test]
+		public void SynchronizeAction_LFDataDeletedLDDataChanged_LDWins()
+		{
+			// Setup
+			_env.Settings.CommitWhenDone = false; // // TODO: remove when multipara is no longer changing GUIDs when there are no changes. DDW 2016-04
+			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+
+			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
+			string fwChangedGloss = unchangedGloss + " - changed in FW";
+
+			// Don't use _mongoConnection.RemoveRecord to delete the entry.  LF uses the "IsDeleted" field
+			lfEntry.IsDeleted = true;
+			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
+			IEnumerable<LfLexEntry> updatedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+
+			// Exercise
+			_sutSynchronize.Run(_lfProject);
+
+			// Verify
+			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
+			Assert.That(receivedMongoData, Is.Not.Null);
+			Assert.That(receivedMongoData, Is.Not.Empty);
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
+			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
+
+			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);
+			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
+			lDcache = _lDProject.FieldWorksProject.Cache;
+			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry, Is.Not.Null);
+			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+		}
+
 			FdoTestFixture.CopyFwProjectTo(testProjectModifiedCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectModifiedCode), LDProjectFolderPath);
 

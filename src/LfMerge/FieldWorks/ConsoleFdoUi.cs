@@ -19,7 +19,9 @@ namespace LfMerge.FieldWorks
 
 		public bool ConflictingSave()
 		{
-			throw new NotImplementedException();
+			MainClass.Logger.Error("ConsoleFdoUI.ConflictingSave...");
+			// Revert to saved state
+			return true;
 		}
 
 		public bool ConnectionLost()
@@ -44,17 +46,17 @@ namespace LfMerge.FieldWorks
 
 		public void DisplayMessage(MessageType type, string message, string caption, string helpTopic)
 		{
-			Console.WriteLine("{0}: {1}", type, message);
+			MainClass.Logger.Warning("{0}: {1}", type, message);
 		}
 
 		public void ReportException(Exception error, bool isLethal)
 		{
-			Console.WriteLine("Got exception: {0}: {1}\n{2}", error.GetType(), error.Message, error);
+			MainClass.Logger.Warning("Got exception: {0}: {1}\n{2}", error.GetType(), error.Message, error);
 		}
 
 		public void ReportDuplicateGuids(string errorText)
 		{
-			Console.WriteLine("Duplicate GUIDs: " + errorText);
+			MainClass.Logger.Warning("Duplicate GUIDs: " + errorText);
 		}
 
 		public bool Retry(string msg, string caption)
@@ -70,7 +72,7 @@ namespace LfMerge.FieldWorks
 
 		public void Exit()
 		{
-			Console.WriteLine("Exiting");
+			MainClass.Logger.Debug("Exiting");
 		}
 
 		public ISynchronizeInvoke SynchronizeInvoke
