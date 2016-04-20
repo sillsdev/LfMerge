@@ -337,8 +337,6 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
 		}
 
-			FdoTestFixture.CopyFwProjectTo(testProjectModifiedCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, testProjectModifiedCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
