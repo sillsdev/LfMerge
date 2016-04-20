@@ -11,6 +11,7 @@ using MongoDB.Bson.Serialization;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
+using SIL.FieldWorks.FDO.DomainServices;
 using SIL.FieldWorks.FDO.Infrastructure;
 using SIL.FieldWorks.Common.COMInterfaces;
 
@@ -31,10 +32,26 @@ namespace LfMerge.DataConverters
 		}
 
 		/// <summary>
+		/// Make an LfParagraph object from an FDO StTxtPara.
+		/// </summary>
+		/// <returns>The LFParagraph.</returns>
+		/// <param name="fdoPara">FDO StTxtPara object to convert.</param>
+		public static LfParagraph FdoParaToLfPara(IStTxtPara fdoPara)
+		{
+			var lfPara = new LfParagraph();
+			lfPara.Guid = fdoPara.Guid;
+			lfPara.StyleName = fdoPara.StyleName;
+			lfPara.Contents = ConvertFdoToMongoTsStrings.SafeTsStringText(fdoPara.Contents);
+			return lfPara;
+		}
+
+		/// <summary>
 		/// Turn a custom StText field into a BsonDocument suitable for storing in Mongo. Returns
 		/// </summary>
 		/// <returns>A BsonDocument with the following structure:
-		/// { "en": { "value": "<p>Para 1</p><p>Para 2</p>", "guids": ["Guid for para 1", "Guid for para 2"] } }
+		/// { "ws": "en",
+		///   "paras": [ { "guid": "123", "styleName": "normal", "contents": "First paragraph" },
+		///              { "guid": "456", "styleName": "italic", "contents": "Second paragraph" } ] }
 		/// </returns>
 		/// <param name="obj">StText whose contents we want.</param>
 		/// <param name="flid">Field ID for this custom StText field (used to get correct writing system for this StText).</param>
@@ -44,20 +61,22 @@ namespace LfMerge.DataConverters
 		public static BsonValue GetCustomStTextValues(IStText obj, int flid,
 			IWritingSystemManager wsManager, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
 		{
+			LfMultiParagraph result = GetCustomStTextValuesAsLfMultiPara(obj, flid, wsManager, metaDataCacheAccessor, fallbackWs);
+			return result.ToBsonDocument();
+		}
+
+		public static LfMultiParagraph GetCustomStTextValuesAsLfMultiPara(IStText obj, int flid,
+			IWritingSystemManager wsManager, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
+		{
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
-			// Get paragraph contents and GUIDs
-			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => para.Contents).ToList();
-			List<string> guids = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => para.Guid.ToString()).ToList();
-			List<string> htmlParas = paras.Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
-			// Prepare the inner BsonDocument
-			var bsonParas = new BsonString(String.Join("", htmlParas));
-			var bsonGuids = new BsonArray(guids);
-			var bsonResult = new BsonDocument(new Dictionary<string, object> { { "value", bsonParas }, { "guids", bsonGuids } });
-			// And wrap the whole thing in a BsonDocument keyed by the field's primary writing system
+			var result = new LfMultiParagraph();
+			result.Paras = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para)).ToList();
+			// StText objects in FDO have a single primary writing system, unlike MultiString or MultiUnicode objects
 			int fieldWs = metaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
 			if (wsStr == null) wsStr = wsManager.GetStrFromWs(fallbackWs);
-			return new BsonDocument(wsStr, bsonResult);
+			result.Ws = wsStr;
+			return result;
 		}
 
 		private struct LfTxtPara { // For SetCustomStTextValues -- nicer than using a tuple
@@ -100,6 +119,73 @@ namespace LfMerge.DataConverters
 				}
 				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Contents, wsId);
 			}
+		}
+
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId, string defaultParagraphStyle)
+		{
+			// Output format:
+			// { "ws": "en",
+			//   "paras": [ { "guid": "123", "styleName": "normal", "contents": "First paragraph" },
+			//              { "guid": "456", "styleName": "italic", "contents": "Second paragraph" } ] }
+
+			// Step 1: Delete all FDO paragraphs that are no longer found in LF
+			var guidsInLf = new HashSet<Guid>(lfParas.Where(p => p.Guid != null).Select(p => p.Guid.Value));
+			var parasToDelete = new HashSet<IStTxtPara>();
+			for (int i = 0, count = fdoStText.ParagraphsOS.Count; i < count; i++)
+			{
+				IStTxtPara para = fdoStText[i];
+				if (!guidsInLf.Contains(para.Guid))
+					parasToDelete.Add(para);
+			}
+			// Step 2: Step through LF and FDO paragraphs, adding new paragraphs as needed.
+			// (We step through FDO paras *by integer index* so that inserting new paragraphs into FDO will place them in the right location)
+			int fdoIdx = 0;
+			foreach (LfParagraph lfPara in lfParas)
+			{
+				IStTxtPara fdoPara;
+				if (fdoIdx >= fdoStText.ParagraphsOS.Count)
+				{
+					// Past the end of existing FDO paras: create new para at end
+					Console.WriteLine("Appending new para with style name {0} and contents {1}", lfPara.StyleName, lfPara.Contents);
+					fdoPara = fdoStText.AddNewTextPara(lfPara.StyleName);
+				}
+				else
+				{
+					fdoPara = fdoStText[fdoIdx];
+					if (fdoPara.Guid != lfPara.Guid)
+					{
+						// A new para was inserted into LF at this point; duplicate that in FDO
+						fdoPara = fdoStText.InsertNewTextPara(fdoIdx, lfPara.StyleName);
+					}
+				}
+				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Contents, wsId);
+				// It turns out that FDO often has an empty StyleName for the normal, default paragraph style. So in those
+				// cases, where we've gotten an empty StyleName in the LfParagraph object, we should NOT change it to be
+				// the default paragraph style, as that can cause round-tripping problems.
+				#if false
+				if (String.IsNullOrEmpty(lfPara.StyleName))
+				{
+					lfPara.StyleName = defaultParagraphStyle;
+				}
+				#endif
+				if (!String.IsNullOrEmpty(lfPara.StyleName)) // Not allowed to set an empty style name on an FDO paragraph
+				{
+					fdoPara.StyleName = lfPara.StyleName;
+				}
+
+				fdoIdx++;
+			}
+		}
+
+		// Convenience overloads
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, string defaultParagraphStyle)
+		{
+			SetCustomStTextValues(fdoStText, lfParas, fdoStText.MainWritingSystem, defaultParagraphStyle);
+		}
+
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas)
+		{
+			SetCustomStTextValues(fdoStText, lfParas, StyleServices.NormalStyleName);
 		}
 	}
 }

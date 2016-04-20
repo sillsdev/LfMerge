@@ -37,38 +37,6 @@ namespace LfMerge.DataConverters
 			return result;
 		}
 
-		private List<string> ParseCustomStTextValuesFromBson(BsonDocument source, out int wsId)
-		{
-			var result = new List<string>();
-			wsId = 0;
-			if (source.ElementCount <= 0)
-				return result;
-			LfMultiText valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(source);
-			KeyValuePair<int, string> kv = valueAsMultiText.WsIdAndFirstNonEmptyString(cache);
-			wsId = kv.Key;
-			string htmlContents = kv.Value;
-			result.AddRange(htmlContents.Split(new string[] { "</p>" }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(para => para.StartsWith("<p>") ? para.Substring(3) : para));
-			// No need to trim trailing </p> as String.Split has already done that for us
-			return result;
-		}
-
-		private List<Guid> ParseCustomStTextGuidsFromBson(BsonDocument source)
-		{
-			var result = new List<Guid>();
-			if (source.ElementCount <= 0)
-				return result;
-			BsonElement foo = source.GetElement(0);
-			if (foo.Value.BsonType != BsonType.Document || !foo.Value.AsBsonDocument.Contains("guids"))
-				return result;
-			BsonValue bar = foo.Value.AsBsonDocument["guids"];
-			if (bar.BsonType != BsonType.Array)
-				return result;
-			IEnumerable<string> guidStrs = bar.AsBsonArray.Where(item => item.BsonType == BsonType.String).Select(item => item.AsString);
-			result.AddRange(guidStrs.Select(ParseGuidOrDefault));
-			return result;
-		}
-
 		public ICmPossibilityList GetParentListForField(int flid)
 		{
 			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
@@ -180,18 +148,11 @@ namespace LfMerge.DataConverters
 					// BsonDocument passed in contains "value", and MAY contain "guids". ParseCustomStTextValuesFromBson
 					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
 					BsonDocument doc = value.AsBsonDocument;
-					if (doc.ElementCount <= 0)
-						return true;
-					if (doc.GetElement(0).Value.BsonType != BsonType.Document || !doc.GetElement(0).Value.AsBsonDocument.Contains("value"))
-						return true;
-					List<Guid> paragraphGuids = ParseCustomStTextGuidsFromBson(doc);
+					LfMultiParagraph multiPara = BsonSerializer.Deserialize<LfMultiParagraph>(doc);
 					//BsonDocument valueOnly = new BsonDocument(wsStr, new BsonDocument("value", doc.GetElement(0).Value.AsBsonDocument["value"]));
-					int wsId;
-					List<string> newParagraphs = ParseCustomStTextValuesFromBson(doc, out wsId);
+					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.Ws);
 					// Make sure we have as many GUIDs as paragraphs
-					while (paragraphGuids.Count < newParagraphs.Count)
-						paragraphGuids.Add(Guid.Empty);
-					ConvertUtilities.SetCustomStTextValues(text, paragraphGuids, newParagraphs, wsId, StyleServices.NormalStyleName);
+					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paras, wsId, StyleServices.NormalStyleName);
 
 					return true;
 				}
