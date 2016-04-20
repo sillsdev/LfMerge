@@ -237,14 +237,14 @@ namespace LfMerge.MongoConnector
 			IMongoDatabase mongoDb = GetMainDatabase();
 			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
 			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
-				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
+				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetCustomFieldConfig() is ever called.
 			};
 
 			List<string> entryCustomFieldOrder = new List<string>();
 			List<string> senseCustomFieldOrder = new List<string>();
 			List<string> exampleCustomFieldOrder = new List<string>();
 
-			// Clean out previous fields and fieldOrders that longer exist (removed from FDO)
+			// Clean out previous fields and fieldOrders that no longer exist (removed from FDO)
 			foreach (string customFieldNameToRemove in GetCustomFieldConfig(project).Keys.Except(lfCustomFieldList.Keys.ToList()))
 			{
 				if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))

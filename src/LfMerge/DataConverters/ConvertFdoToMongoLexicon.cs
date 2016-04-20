@@ -29,10 +29,9 @@ namespace LfMerge.DataConverters
 
 		public int _wsEn;
 
-
-		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
 		public ConvertFdoToMongoCustomField _convertCustomField;
 
+		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
 		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
 		public const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
 		public const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
@@ -58,8 +57,6 @@ namespace LfMerge.DataConverters
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-
-			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();

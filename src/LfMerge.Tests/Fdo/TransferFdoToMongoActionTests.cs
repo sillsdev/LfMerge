@@ -7,6 +7,7 @@ using LfMerge.Actions;
 using LfMerge.DataConverters;
 using LfMerge.MongoConnector;
 using LfMerge.Tests;
+using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using SIL.FieldWorks.FDO;
 using System;
@@ -126,17 +127,37 @@ namespace LfMerge.Tests.Fdo
 		public void Action_ShouldUpdatePictures()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			int originalNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(originalNumPictures, Is.EqualTo(0));
 
 			// Exercise
-			sutFdoToMongo.Run(lfProj);
+			sutFdoToMongo.Run(lfProject);
 
 			// Verify LF project now contains the 4 FDO pictures (1 externally linked, 3 internal)
 			int newNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(newNumPictures, Is.EqualTo(4));
+		}
+
+		[Test]
+		public void Action_ShouldUpdateCustomFieldConfig()
+		{
+			// Setup
+			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+
+			// Exercise
+			sutFdoToMongo.Run(lfProject);
+
+			// Verify
+			var customFieldConfig = _conn.GetCustomFieldConfig(lfProject);
+			Assert.That(customFieldConfig.Count, Is.EqualTo(6));
+			Assert.That(customFieldConfig.ContainsKey("customField_entry_Cust_MultiPara"));
+			Assert.That(customFieldConfig["customField_entry_Cust_MultiPara"].HideIfEmpty, Is.False);
+			LfConfigMultiText entryMultiPara = (LfConfigMultiText)customFieldConfig["customField_entry_Cust_MultiPara"];
+			Assert.That(entryMultiPara.DisplayMultiline, Is.True);
+			Assert.That(entryMultiPara.Label, Is.EqualTo("Cust MultiPara"));
+			Assert.That(entryMultiPara.InputSystems.Count, Is.EqualTo(2));
 		}
 
 		[Test]
