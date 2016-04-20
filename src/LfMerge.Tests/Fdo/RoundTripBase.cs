@@ -158,8 +158,6 @@ namespace LfMerge.Tests.Fdo
 					continue;
 				object value = data.get_Prop(obj.Hvo, flid);
 				fieldValues[flid] = value;
-				Console.WriteLine("Field {0} named {1} had value {2} of type {3}",
-					flid, fieldName, Repr(value), (value == null) ? "null" : value.GetType().ToString());
 			}
 			return fieldValues;
 		}
@@ -270,8 +268,6 @@ namespace LfMerge.Tests.Fdo
 						{
 							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);
 							differencesByName[fieldName + ":" + wsStr] = new Tuple<string, string>(beforeStr, afterStr);
-							Console.WriteLine("After test, field {0} named {1} had value {2} of writing system {3}",
-								flid, fieldName, afterStr, wsStr);
 						}
 					}
 					continue;
@@ -283,8 +279,6 @@ namespace LfMerge.Tests.Fdo
 				// If we get this far, they're different
 				var diff = new Tuple<string, string>(Repr(fieldValuesBeforeTest[flid]), Repr(fieldValuesAfterTest[flid]));
 				differencesByName[fieldName] = diff;
-				Console.WriteLine("After test, field {0} named {1} had value {2} of type {3}",
-					flid, fieldName, Repr(valueAfterTest), (valueAfterTest == null) ? "null" : valueAfterTest.GetType().ToString());
 			}
 			return differencesByName;
 		}

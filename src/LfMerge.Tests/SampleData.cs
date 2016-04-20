@@ -43,9 +43,18 @@ namespace LfMerge.Tests
 	},
 	""customFields"" : {
 		""customField_entry_Cust_MultiPara"" : {
-			""en"" : {
-				""value"" : ""<p>This is the first paragraph.</p><p>This is the second paragraph.</p>""
-			}
+			""ws"": ""en"",
+			""paras"" : [
+				{
+					""guid"" : ""5c8fb347-d884-4db5-9415-64b139b663ff"",
+					""styleName"" : ""Normal"",
+					""contents"" : ""This is the first paragraph."",
+				},
+				{
+					""guid"" : ""061a4bad-eaa8-4365-9a19-8150621a9a44"",
+					""contents"" : ""This is the second paragraph."",
+				}
+			]
 		},
 		""customField_entry_Cust_Single_Line"" : {
 			""en"" : {

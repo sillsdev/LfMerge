@@ -29,9 +29,9 @@ namespace LfMerge.DataConverters
 		{
 			{CellarPropertyType.ReferenceCollection, "Multi_ListRef"},
 			{CellarPropertyType.String, "Single_Line"},
-			{CellarPropertyType.MultiString, "MultiPara"},
-			{CellarPropertyType.MultiUnicode, "MultiPara"},
-			{CellarPropertyType.OwningAtom, "MultiPara"}, // Equivalent to MinObj
+			{CellarPropertyType.MultiString, "MultiText"},
+			{CellarPropertyType.MultiUnicode, "MultiText"},
+			{CellarPropertyType.OwningAtom, "MultiParagraph"}, // Equivalent to MinObj
 			{CellarPropertyType.ReferenceAtomic, "Single_ListRef"},
 
 			// The following custom fields currently aren't displayed in LF
@@ -218,7 +218,6 @@ namespace LfMerge.DataConverters
 					fieldValue = null; // Suppress int fields with 0 in them, to save Mongo DB space
 				else
 					// LF wants single-string fields in the format { "ws": { "value": "contents" } }
-					// LfMultiText.FromSingleStringMapping
 					fieldValue = LfMultiText.FromSingleStringMapping(
 						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString()).AsBsonDocument();
 				break;
@@ -280,18 +279,6 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		private BsonValue GetCustomStTextValues(IStText obj, int flid)
-		{
-			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
-			List<ITsString> paras = obj.ParagraphsOS.OfType<IStTxtPara>().Select(para => para.Contents).ToList();
-			List<string> htmlParas = paras.Where(para => para != null).Select(para => String.Format("<p>{0}</p>", para.Text)).ToList();
-			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int fieldWs = cache.MetaDataCacheAccessor.GetFieldWs(flid);
-			string wsStr = wsManager.GetStrFromWs(fieldWs);
-			if (wsStr == null) wsStr = wsManager.GetStrFromWs(cache.DefaultUserWs); // TODO: Should that be DefaultAnalWs instead?
-			return new BsonDocument(wsStr, new BsonDocument("value", new BsonString(String.Join("", htmlParas))));
-		}
-
 		private BsonValue GetCustomListValues(ICmPossibility obj, int flid)
 		{
 			if (obj == null) return null;
@@ -319,7 +306,7 @@ namespace LfMerge.DataConverters
 		/// <param name="listCode">Parent list code.</param>
 		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode)
 		{
-			if (label.Contains("Multi ListRef"))
+			if (label.Contains("Multi ListRef"))  // TODO: This won't work. The label is based on the field name, which can be set by the user, so it could be anything.
 			{
 				return new LfConfigMultiOptionList {
 					Label = label,
