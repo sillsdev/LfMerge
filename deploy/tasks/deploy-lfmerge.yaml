@@ -1,0 +1,24 @@
+---
+- name: add SIL package signing key
+  become: yes
+  apt_key: keyserver=keys.gnupg.net id=9EE3F7BC2260AB4C7D6BB21E80F251AC2C56031F
+
+- name: add SIL test package signing key
+  become: yes
+  apt_key: keyserver=keys.gnupg.net id=C84F69F2205F52D313EEDF19A22603A0E66F8DBD
+
+- name: add LLSO apt repo
+  become: yes
+  template: src=templates/llso-experimental.list dest=/etc/apt/sources.list.d/llso-experimental.list owner=root group=root mode=0644
+
+- name: deploy LfMerge
+  become: yes
+  apt: update_cache=yes name=lfmerge state=installed
+
+- name: ensure www-data group exists
+  become: yes
+  group: name=www-data state=present
+
+- name: make www-data user a member of fieldworks group
+  become: yes
+  user: name=www-data state=present group=www-data home=/var/www shell=/usr/sbin/nologin groups=fieldworks append=yes

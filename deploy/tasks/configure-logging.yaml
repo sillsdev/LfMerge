@@ -1,0 +1,14 @@
+---
+- name: configure log rotation
+  become: yes
+  template: src=templates/logrotate.conf dest=/etc/logrotate.d/lfmerge.conf owner=root group=root mode=0644
+
+- name: configure logging
+  become: yes
+  template: src=templates/rsyslog.conf dest=/etc/rsyslog.d/lfmerge.conf owner=root group=root mode=0644
+  register: rsyslog
+
+- name: restart rsyslog to read new logging config
+  become: yes
+  service: name=rsyslog state=restarted
+  when: rsyslog.changed

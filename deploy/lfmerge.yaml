@@ -1,0 +1,5 @@
+---
+- hosts: '{{ target }}'
+  tasks:
+    - include: tasks/configure-logging.yaml
+    - include: tasks/deploy-lfmerge.yaml

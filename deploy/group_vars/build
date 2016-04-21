@@ -1,0 +1,15 @@
+lfmerge:
+    # Where to put the syslog file for LfMerge
+    logfile_path: /var/log/languageforge/lexicon_sendreceive.log
+
+    # Which Debian/Ubuntu distro is the server running?
+    distro_name: trusty
+
+    # Valid syslog levels are: debug, info, notice, warning (or warn), error (or err), crit, alert, emerg
+    # Suggested values for production: notice, warning or error
+    # Suggested values for build server: debug, info or notice
+    syslog_level: debug
+
+    # Valid syslog facilities for LfMerge are: either "user" or "local0" through "local7"
+    # LfMerge uses local3 facility as an arbitrarily-chosen value, as that's not likely to interfere with other subsystems
+    syslog_facility: local3

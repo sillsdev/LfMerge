@@ -1,0 +1,2 @@
+deb http://linux.lsdev.sil.org/ubuntu {{ lfmerge.distro_name }} main
+deb http://linux.lsdev.sil.org/ubuntu {{ lfmerge.distro_name }}-experimental main

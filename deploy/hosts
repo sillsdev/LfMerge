@@ -1,0 +1,7 @@
+[build]
+#build.palaso.org
+#fake-build-server ansible_ssh_host=localhost ansible_ssh_port=2244
+
+[production]
+#our-server.example.com
+#fake-prod-server ansible_ssh_host=localhost ansible_ssh_port=2255
