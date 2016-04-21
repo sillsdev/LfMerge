@@ -5,11 +5,17 @@ lfmerge:
     # Which Debian/Ubuntu distro is the server running?
     distro_name: trusty
 
-    # Valid syslog levels are: debug, info, notice, warning (or warn), error (or err), crit, alert, emerg
-    # Suggested values for production: notice, warning or error
-    # Suggested values for build server: debug, info or notice
-    syslog_level: notice
-
-    # Valid syslog facilities for LfMerge are: either "user" or "local0" through "local7"
-    # LfMerge uses local3 facility as an arbitrarily-chosen value, as that's not likely to interfere with other subsystems
-    syslog_facility: local3
+    # Syslog severity levels
+    # 0 emergency
+    # 1 alert
+    # 2 critical
+    # 3 error
+    # 4 warning
+    # 5 notice
+    # 6 info
+    # 7 debug
+    # Suggested values for production: notice (5), warning (4) or error (3)
+    # Suggested values for build server: debug (7), info (6) or notice (5)
+    # Unfortunately, we have to specify this numerically instead of as
+    # user-friendly names, so write "5" instead of "notice".
+    syslog_level: 5
