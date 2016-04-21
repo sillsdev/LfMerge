@@ -6,6 +6,7 @@
 
 export XDG_CONFIG_HOME=$HOME/.config
 export BUILD = Release
+export MONO_PREFIX=/opt/mono-sil
 
 DESTDIR = debian/lfmerge
 LIB     = usr/lib/lfmerge
