@@ -7,7 +7,7 @@ namespace LfMerge.Logging
 {
 	public abstract class LoggerBase : ILogger
 	{
-		public LoggerBase()
+		protected LoggerBase()
 		{
 		}
 
