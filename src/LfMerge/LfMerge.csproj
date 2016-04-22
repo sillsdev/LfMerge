@@ -178,6 +178,9 @@
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
     <Compile Include="Logging\SyslogProgress.cs" />
+    <Compile Include="LanguageForge\Infrastructure\PhpConnection.cs" />
+    <Compile Include="LanguageForge\Infrastructure\RunClassParameters.cs" />
+    <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets')" />
@@ -204,6 +207,7 @@
     <Folder Include="Settings\" />
     <Folder Include="Logging\" />
     <Folder Include="Actions\Infrastructure\" />
+    <Folder Include="LanguageForge\Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">

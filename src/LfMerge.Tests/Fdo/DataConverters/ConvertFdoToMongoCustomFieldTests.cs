@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using LfMerge.DataConverters;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.Tests.Fdo;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 
@@ -40,6 +42,47 @@ namespace LfMerge.Tests.Fdo.DataConverters
 				"customField_entry_Cust_Single_ListRef"
 			};
 			CollectionAssert.AreEqual(customDataDocument[0].AsBsonDocument.Names, expectedCustomFieldNames);
+		}
+
+		[Test]
+		public void RunClass_listUsers_CanCallPhpClass()
+		{
+			// Setup
+			string className = "Api\\Model\\Command\\UserCommands";
+			string methodName = "listUsers";
+			var parameters = new List<Object>();
+
+			// Exercise
+			string output = PhpConnection.RunClass(className, methodName, parameters);
+
+			// Verify
+			var result = JsonConvert.DeserializeObject<Dictionary<string, Object>>(output);
+			Assert.That(output, Is.Not.Empty);
+			Assert.That(result["count"], Is.GreaterThan(0));
+		}
+
+		[Test, Explicit("Assumes PHP unit tests have been run once")]
+		public void RunClass_createCustomFieldsViews_ReturnsProjectId()
+		{
+			// Setup
+			string projectCode = "TestCode1";
+			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
+			string methodName = "createCustomFieldsViews";
+			var customFieldSpecs = new List<CustomFieldSpec>();
+			customFieldSpecs.Add(new CustomFieldSpec("customField_entry_testMultiPara", "OwningAtom"));
+			customFieldSpecs.Add(new CustomFieldSpec("customField_examples_testOptionList", "ReferenceAtom"));
+			var parameters = new List<Object>();
+			parameters.Add(projectCode);
+			parameters.Add(customFieldSpecs);
+
+			// Exercise
+			string output = PhpConnection.RunClass(className, methodName, parameters, true);
+
+			// Verify
+			var result = JsonConvert.DeserializeObject<string>(output);
+			Assert.That(output, Is.Not.Empty);
+			Assert.That(output, Is.Not.EqualTo("false"));
+			Assert.That(result, Is.Not.Empty);
 		}
 	}
 }
