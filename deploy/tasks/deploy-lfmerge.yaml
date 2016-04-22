@@ -22,3 +22,10 @@
 - name: make www-data user a member of fieldworks group
   become: yes
   user: name=www-data state=present group=www-data home=/var/www shell=/usr/sbin/nologin groups=fieldworks append=yes
+
+# Could look up home dir of www-data user on remote system, but that turns out to
+# be a bit complicated. And since we just set it to /var/www, just use that.
+- name: ensure www-data has setguid, group-writeable .local folder
+  become: yes
+  # mode 02775 is u+rwx, g+rwx, o+rx plus the setgid bit (octal 02000)
+  file: path=/var/www/.local state=directory mode=02775 owner=www-data group=fieldworks
