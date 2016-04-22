@@ -1,0 +1,4 @@
+---
+- name: configure crontab
+  become: yes
+  template: src=templates/lfmerge.crontab dest=/etc/cron.d/lfmerge owner=root group=root mode=0644

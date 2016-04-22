@@ -1,0 +1,5 @@
+# Run lfmerge every 20 minutes (at 13, 33 and 53 minutes past the hour)
+# to process any queued send/receive requests.
+
+# m h dom mon dow user  command
+13,33,53 * * * * www-data lfmerge

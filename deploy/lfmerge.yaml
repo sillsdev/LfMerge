@@ -3,3 +3,4 @@
   tasks:
     - include: tasks/configure-logging.yaml
     - include: tasks/deploy-lfmerge.yaml
+    - include: tasks/configure-cron.yaml
