@@ -125,6 +125,7 @@ namespace LfMerge.DataConverters
 			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
 
 			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
+			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
 		}
 
 		// Shorthand for getting an instance from the cache's service locator

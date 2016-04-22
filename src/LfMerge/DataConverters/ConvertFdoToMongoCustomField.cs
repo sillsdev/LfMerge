@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
@@ -59,6 +61,28 @@ namespace LfMerge.DataConverters
 				{cache.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
 				{cache.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
+		}
+
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		{
+			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, false);
+		}
+
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, bool isTest)
+		{
+			var customFieldSpecs = new List<CustomFieldSpec>();
+			// TODO: fill in customFieldSpecs from lfCustomFieldList
+
+			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
+			string methodName = "createCustomFieldsViews";
+			var parameters = new List<Object>();
+			parameters.Add(project.ProjectCode);
+			parameters.Add(customFieldSpecs);
+			string output = PhpConnection.RunClass(className, methodName, parameters, isTest);
+
+			if (string.IsNullOrEmpty(output) || output == "false")
+				return false;
+			return true;
 		}
 
 		/// <summary>
