@@ -1,4 +1,4 @@
 ---
-- name: configure crontab
+- name: configure cron
   become: yes
-  template: src=templates/lfmerge.crontab dest=/etc/cron.d/lfmerge owner=root group=root mode=0644
+  cron: name="run lfmerge" cron_file=lfmerge minute="13,33,57" user=www-data state=present job="lfmerge"
