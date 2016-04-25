@@ -74,7 +74,7 @@ namespace LfMerge.DataConverters
 			// TODO: fill in customFieldSpecs from lfCustomFieldList
 
 			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
-			string methodName = "createCustomFieldsViews";
+			string methodName = "updateCustomFieldViews";
 			var parameters = new List<Object>();
 			parameters.Add(project.ProjectCode);
 			parameters.Add(customFieldSpecs);

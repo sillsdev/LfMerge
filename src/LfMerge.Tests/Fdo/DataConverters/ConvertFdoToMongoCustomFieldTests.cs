@@ -62,12 +62,12 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		}
 
 		[Test, Explicit("Assumes PHP unit tests have been run once")]
-		public void RunClass_createCustomFieldsViews_ReturnsProjectId()
+		public void RunClass_updateCustomFieldViews_ReturnsProjectId()
 		{
 			// Setup
 			string projectCode = "TestCode1";
 			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
-			string methodName = "createCustomFieldsViews";
+			string methodName = "updateCustomFieldViews";
 			var customFieldSpecs = new List<CustomFieldSpec>();
 			customFieldSpecs.Add(new CustomFieldSpec("customField_entry_testMultiPara", "OwningAtom"));
 			customFieldSpecs.Add(new CustomFieldSpec("customField_examples_testOptionList", "ReferenceAtom"));

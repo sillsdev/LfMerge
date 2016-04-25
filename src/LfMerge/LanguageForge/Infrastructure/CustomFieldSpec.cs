@@ -6,14 +6,14 @@ namespace LfMerge.LanguageForge.Infrastructure
 {
 	public class CustomFieldSpec
 	{
-		public CustomFieldSpec(string _name, string _specType)
+		public CustomFieldSpec(string _fieldName, string _fieldType)
 		{
-			name = _name;
-			specType = _specType;
+			fieldName = _fieldName;
+			fieldType = _fieldType;
 		}
 
-		public string name { get; set; }
-		public string specType { get; set; }
+		public string fieldName { get; set; }
+		public string fieldType { get; set; }
 	}
 }
 
