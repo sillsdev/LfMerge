@@ -344,7 +344,6 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		[Ignore("Currently modified LF entry not showing up in LD data after Sync")]
 		public void SynchronizeAction_LFDataChangedLDDataDeleted_LFWins()
 		{
 			// Setup
@@ -380,7 +379,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
 
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
-			// TODO: Find out why actual is just "English gloss"
+			// TODO: Find out why actual is just "English gloss". This is currently commented out
+			// so the last 3 assertions of this test are reached...
 			//Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
@@ -389,10 +389,10 @@ namespace LfMerge.Tests.Actions
 			lDcache = _lDProject.FieldWorksProject.Cache;
 
 			// TODO: Find out why is deleted entry not remaining as expected
-			// lDFdoEntry = lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid) as ILexEntry;
-			// Assert.That(lDFdoEntry, Is.Not.Null);
-			// Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			// Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
+			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid) as ILexEntry;
+			Assert.That(lDFdoEntry, Is.Not.Null);
+			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
 		}
 	}
 }
