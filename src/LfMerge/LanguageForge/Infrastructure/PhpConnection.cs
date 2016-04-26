@@ -24,7 +24,6 @@ namespace LfMerge.LanguageForge.Infrastructure
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardInput = true;
 			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.RedirectStandardError = true;
 			p.StartInfo.FileName = "php";
 			p.StartInfo.Arguments = "/var/www/virtual/languageforge.org/htdocs/Api/Library/Shared/CLI/RunClass.php";
 			p.Start();

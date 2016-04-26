@@ -42,6 +42,7 @@ namespace LfMerge.DataConverters
 		};
 
 		private Dictionary<Guid, string> GuidToListCode;
+		private Dictionary<string, string> _fieldNameToFieldType;
 
 		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
@@ -61,6 +62,7 @@ namespace LfMerge.DataConverters
 				{cache.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
 				{cache.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
+			_fieldNameToFieldType = new Dictionary<string, string>();
 		}
 
 		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
@@ -71,7 +73,10 @@ namespace LfMerge.DataConverters
 		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, bool isTest)
 		{
 			var customFieldSpecs = new List<CustomFieldSpec>();
-			// TODO: fill in customFieldSpecs from lfCustomFieldList
+			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
+			{
+				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, _fieldNameToFieldType[lfCustomFieldName]));
+			}
 
 			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
 			string methodName = "updateCustomFieldViews";
@@ -135,6 +140,9 @@ namespace LfMerge.DataConverters
 				string lfCustomFieldType;
 				GetCustomFieldData(cmObj.Hvo, flid, objectType,
 					out bsonForThisField, out lfCustomFieldType);
+
+				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();
 
 				// Get custom field configuration info
 				if (label.Contains("ListRef"))

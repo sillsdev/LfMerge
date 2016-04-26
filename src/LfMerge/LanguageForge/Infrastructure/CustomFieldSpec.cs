@@ -12,6 +12,7 @@ namespace LfMerge.LanguageForge.Infrastructure
 			fieldType = _fieldType;
 		}
 
+		// note property names are camelCase to match those expected in PHP code
 		public string fieldName { get; set; }
 		public string fieldType { get; set; }
 	}
