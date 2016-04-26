@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LfMerge.LanguageForge.Config;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
@@ -40,6 +42,7 @@ namespace LfMerge.DataConverters
 		};
 
 		private Dictionary<Guid, string> GuidToListCode;
+		private Dictionary<string, string> _fieldNameToFieldType;
 
 		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
 		{
@@ -59,6 +62,32 @@ namespace LfMerge.DataConverters
 				{cache.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
 				{cache.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
+			_fieldNameToFieldType = new Dictionary<string, string>();
+		}
+
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		{
+			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, false);
+		}
+
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, bool isTest)
+		{
+			var customFieldSpecs = new List<CustomFieldSpec>();
+			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
+			{
+				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, _fieldNameToFieldType[lfCustomFieldName]));
+			}
+
+			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
+			string methodName = "updateCustomFieldViews";
+			var parameters = new List<Object>();
+			parameters.Add(project.ProjectCode);
+			parameters.Add(customFieldSpecs);
+			string output = PhpConnection.RunClass(className, methodName, parameters, isTest);
+
+			if (string.IsNullOrEmpty(output) || output == "false")
+				return false;
+			return true;
 		}
 
 		/// <summary>
@@ -111,6 +140,9 @@ namespace LfMerge.DataConverters
 				string lfCustomFieldType;
 				GetCustomFieldData(cmObj.Hvo, flid, objectType,
 					out bsonForThisField, out lfCustomFieldType);
+
+				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();
 
 				// Get custom field configuration info
 				if (label.Contains("ListRef"))
