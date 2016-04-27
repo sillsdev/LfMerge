@@ -35,11 +35,10 @@ namespace LfMerge.Tests
 			TemporaryFolder languageForgeServerFolder = null)
 		{
 			_resetLfProjectsDuringCleanup = resetLfProjectsDuringCleanup;
-			if (languageForgeServerFolder != null)
-				_languageForgeServerFolder = languageForgeServerFolder;
+			if (languageForgeServerFolder == null)
+				_languageForgeServerFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
 			else
-				_languageForgeServerFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name
-					+ Path.GetRandomFileName());
+				_languageForgeServerFolder = languageForgeServerFolder;
 			Environment.SetEnvironmentVariable("FW_CommonAppData", _languageForgeServerFolder.Path);
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
 				registerProcessingStateDouble,
@@ -51,6 +50,17 @@ namespace LfMerge.Tests
 			Directory.CreateDirectory(Settings.StateDirectory);
 		}
 
+		private string TestName
+		{
+			get
+			{
+				var testName = TestContext.CurrentContext.Test.Name;
+				var firstInvalidChar = testName.IndexOfAny(Path.GetInvalidPathChars());
+				if (firstInvalidChar >= 0)
+					testName = testName.Substring(0, firstInvalidChar);
+				return testName;
+			}
+		}
 		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
 			bool registerProcessingStateDouble, string temporaryFolder)
 		{

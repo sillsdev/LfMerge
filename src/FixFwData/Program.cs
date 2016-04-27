@@ -8,10 +8,11 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
 using Palaso.Reporting;
 using SIL.FieldWorks.FixData;
+#if __MonoCS__
 using SIL.Linux.Logging;
+#endif
 using SIL.Utils;
 
 namespace FixFwData
@@ -29,20 +30,24 @@ namespace FixFwData
 				var data = new FwDataFixer(pathname, prog, logError);
 				data.FixErrorsAndSave();
 			}
-			if (errorsOccurred)
-				return 1;
-			return 0;
+			return errorsOccurred ? 1 : 0;
 		}
 
+#if __MonoCS__
 		private static SyslogLogger logger = null;
+#endif
 		private static bool errorsOccurred;
 
 		private static void logError(string guid, string date, string description)
 		{
+#if __MonoCS__
 			if (logger == null)
 				Console.WriteLine(description);
 			else
 				logger.Error("Error in GUID {0}: {1} (on {2})", guid, description, date);
+#else
+			Console.WriteLine(description);
+#endif
 			errorsOccurred = true;
 		}
 
@@ -50,12 +55,16 @@ namespace FixFwData
 		{
 			ErrorReport.EmailAddress = "flex_errors@sil.org";
 			ErrorReport.AddStandardProperties();
+#if __MonoCS__
 			if (MiscUtils.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
 				ExceptionHandler.Init(new SyslogExceptionHandler("FixFwData"));
 			else
+#endif
 				ExceptionHandler.Init();
+#if __MonoCS__
 			if (MiscUtils.IsUnix)
 				logger = new SyslogLogger("FixFwData");
+#endif
 		}
 
 		private sealed class LoggingProgress : IProgress, IDisposable
@@ -78,10 +87,14 @@ namespace FixFwData
 				get { return null; }
 				set
 				{
+#if __MonoCS__
 					if (logger == null)
 						Console.Out.WriteLine(value);
 					else
 						logger.Info(value);
+#else
+					Console.Out.WriteLine(value);
+#endif
 				}
 			}
 

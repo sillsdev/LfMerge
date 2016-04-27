@@ -92,8 +92,8 @@ Path=LibFLExBridge-ChorusPlugin.*=>lib/
 LibTriboroughBridge-ChorusPlugin.*=>lib/
 
 
-[TC::FLExBridge_FLExBridgeDevelopWin32Continuous]
-Name=FLEx Bridge-develop-Win32-Continuous
+[TC::FLExBridgeLfmergeWin32Continuous]
+Name=FLEx Bridge-lfmerge-Win32-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows

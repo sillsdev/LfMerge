@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +30,7 @@
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>FW8_COMPAT</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -81,7 +83,7 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
       <Package>lfmerge-fdo</Package>
     </Reference>
-    <Reference Include="SIL.Linux.Logging">
+    <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Palaso">
@@ -188,7 +190,7 @@
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\..\lib\icu.net.dll.config">
+    <None Include="..\..\lib\icu.net.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <Link>icu.net.dll.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

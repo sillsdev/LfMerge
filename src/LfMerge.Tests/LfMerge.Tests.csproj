@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -28,6 +29,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -126,10 +128,5 @@
       <Name>LfMerge</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queues\" />
-    <Folder Include="Actions\" />
-    <Folder Include="Settings\" />
-    <Folder Include="Fdo\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

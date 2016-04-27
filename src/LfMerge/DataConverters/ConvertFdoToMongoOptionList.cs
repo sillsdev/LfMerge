@@ -174,7 +174,7 @@ namespace LfMerge.DataConverters
 
 		protected void SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
 		{
-			const char ORC = '\xfffc';
+			//const char ORC = '\xfffc';
 			item.Abbreviation = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
 			if (setKey)
 				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
