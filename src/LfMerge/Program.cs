@@ -4,17 +4,12 @@ using System;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Chorus.Model;
 using LfMerge.Actions;
-using LfMerge.Actions.Infrastructure;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Queues;
 using LfMerge.Settings;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using Palaso.IO.FileLock;
 using Palaso.Progress;
 using SIL.FieldWorks.FDO;
@@ -33,12 +28,13 @@ namespace LfMerge
 			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
 				.WithParameter(new TypedParameter(typeof(string), "LfMerge"));
-			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
+#if GETTING_RID_OF_FB_AND_CHORUS
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();
+// GETTING_RID_OF_FB_AND_CHORUS TODO: Remove UpdateBranchHelperFlex in FB, its superclass, and any other branch helper classes in FB.
 			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
-			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
+#endif
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
@@ -124,10 +120,16 @@ namespace LfMerge
 		/// <param name="project">LF Project.</param>
 		public static void EnsureClone(ILfProject project)
 		{
+#if GETTING_RID_OF_FB_AND_CHORUS
+// GETTING_RID_OF_FB_AND_CHORUS TODO: The 'easy' way is to see if the fwdata file is present. If it is, then there must be a clone.
+#endif
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				var progress = scope.Resolve<IProgress>();
 				var settings = Container.Resolve<LfMergeSettingsIni>();
+#if GETTING_RID_OF_FB_AND_CHORUS
+// GETTING_RID_OF_FB_AND_CHORUS TODO: No need to use InternetCloneSettingsModel in this project. Pass the clone buck to LFBridge.
+// GETTING_RID_OF_FB_AND_CHORUS TODO: Everything being put into 'model' needs to be passed to LfBridge.
 				var model = scope.Resolve<InternetCloneSettingsModel>();
 				model.InitFromUri(project.LanguageDepotProjectUri);
 				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
@@ -145,6 +147,9 @@ namespace LfMerge
 						model.TargetLocationIsUnused)
 					{
 						Logger.Notice("Initial clone");
+// GETTING_RID_OF_FB_AND_CHORUS TODO: Make sure the folder has no files or folders, before passing the buck to make the clone.
+// GETTING_RID_OF_FB_AND_CHORUS TODO: You will need to pass the FDO's data model version number as a string to the cloning code in FB,
+// GETTING_RID_OF_FB_AND_CHORUS TODO: or you have no real hope the fwdata file that will be produced will be the right one for your FDO code.
 						// Since we're in here, the previous clone was not finished, so remove and start over
 						var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
 						if (Directory.Exists(cloneLocation))
@@ -153,7 +158,10 @@ namespace LfMerge
 							Directory.Delete(cloneLocation, true);
 						}
 						project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
-						model.DoClone();
+// GETTING_RID_OF_FB_AND_CHORUS TODO: Call method here in LFBridge. Or, make some new CloneAction, and have it call LFBridge.
+						Lfmerge.xxxx;
+// GETTING_RID_OF_FB_AND_CHORUS TODO: If there is an fwdata file in the new clone's main folder, at this point, then it worked. Otherwise, it didn't.
+// GETTING_RID_OF_FB_AND_CHORUS TODO: If it did not work, then it is safe to empty out the project's clone folder here.
 						if (model.LocalFolderName != project.ProjectCode)
 							Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}", project.ProjectCode, model.TargetDestination);
 						if (!FinishClone(project))
@@ -171,47 +179,7 @@ namespace LfMerge
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;
 				}
-			}
-		}
-
-		private static bool FinishClone(ILfProject project)
-		{
-			var actualCloneResult = new ActualCloneResult();
-			var settings = Container.Resolve<LfMergeSettingsIni>();
-
-			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
-			var newProjectFilename = Path.GetFileName(project.ProjectCode) + SharedConstants.FwXmlExtension;
-			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
-
-			using (var scope = MainClass.Container.BeginLifetimeScope())
-			{
-				var helper = scope.Resolve<UpdateBranchHelperFlex>();
-				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(
-					FdoCache.ModelVersion, actualCloneResult, cloneLocation))
-				{
-					actualCloneResult.Message = "Flex version is too old";
-				}
-
-				switch (actualCloneResult.FinalCloneResult)
-				{
-				case FinalCloneResult.ExistingCloneTargetFolder:
-					Logger.Error("Clone failed: Flex project exists: {0}", cloneLocation);
-					if (Directory.Exists(cloneLocation))
-						Directory.Delete(cloneLocation, true);
-					return false;
-				case FinalCloneResult.FlexVersionIsTooOld:
-					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.ProjectCode);
-					if (Directory.Exists(cloneLocation))
-						Directory.Delete(cloneLocation, true);
-					return false;
-				case FinalCloneResult.Cloned:
-					break;
-				}
-
-				var projectUnifier = scope.Resolve<FlexHelper>();
-				var Progress = scope.Resolve<IProgress>();
-				projectUnifier.PutHumptyTogetherAgain(Progress, false, newFwProjectPathname);
-				return true;
+#endif
 			}
 		}
 
