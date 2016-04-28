@@ -96,6 +96,7 @@ namespace LfMerge.Tests
 			Initialize(replacementConfig);
 			CommitWhenDone = false;
 			VerboseProgress = true;
+			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data/php/src");
 		}
 	}
 

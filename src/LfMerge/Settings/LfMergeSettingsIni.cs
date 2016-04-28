@@ -51,8 +51,10 @@ namespace LfMerge.Settings
 			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
 			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
 			string verboseProgress = main["VerboseProgress"] ?? "";
+			string phpSourcePath = main["PhpSourcePath"] ?? "/var/www/virtual/languageforge.org/htdocs";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort, mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress);
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort,
+				mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress, phpSourcePath);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
@@ -60,7 +62,9 @@ namespace LfMerge.Settings
 
 		private string[] QueueDirectories { get; set; }
 
-		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir, string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix, string mongoMainDatabaseName, string verboseProgress)
+		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir,
+			string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix,
+			string mongoMainDatabaseName, string verboseProgress, string phpSourcePath)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
 			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
@@ -78,11 +82,15 @@ namespace LfMerge.Settings
 			MongoDatabaseNamePrefix = mongoDatabaseNamePrefix;
 			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);
 			MongoMainDatabaseName = mongoMainDatabaseName;
+
+			PhpSourcePath = phpSourcePath;
 		}
 
 		public bool CommitWhenDone { get; internal set; }
 
 		public bool VerboseProgress { get; protected set; }
+
+		public string PhpSourcePath { get; protected set; }
 
 		#region Equality and GetHashCode
 
