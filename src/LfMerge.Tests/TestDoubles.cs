@@ -95,6 +95,7 @@ namespace LfMerge.Tests
 			replacementConfig.Global["BaseDir"] = replacementBaseDir;
 			Initialize(replacementConfig);
 			CommitWhenDone = false;
+			VerboseProgress = true;
 		}
 	}
 
