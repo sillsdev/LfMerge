@@ -1,17 +1,13 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.Model;
 using IniParser.Model;
 using LfMerge.Actions;
-using LfMerge.Actions.Infrastructure;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests.Actions;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
@@ -302,40 +298,5 @@ namespace LfMerge.Tests
 		public string Identifier { get; set; }
 		public string Repository { get; set; }
 		#endregion
-	}
-
-	class InternetCloneSettingsModelDouble: InternetCloneSettingsModel
-	{
-		public override void DoClone()
-		{
-			Directory.CreateDirectory(TargetDestination);
-			Directory.CreateDirectory(Path.Combine(TargetDestination, ".hg"));
-			File.WriteAllText(Path.Combine(TargetDestination, ".hg", "hgrc"), "blablabla");
-		}
-	}
-
-	class ChorusHelperDouble: ChorusHelper
-	{
-		public override string GetSyncUri(ILfProject project)
-		{
-			return SynchronizeActionTests.LDProjectFolderPath;
-		}
-	}
-
-	class UpdateBranchHelperFlexDouble: UpdateBranchHelperFlex
-	{
-		public override bool UpdateToTheCorrectBranchHeadIfPossible(string desiredBranchName,
-			ActualCloneResult cloneResult, string cloneLocation)
-		{
-			cloneResult.FinalCloneResult = FinalCloneResult.Cloned;
-			return true;
-		}
-	}
-
-	class FlexHelperDouble: FlexHelper
-	{
-		public override void PutHumptyTogetherAgain(IProgress progress, bool verbose, string mainFilePathname)
-		{
-		}
 	}
 }

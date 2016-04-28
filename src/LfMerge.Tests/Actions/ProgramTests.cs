@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -29,25 +28,6 @@ namespace LfMerge.Tests.Actions
 		public void TearDown()
 		{
 			_env.Dispose();
-		}
-
-		[Test]
-		[ExpectedException("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")]
-		public void EnsureClone_NonExisitingProject_SetsStateOnHold()
-		{
-			// for this test we don't want the test double for InternetCloneSettingsModel
-			_env.Dispose();
-			_env = new TestEnvironment(false);
-
-			// Setup
-			var nonExistingProjectCode = Path.GetRandomFileName().ToLowerInvariant();
-			var lfProject = LanguageForgeProject.Create(_env.Settings, nonExistingProjectCode);
-
-			// Execute
-			MainClass.EnsureClone(lfProject);
-
-			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 		}
 
 		[Test]

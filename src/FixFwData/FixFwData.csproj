@@ -69,7 +69,7 @@
     <Reference Include="FixFwDataDll">
       <Package>lfmerge-fdo</Package>
     </Reference>
-    <Reference Include="SIL.Linux.Logging">
+    <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
   </ItemGroup>
