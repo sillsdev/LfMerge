@@ -1,7 +1,11 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.IO;
+using System.Reflection;
 using Autofac;
 using Chorus.Model;
+using IniParser.Parser;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
@@ -11,8 +15,6 @@ using LibFLExBridgeChorusPlugin.Infrastructure;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
-using System;
-using System.IO;
 
 namespace LfMerge.Tests
 {
@@ -116,6 +118,51 @@ namespace LfMerge.Tests
 		public void CreateProjectUpdateFolder(string projectCode)
 		{
 			Directory.CreateDirectory(ProjectPath(projectCode));
+		}
+
+		public static void CopyFwProjectTo(string projectCode, string destDir)
+		{
+			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
+			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectCode), destDir);
+
+			// Adjust hgrc file
+			var hgrc = Path.Combine(destDir, projectCode, ".hg/hgrc");
+			if (File.Exists(hgrc))
+			{
+				var parser = new IniDataParser();
+				var iniData = parser.Parse(File.ReadAllText(hgrc));
+
+				iniData["ui"]["username"] = Environment.UserName;
+
+				var outputDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+				iniData["merge-tools"]["chorusmerge.executable"] =
+					Path.Combine(outputDirectory, "chorusmerge");
+
+				iniData["extensions"]["fixutf8"] = Path.Combine(FindGitRepoRoot(),
+					"MercurialExtensions/fixutf8/fixutf8.py");
+
+				var contents = iniData.ToString();
+				File.WriteAllText(hgrc, contents);
+			}
+
+			Console.WriteLine("Copied {0} to {1}", projectCode, destDir);
+		}
+
+		public static string FindGitRepoRoot(string startDir = null)
+		{
+			if (String.IsNullOrEmpty(startDir))
+				startDir = Directory.GetCurrentDirectory();
+			while (!Directory.Exists(Path.Combine(startDir, ".git")))
+			{
+				var di = new DirectoryInfo(startDir);
+				if (di.Parent == null) // We've reached the root directory
+				{
+					// Last-ditch effort: assume we're in output/Debug, even though we never found .git
+					return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", ".."));
+				}
+				startDir = Path.Combine(startDir, "..");
+			}
+			return Path.GetFullPath(startDir);
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)

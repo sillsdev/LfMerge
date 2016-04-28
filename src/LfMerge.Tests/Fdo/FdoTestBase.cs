@@ -43,7 +43,7 @@ namespace LfMerge.Tests.Fdo
 				languageForgeServerFolder: LanguageForgeFolder
 			);
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
-			CopyFwProjectTo(testProjectCode, Settings.DefaultProjectsDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.DefaultProjectsDirectory);
 			lfProj = LanguageForgeProject.Create(Settings, testProjectCode);
 		}
 
@@ -64,30 +64,6 @@ namespace LfMerge.Tests.Fdo
 			}
 		}
 
-		// TODO: Consider whether these two utility functions belong in a different class
-		public static void CopyFwProjectTo(string projectCode, string destDir)
-		{
-			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
-			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectCode), destDir);
-			Console.WriteLine("Copied {0} to {1}", projectCode, destDir);
-		}
-
-		public static string FindGitRepoRoot(string startDir = null)
-		{
-			if (String.IsNullOrEmpty(startDir))
-				startDir = Directory.GetCurrentDirectory();
-			while (!Directory.Exists(Path.Combine(startDir, ".git")))
-			{
-				var di = new DirectoryInfo(startDir);
-				if (di.Parent == null) // We've reached the root directory
-				{
-					// Last-ditch effort: assume we're in output/Debug, even though we never found .git
-					return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", ".."));
-				}
-				startDir = Path.Combine(startDir, "..");
-			}
-			return Path.GetFullPath(startDir);
-		}
 	}
 
 	public class FdoTestBase
