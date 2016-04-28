@@ -3,11 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using Autofac;
+using LfMerge.Settings;
 using Newtonsoft.Json;
 
 namespace LfMerge.LanguageForge.Infrastructure
 {
-	public class PhpConnection
+	public static class PhpConnection
 	{
 		public static string RunClass(string className, string methodName, List<Object> parameters)
 		{
@@ -20,23 +23,29 @@ namespace LfMerge.LanguageForge.Infrastructure
 			runClassParameters.isTest = isTest;
 			string runClassParametersJson = JsonConvert.SerializeObject(runClassParameters);
 
-			Process p = new Process();
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardInput = true;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.FileName = "php";
-			p.StartInfo.Arguments = "/var/www/virtual/languageforge.org/htdocs/Api/Library/Shared/CLI/RunClass.php";
-			p.Start();
-			p.StandardInput.Write(runClassParametersJson);
-			p.StandardInput.Close();
+			var settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 
-			string output = p.StandardOutput.ReadToEnd();
-			p.WaitForExit();
-			if (p.ExitCode != 0)
+			string output;
+			using (var p = new Process())
 			{
-				throw new Exception("RunClass non-zero exit code!\n" + output);
+				p.StartInfo.UseShellExecute = false;
+				p.StartInfo.RedirectStandardInput = true;
+				p.StartInfo.RedirectStandardOutput = true;
+				p.StartInfo.FileName = "php";
+				p.StartInfo.Arguments = Path.Combine(settings.PhpSourcePath,
+					"Api/Library/Shared/CLI/RunClass.php");
+				p.Start();
+				p.StandardInput.Write(runClassParametersJson);
+				p.StandardInput.Close();
+
+				output = p.StandardOutput.ReadToEnd();
+				p.WaitForExit();
+				if (p.ExitCode != 0)
+				{
+					throw new Exception("RunClass non-zero exit code!\n" + output);
+				}
+				p.Close();
 			}
-			p.Close();
 
 			return output;
 		}
