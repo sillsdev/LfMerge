@@ -59,7 +59,7 @@ namespace LfMerge.Tests.Actions
 			_env = new TestEnvironment();
 			_env.Settings.CommitWhenDone = true;
 			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
 
 			// Guids are named for the diffs for the modified test project
 			_testEntryGuid = Guid.Parse(testEntryGuidStr);
@@ -96,7 +96,7 @@ namespace LfMerge.Tests.Actions
 		public void SynchronizeAction_NoCloneNoChangedData_GlossUnchanged()
 		{
 			// Setup
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			// Exercise
 			_sutSynchronize.Run(_lfProject);
@@ -115,7 +115,7 @@ namespace LfMerge.Tests.Actions
 		public void SynchronizeAction_LFDataChanged_GlossChanged()
 		{
 			// Setup
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -166,7 +166,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			_env.Settings.CommitWhenDone = false; // TODO: remove when multipara is no longer changing GUIDs when there are no changes. IJH 2016-03
-			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
@@ -223,7 +223,7 @@ namespace LfMerge.Tests.Actions
 		public void SynchronizeAction_LFDataChangedLDDataChanged_LFWins()
 		{
 			//Setup
-			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
@@ -259,7 +259,7 @@ namespace LfMerge.Tests.Actions
 		public void SynchronizeAction_LFDataDeleted_EntryRemoved()
 		{
 			// Setup
-			FdoTestFixture.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -299,7 +299,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			_env.Settings.CommitWhenDone = false; // // TODO: remove when multipara is no longer changing GUIDs when there are no changes. DDW 2016-04
-			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
@@ -348,7 +348,7 @@ namespace LfMerge.Tests.Actions
 		{
 			// Setup
 			//_env.Settings.CommitWhenDone = false; // TODO: Do we need this? remove when multipara is no longer changing GUIDs when there are no changes. DDW 2016-04
-			FdoTestFixture.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;

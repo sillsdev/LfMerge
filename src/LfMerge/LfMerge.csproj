@@ -219,10 +219,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <!-- Copy .mdb files for all files in output directory -->
+    <!-- Copy .mdb files for all files into output directory as well as ChorusMerge.exe -->
     <ItemGroup>
       <FilesInOutput Include="$(OutputPath)/*.*" />
       <FilesToCopy Include="@(FilesInOutput-&gt;'../../lib/%(Filename)%(Extension).mdb')" Condition="Exists('../../lib/%(Filename)%(Extension).mdb')" />
+      <FilesToCopy Include="../../lib/ChorusMerge.exe*"/>
+      <FilesToCopy Include="../../lib/LibChorus.dll*"/>
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
