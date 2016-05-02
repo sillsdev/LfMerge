@@ -136,6 +136,7 @@ namespace LfMerge.Tests.Fdo
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify LF project now contains the 4 FDO pictures (1 externally linked, 3 internal)
+			receivedData = _conn.GetLfLexEntries();
 			int newNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(newNumPictures, Is.EqualTo(4));
 		}

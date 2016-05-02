@@ -136,6 +136,16 @@ namespace LfMerge.Tests
 			_storedCustomFieldConfig.Clear();
 		}
 
+		public static TObj DeepCopy<TObj>(TObj orig)
+		{
+			// Take advantage of BSON serialization to clone any object
+			// This allows this test double to act a bit more like a "real" Mongo database: it no longer holds
+			// onto references to the objects that the test code added. Instead, it clones them. So if we change
+			// fields of those objects *after* adding them to Mongo, those changes should NOT be reflected in Mongo.
+			BsonDocument bson = orig.ToBsonDocument();
+			return BsonSerializer.Deserialize<TObj>(bson);
+		}
+
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			return _storedInputSystems;
@@ -177,7 +187,7 @@ namespace LfMerge.Tests
 		public void UpdateMockLfLexEntry(LfLexEntry mockData)
 		{
 			Guid guid = mockData.Guid ?? Guid.Empty;
-			_storedLfLexEntries[guid] = mockData;
+			_storedLfLexEntries[guid] = DeepCopy(mockData);
 		}
 
 		public void UpdateMockOptionList(BsonDocument mockData)
@@ -189,17 +199,17 @@ namespace LfMerge.Tests
 		public void UpdateMockOptionList(LfOptionList mockData)
 		{
 			string listCode = mockData.Code ?? string.Empty;
-			_storedLfOptionLists[listCode] = mockData;
+			_storedLfOptionLists[listCode] = DeepCopy(mockData);
 		}
 
 		public IEnumerable<LfLexEntry> GetLfLexEntries()
 		{
-			return _storedLfLexEntries.Values;
+			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => DeepCopy(entry)));
 		}
 
 		public IEnumerable<LfOptionList> GetLfOptionLists()
 		{
-			return _storedLfOptionLists.Values;
+			return new List<LfOptionList>(_storedLfOptionLists.Values.Select(entry => DeepCopy(entry)));
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
@@ -240,13 +250,13 @@ namespace LfMerge.Tests
 
 		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
-			_storedLfLexEntries[data.Guid ?? Guid.Empty] = data;
+			_storedLfLexEntries[data.Guid ?? Guid.Empty] = DeepCopy(data);
 			return true;
 		}
 
 		public bool UpdateRecord(ILfProject project, LfOptionList data, string listCode)
 		{
-			_storedLfOptionLists[listCode ?? string.Empty] = data;
+			_storedLfOptionLists[listCode ?? string.Empty] = DeepCopy(data);
 			return true;
 		}
 
