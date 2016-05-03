@@ -33,8 +33,6 @@ namespace LfMerge.Tests.Fdo
 		)
 		{
 			var fieldNamesThatShouldBeDifferent = new string[] {
-				"createdDate",
-				"modifiedDate",
 			};
 			var fieldNamesThatAreSubdocuments = new string[] {
 				"authorInfo",
