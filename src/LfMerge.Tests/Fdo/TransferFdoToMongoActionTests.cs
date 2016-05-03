@@ -23,7 +23,7 @@ namespace LfMerge.Tests.Fdo
 			var result = new LfOptionList();
 			result.Code = MagicStrings.LfOptionListCodeForGrammaticalInfo;
 			result.Name = MagicStrings.FdoOptionlistNames[MagicStrings.LfOptionListCodeForGrammaticalInfo];
-			result.DateCreated = result.DateModified = System.DateTime.UtcNow;
+			result.DateCreated = result.DateModified = System.DateTime.Now;
 			result.CanDelete = false;
 			result.DefaultItemKey = null;
 			result.Items = grammarItems.ToList();

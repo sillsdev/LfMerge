@@ -33,8 +33,6 @@ namespace LfMerge.Tests.Fdo
 		)
 		{
 			var fieldNamesThatShouldBeDifferent = new string[] {
-				"dateCreated",
-				"dateModified",
 				"createdDate",
 				"modifiedDate",
 			};
@@ -99,7 +97,14 @@ namespace LfMerge.Tests.Fdo
 		protected void PrintDifferences(IDictionary<string, Tuple<string, string>> differences)
 		{
 			foreach (var diff in differences)
-				Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);
+				if (diff.Key.Contains("Date"))
+				{
+					DateTime first = new DateTime(Int64.Parse(diff.Value.Item1));
+					DateTime second = new DateTime(Int64.Parse(diff.Value.Item2));
+					Console.WriteLine("{0}: {1} => {2}", diff.Key, first, second);
+				}
+				else
+					Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);
 		}
 
 		protected string Repr(object value)
@@ -184,8 +189,6 @@ namespace LfMerge.Tests.Fdo
 		{
 			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
 			var fieldNamesThatShouldBeDifferent = new string[] {
-				"DateCreated",
-				"DateModified",
 			};
 			var fieldNamesToSkip = new string[] {
 				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare

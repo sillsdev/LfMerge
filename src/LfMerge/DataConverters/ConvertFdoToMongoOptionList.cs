@@ -133,7 +133,7 @@ namespace LfMerge.DataConverters
 		{
 			var result = new LfOptionList();
 			result.Items = new List<LfOptionListItem>();
-			result.DateCreated = result.DateModified = DateTime.UtcNow;
+			result.DateCreated = result.DateModified = DateTime.Now;
 			result.Code = listCode;
 			result.Name = FdoOptionListName(listCode);
 			result.CanDelete = false;
@@ -151,7 +151,7 @@ namespace LfMerge.DataConverters
 			newList.CanDelete = original.CanDelete;
 			newList.Code = original.Code;
 			newList.DateCreated = original.DateCreated;
-			newList.DateModified = DateTime.UtcNow;
+			newList.DateModified = DateTime.Now;
 			newList.DefaultItemKey = original.DefaultItemKey;
 			newList.Name = original.Name;
 			// lfNewOptionList.Items is set to an empty list by its constructor; no need to set it here.

@@ -54,7 +54,7 @@ namespace LfMerge
 		protected ProcessingState()
 		{
 			_state = SendReceiveStates.CLONING;
-			_lastStateChangeTicks = DateTime.Now.ToUniversalTime().Ticks;
+			_lastStateChangeTicks = DateTime.UtcNow.Ticks;
 			ProjectCode = string.Empty;
 		}
 

@@ -209,6 +209,8 @@ namespace LfMerge.Tests.Fdo
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
 			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			if (differencesByName.ContainsKey("DateModified"))
+				differencesByName.Remove("DateModified");
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValuesAfterTest, Is.EqualTo(customFieldValues));

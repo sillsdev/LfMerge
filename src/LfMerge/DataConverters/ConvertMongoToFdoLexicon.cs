@@ -423,8 +423,9 @@ namespace LfMerge.DataConverters
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
-			fdoEntry.DateCreated = lfEntry.DateCreated;
-			fdoEntry.DateModified = lfEntry.DateModified;
+			// Weirdly, FDO expects DateCreated and DateModified to be in LOCAL time, not UTC.
+			fdoEntry.DateCreated = lfEntry.DateCreated.ToLocalTime();
+			fdoEntry.DateModified = lfEntry.DateModified.ToLocalTime();
 			// TODO: What about lfEntry.AuthorInfo? It has CreatedDate and ModifiedDate; What do we do with them?
 			SetMultiStringFrom(fdoEntry.Bibliography, lfEntry.EntryBibliography);
 			SetMultiStringFrom(fdoEntry.Restrictions, lfEntry.EntryRestrictions);
