@@ -98,34 +98,29 @@ namespace LfMerge.DataConverters
 			}
 			LfProject.IsInitialClone = false;
 
+			RemoveMongoEntriesDeletedInFdo();
+
+			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
+			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
+		}
+
+		private void RemoveMongoEntriesDeletedInFdo()
+		{
 			IEnumerable<LfLexEntry> lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			List<Guid> entryGuidsToRemove = new List<Guid>();
 			foreach (LfLexEntry lfEntry in lfEntries)
 			{
 				if (lfEntry.Guid == null)
 					continue;
-				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value))
+				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
+					!Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 					entryGuidsToRemove.Add(lfEntry.Guid.Value);
 			}
+
 			foreach (Guid guid in entryGuidsToRemove)
 			{
 				Connection.RemoveRecord(LfProject, guid);
 			}
-
-			/* For debugging custom field names
-			lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
-			var LfCustomFieldEntryList = lfEntries.Select(e => e.CustomFields).Where(c => c != null && c.Count() > 0);
-			foreach (var LfCustomFieldEntryName in LfCustomFieldEntryList.First().Names)
-			{
-				Console.WriteLine("custom field entry name is {0}", LfCustomFieldEntryName);
-			}
-			*/
-
-			// During initial clone, use initial FDO view preferences for custom fields.
-			//var lfCustomFieldEntry = FdoCustomFieldToLfCustomField();
-
-			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
-			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
@@ -202,6 +197,7 @@ namespace LfMerge.DataConverters
 
 			lfEntry.DateCreated = fdoEntry.DateCreated;
 			lfEntry.DateModified = fdoEntry.DateModified;
+
 			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();

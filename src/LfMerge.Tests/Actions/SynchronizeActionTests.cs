@@ -21,7 +21,7 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Tests.Actions
 {
-	[TestFixture, Explicit, Category("LongRunning")]
+	[TestFixture, Category("LongRunning")]
 	public class SynchronizeActionTests
 	{
 		public static string LDProjectFolderPath;
@@ -88,12 +88,11 @@ namespace LfMerge.Tests.Actions
 			_mongoConnection.Reset();
 		}
 
-		[Test]
-		public void SynchronizeAction_CloneNoChangedData_GlossUnchanged()
+		[Test, Explicit("Superceeded by later tests")]
+		public void SynchronizeAction_NoChangedData_GlossUnchanged()
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
-
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
 
@@ -111,7 +110,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo("English gloss"));
 		}
 
-		[Test]
+		[Test, Explicit("Superceeded by later tests")]
 		public void SynchronizeAction_LFDataChanged_GlossChanged()
 		{
 			// Setup
@@ -162,7 +161,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
 		}
 
-		[Test]
+		[Test, Explicit("Superceeded by later tests")]
 		public void SynchronizeAction_LDDataChanged_GlossChanged()
 		{
 			// Setup
@@ -359,10 +358,10 @@ namespace LfMerge.Tests.Actions
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testDeletedEntryGuid);
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(1));
-			const string lfChangedGloss = "new English gloss - added in LF";
+			const string lfCreatedGloss = "new English gloss - added in LF";
 			const string fwChangedGloss = "English gloss - changed in FW";
 			// LF adds a gloss to the entry that LD is deleting
-			lfEntry.Senses[0].Gloss = LfMultiText.FromSingleStringMapping("en", lfChangedGloss);
+			lfEntry.Senses[0].Gloss = LfMultiText.FromSingleStringMapping("en", lfCreatedGloss);
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
 
@@ -382,7 +381,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries + 1));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testDeletedEntryGuid);
-			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
+			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfCreatedGloss));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
 
@@ -394,7 +393,7 @@ namespace LfMerge.Tests.Actions
 			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(1));
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfChangedGloss));
+			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfCreatedGloss));
 		}
 	}
 }
