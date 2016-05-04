@@ -89,10 +89,13 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		public void SynchronizeAction_NoCloneNoChangedData_GlossUnchanged()
+		public void SynchronizeAction_CloneNoChangedData_GlossUnchanged()
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -377,7 +380,7 @@ namespace LfMerge.Tests.Actions
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries + 1));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testDeletedEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);

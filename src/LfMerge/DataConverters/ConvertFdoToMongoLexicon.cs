@@ -180,7 +180,7 @@ namespace LfMerge.DataConverters
 			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			// string VernacularWritingSystem = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultVernWs);
+			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			var lfEntry = new LfLexEntry();
 
@@ -202,12 +202,6 @@ namespace LfMerge.DataConverters
 
 			lfEntry.DateCreated = fdoEntry.DateCreated;
 			lfEntry.DateModified = fdoEntry.DateModified;
-			if (LfProject.IsInitialClone)
-			{
-				var now = DateTime.Now;
-				lfEntry.DateCreated = now;
-				lfEntry.DateModified = now;
-			}
 			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();
@@ -374,7 +368,7 @@ namespace LfMerge.DataConverters
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
-				lfSense.Source = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoSense.Source);
+				lfSense.Source = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoSense.Source);
 			}
 			lfSense.Status = ToStringArrayField(StatusListCode, fdoSense.StatusRA);
 			lfSense.Usages = ToStringArrayField(UsageTypeListCode, fdoSense.UsageTypesRC);
@@ -460,12 +454,13 @@ namespace LfMerge.DataConverters
 		{
 			var lfExample = new LfExample();
 
+			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = fdoExample.Guid;
 			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
-			lfExample.Reference = LfMultiText.FromSingleITsStringMapping(VernacularWritingSystem.Id, fdoExample.Reference);
+			lfExample.Reference = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoExample.Reference);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
