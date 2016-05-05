@@ -103,6 +103,11 @@ namespace LfMerge.DataConverters
 		public void SetPossibilitiesCollection<T>(IFdoReferenceCollection<T> dest, IEnumerable<T> newItems)
 			where T: class, ICmPossibility
 		{
+			// If we know of NO valid possibility keys, don't make any changes. That's because knowing of NO valid possibility keys
+			// is FAR more likely to happen because of a bug than because we really removed an entire possibility list, and if there's
+			// a bug, we shouldn't drop all the FDO data for this possibility list.
+			if (PossibilitiesByKey.Count == 0)
+				return;
 			// We have to calculate the update (which items to remove and which to add) here; IFdoReferenceCollection won't do it for us.
 			List<T> itemsToAdd = newItems.ToList();
 			HashSet<Guid> guidsToAdd = new HashSet<Guid>(itemsToAdd.Select(poss => poss.Guid));
