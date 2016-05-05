@@ -179,6 +179,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
 		}
 
+		#if false
 		[Test]
 		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
 		{
@@ -415,6 +416,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(newlyCreatedPos.OwningPossibility.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedParentName));
 			Assert.That(newlyCreatedPos.OwningPossibility.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo(expectedParentAbbrev));
 		}
+		#endif
 	}
 }
 

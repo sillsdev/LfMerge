@@ -33,8 +33,10 @@ namespace LfMerge.DataConverters
 		public IEnumerable<ILgWritingSystem> AnalysisWritingSystems;
 		public IEnumerable<ILgWritingSystem> VernacularWritingSystems;
 
+		#if false
 		private int _wsEn;
 		private ConvertMongoToFdoPartsOfSpeech _posConverter;
+		#endif
 		private ConvertMongoToFdoCustomField _convertCustomField;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
@@ -51,8 +53,10 @@ namespace LfMerge.DataConverters
 		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
 		public IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
+		#if false
 		private LfOptionList _lfGrammar;
 		private Dictionary<string, LfOptionListItem> _lfGrammarByKey;
+		#endif
 
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
@@ -70,6 +74,7 @@ namespace LfMerge.DataConverters
 			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
 
+			#if false
 			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
 
@@ -78,6 +83,7 @@ namespace LfMerge.DataConverters
 				_lfGrammarByKey = new Dictionary<string, LfOptionListItem>();
 			else
 				_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
+			#endif
 
 			ListConverters = new Dictionary<string, ConvertMongoToFdoOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
@@ -97,7 +103,9 @@ namespace LfMerge.DataConverters
 					_freeTranslationType = Cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
 
+			#if false
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+			#endif
 		}
 
 		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
@@ -115,16 +123,22 @@ namespace LfMerge.DataConverters
 				});
 
 			// Set English ws handle again in case it changed
+			#if false
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+			#endif
 
 			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
+			#if false
 			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
+			#endif
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
+					#if false
 					if (_lfGrammar != null)
 						UpdateFdoGrammarFromLfGrammar(_lfGrammar);
+					#endif
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
@@ -700,16 +714,20 @@ namespace LfMerge.DataConverters
 		// TODO: Use a more generic ConvertMongoToFdoOptionList class, modeled after the corresponding Mongo->Fdo direction
 		public void UpdateFdoGrammarFromLfGrammar(LfOptionList lfGrammar)
 		{
+			#if false // We're not doing this right now. TODO: Expand this commment to explain why.
 			ICmPossibilityList fdoGrammar = Cache.LanguageProject.PartsOfSpeechOA;
 			var posRepo = GetInstance<IPartOfSpeechRepository>();
 			foreach (LfOptionListItem item in lfGrammar.Items)
 			{
 				OptionListItemToPartOfSpeech(item, fdoGrammar, posRepo);
 			}
+			#endif
 		}
 
 		public IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
 		{
+			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
+			#if false  // Old code, commented out
 			if (source == null || source.ToString() == null)
 				return null;
 			string posStr = source.ToString();
@@ -730,9 +748,11 @@ namespace LfMerge.DataConverters
 				posStr
 			);
 			return _posConverter.FromAbbrevAndName(posStr, null, userWs);
+			#endif
 		}
 
 		// TODO: This probably belongs in the ConvertMongoToFdoPartsOfSpeech class
+		#if false
 		public IPartOfSpeech OptionListItemToPartOfSpeech(LfOptionListItem item, ICmPossibilityList posList, IPartOfSpeechRepository posRepo)
 		{
 			IPartOfSpeech pos = null;
@@ -771,6 +791,7 @@ namespace LfMerge.DataConverters
 				return pos;
 			}
 		}
+		#endif
 	}
 }
 

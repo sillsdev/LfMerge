@@ -12,17 +12,23 @@ namespace LfMerge.DataConverters
 {
 	public class ConvertMongoToFdoPartsOfSpeech
 	{
+		// Currently, LF does not allow editing option lists on projects that send/receive to FDO.
+		// If that ever changes, there's a bunch of commented-out (or #if false ... #endif'd) code below
+		// that contains the start of an approach to handling that situation.
+
+		#if false
 		private FdoCache _cache;
 		private IPartOfSpeechRepository _posRepo;
 		private IPartOfSpeechFactory _posFactory;
+		#endif
 
-		// TODO: Should we also pass in an LfProject object? And make the POSConverter responsible for
-		// updating the LF part of speech list as needed? Consider, and refactor if the answer is yes.
 		public ConvertMongoToFdoPartsOfSpeech(FdoCache fdoCache)
 		{
+			#if false
 			_cache = fdoCache;
 			_posRepo = _cache.ServiceLocator.GetInstance<IPartOfSpeechRepository>();
 			_posFactory = _cache.ServiceLocator.GetInstance<IPartOfSpeechFactory>();
+			#endif
 		}
 
 		// TODO: Do we need the GOLDEtic.xml parsing code any longer?
@@ -30,6 +36,7 @@ namespace LfMerge.DataConverters
 		// we'll have to keep this code around so we can create proper PoSes in FW as needed.
 		// Once LF gains that feature, we can remove the whole GOLDEtic parsing code.
 
+		#if false
 		public static Lazy<Stream> GoldEticXml = new Lazy<Stream>(() =>
 			typeof(MainClass).Assembly.GetManifestResourceStream(typeof(MainClass), "GOLDEtic.xml")
 		);
@@ -52,6 +59,7 @@ namespace LfMerge.DataConverters
 		public static Lazy<Dictionary<string, GoldEticItem>> ItemsByGuidStr = new Lazy<Dictionary<string, GoldEticItem>>(() =>
 			FlattenedGoldEticItems.Value.ToDictionary(item => item.Guid, item => item)
 		);
+		#endif
 
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
 		{
@@ -96,6 +104,7 @@ namespace LfMerge.DataConverters
 			}
 		}
 
+		#if false
 		private GoldEticItem FindGoldEticItem(string searchTerm, string wsToSearch)
 		{
 			foreach (GoldEticItem item in FlattenedGoldEticItems.Value)
@@ -292,6 +301,7 @@ namespace LfMerge.DataConverters
 				return pos;
 			}
 		}
+		#endif
 	}
 }
 
