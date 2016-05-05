@@ -191,7 +191,12 @@ namespace LfMerge.DataConverters
 			case CellarPropertyType.ReferenceCollection:
 			case CellarPropertyType.ReferenceSequence:
 				{
-					if (value == null || value == BsonNull.Value) return false;
+					if (value == null || value == BsonNull.Value)
+					{
+						// FDO writes multi-references if their list is empty, but not if it's null
+						data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
+						return true;
+					}
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
 					// TODO: Investigate why this is sometimes coming back as 0 instead of as a real writing system ID
 					if (fieldWs == 0)
@@ -243,6 +248,9 @@ namespace LfMerge.DataConverters
 						data.Replace(hvo, flid, combinedHvos.Count, combinedHvos.Count, new int[] { newHvo }, 1);
 						combinedHvos.Add(newHvo);
 					}
+					// Now (and not before), replace an empty list with null in the custom field value
+					if (data.VecProp(hvo, flid).Length == 0)
+						data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
 					return true;
 				}
 
