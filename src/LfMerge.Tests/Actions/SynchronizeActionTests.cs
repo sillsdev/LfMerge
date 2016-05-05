@@ -26,13 +26,21 @@ namespace LfMerge.Tests.Actions
 	{
 		public static string LDProjectFolderPath;
 
-		// testlangproj is the original LD repo
-		// testlangproj-modified contains a modified entry, deleted entry, and added entry
+		/* testlangproj is the original LD repo
+		 * testlangproj-modified contains:
+		 * 	a modified entry - ztestmain
+		 * 		lexeme form - Kal: underlying form - changed in FW
+		 * 		Sense 1 Gloss - en: English gloss - changed in FW
+		 * 	a deleted entry - ken
+		 * 	an added entry - Ira
+		 * 		Sense 1 Gloss - en: Externally referenced picture
+		 * 				File: /home/ira/Pictures/test images/TestImage.jpg
+		*/
 		private const string testProjectCode = "testlangproj";
 		private const string modifiedTestProjectCode = "testlangproj-modified";
 		private const int originalNumOfFdoEntries = 63;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-		private const string testCreatedEntryGuidStr = "e670d0e8-c0f7-457d-a6d1-055c83663820";
+		private const string testCreatedEntryGuidStr = "ba8076a9-6552-46b2-a14a-14c01191453b";
 		private const string testDeletedEntryGuidStr = "c5f97698-dade-4ba0-9f91-580ab19ff411";
 
 		private TestEnvironment _env;

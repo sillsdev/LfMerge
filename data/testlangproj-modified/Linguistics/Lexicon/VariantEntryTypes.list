@@ -24,7 +24,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -92,7 +92,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Dialectal Variant</AUni>
@@ -150,7 +150,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Free Variant</AUni>
@@ -418,7 +418,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Inflectional Variant</AUni>
@@ -465,7 +465,7 @@
 						<Hidden
 							val="False" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">first person plural</AUni>
@@ -535,7 +535,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Spelling Variant</AUni>
@@ -611,7 +611,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Irregularly Inflected Form</AUni>
@@ -669,7 +669,7 @@
 						<Hidden
 							val="False" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Plural</AUni>
@@ -731,7 +731,7 @@
 						<Hidden
 							val="False" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Past</AUni>
@@ -757,7 +757,7 @@
 		<PreventChoiceAboveLevel
 			val="0" />
 		<PreventDuplicates
-			val="true" />
+			val="True" />
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields

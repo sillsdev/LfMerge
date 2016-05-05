@@ -17,7 +17,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -80,7 +80,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<IsResearcher
 					val="False" />
 				<Name>
@@ -647,7 +647,7 @@
 				<IsProtected
 					val="False" />
 				<IsResearcher
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="ar-IQ">لا شك أن</AUni>
@@ -910,7 +910,7 @@
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields
-			val="true" />
+			val="True" />
 		<WsSelector
 			val="-6" />
 	</CmPossibilityList>

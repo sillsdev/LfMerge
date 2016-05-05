@@ -17,7 +17,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -487,7 +487,7 @@
 		<PreventChoiceAboveLevel
 			val="0" />
 		<PreventDuplicates
-			val="true" />
+			val="True" />
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields

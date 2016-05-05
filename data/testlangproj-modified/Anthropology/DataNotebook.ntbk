@@ -3085,7 +3085,7 @@
 					</ownseq>
 				</Paragraphs>
 				<RightToLeft
-					val="true" />
+					val="True" />
 			</StText>
 		</ResearchPlan>
 		<Status>

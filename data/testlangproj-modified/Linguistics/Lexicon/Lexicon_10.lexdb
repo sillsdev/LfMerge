@@ -4,7 +4,7 @@
 		guid="1067370f-fd9a-4240-9ba9-2c4fe002565c">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -111,7 +111,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -190,7 +190,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -279,7 +279,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -349,7 +349,7 @@
 		guid="c069c6d1-19d2-41a4-946a-060af2e350ba">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -466,8 +466,6 @@
 			<ownseq
 				class="LexSense"
 				guid="41348695-631a-4c71-ba37-8ae81ce2bb2c">
-				<Custom
-					name="Cust Multi ListRef" />
 				<MorphoSyntaxAnalysis>
 					<objsur
 						guid="d8179982-73bb-4932-adbc-d400a181e112"

@@ -149,7 +149,7 @@
 		<DateCreated
 			val="2004-10-19 2:42:2.903" />
 		<DateModified
-			val="2016-3-28 6:35:21.288" />
+			val="2016-5-5 7:32:30.607" />
 		<DoNotUseForParsing
 			val="False" />
 		<Etymology>
@@ -645,7 +645,7 @@
 		guid="3c99c376-e6dc-45a5-aaa4-bde6808acdcb">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -707,7 +707,7 @@
 		guid="7045f230-4b97-4f9c-9d5f-047e7d66a2df">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -774,7 +774,7 @@
 		guid="b3693338-1690-4bf2-9424-009e1e75398c">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

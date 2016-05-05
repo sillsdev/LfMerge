@@ -4,7 +4,7 @@
 		<version
 			number="" />
 		<generation
-			date="2011-07-18T14:01:19" />
+			date="2016-05-05T07:22:31" />
 		<language
 			type="hbo" />
 	</identity>
@@ -19,15 +19,17 @@
 				<p>u0589u05c2</p>
 				<p>u0589u05c1</p>
 			</rules>
-			<special xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
+			<special
+				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 				<palaso:sortRulesType
 					value="CustomICU" />
 			</special>
 		</collation>
 	</collations>
-	<special xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
+	<special
+		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 		<palaso:abbreviation
-			value="heb" />
+			value="Heb" />
 		<palaso:defaultFontFamily
 			value="Ezra SIL" />
 		<palaso:languageName
@@ -35,7 +37,19 @@
 		<palaso:version
 			value="2" />
 	</special>
-	<special xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
+	<special
+		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
+		<palaso2:knownKeyboards>
+			<palaso2:keyboard
+				layout="us"
+				locale="en-US"
+				os="Unix" />
+		</palaso2:knownKeyboards>
+		<palaso2:version
+			value="2" />
+	</special>
+	<special
+		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
 		<fw:graphiteEnabled
 			value="False" />
 		<fw:validChars

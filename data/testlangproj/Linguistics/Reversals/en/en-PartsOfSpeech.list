@@ -39,7 +39,7 @@
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields
-			val="true" />
+			val="True" />
 		<WsSelector
 			val="-3" />
 	</CmPossibilityList>

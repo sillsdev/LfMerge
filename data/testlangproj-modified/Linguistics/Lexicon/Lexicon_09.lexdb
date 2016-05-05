@@ -71,7 +71,7 @@
 		guid="38ed6cca-8a56-481a-9292-2bd2b435dd36">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -133,7 +133,7 @@
 		guid="82d6bc2e-768e-4ec4-95b8-2cff376208c4">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -200,7 +200,7 @@
 		guid="b660fb0e-2864-4219-a203-591fe644bb20">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -231,42 +231,6 @@
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
-			<MoDerivAffMsa
-				guid="1ed2356a-2a20-4656-a8fa-ba1ddc300631">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
-			<MoDerivAffMsa
-				guid="23042d5c-a25d-4be7-863b-93ed3b4d162f">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="8a0a8938-a569-4e3f-9adf-8c933a3e26de"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f7153d-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
 			<MoDerivAffMsa
 				guid="af274eac-6aa2-4ede-acc4-ada3237f6588">
 				<FromPartOfSpeech>
@@ -306,7 +270,7 @@
 		guid="d2036a5e-8ec7-4ab3-9d5e-434735abfcee">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -438,7 +402,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -460,7 +424,7 @@
 						ws="qaa-x-kal">deN</AUni>
 				</Form>
 				<IsAbstract
-					val="true" />
+					val="True" />
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
@@ -513,7 +477,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

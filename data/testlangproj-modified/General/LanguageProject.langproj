@@ -24,7 +24,7 @@
 		<DateCreated
 			val="2003-7-9 14:59:47.183" />
 		<DateModified
-			val="2016-3-28 6:38:39.286" />
+			val="2016-5-5 7:34:28.193" />
 		<Description>
 			<AStr
 				ws="en">
@@ -3072,9 +3072,15 @@
 				guid="8bc52f36-f495-4762-87a0-9c39e7bdfd12">
 				<Files>
 					<CmFile
+						guid="1c7beb8f-a95b-4b62-a7d3-3fda09cef3fb">
+						<InternalPath>
+							<Uni>/home/ira/Pictures/test images/TestImage.jpg</Uni>
+						</InternalPath>
+					</CmFile>
+					<CmFile
 						guid="534e5cf1-db34-4d2e-8829-146acc78c46e">
 						<InternalPath>
-							<Uni>/home/ira/fwrepo/fw/DistFiles/Projects/testlangproj-ih-flex/LinkedFiles/Pictures/TestImage.jpg</Uni>
+							<Uni>Pictures\TestImage.jpg</Uni>
 						</InternalPath>
 					</CmFile>
 					<CmFile

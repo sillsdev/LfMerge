@@ -407,7 +407,7 @@
 				<Disabled
 					val="False" />
 				<HeadLast
-					val="true" />
+					val="True" />
 				<LeftMsa>
 					<MoStemMsa
 						guid="51f61708-ffc6-494b-9cf4-2c58492570b1">
@@ -497,7 +497,7 @@
 				<Disabled
 					val="False" />
 				<HeadLast
-					val="true" />
+					val="True" />
 				<LeftMsa>
 					<MoStemMsa
 						guid="2948d47b-43b6-436f-af3b-969607648611">
@@ -533,7 +533,7 @@
 				<Disabled
 					val="False" />
 				<HeadLast
-					val="true" />
+					val="True" />
 				<LeftMsa>
 					<MoStemMsa
 						guid="b433be29-cc3f-461e-b419-a973aea038fb">
@@ -2368,9 +2368,6 @@
 						t="r" />
 					<refcol
 						guid="82419a27-ddd5-4f7a-8121-0de4c6d6216d"
-						t="r" />
-					<refcol
-						guid="8423a3c9-5297-4ae3-972a-a5abc1ee1f49"
 						t="r" />
 					<refcol
 						guid="859e20ef-5e20-4ec4-98c7-bb39aa9812af"

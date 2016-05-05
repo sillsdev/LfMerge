@@ -1,1 +1,1 @@
-[FLEx Bridge: 2.1] sync
+[FLEx Bridge: 2.1] sync Fixed FW data 

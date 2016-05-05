@@ -24,7 +24,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -125,7 +125,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Compound</AUni>
@@ -483,7 +483,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Derivative</AUni>
@@ -919,7 +919,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Idiom</AUni>
@@ -977,7 +977,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Keyterm Phrase</AUni>
@@ -1137,7 +1137,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Phrasal Verb</AUni>
@@ -1195,7 +1195,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Saying</AUni>
@@ -1343,7 +1343,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Contraction</AUni>
@@ -1363,7 +1363,7 @@
 		<PreventChoiceAboveLevel
 			val="0" />
 		<PreventDuplicates
-			val="true" />
+			val="True" />
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields

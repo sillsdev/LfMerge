@@ -194,7 +194,7 @@
 						ws="qaa-x-kal">underlying form</AUni>
 				</Form>
 				<IsAbstract
-					val="true" />
+					val="True" />
 				<MorphType>
 					<objsur
 						guid="d7f713e5-e8cf-11d3-9764-00c04f186933"
@@ -645,7 +645,7 @@
 		guid="3c99c376-e6dc-45a5-aaa4-bde6808acdcb">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -707,7 +707,7 @@
 		guid="7045f230-4b97-4f9c-9d5f-047e7d66a2df">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -774,7 +774,7 @@
 		guid="b3693338-1690-4bf2-9424-009e1e75398c">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -879,8 +879,6 @@
 			<ownseq
 				class="LexSense"
 				guid="66ab44a1-383f-4559-b87c-c574b63d8834">
-				<Custom
-					name="Cust Multi ListRef" />
 				<MorphoSyntaxAnalysis>
 					<objsur
 						guid="5a92e072-00b9-4511-aeab-7559b39d546d"

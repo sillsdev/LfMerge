@@ -17,7 +17,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -78,7 +78,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Back translation</AUni>
@@ -129,7 +129,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Free translation</AUni>
@@ -184,7 +184,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Literal translation</AUni>

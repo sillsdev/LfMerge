@@ -70,11 +70,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Section Head Major</Uni>
 		</Name>
@@ -140,11 +140,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Section Head Minor</Uni>
 		</Name>
@@ -176,11 +176,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Hand</Uni>
 		</Name>
@@ -211,11 +211,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Line3</Uni>
 		</Name>
@@ -247,11 +247,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Alluded Text</Uni>
 		</Name>
@@ -277,11 +277,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Untranslated Word</Uni>
 		</Name>
@@ -346,11 +346,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Chapter Number Alternate</Uni>
 		</Name>
@@ -381,11 +381,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Closing</Uni>
 		</Name>
@@ -462,11 +462,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Attribution</Uni>
 		</Name>
@@ -504,7 +504,7 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
@@ -573,11 +573,11 @@
 		<Function
 			val="3" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Table Cell</Uni>
 		</Name>
@@ -657,11 +657,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Paragraph</Uni>
 		</Name>
@@ -697,11 +697,11 @@
 		<Function
 			val="3" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Table Cell Head Last</Uni>
 		</Name>
@@ -737,11 +737,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Refrain</Uni>
 		</Name>
@@ -780,7 +780,7 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
@@ -847,7 +847,7 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
@@ -942,11 +942,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Closing</Uni>
 		</Name>
@@ -983,11 +983,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Citation Paragraph</Uni>
 		</Name>
@@ -1062,11 +1062,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Words Of Christ</Uni>
 		</Name>
@@ -1097,11 +1097,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Paragraph Continuation</Uni>
 		</Name>
@@ -1137,11 +1137,11 @@
 		<Function
 			val="7" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Stanza Break</Uni>
 		</Name>
@@ -1172,11 +1172,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Note Marker</Uni>
 		</Name>
@@ -1209,11 +1209,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Speech Speaker</Uni>
 		</Name>
@@ -1294,11 +1294,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Refrain</Uni>
 		</Name>
@@ -1378,11 +1378,11 @@
 		<Function
 			val="3" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Table Cell Head</Uni>
 		</Name>
@@ -1413,11 +1413,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Title Tertiary</Uni>
 		</Name>
@@ -1449,7 +1449,7 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
@@ -1484,11 +1484,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Label</Uni>
 		</Name>
@@ -1514,11 +1514,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Supplied</Uni>
 		</Name>
@@ -1549,11 +1549,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Paragraph Continuation</Uni>
 		</Name>
@@ -1584,11 +1584,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Quoted Text</Uni>
 		</Name>
@@ -1650,11 +1650,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Opening</Uni>
 		</Name>
@@ -1691,11 +1691,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Parallel Passage Reference</Uni>
 		</Name>
@@ -1729,11 +1729,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Ordinal Number Ending</Uni>
 		</Name>
@@ -1764,11 +1764,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Chapter Head</Uni>
 		</Name>
@@ -1805,11 +1805,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Intro List Item2</Uni>
 		</Name>
@@ -1841,11 +1841,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Verse Number In Note</Uni>
 		</Name>
@@ -1922,11 +1922,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Paragraph</Uni>
 		</Name>
@@ -2043,11 +2043,11 @@
 		<Function
 			val="6" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Note Target Reference</Uni>
 		</Name>
@@ -2078,11 +2078,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Congregational Response</Uni>
 		</Name>
@@ -2120,11 +2120,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>List Item2</Uni>
 		</Name>
@@ -2160,11 +2160,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Intro Citation Line1</Uni>
 		</Name>
@@ -2232,11 +2232,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Line2</Uni>
 		</Name>
@@ -2273,11 +2273,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Title Main</Uni>
 		</Name>
@@ -2317,11 +2317,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Canonical Reference</Uni>
 		</Name>
@@ -2352,11 +2352,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Intro Citation Line2</Uni>
 		</Name>
@@ -2432,11 +2432,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Speech Line2</Uni>
 		</Name>
@@ -2473,11 +2473,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Intro List Item3</Uni>
 		</Name>
@@ -2514,11 +2514,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Hebrew Title</Uni>
 		</Name>
@@ -2560,11 +2560,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>List Item3</Uni>
 		</Name>
@@ -2600,11 +2600,11 @@
 		<Function
 			val="3" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Table Cell Last</Uni>
 		</Name>
@@ -2640,11 +2640,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Embedded Text Line1</Uni>
 		</Name>
@@ -2681,11 +2681,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Line2</Uni>
 		</Name>
@@ -2717,11 +2717,11 @@
 		<Function
 			val="4" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Chapter Number</Uni>
 		</Name>
@@ -2747,11 +2747,11 @@
 		<Function
 			val="5" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Verse Number</Uni>
 		</Name>
@@ -2783,11 +2783,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Interlude</Uni>
 		</Name>
@@ -2850,11 +2850,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Verse Number Alternate</Uni>
 		</Name>
@@ -2881,7 +2881,7 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
@@ -2918,11 +2918,11 @@
 		<Function
 			val="3" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Table Row</Uni>
 		</Name>
@@ -2959,11 +2959,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Line1</Uni>
 		</Name>
@@ -3001,11 +3001,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Section Range Paragraph</Uni>
 		</Name>
@@ -3074,11 +3074,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>List Item1</Uni>
 		</Name>
@@ -3154,11 +3154,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Variant</Uni>
 		</Name>
@@ -3235,11 +3235,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Intro Citation Paragraph</Uni>
 		</Name>
@@ -3277,11 +3277,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Doxology</Uni>
 		</Name>
@@ -3316,11 +3316,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Book Title In Text</Uni>
 		</Name>
@@ -3351,11 +3351,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>List Item2 Additional</Uni>
 		</Name>
@@ -3387,11 +3387,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Foreign</Uni>
 		</Name>
@@ -3509,11 +3509,11 @@
 		<Function
 			val="2" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>List Item1 Additional</Uni>
 		</Name>
@@ -3550,11 +3550,11 @@
 		<Function
 			val="1" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Line3</Uni>
 		</Name>
@@ -3620,11 +3620,11 @@
 		<Function
 			val="0" />
 		<IsBuiltIn
-			val="true" />
+			val="True" />
 		<IsModified
 			val="False" />
 		<IsPublishedTextStyle
-			val="true" />
+			val="True" />
 		<Name>
 			<Uni>Cross-Reference</Uni>
 		</Name>

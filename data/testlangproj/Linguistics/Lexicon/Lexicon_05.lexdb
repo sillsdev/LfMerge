@@ -8,7 +8,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -97,7 +97,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -167,7 +167,7 @@
 		guid="3ab3e31e-eb2c-49c2-820b-8abe98221073">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -232,7 +232,7 @@
 		guid="3ea5b344-ec0b-4fd0-829b-02b6ee424b07">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -360,7 +360,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -382,7 +382,7 @@
 						ws="qaa-x-kal">hiN</AUni>
 				</Form>
 				<IsAbstract
-					val="true" />
+					val="True" />
 				<MorphType>
 					<objsur
 						guid="d7f713db-e8cf-11d3-9764-00c04f186933"
@@ -425,7 +425,7 @@
 		guid="57e4edde-8c0c-441a-bac5-cb0fab50b5a5">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -491,7 +491,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -555,7 +555,7 @@
 		guid="d8c3cf2e-1c0f-4048-8023-944cc9095e06">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -620,7 +620,7 @@
 		guid="f764500c-a3cf-4b35-98bf-e39929f488f6">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

@@ -4,7 +4,7 @@
 		guid="04758355-1e6c-49de-86f0-15d6347f25cd">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -73,7 +73,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -162,7 +162,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -198,19 +198,6 @@
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
-			<MoInflAffMsa
-				guid="d9487299-a9db-455d-922a-f5c95ae5eedd">
-				<PartOfSpeech>
-					<objsur
-						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</PartOfSpeech>
-				<Slots>
-					<refcol
-						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
-						t="r" />
-				</Slots>
-			</MoInflAffMsa>
 			<MoInflAffMsa
 				guid="fa8d0d01-a92a-444d-be4d-f890aad342fa">
 				<PartOfSpeech>
@@ -295,7 +282,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -370,7 +357,7 @@
 		guid="3133a72d-33c4-4b2b-a657-a33085e17465">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -437,7 +424,7 @@
 		guid="47359e87-527f-4105-8589-029ed0a08532">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -526,7 +513,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -598,7 +585,7 @@
 		guid="5c77efd9-8d14-4f19-a049-162588265cad">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -663,7 +650,7 @@
 		guid="e322312f-bcfb-42af-91fb-60973c86fea0">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -747,7 +734,7 @@
 		guid="f61fc071-6b70-4375-9271-92a5fb04024c">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

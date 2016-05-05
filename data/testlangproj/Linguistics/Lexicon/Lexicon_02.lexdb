@@ -4,7 +4,7 @@
 		guid="05806ea3-ce01-41a6-b87a-94f17055df1a">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -69,7 +69,7 @@
 		guid="2703f3e7-5440-422c-8d25-455b4f4cc1b7">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -118,24 +118,6 @@
 						t="r" />
 				</ToPartOfSpeech>
 			</MoDerivAffMsa>
-			<MoDerivAffMsa
-				guid="b948c950-90f5-42b7-b344-2b464d0ded65">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f7153d-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
 		</MorphoSyntaxAnalyses>
 		<Senses>
 			<ownseq
@@ -157,7 +139,7 @@
 		guid="3f2d918f-4650-4725-9923-7e423d57f59e">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -322,7 +304,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

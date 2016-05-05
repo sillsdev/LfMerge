@@ -4,7 +4,7 @@
 		guid="05806ea3-ce01-41a6-b87a-94f17055df1a">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -69,7 +69,7 @@
 		guid="2703f3e7-5440-422c-8d25-455b4f4cc1b7">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -118,24 +118,6 @@
 						t="r" />
 				</ToPartOfSpeech>
 			</MoDerivAffMsa>
-			<MoDerivAffMsa
-				guid="b948c950-90f5-42b7-b344-2b464d0ded65">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f7153d-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
 		</MorphoSyntaxAnalyses>
 		<Senses>
 			<ownseq
@@ -157,7 +139,7 @@
 		guid="3f2d918f-4650-4725-9923-7e423d57f59e">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -297,6 +279,83 @@
 		</Senses>
 	</LexEntry>
 	<LexEntry
+		guid="ba8076a9-6552-46b2-a14a-14c01191453b">
+		<Custom
+			name="Cust Date"
+			val="0" />
+		<Custom
+			name="Cust Number"
+			val="0" />
+		<Custom
+			name="Cust Single Line All" />
+		<DateCreated
+			val="2016-5-5 7:33:29.727" />
+		<DateModified
+			val="2016-5-5 7:34:28.193" />
+		<DoNotUseForParsing
+			val="False" />
+		<HomographNumber
+			val="0" />
+		<LexemeForm>
+			<MoStemAllomorph
+				guid="d7daf7f3-c8f0-4dc6-b7ec-aa85144913b4">
+				<Form>
+					<AUni
+						ws="qaa-x-kal">Ira</AUni>
+				</Form>
+				<IsAbstract
+					val="False" />
+				<MorphType>
+					<objsur
+						guid="d7f713e8-e8cf-11d3-9764-00c04f186933"
+						t="r" />
+				</MorphType>
+			</MoStemAllomorph>
+		</LexemeForm>
+		<MorphoSyntaxAnalyses>
+			<MoStemMsa
+				guid="ee986931-a8b3-4d4b-90cc-33d2f52c0402" />
+		</MorphoSyntaxAnalyses>
+		<Senses>
+			<ownseq
+				class="LexSense"
+				guid="bd8a618a-2de3-497f-a26f-51899499ca1a">
+				<Custom
+					name="Cust Multi ListRef" />
+				<Gloss>
+					<AUni
+						ws="en">Externally referenced picture</AUni>
+				</Gloss>
+				<MorphoSyntaxAnalysis>
+					<objsur
+						guid="ee986931-a8b3-4d4b-90cc-33d2f52c0402"
+						t="r" />
+				</MorphoSyntaxAnalysis>
+				<Pictures>
+					<ownseq
+						class="CmPicture"
+						guid="3a21ab5c-dadf-469b-933f-1a2d20b84643">
+						<LayoutPos
+							val="0" />
+						<LocationMax
+							val="0" />
+						<LocationMin
+							val="0" />
+						<LocationRangeType
+							val="0" />
+						<PictureFile>
+							<objsur
+								guid="1c7beb8f-a95b-4b62-a7d3-3fda09cef3fb"
+								t="r" />
+						</PictureFile>
+						<ScaleFactor
+							val="0" />
+					</ownseq>
+				</Pictures>
+			</ownseq>
+		</Senses>
+	</LexEntry>
+	<LexEntry
 		guid="f1895e27-1613-41d4-be06-6b5e075fb768">
 		<AlternateForms>
 			<ownseq
@@ -322,7 +381,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

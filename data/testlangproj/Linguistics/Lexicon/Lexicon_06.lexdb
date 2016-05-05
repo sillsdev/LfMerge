@@ -8,7 +8,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -79,7 +79,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -150,7 +150,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -242,7 +242,7 @@
 		</Comment>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -256,7 +256,7 @@
 				t="r" />
 		</DoNotShowMainEntryIn>
 		<DoNotUseForParsing
-			val="true" />
+			val="True" />
 		<EntryRefs>
 			<ownseq
 				class="LexEntryRef"
@@ -312,7 +312,7 @@
 		guid="e32d9cbb-79ab-422e-8cd4-005a2b1f3e29">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -385,7 +385,7 @@
 		guid="e55e9139-d219-4359-8e36-355cfd423e74">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -469,7 +469,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -539,7 +539,7 @@
 		guid="ffc22c43-a24d-45fb-bc37-1e3e6b1c5560">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

@@ -4,7 +4,7 @@
 		guid="0fc019bf-7eb5-4038-9be6-63db1d502029">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -35,19 +35,6 @@
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
-			<MoDerivAffMsa
-				guid="1f0d4f3b-3850-4667-9d04-c902e63d5743">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f71527-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f71525-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
 			<MoDerivAffMsa
 				guid="6d3217da-43bd-46f2-8746-9422df8fa159">
 				<FromPartOfSpeech>
@@ -170,8 +157,6 @@
 			<ownseq
 				class="LexSense"
 				guid="3421c175-e7d1-47ea-93ec-7d88bd41cf2e">
-				<Custom
-					name="Cust Multi ListRef" />
 				<Definition>
 					<AStr
 						ws="en">
@@ -221,7 +206,7 @@
 		guid="fa3c17eb-4160-428b-81eb-4c558e67e7c1">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -332,7 +317,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -352,7 +337,7 @@
 						ws="qaa-x-kal">CV</AUni>
 				</Form>
 				<IsAbstract
-					val="true" />
+					val="True" />
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
@@ -366,19 +351,6 @@
 				<ToPartOfSpeech>
 					<objsur
 						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
-			<MoDerivAffMsa
-				guid="1b19025a-a20a-49aa-8fb7-10e27659adc4">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f7153f-e8cf-11d3-9764-00c04f186933"
 						t="r" />
 				</ToPartOfSpeech>
 			</MoDerivAffMsa>

@@ -119,7 +119,7 @@
 				guid="4d55efab-0ba0-4981-ae3b-8580ef97e8ae" />
 		</Disapproves>
 		<Human
-			val="true" />
+			val="True" />
 		<Name>
 			<AUni
 				ws="en">default user</AUni>

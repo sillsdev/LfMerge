@@ -4,7 +4,7 @@
 		<version
 			number="" />
 		<generation
-			date="2013-03-11T04:09:03" />
+			date="2016-05-05T07:27:48" />
 		<language
 			type="pt" />
 	</identity>
@@ -14,13 +14,15 @@
 				<alias
 					source="pt" />
 			</base>
-			<special xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
+			<special
+				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 				<palaso:sortRulesType
 					value="OtherLanguage" />
 			</special>
 		</collation>
 	</collations>
-	<special xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
+	<special
+		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 		<palaso:abbreviation
 			value="Por" />
 		<palaso:defaultFontFamily
@@ -30,17 +32,23 @@
 		<palaso:version
 			value="2" />
 	</special>
-	<special xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
+	<special
+		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
 		<palaso2:knownKeyboards>
 			<palaso2:keyboard
 				layout="US"
 				locale="en-US"
 				os="Win32NT" />
+			<palaso2:keyboard
+				layout="us"
+				locale="en-US"
+				os="Unix" />
 		</palaso2:knownKeyboards>
 		<palaso2:version
 			value="2" />
 	</special>
-	<special xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
+	<special
+		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
 		<fw:graphiteEnabled
 			value="False" />
 		<fw:matchedPairs

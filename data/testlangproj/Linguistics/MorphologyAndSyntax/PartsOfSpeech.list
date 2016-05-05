@@ -17,7 +17,7 @@
 		<IsClosed
 			val="False" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -1498,7 +1498,7 @@
 								ws="en">Possessor</AUni>
 						</Name>
 						<Optional
-							val="true" />
+							val="True" />
 					</MoInflAffixSlot>
 				</AffixSlots>
 				<AffixTemplates>
@@ -1508,7 +1508,7 @@
 						<Disabled
 							val="False" />
 						<Final
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Possessed noun</AUni>
@@ -2747,7 +2747,7 @@
 								ws="en">Subject</AUni>
 						</Name>
 						<Optional
-							val="true" />
+							val="True" />
 					</MoInflAffixSlot>
 					<MoInflAffixSlot
 						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba">
@@ -2980,7 +2980,7 @@
 								<Disabled
 									val="False" />
 								<Final
-									val="true" />
+									val="True" />
 								<Name>
 									<AUni
 										ws="en">Intransitive verb</AUni>
@@ -3198,7 +3198,7 @@
 								<Disabled
 									val="False" />
 								<Final
-									val="true" />
+									val="True" />
 								<Name>
 									<AUni
 										ws="en">Stative verb</AUni>
@@ -3285,7 +3285,7 @@
 								<Disabled
 									val="False" />
 								<Final
-									val="true" />
+									val="True" />
 								<Name>
 									<AUni
 										ws="en">Transitive verb</AUni>
@@ -3388,7 +3388,7 @@
 								<Disabled
 									val="False" />
 								<Final
-									val="true" />
+									val="True" />
 								<Name>
 									<AUni
 										ws="en">Bitransitive verb</AUni>
@@ -3487,7 +3487,7 @@
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields
-			val="true" />
+			val="True" />
 		<WsSelector
 			val="-3" />
 	</CmPossibilityList>

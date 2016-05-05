@@ -462,7 +462,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -605,7 +605,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -727,7 +727,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -854,7 +854,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1002,7 +1002,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1114,7 +1114,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1405,7 +1405,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1698,7 +1698,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1825,7 +1825,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="1ed2356a-2a20-4656-a8fa-ba1ddc300631"
+								guid="af274eac-6aa2-4ede-acc4-ada3237f6588"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1851,7 +1851,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -1965,7 +1965,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -2528,7 +2528,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -2645,7 +2645,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -2863,7 +2863,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -2985,7 +2985,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -3102,7 +3102,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -3140,128 +3140,6 @@
 		<Form>
 			<AUni
 				ws="qaa-x-kal">nadralo</AUni>
-		</Form>
-		<SpellingStatus
-			val="0" />
-	</WfiWordform>
-	<WfiWordform
-		guid="8423a3c9-5297-4ae3-972a-a5abc1ee1f49">
-		<Analyses>
-			<WfiAnalysis
-				guid="4464adbe-16e8-41a8-ae46-c7312dabe4e3">
-				<Evaluations>
-					<refcol
-						guid="74909567-2065-4f3d-b8ed-5e70a673e42e"
-						t="r" />
-				</Evaluations>
-				<MorphBundles>
-					<ownseq
-						class="WfiMorphBundle"
-						guid="13e5653b-b387-41ce-9aef-9ba275aba1f2">
-						<Form>
-							<AStr
-								ws="qaa-fonipa-x-kal">
-								<Run
-									ws="qaa-fonipa-x-kal">ni</Run>
-							</AStr>
-							<AStr
-								ws="qaa-x-kal">
-								<Run
-									ws="qaa-x-kal">ni</Run>
-							</AStr>
-						</Form>
-						<Morph>
-							<objsur
-								guid="bd771cf4-d7f4-4993-8399-f47217237d42"
-								t="r" />
-						</Morph>
-						<Msa>
-							<objsur
-								guid="069aee8f-8b79-4f8f-afb5-2c433ec4a9e1"
-								t="r" />
-						</Msa>
-					</ownseq>
-					<ownseq
-						class="WfiMorphBundle"
-						guid="6dcd3597-895e-4e35-bd0c-34d69b345127">
-						<Form>
-							<AStr
-								ws="qaa-fonipa-x-kal">
-								<Run
-									ws="qaa-fonipa-x-kal">ʧimu</Run>
-							</AStr>
-							<AStr
-								ws="qaa-x-kal">
-								<Run
-									ws="qaa-x-kal">ximu</Run>
-							</AStr>
-						</Form>
-						<Morph>
-							<objsur
-								guid="b2c43ab8-8597-4d00-9994-075f619c7436"
-								t="r" />
-						</Morph>
-						<Msa>
-							<objsur
-								guid="2d58f09e-228d-4e09-98b1-6d7e79b66ba7"
-								t="r" />
-						</Msa>
-					</ownseq>
-					<ownseq
-						class="WfiMorphBundle"
-						guid="8b87e452-af5a-48cd-b2ec-b6b40967000b">
-						<Form>
-							<AStr
-								ws="qaa-fonipa-x-kal">
-								<Run
-									ws="qaa-fonipa-x-kal">iŋ</Run>
-							</AStr>
-							<AStr
-								ws="qaa-x-kal">
-								<Run
-									ws="qaa-x-kal">iŋ</Run>
-							</AStr>
-						</Form>
-						<Morph>
-							<objsur
-								guid="798e057f-f610-4388-af3a-ad1016562cd0"
-								t="r" />
-						</Morph>
-						<Msa>
-							<objsur
-								guid="f5b2e173-202a-49da-8cab-d216ea79765b"
-								t="r" />
-						</Msa>
-					</ownseq>
-					<ownseq
-						class="WfiMorphBundle"
-						guid="58ed053b-fdf4-42a0-b6b4-80108b654aed">
-						<Form>
-							<AStr
-								ws="qaa-x-kal">
-								<Run
-									ws="qaa-x-kal">ko</Run>
-							</AStr>
-						</Form>
-						<Morph>
-							<objsur
-								guid="b70998be-e888-46b3-8087-ab50c75e8916"
-								t="r" />
-						</Morph>
-						<Msa>
-							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
-								t="r" />
-						</Msa>
-					</ownseq>
-				</MorphBundles>
-			</WfiAnalysis>
-		</Analyses>
-		<Checksum
-			val="0" />
-		<Form>
-			<AUni
-				ws="qaa-x-kal">niximuiŋko</AUni>
 		</Form>
 		<SpellingStatus
 			val="0" />
@@ -3463,7 +3341,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -3585,7 +3463,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -3707,7 +3585,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -3925,7 +3803,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4052,7 +3930,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4174,7 +4052,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4418,7 +4296,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4587,7 +4465,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4709,7 +4587,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -4810,7 +4688,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -5059,7 +4937,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -5324,7 +5202,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -5446,7 +5324,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -5775,7 +5653,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -5871,7 +5749,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -6268,7 +6146,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -6512,7 +6390,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -6639,7 +6517,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -6761,7 +6639,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -6979,7 +6857,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -7117,7 +6995,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="d9487299-a9db-455d-922a-f5c95ae5eedd"
+								guid="fa8d0d01-a92a-444d-be4d-f890aad342fa"
 								t="r" />
 						</Msa>
 					</ownseq>
@@ -7234,7 +7112,7 @@
 						</Morph>
 						<Msa>
 							<objsur
-								guid="50e06993-ccd3-4edc-9140-9e25cde6d90f"
+								guid="c274b2d9-740e-423f-a81f-cc06450a7061"
 								t="r" />
 						</Msa>
 					</ownseq>

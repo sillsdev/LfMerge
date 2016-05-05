@@ -4,7 +4,7 @@
 		guid="0e99a5be-aca0-4b04-8462-d6961c7428e8">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -35,42 +35,6 @@
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
-			<MoDerivAffMsa
-				guid="20fd734a-8c62-4b40-8172-4bf073d983ad">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f71543-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
-			<MoDerivAffMsa
-				guid="512b8e9a-8bfc-4601-9952-d4af9aaea107">
-				<FromPartOfSpeech>
-					<objsur
-						guid="d7f7153d-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</FromPartOfSpeech>
-				<ToInflectionClass>
-					<objsur
-						guid="d64cbd78-3277-44b5-9ec3-6a6b0b38f772"
-						t="r" />
-				</ToInflectionClass>
-				<ToPartOfSpeech>
-					<objsur
-						guid="d7f7153d-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</ToPartOfSpeech>
-			</MoDerivAffMsa>
 			<MoDerivAffMsa
 				guid="fa222f19-c11a-4bf2-9846-a1ce45cd0f30">
 				<FromPartOfSpeech>
@@ -134,7 +98,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -277,8 +241,6 @@
 			<ownseq
 				class="LexSense"
 				guid="b4514ac6-b41a-4a07-92ba-1c39443fbe3d">
-				<Custom
-					name="Cust Multi ListRef" />
 				<Gloss>
 					<AUni
 						ws="en">English glos</AUni>
@@ -313,8 +275,6 @@
 					<ownseq
 						class="LexSense"
 						guid="3b6d0fd0-9b42-495e-874c-c861444a9ea3">
-						<Custom
-							name="Cust Multi ListRef" />
 						<MorphoSyntaxAnalysis>
 							<objsur
 								guid="5704a774-1a34-4d60-a868-d5c659eb7cc9"
@@ -329,7 +289,7 @@
 		guid="cabdcba8-bdb6-4005-9f02-e28b50366850">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -389,7 +349,7 @@
 		guid="ce02e154-a2aa-48da-baaf-16c58c45072c">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -447,83 +407,6 @@
 						guid="cf730e86-e5a8-4405-956e-e66417e51d68"
 						t="r" />
 				</MorphoSyntaxAnalysis>
-			</ownseq>
-		</Senses>
-	</LexEntry>
-	<LexEntry
-		guid="e670d0e8-c0f7-457d-a6d1-055c83663820">
-		<Custom
-			name="Cust Date"
-			val="0" />
-		<Custom
-			name="Cust Number"
-			val="0" />
-		<Custom
-			name="Cust Single Line All" />
-		<DateCreated
-			val="2016-3-28 6:35:57.798" />
-		<DateModified
-			val="2016-3-28 6:37:52.25" />
-		<DoNotUseForParsing
-			val="False" />
-		<HomographNumber
-			val="0" />
-		<LexemeForm>
-			<MoStemAllomorph
-				guid="c9a3fa70-5fbb-4459-a30e-91eb3147b076">
-				<Form>
-					<AUni
-						ws="qaa-x-kal">Ira</AUni>
-				</Form>
-				<IsAbstract
-					val="False" />
-				<MorphType>
-					<objsur
-						guid="d7f713e8-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</MorphType>
-			</MoStemAllomorph>
-		</LexemeForm>
-		<MorphoSyntaxAnalyses>
-			<MoStemMsa
-				guid="d1335cf1-34ec-43c7-97c5-2669d27dbc8f" />
-		</MorphoSyntaxAnalyses>
-		<Senses>
-			<ownseq
-				class="LexSense"
-				guid="d619ee0e-b70e-4cac-b234-88739541d6f0">
-				<Custom
-					name="Cust Multi ListRef" />
-				<Gloss>
-					<AUni
-						ws="en">Externally referenced picture</AUni>
-				</Gloss>
-				<MorphoSyntaxAnalysis>
-					<objsur
-						guid="d1335cf1-34ec-43c7-97c5-2669d27dbc8f"
-						t="r" />
-				</MorphoSyntaxAnalysis>
-				<Pictures>
-					<ownseq
-						class="CmPicture"
-						guid="55525ccc-1508-43c3-9c7d-da66d10d1b22">
-						<LayoutPos
-							val="0" />
-						<LocationMax
-							val="0" />
-						<LocationMin
-							val="0" />
-						<LocationRangeType
-							val="0" />
-						<PictureFile>
-							<objsur
-								guid="534e5cf1-db34-4d2e-8829-146acc78c46e"
-								t="r" />
-						</PictureFile>
-						<ScaleFactor
-							val="0" />
-					</ownseq>
-				</Pictures>
 			</ownseq>
 		</Senses>
 	</LexEntry>

@@ -57,7 +57,7 @@
 		guid="0bfa5f0e-c655-46a3-9047-05bc21547002">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -159,7 +159,7 @@
 		</AlternateForms>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -195,19 +195,6 @@
 			</MoAffixAllomorph>
 		</LexemeForm>
 		<MorphoSyntaxAnalyses>
-			<MoInflAffMsa
-				guid="50e06993-ccd3-4edc-9140-9e25cde6d90f">
-				<PartOfSpeech>
-					<objsur
-						guid="d7f7153b-e8cf-11d3-9764-00c04f186933"
-						t="r" />
-				</PartOfSpeech>
-				<Slots>
-					<refcol
-						guid="617322ab-79f5-4302-8b9f-f92ca1d1eeba"
-						t="r" />
-				</Slots>
-			</MoInflAffMsa>
 			<MoInflAffMsa
 				guid="c274b2d9-740e-423f-a81f-cc06450a7061">
 				<PartOfSpeech>
@@ -262,7 +249,7 @@
 		</CitationForm>
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />
@@ -327,7 +314,7 @@
 		guid="f8b09b4c-9017-4db7-a70b-1a7be236e742">
 		<Custom
 			name="Cust Date"
-			val="-000000000" />
+			val="0" />
 		<Custom
 			name="Cust Number"
 			val="0" />

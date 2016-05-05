@@ -44,7 +44,7 @@
 						ws="en">Nt</AUni>
 				</Abbreviation>
 				<AllowsComment
-					val="true" />
+					val="True" />
 				<AllowsFeatureStructure
 					val="False" />
 				<AllowsInstanceOf
@@ -52,9 +52,9 @@
 				<BackColor
 					val="-1073741824" />
 				<CanCreateOrphan
-					val="true" />
+					val="True" />
 				<CopyCutPastable
-					val="true" />
+					val="True" />
 				<DateCreated
 					val="2004-4-22 19:25:1.507" />
 				<DateModified
@@ -90,11 +90,11 @@
 				<InstanceOfSignature
 					val="0" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<MaxDupOccur
 					val="0" />
 				<Multi
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Note</AUni>
@@ -114,7 +114,7 @@
 								ws="en">ConsNt</AUni>
 						</Abbreviation>
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -122,9 +122,9 @@
 						<BackColor
 							val="-1073741824" />
 						<CanCreateOrphan
-							val="true" />
+							val="True" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2004-7-1 13:49:59.710" />
 						<DateModified
@@ -160,7 +160,7 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
@@ -170,7 +170,7 @@
 								ws="en">Consultant Note</AUni>
 						</Name>
 						<PromptUser
-							val="true" />
+							val="True" />
 						<Severity
 							val="0" />
 						<SortSpec
@@ -180,9 +180,9 @@
 						<UnderStyle
 							val="0" />
 						<UserCanCreate
-							val="true" />
+							val="True" />
 						<ZeroWidth
-							val="true" />
+							val="True" />
 					</ownseq>
 					<ownseq
 						class="CmAnnotationDefn"
@@ -192,7 +192,7 @@
 								ws="en">TransNt</AUni>
 						</Abbreviation>
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -200,9 +200,9 @@
 						<BackColor
 							val="-1073741824" />
 						<CanCreateOrphan
-							val="true" />
+							val="True" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2006-4-26 19:23:38.57" />
 						<DateModified
@@ -238,7 +238,7 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
@@ -248,7 +248,7 @@
 								ws="en">Translator Note</AUni>
 						</Name>
 						<PromptUser
-							val="true" />
+							val="True" />
 						<Severity
 							val="0" />
 						<SortSpec
@@ -258,9 +258,9 @@
 						<UnderStyle
 							val="0" />
 						<UserCanCreate
-							val="true" />
+							val="True" />
 						<ZeroWidth
-							val="true" />
+							val="True" />
 					</ownseq>
 				</SubPossibilities>
 				<UnderColor
@@ -268,7 +268,7 @@
 				<UnderStyle
 					val="0" />
 				<UserCanCreate
-					val="true" />
+					val="True" />
 				<ZeroWidth
 					val="False" />
 			</ownseq>
@@ -326,7 +326,7 @@
 				<InstanceOfSignature
 					val="0" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<MaxDupOccur
 					val="0" />
 				<Multi
@@ -360,7 +360,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2004-12-23 15:42:46.890" />
 						<DateModified
@@ -396,7 +396,7 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
@@ -438,7 +438,7 @@
 						ws="en">Cmt</AUni>
 				</Abbreviation>
 				<AllowsComment
-					val="true" />
+					val="True" />
 				<AllowsFeatureStructure
 					val="False" />
 				<AllowsInstanceOf
@@ -446,9 +446,9 @@
 				<BackColor
 					val="-1073741824" />
 				<CanCreateOrphan
-					val="true" />
+					val="True" />
 				<CopyCutPastable
-					val="true" />
+					val="True" />
 				<DateCreated
 					val="2004-9-10 23:38:50.513" />
 				<DateModified
@@ -484,11 +484,11 @@
 				<InstanceOfSignature
 					val="0" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<MaxDupOccur
 					val="0" />
 				<Multi
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Comment</AUni>
@@ -504,7 +504,7 @@
 				<UnderStyle
 					val="0" />
 				<UserCanCreate
-					val="true" />
+					val="True" />
 				<ZeroWidth
 					val="False" />
 			</ownseq>
@@ -516,7 +516,7 @@
 						ws="en">Err</AUni>
 				</Abbreviation>
 				<AllowsComment
-					val="true" />
+					val="True" />
 				<AllowsFeatureStructure
 					val="False" />
 				<AllowsInstanceOf
@@ -526,7 +526,7 @@
 				<CanCreateOrphan
 					val="False" />
 				<CopyCutPastable
-					val="true" />
+					val="True" />
 				<DateCreated
 					val="2004-9-10 23:38:50.513" />
 				<DateModified
@@ -562,11 +562,11 @@
 				<InstanceOfSignature
 					val="0" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<MaxDupOccur
 					val="0" />
 				<Multi
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">Errors</AUni>
@@ -582,7 +582,7 @@
 						class="CmAnnotationDefn"
 						guid="6558a579-b9c4-4efd-8728-f994d0561293">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -592,7 +592,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:17.10" />
 						<DateModified
@@ -631,11 +631,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Character</AUni>
@@ -659,7 +659,7 @@
 						class="CmAnnotationDefn"
 						guid="ddccb400-f274-4498-92c5-77e99c90f75b">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -669,7 +669,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:17.900" />
 						<DateModified
@@ -708,11 +708,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Matched Pairs</AUni>
@@ -736,7 +736,7 @@
 						class="CmAnnotationDefn"
 						guid="babcb400-f274-4498-92c5-77e99c90f75b">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -746,7 +746,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:17.960" />
 						<DateModified
@@ -785,11 +785,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Uncapitalized Styles</AUni>
@@ -813,7 +813,7 @@
 						class="CmAnnotationDefn"
 						guid="babcb400-f274-4498-92c5-77e99c90f75c">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -823,7 +823,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:18.23" />
 						<DateModified
@@ -862,11 +862,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Sentence Final Punctuation Capitalization</AUni>
@@ -890,7 +890,7 @@
 						class="CmAnnotationDefn"
 						guid="f17a054b-d21e-4298-a1a5-0d79c4af6f0f">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -900,7 +900,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:18.87" />
 						<DateModified
@@ -939,11 +939,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Chapter and Verse Numbers</AUni>
@@ -967,7 +967,7 @@
 						class="CmAnnotationDefn"
 						guid="72abb400-f274-4498-92c5-77e99c90f75b">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -977,7 +977,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:18.133" />
 						<DateModified
@@ -1016,11 +1016,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Repeated Words</AUni>
@@ -1044,7 +1044,7 @@
 						class="CmAnnotationDefn"
 						guid="dcc8d4d2-13b2-46e4-8fb3-29c166d189ea">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -1054,7 +1054,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:18.197" />
 						<DateModified
@@ -1093,11 +1093,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Punctuation</AUni>
@@ -1121,7 +1121,7 @@
 						class="CmAnnotationDefn"
 						guid="babcb400-f274-4498-92c5-77e99c90f75d">
 						<AllowsComment
-							val="true" />
+							val="True" />
 						<AllowsFeatureStructure
 							val="False" />
 						<AllowsInstanceOf
@@ -1131,7 +1131,7 @@
 						<CanCreateOrphan
 							val="False" />
 						<CopyCutPastable
-							val="true" />
+							val="True" />
 						<DateCreated
 							val="2008-7-28 15:37:18.243" />
 						<DateModified
@@ -1170,11 +1170,11 @@
 						<InstanceOfSignature
 							val="0" />
 						<IsProtected
-							val="true" />
+							val="True" />
 						<MaxDupOccur
 							val="0" />
 						<Multi
-							val="true" />
+							val="True" />
 						<Name>
 							<AUni
 								ws="en">Mixed Capitalization</AUni>
@@ -1208,7 +1208,7 @@
 		<PreventChoiceAboveLevel
 			val="0" />
 		<PreventDuplicates
-			val="true" />
+			val="True" />
 		<PreventNodeChoices
 			val="False" />
 		<UseExtendedFields

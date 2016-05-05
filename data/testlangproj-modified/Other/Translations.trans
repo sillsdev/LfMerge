@@ -712,7 +712,7 @@
 							<PubPageLayout
 								guid="b7f178f3-9e28-4039-8d9b-00b8516a68e3">
 								<IsBuiltIn
-									val="true" />
+									val="True" />
 								<IsModified
 									val="False" />
 								<MarginBottom
@@ -779,9 +779,9 @@
 						class="PubDivision"
 						guid="5a1d9820-031b-4cbc-9097-691375897f6d">
 						<DifferentEvenHF
-							val="true" />
+							val="True" />
 						<DifferentFirstHF
-							val="true" />
+							val="True" />
 						<HFSet>
 							<PubHFSet
 								guid="7b9ef527-d344-4e7c-b5cf-e932077a21ee">
@@ -864,7 +864,7 @@
 							<PubPageLayout
 								guid="d5dbf65d-a63b-4144-9887-e8603509a424">
 								<IsBuiltIn
-									val="true" />
+									val="True" />
 								<IsModified
 									val="False" />
 								<MarginBottom
@@ -931,9 +931,9 @@
 						class="PubDivision"
 						guid="c52f44c2-3c78-43ce-b6da-6059078a4438">
 						<DifferentEvenHF
-							val="true" />
+							val="True" />
 						<DifferentFirstHF
-							val="true" />
+							val="True" />
 						<HFSet>
 							<PubHFSet
 								guid="6e677dfd-a398-46bc-b5e5-496719bffe25">
@@ -1016,7 +1016,7 @@
 							<PubPageLayout
 								guid="fbdbd670-d27f-4bff-926f-57835b01f75b">
 								<IsBuiltIn
-									val="true" />
+									val="True" />
 								<IsModified
 									val="False" />
 								<MarginBottom
@@ -1144,7 +1144,7 @@
 							<PubPageLayout
 								guid="5a21321a-77b0-45cb-b515-735810236d9b">
 								<IsBuiltIn
-									val="true" />
+									val="True" />
 								<IsModified
 									val="False" />
 								<MarginBottom
@@ -1272,7 +1272,7 @@
 							<PubPageLayout
 								guid="25840fff-ad01-4483-b600-aaf25a04353a">
 								<IsBuiltIn
-									val="true" />
+									val="True" />
 								<IsModified
 									val="False" />
 								<MarginBottom

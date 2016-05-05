@@ -15,9 +15,9 @@
 		<DisplayOption
 			val="0" />
 		<IsClosed
-			val="true" />
+			val="True" />
 		<IsSorted
-			val="true" />
+			val="True" />
 		<IsVernacular
 			val="False" />
 		<ItemClsid
@@ -89,7 +89,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">particle</AUni>
@@ -153,7 +153,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">infix</AUni>
@@ -223,7 +223,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">prefix</AUni>
@@ -290,7 +290,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">simulfix</AUni>
@@ -360,7 +360,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">suffix</AUni>
@@ -427,7 +427,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">suprafix</AUni>
@@ -497,7 +497,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">circumfix</AUni>
@@ -561,7 +561,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">clitic</AUni>
@@ -625,7 +625,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">enclitic</AUni>
@@ -692,7 +692,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">proclitic</AUni>
@@ -759,7 +759,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">bound root</AUni>
@@ -826,7 +826,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">root</AUni>
@@ -890,7 +890,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">bound stem</AUni>
@@ -982,7 +982,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">stem</AUni>
@@ -1046,7 +1046,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">infixing interfix</AUni>
@@ -1116,7 +1116,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">prefixing interfix</AUni>
@@ -1183,7 +1183,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">suffixing interfix</AUni>
@@ -1246,7 +1246,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">phrase</AUni>
@@ -1302,7 +1302,7 @@
 				<Hidden
 					val="False" />
 				<IsProtected
-					val="true" />
+					val="True" />
 				<Name>
 					<AUni
 						ws="en">discontiguous phrase</AUni>
