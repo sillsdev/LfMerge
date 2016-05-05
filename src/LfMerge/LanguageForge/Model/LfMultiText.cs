@@ -133,23 +133,6 @@ namespace LfMerge.LanguageForge.Model
 				new KeyValuePair<string, string>(result.Key, result.Value.Value);
 		}
 
-		// TODO: If we need to pass in an FdoCache, this method probably doesn't belong on LfMultiText...
-		public ITsString ToITsString(int wsId, FdoCache cache)
-		{
-			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			string wsStr = wsManager.GetStrFromWs(wsId);
-			LfStringField valueField;
-			if (TryGetValue(wsStr, out valueField))
-				return TsStringUtils.MakeTss(valueField.Value, wsId);
-			else
-				return TsStringUtils.MakeTss(FirstNonEmptyString(), wsId);
-		}
-
-		public ITsString ToAnalysisITsString(FdoCache cache)
-		{
-			return ToITsString(cache.DefaultAnalWs, cache);
-		}
-
 		public void WriteToFdoMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
 		{
 			foreach (KeyValuePair<string, LfStringField> kv in this)
