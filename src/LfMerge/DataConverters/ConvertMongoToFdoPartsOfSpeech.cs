@@ -53,55 +53,6 @@ namespace LfMerge.DataConverters
 			FlattenedGoldEticItems.Value.ToDictionary(item => item.Guid, item => item)
 		);
 
-		public string NameFromGuid(Guid guid, bool flat=false)
-		{
-			return NameFromGuidStr(guid.ToString(), flat);
-		}
-
-		public string NameFromGuidStr(string guidStr, bool flat=false)
-		{
-			string result;
-			Dictionary<string, string> lookupTable = flat ?
-				PartOfSpeechMasterList.FlatPosNames :
-				PartOfSpeechMasterList.HierarchicalPosNames;
-			if (lookupTable.TryGetValue(guidStr, out result))
-				return result;
-			return null;
-		}
-
-		public IPartOfSpeech FromGuid(Guid guid)
-		{
-			IPartOfSpeech result;
-			if (TryGetPos(guid, out result))
-				return result;
-			string name = NameFromGuidStr(guid.ToString(), flat:false);
-			if (name == null) return null; // If it's not a well-known name, we'll need to create an entry
-			return CreateFromWellKnownGuid(guid);
-		}
-
-		public IPartOfSpeech FromGuidStr(string guidStr)
-		{
-			IPartOfSpeech result;
-			if (TryGetPos(guidStr, out result))
-				return result;
-			string name = NameFromGuidStr(guidStr, flat:false);
-			if (name == null) return null;
-			// We know we have a well-known name, so we should use it. TODO: Or should we?
-			Guid guid;
-			if (Guid.TryParse(guidStr, out guid))
-				return CreateFromWellKnownGuid(guid);
-			// Really shouldn't get here at all, but if we do...
-			throw new ArgumentException(String.Format("Well-known GUID {0} didn't parse", guidStr), "guidStr");
-			// TODO: Turn that into a log message and don't actually throw an exception.
-		}
-
-		public IPartOfSpeech FromGuidStrOrName(string guidStr, string name, string userWs = "en", string fallbackWs = "en")
-		{
-			IPartOfSpeech posFromGuid = FromGuidStr(guidStr);
-			if (posFromGuid != null) return posFromGuid;
-			return FromAbbrevAndName(name, userWs, fallbackWs);
-		}
-
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null)
 		{
 			if (msa == null)
@@ -178,17 +129,6 @@ namespace LfMerge.DataConverters
 				if (wsId != 0)
 					pos.Name.set_String(wsId, kv.Value);
 			}
-		}
-
-		private void PopulateCustomPos(IPartOfSpeech pos, string finalName, string userWs)
-		{
-			int wsId = _cache.WritingSystemFactory.GetWsFromStr(userWs);
-			pos.Name.set_String(wsId, finalName);
-		}
-
-		private bool TryGetPos(Guid guid, out IPartOfSpeech result)
-		{
-			return _posRepo.TryGetObject(guid, out result);
 		}
 
 		private bool TryGetPos(string guidStr, out IPartOfSpeech result)
