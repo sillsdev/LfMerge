@@ -306,7 +306,7 @@ namespace LfMerge.DataConverters
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
 					ITsString newValue = TsStringUtils.MakeTss(foundData, foundWsId);
-					if (oldValue == newValue)
+					if (oldValue != null && oldValue.Text == newValue.Text)
 						return false;
 					else
 					{
