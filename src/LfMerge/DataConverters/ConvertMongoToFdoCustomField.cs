@@ -8,6 +8,7 @@ using LfMerge.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using SIL.CoreImpl;
+using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
 using SIL.FieldWorks.FDO.DomainServices;
@@ -97,8 +98,14 @@ namespace LfMerge.DataConverters
 					GenDate valueAsGenDate;
 					if (GenDate.TryParse(valueAsString, out valueAsGenDate))
 					{
-						data.SetGenDate(hvo, flid, valueAsGenDate);
-						return true;
+						GenDate oldValue = data.get_GenDateProp(hvo, flid);
+						if (oldValue == valueAsGenDate)
+							return false;
+						else
+						{
+							data.SetGenDate(hvo, flid, valueAsGenDate);
+							return true;
+						}
 					}
 					return false;
 				}
@@ -112,8 +119,14 @@ namespace LfMerge.DataConverters
 					int valueAsInt;
 					if (int.TryParse(valueAsString, out valueAsInt))
 					{
-						data.SetInt(hvo, flid, valueAsInt);
-						return true;
+						int oldValue = data.get_IntProp(hvo, flid);
+						if (oldValue == valueAsInt)
+							return false;
+						else
+						{
+							data.SetInt(hvo, flid, valueAsInt);
+							return true;
+						}
 					}
 					return false;
 				}
@@ -143,7 +156,7 @@ namespace LfMerge.DataConverters
 					if (currentFdoTextContents != null && currentFdoTextContents.Equals(value))
 					{
 						// No changes needed.
-						return true;
+						return false;
 					}
 					// BsonDocument passed in contains "value", and MAY contain "guids". ParseCustomStTextValuesFromBson
 					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
@@ -165,10 +178,16 @@ namespace LfMerge.DataConverters
 				if (fieldGuids.First() != Guid.Empty)
 				{
 					int referencedHvo = data.get_ObjFromGuid(fieldGuids.First());
-					data.SetObjProp(hvo, flid, referencedHvo);
-					// TODO: What if the value of the referenced object has changed in LanguageForge? (E.g., change that possibility's text from "foo" to "bar")
-					// Need to implement that scenario.
-					return true;
+					int oldHvo = data.get_ObjectProp(hvo, flid);
+					if (referencedHvo == oldHvo)
+						return false;
+					else
+					{
+						data.SetObjProp(hvo, flid, referencedHvo);
+						// TODO: What if the value of the referenced object has changed in LanguageForge? (E.g., change that possibility's text from "foo" to "bar")
+						// Need to implement that scenario.
+						return true;
+					}
 				}
 				else
 				{
@@ -184,8 +203,14 @@ namespace LfMerge.DataConverters
 					ICmPossibilityList parentList = GetParentListForField(flid);
 					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
 
-					data.SetObjProp(hvo, flid, newPoss.Hvo);
-					return true;
+					int oldHvo = data.get_ObjectProp(hvo, flid);
+					if (newPoss.Hvo == oldHvo)
+						return false;
+					else
+					{
+						data.SetObjProp(hvo, flid, newPoss.Hvo);
+						return true;
+					}
 				}
 
 			case CellarPropertyType.ReferenceCollection:
@@ -194,8 +219,14 @@ namespace LfMerge.DataConverters
 					if (value == null || value == BsonNull.Value)
 					{
 						// FDO writes multi-references if their list is empty, but not if it's null
-						data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
-						return true;
+						int oldValue = data.get_ObjectProp(hvo, flid);
+						if (oldValue == FdoCache.kNullHvo)
+							return false;
+						else
+						{
+							data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
+							return true;
+						}
 					}
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
 					// TODO: Investigate why this is sometimes coming back as 0 instead of as a real writing system ID
@@ -250,7 +281,15 @@ namespace LfMerge.DataConverters
 					}
 					// Now (and not before), replace an empty list with null in the custom field value
 					if (data.VecProp(hvo, flid).Length == 0)
-						data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
+					{
+						if (data.get_ObjectProp(hvo, flid) == FdoCache.kNullHvo)
+							return false;
+						else
+						{
+							data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
+							return true;
+						}
+					}
 					return true;
 				}
 
@@ -265,15 +304,21 @@ namespace LfMerge.DataConverters
 					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
-					data.SetString(hvo, flid, TsStringUtils.MakeTss(foundData, foundWsId));
-					return true;
+					ITsString oldValue = data.get_StringProp(hvo, flid);
+					ITsString newValue = TsStringUtils.MakeTss(foundData, foundWsId);
+					if (oldValue == newValue)
+						return false;
+					else
+					{
+						data.SetString(hvo, flid, newValue);
+						return true;
+					}
 				}
 
 			default:
 				return false;
 				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
-			// return false; // If compiler complains about unreachable code, GOOD! We got the switch statement right. Otherwise this is our catch-all.
 		}
 
 		public void SetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType, BsonDocument customFieldValues, BsonDocument customFieldGuids)
