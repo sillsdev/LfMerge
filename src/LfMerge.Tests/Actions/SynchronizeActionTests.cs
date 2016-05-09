@@ -403,5 +403,24 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(1));
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(lfCreatedGloss));
 		}
+
+		[Test]
+		public void TransferMongoToFdoAction_NoChangedData_DateModifiedUnchanged()
+		{
+			// Setup
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+			_lfProject.IsInitialClone = true;
+			_transferFdoToMongo.Run(_lfProject);
+
+			// Exercise
+			var transferMongoToFdo = new TransferMongoToFdoAction(_env.Settings, _env.Logger, _mongoConnection, _recordFactory);
+			transferMongoToFdo.Run(_lfProject);
+
+			// Verify
+			var lfcache = _lfProject.FieldWorksProject.Cache;
+			var lfFdoEntry = lfcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lfFdoEntry.DateModified.ToUniversalTime(), Is.EqualTo(DateTime.Parse("2016-02-25 03:51:29.404")));
+		}
+
 	}
 }
