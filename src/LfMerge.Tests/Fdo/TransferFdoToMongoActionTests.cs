@@ -80,7 +80,7 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_IsInitialClone_ShouldNotUpdateDates()
+		public void Action_IsInitialClone_ShouldUpdateDates()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
@@ -97,8 +97,10 @@ namespace LfMerge.Tests.Fdo
 			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
 			Assert.That(entry, Is.Not.Null);
-			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.Parse("2004-10-19 02:42:02.903")));
-			Assert.That(entry.DateModified, Is.EqualTo(DateTime.Parse("2016-02-25 03:51:29.404")));
+			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
+			Assert.That(entry.DateModified, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
+			Assert.That(entry.AuthorInfo.CreatedDate, Is.EqualTo(DateTime.Parse("2004-10-19 02:42:02.903")));
+			Assert.That(entry.AuthorInfo.ModifiedDate, Is.EqualTo(DateTime.Parse("2016-02-25 03:51:29.404")));
 		}
 
 		[Test]

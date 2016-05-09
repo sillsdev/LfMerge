@@ -195,16 +195,20 @@ namespace LfMerge.DataConverters
 			lfEntry.CitationForm = ToMultiText(fdoEntry.CitationForm);
 			lfEntry.Note = ToMultiText(fdoEntry.Comment);
 
-			lfEntry.DateCreated = fdoEntry.DateCreated;
-			lfEntry.DateModified = fdoEntry.DateModified;
+			if (LfProject.IsInitialClone)
+			{
+				var now = DateTime.UtcNow;
+				lfEntry.DateCreated = now;
+				lfEntry.DateModified = now;
+			}
 
 			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();
 			lfEntry.AuthorInfo.CreatedByUserRef = null;
-			lfEntry.AuthorInfo.CreatedDate = fdoEntry.DateCreated;
+			lfEntry.AuthorInfo.CreatedDate = fdoEntry.DateCreated.ToUniversalTime();
 			lfEntry.AuthorInfo.ModifiedByUserRef = null;
-			lfEntry.AuthorInfo.ModifiedDate = fdoEntry.DateModified;
+			lfEntry.AuthorInfo.ModifiedDate = fdoEntry.DateModified.ToUniversalTime();
 
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
 			if (fdoEtymology != null)
