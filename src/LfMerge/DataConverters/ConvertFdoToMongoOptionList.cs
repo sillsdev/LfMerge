@@ -177,7 +177,7 @@ namespace LfMerge.DataConverters
 			//const char ORC = '\xfffc';
 			item.Abbreviation = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
 			if (setKey)
-				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Name.get_String(_wsForKeys)));
+				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
 			item.Value = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Name.BestAnalysisVernacularAlternative);
 			item.Guid = poss.Guid;
 		}

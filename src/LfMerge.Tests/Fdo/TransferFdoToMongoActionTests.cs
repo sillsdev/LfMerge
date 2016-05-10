@@ -181,8 +181,6 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(lfGrammar, Is.Not.Null);
 			Assert.That(lfGrammar.Items, Is.Not.Empty);
 			Assert.That(lfGrammar.Items.Count, Is.EqualTo(lfProject.FieldWorksProject.Cache.LanguageProject.AllPartsOfSpeech.Count));
-			foreach (var grammaticalInfoItem in lfGrammar.Items)
-				Assert.That(grammaticalInfoItem.Key, Is.EqualTo(grammaticalInfoItem.Value));
 		}
 
 		[Test]
