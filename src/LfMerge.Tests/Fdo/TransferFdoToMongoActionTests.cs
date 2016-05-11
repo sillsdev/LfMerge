@@ -103,7 +103,7 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_ShouldUpdateLexemes()
+		public void Action_NoDataChanged_ShouldUpdateLexemes()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
@@ -123,7 +123,7 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_ShouldUpdatePictures()
+		public void Action_NoDataChanged_ShouldUpdatePictures()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
@@ -138,10 +138,16 @@ namespace LfMerge.Tests.Fdo
 			receivedData = _conn.GetLfLexEntries();
 			int newNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(newNumPictures, Is.EqualTo(4));
+			LfLexEntry subEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestSubEntryGuidStr);
+			Assert.That(subEntry, Is.Not.Null);
+			Assert.That(subEntry.Senses[0].Pictures[0].FileName, Is.EqualTo("TestImage.tif"));
+			LfLexEntry kenEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == KenEntryGuidStr);
+			Assert.That(kenEntry, Is.Not.Null);
+			Assert.That(kenEntry.Senses[0].Pictures[0].FileName, Is.EqualTo("F:\\src\\xForge\\web-languageforge\\test\\php\\common\\TestImage.jpg"));
 		}
 
 		[Test]
-		public void Action_ShouldUpdateCustomFieldConfig()
+		public void Action_NoDataChanged_ShouldUpdateCustomFieldConfig()
 		{
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);

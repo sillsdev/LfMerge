@@ -17,6 +17,7 @@ using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace LfMerge.Tests.Fdo
@@ -51,54 +52,71 @@ namespace LfMerge.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_Should_UpdatePictures()
+		public void Action_ChangedWithSampleData_ShouldUpdatePictures()
 		{
 			// Setup initial Mongo project has 1 picture and 2 captions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var data = new SampleData();
-			int newMongoPictures = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
-			int newMongoCaptions = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
-			Assert.That(newMongoPictures, Is.EqualTo(1));
-			Assert.That(newMongoCaptions, Is.EqualTo(2));
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+			string expectedInternalFileName = Path.Combine("Pictures", data.bsonTestData["senses"][0]["pictures"][0]["fileName"].ToString());
+			string expectedExternalFileName = data.bsonTestData["senses"][0]["pictures"][1]["fileName"].ToString();
+			int newMongoPictureCount = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
+			int newMongoCaptionCount = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
+			Assert.That(newMongoPictureCount, Is.EqualTo(2));
+			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
 			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			ILexEntryRepository entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
-			int originalNumOfFdoPictures = entryRepo.AllInstances().Count(
-				e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
+			int originalNumOfFdoPictures = entryRepo.AllInstances().
+				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
 			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
 			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
-			string expectedGuidStrBefore = data.bsonTestData["guid"].AsString;
-			Guid expectedGuidBefore = Guid.Parse(expectedGuidStrBefore);
-			var entryBefore = cache.ServiceLocator.GetObject(expectedGuidBefore) as ILexEntry;
+			string expectedGuidStr = data.bsonTestData["guid"].AsString;
+			Guid expectedGuid = Guid.Parse(expectedGuidStr);
+			var entryBefore = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
 			Assert.That(entryBefore.SensesOS.Count, Is.GreaterThan(0));
 			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 
 			// Exercise adding 1 picture with 2 captions. Note that the picture that was previously attached
 			// to this FDO entry will end up being deleted, because it does not have a corresponding picture in LF.
-			// TODO: Er... the above comment sounds bad. If it is true it needs fixing. IJH 2016-05
-			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			sutMongoToFdo.Run(lfProj);
-
-			string expectedGuidStr = data.bsonTestData["guid"].AsString;
-			Guid expectedGuid = Guid.Parse(expectedGuidStr);
-			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
-			Assert.IsNotNull(entry);
-			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
 			// Verify "Added" picture is now the only picture on the sense (because the "old" picture was deleted),
 			// and that it has 2 captions with the expected values.
+			entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			int numOfFdoPictures = entryRepo.AllInstances().
+				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(numOfFdoPictures, Is.EqualTo(originalNumOfFdoPictures));
+
+			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
+			Assert.IsNotNull(entry);
+			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 			Assert.That(entry.SensesOS.Count, Is.GreaterThan(0));
-			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
-			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.ToMultiText(
-				entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
+			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(2));
+			Assert.That(entry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath.ToString(),
+				Is.EqualTo(expectedInternalFileName));
+			Assert.That(entry.SensesOS[0].PicturesOS[1].PictureFileRA.InternalPath.ToString(),
+				Is.EqualTo(expectedExternalFileName));
+
+			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.
+				ToMultiText(entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
-
 			string expectedNewVernacularCaption = expectedNewCaption["qaa-x-kal"].Value;
 			string expectedNewAnalysisCaption = expectedNewCaption["en"].Value;
 			Assert.That(expectedNewVernacularCaption.Equals("First Vernacular caption"));
-			Assert.That(expectedNewAnalysisCaption.Equals("First Analysis caption"));
+			Assert.That(expectedNewAnalysisCaption.Equals("Internal path reference"));
+
+			var testSubEntry = cache.ServiceLocator.GetObject(Guid.Parse(TestSubEntryGuidStr)) as ILexEntry;
+			Assert.That(testSubEntry, Is.Not.Null);
+			Assert.That(testSubEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath.ToString(),
+				Is.EqualTo("Pictures\\TestImage.tif"));
+			var kenEntry = cache.ServiceLocator.GetObject(Guid.Parse(KenEntryGuidStr)) as ILexEntry;
+			Assert.That(kenEntry, Is.Not.Null);
+			Assert.That(kenEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath.ToString(),
+				Is.EqualTo("F:\\src\\xForge\\web-languageforge\\test\\php\\common\\TestImage.jpg"));
 		}
 
 		[Test]
@@ -107,10 +125,10 @@ namespace LfMerge.Tests.Fdo
 			// Setup initial Mongo project has 1 picture and 2 captions
 			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var data = new SampleData();
-			int newMongoPictures = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
-			int newMongoCaptions = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
-			Assert.That(newMongoPictures, Is.EqualTo(1));
-			Assert.That(newMongoCaptions, Is.EqualTo(2));
+			int newMongoPictureCount = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
+			int newMongoCaptionCount = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
+			Assert.That(newMongoPictureCount, Is.EqualTo(2));
+			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
 			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
@@ -137,7 +155,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
 			Assert.That(entry.SensesOS.Count, Is.GreaterThan(0));
-			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
+			Assert.That(entry.SensesOS.First().PicturesOS.Count, Is.EqualTo(2));
 		}
 
 		[Test]

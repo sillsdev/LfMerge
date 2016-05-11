@@ -150,8 +150,8 @@ namespace LfMerge.Tests
 			},
 			""semanticDomain"" : {
 				""values"" : [
-					""1 Universe, creation"",
-					""7 Physical actions""
+					""1"",
+					""7""
 				]
 			},
 			""examples"" : [
@@ -245,10 +245,21 @@ namespace LfMerge.Tests
 							""value"" : ""First Vernacular caption""
 						},
 						""en"": {
-							""value"" : ""First Analysis caption""
+							""value"" : ""Internal path reference""
 						}
 					},
 					""guid"" : ""567081ab-22f5-45d6-ad25-9c24f3bb5c6f""
+				},
+				{ ""fileName"" : ""/home/ira/Pictures/test images/Picture2.jpg"" ,
+					""caption"" : {
+						""qaa-x-kal"" : {
+							""value"" : ""Second Vernacular caption""
+						},
+						""en"": {
+							""value"" : ""External path reference""
+						}
+					},
+					""guid"" : ""d0286e5f-a3aa-4e87-9195-5ebbf9ccf33b""
 				}],
 			""scientificName"" : {
 				""en"" : {
