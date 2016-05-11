@@ -25,8 +25,6 @@ namespace LfMerge.Tests.Fdo
 {
 	public class RoundTripBase : FdoTestBase
 	{
-		public const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-
 		protected IDictionary<string, Tuple<string, string>> GetMongoDifferences(
 			BsonDocument itemBeforeTest,
 			BsonDocument itemAfterTest

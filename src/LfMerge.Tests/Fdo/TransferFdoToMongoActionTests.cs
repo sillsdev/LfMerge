@@ -49,7 +49,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_IsInitialClone_ShouldPopulateMongoInputSystems()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			lfProject.IsInitialClone = true;
 			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProject);
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
@@ -83,7 +83,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_IsInitialClone_ShouldUpdateDates()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			lfProject.IsInitialClone = true;
 
 			// Exercise
@@ -94,8 +94,7 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
 
-			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
+			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
 			Assert.That(entry.DateModified, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
@@ -107,7 +106,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_ShouldUpdateLexemes()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
@@ -115,12 +114,10 @@ namespace LfMerge.Tests.Fdo
 			// Verify
 			string[] searchOrder = new string[] { "en", "fr" };
 			string expectedLexeme = "zitʰɛstmen";
-			string expectedGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == expectedGuidStr);
+			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.Lexeme.BestString(searchOrder), Is.EqualTo(expectedLexeme));
 		}
@@ -129,7 +126,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_ShouldUpdatePictures()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			int originalNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(originalNumPictures, Is.EqualTo(0));
@@ -147,7 +144,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_ShouldUpdateCustomFieldConfig()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
@@ -167,7 +164,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_WithEmptyMongoGrammar_ShouldPopulateMongoGrammarFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			LfOptionList lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Null);
@@ -187,7 +184,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithGuids_ShouldReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			_conn.UpdateMockOptionList(lfGrammar);
@@ -207,7 +204,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithNoGuids_ShouldStillReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			foreach (LfOptionListItem item in lfGrammar.Items)
@@ -231,7 +228,7 @@ namespace LfMerge.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithMatchingGuids_ShouldBeUpdatedFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
 			var converter = new ConvertFdoToMongoOptionList(null, wsEn, MagicStrings.LfOptionListCodeForGrammaticalInfo, new LfMerge.Logging.NullLogger());

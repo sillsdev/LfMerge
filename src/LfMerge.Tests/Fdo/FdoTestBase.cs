@@ -68,6 +68,21 @@ namespace LfMerge.Tests.Fdo
 
 	public class FdoTestBase
 	{
+		public const string TestProjectCode = FdoTestFixture.testProjectCode;
+		public const int OriginalNumOfFdoEntries = FdoTestFixture.originalNumOfFdoEntries;
+		public const string ModifiedTestProjectCode = "testlangproj-modified";
+
+		// common to both test projects
+		public const string TestEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc"; // lexeme kal: ztestmain
+		public const string TestMinorEntryGuidStr = "a6babda6-6830-4ec0-a363-c7fba14268eb"; // lexeme kal: ztestminor
+		public const string TestSubEntryGuidStr = "157edd55-886f-4d91-b009-8e6b49991c85"; // lexeme kal: ztestsub
+
+		// in "testlangproj" only
+		public const string KenEntryGuidStr = "c5f97698-dade-4ba0-9f91-580ab19ff411"; // lexeme kal: ken
+
+		// in "testlangproj-modified" only
+		public const string IraEntryGuidStr = "ba8076a9-6552-46b2-a14a-14c01191453b"; // lexeme kal: Ira
+
 		protected TestEnvironment _env;
 		protected MongoConnectionDouble _conn;
 		protected MongoProjectRecordFactory _recordFactory;
@@ -76,9 +91,6 @@ namespace LfMerge.Tests.Fdo
 		protected UndoableUnitOfWorkHelper _undoHelper;
 		protected TransferMongoToFdoAction sutMongoToFdo;
 		protected TransferFdoToMongoAction sutFdoToMongo;
-
-		public const string testProjectCode = FdoTestFixture.testProjectCode;
-		public const int originalNumOfFdoEntries = FdoTestFixture.originalNumOfFdoEntries;
 
 		[SetUp]
 		public void Setup()

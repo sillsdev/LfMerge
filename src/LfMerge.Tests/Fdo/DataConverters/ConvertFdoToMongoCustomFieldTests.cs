@@ -15,16 +15,14 @@ namespace LfMerge.Tests.Fdo.DataConverters
 {
 	public class ConvertFdoToMongoCustomFieldTests : FdoTestBase
 	{
-		public const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
-
 		[Test]
 		public void GetCustomFieldsForThisCmObject_ShouldGetCustomFieldSettings()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, new Logging.SyslogLogger());
-			Guid entryGuid = Guid.Parse(testEntryGuidStr);
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 
