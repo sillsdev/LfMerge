@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Threading;
 
 namespace LfMerge.Tests.Actions
 {
-	[TestFixture]
+	[TestFixture, Ignore("I (RandyR) am sure the cloning code is a not a unit to be tested.")]
 	public class ProgramTests
 	{
 		private TestEnvironment _env;
@@ -33,7 +32,7 @@ namespace LfMerge.Tests.Actions
 
 		[Test]
 		[ExpectedException("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")]
-		public void EnsureClone_NonExisitingProject_SetsStateOnHold()
+		public void EnsureClone_NonExistingProject_SetsStateOnHold()
 		{
 			// for this test we don't want the test double for InternetCloneSettingsModel
 			_env.Dispose();
