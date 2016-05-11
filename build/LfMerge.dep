@@ -51,8 +51,8 @@ Path=SIL.Linux.Logging.dll*=>lib/
 icu.net.dll*=>lib/
 
 
-[TC::ChorusWin32LfmergeStrongnameCont]
-Name=chorus-win32-lfmerge-strongname Continuous
+[TC::ChorusWin32LfmergeCont]
+Name=chorus-win32-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
@@ -66,8 +66,8 @@ MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 
-[TC::PalasoWin32lfmergeStrongnameContinuous]
-Name=palaso-win32-lfmerge-strongname Continuous
+[TC::PalasoWin32lfmergeContinuous]
+Name=palaso-win32-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
