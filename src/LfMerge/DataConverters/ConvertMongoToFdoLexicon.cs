@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.DataConverters;
+using LfMerge.DataConverters.CanonicalSources;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
 using LfMerge.LanguageForge.Config;
@@ -111,7 +112,7 @@ namespace LfMerge.DataConverters
 		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
 		{
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
-			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), optionListToConvert, Logger);
+			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), optionListToConvert, Logger, CanonicalOptionListSource.Create(listCode));
 		}
 
 		public void RunConversion()
@@ -566,11 +567,10 @@ namespace LfMerge.DataConverters
 				}
 				else
 				{
-					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos); // It's fine if secondaryPos is null
+					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos, Logger); // It's fine if secondaryPos is null
 					Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
 				}
 			}
-			// fdoSense.MorphoSyntaxAnalysisRA.MLPartOfSpeech = lfSense.PartOfSpeech; // TODO: FAR more complex than that. Handle it correctly.
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
 			// fdoSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than that. Handle it correctly. Maybe.
 			fdoSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);

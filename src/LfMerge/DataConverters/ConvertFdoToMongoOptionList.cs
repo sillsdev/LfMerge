@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.Common.COMInterfaces;
+using LfMerge.DataConverters.CanonicalSources;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 
@@ -18,6 +19,7 @@ namespace LfMerge.DataConverters
 		protected Dictionary<string, LfOptionListItem> _lfOptionListItemByStrKey;
 		protected Dictionary<Guid, string> _lfOptionListItemKeyByGuid;
 		protected ILogger _logger;
+		protected CanonicalOptionListSource _canonicalSource;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LfMerge.DataConverters.ConvertFdoToMongoOptionList"/> class.
@@ -26,13 +28,14 @@ namespace LfMerge.DataConverters
 		/// <param name="wsForKeys">Ws for keys.</param>
 		/// <param name="listCode">List code.</param>
 		/// <param name="logger">Logger.</param>
-		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger)
+		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger, CanonicalOptionListSource canonicalSource = null)
 		{
 			_logger = logger;
 			_wsForKeys = wsForKeys;
 			if (lfOptionList == null)
 				lfOptionList = MakeEmptyOptionList(listCode);
 			_lfOptionList = lfOptionList;
+			_canonicalSource = canonicalSource;
 			UpdateOptionListItemDictionaries(_lfOptionList);
 		}
 

@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.DataConverters.CanonicalSources;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
+using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.DataConverters
@@ -14,20 +16,29 @@ namespace LfMerge.DataConverters
 	// that contains the start of an approach to handling that situation.
 	public class ConvertMongoToFdoOptionList
 	{
-		//protected ICmPossibilityList _parentList;  // NOTE: Not generic, unlike ICmPossibility. Might be a problem, but we'll see.
 		protected IRepository<ICmPossibility> _possRepo;
 		protected LfOptionList _lfOptionList;
-		//protected int _wsForKeys;
 		protected ILogger _logger;
+		protected CanonicalOptionListSource _canonicalSource;
+		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+		protected int _wsForKeys;
+		protected ICmPossibilityList _parentList;
+		#endif
 
 		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
 
-		//public ConvertMongoToFdoOptionList(ICmPossibilityList parentList, IRepository<ICmPossibility> possRepo, int wsForKeys, ILogger logger)
-		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger)
+		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
+		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
+		#endif
+		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, CanonicalOptionListSource canonicalSource = null)
 		{
-			//_parentList = parentList;
 			_possRepo = possRepo;
 			_logger = logger;
+			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+			_parentList = parentList;
+			_wsForKeys = wsForKeys;
+			#endif
+			_canonicalSource = canonicalSource;
 			RebuildLookupTables(lfOptionList);
 		}
 
@@ -52,8 +63,34 @@ namespace LfMerge.DataConverters
 			ICmPossibility result;
 			if (PossibilitiesByKey.TryGetValue(key, out result))
 				return result;
+			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+			if (_canonicalSource != null)
+			{
+				CanonicalItem item;
+				if (_canonicalSource.TryGetByKey(key, out item))
+				{
+					return CreateFromCanonicalItem(item);
+				}
+			}
+			#endif
 			return null;
 		}
+
+		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+		public ICmPossibility CreateFromCanonicalItem(CanonicalItem item)
+		{
+			if (item.Parent != null)
+			{
+				// Note that we're throwing away the return value; we want this for its side effects (it will create
+				// and populate the parent if the parent didn't exist already).
+				FromStringKey(item.Parent.Key);
+			}
+			ICmPossibility poss = _parentList.FindOrCreatePossibility(item.ORCDelimitedKey, wsForKeys);
+			item.PopulatePossibility(poss);
+			PossibilitiesByKey[item.Key] = poss;
+			return poss;
+		}
+		#endif
 
 		public ICmPossibility FromStringField(LfStringField keyField)
 		{
@@ -142,7 +179,7 @@ namespace LfMerge.DataConverters
 			SetPossibilitiesCollection<T>(dest, remainingPossibilities.ToList());
 		}
 
-		#if false
+		#if false  // This was an older approach, but we MIGHT still revert back to it at some point, as a last-ditch fallback.
 		public ICmPossibility FromAbbrevAndName(string abbrev, string name)
 		{
 		ICmPossibility poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, abbrev, _wsForKeys);

@@ -7,10 +7,6 @@ namespace LfMerge.DataConverters
 {
 	public class ConvertFdoToMongoPartsOfSpeech
 	{
-		public ConvertFdoToMongoPartsOfSpeech()
-		{
-		}
-
 		public static IPartOfSpeech FromMSA(IMoMorphSynAnalysis msa, out IPartOfSpeech secondaryPos)
 		{
 			secondaryPos = null;

@@ -183,6 +183,12 @@
     <Compile Include="LanguageForge\Infrastructure\PhpConnection.cs" />
     <Compile Include="LanguageForge\Infrastructure\RunClassParameters.cs" />
     <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalOptionListSource.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalPartOfSpeechSource.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainSource.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalItem.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalPartOfSpeechItem.cs" />
+    <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets')" />
@@ -210,10 +216,16 @@
     <Folder Include="Logging\" />
     <Folder Include="Actions\Infrastructure\" />
     <Folder Include="LanguageForge\Infrastructure\" />
+    <Folder Include="DataConverters\CanonicalSources\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">
       <Link>GOLDEtic.xml</Link>
+      <LogicalName>GOLDEtic.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\data\semantic-domains\SemDom.xml">
+      <Link>SemDom.xml</Link>
+      <LogicalName>SemDom.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
