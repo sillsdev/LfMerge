@@ -130,9 +130,6 @@
     <Compile Include="LanguageForge\Config\LfConfigFieldTypeMapper.cs" />
     <Compile Include="LanguageForge\Config\MongoRegistrarForLfConfig.cs" />
     <Compile Include="MongoConnector\MongoRegistrar.cs" />
-    <Compile Include="LanguageForge\Model\ILfLexicon.cs" />
-    <Compile Include="LanguageForge\Model\LfLexicon.cs" />
-    <Compile Include="LanguageForge\Model\LfFieldFactory.cs" />
     <Compile Include="LanguageForge\Model\LfLexEntry.cs" />
     <Compile Include="LanguageForge\Model\LfMultiText.cs" />
     <Compile Include="LanguageForge\Model\LfStringField.cs" />
