@@ -6,7 +6,7 @@ using System;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfOptionListItem
+	public class LfOptionListItem : IHasNullableGuid
 	{
 		[BsonRepresentation(BsonType.String)]
 		public Guid? Guid { get; set; }
