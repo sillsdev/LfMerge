@@ -37,17 +37,8 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="LibChorus">
-      <HintPath>..\..\lib\LibChorus.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="LibFLExBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
-    </Reference>
-    <Reference Include="LibTriboroughBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
       <Package>lfmerge-fdo</Package>
@@ -91,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LanguageForgeBridgeServices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProcessingState.cs" />
@@ -113,7 +105,6 @@
     <Compile Include="ILanguageDepotProject.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IProcessingStateDeserialize.cs" />
-    <Compile Include="FieldWorks\FlexHelper.cs" />
     <Compile Include="MongoConnector\MongoConnection.cs" />
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
     <Compile Include="MongoConnector\MongoCursorEnumerableExtensions.cs" />
@@ -199,31 +190,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Queues\" />
-    <Folder Include="FieldWorks\" />
-    <Folder Include="Actions\" />
-    <Folder Include="MongoConnector\" />
-    <Folder Include="LanguageForge\" />
-    <Folder Include="LanguageForge\Config\" />
-    <Folder Include="LanguageForge\Model\" />
-    <Folder Include="DataConverters\" />
-    <Folder Include="Settings\" />
-    <Folder Include="Logging\" />
-    <Folder Include="Actions\Infrastructure\" />
-    <Folder Include="LanguageForge\Infrastructure\" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\..\data\parts-of-speech\GOLDEtic.xml">
       <Link>GOLDEtic.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <!-- Copy .mdb files for all files into output directory as well as ChorusMerge.exe -->
+    <!-- Copy .mdb files for all files into output directory -->
     <ItemGroup>
       <FilesInOutput Include="$(OutputPath)/*.*" />
       <FilesToCopy Include="@(FilesInOutput-&gt;'../../lib/%(Filename)%(Extension).mdb')" Condition="Exists('../../lib/%(Filename)%(Extension).mdb')" />
-      <FilesToCopy Include="../../lib/ChorusMerge.exe*"/>
-      <FilesToCopy Include="../../lib/LibChorus.dll*"/>
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
