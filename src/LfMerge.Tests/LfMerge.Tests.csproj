@@ -39,20 +39,11 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="LibChorus">
-      <HintPath>..\..\lib\LibChorus.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="LibFLExBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
-    </Reference>
     <Reference Include="Palaso.TestUtilities">
       <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="LibTriboroughBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
       <Package>lfmerge-fdo</Package>
