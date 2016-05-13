@@ -33,9 +33,8 @@ namespace LfMerge.DataConverters
 
 		public Guid ParseGuidOrDefault(string input)
 		{
-			Guid result = default(Guid);
-			Guid.TryParse(input, out result);
-			return result;
+			Guid result;
+			return Guid.TryParse(input, out result) ? result : default(Guid);
 		}
 
 		public ICmPossibilityList GetParentListForField(int flid)
@@ -44,10 +43,10 @@ namespace LfMerge.DataConverters
 			if (parentListGuid == Guid.Empty)
 			{
 				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
-				Console.WriteLine("No possibility list found for custom field {0}; giving up", fieldName);
+				logger.Warning("No possibility list found for custom field {0} (field ID {1}); it will not be present in FDO", fieldName ?? "(name not found)", flid);
 				return null;
 				// TODO: If this happens, we're probably importing a newly-created possibility list, so we should
-				// probably create it in FDO. Implementation needed.
+				// probably create it in FDO using ConvertMongoToFdoOptionList. Implementation needed.
 			}
 			return (ICmPossibilityList)servLoc.GetObject(parentListGuid);
 		}
@@ -55,8 +54,8 @@ namespace LfMerge.DataConverters
 		/// <summary>
 		/// Set custom field data for one field (specified by owner HVO and field ID).
 		/// </summary>
-		/// <returns><c>true</c>, if custom field data was set, <c>false</c> otherwise
-		/// (e.g., if value was null, or field type was one not implemented in FDO, such as CellarPropertyType.Float).</returns>
+		/// <returns><c>true</c>, if custom field data was set, <c>false</c> otherwise (e.g., if value hadn't changed,
+		/// or value was null, or field type was one not implemented in FDO, such as CellarPropertyType.Float).</returns>
 		/// <param name="hvo">HVO of object whose field we're setting.</param>
 		/// <param name="flid">Field ID of custom field to set.</param>
 		/// <param name="value">Field's new value (as returned by GetCustomFieldData).</param>
@@ -149,10 +148,11 @@ namespace LfMerge.DataConverters
 							text = (IStText)cache.GetAtomicPropObject(newStTextHvo);
 						}
 					}
+					// Shortcut: if text contents haven't changed, we don't want to change anything at all
 					BsonValue currentFdoTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
 						cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
 					if (currentFdoTextContents == null && value == null)
-						return true;
+						return false;
 					if (currentFdoTextContents != null && currentFdoTextContents.Equals(value))
 					{
 						// No changes needed.
@@ -162,9 +162,7 @@ namespace LfMerge.DataConverters
 					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
 					BsonDocument doc = value.AsBsonDocument;
 					LfMultiParagraph multiPara = BsonSerializer.Deserialize<LfMultiParagraph>(doc);
-					//BsonDocument valueOnly = new BsonDocument(wsStr, new BsonDocument("value", doc.GetElement(0).Value.AsBsonDocument["value"]));
 					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.Ws);
-					// Make sure we have as many GUIDs as paragraphs
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paras, wsId);
 
 					return true;
