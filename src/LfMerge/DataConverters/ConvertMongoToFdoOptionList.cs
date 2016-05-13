@@ -28,7 +28,7 @@ namespace LfMerge.DataConverters
 		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
 
 		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
-		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
+		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
 		#endif
 		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, CanonicalOptionListSource canonicalSource = null)
 		{
@@ -85,7 +85,7 @@ namespace LfMerge.DataConverters
 				// and populate the parent if the parent didn't exist already).
 				FromStringKey(item.Parent.Key);
 			}
-			ICmPossibility poss = _parentList.FindOrCreatePossibility(item.ORCDelimitedKey, wsForKeys);
+			ICmPossibility poss = _parentList.FindOrCreatePossibility(item.ORCDelimitedKey, _wsForKeys);
 			item.PopulatePossibility(poss);
 			PossibilitiesByKey[item.Key] = poss;
 			return poss;
@@ -129,7 +129,9 @@ namespace LfMerge.DataConverters
 				if (_possRepo.TryGetObject(item.Guid.Value, out result))
 					return result;
 			}
-			// return FromAbbrevAndName(item.Abbreviation, item.Value);
+			#if false  // Once we are populating FDO from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
+			return FromAbbrevAndName(item.Abbreviation, item.Value);
+			#endif
 			return null;
 		}
 
@@ -179,14 +181,108 @@ namespace LfMerge.DataConverters
 			SetPossibilitiesCollection<T>(dest, remainingPossibilities.ToList());
 		}
 
-		#if false  // This was an older approach, but we MIGHT still revert back to it at some point, as a last-ditch fallback.
-		public ICmPossibility FromAbbrevAndName(string abbrev, string name)
+		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+		#if false  // Once we are populating FDO from LF OptionLists, the entire block of functions below will be useful. Until then, they're commented out.
+		public ICmPossibility FromAbbrevAndName(string abbrev, string name, string userWs)
 		{
 		ICmPossibility poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, abbrev, _wsForKeys);
 		if (poss == null)
 		poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, name, _wsForKeys);
 		return poss; // If it's still null, we just return null for "not found"
 		// NOTE: If LF can create new OptionList items, might want to use FindOrCreatePossibilityByName above.
+		}
+
+		// Should be called from within an UndoableUnitOfWorkHelper
+		// Replacement for the old UpdateFdoGrammarFromLfGrammar() method in ConvertMongoToFdoLexicon
+		// Writing system should be the user interface language from LF. If not supplied, will default to English.
+		public void UpdateFdoOptionListFromLf(string lfUserInterfaceWs = null)
+		{
+			foreach (LfOptionListItem item in _lfOptionList.Items)
+			{
+				UpdateOrCreatePossibilityFromOptionListItem(item, lfUserInterfaceWs);
+			}
+		}
+
+		/// <summary>
+		/// Update a CmPossibility object from the corresponding LF item. Will draw from canonical sources if available.
+		/// Will try very hard to find a CmPossibility item matching the LF OptionList item, but will eventually create
+		/// one if nothing remotely matching could be found.
+		///
+		/// NOTE: This is currently commented out (via #if false...#endif block) because we currently don't want to update
+		/// FDO from the values of LF option lists. Once that changes, this code can be uncommented.
+		/// </summary>
+		/// <param name="item">Item.</param>
+		/// <param name="wsForOptionListItems">Ws for option list items.</param>
+		public void UpdateOrCreatePossibilityFromOptionListItem(LfOptionListItem item, string wsForOptionListItems = null)
+		{
+			ICmPossibility poss = null;
+			CanonicalItem canonicalItem = null;
+			if (item.Guid != null)
+			{
+				if (_possRepo.TryGetObject(item.Guid.Value, out poss))
+				{
+					// Currently we do NOT want to change the name, abbreviation, etc. in FDO for already-existing possibility items.
+					// Once we do, uncomment the next line:
+					//PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+					// For now, however, just return without touching the FDO CmPossibility object
+					return;
+				}
+				else
+				{
+					if (_canonicalSource != null && _canonicalSource.TryGetByGuid(item.Guid.Value, out canonicalItem))
+					{
+						canonicalItem.PopulatePossibility(poss);
+						return;
+					}
+					// No canonical item? At least set name and abbreviation from LF
+					var factory = _parentList.Cache.ServiceLocator.GetInstance<ICmPossibilityFactory>();
+					poss = factory.Create(item.Guid.Value, _parentList);  // Note that this does NOT handle "parent" possibilities; new one gets created as a TOP-level item
+					PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+				}
+			}
+			else
+			{
+				// Can't look it up by GUID, so search by key. If key not found, fall back to abbreviation and name.
+				if (_canonicalSource != null && _canonicalSource.TryGetByKey(item.Key, out canonicalItem))
+				{
+					canonicalItem.PopulatePossibility(poss);
+					return;
+				}
+				// No canonical source? Then we're in fallback-of-fallback land. First try the key, as that's most likely to be found.
+				poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, item.Key, _wsForKeys);
+				if (poss != null)
+				{
+					PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+					return;
+				}
+				// Then try the abbreviation, and finally the name -- these, though, should be in the LF user's interface language
+				poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, item.Abbreviation, wsForOptionListItems);
+				if (poss != null)
+				{
+					PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+					return;
+				}
+				// In LF, OptionListItems have their name in the "Value" property
+				poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, item.Value, wsForOptionListItems);
+				if (poss != null)
+				{
+					PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+					return;
+				}
+				// If we STILL haven't found it, then just create a new item and populate it. This is the final, last-ditch fallback.
+				poss = _parentList.FindOrCreatePossibility(item.Value, wsForOptionListItems);
+				PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
+			}
+		}
+
+		public void PopulateCmPossibilityFromOptionListItem(ICmPossibility poss, LfOptionListItem item, string wsStr = null)
+		{
+			// Should only be called when NO canonical item can be found
+			if (wsStr == null)
+				wsStr = "en";  // TODO: Set this from LF user's writing system rather than English, once LF allows setting interface languages
+			int wsId = poss.Cache.WritingSystemFactory.GetWsFromStr(wsStr);
+			poss.Abbreviation.set_String(wsId, item.Abbreviation);
+			poss.Name.set_String(wsId, item.Value);
 		}
 		#endif
 	}

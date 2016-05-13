@@ -34,9 +34,8 @@ namespace LfMerge.DataConverters
 		public IEnumerable<ILgWritingSystem> AnalysisWritingSystems;
 		public IEnumerable<ILgWritingSystem> VernacularWritingSystems;
 
-		#if false
+		#if false  // Only used in "update FDO from LF option lists" code, so commented out with the rest of that code to avoid compiler warnings
 		private int _wsEn;
-		private ConvertMongoToFdoPartsOfSpeech _posConverter;
 		#endif
 		private ConvertMongoToFdoCustomField _convertCustomField;
 
@@ -54,10 +53,6 @@ namespace LfMerge.DataConverters
 		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
 		public IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
-		#if false
-		private LfOptionList _lfGrammar;
-		private Dictionary<string, LfOptionListItem> _lfGrammarByKey;
-		#endif
 
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
@@ -75,17 +70,6 @@ namespace LfMerge.DataConverters
 			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
 
-			#if false
-			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
-			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
-
-			_lfGrammar = Connection.GetLfOptionListByCode(LfProject, MagicStrings.LfOptionListCodeForGrammaticalInfo);
-			if (_lfGrammar == null)
-				_lfGrammarByKey = new Dictionary<string, LfOptionListItem>();
-			else
-				_lfGrammarByKey = _lfGrammar.Items.ToDictionary(item => item.Key, item => item);
-			#endif
-
 			ListConverters = new Dictionary<string, ConvertMongoToFdoOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
 			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode);
@@ -97,16 +81,27 @@ namespace LfMerge.DataConverters
 			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 
+			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
+			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
+			#if false
+			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
+			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode, Cache.LanguageProject.SemanticDomainListOA);
+			ListConverters[AcademicDomainListCode] = PrepareOptionListConverter(AcademicDomainListCode, Cache.LanguageProject.LexDbOA.DomainTypesOA);
+			ListConverters[LocationListCode] = PrepareOptionListConverter(LocationListCode, Cache.LanguageProject.LocationsOA);
+			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode, Cache.LanguageProject.LexDbOA.UsageTypesOA);
+			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode, Cache.LanguageProject.LexDbOA.SenseTypesOA);
+			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode, Cache.LanguageProject.AnthroListOA);
+			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode, Cache.LanguageProject.LexDbOA.PublicationTypesOA);
+			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode, Cache.LanguageProject.StatusOA);
+			#endif
+
 			if (Cache.LanguageProject != null && Cache.LanguageProject.TranslationTagsOA != null)
 			{
 				_freeTranslationType = Cache.ServiceLocator.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation) as ICmPossibility;
 				if (_freeTranslationType == null) // Shouldn't happen, but let's have a fallback possibility
 					_freeTranslationType = Cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
-
-			#if false
-			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			#endif
 		}
 
 		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
@@ -114,6 +109,16 @@ namespace LfMerge.DataConverters
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
 			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), optionListToConvert, Logger, CanonicalOptionListSource.Create(listCode));
 		}
+
+		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the function
+		// above (that takes ONE parameter) with this one (that takes TWO parameters)
+		#if false
+		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode, ICmPossibilityList parentList)
+		{
+			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
+			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), optionListToConvert, Logger, parentList, _wsEn, CanonicalOptionListSource.Create(listCode));
+		}
+		#endif
 
 		public void RunConversion()
 		{
@@ -123,22 +128,21 @@ namespace LfMerge.DataConverters
 					LfWsToFdoWs(ProjectRecord.InputSystems);
 				});
 
+			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 			// Set English ws handle again in case it changed
-			#if false
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
 			#endif
 
 			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
-			#if false
-			_posConverter = new ConvertMongoToFdoPartsOfSpeech(Cache);
-			#endif
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
-					#if false
-					if (_lfGrammar != null)
-						UpdateFdoGrammarFromLfGrammar(_lfGrammar);
+					#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+					foreach (ConvertMongoToFdoOptionList converter in ListConverters.Values)
+					{
+						converter.UpdateFdoOptionListFromLf(ProjectRecord.InterfaceLanguageCode);
+					}
 					#endif
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
@@ -482,7 +486,7 @@ namespace LfMerge.DataConverters
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
 			Logger.Info("FDO Example just got set to {0} for GUID {1} and HVO {2}",
-				fdoExample.Example.BestAnalysisVernacularAlternative.Text,
+				ConvertFdoToMongoTsStrings.SafeTsStringText(fdoExample.Example.BestAnalysisVernacularAlternative),
 				fdoExample.Guid,
 				fdoExample.Hvo
 			);
@@ -711,87 +715,10 @@ namespace LfMerge.DataConverters
 			// Not handling fdoPronunciation.LiftResidue
 		}
 
-		// TODO: Use a more generic ConvertMongoToFdoOptionList class, modeled after the corresponding Mongo->Fdo direction
-		public void UpdateFdoGrammarFromLfGrammar(LfOptionList lfGrammar)
-		{
-			#if false // We're not doing this right now. TODO: Expand this commment to explain why.
-			ICmPossibilityList fdoGrammar = Cache.LanguageProject.PartsOfSpeechOA;
-			var posRepo = GetInstance<IPartOfSpeechRepository>();
-			foreach (LfOptionListItem item in lfGrammar.Items)
-			{
-				OptionListItemToPartOfSpeech(item, fdoGrammar, posRepo);
-			}
-			#endif
-		}
-
 		public IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
 		{
 			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
-			#if false  // Old code, commented out
-			if (source == null || source.ToString() == null)
-				return null;
-			string posStr = source.ToString();
-			LfOptionListItem lfGrammarEntry;
-			if (_lfGrammarByKey.TryGetValue(posStr, out lfGrammarEntry))
-				return OptionListItemToPartOfSpeech(lfGrammarEntry, Cache.LanguageProject.PartsOfSpeechOA, GetInstance<IPartOfSpeechRepository>());
-			//string userWs = _servLoc.WritingSystemManager.GetStrFromWs(Cache.DefaultUserWs);
-			string userWs = ProjectRecord.InterfaceLanguageCode;
-			if (String.IsNullOrEmpty(userWs))
-				userWs = "en";
-			// return posConverter.FromAbbrevAndName(lfSense.PartOfSpeech.ToString(), userWs);
-			Logger.Warning("Part of speech with key {0} (found in sense {1} with GUID {2}) has no corresponding entry in the {3} optionlist of project {4}. Falling back to creating an FDO part of speech from abbreviation {5}, which is not ideal.",
-				posStr,
-				owner.Gloss,
-				(owner.Guid != null) ? owner.Guid.ToString() : "(no GUID)",
-				MagicStrings.LfOptionListCodeForGrammaticalInfo,
-				LfProject.ProjectCode,
-				posStr
-			);
-			return _posConverter.FromAbbrevAndName(posStr, null, userWs);
-			#endif
 		}
-
-		// TODO: This probably belongs in the ConvertMongoToFdoPartsOfSpeech class
-		#if false
-		public IPartOfSpeech OptionListItemToPartOfSpeech(LfOptionListItem item, ICmPossibilityList posList, IPartOfSpeechRepository posRepo)
-		{
-			IPartOfSpeech pos = null;
-			if (item.Guid != null)
-			{
-				if (posRepo.TryGetObject(item.Guid.Value, out pos))
-				{
-					// Any fields that are different need to be set in the FDO PoS object. ... WAIT. That's not true any more, is it? TODO: Examine this.
-					pos.Abbreviation.SetAnalysisDefaultWritingSystem(item.Abbreviation);
-					pos.Name.SetAnalysisDefaultWritingSystem(item.Value);
-					// pos.Description won't be updated as that field is currently not kept in LF
-					return pos;
-				}
-				else
-				{
-					// No pos with that GUID, so we might have to create one
-					pos = _posConverter.FromAbbrevAndName(item.Key, item.Value, ProjectRecord.InterfaceLanguageCode);
-					return pos;
-				}
-			}
-			else
-			{
-				// Don't simply assume FDO doesn't know about it until we search by name and abbreviation.
-				// LF PoS keys are English *only* and never translated. Try that first.
-				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Key, _wsEn) as IPartOfSpeech;
-				if (pos != null)
-					return pos;
-				// Part of speech name, though, should be searched in the LF analysis language
-				// TODO: Using interface language as a fallback, but get the analysis language once it's available
-				int wsId = Cache.WritingSystemFactory.GetWsFromStr(ProjectRecord.InterfaceLanguageCode);
-				pos = posList.FindPossibilityByName(posList.PossibilitiesOS, item.Value, wsId) as IPartOfSpeech;
-				if (pos != null)
-					return pos;
-				// If we still haven't found it, we'll need to create one
-				pos = _posConverter.FromAbbrevAndName(item.Key, item.Value, ProjectRecord.InterfaceLanguageCode);
-				return pos;
-			}
-		}
-		#endif
 	}
 }
 
