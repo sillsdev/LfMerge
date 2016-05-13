@@ -147,8 +147,6 @@
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\IMongoConnection.cs" />
     <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
-    <Compile Include="DataConverters\GoldEticXmlParser.cs" />
-    <Compile Include="DataConverters\GoldEticItem.cs" />
     <Compile Include="Settings\LfMergeSettingsIni.cs" />
     <Compile Include="Settings\DefaultLfMergeSettings.cs" />
     <Compile Include="Logging\ILogger.cs" />
