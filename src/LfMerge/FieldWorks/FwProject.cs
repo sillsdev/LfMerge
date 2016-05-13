@@ -73,7 +73,7 @@ namespace LfMerge.FieldWorks
 				return null;
 			}
 
-			var settings = new FdoSettings {DisableDataMigration = false};
+			var settings = new FdoSettings {DisableDataMigration = true};
 
 			try
 			{

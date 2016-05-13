@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace LfMerge.Tests.Actions
 {
-	[TestFixture, Ignore("I (RandyR) am sure the cloning code is a not a unit to be tested.")]
+	[TestFixture, Category("IntegrationTests")]
 	public class ProgramTests
 	{
 		private TestEnvironment _env;

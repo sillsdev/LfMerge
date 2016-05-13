@@ -13,6 +13,7 @@ using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests;
 using LfMerge.Tests.Fdo;
+using LibFLExBridgeChorusPlugin;
 using NUnit.Framework;
 using Palaso.Progress;
 using Palaso.TestUtilities;
@@ -21,7 +22,7 @@ using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.Tests.Actions
 {
-	[TestFixture, Category("LongRunning"), Ignore("I (RandyR) am sure the S/R code is a not a unit to be tested.")]
+	[TestFixture, Category("LongRunning"), Category("IntegrationTests")]
 	public class SynchronizeActionTests
 	{
 		public static string LDProjectFolderPath;
@@ -160,11 +161,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfChangedGloss));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
-			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + ".fwdata");
-#if CAN_STILL_ACCESS_INNARDS
-			// Cannot access this now, but then there is no need to do so now. I (RandyR) am not sure why this it testing such low level Chorus functioning.
+			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + FdoFileHelper.ksFwDataXmlFileExtension);
 			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
-#endif
 			lDcache = _lDProject.FieldWorksProject.Cache;
 			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
@@ -347,11 +345,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
-			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + ".fwdata");
-#if CAN_STILL_ACCESS_INNARDS
-			// Cannot access this now, but then there is no need to do so now. I (RandyR) am not sure why this it testing such low level Chorus functioning.
+			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + FdoFileHelper.ksFwDataXmlFileExtension);
 			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
-#endif
 			lDcache = _lDProject.FieldWorksProject.Cache;
 			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
@@ -400,11 +395,8 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
-			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + ".fwdata");
-#if CAN_STILL_ACCESS_INNARDS
-			// Cannot access this now, but then there is no need to do so now. I (RandyR) am not sure why this it testing such low level Chorus functioning.
+			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + FdoFileHelper.ksFwDataXmlFileExtension);
 			FLEx.ProjectUnifier.PutHumptyTogetherAgain(MainClass.Container.Resolve<IProgress>(), true, lDdataFilePath);
-#endif
 			lDcache = _lDProject.FieldWorksProject.Cache;
 
 			lDFdoEntry = lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid) as ILexEntry;

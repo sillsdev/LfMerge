@@ -37,37 +37,37 @@ namespace LfMerge.Actions
 				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.ProjectCode);
 
 				// Call into LF Bridge to do the work.
-				string somethingForClient;
+				string syncResult;
 				var options = new Dictionary<string, string>
 				{
 					{"projectPath", projectFolderPath},
-					{"fwdataFilename", project.ProjectCode + ".fwdata"},
+					{"fwdataFilename", project.ProjectCode + FdoFileHelper.ksFwDataXmlFileExtension},
 					{"languageDepotRepoName", "Language Depot"},
 					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)}
 				};
-				LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress, options, out somethingForClient);
+				LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress, options, out syncResult);
 
 // REVIEW Eberhard(RandyR): What kind of states belong with each of these 'line' checks, if any?
 				// LF Bridge may have thrown an exception (in which case we won't get to this line),
 				// or it may have done something. The most important to us 'somethings' will be in 'somethingForClient'.
-				if (somethingForClient.Contains("Sync failed: Cannot create a repository at this point in LF development."))
+				if (syncResult.Contains("Sync failed: Cannot create a repository at this point in LF development."))
 				{
 					Logger.Error("Sync failed: Cannot create a repository at this point in LF development.");
 					return;
 				}
-				var line = LanguageForgeBridgeServices.GetLineStartingWith(somethingForClient, "Sync failed - ");
+				var line = LanguageForgeBridgeServices.GetLineStartingWith(syncResult, "Sync failed - ");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Error(line);
 					return;
 				}
-				line = LanguageForgeBridgeServices.GetLineFromLfBridge(somethingForClient, "No changes from others");
+				line = LanguageForgeBridgeServices.GetLineFromLfBridge(syncResult, "No changes from others");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Notice(line);
 					return;
 				}
-				line = LanguageForgeBridgeServices.GetLineFromLfBridge(somethingForClient, "Received changes from others");
+				line = LanguageForgeBridgeServices.GetLineFromLfBridge(syncResult, "Received changes from others");
 				if (string.IsNullOrEmpty(line))
 				{
 					// Hmm. Bad news. Must have been some kind of problem down there.

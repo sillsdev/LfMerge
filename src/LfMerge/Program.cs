@@ -130,28 +130,28 @@ namespace LfMerge
 					{
 						return;
 					}
-						Logger.Notice("Initial clone");
-						// Since we're in here, the previous clone was not finished, so remove and start over
-						var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
+					Logger.Notice("Initial clone");
+					// Since we're in here, the previous clone was not finished, so remove and start over
+					var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
 					if (LanguageForgeBridgeServices.CanDeleteCloneFolderCandidate(cloneLocation))
-						{
-							Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
-							Directory.Delete(cloneLocation, true);
-						}
-						project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
+					{
+						Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
+						Directory.Delete(cloneLocation, true);
+					}
+					project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 
 					var projectFolderPath = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
 					var chorusHelper = Container.Resolve<ChorusHelper>();
-					string somethingForClient;
+					string cloneResult;
 					var options = new Dictionary<string, string>
 					{
 						{"projectPath", projectFolderPath},
 						{"fdoDataModelVersion", FdoCache.ModelVersion},
 						{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)}
 					};
-					LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", progress, options, out somethingForClient);
+					LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", progress, options, out cloneResult);
 
-					var line = LanguageForgeBridgeServices.GetLineStartingWith(somethingForClient, "Clone created in folder");
+					var line = LanguageForgeBridgeServices.GetLineStartingWith(cloneResult, "Clone created in folder");
 					if (!string.IsNullOrEmpty(line))
 					{
 						// Dig out actual clone path from 'line'.
@@ -159,7 +159,7 @@ namespace LfMerge
 						if (projectFolderPath != actualClonePath)
 							Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}", projectFolderPath, actualClonePath);
 					}
-					line = LanguageForgeBridgeServices.GetLineStartingWith(somethingForClient, "Specified branch did not exist");
+					line = LanguageForgeBridgeServices.GetLineStartingWith(cloneResult, "Specified branch did not exist");
 					if (!string.IsNullOrEmpty(line))
 					{
 						// Updated to a branch, but an earlier one than is in "FdoCache.ModelVersion".
@@ -170,27 +170,24 @@ namespace LfMerge
 						Logger.Notice(line);
 					}
 
-						Logger.Notice("Initial transfer to mongo after clone");
-						project.IsInitialClone = true;
+					Logger.Notice("Initial transfer to mongo after clone");
+					project.IsInitialClone = true;
 					Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
-						project.IsInitialClone = false;
-					}
-				catch (ArgumentOutOfRangeException err)
-				{
-					if (err.Message == "Cannot update to any branch.")
-				{
-					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
-					throw;
+					project.IsInitialClone = false;
 				}
-			}
-				catch (Exception err)
-		{
-					if (err.GetType().Name == "RepositoryAuthorizationException")
-			{
+				catch (Exception e)
+				{
+					if (e.GetType().Name == "ArgumentOutOfRangeException" && e.Message == "Cannot update to any branch.")
+					{
+						project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+						throw;
+					}
+					if (e.GetType().Name == "RepositoryAuthorizationException")
+					{
 						Logger.Error("Initial clone authorization exception");
 						project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 						throw;
-				}
+					}
 				}
 			}
 		}
