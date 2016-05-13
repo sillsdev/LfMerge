@@ -2,10 +2,11 @@
 
 # In order to debug dependencies in Flexbridge, build Flexbridge then run this script to
 # copy its relevant libraries.
-# This script assumes that the Flexbridge repo is in ~/fwrepo/flexbridge.
+# This script assumes that the Flexbridge repo is in ~/fwrepo/flexbridge (or that FB_DIR is
+# set prior to running this script)
 # It copies the needed libraries into the lib and the ${BUILD_CONFIG} folders.
 
-FB_DIR=~/fwrepo/flexbridge
+FB_DIR=${FB_DIR:-$HOME/fwrepo/flexbridge}
 
 if [ ! -d ${FB_DIR} ]
 then
@@ -29,6 +30,12 @@ fi
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.dll* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.dll* output/${BUILD_CONFIG}/
 
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.dll* lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.dll* output/${BUILD_CONFIG}/
+
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.dll* lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.dll* output/${BUILD_CONFIG}/
+
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibChorus.dll* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibChorus.dll* output/${BUILD_CONFIG}/
 
@@ -42,9 +49,6 @@ cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/chorusmerge output/${BUILD_CONFIG}/
 
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* output/${BUILD_CONFIG}/
-
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/SIL.*.dll* lib/
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/SIL.*.dll* output/${BUILD_CONFIG}/
 
 echo Files copied.
 
