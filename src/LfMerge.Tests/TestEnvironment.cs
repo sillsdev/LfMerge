@@ -4,14 +4,12 @@ using System;
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Chorus.Model;
 using IniParser.Parser;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.FieldWorks;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
-using LibFLExBridgeChorusPlugin.Infrastructure;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
@@ -75,10 +73,7 @@ namespace LfMerge.Tests
 
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>();
-				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
-				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 

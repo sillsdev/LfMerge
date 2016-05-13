@@ -1,20 +1,16 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Chorus.Model;
 using LfMerge.Actions;
 using LfMerge.Actions.Infrastructure;
-using LfMerge.FieldWorks;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Queues;
 using LfMerge.Settings;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using Palaso.IO.FileLock;
 using Palaso.Progress;
 using SIL.FieldWorks.FDO;
@@ -33,16 +29,13 @@ namespace LfMerge
 			containerBuilder.RegisterType<LfMergeSettingsIni>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
 				.WithParameter(new TypedParameter(typeof(string), "LfMerge"));
-			containerBuilder.RegisterType<InternetCloneSettingsModel>().AsSelf();
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();
-			containerBuilder.RegisterType<UpdateBranchHelperFlex>().As<UpdateBranchHelperFlex>();
-			containerBuilder.RegisterType<FlexHelper>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
-			LfMerge.Actions.Action.Register(containerBuilder);
+			Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
 		}
@@ -113,6 +106,7 @@ namespace LfMerge
 			Logger.Notice("LfMerge finished");
 		}
 
+// REVIEW Eberhard(RandyR): This method sure feels like it should be in a new LF 'Action' subclass.
 		/// <summary>
 		/// Ensures a Send/Receive project from Language Depot is properly
 		/// cloned into the WebWork directory for LfMerge.
@@ -124,94 +118,80 @@ namespace LfMerge
 		/// <param name="project">LF Project.</param>
 		public static void EnsureClone(ILfProject project)
 		{
-			using (var scope = MainClass.Container.BeginLifetimeScope())
+			using (var scope = Container.BeginLifetimeScope())
 			{
 				var progress = scope.Resolve<IProgress>();
 				var settings = Container.Resolve<LfMergeSettingsIni>();
-				var model = scope.Resolve<InternetCloneSettingsModel>();
-				model.InitFromUri(project.LanguageDepotProjectUri);
-				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
-				model.AccountName = project.LanguageDepotProject.Username;
-				model.Password = project.LanguageDepotProject.Password;
-				model.ProjectId = project.LanguageDepotProject.Identifier;
-				model.LocalFolderName = project.ProjectCode;
-				model.AddProgress(progress);
 
 				try
 				{
 					// Check if an initial clone needs to be performed
-					if (!File.Exists(settings.GetStateFileName(project.ProjectCode)) ||
-						(project.State.SRState == ProcessingState.SendReceiveStates.CLONING) ||
-						model.TargetLocationIsUnused)
+					if (File.Exists(settings.GetStateFileName(project.ProjectCode)) && (project.State.SRState != ProcessingState.SendReceiveStates.CLONING))
 					{
+						return;
+					}
 						Logger.Notice("Initial clone");
 						// Since we're in here, the previous clone was not finished, so remove and start over
 						var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
-						if (Directory.Exists(cloneLocation))
+					if (LanguageForgeBridgeServices.CanDeleteCloneFolderCandidate(cloneLocation))
 						{
 							Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
 							Directory.Delete(cloneLocation, true);
 						}
 						project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
-						model.DoClone();
-						if (model.LocalFolderName != project.ProjectCode)
-							Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}", project.ProjectCode, model.TargetDestination);
-						if (!FinishClone(project))
-							project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+
+					var projectFolderPath = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
+					var chorusHelper = Container.Resolve<ChorusHelper>();
+					string somethingForClient;
+					var options = new Dictionary<string, string>
+					{
+						{"projectPath", projectFolderPath},
+						{"fdoDataModelVersionKey", FdoCache.ModelVersion},
+						{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)}
+					};
+					LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", progress, options, out somethingForClient);
+
+					var line = LanguageForgeBridgeServices.GetLineStartingWith(somethingForClient, "Clone created in folder");
+					if (!string.IsNullOrEmpty(line))
+					{
+						// Dig out actual clone path from 'line'.
+						var actualClonePath = line.Replace("Clone created in folder ", string.Empty).Split(',')[0].Trim();
+						if (projectFolderPath != actualClonePath)
+							Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}", projectFolderPath, actualClonePath);
+					}
+					line = LanguageForgeBridgeServices.GetLineStartingWith(somethingForClient, "Specified branch did not exist");
+					if (!string.IsNullOrEmpty(line))
+					{
+						// Updated to a branch, but an earlier one than is in "FdoCache.ModelVersion".
+						// That is fine, since FDO will update (e.g., do a data migration on) that older version to the one in FdoCache.ModelVersion.
+						// Then, the next commit. or full S/R operation will create the new branch at FdoCache.ModelVersion.
+						// I (RandyR) suspect this to not happen any time soon, if LF starts with DM '68'.
+						// So, this is essentially future-proofing LF Merge for some unknown day in the future, when this coud happen.
+						Logger.Notice(line);
+					}
 
 						Logger.Notice("Initial transfer to mongo after clone");
 						project.IsInitialClone = true;
-						LfMerge.Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
+					Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
 						project.IsInitialClone = false;
 					}
-				}
-				catch (Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException)
+				catch (ArgumentOutOfRangeException err)
 				{
-					Logger.Error("Initial clone authorization exception");
+					if (err.Message == "Cannot update to any branch.")
+				{
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;
 				}
 			}
-		}
-
-		private static bool FinishClone(ILfProject project)
+				catch (Exception err)
 		{
-			var actualCloneResult = new ActualCloneResult();
-			var settings = Container.Resolve<LfMergeSettingsIni>();
-
-			var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
-			var newProjectFilename = Path.GetFileName(project.ProjectCode) + SharedConstants.FwXmlExtension;
-			var newFwProjectPathname = Path.Combine(cloneLocation, newProjectFilename);
-
-			using (var scope = MainClass.Container.BeginLifetimeScope())
+					if (err.GetType().Name == "RepositoryAuthorizationException")
 			{
-				var helper = scope.Resolve<UpdateBranchHelperFlex>();
-				if (!helper.UpdateToTheCorrectBranchHeadIfPossible(
-					FdoCache.ModelVersion, actualCloneResult, cloneLocation))
-				{
-					actualCloneResult.Message = "Flex version is too old";
+						Logger.Error("Initial clone authorization exception");
+						project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+						throw;
 				}
-
-				switch (actualCloneResult.FinalCloneResult)
-				{
-				case FinalCloneResult.ExistingCloneTargetFolder:
-					Logger.Error("Clone failed: Flex project exists: {0}", cloneLocation);
-					if (Directory.Exists(cloneLocation))
-						Directory.Delete(cloneLocation, true);
-					return false;
-				case FinalCloneResult.FlexVersionIsTooOld:
-					Logger.Error("Clone failed: Flex version is too old; project: {0}", project.ProjectCode);
-					if (Directory.Exists(cloneLocation))
-						Directory.Delete(cloneLocation, true);
-					return false;
-				case FinalCloneResult.Cloned:
-					break;
 				}
-
-				var projectUnifier = scope.Resolve<FlexHelper>();
-				var Progress = scope.Resolve<IProgress>();
-				projectUnifier.PutHumptyTogetherAgain(Progress, false, newFwProjectPathname);
-				return true;
 			}
 		}
 
