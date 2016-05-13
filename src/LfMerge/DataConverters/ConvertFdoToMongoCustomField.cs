@@ -23,6 +23,8 @@ namespace LfMerge.DataConverters
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
 
+		private int _wsEn;
+
 		/// <summary>
 		/// Mapping of FDO CellarProperty type enumeration to LF custom field type.
 		/// Refer to FDO SIL.CoreImpl.CellarPropertyType.
@@ -49,6 +51,7 @@ namespace LfMerge.DataConverters
 			this.cache = cache;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
+			_wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
 
 			GuidToListCode = new Dictionary<Guid, string>
 			{
@@ -91,6 +94,39 @@ namespace LfMerge.DataConverters
 		}
 
 		/// <summary>
+		/// Returns a dictionary of custom fields at the LexEntry, LexSense, and LexExampleSentence levels
+		/// From FDO to LF.  If the dictionary doesn't exist, create one.
+		/// </summary>
+		/// <returns>Dictionary of custom fields where the keys are the parent listCode</returns>
+		public Dictionary<string, ICmPossibilityList> GetCustomFieldParentLists()
+		{
+			// Generate the dictionary of custom fields
+			var lfCustomFieldLists = new Dictionary<string, ICmPossibilityList>();
+
+			// The three classes that are allowed to have custom fields in them are LexEntry, LexSense, and LexExampleSentence
+			List<int> customFieldIds = new List<int>(
+				fdoMetaData.GetFields(LexEntryTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+			customFieldIds.AddRange(
+				fdoMetaData.GetFields(LexSenseTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+			customFieldIds.AddRange(
+				fdoMetaData.GetFields(LexExampleSentenceTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+
+			var listRepo = cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>();
+			
+			foreach (int flid in customFieldIds)
+			{
+				Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+				string listCode = GetParentListCode(flid);
+				lfCustomFieldLists[listCode] = listRepo.GetObject(parentListGuid);
+			}
+
+			return lfCustomFieldLists;
+		}
+
+		/// <summary>
 		/// Returns value of custom fields for this CmObject.
 		/// </summary>
 		/// <returns>Either null or a BsonDocument with the following structure
@@ -116,9 +152,11 @@ namespace LfMerge.DataConverters
 		/// </returns>
 		/// <param name="cmObj">Cm object.</param>
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
+		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
 		/// <param name="lfCustomFieldList">Dictionary to receive LF custom field configuration settings (keys are field names
 		/// as found in LF, e.g. customField_entry_MyCustomField)</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
+			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
 			Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			if (cmObj == null) return null;
@@ -138,27 +176,32 @@ namespace LfMerge.DataConverters
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, objectType);
 				BsonDocument bsonForThisField;
 				string lfCustomFieldType;
-				GetCustomFieldData(cmObj.Hvo, flid, objectType,
+				string listCode = string.Empty;
+				GetCustomFieldData(cmObj.Hvo, flid, objectType, listConverters,
 					out bsonForThisField, out lfCustomFieldType);
 
 				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();
 
-				// Get custom field configuration info
-				if (label.Contains("ListRef"))
+				if (!string.IsNullOrEmpty(lfCustomFieldType))
 				{
-					// Compute list code
-					string listCode = GetParentListCode(flid);
-					lfCustomFieldList[lfCustomFieldName] = GetLfCustomFieldSettings(label, listCode);
-				}
-				else if (!string.IsNullOrEmpty(lfCustomFieldType))
-				{
-					// Default to current analysis WS?
-					List<string>inputSystems = new List<string>();
-					foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
-						inputSystems.Add(fdoAnalysisWs.RFC5646);
-					lfCustomFieldList[lfCustomFieldName] =
+					// Get custom field configuration info
+					if (lfCustomFieldType.Contains("ListRef"))
+					{
+						// Compute list code
+						listCode = GetParentListCode(flid);
+						lfCustomFieldList[lfCustomFieldName] = GetLfCustomFieldSettings(label, lfCustomFieldType, listCode);
+
+					}
+					else
+					{
+						// Default to current analysis WS?
+						List<string> inputSystems = new List<string>();
+						foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
+							inputSystems.Add(fdoAnalysisWs.RFC5646);
+						lfCustomFieldList[lfCustomFieldName] =
 						GetLfCustomFieldSettings(label, lfCustomFieldType, inputSystems);
+					}
 				}
 
 				if (bsonForThisField != null)
@@ -167,12 +210,15 @@ namespace LfMerge.DataConverters
 					BsonValue guid;
 					if (bsonForThisField.TryGetValue("guid", out guid))
 					{
-						customFieldGuids.Add(lfCustomFieldName, guid);
+						if (guid is BsonArray)
+							customFieldGuids.Add(lfCustomFieldName, guid, ((BsonArray)guid).Count > 0);
+						else
+							customFieldGuids.Add(lfCustomFieldName, guid);
 
 						LfConfigFieldBase lfCustomFieldSettings;
 						// Valid guid so we should be able to create custom field configuration info
 						if (lfCustomFieldName.Contains("ListRef"))
-							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName, "");
+							lfCustomFieldSettings = GetLfCustomFieldSettings(label, lfCustomFieldName, listCode);
 						else
 							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName,
 								lfCustomFieldType, new List<string>{cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
@@ -192,16 +238,42 @@ namespace LfMerge.DataConverters
 		/// <summary>
 		/// Get the list code of the parent
 		/// </summary>
-		/// <returns>The list code as used in LF (e.g., "sense-type" or "grammatical-info").</returns>
+		/// <returns>The list code as used in LF (e.g., "sense-type" or "grammatical-info").
+		/// For custom lists from FDO, returns the user-given list name or abbreviation.</returns>
 		/// <param name="flid">Flid.</param>
 		private string GetParentListCode(int flid)
 		{
 			string result = string.Empty;
 			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
 			if (parentListGuid != Guid.Empty)
-				GuidToListCode.TryGetValue(parentListGuid, out result);
+			{
+				if (GuidToListCode.TryGetValue(parentListGuid, out result))
+					return result;
+				// If it wasn't in GuidToListCode, it's a custom field we haven't actually seen yet
+				ICmPossibilityList parentList;
+				if (cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
+				{
+					if (parentList.Name != null)
+						result = ConvertFdoToMongoTsStrings.SafeTsStringText(parentList.Name.BestAnalysisVernacularAlternative);
+					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
+					{
+						GuidToListCode[parentListGuid] = result;
+						return result;
+					}
+					if (parentList.Abbreviation != null)
+						result = ConvertFdoToMongoTsStrings.SafeTsStringText(parentList.Abbreviation.BestAnalysisVernacularAlternative);
+					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
+					{
+						GuidToListCode[parentListGuid] = result;
 
-			return result;
+						return result;
+					}
+					result = String.Format("Custom List {0}", parentListGuid);
+					GuidToListCode[parentListGuid] = result;
+					return result;
+				}
+			}
+			return result; // If we reach here, result is still an empty string
 		}
 
 		/// <summary>
@@ -220,8 +292,11 @@ namespace LfMerge.DataConverters
 		/// or a list of GUIDs that happens to contain only one entry.
 		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
 		/// </param>
+		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
 		/// <param name="customFieldType">output string of LF custom field type</param>
-		private void GetCustomFieldData(int hvo, int flid, string fieldSourceType, out BsonDocument bsonForThisField, out string customFieldType)
+		private void GetCustomFieldData(int hvo, int flid, string fieldSourceType,
+			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
+			out BsonDocument bsonForThisField, out string customFieldType)
 		{
 			bsonForThisField = null;
 			customFieldType = string.Empty;
@@ -257,21 +332,25 @@ namespace LfMerge.DataConverters
 			case CellarPropertyType.OwningAtomic:
 			case CellarPropertyType.ReferenceAtomic:
 				int ownedHvo = data.get_ObjectProp(hvo, flid);
-				fieldValue = GetCustomReferencedObject(ownedHvo, flid, ref dataGuids);
+				fieldValue = GetCustomReferencedObject(ownedHvo, flid, listConverters, ref dataGuids);
 				if (fieldValue != null && fdoFieldType == CellarPropertyType.ReferenceAtomic)
 				{
-					// Single CmPossiblity reference - LF expects format like { "value": "name of possibility" }
+					// Single CmPossiblity reference - LF expects format like { "value": "key of possibility" }
 					fieldValue = new BsonDocument("value", fieldValue);
 				}
 				fieldGuid = new BsonString(dataGuids.FirstOrDefault().ToString());
 				break;
-
+			case CellarPropertyType.MultiUnicode:
+				ITsMultiString tss = data.get_MultiStringProp(hvo, flid);
+				if (tss != null && tss.StringCount > 0)
+					fieldValue = LfMultiText.FromMultiITsString(tss, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+				break;
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
 			case CellarPropertyType.ReferenceCollection:
 			case CellarPropertyType.ReferenceSequence:
 				int[] listHvos = data.VecProp(hvo, flid);
-				var innerValues = new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid, ref dataGuids)).Where(x => x != null));
+				var innerValues = new BsonArray(listHvos.Select(listHvo => GetCustomReferencedObject(listHvo, flid, listConverters, ref dataGuids)).Where(x => x != null));
 				if (innerValues.Count == 0)
 					fieldValue = null;
 				else
@@ -288,7 +367,6 @@ namespace LfMerge.DataConverters
 				else
 					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
 				break;
-
 			default:
 				fieldValue = null;
 				if (logger != null)
@@ -335,10 +413,11 @@ namespace LfMerge.DataConverters
 		/// </summary>
 		/// <returns>The lf custom field settings as LfConfigMultiOptionList or LfConfigOptionList.</returns>
 		/// <param name="label">Custom field label.</param>
+		/// <param name="lfCustomFieldType">lf custom field type</param>
 		/// <param name="listCode">Parent list code.</param>
-		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string listCode)
+		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string lfCustomFieldType, string listCode)
 		{
-			if (label.Contains("Multi ListRef"))  // TODO: This won't work. The label is based on the field name, which can be set by the user, so it could be anything.
+			if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.ReferenceCollection])
 			{
 				return new LfConfigMultiOptionList {
 					Label = label,
@@ -365,8 +444,11 @@ namespace LfMerge.DataConverters
 		/// <returns>The custom referenced object's data converted to a BsonValue.</returns>
 		/// <param name="hvo">Hvo of referenced object.</param>
 		/// <param name="flid">Flid of referring field (required to get correct writing system for an StText).</param>
+		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
 		/// <param name="referencedObjectGuids">List to which referenced object's GUID will be added.</param>
-		private BsonValue GetCustomReferencedObject(int hvo, int flid, ref List<Guid> referencedObjectGuids)
+		private BsonValue GetCustomReferencedObject(int hvo, int flid,
+			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
+			ref List<Guid> referencedObjectGuids)
 		{
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			if (hvo == 0 || !data.get_IsValidObject(hvo))
@@ -385,7 +467,11 @@ namespace LfMerge.DataConverters
 				return ConvertUtilities.GetCustomStTextValues((IStText)referencedObject, flid,
 					cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
 			else if (referencedObject is ICmPossibility)
-				return GetCustomListValues((ICmPossibility)referencedObject, flid);
+			{
+				//return GetCustomListValues((ICmPossibility)referencedObject, flid);
+				string listCode = GetParentListCode(flid);
+				return new BsonString(listConverters[listCode].LfItemKeyString((ICmPossibility)referencedObject, _wsEn));
+			}
 			else
 				return null;
 		}

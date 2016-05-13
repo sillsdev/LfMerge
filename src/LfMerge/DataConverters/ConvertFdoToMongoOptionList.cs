@@ -19,6 +19,13 @@ namespace LfMerge.DataConverters
 		protected Dictionary<Guid, string> _lfOptionListItemKeyByGuid;
 		protected ILogger _logger;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="LfMerge.DataConverters.ConvertFdoToMongoOptionList"/> class.
+		/// </summary>
+		/// <param name="lfOptionList">Lf option list.</param>
+		/// <param name="wsForKeys">Ws for keys.</param>
+		/// <param name="listCode">List code.</param>
+		/// <param name="logger">Logger.</param>
 		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger)
 		{
 			_logger = logger;

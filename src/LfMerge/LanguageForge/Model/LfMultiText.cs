@@ -58,6 +58,22 @@ namespace LfMerge.LanguageForge.Model
 			return new LfMultiText { { wsStr, new LfStringField { Value = value.Text } } };
 		}
 
+		public static LfMultiText FromMultiITsString(ITsMultiString value, ILgWritingSystemFactory wsManager)
+		{
+			if (value == null || value.StringCount == 0) return null;
+			LfMultiText mt = new LfMultiText();
+			for (int index = 0; index < value.StringCount; index++)
+			{
+				int wsId;
+				string valueStr = value.GetStringFromIndex(index, out wsId).Text;
+				string wsStr = wsManager.GetStrFromWs(wsId);
+				if (!string.IsNullOrEmpty(wsStr))
+					mt.Add(wsStr, new LfStringField { Value = valueStr });
+				//MainClass.Logger.Warning("Adding multistring ws: {0}, str {1}", wsStr, valueStr);
+			}
+			return mt;
+		}
+
 		public BsonDocument AsBsonDocument()
 		{
 			BsonDocument result = new BsonDocument();

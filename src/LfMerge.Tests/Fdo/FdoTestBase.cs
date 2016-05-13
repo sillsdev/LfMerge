@@ -2,6 +2,8 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.DataConverters;
+using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
@@ -11,6 +13,7 @@ using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace LfMerge.Tests.Fdo
@@ -88,6 +91,8 @@ namespace LfMerge.Tests.Fdo
 		protected MongoProjectRecordFactory _recordFactory;
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
+		protected int _wsEn;
+		protected Dictionary<string, ConvertFdoToMongoOptionList> _listConverters;
 		protected UndoableUnitOfWorkHelper _undoHelper;
 		protected TransferMongoToFdoAction sutMongoToFdo;
 		protected TransferFdoToMongoAction sutFdoToMongo;
@@ -105,6 +110,7 @@ namespace LfMerge.Tests.Fdo
 
 			_lfProj = FdoTestFixture.lfProj;
 			_cache = _lfProj.FieldWorksProject.Cache;
+			_wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			_undoHelper = new UndoableUnitOfWorkHelper(_cache.ActionHandlerAccessor, "undo", "redo");
 			_undoHelper.RollBack = true;
 
@@ -120,6 +126,25 @@ namespace LfMerge.Tests.Fdo
 				_env.Logger,
 				_conn
 			);
+
+			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _env.Logger);
+			_listConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
+			foreach (KeyValuePair<string, ICmPossibilityList> pair in convertCustomField.GetCustomFieldParentLists())
+			{
+				string listCode = pair.Key;
+				ICmPossibilityList parentList = pair.Value;
+				_listConverters[listCode] = ConvertOptionListFromFdo(_lfProj, listCode, parentList);
+			}
+		}
+
+		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
+		{
+			LfOptionList lfExistingOptionList = _conn.GetLfOptionListByCode(project, listCode);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, _env.Logger);
+			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
+			if (updateMongoList)
+				_conn.UpdateRecord(project, lfChangedOptionList, listCode);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, _env.Logger);
 		}
 
 		[TearDown]

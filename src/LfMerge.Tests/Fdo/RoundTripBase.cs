@@ -168,7 +168,7 @@ namespace LfMerge.Tests.Fdo
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
 			var convertCustomField = new ConvertFdoToMongoCustomField(cache, new LfMerge.Logging.NullLogger());
 			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, lfCustomFieldList);
+			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters, lfCustomFieldList);
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)
