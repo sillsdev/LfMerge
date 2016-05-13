@@ -120,6 +120,7 @@
     <Compile Include="Fdo\DataConverters\ConvertFdoToMongoCustomFieldTests.cs" />
     <Compile Include="LanguageDepotMock.cs" />
     <Compile Include="Actions\SynchronizeActionTests.cs" />
+    <Compile Include="TestLogger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

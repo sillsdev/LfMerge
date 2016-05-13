@@ -21,7 +21,8 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
-			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, new Logging.SyslogLogger());
+			var converter = new ConvertFdoToMongoCustomField(cache,
+				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
@@ -43,7 +44,8 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
-			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, new Logging.SyslogLogger());
+			var converter = new ConvertFdoToMongoCustomField(cache,
+				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
@@ -66,7 +68,8 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			// Setup
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
-			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, new Logging.SyslogLogger());
+			var converter = new ConvertFdoToMongoCustomField(cache,
+				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);

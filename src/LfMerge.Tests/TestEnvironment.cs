@@ -63,13 +63,17 @@ namespace LfMerge.Tests
 				return testName;
 			}
 		}
-		private static ContainerBuilder RegisterTypes(bool registerSettingsModel,
+
+		private ContainerBuilder RegisterTypes(bool registerSettingsModel,
 			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
 				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
 				.As<LfMergeSettingsIni>();
+			containerBuilder.RegisterType<TestLogger>().SingleInstance().As<ILogger>()
+				.WithParameter(new TypedParameter(typeof(string), TestName));
+
 
 			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
 
