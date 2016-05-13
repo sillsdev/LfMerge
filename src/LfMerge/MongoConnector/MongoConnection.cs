@@ -183,7 +183,7 @@ namespace LfMerge.MongoConnector
 
 				var vernacularInputSystems = new List<string> { vernacularWs };
 				List<string> vernacularFieldsWsList = new List<string> {
-					"citationForm", "lexeme"
+					"citationForm", "lexeme", "etymology"
 				};
 				foreach (var vernacularFieldName in vernacularFieldsWsList)
 				{
