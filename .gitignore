@@ -3,6 +3,7 @@ packages/
 bin/
 obj/
 output/
+.idea/
 MercurialExtensions/
 Mercurial/
 Downloads/
@@ -17,5 +18,6 @@ _ReSharper.LfMerge
 *.ulsx
 *.userprefs
 *.swp
+*.iml
 *~
 data/testlangproj*/*.bak
