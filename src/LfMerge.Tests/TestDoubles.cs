@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LfMerge.Logging;
 
 namespace LfMerge.Tests
 {
@@ -320,5 +321,36 @@ namespace LfMerge.Tests
 		{
 			return SynchronizeActionTests.LDProjectFolderPath;
 		}
+	}
+
+	class EnsureCloneActionDouble: EnsureCloneAction
+	{
+		private readonly bool _projectExists;
+
+		public EnsureCloneActionDouble(LfMergeSettingsIni settings, ILogger logger, bool projectExists = true):
+			base(settings, logger)
+		{
+			_projectExists = projectExists;
+		}
+
+		protected override string CloneRepo(ILfProject project, string projectFolderPath)
+		{
+			if (_projectExists)
+			{
+				Directory.CreateDirectory(projectFolderPath);
+				Directory.CreateDirectory(Path.Combine(projectFolderPath, ".hg"));
+				File.WriteAllText(Path.Combine(projectFolderPath, ".hg", "hgrc"), "blablabla");
+				return string.Format("Clone created in folder {0}", projectFolderPath);
+			}
+			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
+		}
+	}
+}
+
+// We can't directly use Chorus, so we redefine the exception we need here
+namespace Chorus.VcsDrivers.Mercurial
+{
+	class RepositoryAuthorizationException: Exception
+	{
 	}
 }

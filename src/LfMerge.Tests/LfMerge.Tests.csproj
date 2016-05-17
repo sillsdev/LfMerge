@@ -103,7 +103,6 @@
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
     <Compile Include="Settings\LfMergeSettingsIniTests.cs" />
-    <Compile Include="Actions\ProgramTests.cs" />
     <Compile Include="GlobalTestFixture.cs" />
     <Compile Include="Fdo\FdoTestBase.cs" />
     <Compile Include="Fdo\RoundTripBase.cs" />
@@ -113,6 +112,7 @@
     <Compile Include="Fdo\DataConverters\ConvertFdoToMongoCustomFieldTests.cs" />
     <Compile Include="LanguageDepotMock.cs" />
     <Compile Include="Actions\SynchronizeActionTests.cs" />
+    <Compile Include="Actions\EnsureCloneActionTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -2,16 +2,13 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using Palaso.IO;
 
-namespace LfMerge
+namespace LfMerge.Actions.Infrastructure
 {
-	public static class LanguageForgeBridgeServices
+	public static class LfMergeBridgeServices
 	{
-		public static IList<string> GetLinesFromLfBridge(string somethingForClient)
+		private static IList<string> GetLinesFromLfBridge(string somethingForClient)
 		{
 			return somethingForClient.Split(new[] {"\n", "\r"}, StringSplitOptions.RemoveEmptyEntries).ToList();
 		}
@@ -38,13 +35,6 @@ namespace LfMerge
 				}
 			}
 			return string.Empty;
-		}
-
-		public static bool CanDeleteCloneFolderCandidate(string cloneCandidateFolder)
-		{
-			return Directory.Exists(cloneCandidateFolder) // It does exist
-				&& (DirectoryUtilities.GetSafeDirectories(cloneCandidateFolder).Length == 0)
-				&& (Directory.GetFiles(cloneCandidateFolder).Length == 0); // Has no files.
 		}
 
 		public static Tuple<bool, string, string> GetLongShaFromClient(string somethingForClient)

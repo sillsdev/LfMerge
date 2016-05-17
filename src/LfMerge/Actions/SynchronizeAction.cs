@@ -55,19 +55,19 @@ namespace LfMerge.Actions
 					Logger.Error("Sync failed: Cannot create a repository at this point in LF development.");
 					return;
 				}
-				var line = LanguageForgeBridgeServices.GetLineStartingWith(syncResult, "Sync failed - ");
+				var line = LfMergeBridgeServices.GetLineStartingWith(syncResult, "Sync failed - ");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Error(line);
 					return;
 				}
-				line = LanguageForgeBridgeServices.GetLineFromLfBridge(syncResult, "No changes from others");
+				line = LfMergeBridgeServices.GetLineFromLfBridge(syncResult, "No changes from others");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Notice(line);
 					return;
 				}
-				line = LanguageForgeBridgeServices.GetLineFromLfBridge(syncResult, "Received changes from others");
+				line = LfMergeBridgeServices.GetLineFromLfBridge(syncResult, "Received changes from others");
 				if (string.IsNullOrEmpty(line))
 				{
 					// Hmm. Bad news. Must have been some kind of problem down there.
