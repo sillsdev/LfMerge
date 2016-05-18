@@ -29,8 +29,9 @@ namespace LfMerge.Actions
 			{
 				GetAction(ActionNames.TransferMongoToFdo).Run(project);
 
-				// Syncing of a new repo is not currently supported.
-				// For implementation, look in ~/fwrepo/flexbridge/src/FLEx-ChorusPlugin/Infrastructure/ActionHandlers/SendReceiveActionHandler.cs
+				// Save any changes in FDO into fwdata file. Release for LfMergeBridge to use.
+				LanguageForgeProject.DisposeProjectCache(project.ProjectCode);
+
 				Logger.Notice("Syncing");
 
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
@@ -47,9 +48,6 @@ namespace LfMerge.Actions
 				};
 				LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress, options, out syncResult);
 
-// REVIEW Eberhard(RandyR): What kind of states belong with each of these 'line' checks, if any?
-				// LF Bridge may have thrown an exception (in which case we won't get to this line),
-				// or it may have done something. The most important to us 'somethings' will be in 'somethingForClient'.
 				if (syncResult.Contains("Sync failed: Cannot create a repository at this point in LF development."))
 				{
 					Logger.Error("Sync failed: Cannot create a repository at this point in LF development.");
@@ -65,19 +63,20 @@ namespace LfMerge.Actions
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Notice(line);
-					return;
+					// We still need to transfer back to Mongo to delete any entries marked for deletion
 				}
-				line = LfMergeBridgeServices.GetLineFromLfBridge(syncResult, "Received changes from others");
-				if (string.IsNullOrEmpty(line))
+				else
 				{
-					// Hmm. Bad news. Must have been some kind of problem down there.
-					Logger.Error("Unknown sync failure.");
-					return;
+					line = LfMergeBridgeServices.GetLineFromLfBridge(syncResult, "Received changes from others");
+					if (string.IsNullOrEmpty(line))
+					{
+						// Hmm. Bad news. Must have been some kind of problem down there.
+						Logger.Error("Unknown sync failure.");
+						return;
+					}
+					Logger.Notice(line);
 				}
 
-				// At this point, we know we have new stuff from afar, so wipe out FdoCache, reload it, and send it back to Mongo.
-				Logger.Notice(line);
-				LanguageForgeProject.DisposeProjectCache(project.ProjectCode);
 				GetAction(ActionNames.TransferFdoToMongo).Run(project);
 			}
 		}
