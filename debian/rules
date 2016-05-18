@@ -35,12 +35,13 @@ override_dh_auto_install:
 	install -d $(DESTDIR)/$(LIB)/Mercurial
 	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext
 	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial
-	install -d $(DESTDIR)/$(LIB)/MercuralExtensions
+	install -d $(DESTDIR)/$(LIB)/MercurialExtensions
+	install -d $(DESTDIR)/$(LIB)/MercurialExtensions/fixutf8
 	install -m 755 Mercurial/hg $(DESTDIR)/$(LIB)/Mercurial
 	install -m 644 Mercurial/mercurial.ini $(DESTDIR)/$(LIB)/Mercurial
 	install -m 644 Mercurial/hgext/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext
 	install -m 644 Mercurial/mercurial/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial
-	install -m 644 MercurialExtensions/**/*.* $(DESTDIR)/$(LIB)/MercuralExtensions
+	install -m 644 MercurialExtensions/fixutf8/*.* $(DESTDIR)/$(LIB)/MercurialExtensions/fixuf8
 	# Remove files that are also in lfmerge-fdo and unit test related files
 	cd $(DESTDIR)/$(LIB) && \
 		rm *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
