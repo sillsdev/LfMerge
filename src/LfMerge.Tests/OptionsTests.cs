@@ -61,7 +61,7 @@ namespace LfMerge.Tests
 			Assert.That(Options.GetQueueForAction(action), Is.EqualTo(expectedQueue));
 		}
 
-		[TestCase(ActionNames.None, ActionNames.TransferMongoToFdo)]
+		[TestCase(ActionNames.None, ActionNames.EnsureClone)]
 		[TestCase(ActionNames.TransferMongoToFdo, ActionNames.Commit)]
 		[TestCase(ActionNames.Commit, ActionNames.Synchronize)]
 		[TestCase(ActionNames.Synchronize, ActionNames.Edit)]
