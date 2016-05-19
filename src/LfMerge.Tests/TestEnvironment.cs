@@ -6,7 +6,7 @@ using System.Reflection;
 using Autofac;
 using IniParser.Parser;
 using LfMerge.Actions.Infrastructure;
-using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
@@ -70,6 +70,7 @@ namespace LfMerge.Tests
 				.As<LfMergeSettingsIni>();
 
 			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
+			containerBuilder.RegisterType<LanguageForgeProxyMock>().As<ILanguageForgeProxy>();
 
 			if (registerSettingsModel)
 			{
