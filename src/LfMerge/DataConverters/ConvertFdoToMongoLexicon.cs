@@ -542,13 +542,20 @@ namespace LfMerge.DataConverters
 					Abbreviation = fdoWs.Abbreviation,
 					IsRightToLeft = fdoWs.RightToLeftScript,
 					LanguageName = fdoWs.LanguageName,
-					// Tag = fdoWs.LanguageTag,  // This is FDO 9.0+ only. In 8.2 it was fdoWs.Id
+					#if FW8_COMPAT
 					Tag = fdoWs.Id,
+					#else
+					Tag = fdoWs.LanguageTag,
+					#endif
 					VernacularWS = vernacularWSList.Contains(fdoWs),
 					AnalysisWS = analysisWSList.Contains(fdoWs)
 				};
 
+				#if FW8_COMPAT
 				lfWsList.Add(fdoWs.Id, lfWs);
+				#else
+				lfWsList.Add(fdoWs.LanguageTag, lfWs);
+				#endif
 			}
 			return lfWsList;
 		}
