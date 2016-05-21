@@ -30,7 +30,7 @@ Path=Mercurial-x86_64.zip!**=>.
 
 
 [TC::PalasoPrecise64lfmergeContinuous]
-Name=palaso-precise64-lfmerge Continuous
+Name=palaso-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -76,8 +76,8 @@ L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 
 
-[TC::FLExBridgeLfmergePrecise64Continuous]
-Name=FLEx Bridge-lfmerge-Precise64-Continuous
+[TC::FLExBridgeLfmergeTrusty64Continuous]
+Name=FLEx Bridge-lfmerge-Trusty64-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
