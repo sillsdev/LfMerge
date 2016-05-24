@@ -6,7 +6,7 @@ using System.Reflection;
 using Autofac;
 using IniParser.Parser;
 using LfMerge.Actions.Infrastructure;
-using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
@@ -32,7 +32,8 @@ namespace LfMerge.Tests
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
 			bool resetLfProjectsDuringCleanup = true,
-			TemporaryFolder languageForgeServerFolder = null)
+			TemporaryFolder languageForgeServerFolder = null,
+			bool registerLfProxyMock = true)
 		{
 			_resetLfProjectsDuringCleanup = resetLfProjectsDuringCleanup;
 			if (languageForgeServerFolder == null)
@@ -41,8 +42,8 @@ namespace LfMerge.Tests
 				_languageForgeServerFolder = languageForgeServerFolder;
 			Environment.SetEnvironmentVariable("FW_CommonAppData", _languageForgeServerFolder.Path);
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble,
-				_languageForgeServerFolder.Path).Build();
+				registerProcessingStateDouble, _languageForgeServerFolder.Path,
+				registerLfProxyMock).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
@@ -63,7 +64,7 @@ namespace LfMerge.Tests
 		}
 
 		private ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, string temporaryFolder)
+			bool registerProcessingStateDouble, string temporaryFolder, bool registerLfProxyMock)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
@@ -74,6 +75,9 @@ namespace LfMerge.Tests
 
 
 			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
+
+			if (registerLfProxyMock)
+				containerBuilder.RegisterType<LanguageForgeProxyMock>().As<ILanguageForgeProxy>();
 
 			if (registerSettingsModel)
 			{
