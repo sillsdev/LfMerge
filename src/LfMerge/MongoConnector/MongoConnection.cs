@@ -39,6 +39,16 @@ namespace LfMerge.MongoConnector
 		public static string MainDatabaseName = "scriptureforge";
 		public static string HostNameAndPort = "localhost:27017";
 
+		// List of LF fields which will use the default vernacular / analysis WS. Heirarchy is config.entry.fields...
+		// We intentionally aren't setting custom example WS here, since it's a custom field with a custom name
+		private readonly List<string> _vernacularFieldsWsList = new List<string> {
+			"citationForm", "lexeme", "etymology", "senses.fields.examples.fields.sentence"
+		};
+		private readonly List<string> _analysisFieldsWsList = new List<string> {
+			"note"
+		};
+
+
 		public static void Initialize(string hostName = null, string mainDatabaseName = null)
 		{
 			if (hostName != null) HostNameAndPort = hostName;
@@ -182,22 +192,16 @@ namespace LfMerge.MongoConnector
 				var updates = new List<UpdateDefinition<MongoProjectRecord>>();
 
 				var vernacularInputSystems = new List<string> { vernacularWs };
-				List<string> vernacularFieldsWsList = new List<string> {
-					"citationForm", "lexeme", "etymology"
-				};
-				foreach (var vernacularFieldName in vernacularFieldsWsList)
+				foreach (var vernacularFieldName in _vernacularFieldsWsList)
 				{
+					Logger.Debug("WS for {0}", string.Format("config.entry.fields.{0}.inputSystems", vernacularFieldName));
 					updates.Add(builder.Set("config.entry.fields." + vernacularFieldName + ".inputSystems", vernacularInputSystems));
 					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[vernacularFieldName].InputSystems, vernacularInputSystems));
 					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[vernacularFieldName]).InputSystems, vernacularInputSystems));
 				}
 
-				// TODO: sort out what LF fields are "vernacular" / "analysis"
 				var analysisInputSystems = new List<string> { analysisWs };
-				List<string> analysisFieldsWsList = new List<string> {
-					"note", "senses.fields.examples.fields.sentence"
-				};
-				foreach (var analysisFieldName in analysisFieldsWsList)
+				foreach (var analysisFieldName in _analysisFieldsWsList)
 				{
 					updates.Add(builder.Set("config.entry.fields." + analysisFieldName + ".inputSystems", analysisInputSystems));
 					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[analysisFieldName].InputSystems, analysisInputSystems));
