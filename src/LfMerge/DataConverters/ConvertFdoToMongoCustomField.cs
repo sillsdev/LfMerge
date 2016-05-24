@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.LanguageForge.Model;
@@ -10,10 +11,10 @@ using LfMerge.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using SIL.CoreImpl;
+using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
 using SIL.FieldWorks.FDO.Infrastructure;
-using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.DataConverters
 {
@@ -78,12 +79,8 @@ namespace LfMerge.DataConverters
 				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, _fieldNameToFieldType[lfCustomFieldName]));
 			}
 
-			string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
-			string methodName = "updateCustomFieldViews";
-			var parameters = new List<Object>();
-			parameters.Add(project.ProjectCode);
-			parameters.Add(customFieldSpecs);
-			string output = PhpConnection.RunClass(className, methodName, parameters, isTest);
+			var lfproxy = MainClass.Container.Resolve<ILanguageForgeProxy>();
+			string output = lfproxy.UpdateCustomFieldViews(project.ProjectCode, customFieldSpecs, isTest);
 
 			if (string.IsNullOrEmpty(output) || output == "false")
 				return false;
