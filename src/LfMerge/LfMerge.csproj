@@ -171,11 +171,12 @@
     <Compile Include="Logging\SyslogProgress.cs" />
     <Compile Include="LanguageForge\Model\LfParagraph.cs" />
     <Compile Include="LanguageForge\Model\LfMultiParagraph.cs" />
-    <Compile Include="LanguageForge\Infrastructure\PhpConnection.cs" />
     <Compile Include="LanguageForge\Infrastructure\RunClassParameters.cs" />
     <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
     <Compile Include="Actions\EnsureCloneAction.cs" />
     <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
+    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxy.cs" />
+    <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets')" />

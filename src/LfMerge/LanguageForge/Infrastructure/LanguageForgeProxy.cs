@@ -10,14 +10,38 @@ using Newtonsoft.Json;
 
 namespace LfMerge.LanguageForge.Infrastructure
 {
-	public static class PhpConnection
+	public class LanguageForgeProxy: ILanguageForgeProxy
 	{
-		public static string RunClass(string className, string methodName, List<Object> parameters)
+		public string UpdateCustomFieldViews(string projectCode, List<CustomFieldSpec> customFieldSpecs)
+		{
+			return UpdateCustomFieldViews(projectCode, customFieldSpecs, false);
+		}
+
+		public string UpdateCustomFieldViews(string projectCode, List<CustomFieldSpec> customFieldSpecs, bool isTest)
+		{
+			const string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
+			const string methodName = "updateCustomFieldViews";
+			var parameters = new List<Object>();
+			parameters.Add(projectCode);
+			parameters.Add(customFieldSpecs);
+			return RunClass(className, methodName, parameters, isTest);
+		}
+
+		public string ListUsers()
+		{
+			const string className = "Api\\Model\\Command\\UserCommands";
+			const string methodName = "listUsers";
+			var parameters = new List<Object>();
+
+			return RunClass(className, methodName, parameters);
+		}
+
+		private static string RunClass(string className, string methodName, List<Object> parameters)
 		{
 			return RunClass(className, methodName, parameters, false);
 		}
 
-		public static string RunClass(string className, string methodName, List<Object> parameters, bool isTest)
+		private static string RunClass(string className, string methodName, List<Object> parameters, bool isTest)
 		{
 			var runClassParameters = new RunClassParameters(className, methodName, parameters);
 			runClassParameters.isTest = isTest;
@@ -49,7 +73,6 @@ namespace LfMerge.LanguageForge.Infrastructure
 
 			return output;
 		}
-
 	}
 }
 
