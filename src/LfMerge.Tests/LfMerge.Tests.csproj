@@ -114,6 +114,8 @@
     <Compile Include="Actions\SynchronizeActionTests.cs" />
     <Compile Include="Actions\EnsureCloneActionTests.cs" />
     <Compile Include="TestLogger.cs" />
+    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxyTests.cs" />
+    <Compile Include="LanguageForgeProxyMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -126,4 +128,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="LanguageForge\" />
+    <Folder Include="LanguageForge\Infrastructure\" />
+  </ItemGroup>
 </Project>
