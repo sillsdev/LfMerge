@@ -3,7 +3,9 @@
 using Autofac;
 using LfMerge.FieldWorks;
 using LfMerge.Settings;
+using SIL.FieldWorks.FDO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace LfMerge
 {
@@ -66,6 +68,10 @@ namespace LfMerge
 		#region ILfProject implementation
 
 		public string ProjectCode { get { return _projectCode; } }
+
+		public string ProjectDir { get { return Path.Combine(_settings.WebWorkDirectory, _projectCode); }}
+
+		public string FwDataPath { get { return Path.Combine(ProjectDir, string.Format("{0}{1}", _projectCode, FdoFileHelper.ksFwDataXmlFileExtension)); }}
 
 		public string MongoDatabaseName { get { return _settings.MongoDatabaseNamePrefix + ProjectCode; } }
 
