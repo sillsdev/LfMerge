@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using Autofac;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.Settings;
-using Palaso.Progress;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Actions
 {
@@ -35,14 +33,13 @@ namespace LfMerge.Actions
 				Logger.Notice("Syncing");
 
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-				var projectFolderPath = Path.Combine(Settings.WebWorkDirectory, project.ProjectCode);
 
 				// Call into LF Bridge to do the work.
 				string syncResult;
 				var options = new Dictionary<string, string>
 				{
-					{"projectPath", projectFolderPath},
-					{"fwdataFilename", project.ProjectCode + FdoFileHelper.ksFwDataXmlFileExtension},
+					{"projectPath", project.ProjectDir},
+					{"fwdataFilename", project.FwDataPath},
 					{"languageDepotRepoName", "Language Depot"},
 					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)}
 				};
