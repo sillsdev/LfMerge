@@ -496,7 +496,6 @@ namespace LfMerge.DataConverters
 			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample, _freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
-			// TODO: Set t.AvailableWritingSystems appropriately
 			// Ignoring t.Status since LF won't touch it
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoExample, "examples", lfExample.CustomFields, lfExample.CustomFieldGuids);
@@ -546,7 +545,8 @@ namespace LfMerge.DataConverters
 			ListConverters[AcademicDomainListCode].UpdatePossibilitiesFromStringArray(fdoSense.DomainTypesRC, lfSense.AcademicDomains);
 			ListConverters[AnthroCodeListCode].UpdatePossibilitiesFromStringArray(fdoSense.AnthroCodesRC, lfSense.AnthropologyCategories);
 			SetMultiStringFrom(fdoSense.AnthroNote, lfSense.AnthropologyNote);
-			// lfSense.AuthorInfo; // TODO: Figure out if this should be copied too
+			// Ignoring lfSense.AuthorInfo.CreatedDate;
+			// Ignoring lfSense.AuthorInfo.ModifiedDate;
 			SetMultiStringFrom(fdoSense.Definition, lfSense.Definition);
 			SetMultiStringFrom(fdoSense.DiscourseNote, lfSense.DiscourseNote);
 			SetMultiStringFrom(fdoSense.EncyclopedicInfo, lfSense.EncyclopedicNote);

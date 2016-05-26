@@ -200,6 +200,8 @@ namespace LfMerge.DataConverters
 				// Do nothing; LanguageForge doesn't currently handle allomorphs, so we don't convert them
 			}
 			lfEntry.EntryBibliography = ToMultiText(fdoEntry.Bibliography);
+			// TODO: Consider whether to use fdoEntry.CitationFormWithAffixType instead
+			// (which would produce "-s" instead of "s" for the English plural suffix, for instance)
 			lfEntry.CitationForm = ToMultiText(fdoEntry.CitationForm);
 			lfEntry.Note = ToMultiText(fdoEntry.Comment);
 
@@ -221,7 +223,7 @@ namespace LfMerge.DataConverters
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
 			if (fdoEtymology != null)
 			{
-				lfEntry.Etymology = ToMultiText(fdoEtymology.Form); // TODO: Check if ILexEtymology.Form is the right field here
+				lfEntry.Etymology = ToMultiText(fdoEtymology.Form);
 				lfEntry.EtymologyComment = ToMultiText(fdoEtymology.Comment);
 				lfEntry.EtymologyGloss = ToMultiText(fdoEtymology.Gloss);
 				lfEntry.EtymologySource = LfMultiText.FromSingleStringMapping(AnalysisWritingSystem.Id, fdoEtymology.Source);
@@ -281,7 +283,7 @@ namespace LfMerge.DataConverters
 			/* Fields that would make sense to map, but that we don't because LF doesn't handle them (e.g., allomorphs):
 			fdoEntry.AllAllomorphs; // LF doesn't handle allomorphs, so skip all allomorph-related fields
 			fdoEntry.AlternateFormsOS;
-			fdoEntry.CitationFormWithAffixType; // TODO: This one should maybe be mapped. Figure out how.
+			fdoEntry.CitationFormWithAffixType; // Citation form already mapped
 			fdoEntry.DoNotPublishInRC;
 			fdoEntry.DoNotShowMainEntryInRC;
 			fdoEntry.DoNotUseForParsing;
@@ -316,8 +318,6 @@ namespace LfMerge.DataConverters
 
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-
-			// TODO: Currently skipping subsenses. Figure out if we should include them or not.
 
 			lfSense.Guid = fdoSense.Guid;
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
