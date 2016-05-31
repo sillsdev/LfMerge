@@ -1,4 +1,11 @@
 ---
+- name: ensure logging installed
+  become: yes
+  apt: name={{item}} state=installed
+  with_items:
+      - rsyslog
+      - logrotate
+
 - name: configure log rotation
   become: yes
   template: src=templates/logrotate.conf dest=/etc/logrotate.d/lfmerge.conf owner=root group=root mode=0644
