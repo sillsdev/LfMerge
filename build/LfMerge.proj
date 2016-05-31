@@ -95,7 +95,7 @@
 
 	<Target Name="PrepareSource" DependsOnTargets="RestorePackages;DownloadDependencies">
 		<!-- This target gets called before building the source package -->
-		<RemoveDir Directories="$(RootDir)/Downloads"/>
+		<RemoveDir Directories="$(RootDir)/Mercurial"/>
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="RestorePackages;DownloadDependencies">
