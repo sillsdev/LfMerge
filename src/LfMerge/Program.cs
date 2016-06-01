@@ -131,8 +131,8 @@ namespace LfMerge
 				var model = scope.Resolve<InternetCloneSettingsModel>();
 				model.InitFromUri(project.LanguageDepotProjectUri);
 				model.ParentDirectoryToPutCloneIn = settings.WebWorkDirectory;
-				model.AccountName = project.LanguageDepotProject.Username;
-				model.Password = project.LanguageDepotProject.Password;
+				model.AccountName = "x";
+				model.Password = "x";
 				model.ProjectId = project.LanguageDepotProject.Identifier;
 				model.LocalFolderName = project.ProjectCode;
 				model.AddProgress(progress);

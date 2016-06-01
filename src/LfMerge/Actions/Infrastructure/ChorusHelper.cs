@@ -10,9 +10,7 @@ namespace LfMerge.Actions.Infrastructure
 		{
 			string uri = project.LanguageDepotProjectUri;
 			string serverPath = uri.StartsWith("http://") ? uri.Replace("http://", "") : uri;
-			return "http://" +
-				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Username) + ":" +
-				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Password) + "@" + serverPath + "/" +
+			return "http://x:x@" + serverPath + "/" +
 				HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Identifier);
 		}
 	}
