@@ -94,7 +94,7 @@ namespace LfMerge.Actions
 					project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 				else if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 				{
-					Logger.Error("State going to IDLE");
+					Logger.Error("Got exception. State going to IDLE");
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 				}
 				Logger.Error("LfMerge exiting due to exception in Action.{0}", Name);

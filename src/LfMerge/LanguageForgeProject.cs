@@ -1,11 +1,11 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System.Collections.Generic;
+using System.IO;
 using Autofac;
 using LfMerge.FieldWorks;
 using LfMerge.Settings;
 using SIL.FieldWorks.FDO;
-using System.Collections.Generic;
-using System.IO;
 
 namespace LfMerge
 {
@@ -49,7 +49,8 @@ namespace LfMerge
 		public static void DisposeProjectCache(string projectCode)
 		{
 			LanguageForgeProject project;
-			if (CachedProjects.TryGetValue(projectCode, out project)) {
+			if (CachedProjects.TryGetValue(projectCode, out project))
+			{
 				DisposeFwProject(project);
 				CachedProjects.Remove(projectCode);
 			}
@@ -69,9 +70,16 @@ namespace LfMerge
 
 		public string ProjectCode { get { return _projectCode; } }
 
-		public string ProjectDir { get { return Path.Combine(_settings.WebWorkDirectory, _projectCode); }}
+		public string ProjectDir { get { return Path.Combine(_settings.WebWorkDirectory, ProjectCode); }}
 
-		public string FwDataPath { get { return Path.Combine(ProjectDir, string.Format("{0}{1}", _projectCode, FdoFileHelper.ksFwDataXmlFileExtension)); }}
+		public string FwDataPath
+		{
+			get
+			{
+				return Path.Combine(ProjectDir, string.Format("{0}{1}", ProjectCode,
+					FdoFileHelper.ksFwDataXmlFileExtension));
+			}
+		}
 
 		public string MongoDatabaseName { get { return _settings.MongoDatabaseNamePrefix + ProjectCode; } }
 

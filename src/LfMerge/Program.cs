@@ -65,9 +65,10 @@ namespace LfMerge
 				}
 				Logger.Notice("Lock acquired");
 
-				if (!CheckSetup(settings)) return;
+				if (!CheckSetup(settings))
+					return;
 
-				MongoConnection.Initialize(settings.MongoDbHostNameAndPort, settings.MongoMainDatabaseName);
+				MongoConnection.Initialize();
 
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

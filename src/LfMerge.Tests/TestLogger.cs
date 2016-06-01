@@ -23,7 +23,7 @@ namespace LfMerge.Tests
 		private static void LogOneLine(TextWriter writer, string message)
 		{
 			var now = DateTime.Now;
-			writer.WriteLine("{0}:{1}:{2}: {3}", now.Hour, now.Minute, now.Second, message);
+			writer.WriteLine("{0:D2}:{1:D2}:{2:D2}: {3}", now.Hour, now.Minute, now.Second, message);
 		}
 
 		#region implemented abstract members of LoggerBase
