@@ -86,10 +86,7 @@ namespace LfMerge.Tests
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
-			var ldProj = new LanguageDepotProjectDouble {
-				Username = "foo",
-				Password = "secret"
-			};
+			var ldProj = new LanguageDepotProjectDouble();
 			containerBuilder.RegisterInstance(ldProj)
 				.As<ILanguageDepotProject>().AsSelf().SingleInstance();
 

@@ -7,10 +7,6 @@ namespace LfMerge
 	{
 		void Initialize(string lfProjectCode);
 
-		string Username { get; }
-
-		string Password { get; }
-
 		string Identifier { get; }
 
 		string Repository { get; }

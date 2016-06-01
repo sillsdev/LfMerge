@@ -40,15 +40,7 @@ namespace LfMerge
 			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
 				(srProjectValue.AsBsonDocument.TryGetValue("repository", out value)))
 				Repository = value.AsString;
-			if (project.TryGetValue("sendReceiveUsername", out value))
-				Username = value.AsString;
-			if (project.TryGetValue("sendReceivePassword", out value))
-				Password = value.AsString;
 		}
-
-		public string Username { get; private set; }
-
-		public string Password { get; private set; }
 
 		public string Identifier { get; private set; }
 

@@ -309,8 +309,6 @@ namespace LfMerge.Tests
 			Identifier = lfProjectCode;
 		}
 
-		public string Username { get; set; }
-		public string Password { get; set; }
 		public string Identifier { get; set; }
 		public string Repository { get; set; }
 		#endregion

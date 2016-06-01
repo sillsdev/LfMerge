@@ -45,8 +45,6 @@ namespace LfMerge.Tests
 			sut.Initialize("proja");
 
 			// Verify
-			Assert.That(sut.Username, Is.EqualTo("proja-user"));
-			Assert.That(sut.Password, Is.EqualTo("proja-pw"));
 			Assert.That(sut.Identifier, Is.EqualTo("proja-langdepot"));
 			Assert.That(sut.Repository, Contains.Substring("public"));
 		}
