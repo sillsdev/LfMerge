@@ -185,7 +185,7 @@
     <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.5.0\build\BuildDependencyTasks.targets')" />
+  <Import Project="..\..\packages\BuildDependencyTasks.0.2.6.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.6.0\build\BuildDependencyTasks.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="..\..\lib\icu.net.dll.config" Condition="'$(OS)'!='Windows_NT'">
