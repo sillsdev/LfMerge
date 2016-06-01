@@ -1,28 +1,24 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using IniParser.Model;
 using LfMerge.Actions;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
-using LfMerge.FieldWorks;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests.Actions;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Moq;
-using Palaso.Progress;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using LfMerge.Logging;
 
 namespace LfMerge.Tests
 {
