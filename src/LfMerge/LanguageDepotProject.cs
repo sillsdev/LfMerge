@@ -34,8 +34,7 @@ namespace LfMerge
 				throw new ArgumentException("Can't find project code", "lfProjectCode");
 
 			BsonValue value, srProjectValue;
-			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
-			   (srProjectValue.AsBsonDocument.TryGetValue("identifier", out value)))
+			if (project.TryGetValue("sendReceiveProjectIdentifier", out value))
 				Identifier = value.AsString;
 			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
 				(srProjectValue.AsBsonDocument.TryGetValue("repository", out value)))
