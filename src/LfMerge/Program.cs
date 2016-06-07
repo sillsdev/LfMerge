@@ -78,10 +78,12 @@ namespace LfMerge
 					{
 						Logger.Notice("ProjectCode {0}", projectCode);
 						var project = LanguageForgeProject.Create(settings, projectCode);
+
 						var ensureClone = LfMerge.Actions.Action.GetAction(ActionNames.EnsureClone);
 						ensureClone.Run(project);
 
-						queue.CurrentAction.Run(project);
+						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+							queue.CurrentAction.Run(project);
 
 						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 							project.State.SRState = ProcessingState.SendReceiveStates.IDLE;

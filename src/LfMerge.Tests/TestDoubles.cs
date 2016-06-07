@@ -327,14 +327,17 @@ namespace LfMerge.Tests
 			_projectExists = projectExists;
 		}
 
-		protected override string CloneRepo(ILfProject project, string projectFolderPath)
+		protected override bool CloneRepo(ILfProject project, string projectFolderPath,
+			out string cloneResult)
 		{
 			if (_projectExists)
 			{
 				Directory.CreateDirectory(projectFolderPath);
 				Directory.CreateDirectory(Path.Combine(projectFolderPath, ".hg"));
 				File.WriteAllText(Path.Combine(projectFolderPath, ".hg", "hgrc"), "blablabla");
-				return string.Format("Clone created in folder {0}", projectFolderPath);
+				cloneResult = string.Format("Clone success: new clone created on branch '' in folder {0}",
+					projectFolderPath);
+				return true;
 			}
 			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
 		}

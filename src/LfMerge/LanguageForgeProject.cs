@@ -85,7 +85,7 @@ namespace LfMerge
 		{
 			get
 			{
-				if (_fieldWorksProject == null)
+				if (_fieldWorksProject == null || _fieldWorksProject.IsDisposed)
 				{
 					// for now we simply use the language forge project code as name for the fwdata file
 					_fieldWorksProject = new FwProject(_settings, ProjectCode);
