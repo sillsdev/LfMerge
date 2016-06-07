@@ -29,7 +29,7 @@ gulp.task('default', function() {
             }))
             .pipe(savefile()) // Shouldn't need to do this, but apparently gulp-rsync needs a locally-saved file
             .pipe(rsync({
-                hostname: "svr01-vm106.saygoweb.com"
+                hostname: "svr01-vm106.saygoweb.com",
                 username: "root",
                 destination: "/root/lfmerge/",
                 times: true,
