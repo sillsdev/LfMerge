@@ -6,6 +6,7 @@ namespace LfMerge.Actions
 	public enum ActionNames
 	{
 		None,
+		EnsureClone,
 		TransferMongoToFdo,
 		Commit,
 		Synchronize,

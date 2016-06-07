@@ -10,7 +10,6 @@ namespace LfMerge.FieldWorks
 		public ProjectIdentifier(IFdoDirectories fdoDirs, string database)
 		{
 			FdoDirectories = fdoDirs;
-			Type = FDOBackendProviderType.kSharedXML;
 			Path = GetPathToDatabase(fdoDirs, database);
 		}
 
@@ -53,7 +52,7 @@ namespace LfMerge.FieldWorks
 
 		public string PipeHandle
 		{
-			get { throw new NotImplementedException(); }
+			get { throw new NotSupportedException(); }
 		}
 
 		public string Name
@@ -61,7 +60,7 @@ namespace LfMerge.FieldWorks
 			get { return System.IO.Path.GetFileNameWithoutExtension(Path); }
 		}
 
-		public FDOBackendProviderType Type { get; private set; }
+		public FDOBackendProviderType Type { get { return FDOBackendProviderType.kXML; } }
 
 		public string UiName
 		{

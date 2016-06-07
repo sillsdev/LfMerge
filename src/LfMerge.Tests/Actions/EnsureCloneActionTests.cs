@@ -1,15 +1,18 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.VcsDrivers.Mercurial;
-using NUnit.Framework;
 using System;
 using System.IO;
 using System.Threading;
+using NUnit.Framework;
 
 namespace LfMerge.Tests.Actions
 {
+	/// <summary>
+	/// These tests test the behavior of LfMerge in various conditions related to cloning a
+	/// project from LD. The cloning is mocked; the important part is how LfMerge behaves.
+	/// </summary>
 	[TestFixture]
-	public class ProgramTests
+	public class EnsureCloneActionTests
 	{
 		private TestEnvironment _env;
 		private string _projectCode;
@@ -32,8 +35,7 @@ namespace LfMerge.Tests.Actions
 		}
 
 		[Test]
-		[ExpectedException("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")]
-		public void EnsureClone_NonExisitingProject_SetsStateOnHold()
+		public void EnsureClone_NonExistingProject_SetsStateOnHold()
 		{
 			// for this test we don't want the test double for InternetCloneSettingsModel
 			_env.Dispose();
@@ -44,7 +46,8 @@ namespace LfMerge.Tests.Actions
 			var lfProject = LanguageForgeProject.Create(_env.Settings, nonExistingProjectCode);
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger, false).Run(lfProject),
+				Throws.Exception.TypeOf(Type.GetType("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")));
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
@@ -64,7 +67,7 @@ namespace LfMerge.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
@@ -91,7 +94,7 @@ namespace LfMerge.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
@@ -117,7 +120,7 @@ namespace LfMerge.Tests.Actions
 			Console.WriteLine("{0}", me); 
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.False,
@@ -139,7 +142,7 @@ namespace LfMerge.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
@@ -159,7 +162,7 @@ namespace LfMerge.Tests.Actions
 				"Clone of project shouldn't exist yet");
 
 			// Execute
-			MainClass.EnsureClone(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
@@ -170,8 +173,9 @@ namespace LfMerge.Tests.Actions
 		public void EnsureClone_ProjectDirDoesExist_DeleteAndClonesProject()
 		{
 			// Setup and clone once
+			var ensureCloneAction = new EnsureCloneActionDouble(_env.Settings, _env.Logger);
 			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
-			MainClass.EnsureClone(lfProject);
+			ensureCloneAction.Run(lfProject);
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
 				"Didn't clone project the first time");
@@ -181,7 +185,7 @@ namespace LfMerge.Tests.Actions
 			// execute another clone into the same directory.
 			// Note: since test double doesn't write state files, EnsureClone will do another initial clone
 			Thread.Sleep(1000);
-			MainClass.EnsureClone(lfProject);
+			ensureCloneAction.Run(lfProject);
 			DateTime newCreationDateTime = Directory.GetCreationTimeUtc(projectDir);
 
 			// Verify
