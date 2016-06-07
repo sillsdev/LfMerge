@@ -1,0 +1,12 @@
+{
+  "name": "deploy-live.gulpfile.js",
+  "description": "Gulpfile to download latest live .deb and deploy it on live server",
+  "devDependencies": {
+    "gulp-download": "0.0.1",
+    "gulp-fn": "0.0.0",
+    "gulp-json-transform": "^0.3.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-rsync": "0.0.6",
+    "gulp-savefile": "^0.1.1"
+  }
+}
