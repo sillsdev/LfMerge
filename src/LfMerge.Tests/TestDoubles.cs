@@ -1,6 +1,6 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.Model;
+
 using IniParser.Model;
 using LfMerge.Actions;
 using LfMerge.Actions.Infrastructure;
@@ -10,8 +10,6 @@ using LfMerge.FieldWorks;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests.Actions;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
@@ -24,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LfMerge.Logging;
 
 namespace LfMerge.Tests
 {
@@ -314,16 +313,6 @@ namespace LfMerge.Tests
 		#endregion
 	}
 
-	class InternetCloneSettingsModelDouble: InternetCloneSettingsModel
-	{
-		public override void DoClone()
-		{
-			Directory.CreateDirectory(TargetDestination);
-			Directory.CreateDirectory(Path.Combine(TargetDestination, ".hg"));
-			File.WriteAllText(Path.Combine(TargetDestination, ".hg", "hgrc"), "blablabla");
-		}
-	}
-
 	class ChorusHelperDouble: ChorusHelper
 	{
 		public override string GetSyncUri(ILfProject project)
@@ -332,20 +321,34 @@ namespace LfMerge.Tests
 		}
 	}
 
-	class UpdateBranchHelperFlexDouble: UpdateBranchHelperFlex
+	class EnsureCloneActionDouble: EnsureCloneAction
 	{
-		public override bool UpdateToTheCorrectBranchHeadIfPossible(string desiredBranchName,
-			ActualCloneResult cloneResult, string cloneLocation)
+		private readonly bool _projectExists;
+
+		public EnsureCloneActionDouble(LfMergeSettingsIni settings, ILogger logger, bool projectExists = true):
+			base(settings, logger)
 		{
-			cloneResult.FinalCloneResult = FinalCloneResult.Cloned;
-			return true;
+			_projectExists = projectExists;
+		}
+
+		protected override string CloneRepo(ILfProject project, string projectFolderPath)
+		{
+			if (_projectExists)
+			{
+				Directory.CreateDirectory(projectFolderPath);
+				Directory.CreateDirectory(Path.Combine(projectFolderPath, ".hg"));
+				File.WriteAllText(Path.Combine(projectFolderPath, ".hg", "hgrc"), "blablabla");
+				return string.Format("Clone created in folder {0}", projectFolderPath);
+			}
+			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
 		}
 	}
+}
 
-	class FlexHelperDouble: FlexHelper
+// We can't directly use Chorus, so we redefine the exception we need here
+namespace Chorus.VcsDrivers.Mercurial
+{
+	class RepositoryAuthorizationException: Exception
 	{
-		public override void PutHumptyTogetherAgain(IProgress progress, bool verbose, string mainFilePathname)
-		{
-		}
 	}
 }
