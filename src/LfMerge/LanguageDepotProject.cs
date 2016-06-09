@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using LfMerge.Logging;
 using LfMerge.Settings;
 
 namespace LfMerge
@@ -11,10 +12,12 @@ namespace LfMerge
 	public class LanguageDepotProject: ILanguageDepotProject
 	{
 		private LfMergeSettingsIni Settings { get; set; }
+		private ILogger Logger { get; set; }
 
 		// TODO: Need to grab a MongoConnection as well
-		public LanguageDepotProject(LfMergeSettingsIni settings)
+		public LanguageDepotProject(LfMergeSettingsIni settings, ILogger logger)
 		{
+			Logger = logger;
 			Settings = settings;
 		}
 
@@ -35,10 +38,36 @@ namespace LfMerge
 
 			BsonValue value, srProjectValue;
 			if (project.TryGetValue("sendReceiveProjectIdentifier", out value))
+			{
+				if (value == null || value.BsonType == BsonType.Null)
+				{
+					Logger.Error("sendReceiveProjectIdentifier was null for LF project code {0}", lfProjectCode);
+					throw new ArgumentNullException("sendReceiveProjectIdentifier"); // TODO: Can we set a default value?
+				}
 				Identifier = value.AsString;
-			if (project.TryGetValue("sendReceiveProject", out srProjectValue) &&
-				(srProjectValue.AsBsonDocument.TryGetValue("repository", out value)))
-				Repository = value.AsString;
+			}
+			if (project.TryGetValue("sendReceiveProject", out srProjectValue))
+			{
+				if (srProjectValue == null || srProjectValue.BsonType == BsonType.Null)
+				{
+					Logger.Error("sendReceiveProject was null for LF project code {0}", lfProjectCode);
+					throw new ArgumentNullException("sendReceiveProject"); // TODO: Can we set a default value?
+				}
+				if (srProjectValue.BsonType != BsonType.Document)
+				{
+					Logger.Error("sendReceiveProject should be a BsonDocument for LF project code {0}; instead, found a {1}", lfProjectCode, srProjectValue.BsonType.ToString());
+					throw new InvalidCastException(); // TODO: Can we set a default value?
+				}
+				if (srProjectValue.AsBsonDocument.TryGetValue("repository", out value))
+				{
+					if (value == null || value.BsonType == BsonType.Null)
+					{
+						Logger.Error("repository was null for LF project code {0}", lfProjectCode);
+						throw new ArgumentNullException("repository"); // TODO: Can we set a default value?
+					}
+					Repository = value.AsString;
+				}
+			}
 		}
 
 		public string Identifier { get; private set; }
