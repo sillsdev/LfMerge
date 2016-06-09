@@ -6,7 +6,7 @@
     "gulp-fn": "0.0.0",
     "gulp-json-transform": "^0.3.2",
     "gulp-rename": "^1.2.2",
-    "gulp-rsync": "0.0.6",
-    "gulp-savefile": "^0.1.1"
+    "gulp-savefile": "^0.1.1",
+    "gulp-shell": "^0.5.2",
   }
 }

@@ -3,11 +3,12 @@ var download = require('gulp-download');
 var fn = require('gulp-fn');
 var jsonTransform = require('gulp-json-transform');
 var rename = require("gulp-rename");
-var rsync = require('gulp-rsync');
 var savefile = require('gulp-savefile');
+var shell = require('gulp-shell');
 
-// TODO: Change "master" to "live" in URL below once live build is active on Jenkins
-var baseUrl = "https://jenkins.lsdev.sil.org/view/LfMerge/view/All/job/LfMerge_Packaging-Linux-all-master-release/lastSuccessfulBuild/";
+// TODO: Change "lastCompletedBuild" to "lastSuccessfulBuild" in URL below
+// once the lastSuccessfulBuild target is being correctly published in Jenkins
+var baseUrl = "https://jenkins.lsdev.sil.org/view/LfMerge/view/All/job/LfMerge_Packaging-Linux-all-live-release/lastCompletedBuild/";
 
 gulp.task('default', function() {
     download(baseUrl + "/api/json")
@@ -27,14 +28,13 @@ gulp.task('default', function() {
                 // the filenames. If that's the case, just remove this rename() operation from the Gulp pipeline.
                 basename: "lfmerge-live"
             }))
-            .pipe(savefile()) // Shouldn't need to do this, but apparently gulp-rsync needs a locally-saved file
-            .pipe(rsync({
-                hostname: "svr01-vm106.saygoweb.com",
-                username: "root",
-                destination: "/root/lfmerge/",
-                times: true,
-                compress: true,
-            }))
+            .pipe(savefile())
+            .pipe(shell([
+                'echo About to start rsync',
+                'rsync -vtRz --progress lfmerge-live.deb root@svr01-vm106.saygoweb.com:/root/lfmerge/',
+                'echo Done with rsync',
+                'ssh root@svr01-vm106.saygoweb.com echo Hi',  // This will eventually be "ssh vm106 dpkg -i lfmerge-live.deb"
+                'echo Finished download task',
+            ]))
         }))
-        // TODO: Find the "gulp-ssh" module and add a command to run "ssh vm106 dpkg -i lfmerge-live.deb".
 })
