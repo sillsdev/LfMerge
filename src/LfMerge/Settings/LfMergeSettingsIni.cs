@@ -51,7 +51,7 @@ namespace LfMerge.Settings
 			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
 			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
 			string verboseProgress = main["VerboseProgress"] ?? "";
-			string phpSourcePath = main["PhpSourcePath"] ?? "/var/www/virtual/languageforge.org/htdocs";
+			string phpSourcePath = main["PhpSourcePath"] ?? "/var/www/languageforge.org/htdocs";
 
 			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort,
 				mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress, phpSourcePath);

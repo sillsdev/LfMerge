@@ -14,6 +14,7 @@ MongoPort = 27017
 MongoMainDatabaseName = scriptureforge
 MongoDatabaseNamePrefix = sf_
 VerboseProgress = false
+PhpSourcePath = /var/www/languageforge.org/htdocs
 ";
 	}
 }
