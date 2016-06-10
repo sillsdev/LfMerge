@@ -1,4 +1,6 @@
 #!/bin/bash
+# If this script fails because Ansible can't verify the host fingerprint, run it as
+# ANSIBLE_HOST_KEY_CHECKING=False ./deploy.sh build
 
 if [ $# -le 0 ];
 then
