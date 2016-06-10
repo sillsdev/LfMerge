@@ -113,7 +113,9 @@
 
 	<Target Name="Test" DependsOnTargets="Build">
 		<ItemGroup>
-			<FdoFiles Include="/usr/lib/lfmerge/*" Condition="'$(OS)'=='Unix'"/>
+			<ExistingFiles Include="$(RootDir)/output/$(Configuration)/*" Condition="'$(OS)'=='Unix'" />
+			<FdoFiles Include="/usr/lib/lfmerge/*" Condition="'$(OS)'=='Unix'"
+				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/%(FileName)%(Extension)')" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
 			Condition="'$(OS)'=='Unix'"/>

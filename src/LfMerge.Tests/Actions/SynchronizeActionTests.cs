@@ -51,6 +51,8 @@ namespace LfMerge.Tests.Actions
 		private Guid _testDeletedEntryGuid;
 		private TransferFdoToMongoAction _transferFdoToMongo;
 
+		public static MercurialServer LDServer { get; set; }
+
 		[SetUp]
 		public void Setup()
 		{
@@ -114,26 +116,27 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo("English gloss"));
 		}
 
-		private string GetGlossFromFdo(int expectedSensesCount)
+		private string GetGlossFromFdo(Guid testEntryGuid, int expectedSensesCount)
 		{
 			var cache = _lfProject.FieldWorksProject.Cache;
-			var lfFdoEntry = cache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			var lfFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
 			Assert.That(lfFdoEntry, Is.Not.Null);
 			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(expectedSensesCount));
 			return lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text;
 		}
 
-		private string GetGlossFromMongoDb(Guid testEntryGuid)
+		private string GetGlossFromMongoDb(Guid testEntryGuid,
+			int expectedLfLexEntriesCount = originalNumOfFdoEntries)
 		{
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(expectedLfLexEntriesCount));
 			var lfEntry = receivedMongoData.First(e => e.Guid == testEntryGuid);
 			Assert.That(lfEntry.IsDeleted, Is.EqualTo(false));
 			return lfEntry.Senses[0].Gloss["en"].Value;
 		}
 
-		private string GetGlossFromLanguageDepot(int expectedSensesCount)
+		private string GetGlossFromLanguageDepot(Guid testEntryGuid, int expectedSensesCount)
 		{
 			// Since there is no direct way to check the XML files checked in to Mercurial, we
 			// do it indirectly by re-cloning the repo from LD and checking the new clone.
@@ -141,7 +144,7 @@ namespace LfMerge.Tests.Actions
 			Directory.Delete(_lfProject.ProjectDir, true);
 			var ensureClone = new EnsureCloneAction(_env.Settings, _env.Logger);
 			ensureClone.Run(_lfProject);
-			return GetGlossFromFdo(expectedSensesCount);
+			return GetGlossFromFdo(testEntryGuid, expectedSensesCount);
 		}
 
 		[Test, Explicit("Superceeded by later tests")]
@@ -171,9 +174,9 @@ namespace LfMerge.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			Assert.That(GetGlossFromFdo(2), Is.EqualTo(lfChangedGloss));
+			Assert.That(GetGlossFromFdo(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(lfChangedGloss));
-			Assert.That(GetGlossFromLanguageDepot(2), Is.EqualTo(lfChangedGloss));
+			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
 		}
 
 		[Test, Explicit("Superceeded by later tests")]
@@ -324,7 +327,7 @@ namespace LfMerge.Tests.Actions
 
 			// Verify LD modified entry remains and LF marks not deleted
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(fwChangedGloss));
-			Assert.That(GetGlossFromLanguageDepot(2), Is.EqualTo(fwChangedGloss));
+			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(fwChangedGloss));
 		}
 
 		[Test]
@@ -346,10 +349,10 @@ namespace LfMerge.Tests.Actions
 			lfEntry.Senses[0].Gloss = LfMultiText.FromSingleStringMapping("en", lfCreatedGloss);
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
-
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			Assert.Throws<KeyNotFoundException>(()=> lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid));
+			Assert.That(()=> lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid),
+				Throws.InstanceOf<KeyNotFoundException>());
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
 
@@ -358,9 +361,11 @@ namespace LfMerge.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify modified LF entry wins
-			Assert.That(GetGlossFromMongoDb(_testDeletedEntryGuid), Is.EqualTo(lfCreatedGloss));
-			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(fwChangedGloss));
-			Assert.That(GetGlossFromLanguageDepot(1), Is.EqualTo(lfCreatedGloss));
+			Assert.That(GetGlossFromMongoDb(_testDeletedEntryGuid, originalNumOfFdoEntries + 1),
+				Is.EqualTo(lfCreatedGloss));
+			Assert.That(GetGlossFromMongoDb(_testEntryGuid, originalNumOfFdoEntries + 1),
+				Is.EqualTo(fwChangedGloss));
+			Assert.That(GetGlossFromLanguageDepot(_testDeletedEntryGuid, 1), Is.EqualTo(lfCreatedGloss));
 		}
 
 		[Test]
