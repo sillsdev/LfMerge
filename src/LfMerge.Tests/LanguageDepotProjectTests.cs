@@ -39,7 +39,7 @@ namespace LfMerge.Tests
 			// relies on a project being manually added to MongoDB with projectCode "proja"
 
 			// Setup
-			var sut = new LanguageDepotProject(_env.Settings);
+			var sut = new LanguageDepotProject(_env.Settings, _env.Logger);
 
 			// Exercise
 			sut.Initialize("proja");
@@ -53,7 +53,7 @@ namespace LfMerge.Tests
 		public void NonexistingProject()
 		{
 			// Setup
-			var sut = new LanguageDepotProject(_env.Settings);
+			var sut = new LanguageDepotProject(_env.Settings, _env.Logger);
 
 			// Exercise/Verify
 			Assert.That(() => sut.Initialize("nonexisting"), Throws.ArgumentException);
