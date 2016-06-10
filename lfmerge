@@ -6,6 +6,6 @@ SHARE=/usr/share/lfmerge
 cd "$SHARE"
 RUNMODE=INSTALLED
 . ./environ
-cd $OLDPWD
+cd "$LIB"
 
 exec mono --debug "$LIB"/LfMerge.exe "$@"
