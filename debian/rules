@@ -35,6 +35,10 @@ override_dh_auto_install:
 	install -m 755 output/$(BUILD)/chorusmerge $(DESTDIR)/$(LIB)
 	install -d $(DESTDIR)/$(LIB)/Mercurial
 	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext
+	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/convert
+	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/highlight
+	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/largefiles
+	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
 	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial
 	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
 	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
@@ -43,6 +47,10 @@ override_dh_auto_install:
 	install -m 755 Mercurial/hg $(DESTDIR)/$(LIB)/Mercurial
 	install -m 644 Mercurial/mercurial.ini $(DESTDIR)/$(LIB)/Mercurial
 	install -m 644 Mercurial/hgext/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext
+	install -m 644 Mercurial/hgext/convert/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/convert
+	install -m 644 Mercurial/hgext/highlight/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/highlight
+	install -m 644 Mercurial/hgext/largefiles/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/largefiles
+	install -m 644 Mercurial/hgext/zeroconf/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
 	install -m 644 Mercurial/mercurial/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial
 	install -m 644 Mercurial/mercurial/hgweb/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
 	install -m 644 Mercurial/mercurial/httpclient/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
