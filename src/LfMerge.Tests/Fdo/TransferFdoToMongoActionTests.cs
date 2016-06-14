@@ -96,8 +96,8 @@ namespace LfMerge.Tests.Fdo
 
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
-			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
-			Assert.That(entry.DateModified, Is.EqualTo(DateTime.UtcNow).Within(1).Seconds);
+			Assert.That(entry.DateCreated, Is.EqualTo(DateTime.UtcNow).Within(5).Seconds);
+			Assert.That(entry.DateModified, Is.EqualTo(DateTime.UtcNow).Within(5).Seconds);
 			Assert.That(entry.AuthorInfo.CreatedDate, Is.EqualTo(DateTime.Parse("2004-10-19 02:42:02.903")));
 			Assert.That(entry.AuthorInfo.ModifiedDate, Is.EqualTo(DateTime.Parse("2016-02-25 03:51:29.404")));
 		}
