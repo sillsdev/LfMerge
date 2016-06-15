@@ -205,6 +205,8 @@ namespace LfMerge.DataConverters
 			lfEntry.CitationForm = ToMultiText(fdoEntry.CitationForm);
 			lfEntry.Note = ToMultiText(fdoEntry.Comment);
 
+			// LanguageForge needs this modified to know there is changed data
+			lfEntry.DateModified = fdoEntry.DateModified.ToUniversalTime();
 			if (LfProject.IsInitialClone)
 			{
 				var now = DateTime.UtcNow;
