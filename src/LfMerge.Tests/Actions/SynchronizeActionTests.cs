@@ -335,13 +335,14 @@ namespace LfMerge.Tests.Actions
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 			sutSynchronize.Run(_lfProject);
 
-			// Verify LD modified entry remains
+			// Verify LD modified entry remains and LF marks not deleted
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
+			Assert.That(lfEntry.IsDeleted, Is.EqualTo(false));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
 			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);
@@ -392,6 +393,7 @@ namespace LfMerge.Tests.Actions
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(lfCreatedGloss));
 			lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(fwChangedGloss));
+			Assert.That(lfEntry.IsDeleted, Is.EqualTo(false));
 
 			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
 			string lDdataFilePath = Path.Combine(LDProjectFolderPath, _lDProject.ProjectCode + SharedConstants.FwXmlExtension);

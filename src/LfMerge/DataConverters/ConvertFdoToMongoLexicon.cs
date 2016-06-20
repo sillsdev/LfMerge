@@ -101,6 +101,7 @@ namespace LfMerge.DataConverters
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+				lfEntry.IsDeleted = false;
 				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
