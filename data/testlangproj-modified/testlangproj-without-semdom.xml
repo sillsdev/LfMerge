@@ -9013,7 +9013,7 @@
 <objsur guid="d7f713ad-e8cf-11d3-9764-00c04f186933" t="r"/>
 </Custom>
 <DateCreated val="2004-10-19 2:42:2.903"/>
-<DateModified val="2016-5-5 7:32:30.607"/>
+<DateModified val="2016-2-25 3:51:29.404"/>
 <DoNotUseForParsing val="False"/>
 <Etymology>
 <objsur guid="d7d67133-0f3a-416c-ad71-8a7cd4b88376" t="o"/>
@@ -9614,11 +9614,6 @@
 <objsur guid="5acc3062-3cd2-430d-a46d-6ddcfcf1dfff" t="o"/>
 </Paragraphs>
 <RightToLeft val="False"/>
-</rt>
-<rt class="CmFile" guid="1c7beb8f-a95b-4b62-a7d3-3fda09cef3fb" ownerguid="8bc52f36-f495-4762-87a0-9c39e7bdfd12">
-<InternalPath>
-<Uni>/home/ira/Pictures/test images/TestImage.jpg</Uni>
-</InternalPath>
 </rt>
 <rt class="WfiMorphBundle" guid="1c7f1015-f8fe-4df8-95bf-e64cf0843d40" ownerguid="d9fcc6d5-b056-4bfb-9c06-b1cfcd73ea4d">
 <Form>
@@ -22634,16 +22629,6 @@
 </Usage>
 <UserLevel val="1"/>
 </rt>
-<rt class="CmPicture" guid="3a21ab5c-dadf-469b-933f-1a2d20b84643" ownerguid="bd8a618a-2de3-497f-a26f-51899499ca1a">
-<LayoutPos val="0"/>
-<LocationMax val="0"/>
-<LocationMin val="0"/>
-<LocationRangeType val="0"/>
-<PictureFile>
-<objsur guid="1c7beb8f-a95b-4b62-a7d3-3fda09cef3fb" t="r"/>
-</PictureFile>
-<ScaleFactor val="0"/>
-</rt>
 <rt class="CmPossibilityList" guid="3a2a22fd-e440-4433-97a8-30ecc460c9cd" ownerguid="2c1cda34-a561-4df0-bce8-1adb8d128218">
 <Abbreviation>
 <AUni ws="en">ConChrtTempl</AUni>
@@ -34091,6 +34076,7 @@
 <objsur guid="3c79639a-1cb4-4371-bc76-7cada4d38474" t="o"/>
 </Translations>
 </rt>
+<rt class="MoStemMsa" guid="5a92e072-00b9-4511-aeab-7559b39d546d" ownerguid="c5f97698-dade-4ba0-9f91-580ab19ff411"/>
 <rt class="WfiMorphBundle" guid="5a942b60-901a-4a2a-aadc-8f25afee4bad" ownerguid="4d735cb1-8947-49a9-9919-a7ae8617f8dc">
 <Form>
 <AStr ws="qaa-x-kal">
@@ -37964,6 +37950,14 @@
 <Msa>
 <objsur guid="09477ee9-5488-4796-abdd-a4a06c75d219" t="r"/>
 </Msa>
+</rt>
+<rt class="LexSense" guid="66ab44a1-383f-4559-b87c-c574b63d8834" ownerguid="c5f97698-dade-4ba0-9f91-580ab19ff411">
+<MorphoSyntaxAnalysis>
+<objsur guid="5a92e072-00b9-4511-aeab-7559b39d546d" t="r"/>
+</MorphoSyntaxAnalysis>
+<Pictures>
+<objsur guid="84f8b2d1-c4c9-4dee-b4ea-ff6656c004e4" t="o"/>
+</Pictures>
 </rt>
 <rt class="StText" guid="66ab91de-2233-41bf-8dc5-22ef7fc5b263" ownerguid="5f4d6860-e1de-471c-9586-cf586b07ac47">
 <DateModified val="2011-2-2 19:39:28.823"/>
@@ -47536,6 +47530,21 @@
 <rt class="Segment" guid="84f718a1-3ef8-4c69-b65d-7414f04ac74d" ownerguid="0f687138-9273-4c20-89ab-aacb72d52a7f">
 <BeginOffset val="130"/>
 </rt>
+<rt class="CmPicture" guid="84f8b2d1-c4c9-4dee-b4ea-ff6656c004e4" ownerguid="66ab44a1-383f-4559-b87c-c574b63d8834">
+<Caption>
+<AStr ws="en">
+<Run ws="en">External file</Run>
+</AStr>
+</Caption>
+<LayoutPos val="0"/>
+<LocationMax val="0"/>
+<LocationMin val="0"/>
+<LocationRangeType val="0"/>
+<PictureFile>
+<objsur guid="b9b32aaa-ef6e-4248-9e48-d00eb97320a1" t="r"/>
+</PictureFile>
+<ScaleFactor val="0"/>
+</rt>
 <rt class="StText" guid="84fc5548-8ab2-4aa0-afe5-72f64f567982" ownerguid="721d8749-b505-49a7-b871-8a5042b46223">
 <DateModified val="2011-2-2 19:39:28.365"/>
 <Paragraphs>
@@ -49815,7 +49824,6 @@
 </rt>
 <rt class="CmFolder" guid="8bc52f36-f495-4762-87a0-9c39e7bdfd12" ownerguid="a4280af1-ac76-4d40-9dbe-5058ad497681">
 <Files>
-<objsur guid="1c7beb8f-a95b-4b62-a7d3-3fda09cef3fb" t="o"/>
 <objsur guid="534e5cf1-db34-4d2e-8829-146acc78c46e" t="o"/>
 <objsur guid="b1e11684-2989-4a87-8206-2148526b4679" t="o"/>
 <objsur guid="b9b32aaa-ef6e-4248-9e48-d00eb97320a1" t="o"/>
@@ -57625,7 +57633,7 @@
 <Uni>qaa-x-kal qaa-fonipa-x-kal qaa-Zxxx-x-kal-AUDIO</Uni>
 </CurVernWss>
 <DateCreated val="2003-7-9 14:59:47.183"/>
-<DateModified val="2016-5-5 7:34:28.193"/>
+<DateModified val="2016-2-25 7:43:38.419"/>
 <Description>
 <AStr ws="en">
 <Run ws="en">FieldWorks Test Language Project</Run>
@@ -65429,24 +65437,6 @@
 <objsur guid="cfae7ea4-92ce-4235-922a-0e852f84ab1e" t="r"/>
 </Msa>
 </rt>
-<rt class="LexEntry" guid="ba8076a9-6552-46b2-a14a-14c01191453b">
-<Custom name="Cust Date" val="0"/>
-<Custom name="Cust Number" val="0"/>
-<Custom name="Cust Single Line All"/>
-<DateCreated val="2016-5-5 7:33:29.727"/>
-<DateModified val="2016-5-5 7:34:28.193"/>
-<DoNotUseForParsing val="False"/>
-<HomographNumber val="0"/>
-<LexemeForm>
-<objsur guid="d7daf7f3-c8f0-4dc6-b7ec-aa85144913b4" t="o"/>
-</LexemeForm>
-<MorphoSyntaxAnalyses>
-<objsur guid="ee986931-a8b3-4d4b-90cc-33d2f52c0402" t="o"/>
-</MorphoSyntaxAnalyses>
-<Senses>
-<objsur guid="bd8a618a-2de3-497f-a26f-51899499ca1a" t="o"/>
-</Senses>
-</rt>
 <rt class="WfiWordform" guid="baa1b3c0-57ba-488b-8424-1d9838bf0b16">
 <Analyses>
 <objsur guid="7eea0c6d-fad2-4fa3-ae83-bae39db30e26" t="o"/>
@@ -66410,18 +66400,6 @@
 <Msa>
 <objsur guid="069aee8f-8b79-4f8f-afb5-2c433ec4a9e1" t="r"/>
 </Msa>
-</rt>
-<rt class="LexSense" guid="bd8a618a-2de3-497f-a26f-51899499ca1a" ownerguid="ba8076a9-6552-46b2-a14a-14c01191453b">
-<Custom name="Cust Multi ListRef"/>
-<Gloss>
-<AUni ws="en">Externally referenced picture</AUni>
-</Gloss>
-<MorphoSyntaxAnalysis>
-<objsur guid="ee986931-a8b3-4d4b-90cc-33d2f52c0402" t="r"/>
-</MorphoSyntaxAnalysis>
-<Pictures>
-<objsur guid="3a21ab5c-dadf-469b-933f-1a2d20b84643" t="o"/>
-</Pictures>
 </rt>
 <rt class="ScrBookAnnotations" guid="bd8f1bc8-7d4b-4cbc-b6a7-21641825dc75" ownerguid="a067ddf3-165d-40ac-b9d4-afc4f73b26c4"/>
 <rt class="Segment" guid="bd9153e9-fc07-4c40-8d4a-1ca2e3afe2fc" ownerguid="7eacdc9f-dc77-4eae-97d6-1b38ffdb075c">
@@ -69275,6 +69253,26 @@
 </rt>
 <rt class="Segment" guid="c5f4a82f-5ad4-4f1f-860a-28b86e15c85f" ownerguid="498bbfb6-8d17-441c-aa7c-9395e91b0db2">
 <BeginOffset val="345"/>
+</rt>
+<rt class="LexEntry" guid="c5f97698-dade-4ba0-9f91-580ab19ff411">
+<Custom name="Cust Date" val="0"/>
+<Custom name="Cust Number" val="0"/>
+<Custom name="Cust Single Line All">
+<AUni ws="en">635459583625516142ken.wav</AUni>
+</Custom>
+<DateCreated val="2016-2-25 3:34:38.750"/>
+<DateModified val="2016-2-25 7:45:11.729"/>
+<DoNotUseForParsing val="False"/>
+<HomographNumber val="0"/>
+<LexemeForm>
+<objsur guid="d7bae15f-34b9-4762-8867-649cfff6e5e7" t="o"/>
+</LexemeForm>
+<MorphoSyntaxAnalyses>
+<objsur guid="5a92e072-00b9-4511-aeab-7559b39d546d" t="o"/>
+</MorphoSyntaxAnalyses>
+<Senses>
+<objsur guid="66ab44a1-383f-4559-b87c-c574b63d8834" t="o"/>
+</Senses>
 </rt>
 <rt class="WfiWordform" guid="c5fa6479-4c24-4bae-bb19-ce8e1cf13585">
 <Analyses>
@@ -75288,6 +75286,17 @@
 </Usage>
 <UserLevel val="2"/>
 </rt>
+<rt class="MoStemAllomorph" guid="d7bae15f-34b9-4762-8867-649cfff6e5e7" ownerguid="c5f97698-dade-4ba0-9f91-580ab19ff411">
+<Form>
+<AUni ws="qaa-fonipa-x-kal">ken</AUni>
+<AUni ws="qaa-x-kal">ken</AUni>
+<AUni ws="qaa-Zxxx-x-kal-audio">635459583625516142ken.wav</AUni>
+</Form>
+<IsAbstract val="False"/>
+<MorphType>
+<objsur guid="d7f713e8-e8cf-11d3-9764-00c04f186933" t="r"/>
+</MorphType>
+</rt>
 <rt class="WfiMorphBundle" guid="d7bb5bdf-17af-4396-9651-ae6c73ce3141" ownerguid="6fa5037c-b110-4d7f-a733-660ceaca33f5">
 <Form>
 <AStr ws="qaa-x-kal">
@@ -75332,15 +75341,6 @@
 <Evaluations>
 <objsur guid="74909567-2065-4f3d-b8ed-5e70a673e42e" t="r"/>
 </Evaluations>
-</rt>
-<rt class="MoStemAllomorph" guid="d7daf7f3-c8f0-4dc6-b7ec-aa85144913b4" ownerguid="ba8076a9-6552-46b2-a14a-14c01191453b">
-<Form>
-<AUni ws="qaa-x-kal">Ira</AUni>
-</Form>
-<IsAbstract val="False"/>
-<MorphType>
-<objsur guid="d7f713e8-e8cf-11d3-9764-00c04f186933" t="r"/>
-</MorphType>
 </rt>
 <rt class="StText" guid="d7e273ef-dc97-48cf-9e42-3dcfc6583a6f" ownerguid="e5be1c64-40e8-4617-81a0-1b1a6770c05c">
 <DateModified val="2011-2-2 19:39:28.929"/>
@@ -85206,7 +85206,7 @@
 <rt class="MoStemAllomorph" guid="e5eed8d7-b79f-4efc-8173-3805ab4d38ba" ownerguid="1a705846-a814-4289-8594-4b874faca6cc">
 <Form>
 <AUni ws="qaa-fonipa-x-kal">zit&#688;&#603;stmen</AUni>
-<AUni ws="qaa-x-kal">underlying form - changed in FW</AUni>
+<AUni ws="qaa-x-kal">underlying form</AUni>
 </Form>
 <IsAbstract val="True"/>
 <MorphType>
@@ -88351,7 +88351,6 @@
 <objsur guid="8b4dcdf5-b9fe-4670-be2b-38060056a6ca" t="r"/>
 </Msa>
 </rt>
-<rt class="MoStemMsa" guid="ee986931-a8b3-4d4b-90cc-33d2f52c0402" ownerguid="ba8076a9-6552-46b2-a14a-14c01191453b"/>
 <rt class="WfiWordform" guid="ee9be618-60c7-46a6-b124-31f493fb2631">
 <Analyses>
 <objsur guid="148224e9-1337-48ed-b6ab-344e2baa5c18" t="o"/>
@@ -88438,7 +88437,7 @@
 </AStr>
 </GeneralNote>
 <Gloss>
-<AUni ws="en">English gloss - changed in FW</AUni>
+<AUni ws="en">English gloss</AUni>
 <AUni ws="fr">French gloss</AUni>
 </Gloss>
 <GrammarNote>
