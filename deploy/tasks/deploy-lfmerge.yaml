@@ -9,11 +9,19 @@
 
 - name: add LLSO apt repo
   become: yes
-  template: src=templates/llso-experimental.list dest=/etc/apt/sources.list.d/llso-experimental.list owner=root group=root mode=0644
+  template: src=templates/{{lfmerge.llso_repo}} dest=/etc/apt/sources.list.d/llso-experimental.list owner=root group=root mode=0644
+
+- name: install dependencies
+  become: yes
+  apt: update_cache=yes name={{item}} state=installed
+  with_items:
+    - lfmerge-fdo
+    - mono-sil
 
 - name: deploy LfMerge
   become: yes
-  apt: update_cache=yes name=lfmerge state=installed
+  apt: name=lfmerge state=installed
+  when: lfmerge.deploy_lfmerge
 
 - name: ensure www-data group exists
   become: yes

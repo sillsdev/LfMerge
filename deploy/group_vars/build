@@ -9,3 +9,9 @@ lfmerge:
     # Suggested values for production: notice, warning or error
     # Suggested values for build server: debug, info or notice
     syslog_level: debug
+
+    # Which Debian repository do we use, main or experimental?
+    llso_repo: llso-experimental.list
+
+    # Deploy LfMerge, or just its dependencies?
+    deploy_lfmerge: true
