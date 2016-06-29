@@ -30,11 +30,8 @@ gulp.task('default', function() {
             }))
             .pipe(savefile())
             .pipe(shell([
-                'echo About to start rsync',
                 'rsync -vtRz --progress lfmerge-live.deb root@svr01-vm106.saygoweb.com:/root/lfmerge/',
-                'echo Done with rsync',
-                'ssh root@svr01-vm106.saygoweb.com echo Hi',  // This will eventually be "ssh vm106 dpkg -i lfmerge-live.deb"
-                'echo Finished download task',
+                'ssh root@svr01-vm106.saygoweb.com dpkg -i /root/lfmerge/lfmerge-live.deb'
             ]))
         }))
 })
