@@ -3,18 +3,15 @@ Type=TeamCity
 Url=http://build.palaso.org
 
 [TC::ChorusPrecise64lfmergeCont]
-Name=chorus-precise64-lfmerge Continuous
+Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
-Path=Chorus.exe* => lib/
-ChorusMerge.exe* => lib/
-LibChorus.dll* => lib/
-MercurialExtensions/**/*.py=>MercurialExtensions
+Path=MercurialExtensions/**/*.py=>MercurialExtensions
 
 
 [TC::ChorusPrecise64lfmergeCont]
-Name=chorus-precise64-lfmerge Continuous
+Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux32
@@ -22,7 +19,7 @@ Path=Mercurial-i686.zip!**=>.
 
 
 [TC::ChorusPrecise64lfmergeCont]
-Name=chorus-precise64-lfmerge Continuous
+Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux64
@@ -49,13 +46,7 @@ Name=chorus-win32-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
-Path=Chorus.exe => lib/
-Chorus.pdb => lib/
-ChorusMerge.exe => lib/
-ChorusMerge.pdb => lib/
-LibChorus.dll => lib/
-LibChorus.pdb => lib/
-MercurialExtensions/**/*.py=>MercurialExtensions/
+Path=MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 
@@ -78,12 +69,16 @@ L10NSharp.pdb=>lib/
 
 [TC::FLExBridgeLfmergeTrusty64Continuous]
 Name=FLEx Bridge-lfmerge-Trusty64-Continuous
-RevisionName=lastPinned
-RevisionValue=latest.lastPinned
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=LibFLExBridge-ChorusPlugin.*=>lib/
 LibTriboroughBridge-ChorusPlugin.*=>lib/
 LfMergeBridge.*=>lib/
+Chorus.exe* => lib/
+ChorusMerge.exe* => lib/
+LibChorus.dll* => lib/
+
 
 [TC::FLExBridgeLfmergeWin32Continuous]
 Name=FLEx Bridge-lfmerge-Win32-Continuous
@@ -93,4 +88,11 @@ Condition=Windows
 Path=LibFLExBridge-ChorusPlugin.*=>lib/
 LibTriboroughBridge-ChorusPlugin.*=>lib/
 LfMergeBridge.*=>lib/
+Chorus.exe => lib/
+Chorus.pdb => lib/
+ChorusMerge.exe => lib/
+ChorusMerge.pdb => lib/
+LibChorus.dll => lib/
+LibChorus.pdb => lib/
+
 

@@ -74,11 +74,11 @@ namespace LfMerge.Tests.Fdo.DataConverters
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 
 			// Exercise
-			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters, lfCustomFieldList);
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry",
+				_listConverters, lfCustomFieldList);
 
 			// Verify
-			List<string> expectedCustomFieldNames = new List<string>
+			var expectedCustomFieldNames = new List<string>
 			{
 				"customField_entry_Cust_Date",
 				"customField_entry_Cust_MultiPara",
