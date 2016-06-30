@@ -93,6 +93,9 @@ namespace LfMerge
 
 						// TODO: Verify actions complete before dequeuing
 						queue.DequeueProject(projectCode);
+
+						// Dispose FDO cache to free memory
+						LanguageForgeProject.DisposeFwProject(project);
 					}
 				}
 			}
