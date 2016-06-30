@@ -26,7 +26,7 @@ namespace LfMerge.Actions
 			using (var scope = MainClass.Container.BeginLifetimeScope())
 			{
 				GetAction(ActionNames.TransferMongoToFdo).Run(project);
-				LanguageForgeProject.DisposeProjectCache(project.ProjectCode);
+				LanguageForgeProject.DisposeFwProject(project);
 
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 				LfMergeBridge.LfMergeBridge.DoSendReceive(

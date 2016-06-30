@@ -53,12 +53,13 @@ namespace LfMerge
 			}
 		}
 
-		public static void DisposeFwProject(LanguageForgeProject project)
+		public static void DisposeFwProject(ILfProject project)
 		{
-			if (project != null && project._fieldWorksProject != null)
+			var lfProject = project as LanguageForgeProject;
+			if (lfProject != null && lfProject._fieldWorksProject != null)
 			{
-				project._fieldWorksProject.Dispose();
-				project._fieldWorksProject = null;
+				lfProject._fieldWorksProject.Dispose();
+				lfProject._fieldWorksProject = null;
 			}
 		}
 
