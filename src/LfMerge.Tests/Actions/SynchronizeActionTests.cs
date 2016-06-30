@@ -297,8 +297,11 @@ namespace LfMerge.Tests.Actions
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries-1));
-			Assert.IsFalse(receivedMongoData.Any(e => e.Guid ==_testEntryGuid));
+			// Deleting entries in LF should *not* remove them, just set the isDeleted flag
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			var entry = receivedMongoData.FirstOrDefault(e => e.Guid ==_testEntryGuid);
+			Assert.That(entry, Is.Not.Null);
+			Assert.That(entry.IsDeleted, Is.EqualTo(true));
 
 			var cache = _lfProject.FieldWorksProject.Cache;
 			Assert.Throws<KeyNotFoundException>(()=> cache.ServiceLocator.GetObject(_testEntryGuid));
