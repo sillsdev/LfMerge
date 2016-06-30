@@ -7,6 +7,7 @@ using Autofac;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.Logging;
 using LfMerge.Settings;
+using Palaso.Code;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Actions
@@ -41,6 +42,27 @@ namespace LfMerge.Actions
 				_currentProject.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 		}
 
+		private bool CloneResultedInError(ILfProject project,
+			string cloneResult, string errorString)
+		{
+			var line = LfMergeBridgeServices.GetLineContaining(cloneResult, errorString);
+			if (!string.IsNullOrEmpty(line))
+			{
+				Logger.Error(line);
+				project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+				return true;
+			}
+			return false;
+		}
+
+		protected virtual void InitialTransferToMongoAfterClone(ILfProject project)
+		{
+			Logger.Notice("Initial transfer to mongo after clone");
+			project.IsInitialClone = true;
+			Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
+			project.IsInitialClone = false;
+		}
+
 		/// <summary>
 		/// Ensures a Send/Receive project from Language Depot is properly
 		/// cloned into the WebWork directory for LfMerge.
@@ -62,7 +84,7 @@ namespace LfMerge.Actions
 				}
 				Logger.Notice("Initial clone for project {0}", project.ProjectCode);
 				// Since we're in here, the previous clone was not finished, so remove and start over
-				var cloneLocation = Path.Combine(Settings.WebWorkDirectory, project.ProjectCode);
+				var cloneLocation = project.ProjectDir;
 				if (Directory.Exists(cloneLocation))
 				{
 					Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
@@ -70,39 +92,38 @@ namespace LfMerge.Actions
 				}
 				project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 
-				string cloneResult = CloneRepo(project, cloneLocation);
-
-				var line = LfMergeBridgeServices.GetLineStartingWith(cloneResult,
-					"Clone created in folder");
-				if (!string.IsNullOrEmpty(line))
+				string cloneResult;
+				if (!CloneRepo(project, cloneLocation, out cloneResult))
 				{
-					// Dig out actual clone path from 'line'.
-					var actualClonePath = line.Replace("Clone created in folder ",
-						string.Empty).Split(',')[0].Trim();
-					if (cloneLocation != actualClonePath)
-					{
-						Logger.Notice("Warning: Folder {0} already exists, so project cloned in {1}",
-							cloneLocation, actualClonePath);
-					}
-				}
-				line = LfMergeBridgeServices.GetLineStartingWith(cloneResult,
-					"Specified branch did not exist");
-				if (!string.IsNullOrEmpty(line))
-				{
-					// Updated to a branch, but an earlier one than is in "FdoCache.ModelVersion".
-					// That is fine, since FDO will update (e.g., do a data migration on) that
-					// older version to the one in FdoCache.ModelVersion.
-					// Then, the next commit. or full S/R operation will create the new branch at
-					// FdoCache.ModelVersion. I (RandyR) suspect this to not happen any time soon,
-					// if LF starts with DM '68'. So, this is essentially future-proofing LF Merge
-					// for some unknown day in the future, when this coud happen.
-					Logger.Notice(line);
+					Logger.Error(cloneResult);
+					return;
 				}
 
-				Logger.Notice("Initial transfer to mongo after clone");
-				project.IsInitialClone = true;
-				Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
-				project.IsInitialClone = false;
+				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project") ||
+					CloneResultedInError(project, cloneResult, "no such branch") ||
+					CloneResultedInError(project, cloneResult, "new repository with no commits") ||
+					CloneResultedInError(project, cloneResult, "clone has higher model"))
+				{
+					return;
+				}
+
+				var line = LfMergeBridgeServices.GetLineContaining(cloneResult,
+					"new clone created on branch");
+				Require.That(!string.IsNullOrEmpty(line),
+					"Looks like the clone was not successful, but we didn't get an understandable error");
+
+				// Dig out actual clone path from 'line'.
+				const string folder = "folder '";
+				var folderIndex = line.IndexOf(folder, StringComparison.InvariantCulture);
+				if (folderIndex >= 0)
+				{
+					var actualClonePath = line.Substring(folderIndex + folder.Length)
+						.TrimEnd('.').TrimEnd('\'');
+					Require.That(cloneLocation == actualClonePath,
+						"Something changed in LfMergeBridge so that we cloned in a different directory");
+				}
+
+				InitialTransferToMongoAfterClone(project);
 			}
 			catch (Exception e)
 			{
@@ -118,20 +139,23 @@ namespace LfMerge.Actions
 					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 					throw;
 				}
+				Logger.Error("Got {0} exception trying to clone: {1}", e.GetType(), e.Message);
+				throw;
 			}
 		}
 
-		protected virtual string CloneRepo(ILfProject project, string projectFolderPath)
+		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,
+			out string cloneResult)
 		{
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-			string cloneResult;
 			var options = new Dictionary<string, string> {
-				{ "projectPath", projectFolderPath },
+				{ "fullPathToProject", projectFolderPath },
+				{ "languageDepotRepoName", project.LanguageDepotProject.Identifier },
 				{ "fdoDataModelVersion", FdoCache.ModelVersion },
 				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) }
 			};
-			LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", Progress, options, out cloneResult);
-			return cloneResult;
+			return LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", Progress, options,
+				out cloneResult);
 		}
 
 	}
