@@ -431,6 +431,9 @@ namespace LfMerge.DataConverters
 			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
 			if (lfEntry.IsDeleted)
 			{
+				// LF entry deleted: delete the corresponding FDO entry
+				if (fdoEntry == null)
+					return; // No need to delete an FDO entry that doesn't exist
 				if (fdoEntry.CanDelete)
 					fdoEntry.Delete();
 				else
