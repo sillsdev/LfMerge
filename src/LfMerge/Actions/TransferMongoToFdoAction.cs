@@ -45,7 +45,7 @@ namespace LfMerge.Actions
 		protected override void DoRun(ILfProject project)
 		{
 			// TODO: Some of these checks might be overkill; consider removing some of them
-			Logger.Debug("FdoFromMongoDb: starting");
+			Logger.Debug("MongoToFdo: starting");
 			_lfProject = project;
 			_projectRecord = _projectRecordFactory.Create(_lfProject);
 			if (_projectRecord == null)

@@ -414,7 +414,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
 			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
-			Logger.Notice("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
+			Logger.Debug("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
 			return result;
 		}
 
@@ -480,7 +480,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = Builders<LfOptionList>.Filter;
 			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Code, listCode);
 			bool result = UpdateRecordImpl(project, data, filter, MagicStrings.LfCollectionNameForOptionLists, MongoDbSelector.ProjectDatabase);
-			Logger.Notice("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
+			Logger.Debug("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
 			return result;
 		}
 

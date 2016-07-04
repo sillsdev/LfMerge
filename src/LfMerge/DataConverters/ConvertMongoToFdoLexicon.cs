@@ -122,6 +122,7 @@ namespace LfMerge.DataConverters
 
 		public void RunConversion()
 		{
+			Logger.Notice("MongoToFdo: Converting lexicon");
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
@@ -149,7 +150,7 @@ namespace LfMerge.DataConverters
 				});
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
-			Logger.Debug("FdoFromMongoDb: done");
+			Logger.Debug("MongoToFdo: done");
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
@@ -266,7 +267,7 @@ namespace LfMerge.DataConverters
 				LfStringField field;
 				if (input.TryGetValue(ws.Id, out field) && !String.IsNullOrEmpty(field.Value))
 				{
-					Logger.Info("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
+					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
 					return new Tuple<string, int>(field.Value, ws.Handle);
 				}
 			}
@@ -274,7 +275,7 @@ namespace LfMerge.DataConverters
 			// Last-ditch option: just grab the first non-empty string we can find
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(Cache);
 			if (kv.Value == null) return null;
-			Logger.Info("Returning first non-empty TsString from {0} for writing system with ID {1}", kv.Value, kv.Key);
+			Logger.Debug("Returning first non-empty TsString from {0} for writing system with ID {1}", kv.Value, kv.Key);
 			return new Tuple<string, int>(kv.Value, kv.Key);
 		}
 
@@ -441,7 +442,7 @@ namespace LfMerge.DataConverters
 				return; // Don't set fields on a deleted entry
 			}
 			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
-			Logger.Notice("Processing entry {0} ({1}) from LF lexicon", guid, entryNameForDebugging);
+			Logger.Info("Processing entry {0} ({1}) from LF lexicon", guid, entryNameForDebugging);
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
@@ -488,7 +489,7 @@ namespace LfMerge.DataConverters
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
-			Logger.Info("FDO Example just got set to {0} for GUID {1} and HVO {2}",
+			Logger.Debug("FDO Example just got set to {0} for GUID {1} and HVO {2}",
 				ConvertFdoToMongoTsStrings.SafeTsStringText(fdoExample.Example.BestAnalysisVernacularAlternative),
 				fdoExample.Guid,
 				fdoExample.Hvo
@@ -575,7 +576,10 @@ namespace LfMerge.DataConverters
 				else
 				{
 					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA, pos, secondaryPos, Logger); // It's fine if secondaryPos is null
-					Logger.Info("Part of speech of {0} has been set to {1}", fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(), pos);
+					Logger.Debug("Part of speech of {0} has been set to {1}{2}",
+						fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(),
+						pos,
+						secondaryPos == null ? "" : String.Format("with secondary part of speech {0}", secondaryPos));
 				}
 			}
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
@@ -704,8 +708,6 @@ namespace LfMerge.DataConverters
 				lfEntry.Tone == null &&
 				lfEntry.Location == null)
 			{
-				// Do we even need to log this scenario? TODO: Either uncomment or remove the line below.
-				// Logger.Info("No pronunciation data in lfEntry {0}", lfEntry.Guid);
 				return;
 			}
 			ILexPronunciation fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);

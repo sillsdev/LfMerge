@@ -98,7 +98,7 @@ namespace LfMerge
 			}
 			catch (Exception e)
 			{
-				Logger.Debug("Unhandled Exception: \n{0}", e);
+				Logger.Error("Unhandled Exception: \n{0}", e);
 				throw;
 			}
 			finally
@@ -144,7 +144,7 @@ namespace LfMerge
 						(project.State.SRState == ProcessingState.SendReceiveStates.CLONING) ||
 						model.TargetLocationIsUnused)
 					{
-						Logger.Notice("Initial clone");
+						Logger.Notice("Initial clone for project {0}", project.ProjectCode);
 						// Since we're in here, the previous clone was not finished, so remove and start over
 						var cloneLocation = Path.Combine(settings.WebWorkDirectory, project.ProjectCode);
 						if (Directory.Exists(cloneLocation))
