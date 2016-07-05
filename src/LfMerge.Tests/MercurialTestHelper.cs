@@ -5,6 +5,7 @@ using System.IO;
 using IniParser.Parser;
 using NUnit.Framework;
 using Palaso.CommandLineProcessing;
+using Palaso.PlatformUtilities;
 using Palaso.Progress;
 using SIL.FieldWorks.FDO;
 
@@ -12,10 +13,21 @@ namespace LfMerge.Tests
 {
 	public static class MercurialTestHelper
 	{
+		public static string HgCommand
+		{
+			get
+			{
+				return Path.Combine(TestEnvironment.FindGitRepoRoot(), "Mercurial",
+					Platform.IsWindows ? "hg.exe" : "hg");
+			}
+		}
+
 		private static string RunHgCommand(string repoPath, string args)
 		{
-			var result = CommandLineRunner.Run("hg", args, repoPath, 120, new NullProgress());
-			Assert.That(result.ExitCode, Is.EqualTo(0), string.Format("hg {0} failed.\nStdOut: {1}\nStdErr: {2}", args, result.StandardOutput, result.StandardError));
+			var result = CommandLineRunner.Run(HgCommand, args, repoPath, 120, new NullProgress());
+			Assert.That(result.ExitCode, Is.EqualTo(0),
+				string.Format("hg {0} failed.\nStdOut: {1}\nStdErr: {2}",
+					args, result.StandardOutput, result.StandardError));
 			return result.StandardOutput;
 		}
 

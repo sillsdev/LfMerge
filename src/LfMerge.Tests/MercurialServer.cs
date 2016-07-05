@@ -23,7 +23,8 @@ namespace LfMerge.Tests
 			_pidFile = Path.GetTempFileName();
 			var args = "serv --port 0 --daemon --config web.push_ssl=No --config \"web.allow_push=*\" --pid-file "
 				+ _pidFile;
-			var result = CommandLineRunner.Run("hg", args, RepoPath, 120, new NullProgress());
+			var result = CommandLineRunner.Run(MercurialTestHelper.HgCommand,
+				args, RepoPath, 120, new NullProgress());
 			Assert.That(result.ExitCode, Is.EqualTo(0),
 				string.Format("hg {0}\nStdOut: {1}\nStdErr: {2}", args,
 					result.StandardOutput, result.StandardError));
