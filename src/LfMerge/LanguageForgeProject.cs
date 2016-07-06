@@ -1,9 +1,11 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System.Collections.Generic;
+using System.IO;
 using Autofac;
 using LfMerge.FieldWorks;
 using LfMerge.Settings;
-using System.Collections.Generic;
+using SIL.FieldWorks.FDO;
 
 namespace LfMerge
 {
@@ -47,18 +49,20 @@ namespace LfMerge
 		public static void DisposeProjectCache(string projectCode)
 		{
 			LanguageForgeProject project;
-			if (CachedProjects.TryGetValue(projectCode, out project)) {
+			if (CachedProjects.TryGetValue(projectCode, out project))
+			{
 				DisposeFwProject(project);
 				CachedProjects.Remove(projectCode);
 			}
 		}
 
-		public static void DisposeFwProject(LanguageForgeProject project)
+		public static void DisposeFwProject(ILfProject project)
 		{
-			if (project != null && project._fieldWorksProject != null)
+			var lfProject = project as LanguageForgeProject;
+			if (lfProject != null && lfProject._fieldWorksProject != null)
 			{
-				project._fieldWorksProject.Dispose();
-				project._fieldWorksProject = null;
+				lfProject._fieldWorksProject.Dispose();
+				lfProject._fieldWorksProject = null;
 			}
 		}
 
@@ -66,13 +70,24 @@ namespace LfMerge
 
 		public string ProjectCode { get { return _projectCode; } }
 
+		public string ProjectDir { get { return Path.Combine(_settings.WebWorkDirectory, ProjectCode); }}
+
+		public string FwDataPath
+		{
+			get
+			{
+				return Path.Combine(ProjectDir, string.Format("{0}{1}", ProjectCode,
+					FdoFileHelper.ksFwDataXmlFileExtension));
+			}
+		}
+
 		public string MongoDatabaseName { get { return _settings.MongoDatabaseNamePrefix + ProjectCode; } }
 
 		public FwProject FieldWorksProject
 		{
 			get
 			{
-				if (_fieldWorksProject == null)
+				if (_fieldWorksProject == null || _fieldWorksProject.IsDisposed)
 				{
 					// for now we simply use the language forge project code as name for the fwdata file
 					_fieldWorksProject = new FwProject(_settings, ProjectCode);

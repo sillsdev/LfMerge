@@ -1,29 +1,24 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Chorus.Model;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using IniParser.Model;
 using LfMerge.Actions;
 using LfMerge.Actions.Infrastructure;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
-using LfMerge.FieldWorks;
+using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
 using LfMerge.Tests.Actions;
-using LibFLExBridgeChorusPlugin.Infrastructure;
-using LibTriboroughBridgeChorusPlugin.Infrastructure;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Moq;
-using Palaso.Progress;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace LfMerge.Tests
 {
@@ -123,9 +118,9 @@ namespace LfMerge.Tests
 			new LfMerge.LanguageForge.Config.MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
-		private Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
-		private Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
-		private Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
+		private readonly Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
+		private readonly Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
+		private readonly Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 		private Dictionary<string, LfConfigFieldBase> _storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
 
 		public void Reset()
@@ -314,38 +309,46 @@ namespace LfMerge.Tests
 		#endregion
 	}
 
-	class InternetCloneSettingsModelDouble: InternetCloneSettingsModel
-	{
-		public override void DoClone()
-		{
-			Directory.CreateDirectory(TargetDestination);
-			Directory.CreateDirectory(Path.Combine(TargetDestination, ".hg"));
-			File.WriteAllText(Path.Combine(TargetDestination, ".hg", "hgrc"), "blablabla");
-		}
-	}
-
 	class ChorusHelperDouble: ChorusHelper
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
-			return SynchronizeActionTests.LDProjectFolderPath;
+			var server = SynchronizeActionTests.LDServer;
+			return server != null ? server.Url : SynchronizeActionTests.LDProjectFolderPath;
 		}
 	}
 
-	class UpdateBranchHelperFlexDouble: UpdateBranchHelperFlex
+	class EnsureCloneActionDouble: EnsureCloneAction
 	{
-		public override bool UpdateToTheCorrectBranchHeadIfPossible(string desiredBranchName,
-			ActualCloneResult cloneResult, string cloneLocation)
+		private readonly bool _projectExists;
+
+		public EnsureCloneActionDouble(LfMergeSettingsIni settings, ILogger logger, bool projectExists = true):
+			base(settings, logger)
 		{
-			cloneResult.FinalCloneResult = FinalCloneResult.Cloned;
-			return true;
+			_projectExists = projectExists;
+		}
+
+		protected override bool CloneRepo(ILfProject project, string projectFolderPath,
+			out string cloneResult)
+		{
+			if (_projectExists)
+			{
+				Directory.CreateDirectory(projectFolderPath);
+				Directory.CreateDirectory(Path.Combine(projectFolderPath, ".hg"));
+				File.WriteAllText(Path.Combine(projectFolderPath, ".hg", "hgrc"), "blablabla");
+				cloneResult = string.Format("Clone success: new clone created on branch '' in folder {0}",
+					projectFolderPath);
+				return true;
+			}
+			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
 		}
 	}
+}
 
-	class FlexHelperDouble: FlexHelper
+// We can't directly use Chorus, so we redefine the exception we need here
+namespace Chorus.VcsDrivers.Mercurial
+{
+	class RepositoryAuthorizationException: Exception
 	{
-		public override void PutHumptyTogetherAgain(IProgress progress, bool verbose, string mainFilePathname)
-		{
-		}
 	}
 }

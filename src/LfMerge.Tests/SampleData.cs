@@ -28,7 +28,7 @@ namespace LfMerge.Tests
 		}
 
 		#region JSON Test Data
-		public static string jsonTestData = @"{
+		public const string jsonTestData = @"{
 	""_id"" : ObjectId(""56332f680f8709ed0fd92d6c""),
 	""authorInfo"" : {
 		""createdByUserRef"" : null,
@@ -401,7 +401,7 @@ namespace LfMerge.Tests
 		#endregion
 
 		#region JSON Config Data
-		public static string jsonConfigData = @"{
+		public const string jsonConfigData = @"{
 		""tasks"" : {
 			""view"" : {
 				""visible"" : true,
@@ -2186,7 +2186,7 @@ namespace LfMerge.Tests
 		#endregion
 
 		#region JSON Project Record Data
-		public static string jsonProjectRecordData = @"{
+		public const string jsonProjectRecordData = @"{
 	""_id"" : ObjectId(""56332f5d0f8709ed0f582326""),
 	""allowAudioDownload"" : true,
 	""allowInviteAFriend"" : true,
@@ -2287,7 +2287,7 @@ namespace LfMerge.Tests
 		#endregion
 
 		#region JSON Option List Data
-		public static string jsonOptionListData = @"{
+		public const string jsonOptionListData = @"{
 	""_id"" : ObjectId(""56a9e2450f8709b702f15f97""),
 	""canDelete"" : false,
 	""code"" : ""grammatical-info"",

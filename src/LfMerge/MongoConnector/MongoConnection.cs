@@ -35,10 +35,6 @@ namespace LfMerge.MongoConnector
 		public ILogger Logger { get { return _logger; } }
 		public LfMergeSettingsIni Settings { get { return _settings; } }
 
-		// TODO: Get rid of these hardcoded defaults and see what breaks, then make sure that code calls Initialize() like it should.
-		public static string MainDatabaseName = "scriptureforge";
-		public static string HostNameAndPort = "localhost:27017";
-
 		// List of LF fields which will use the default vernacular / analysis WS. Heirarchy is config.entry.fields...
 		// We intentionally aren't setting custom example WS here, since it's a custom field with a custom name
 		private readonly List<string> _vernacularFieldsWsList = new List<string> {
@@ -49,11 +45,8 @@ namespace LfMerge.MongoConnector
 		};
 
 
-		public static void Initialize(string hostName = null, string mainDatabaseName = null)
+		public static void Initialize()
 		{
-			if (hostName != null) HostNameAndPort = hostName;
-			if (mainDatabaseName != null) MainDatabaseName = mainDatabaseName;
-
 			// Serialize Boolean values permissively
 			BsonSerializer.RegisterSerializationProvider(new BooleanSerializationProvider());
 
@@ -414,7 +407,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
 			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
-			Logger.Notice("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
+			Logger.Debug("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
 			return result;
 		}
 
@@ -480,7 +473,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = Builders<LfOptionList>.Filter;
 			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Code, listCode);
 			bool result = UpdateRecordImpl(project, data, filter, MagicStrings.LfCollectionNameForOptionLists, MongoDbSelector.ProjectDatabase);
-			Logger.Notice("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
+			Logger.Debug("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
 			return result;
 		}
 

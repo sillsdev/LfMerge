@@ -4,17 +4,16 @@ using System;
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Chorus.Model;
 using IniParser.Parser;
 using LfMerge.Actions.Infrastructure;
-using LfMerge.FieldWorks;
+using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
-using LibFLExBridgeChorusPlugin.Infrastructure;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
+using SIL.CoreImpl;
 
 namespace LfMerge.Tests
 {
@@ -23,6 +22,7 @@ namespace LfMerge.Tests
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		private bool _resetLfProjectsDuringCleanup;
 		public LfMergeSettingsIni Settings;
+		private MongoConnectionDouble _mongoConnection;
 		public ILogger Logger { get { return MainClass.Logger; }}
 
 		static TestEnvironment()
@@ -34,22 +34,21 @@ namespace LfMerge.Tests
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
 			bool resetLfProjectsDuringCleanup = true,
-			TemporaryFolder languageForgeServerFolder = null)
+			TemporaryFolder languageForgeServerFolder = null,
+			bool registerLfProxyMock = true)
 		{
 			_resetLfProjectsDuringCleanup = resetLfProjectsDuringCleanup;
-			if (languageForgeServerFolder == null)
-				_languageForgeServerFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
-			else
-				_languageForgeServerFolder = languageForgeServerFolder;
+			_languageForgeServerFolder = languageForgeServerFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName());
 			Environment.SetEnvironmentVariable("FW_CommonAppData", _languageForgeServerFolder.Path);
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble,
-				_languageForgeServerFolder.Path).Build();
+				registerProcessingStateDouble, _languageForgeServerFolder.Path,
+				registerLfProxyMock).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
 			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
 			Directory.CreateDirectory(Settings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
+			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 		}
 
 		private string TestName
@@ -65,7 +64,7 @@ namespace LfMerge.Tests
 		}
 
 		private ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, string temporaryFolder)
+			bool registerProcessingStateDouble, string temporaryFolder, bool registerLfProxyMock)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
@@ -77,12 +76,12 @@ namespace LfMerge.Tests
 
 			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
 
+			if (registerLfProxyMock)
+				containerBuilder.RegisterType<LanguageForgeProxyMock>().As<ILanguageForgeProxy>();
+
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<InternetCloneSettingsModelDouble>().As<InternetCloneSettingsModel>();
 				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>();
-				containerBuilder.RegisterType<UpdateBranchHelperFlexDouble>().As<UpdateBranchHelperFlex>();
-				containerBuilder.RegisterType<FlexHelperDouble>().As<FlexHelper>();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
@@ -100,12 +99,17 @@ namespace LfMerge.Tests
 
 		public void Dispose()
 		{
+			if (_mongoConnection != null)
+				_mongoConnection.Reset();
+
 			MainClass.Container.Dispose();
 			MainClass.Container = null;
 			if (_resetLfProjectsDuringCleanup)
 				LanguageForgeProjectAccessor.Reset();
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
+
+			DirectoryFinder.ResetStaticVars();
 		}
 
 		public string LanguageForgeFolder

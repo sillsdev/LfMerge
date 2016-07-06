@@ -29,6 +29,7 @@ namespace LfMerge.Actions
 
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
+			containerBuilder.RegisterType<EnsureCloneAction>().Keyed<IAction>(ActionNames.EnsureClone).SingleInstance();
 			containerBuilder.RegisterType<CommitAction>().Keyed<IAction>(ActionNames.Commit).SingleInstance();
 			containerBuilder.RegisterType<EditAction>().Keyed<IAction>(ActionNames.Edit).SingleInstance();
 			containerBuilder.RegisterType<SynchronizeAction>().Keyed<IAction>(ActionNames.Synchronize).SingleInstance();
@@ -63,9 +64,16 @@ namespace LfMerge.Actions
 			}
 		}
 
+		public virtual void PreRun(ILfProject project)
+		{
+			// Default implementation does nothing
+		}
+
 		public void Run(ILfProject project)
 		{
 			Logger.Notice("Action {0} started", Name);
+
+			PreRun(project);
 
 			if (project.State.SRState == ProcessingState.SendReceiveStates.HOLD)
 			{
@@ -86,7 +94,7 @@ namespace LfMerge.Actions
 					project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 				else if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 				{
-					Logger.Error("State going to IDLE");
+					Logger.Error("Got exception. State going to IDLE");
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 				}
 				Logger.Error("LfMerge exiting due to exception in Action.{0}", Name);

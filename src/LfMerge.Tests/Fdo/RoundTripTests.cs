@@ -500,6 +500,7 @@ namespace LfMerge.Tests.Fdo
 
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
+			Assert.That(entry.IsDeleted, Is.EqualTo(false));
 
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(newEntry.ToBsonDocument(), entry.ToBsonDocument());
@@ -521,8 +522,11 @@ namespace LfMerge.Tests.Fdo
 			sutFdoToMongo.Run(lfProject);
 
 			// Verify
-			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			var dataAfterRoundTrip = _conn.GetLfLexEntries();
+			Assert.That(dataAfterRoundTrip.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
+			entry = dataAfterRoundTrip.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
+			Assert.That(entry, Is.Not.Null);
+			Assert.That(entry.IsDeleted, Is.EqualTo(true));
 		}
 
 		[Test]

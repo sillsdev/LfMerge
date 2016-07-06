@@ -34,6 +34,9 @@ namespace LfMerge
 			get { return GetActionForQueue(QueueNames.Edit); }
 		}
 
+		// REVIEW: improve naming of this method. This method returns the next action for the
+		// purpose of enumerating over all actions. It doesn't return the next action that should
+		// logically be run. That is returned by IAction.NextAction.
 		public ActionNames GetNextAction(ActionNames currentAction)
 		{
 			int nextAction = ((int)currentAction) + 1;

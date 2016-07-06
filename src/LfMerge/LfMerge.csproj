@@ -14,7 +14,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -24,6 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
@@ -36,17 +37,8 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="LibChorus">
-      <HintPath>..\..\lib\LibChorus.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="LibFLExBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
-    </Reference>
-    <Reference Include="LibTriboroughBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
       <Package>lfmerge-fdo</Package>
@@ -112,7 +104,6 @@
     <Compile Include="ILanguageDepotProject.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IProcessingStateDeserialize.cs" />
-    <Compile Include="FieldWorks\FlexHelper.cs" />
     <Compile Include="MongoConnector\MongoConnection.cs" />
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
     <Compile Include="MongoConnector\MongoCursorEnumerableExtensions.cs" />
@@ -174,7 +165,6 @@
     <Compile Include="Logging\SyslogProgress.cs" />
     <Compile Include="LanguageForge\Model\LfParagraph.cs" />
     <Compile Include="LanguageForge\Model\LfMultiParagraph.cs" />
-    <Compile Include="LanguageForge\Infrastructure\PhpConnection.cs" />
     <Compile Include="LanguageForge\Infrastructure\RunClassParameters.cs" />
     <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalOptionListSource.cs" />
@@ -183,6 +173,10 @@
     <Compile Include="DataConverters\CanonicalSources\CanonicalItem.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalPartOfSpeechItem.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainItem.cs" />
+    <Compile Include="Actions\EnsureCloneAction.cs" />
+    <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
+    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxy.cs" />
+    <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\BuildDependencyTasks.0.2.6.0\build\BuildDependencyTasks.targets" Condition="Exists('..\..\packages\BuildDependencyTasks.0.2.6.0\build\BuildDependencyTasks.targets')" />
@@ -223,7 +217,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <!-- Copy .mdb files for all files into output directory as well as ChorusMerge.exe -->
+    <!-- Copy .mdb files for all files into output directory as well as ChorusMerge.exe. Although
+    we don't have direct dependencies on Chorus we still need to copy ChorusMerge in order for
+    LfMergeBridge to work properly. -->
     <ItemGroup>
       <FilesInOutput Include="$(OutputPath)/*.*" />
       <FilesToCopy Include="@(FilesInOutput-&gt;'../../lib/%(Filename)%(Extension).mdb')" Condition="Exists('../../lib/%(Filename)%(Extension).mdb')" />

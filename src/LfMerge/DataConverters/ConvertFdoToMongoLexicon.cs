@@ -88,7 +88,7 @@ namespace LfMerge.DataConverters
 
 		public void RunConversion()
 		{
-			Logger.Notice("FdoToMongo: LexEntryRepository");
+			Logger.Notice("FdoToMongo: Converting lexicon");
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
@@ -102,7 +102,8 @@ namespace LfMerge.DataConverters
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
-				Logger.Info("Populated LfEntry {0}", lfEntry.Guid);
+				string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
+				Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
 			LfProject.IsInitialClone = false;
@@ -116,19 +117,16 @@ namespace LfMerge.DataConverters
 		private void RemoveMongoEntriesDeletedInFdo()
 		{
 			IEnumerable<LfLexEntry> lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
-			List<Guid> entryGuidsToRemove = new List<Guid>();
 			foreach (LfLexEntry lfEntry in lfEntries)
 			{
 				if (lfEntry.Guid == null)
 					continue;
 				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
-					!Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
-					entryGuidsToRemove.Add(lfEntry.Guid.Value);
-			}
-
-			foreach (Guid guid in entryGuidsToRemove)
-			{
-				Connection.RemoveRecord(LfProject, guid);
+				    !Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
+				{
+					lfEntry.IsDeleted = true;
+					Connection.UpdateRecord(LfProject, lfEntry);
+				}
 			}
 		}
 
@@ -181,7 +179,7 @@ namespace LfMerge.DataConverters
 		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			if (fdoEntry == null) return null;
-			Logger.Notice("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
+			Logger.Debug("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
@@ -449,8 +447,8 @@ namespace LfMerge.DataConverters
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
-			//Logger.Notice("Custom fields for this sense: {0}", lfSense.CustomFields);
-			//Logger.Notice("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
+			//Logger.Debug("Custom fields for this sense: {0}", lfSense.CustomFields);
+			//Logger.Debug("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -494,8 +492,8 @@ namespace LfMerge.DataConverters
 
 			lfExample.CustomFields = customFieldsBson;
 			lfExample.CustomFieldGuids = customFieldGuids;
-			//Logger.Notice("Custom fields for this example: {0}", result.CustomFields);
-			//Logger.Notice("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
+			//Logger.Debug("Custom fields for this example: {0}", result.CustomFields);
+			//Logger.Debug("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return lfExample;
 		}
 

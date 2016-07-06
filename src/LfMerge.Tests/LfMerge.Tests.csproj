@@ -18,7 +18,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -39,20 +38,11 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="LibChorus">
-      <HintPath>..\..\lib\LibChorus.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="LibFLExBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibFLExBridge-ChorusPlugin.dll</HintPath>
-    </Reference>
     <Reference Include="Palaso.TestUtilities">
       <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="LibTriboroughBridge-ChorusPlugin">
-      <HintPath>..\..\lib\LibTriboroughBridge-ChorusPlugin.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
       <Package>lfmerge-fdo</Package>
@@ -110,7 +100,6 @@
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
     <Compile Include="Settings\LfMergeSettingsIniTests.cs" />
-    <Compile Include="Actions\ProgramTests.cs" />
     <Compile Include="GlobalTestFixture.cs" />
     <Compile Include="Fdo\FdoTestBase.cs" />
     <Compile Include="Fdo\RoundTripBase.cs" />
@@ -120,7 +109,14 @@
     <Compile Include="Fdo\DataConverters\ConvertFdoToMongoCustomFieldTests.cs" />
     <Compile Include="LanguageDepotMock.cs" />
     <Compile Include="Actions\SynchronizeActionTests.cs" />
+    <Compile Include="Actions\EnsureCloneActionTests.cs" />
     <Compile Include="TestLogger.cs" />
+    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxyTests.cs" />
+    <Compile Include="LanguageForgeProxyMock.cs" />
+    <Compile Include="MercurialTestHelper.cs" />
+    <Compile Include="Actions\EnsureCloneActionBridgeIntegrationTests.cs" />
+    <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
+    <Compile Include="MercurialServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -133,4 +129,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="LanguageForge\" />
+    <Folder Include="LanguageForge\Infrastructure\" />
+  </ItemGroup>
 </Project>
