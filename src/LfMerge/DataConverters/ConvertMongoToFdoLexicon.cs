@@ -449,15 +449,20 @@ namespace LfMerge.DataConverters
 				}
 				return; // Don't set fields on a deleted entry
 			}
-			string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
+			string entryNameForDebugging = "";
+			if (lfEntry.Lexeme != null && lfEntry.Lexeme.Values != null)
+				entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 			Logger.Info("Processing entry {0} ({1}) from LF lexicon", guid, entryNameForDebugging);
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
 			// Use AuthorInfo for dates as this should always reflect user changes (Mongo or FDO)
 			// Weirdly, FDO expects Dates to be in LOCAL time, not UTC.
-			fdoEntry.DateCreated = lfEntry.AuthorInfo.CreatedDate.ToLocalTime();
-			fdoEntry.DateModified = lfEntry.AuthorInfo.ModifiedDate.ToLocalTime();
+			if (lfEntry.AuthorInfo != null)
+			{
+				fdoEntry.DateCreated = lfEntry.AuthorInfo.CreatedDate.ToLocalTime();
+				fdoEntry.DateModified = lfEntry.AuthorInfo.ModifiedDate.ToLocalTime();
+			}
 			SetMultiStringFrom(fdoEntry.Bibliography, lfEntry.EntryBibliography);
 			SetMultiStringFrom(fdoEntry.Restrictions, lfEntry.EntryRestrictions);
 			SetEtymologyFields(fdoEntry, lfEntry);
