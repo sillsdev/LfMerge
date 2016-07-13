@@ -1,3 +1,7 @@
+# This file lists dependencies
+# It can be edited with the BuildDependencyManager application.
+# See https://github.com/ermshiperete/BuildDependency for more information.
+
 [[TC]]
 Type=TeamCity
 Url=http://build.palaso.org
