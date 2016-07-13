@@ -6,4 +6,4 @@
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y equivs devscripts
-sudo mk-build-deps --install --remove $(dirname "$0")/../debian/control
+sudo DEBIAN_FRONTEND=noninteractive mk-build-deps --install --remove --tool "apt-get --no-install-recommends -y" $(dirname "$0")/../debian/control
