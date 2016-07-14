@@ -8,9 +8,10 @@ export XDG_CONFIG_HOME=$HOME/.config
 export BUILD = Release
 export MONO_PREFIX=/opt/mono-sil
 
-DESTDIR = debian/lfmerge
-LIB     = usr/lib/lfmerge
-SHARE   = usr/share/lfmerge
+DBVERSION = $(shell dpkg -l | grep lfmerge-fdo-[0-9] | sort -r | cut --characters=17-23)
+DESTDIR   = debian/lfmerge/$(DBVERSION)
+LIB       = usr/lib/lfmerge/$(DBVERSION)
+SHARE     = usr/share/lfmerge/$(DBVERSION)
 
 %:
 	dh $@ --with=cli --parallel
@@ -95,6 +96,8 @@ override_dh_clideps:
 	PATH=$(MONO_PREFIX)/bin:$(PATH) \
 	dh_clideps internal-mono  -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
+		--exclude-moduleref=icuuc57.dll --exclude-moduleref=icuin57.dll \
+		--exclude-moduleref=icuuc56.dll --exclude-moduleref=icuin56.dll \
 		--exclude-moduleref=icuuc55.dll --exclude-moduleref=icuin55.dll \
 		--exclude-moduleref=icuuc54.dll --exclude-moduleref=icuin54.dll \
 		--exclude-moduleref=icuuc52.dll --exclude-moduleref=icuin52.dll \

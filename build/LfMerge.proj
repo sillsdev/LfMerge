@@ -30,6 +30,16 @@
 		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
 	</PropertyGroup>
 
+	<Target Name="GetDbModelVersion" Condition="'$(OS)'=='Unix'">
+		<Exec Command='bash -c "find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1 > /tmp/dbmodelversion"'/>
+		<ReadLinesFromFile File="/tmp/dbmodelversion">
+			<Output ItemName="DbModelVersion" TaskParameter="Lines" />
+		</ReadLinesFromFile>
+		<CreateProperty Value="@(DbModelVersion)">
+			<Output PropertyName="DbModelVersion" TaskParameter="Value"/>
+		</CreateProperty>
+	</Target>
+
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
 		<Message Text="RootDir=$(RootDir)"/>
@@ -122,11 +132,11 @@
 			Properties="Configuration=$(Configuration)" />
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="Build">
+	<Target Name="Test" DependsOnTargets="Build;GetDbModelVersion">
 		<ItemGroup>
 			<ExistingFiles Include="$(RootDir)/output/$(Configuration)/*" Condition="'$(OS)'=='Unix'" />
-			<FdoFiles Include="/usr/lib/lfmerge/*" Condition="'$(OS)'=='Unix'"
-				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/%(FileName)%(Extension)')" />
+			<FdoFiles Include="/usr/lib/lfmerge/$(DbModelVersion)*" Condition="'$(OS)'=='Unix'"
+				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/$(DbModelVersion)/%(FileName)%(Extension)')" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
 			Condition="'$(OS)'=='Unix'"/>
@@ -143,7 +153,7 @@
 		<NUnitTeamCity
 			Assemblies="@(TestAssemblies)"
 			ExcludeCategory="SkipOnTeamCity;ByHand$(ExtraExcludeCategories)"
-			NUnitVersion="NUnit-2.6.3" />
+			NUnitVersion="NUnit-2.6.4" />
 	</Target>
 
 	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
