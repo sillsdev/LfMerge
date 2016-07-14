@@ -6,4 +6,7 @@
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y equivs devscripts
-sudo DEBIAN_FRONTEND=noninteractive mk-build-deps --install --remove --tool "apt-get --no-install-recommends -y" $(dirname "$0")/../debian/control
+sudo DEBIAN_FRONTEND=noninteractive mk-build-deps --install --remove \
+	--tool "apt-get --no-install-recommends -y" $(dirname "$0")/../debian/control
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+	$(apt-cache depends lfmerge-build-deps | grep Depends | cut -f 4 -d" ")
