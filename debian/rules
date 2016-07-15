@@ -9,7 +9,7 @@ export BUILD = Release
 export MONO_PREFIX=/opt/mono-sil
 
 DBVERSION = $(shell dpkg -l | grep lfmerge-fdo-[0-9] | sort -r | cut --characters=17-23)
-DESTDIR   = debian/lfmerge/$(DBVERSION)
+DESTDIR   = debian/lfmerge
 LIB       = usr/lib/lfmerge/$(DBVERSION)
 SHARE     = usr/share/lfmerge/$(DBVERSION)
 
