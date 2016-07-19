@@ -67,7 +67,7 @@ namespace LfMerge.MongoConnector
 		{
 			_settings = settings;
 			_logger = logger;
-			connectionString = String.Format("mongodb://{0}", Settings.MongoDbHostNameAndPort);
+			connectionString = String.Format("mongodb://{0}?maxPoolSize=999", Settings.MongoDbHostNameAndPort);
 			mainDatabaseName = Settings.MongoMainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
 		}
