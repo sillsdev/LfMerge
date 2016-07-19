@@ -20,7 +20,7 @@ namespace LfMerge.LanguageForge.Model
 		public LfStringField PartOfSpeech { get; set; }
 		public LfStringField SecondaryPartOfSpeech { get; set; }
 		[BsonRepresentation(BsonType.String)]
-		public Guid? PartOfSpeechGuid { get; set; } // TODO: Delete this since it *should* now be unused. (Test first, though)
+		public Guid? PartOfSpeechGuid { get; set; } // Present for historical reasons, but never persisted
 		public LfStringArrayField SemanticDomain { get; set; }
 		public List<LfExample> Examples { get; set; }
 		public BsonDocument CustomFields { get; set; } // Mapped at runtime
@@ -54,6 +54,7 @@ namespace LfMerge.LanguageForge.Model
 		// Maybe later we can write reflection code to automatically add these to the class...
 		public bool ShouldSerializePartOfSpeech() { return _ShouldSerializeLfStringField(PartOfSpeech); }
 		public bool ShouldSerializeSecondaryPartOfSpeech() { return _ShouldSerializeLfStringField(SecondaryPartOfSpeech); }
+		public bool ShouldSerializePartOfSpeechGuid() { return false; }
 		public bool ShouldSerializeSemanticDomain() { return _ShouldSerializeLfStringArrayField(SemanticDomain); }
 		public bool ShouldSerializeExamples() { return _ShouldSerializeList(Examples); }
 		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
