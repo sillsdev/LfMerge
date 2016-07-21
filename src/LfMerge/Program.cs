@@ -77,23 +77,35 @@ namespace LfMerge
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						Logger.Notice("ProjectCode {0}", projectCode);
-						var project = LanguageForgeProject.Create(settings, projectCode);
+						LanguageForgeProject project = null;
+						try
+						{
+							Logger.Notice("ProjectCode {0}", projectCode);
+							project = LanguageForgeProject.Create(settings, projectCode);
 
-						var ensureClone = LfMerge.Actions.Action.GetAction(ActionNames.EnsureClone);
-						ensureClone.Run(project);
+							var ensureClone = LfMerge.Actions.Action.GetAction(ActionNames.EnsureClone);
+							ensureClone.Run(project);
 
-						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
-							queue.CurrentAction.Run(project);
+							if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+								queue.CurrentAction.Run(project);
+						}
+						catch (Exception e)
+						{
+							Logger.Error("Putting project {0} on hold due to unhandled exception: \n{1}", projectCode, e);
+							if (project != null)
+								project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+						}
+						finally
+						{
+							if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+								project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 
-						if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
-							project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+							// TODO: Verify actions complete before dequeuing
+							queue.DequeueProject(projectCode);
 
-						// TODO: Verify actions complete before dequeuing
-						queue.DequeueProject(projectCode);
-
-						// Dispose FDO cache to free memory
-						LanguageForgeProject.DisposeFwProject(project);
+							// Dispose FDO cache to free memory
+							LanguageForgeProject.DisposeFwProject(project);
+						}
 					}
 				}
 			}
