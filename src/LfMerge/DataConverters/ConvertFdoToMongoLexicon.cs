@@ -102,6 +102,16 @@ namespace LfMerge.DataConverters
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
+				if (lfEntry.Guid.HasValue)
+				{
+					LfLexEntry oldLfEntry = GetLexEntryByGuid(LfProject, lfEntry.Guid.Value);
+					if (oldLfEntry != null && oldLfEntry.IsDeleted)
+					{
+						// "Undeleted" entries need to have their DateModified updated so that LF will know that
+						// its cached version of this entry is stale and needs to be refreshed.
+						lfEntry.DateModified = DateTime.UtcNow;
+					}
+				}
 				string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 				Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
 				Connection.UpdateRecord(LfProject, lfEntry);
@@ -140,6 +150,11 @@ namespace LfMerge.DataConverters
 		public T GetInstance<T>(string key)
 		{
 			return Cache.ServiceLocator.GetInstance<T>(key);
+		}
+
+		public LfLexEntry GetLexEntryByGuid(ILfProject project, Guid key)
+		{
+			return Connection.GetRecordByGuid<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon, key);
 		}
 
 		public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)

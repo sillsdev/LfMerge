@@ -202,6 +202,15 @@ namespace LfMerge.Tests
 			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => DeepCopy(entry)));
 		}
 
+		public LfLexEntry GetLfLexEntryByGuid(Guid key)
+		{
+			LfLexEntry result;
+			if (_storedLfLexEntries.TryGetValue(key, out result))
+				return result;
+			else
+				return null;
+		}
+
 		public IEnumerable<LfOptionList> GetLfOptionLists()
 		{
 			return new List<LfOptionList>(_storedLfOptionLists.Values.Select(entry => DeepCopy(entry)));
@@ -218,6 +227,18 @@ namespace LfMerge.Tests
 			default:
 				List<TDocument> empty = new List<TDocument>();
 				return empty.AsEnumerable();
+			}
+		}
+
+		public TDocument GetRecordByGuid<TDocument>(ILfProject project, string collectionName, Guid key)
+			where TDocument : class
+		{
+			switch (collectionName)
+			{
+			case MagicStrings.LfCollectionNameForLexicon:
+				return GetLfLexEntryByGuid(key) as TDocument;
+			default:
+				return null;
 			}
 		}
 

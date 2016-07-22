@@ -115,6 +115,15 @@ namespace LfMerge.MongoConnector
 				.Limit(1).FirstOrDefault();
 		}
 
+		public TDocument GetRecordByGuid<TDocument>(ILfProject project, string collectionName, Guid key)
+			where TDocument : class
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
+			FilterDefinition<TDocument> filter = new BsonDocument("guid", key.ToString());
+			return collection.Find(filter).FirstOrDefault();
+		}
+
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			MongoProjectRecord projectRecord = GetProjectRecord(project);
