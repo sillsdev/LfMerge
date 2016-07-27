@@ -97,22 +97,26 @@ namespace LfMerge.DataConverters
 			}
 
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+				string entryNameForDebugging;
+				if (lfEntry.Lexeme == null)
+					entryNameForDebugging = "<null lexeme>";
+				else
+					entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 				lfEntry.IsDeleted = false;
 				if (lfEntry.Guid.HasValue)
 				{
-					LfLexEntry oldLfEntry = GetLexEntryByGuid(LfProject, lfEntry.Guid.Value);
-					if (oldLfEntry != null && oldLfEntry.IsDeleted)
+					DateTime lastModifiedDate;
+					if (previousModificationDates.TryGetValue(lfEntry.Guid.Value, out lastModifiedDate))
 					{
-						// "Undeleted" entries need to have their DateModified updated so that LF will know that
-						// its cached version of this entry is stale and needs to be refreshed.
-						lfEntry.DateModified = DateTime.UtcNow;
+						if (lastModifiedDate != lfEntry.DateModified)
+							lfEntry.DateModified = DateTime.UtcNow;
 					}
 				}
-				string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 				Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
@@ -150,11 +154,6 @@ namespace LfMerge.DataConverters
 		public T GetInstance<T>(string key)
 		{
 			return Cache.ServiceLocator.GetInstance<T>(key);
-		}
-
-		public LfLexEntry GetLexEntryByGuid(ILfProject project, Guid key)
-		{
-			return Connection.GetRecordByGuid<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon, key);
 		}
 
 		public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
@@ -228,7 +227,6 @@ namespace LfMerge.DataConverters
 				lfEntry.DateModified = now;
 			}
 
-			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();
 			lfEntry.AuthorInfo.CreatedByUserRef = null;

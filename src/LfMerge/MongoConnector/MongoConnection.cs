@@ -115,13 +115,31 @@ namespace LfMerge.MongoConnector
 				.Limit(1).FirstOrDefault();
 		}
 
-		public TDocument GetRecordByGuid<TDocument>(ILfProject project, string collectionName, Guid key)
-			where TDocument : class
+		private bool CanParseGuid(string guidStr)
+		{
+			Guid ignored;
+			return Guid.TryParse(guidStr, out ignored);
+		}
+
+		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
-			FilterDefinition<TDocument> filter = new BsonDocument("guid", key.ToString());
-			return collection.Find(filter).FirstOrDefault();
+			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
+			var filter = new BsonDocument();
+			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
+			filter.Add("dateModified", new BsonDocument("$ne", BsonNull.Value));
+			var projection = new BsonDocument();
+			projection.Add("guid", 1);
+			projection.Add("dateModified", 1);
+			Dictionary<Guid, DateTime> results =
+				lexicon
+				.Find(filter)
+				.Project(projection)
+				.ToEnumerable()
+				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString) && doc.Contains("dateModified"))
+				.ToDictionary(doc => Guid.Parse(doc.GetValue("guid").AsString),
+				              doc => doc.GetValue("dateModified").AsBsonDateTime.ToUniversalTime());
+			return results;
 		}
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)

@@ -230,16 +230,9 @@ namespace LfMerge.Tests
 			}
 		}
 
-		public TDocument GetRecordByGuid<TDocument>(ILfProject project, string collectionName, Guid key)
-			where TDocument : class
+		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
-			switch (collectionName)
-			{
-			case MagicStrings.LfCollectionNameForLexicon:
-				return GetLfLexEntryByGuid(key) as TDocument;
-			default:
-				return null;
-			}
+			return _storedLfLexEntries.ToDictionary(kv => kv.Key, kv => kv.Value.DateModified);
 		}
 
 		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)

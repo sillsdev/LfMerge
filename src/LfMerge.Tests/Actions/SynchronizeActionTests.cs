@@ -242,6 +242,8 @@ namespace LfMerge.Tests.Actions
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			DateTime originalLfDateModified = lfEntry.DateModified;
+
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string fwChangedGloss = unchangedGloss + " - changed in FW";
 			string lfChangedGloss = unchangedGloss + " - changed in LF";
@@ -252,6 +254,7 @@ namespace LfMerge.Tests.Actions
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDFdoEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -259,6 +262,10 @@ namespace LfMerge.Tests.Actions
 
 			// Verify
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(lfChangedGloss));
+			LfLexEntry updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
+			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
 		}
 
 		[Test]
@@ -272,11 +279,14 @@ namespace LfMerge.Tests.Actions
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			DateTime originalLfDateModified = lfEntry.DateModified;
 
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 
 			// Don't use _mongoConnection.RemoveRecord to delete the entry.  LF uses the "IsDeleted" field
 			lfEntry.IsDeleted = true;
+			// The LF PHP code would have updated DateModified when it deleted the record, so simulate that here
+			lfEntry.DateModified = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 			IEnumerable<LfLexEntry> updatedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
@@ -285,6 +295,7 @@ namespace LfMerge.Tests.Actions
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
+			DateTime originalLdDateModified = lDFdoEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -299,6 +310,9 @@ namespace LfMerge.Tests.Actions
 			var entry = receivedMongoData.FirstOrDefault(e => e.Guid ==_testEntryGuid);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.IsDeleted, Is.EqualTo(true));
+			DateTime updatedLfDateModified = entry.DateModified;
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
 
 			var cache = _lfProject.FieldWorksProject.Cache;
 			Assert.That(()=> cache.ServiceLocator.GetObject(_testEntryGuid),
@@ -317,6 +331,7 @@ namespace LfMerge.Tests.Actions
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			DateTime originalLfDateModified = lfEntry.DateModified;
 
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string fwChangedGloss = unchangedGloss + " - changed in FW";
@@ -331,6 +346,7 @@ namespace LfMerge.Tests.Actions
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDFdoEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -339,6 +355,10 @@ namespace LfMerge.Tests.Actions
 			// Verify LD modified entry remains and LF marks not deleted
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(fwChangedGloss));
 			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(fwChangedGloss));
+			LfLexEntry updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
+			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
 		}
 
 		[Test]
@@ -353,6 +373,7 @@ namespace LfMerge.Tests.Actions
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testDeletedEntryGuid);
+			DateTime originalLfDateModified = lfEntry.DateModified;
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(1));
 			const string lfCreatedGloss = "new English gloss - added in LF";
 			const string fwChangedGloss = "English gloss - changed in FW";
@@ -366,6 +387,7 @@ namespace LfMerge.Tests.Actions
 				Throws.InstanceOf<KeyNotFoundException>());
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDFdoEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -377,6 +399,10 @@ namespace LfMerge.Tests.Actions
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid, originalNumOfFdoEntries + 1, 0),
 				Is.EqualTo(fwChangedGloss));
 			Assert.That(GetGlossFromLanguageDepot(_testDeletedEntryGuid, 1), Is.EqualTo(lfCreatedGloss));
+			LfLexEntry updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
+			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
+			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
 		}
 
 		[Test]
