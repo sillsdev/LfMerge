@@ -41,7 +41,7 @@ namespace LfMerge.DataConverters
 			var lfPara = new LfParagraph();
 			lfPara.Guid = fdoPara.Guid;
 			lfPara.StyleName = fdoPara.StyleName;
-			lfPara.Contents = ConvertFdoToMongoTsStrings.SafeTsStringText(fdoPara.Contents);
+			lfPara.Content = ConvertFdoToMongoTsStrings.SafeTsStringText(fdoPara.Contents);
 			return lfPara;
 		}
 
@@ -70,12 +70,12 @@ namespace LfMerge.DataConverters
 		{
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			var result = new LfMultiParagraph();
-			result.Paras = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para)).ToList();
+			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para)).ToList();
 			// StText objects in FDO have a single primary writing system, unlike MultiString or MultiUnicode objects
 			int fieldWs = metaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
 			if (wsStr == null) wsStr = wsManager.GetStrFromWs(fallbackWs);
-			result.Ws = wsStr;
+			result.InputSystem = wsStr;
 			return result;
 		}
 
@@ -146,7 +146,7 @@ namespace LfMerge.DataConverters
 				if (fdoIdx >= fdoStText.ParagraphsOS.Count)
 				{
 					// Past the end of existing FDO paras: create new para at end
-					Console.WriteLine("Appending new para with style name {0} and contents {1}", lfPara.StyleName, lfPara.Contents);
+					Console.WriteLine("Appending new para with style name {0} and contents {1}", lfPara.StyleName, lfPara.Content);
 					fdoPara = fdoStText.AddNewTextPara(lfPara.StyleName);
 				}
 				else
@@ -158,7 +158,7 @@ namespace LfMerge.DataConverters
 						fdoPara = fdoStText.InsertNewTextPara(fdoIdx, lfPara.StyleName);
 					}
 				}
-				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Contents, wsId);
+				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Content, wsId);
 				// It turns out that FDO often has an empty StyleName for the normal, default paragraph style. So in those
 				// cases, where we've gotten an empty StyleName in the LfParagraph object, we should NOT change it to be
 				// the default paragraph style, as that can cause round-tripping problems.

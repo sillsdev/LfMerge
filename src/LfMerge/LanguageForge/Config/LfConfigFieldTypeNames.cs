@@ -7,6 +7,7 @@ namespace LfMerge.LanguageForge.Config
 	{
 		public const string FieldList = "fields";
 		public const string MultiText = "multitext";
+		public const string MultiParagraph = "multiparagraph";
 		public const string OptionList = "optionlist";
 		public const string MultiOptionList = "multioptionlist";
 		public const string Pictures = "pictures";

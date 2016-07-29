@@ -177,6 +177,7 @@
     <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
     <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxy.cs" />
     <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
+    <Compile Include="LanguageForge\Config\LfConfigMultiParagraph.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

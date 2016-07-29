@@ -10,7 +10,7 @@ namespace LfMerge.LanguageForge.Config
 		public List<string> FieldOrder;
 		public Dictionary<string, LfConfigFieldBase> Fields;
 		
-		public LfConfigFieldList()
+		public LfConfigFieldList() : base()
 		{
 			Fields = new Dictionary<string, LfConfigFieldBase>(); // TODO: Check if Mongo is populating this correctly with objects
 		}

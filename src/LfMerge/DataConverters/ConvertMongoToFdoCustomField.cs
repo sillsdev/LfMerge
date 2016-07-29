@@ -162,8 +162,8 @@ namespace LfMerge.DataConverters
 					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
 					BsonDocument doc = value.AsBsonDocument;
 					LfMultiParagraph multiPara = BsonSerializer.Deserialize<LfMultiParagraph>(doc);
-					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.Ws);
-					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paras, wsId);
+					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
+					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
 
 					return true;
 				}

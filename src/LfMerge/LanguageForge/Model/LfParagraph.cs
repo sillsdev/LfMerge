@@ -11,13 +11,13 @@ namespace LfMerge.LanguageForge.Model
 		[BsonRepresentation(BsonType.String)]
 		public Guid? Guid { get; set; }
 		public string StyleName { get; set; }
-		public string Contents { get; set; }
+		public string Content { get; set; }
 
 		public bool ShouldSerializeGuid() { return (Guid != null && Guid.Value != System.Guid.Empty); }
 		public bool ShouldSerializeStyleName() { return !String.IsNullOrEmpty(StyleName); }
-		// Always serialize Contents even if empty. Thus, no ShouldSerializeContents() method needed.
+		// Always serialize Content even if empty. Thus, no ShouldSerializeContent() method needed.
 
-		public bool IsEmpty { get { return String.IsNullOrEmpty(Contents); } }
+		public bool IsEmpty { get { return String.IsNullOrEmpty(Content); } }
 	}
 }
 

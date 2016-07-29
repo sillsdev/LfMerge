@@ -187,8 +187,12 @@ namespace LfMerge.DataConverters
 					{
 						// Compute list code
 						listCode = GetParentListCode(flid);
-						lfCustomFieldList[lfCustomFieldName] = GetLfCustomFieldSettings(label, lfCustomFieldType, listCode);
-
+						lfCustomFieldList[lfCustomFieldName] =
+							GetLfCustomFieldOptionListConfig(label, lfCustomFieldType, listCode);
+					}
+					else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtom]) {
+						lfCustomFieldList[lfCustomFieldName] =
+							GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
 					}
 					else
 					{
@@ -197,7 +201,7 @@ namespace LfMerge.DataConverters
 						foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
 							inputSystems.Add(fdoAnalysisWs.RFC5646);
 						lfCustomFieldList[lfCustomFieldName] =
-						GetLfCustomFieldSettings(label, lfCustomFieldType, inputSystems);
+							GetLfCustomFieldMultiTextConfig(label, lfCustomFieldType, inputSystems);
 					}
 				}
 
@@ -212,15 +216,17 @@ namespace LfMerge.DataConverters
 						else
 							customFieldGuids.Add(lfCustomFieldName, guid);
 
-						LfConfigFieldBase lfCustomFieldSettings;
+						LfConfigFieldBase lfCustomFieldConfig;
 						// Valid guid so we should be able to create custom field configuration info
 						if (lfCustomFieldName.Contains("ListRef"))
-							lfCustomFieldSettings = GetLfCustomFieldSettings(label, lfCustomFieldName, listCode);
+							lfCustomFieldConfig = GetLfCustomFieldOptionListConfig(label, lfCustomFieldName, listCode);
+						else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtom])
+							lfCustomFieldConfig = GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
 						else
-							lfCustomFieldSettings = GetLfCustomFieldSettings(lfCustomFieldName,
+							lfCustomFieldConfig = GetLfCustomFieldMultiTextConfig(lfCustomFieldName,
 								lfCustomFieldType, new List<string>{cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
 
-						lfCustomFieldList[lfCustomFieldName] = lfCustomFieldSettings;
+						lfCustomFieldList[lfCustomFieldName] = lfCustomFieldConfig;
 					}
 				}
 			}
@@ -393,26 +399,14 @@ namespace LfMerge.DataConverters
 			return new BsonString(obj.Name.BestAnalysisVernacularAlternative.Text);
 		}
 
-		private LfConfigMultiText GetLfCustomFieldSettings(string label, string lfCustomFieldType, List<string> inputSystems)
-		{
-			if (lfCustomFieldType == null)
-				return null;
-			return new LfConfigMultiText {
-				Label = label,
-				DisplayMultiline = !lfCustomFieldType.Contains("Single") && !label.Contains("Single"),
-				Width = 20,
-				InputSystems = inputSystems,
-			};
-		}
-
 		/// <summary>
-		/// Gets the lf custom field settings.
+		/// Gets the lf custom field option list config settings.
 		/// </summary>
 		/// <returns>The lf custom field settings as LfConfigMultiOptionList or LfConfigOptionList.</returns>
 		/// <param name="label">Custom field label.</param>
 		/// <param name="lfCustomFieldType">lf custom field type</param>
 		/// <param name="listCode">Parent list code.</param>
-		private LfConfigFieldBase GetLfCustomFieldSettings(string label, string lfCustomFieldType, string listCode)
+		private LfConfigFieldBase GetLfCustomFieldOptionListConfig(string label, string lfCustomFieldType, string listCode)
 		{
 			if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.ReferenceCollection])
 			{
@@ -428,6 +422,27 @@ namespace LfMerge.DataConverters
 					ListCode = listCode,
 				};
 			}
+		}
+
+		private LfConfigMultiText GetLfCustomFieldMultiTextConfig(string label, string lfCustomFieldType, List<string> inputSystems)
+		{
+			if (lfCustomFieldType == null)
+				return null;
+			return new LfConfigMultiText {
+				Label = label,
+				DisplayMultiline = !lfCustomFieldType.Contains("Single") && !label.Contains("Single"),
+				Width = 20,
+				InputSystems = inputSystems,
+			};
+		}
+
+		private LfConfigMultiParagraph GetLfCustomFieldMultiParagraphConfig(string label, string lfCustomFieldType)
+		{
+			if (lfCustomFieldType == null)
+				return null;
+			return new LfConfigMultiParagraph {
+				Label = label,
+			};
 		}
 
 		/// <summary>
