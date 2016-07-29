@@ -43,6 +43,11 @@ namespace LfMerge.MongoConnector
 		private readonly List<string> _analysisFieldsWsList = new List<string> {
 			"note"
 		};
+		// Pronunciation fields are special: they want the first vernacular WS that uses IPA (or is otherwise flagged
+		// as being a pronunciation writing system).
+		private readonly List<string> _pronunciationFieldsWsList = new List<string> {
+			"pronunciation"
+		};
 
 
 		public static void Initialize()
@@ -193,7 +198,7 @@ namespace LfMerge.MongoConnector
 		/// <param name="vernacularWs">Default vernacular writing system. Default blank</param>
 		/// <param name="analysisWs">Default analysis writing system. Default blank</param>
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
-			string vernacularWs = "", string analysisWs = "")
+			string vernacularWs = "", string analysisWs = "", string pronunciationWs = "")
 		{
 			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
@@ -226,6 +231,19 @@ namespace LfMerge.MongoConnector
 					updates.Add(builder.Set("config.entry.fields." + analysisFieldName + ".inputSystems", analysisInputSystems));
 					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[analysisFieldName].InputSystems, analysisInputSystems));
 					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[analysisFieldName]).InputSystems, analysisInputSystems));
+				}
+
+				List<string> pronunciationInputSystems;
+				if (!string.IsNullOrEmpty(pronunciationWs))
+					pronunciationInputSystems = new List<string> { pronunciationWs };
+				else
+					// Pronunciation fields fall back on vernacular writing system if no pronunciation WS exists.
+					pronunciationInputSystems = new List<string> { vernacularWs };
+				foreach (var pronunciationFieldName in _pronunciationFieldsWsList)
+				{
+					updates.Add(builder.Set("config.entry.fields." + pronunciationFieldName + ".inputSystems", pronunciationInputSystems));
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[pronunciationFieldName].InputSystems, pronunciationInputSystems));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[pronunciationFieldName]).InputSystems, pronunciationInputSystems));
 				}
 
 				// Also update the LF language code with the vernacular WS

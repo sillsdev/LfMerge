@@ -146,7 +146,8 @@ namespace LfMerge.Tests
 			return _storedInputSystems;
 		}
 
-		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, string vernacularWs = "", string analysisWs = "")
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
+			string vernacularWs = "", string analysisWs = "", string pronunciationWs = "")
 		{
 			foreach (var ws in inputSystems.Keys)
 				_storedInputSystems[ws] = inputSystems[ws];

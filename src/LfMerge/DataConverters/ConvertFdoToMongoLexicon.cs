@@ -62,8 +62,9 @@ namespace LfMerge.DataConverters
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
 			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
 			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
-			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id);
+			ILgWritingSystem PronunciationWs = Cache.LanguageProject.DefaultPronunciationWritingSystem;
+			Logger.Debug("Vernacular {0}, Analysis {1}, Pronunciation {2}", VernacularWs, AnalysisWs, PronunciationWs);
+			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id, PronunciationWs.Id);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
