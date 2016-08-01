@@ -63,7 +63,9 @@ namespace LfMerge.DataConverters
 			ICmPossibility result;
 			if (PossibilitiesByKey.TryGetValue(key, out result))
 				return result;
-			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
+			if (_canonicalSource != null)
+				return LookupByCanonicalItem(_canonicalSource.ByKeyOrNull(key));
+			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block to replace the "return _canonicalSource.ByKeyOrNull(key)" line above.
 			if (_canonicalSource != null)
 			{
 				CanonicalItem item;
@@ -123,6 +125,8 @@ namespace LfMerge.DataConverters
 
 		protected ICmPossibility LookupByItem(LfOptionListItem item)
 		{
+			if (item == null)
+				return null;
 			ICmPossibility result;
 			if (item.Guid.HasValue)
 			{
@@ -131,6 +135,26 @@ namespace LfMerge.DataConverters
 			}
 			#if false  // Once we are populating FDO from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
 			return FromAbbrevAndName(item.Abbreviation, item.Value);
+			#endif
+			return null;
+		}
+
+		protected ICmPossibility LookupByCanonicalItem(CanonicalItem item)
+		{
+			if (item == null)
+				return null;
+			ICmPossibility result;
+			if (!String.IsNullOrEmpty(item.GuidStr))
+			{
+				Guid guid;
+				if (Guid.TryParse(item.GuidStr, out guid))
+				{
+					if (_possRepo.TryGetObject(guid, out result))
+						return result;
+				}
+			}
+			#if false  // Once we are populating FDO from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
+			return FromAbbrevAndName(item.Abbrevs[_wsForKeys], item.Names[_wsForKeys]);
 			#endif
 			return null;
 		}
@@ -145,7 +169,7 @@ namespace LfMerge.DataConverters
 			// If we know of NO valid possibility keys, don't make any changes. That's because knowing of NO valid possibility keys
 			// is FAR more likely to happen because of a bug than because we really removed an entire possibility list, and if there's
 			// a bug, we shouldn't drop all the FDO data for this possibility list.
-			if (PossibilitiesByKey.Count == 0)
+			if (PossibilitiesByKey.Count == 0 && _canonicalSource == null)
 				return;
 			// We have to calculate the update (which items to remove and which to add) here; IFdoReferenceCollection won't do it for us.
 			List<T> itemsToAdd = newItems.ToList();

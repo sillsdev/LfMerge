@@ -10,12 +10,12 @@ BASE="$(pwd)"
 [ -z "$BUILD" ] && BUILD=Debug
 [ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono-sil
 
-
 MONO_RUNTIME=v4.0.30319
 MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
-COMPONENTS_MAP_PATH=/usr/lib/lfmerge
+DBVERSIONPATH=$(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1)
+COMPONENTS_MAP_PATH=$DBVERSIONPATH
 ICU_DATA=/usr/share/fieldworks/Icu54
 
 ################################################################################################
@@ -61,7 +61,7 @@ then
 	MONO_PATH="$(pkg-config --variable=assemblies_dir lfmerge-fdo):$MONO_PATH"
 fi
 
-LD_LIBRARY_PATH="/usr/lib/lfmerge:${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${DBVERSIONPATH}:${LD_LIBRARY_PATH}"
 
 FW_ROOTCODE=/usr/share/fieldworks
 

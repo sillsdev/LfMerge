@@ -30,6 +30,16 @@
 		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
 	</PropertyGroup>
 
+	<Target Name="GetDbModelVersion" Condition="'$(OS)'=='Unix'">
+		<Exec Command='bash -c "find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1 > /tmp/dbmodelversion"'/>
+		<ReadLinesFromFile File="/tmp/dbmodelversion">
+			<Output ItemName="DbModelVersion" TaskParameter="Lines" />
+		</ReadLinesFromFile>
+		<CreateProperty Value="@(DbModelVersion)">
+			<Output PropertyName="DbModelVersion" TaskParameter="Value"/>
+		</CreateProperty>
+	</Target>
+
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
 		<Message Text="RootDir=$(RootDir)"/>
@@ -86,19 +96,30 @@
 		<Delete Files="build/LfMerge.files" />
 	</Target>
 
-	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages">
-		<MSBuild
-			Projects="LfMerge-DownloadDeps.xml"
-			Targets="DownloadDependencies"
-			Properties="Configuration=$(Configuration);RootDir=$(RootDir)" />
+	<ItemGroup>
+		<AllBuildDependencyTasksFiles Include="$(RootDir)/packages/BuildDependencyTasks*/**"/>
+		<AllBuildDependencyTasksDirs Include="@(AllBuildDependencyTasksFiles->'%(RootDir)%(Directory)')"/>
+	</ItemGroup>
+
+	<Target Name="RemoveOldBuildDependencyTaskPackages">
+		<!-- Delete BuildDependencyTasks.* package directories so that we end up with having only the desired version -->
+		<!-- NOTE: because of limited functionality of msbuild on Linux we always delete the directories even when we have only one. -->
+		<RemoveDir Directories="@(AllBuildDependencyTasksDirs)" />
 	</Target>
 
-	<Target Name="PrepareSource" DependsOnTargets="RestorePackages;DownloadDependencies">
+	<Target Name="DownloadDependencies" DependsOnTargets="RemoveOldBuildDependencyTaskPackages;RestorePackages">
+		<MSBuild
+			Projects="LfMerge-DownloadDeps.xml"
+			Targets="DownloadDependenciesTarget"
+			Properties="Configuration=$(Configuration);RootDir=$(RootDir);SolutionDir=$(SolutionDir)" />
+	</Target>
+
+	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="RestorePackages;DownloadDependencies">
+	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
@@ -111,11 +132,11 @@
 			Properties="Configuration=$(Configuration)" />
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="Build">
+	<Target Name="Test" DependsOnTargets="Build;GetDbModelVersion">
 		<ItemGroup>
 			<ExistingFiles Include="$(RootDir)/output/$(Configuration)/*" Condition="'$(OS)'=='Unix'" />
-			<FdoFiles Include="/usr/lib/lfmerge/*" Condition="'$(OS)'=='Unix'"
-				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/%(FileName)%(Extension)')" />
+			<FdoFiles Include="/usr/lib/lfmerge/$(DbModelVersion)*" Condition="'$(OS)'=='Unix'"
+				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/$(DbModelVersion)/%(FileName)%(Extension)')" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
 			Condition="'$(OS)'=='Unix'"/>
@@ -132,7 +153,7 @@
 		<NUnitTeamCity
 			Assemblies="@(TestAssemblies)"
 			ExcludeCategory="SkipOnTeamCity;ByHand$(ExtraExcludeCategories)"
-			NUnitVersion="NUnit-2.6.3" />
+			NUnitVersion="NUnit-2.6.4" />
 	</Target>
 
 	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">

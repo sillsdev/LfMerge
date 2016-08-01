@@ -27,7 +27,7 @@ namespace FixFwData
 			var pathname = args[0];
 			using (var prog = new LoggingProgress())
 			{
-				var data = new FwDataFixer(pathname, prog, logError);
+				var data = new FwDataFixer(pathname, prog, logError, getErrorCount);
 				data.FixErrorsAndSave();
 			}
 			return errorsOccurred ? 1 : 0;
@@ -36,19 +36,27 @@ namespace FixFwData
 #if __MonoCS__
 		private static SyslogLogger logger = null;
 #endif
-		private static bool errorsOccurred;
+		private static bool errorsOccurred = false;
+		private static int errorCount = 0;
 
-		private static void logError(string guid, string date, string description)
+		private static void logError(string description, bool errorFixed)
 		{
 #if __MonoCS__
 			if (logger == null)
 				Console.WriteLine(description);
 			else
-				logger.Error("Error in GUID {0}: {1} (on {2})", guid, description, date);
+				logger.Error(description);
 #else
 			Console.WriteLine(description);
 #endif
 			errorsOccurred = true;
+			if (errorFixed)
+				++errorCount;
+		}
+
+		private static int getErrorCount()
+		{
+			return errorCount;
 		}
 
 		private static void SetUpErrorHandling()

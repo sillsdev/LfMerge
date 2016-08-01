@@ -146,7 +146,8 @@ namespace LfMerge.Tests
 			return _storedInputSystems;
 		}
 
-		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems, string vernacularWs = "", string analysisWs = "")
+		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
+			string vernacularWs = "", string analysisWs = "", string pronunciationWs = "")
 		{
 			foreach (var ws in inputSystems.Keys)
 				_storedInputSystems[ws] = inputSystems[ws];
@@ -202,6 +203,15 @@ namespace LfMerge.Tests
 			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => DeepCopy(entry)));
 		}
 
+		public LfLexEntry GetLfLexEntryByGuid(Guid key)
+		{
+			LfLexEntry result;
+			if (_storedLfLexEntries.TryGetValue(key, out result))
+				return result;
+			else
+				return null;
+		}
+
 		public IEnumerable<LfOptionList> GetLfOptionLists()
 		{
 			return new List<LfOptionList>(_storedLfOptionLists.Values.Select(entry => DeepCopy(entry)));
@@ -219,6 +229,11 @@ namespace LfMerge.Tests
 				List<TDocument> empty = new List<TDocument>();
 				return empty.AsEnumerable();
 			}
+		}
+
+		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
+		{
+			return _storedLfLexEntries.ToDictionary(kv => kv.Key, kv => kv.Value.DateModified);
 		}
 
 		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)

@@ -6,23 +6,23 @@ Files: *
 Copyright: 2016 SIL International
 License: MIT
 
-Files: /usr/lib/lfmerge/Autofac.dll
+Files: /usr/lib/lfmerge/*/Autofac.dll
 Copyright: 2014 Autofac Project
 License: MIT
 
-Files: /usr/lib/lfmerge/CommandLine.dll
+Files: /usr/lib/lfmerge/*/CommandLine.dll
 Copyright: 2005 - 2015 Giacomo Stelluti Scala & Contributors
 License: MIT
 
-Files: /usr/lib/lfmerge/INIFileParser.dll
+Files: /usr/lib/lfmerge/*/INIFileParser.dll
 Copyright: 2008 Ricardo Amores Hernández
 License: MIT
 
-Files: /usr/lib/lfmerge/MongoDB.*.dll
+Files: /usr/lib/lfmerge/*/MongoDB.*.dll
 Copyright: 2010-2014 MongoDB Inc.
 License: Apache-2.0
 
-Files: /usr/lib/lfmerge/Newtonsoft.Json.dll
+Files: /usr/lib/lfmerge/*/Newtonsoft.Json.dll
 Copyright: 2007 James Newton-King
 License: MIT
 

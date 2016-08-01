@@ -17,7 +17,8 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  pkg-config,
  mono-sil,
- lfmerge-fdo
+ lfmerge-fdo,
+ lfmerge-fdo-data
 Description: LanguageForge Send/Receive
  lfmerge is a tool that is used by the LanguageForge server
  to share data with language depot. Since this tool makes assumptions

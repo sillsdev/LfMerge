@@ -62,8 +62,9 @@ namespace LfMerge.DataConverters
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
 			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
 			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			Logger.Debug("Vernacular {0}, Analysis {1}", VernacularWs, AnalysisWs);
-			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id);
+			ILgWritingSystem PronunciationWs = Cache.LanguageProject.DefaultPronunciationWritingSystem;
+			Logger.Debug("Vernacular {0}, Analysis {1}, Pronunciation {2}", VernacularWs, AnalysisWs, PronunciationWs);
+			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id, PronunciationWs.Id);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
@@ -97,12 +98,26 @@ namespace LfMerge.DataConverters
 			}
 
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+				string entryNameForDebugging;
+				if (lfEntry.Lexeme == null)
+					entryNameForDebugging = "<null lexeme>";
+				else
+					entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
 				lfEntry.IsDeleted = false;
-				string entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
+				if (lfEntry.Guid.HasValue)
+				{
+					DateTime lastModifiedDate;
+					if (previousModificationDates.TryGetValue(lfEntry.Guid.Value, out lastModifiedDate))
+					{
+						if (lastModifiedDate != lfEntry.DateModified)
+							lfEntry.DateModified = DateTime.UtcNow;
+					}
+				}
 				Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
@@ -213,7 +228,6 @@ namespace LfMerge.DataConverters
 				lfEntry.DateModified = now;
 			}
 
-			// TODO: In some LIFT imports, AuthorInfo.CreatedDate in Mongo doesn't match fdoEntry.DateCreated. Figure out why.
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();
 			lfEntry.AuthorInfo.CreatedByUserRef = null;
