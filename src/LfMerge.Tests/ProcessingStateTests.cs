@@ -112,18 +112,21 @@ namespace LfMerge.Tests
 		public void State_SettingProperty_SerializesState()
 		{
 			// Setup
-			var ticks = DateTime.Now.Ticks;
 			var sut = new ProcessingState("proja", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.SYNCING,
-				LastStateChangeTicks = ticks,
 				PercentComplete = 50,
 				ElapsedTimeSeconds = 10,
 				TimeRemainingSeconds = 20,
 				TotalSteps = 5,
 				CurrentStep = 1,
 				RetryCounter = 2,
-				UncommittedEditCounter = 0
+				UncommittedEditCounter = 0,
 			};
+
+			// Exercise
+			sut.SRState = ProcessingState.SendReceiveStates.SYNCING;
+
+			// Have to calculate the expected value AFTER setting the state
 			var expectedJson = string.Format(@"{{
   ""SRState"": ""{0}"",
   ""LastStateChangeTicks"": {1},
@@ -137,10 +140,7 @@ namespace LfMerge.Tests
   ""ErrorMessage"": null,
   ""ErrorCode"": 0,
   ""ProjectCode"": ""proja""
-}}", ProcessingState.SendReceiveStates.SYNCING, ticks);
-
-			// Exercise
-			sut.SRState = ProcessingState.SendReceiveStates.SYNCING;
+}}", ProcessingState.SendReceiveStates.SYNCING, sut.LastStateChangeTicks);
 
 			// Verify
 			Directory.CreateDirectory(_env.Settings.StateDirectory);
@@ -148,6 +148,23 @@ namespace LfMerge.Tests
 			Assert.That(File.ReadAllText(filename), Is.EqualTo(expectedJson));
 		}
 
+		[Test]
+		public void State_SettingProperty_ChangesLastStateChangeTicks()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE,
+			};
+			var oldTicks = sut.LastStateChangeTicks;
+
+			// Exercise
+			sut.SRState = ProcessingState.SendReceiveStates.SYNCING;
+			// Have to calculate the expected value AFTER setting the state
+			var newTicks = sut.LastStateChangeTicks;
+
+			// Verify
+			Assert.That(newTicks, Is.GreaterThan(oldTicks));
+		}
 	}
 }
 
