@@ -86,7 +86,6 @@ namespace LfMerge.Tests
 		{
 			var expectedState = new ProcessingState("ProjC", _env.Settings) {
 				SRState = ProcessingState.SendReceiveStates.SYNCING,
-				LastStateChangeTicks = 635683277459459160,
 				PercentComplete = 30,
 				ElapsedTimeSeconds = 40,
 				TimeRemainingSeconds = 50,
@@ -95,6 +94,7 @@ namespace LfMerge.Tests
 				RetryCounter = 1,
 				UncommittedEditCounter = 0
 			};
+			expectedState.LastStateChangeTicks = 635683277459459160; // Make sure this gets set last so the value isn't UtcNow.Ticks
 			const string json = "{\"SRState\":\"SYNCING\",\"LastStateChangeTicks\":635683277459459160," +
 				"\"PercentComplete\":30,\"ElapsedTimeSeconds\":40,\"TimeRemainingSeconds\":50," +
 				"\"TotalSteps\":3,\"CurrentStep\":2,\"RetryCounter\":1,\"UncommittedEditCounter\":0," +
