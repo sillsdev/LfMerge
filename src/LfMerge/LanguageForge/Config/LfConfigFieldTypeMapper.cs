@@ -11,6 +11,7 @@ namespace LfMerge.LanguageForge.Config
 				new BidirectionalDictionary<string, Type> {
 					{ LfConfigFieldTypeNames.FieldList, typeof(LfConfigFieldList) },
 					{ LfConfigFieldTypeNames.MultiText, typeof(LfConfigMultiText) },
+					{ LfConfigFieldTypeNames.MultiParagraph, typeof(LfConfigMultiParagraph) },
 					{ LfConfigFieldTypeNames.OptionList, typeof(LfConfigOptionList) },
 					{ LfConfigFieldTypeNames.MultiOptionList, typeof(LfConfigMultiOptionList) },
 					{ LfConfigFieldTypeNames.Pictures, typeof(LfConfigPictures) }

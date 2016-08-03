@@ -7,14 +7,16 @@ namespace LfMerge.LanguageForge.Model
 {
 	public class LfMultiParagraph : LfFieldBase
 	{
-		public string Ws { get; set; }
-		public List<LfParagraph> Paras { get; set; }
+		public Guid? Guid { get; set; }
+		public string InputSystem { get; set; }
+		public List<LfParagraph> Paragraphs { get; set; }
 
-		public bool ShouldSerializeWs() { return !String.IsNullOrEmpty(Ws); }
-		public bool ShouldSerializeParas() { return (Paras != null && Paras.Count > 0); }
+		public bool ShouldSerializeGuid() { return (Guid != null && Guid.Value != System.Guid.Empty); }
+		public bool ShouldSerializeInputSystem() { return !String.IsNullOrEmpty(InputSystem); }
+		public bool ShouldSerializeParagraphs() { return (Paragraphs != null && Paragraphs.Count > 0); }
 
 		public LfMultiParagraph() {
-			Paras = new List<LfParagraph>();
+			Paragraphs = new List<LfParagraph>();
 		}
 	}
 }

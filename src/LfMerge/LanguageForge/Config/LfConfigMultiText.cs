@@ -7,14 +7,12 @@ namespace LfMerge.LanguageForge.Config
 {
 	public class LfConfigMultiText : LfConfigFieldBase
 	{
-		public string Label { get; set; }
 		public int Width { get; set; }
 		public List<string> InputSystems { get; set; }
 		public bool DisplayMultiline { get; set; }
 
-		public LfConfigMultiText()
+		public LfConfigMultiText() : base()
 		{
-			Label = String.Empty;
 			Width = 20;
 			InputSystems = new List<string>();
 			DisplayMultiline = false;
