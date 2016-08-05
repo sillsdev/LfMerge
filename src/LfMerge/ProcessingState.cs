@@ -72,6 +72,7 @@ namespace LfMerge
 		protected virtual void SetProperty<T>(ref T property, T value)
 		{
 			property = value;
+			_lastStateChangeTicks = DateTime.UtcNow.Ticks;
 			Serialize();
 		}
 
@@ -83,7 +84,8 @@ namespace LfMerge
 		public long LastStateChangeTicks
 		{
 			get { return _lastStateChangeTicks; }
-			set { SetProperty(ref _lastStateChangeTicks, value); }
+			// Avoid calling SetProperty() for this one so that we can set an "old" value if desired.
+			set { _lastStateChangeTicks = value; Serialize(); }
 		}
 		public int PercentComplete
 		{
@@ -138,7 +140,8 @@ namespace LfMerge
 			var other = obj as ProcessingState;
 			if (other == null)
 				return false;
-			return SRState == other.SRState && LastStateChangeTicks == other.LastStateChangeTicks &&
+			return SRState == other.SRState &&
+				// LastStateChangeTicks == other.LastStateChangeTicks &&  // NOPE. Not now that this changes all the time.
 				PercentComplete == other.PercentComplete &&
 				ElapsedTimeSeconds == other.ElapsedTimeSeconds &&
 				TimeRemainingSeconds == other.TimeRemainingSeconds &&
@@ -152,7 +155,8 @@ namespace LfMerge
 
 		public override int GetHashCode()
 		{
-			var hash = SRState.GetHashCode() ^ LastStateChangeTicks.GetHashCode() ^
+			var hash = SRState.GetHashCode() ^
+				// LastStateChangeTicks.GetHashCode() ^  // NOPE. This changes too often.
 				PercentComplete ^ ElapsedTimeSeconds.GetHashCode() ^ TimeRemainingSeconds.GetHashCode() ^
 				TotalSteps ^ CurrentStep ^ RetryCounter ^ UncommittedEditCounter ^ ErrorCode ^
 				ProjectCode.GetHashCode();

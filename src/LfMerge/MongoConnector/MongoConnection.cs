@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -29,6 +30,9 @@ namespace LfMerge.MongoConnector
 		private string connectionString;
 		private string mainDatabaseName;
 		private Lazy<IMongoClient> client;
+		// Since calling GetDatabase() too often creates a new connection, we memoize the databases in this dictionary.
+		// ConcurrentDictionary is used instead of Dictionary because it has a handy GetOrAdd() method.
+		private ConcurrentDictionary<string, IMongoDatabase> dbs;
 		private ILogger _logger;
 		private LfMergeSettingsIni _settings;
 
@@ -75,6 +79,7 @@ namespace LfMerge.MongoConnector
 			connectionString = String.Format("mongodb://{0}?maxPoolSize=999", Settings.MongoDbHostNameAndPort);
 			mainDatabaseName = Settings.MongoMainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
+			dbs = new ConcurrentDictionary<string, IMongoDatabase>();
 		}
 
 		private MongoClient GetNewConnection()
@@ -83,7 +88,7 @@ namespace LfMerge.MongoConnector
 		}
 
 		private IMongoDatabase GetDatabase(string databaseName) {
-			return client.Value.GetDatabase(databaseName);
+			return dbs.GetOrAdd(databaseName, client.Value.GetDatabase(databaseName));
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project) {

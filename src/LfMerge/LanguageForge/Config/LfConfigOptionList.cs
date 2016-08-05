@@ -6,11 +6,10 @@ namespace LfMerge.LanguageForge.Config
 {
 	public class LfConfigOptionList : LfConfigFieldBase
 	{
-		public string Label { get; set;}
 		public string ListCode { get; set;}
-		public LfConfigOptionList()
+
+		public LfConfigOptionList() : base()
 		{
-			Label = String.Empty;
 			ListCode = String.Empty;
 			HideIfEmpty = false;
 		}
