@@ -41,6 +41,7 @@ namespace LfMerge
 		private LfMergeSettingsIni Settings { get; set; }
 		private SendReceiveStates _state;
 		private long _lastStateChangeTicks;
+		private long _startTimestamp; // Should be seconds since Unix epoch (1970-01-01 at 00:00:00 UTC)
 		private int _percentComplete;
 		private long _elapsedTimeSeconds;
 		private long _timeRemainingSeconds;
@@ -50,6 +51,7 @@ namespace LfMerge
 		private int _uncommittedEditCounter;
 		private string _errorMessage;
 		private int _errorCode;
+		private long _previousRunTotalMilliseconds;
 
 		protected ProcessingState()
 		{
@@ -86,6 +88,11 @@ namespace LfMerge
 			get { return _lastStateChangeTicks; }
 			// Avoid calling SetProperty() for this one so that we can set an "old" value if desired.
 			set { _lastStateChangeTicks = value; Serialize(); }
+		}
+		public long StartTimestamp
+		{
+			get { return _startTimestamp; }
+			set { SetProperty(ref _startTimestamp, value); }
 		}
 		public int PercentComplete
 		{
@@ -132,6 +139,11 @@ namespace LfMerge
 			get { return _errorCode; }
 			set { SetProperty(ref _errorCode, value); }
 		}
+		public long PreviousRunTotalMilliseconds
+		{
+			get { return _previousRunTotalMilliseconds; }
+			set { SetProperty(ref _previousRunTotalMilliseconds, value); }
+		}
 
 		public string ProjectCode { get; private set; }
 
@@ -142,6 +154,7 @@ namespace LfMerge
 				return false;
 			return SRState == other.SRState &&
 				// LastStateChangeTicks == other.LastStateChangeTicks &&  // NOPE. Not now that this changes all the time.
+				StartTimestamp == other.StartTimestamp &&
 				PercentComplete == other.PercentComplete &&
 				ElapsedTimeSeconds == other.ElapsedTimeSeconds &&
 				TimeRemainingSeconds == other.TimeRemainingSeconds &&
@@ -150,6 +163,7 @@ namespace LfMerge
 				RetryCounter == other.RetryCounter &&
 				UncommittedEditCounter == other.UncommittedEditCounter &&
 				ErrorMessage == other.ErrorMessage && ErrorCode == other.ErrorCode &&
+				PreviousRunTotalMilliseconds == other.PreviousRunTotalMilliseconds &&
 				ProjectCode == other.ProjectCode;
 		}
 
@@ -157,9 +171,10 @@ namespace LfMerge
 		{
 			var hash = SRState.GetHashCode() ^
 				// LastStateChangeTicks.GetHashCode() ^  // NOPE. This changes too often.
+				StartTimestamp.GetHashCode() ^
 				PercentComplete ^ ElapsedTimeSeconds.GetHashCode() ^ TimeRemainingSeconds.GetHashCode() ^
 				TotalSteps ^ CurrentStep ^ RetryCounter ^ UncommittedEditCounter ^ ErrorCode ^
-				ProjectCode.GetHashCode();
+				PreviousRunTotalMilliseconds.GetHashCode() ^ ProjectCode.GetHashCode();
 			if (ErrorMessage != null)
 				hash ^= ErrorMessage.GetHashCode();
 			return hash;
