@@ -76,7 +76,7 @@ namespace LfMerge.MongoConnector
 		{
 			_settings = settings;
 			_logger = logger;
-			connectionString = String.Format("mongodb://{0}?maxPoolSize=999", Settings.MongoDbHostNameAndPort);
+			connectionString = String.Format("mongodb://{0}", Settings.MongoDbHostNameAndPort);
 			mainDatabaseName = Settings.MongoMainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
 			dbs = new ConcurrentDictionary<string, IMongoDatabase>();
@@ -103,8 +103,12 @@ namespace LfMerge.MongoConnector
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
-			IAsyncCursor<TDocument> result = collection.Find<TDocument>(filter).ToCursor();
-			return result.AsEnumerable();
+			using (IAsyncCursor<TDocument> cursor = collection.Find<TDocument>(filter).ToCursor())
+			{
+				while (cursor.MoveNext())
+					foreach (TDocument doc in cursor.Current) // IAsyncCursor returns results in batches
+						yield return doc;
+			}
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)

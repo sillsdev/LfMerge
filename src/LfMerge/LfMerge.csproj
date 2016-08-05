@@ -106,7 +106,6 @@
     <Compile Include="IProcessingStateDeserialize.cs" />
     <Compile Include="MongoConnector\MongoConnection.cs" />
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
-    <Compile Include="MongoConnector\MongoCursorEnumerableExtensions.cs" />
     <Compile Include="LanguageForge\Config\ILfProjectConfig.cs" />
     <Compile Include="LanguageForge\Config\LfProjectConfig.cs" />
     <Compile Include="LanguageForge\Config\LfConfigFieldBase.cs" />
