@@ -78,10 +78,14 @@ namespace LfMerge
 					foreach (var projectCode in clonedQueue)
 					{
 						LanguageForgeProject project = null;
+						var stopwatch = new System.Diagnostics.Stopwatch();
 						try
 						{
 							Logger.Notice("ProjectCode {0}", projectCode);
 							project = LanguageForgeProject.Create(settings, projectCode);
+
+							project.State.StartTimestamp = CurrentUnixTimestamp();
+							stopwatch.Start();
 
 							var ensureClone = LfMerge.Actions.Action.GetAction(ActionNames.EnsureClone);
 							ensureClone.Run(project);
@@ -97,6 +101,9 @@ namespace LfMerge
 						}
 						finally
 						{
+							stopwatch.Stop();
+							if (project != null && project.State != null)
+								project.State.PreviousRunTotalMilliseconds = stopwatch.ElapsedMilliseconds;
 							if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
 								project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 
@@ -151,5 +158,13 @@ namespace LfMerge
 			return true;
 		}
 
+		private static DateTime _unixEpoch = new DateTime(1970, 1, 1);
+
+		private static long CurrentUnixTimestamp()
+		{
+			// http://stackoverflow.com/a/9453127/2314532
+			TimeSpan sinceEpoch = DateTime.UtcNow - _unixEpoch;
+			return (long)sinceEpoch.TotalSeconds;
+		}
 	}
 }
