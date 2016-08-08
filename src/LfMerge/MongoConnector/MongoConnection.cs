@@ -39,20 +39,17 @@ namespace LfMerge.MongoConnector
 		public ILogger Logger { get { return _logger; } }
 		public LfMergeSettingsIni Settings { get { return _settings; } }
 
-		// List of LF fields which will use the default vernacular / analysis WS. Heirarchy is config.entry.fields...
+		// List of LF fields which will use vernacular or pronunciation input systems. Heirarchy is config.entry.fields...
 		// We intentionally aren't setting custom example WS here, since it's a custom field with a custom name
-		private readonly List<string> _vernacularFieldsWsList = new List<string> {
+		private readonly List<string> _vernacularWsFieldsList = new List<string> {
 			"citationForm", "lexeme", "etymology", "senses.fields.examples.fields.sentence"
 		};
-		private readonly List<string> _analysisFieldsWsList = new List<string> {
-			"note"
-		};
-		// Pronunciation fields are special: they want the first vernacular WS that uses IPA (or is otherwise flagged
+		// Pronunciation fields are special: they want the *first* vernacular WS that uses IPA (or is otherwise flagged
 		// as being a pronunciation writing system).
-		private readonly List<string> _pronunciationFieldsWsList = new List<string> {
+		private readonly List<string> _pronunciationWsFieldsList = new List<string> {
 			"pronunciation"
 		};
-
+		// No need to create a similar list for analysis input systems, because those are the default.
 
 		public static void Initialize()
 		{
@@ -207,7 +204,7 @@ namespace LfMerge.MongoConnector
 		/// <param name="vernacularWs">Default vernacular writing system. Default blank</param>
 		/// <param name="analysisWs">Default analysis writing system. Default blank</param>
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
-			string vernacularWs = "", string analysisWs = "", string pronunciationWs = "")
+			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss)
 		{
 			UpdateDefinition<MongoProjectRecord> update = Builders<MongoProjectRecord>.Update.Set(rec => rec.InputSystems, inputSystems);
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
@@ -217,46 +214,70 @@ namespace LfMerge.MongoConnector
 			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
 				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
 			};
-			collection.FindOneAndUpdate(filter, update, updateOptions);
+			MongoProjectRecord oldProjectRecord = collection.FindOneAndUpdate(filter, update, updateOptions);
 
 			// For initial clone, also update field writing systems accordingly
 			if (project.IsInitialClone)
 			{
+				// Currently only MultiText fields have input systems in the config. If MultiParagraph fields acquire input systems as well,
+				// we'll need to add those to the logic below.
+				var analysisFields = new List<string>();
+				IEnumerable<string> entryFields = oldProjectRecord.Config.Entry.Fields.Where(kv => kv.Value is LfConfigMultiText).Select(kv => kv.Key);
+				foreach (string fieldName in entryFields)
+				{
+					if (!_vernacularWsFieldsList.Contains(fieldName) && !_pronunciationWsFieldsList.Contains(fieldName))
+						analysisFields.Add(fieldName);
+				}
+				if (oldProjectRecord.Config.Entry.Fields.ContainsKey("senses"))
+				{
+					LfConfigFieldList senses = (LfConfigFieldList)oldProjectRecord.Config.Entry.Fields["senses"];
+					IEnumerable<string> senseFields = senses.Fields.Where(kv => kv.Value is LfConfigMultiText).Select(kv => kv.Key);
+					foreach (string fieldName in senseFields)
+					{
+						if (!_vernacularWsFieldsList.Contains(fieldName) && !_pronunciationWsFieldsList.Contains(fieldName))
+							analysisFields.Add("senses.fields." + fieldName);
+					}
+					if (senses.Fields.ContainsKey("examples"))
+					{
+						LfConfigFieldList examples = (LfConfigFieldList)senses.Fields["examples"];
+						IEnumerable<string> exampleFields = examples.Fields.Where(kv => kv.Value is LfConfigMultiText).Select(kv => kv.Key);
+						foreach (string fieldName in exampleFields)
+						{
+							if (!_vernacularWsFieldsList.Contains(fieldName) && !_pronunciationWsFieldsList.Contains(fieldName))
+								analysisFields.Add("senses.fields.examples.fields." + fieldName);
+						}
+					}
+				}
+
 				var builder = Builders<MongoProjectRecord>.Update;
 				var updates = new List<UpdateDefinition<MongoProjectRecord>>();
 
-				var vernacularInputSystems = new List<string> { vernacularWs };
-				foreach (var vernacularFieldName in _vernacularFieldsWsList)
+				foreach (var vernacularFieldName in _vernacularWsFieldsList)
 				{
-					Logger.Debug("WS for {0}", string.Format("config.entry.fields.{0}.inputSystems", vernacularFieldName));
-					updates.Add(builder.Set("config.entry.fields." + vernacularFieldName + ".inputSystems", vernacularInputSystems));
-					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[vernacularFieldName].InputSystems, vernacularInputSystems));
-					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[vernacularFieldName]).InputSystems, vernacularInputSystems));
+					updates.Add(builder.Set("config.entry.fields." + vernacularFieldName + ".inputSystems", vernacularWss));
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[vernacularFieldName].InputSystems, vernacularWss));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[vernacularFieldName]).InputSystems, vernacularWss));
 				}
 
-				var analysisInputSystems = new List<string> { analysisWs };
-				foreach (var analysisFieldName in _analysisFieldsWsList)
+				// Pronunciation fields fall back on vernacular writing system if no pronunciation WS exists.
+				if (pronunciationWss.Count == 0)
+					pronunciationWss = vernacularWss;
+				foreach (var pronunciationFieldName in _pronunciationWsFieldsList)
 				{
-					updates.Add(builder.Set("config.entry.fields." + analysisFieldName + ".inputSystems", analysisInputSystems));
-					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[analysisFieldName].InputSystems, analysisInputSystems));
-					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[analysisFieldName]).InputSystems, analysisInputSystems));
+					updates.Add(builder.Set("config.entry.fields." + pronunciationFieldName + ".inputSystems", pronunciationWss.Take(1)));  // Not First() since it still needs to be an enumerable
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[pronunciationFieldName].InputSystems, pronunciationWss));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[pronunciationFieldName]).InputSystems, pronunciationWss));
 				}
 
-				List<string> pronunciationInputSystems;
-				if (!string.IsNullOrEmpty(pronunciationWs))
-					pronunciationInputSystems = new List<string> { pronunciationWs };
-				else
-					// Pronunciation fields fall back on vernacular writing system if no pronunciation WS exists.
-					pronunciationInputSystems = new List<string> { vernacularWs };
-				foreach (var pronunciationFieldName in _pronunciationFieldsWsList)
+				foreach (var analysisFieldName in analysisFields)
 				{
-					updates.Add(builder.Set("config.entry.fields." + pronunciationFieldName + ".inputSystems", pronunciationInputSystems));
-					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[pronunciationFieldName].InputSystems, pronunciationInputSystems));
-					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[pronunciationFieldName]).InputSystems, pronunciationInputSystems));
+					updates.Add(builder.Set("config.entry.fields." + analysisFieldName + ".inputSystems", analysisWss));
+					// This one won't compile: updates.Add(builder.Set(record => record.Config.Entry.Fields[analysisFieldName].InputSystems, analysisWss));
+					// Mongo can't handle this one: updates.Add(builder.Set(record => ((LfConfigMultiText)record.Config.Entry.Fields[analysisFieldName]).InputSystems, analysisWss));
 				}
 
 				// Also update the LF language code with the vernacular WS
-				updates.Add(builder.Set("languageCode", vernacularWs));
+				updates.Add(builder.Set("languageCode", vernacularWss.First()));
 
 				update = builder.Combine(updates);
 

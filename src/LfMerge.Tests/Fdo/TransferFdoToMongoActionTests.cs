@@ -160,10 +160,8 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(customFieldConfig.Count, Is.EqualTo(6));
 			Assert.That(customFieldConfig.ContainsKey("customField_entry_Cust_MultiPara"));
 			Assert.That(customFieldConfig["customField_entry_Cust_MultiPara"].HideIfEmpty, Is.False);
-			LfConfigMultiText entryMultiPara = (LfConfigMultiText)customFieldConfig["customField_entry_Cust_MultiPara"];
-			Assert.That(entryMultiPara.DisplayMultiline, Is.True);
+			LfConfigMultiParagraph entryMultiPara = (LfConfigMultiParagraph)customFieldConfig["customField_entry_Cust_MultiPara"];
 			Assert.That(entryMultiPara.Label, Is.EqualTo("Cust MultiPara"));
-			Assert.That(entryMultiPara.InputSystems.Count, Is.EqualTo(2));
 		}
 
 		[Test]

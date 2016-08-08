@@ -60,11 +60,14 @@ namespace LfMerge.DataConverters
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
-			ILgWritingSystem VernacularWs = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			ILgWritingSystem AnalysisWs = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			ILgWritingSystem PronunciationWs = Cache.LanguageProject.DefaultPronunciationWritingSystem;
-			Logger.Debug("Vernacular {0}, Analysis {1}, Pronunciation {2}", VernacularWs, AnalysisWs, PronunciationWs);
-			Connection.SetInputSystems(LfProject, lfWsList, VernacularWs.Id, AnalysisWs.Id, PronunciationWs.Id);
+			List<string> VernacularWss = Cache.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.Id).ToList();
+			List<string> AnalysisWss = Cache.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.Id).ToList();
+			List<string> PronunciationWss = Cache.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.Id).ToList();
+			Logger.Debug("Vernacular ({0}), Analysis ({1}), Pronunciation ({2})",
+				String.Join(", ", VernacularWss),
+				String.Join(", ", AnalysisWss),
+				String.Join(", ", PronunciationWss));
+			Connection.SetInputSystems(LfProject, lfWsList, VernacularWss, AnalysisWss, PronunciationWss);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);

@@ -22,7 +22,7 @@ namespace LfMerge.MongoConnector
 		bool RemoveRecord(ILfProject project, Guid guid);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
-			string vernacularWs = "", string analysisWs = "", string pronunciationWs = "");
+			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 	}

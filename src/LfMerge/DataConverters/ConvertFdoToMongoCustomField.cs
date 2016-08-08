@@ -14,6 +14,7 @@ using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
+using SIL.FieldWorks.FDO.DomainServices;
 using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.DataConverters
@@ -183,25 +184,36 @@ namespace LfMerge.DataConverters
 				if (!string.IsNullOrEmpty(lfCustomFieldType))
 				{
 					// Get custom field configuration info
-					if (lfCustomFieldType.Contains("ListRef"))
+					if (lfCustomFieldType.EndsWith("ListRef"))
 					{
-						// Compute list code
+						// List references, whether single or multi, need a list code
 						listCode = GetParentListCode(flid);
 						lfCustomFieldList[lfCustomFieldName] =
 							GetLfCustomFieldOptionListConfig(label, lfCustomFieldType, listCode);
 					}
 					else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtom]) {
+						// Multiparagraphs don't need writing systems
+						// TODO: Or do they?
 						lfCustomFieldList[lfCustomFieldName] =
 							GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
 					}
 					else
 					{
-						// Default to current analysis WS?
-						List<string> inputSystems = new List<string>();
-						foreach (var fdoAnalysisWs in cache.LangProject.CurrentAnalysisWritingSystems)
-							inputSystems.Add(fdoAnalysisWs.RFC5646);
+						// Single line or MultiText fields need writing systems
+						int fieldWs = fdoMetaData.GetFieldWs(flid);
+#if FW8_COMPAT
+						List<IWritingSystem> wsesForThisField;
+#else
+						List<CoreWritingSystemDefinition> wsesForThisField;
+#endif
+						wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
+						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.Id);
+						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
+						// is a single-line custom field, trim the WSes down to just the first one
+						if (lfCustomFieldType.StartsWith("Single"))
+							inputSystems = inputSystems.Take(1);
 						lfCustomFieldList[lfCustomFieldName] =
-							GetLfCustomFieldMultiTextConfig(label, lfCustomFieldType, inputSystems);
+							GetLfCustomFieldMultiTextConfig(label, lfCustomFieldType, inputSystems.ToList());
 					}
 				}
 
@@ -215,18 +227,6 @@ namespace LfMerge.DataConverters
 							customFieldGuids.Add(lfCustomFieldName, guid, ((BsonArray)guid).Count > 0);
 						else
 							customFieldGuids.Add(lfCustomFieldName, guid);
-
-						LfConfigFieldBase lfCustomFieldConfig;
-						// Valid guid so we should be able to create custom field configuration info
-						if (lfCustomFieldName.Contains("ListRef"))
-							lfCustomFieldConfig = GetLfCustomFieldOptionListConfig(label, lfCustomFieldName, listCode);
-						else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtom])
-							lfCustomFieldConfig = GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
-						else
-							lfCustomFieldConfig = GetLfCustomFieldMultiTextConfig(lfCustomFieldName,
-								lfCustomFieldType, new List<string>{cache.LanguageProject.DefaultAnalysisWritingSystem.ToString()});
-
-						lfCustomFieldList[lfCustomFieldName] = lfCustomFieldConfig;
 					}
 				}
 			}
@@ -430,7 +430,7 @@ namespace LfMerge.DataConverters
 				return null;
 			return new LfConfigMultiText {
 				Label = label,
-				DisplayMultiline = !lfCustomFieldType.Contains("Single") && !label.Contains("Single"),
+				DisplayMultiline = !lfCustomFieldType.StartsWith("Single"),
 				Width = 20,
 				InputSystems = inputSystems,
 			};
@@ -438,6 +438,7 @@ namespace LfMerge.DataConverters
 
 		private LfConfigMultiParagraph GetLfCustomFieldMultiParagraphConfig(string label, string lfCustomFieldType)
 		{
+			// TODO: Might need to record input system
 			if (lfCustomFieldType == null)
 				return null;
 			return new LfConfigMultiParagraph {
