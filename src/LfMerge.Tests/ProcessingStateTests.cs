@@ -130,6 +130,7 @@ namespace LfMerge.Tests
 			var expectedJson = string.Format(@"{{
   ""SRState"": ""{0}"",
   ""LastStateChangeTicks"": {1},
+  ""StartTimestamp"": 0,
   ""PercentComplete"": 50,
   ""ElapsedTimeSeconds"": 10,
   ""TimeRemainingSeconds"": 20,
@@ -139,6 +140,7 @@ namespace LfMerge.Tests
   ""UncommittedEditCounter"": 0,
   ""ErrorMessage"": null,
   ""ErrorCode"": 0,
+  ""PreviousRunTotalMilliseconds"": 0,
   ""ProjectCode"": ""proja""
 }}", ProcessingState.SendReceiveStates.SYNCING, sut.LastStateChangeTicks);
 

@@ -43,16 +43,16 @@ namespace LfMerge.Tests
 	},
 	""customFields"" : {
 		""customField_entry_Cust_MultiPara"" : {
-			""ws"": ""en"",
-			""paras"" : [
+			""inputSystem"": ""en"",
+			""paragraphs"" : [
 				{
 					""guid"" : ""5c8fb347-d884-4db5-9415-64b139b663ff"",
 					""styleName"" : ""Normal"",
-					""contents"" : ""This is the first paragraph."",
+					""content"" : ""This is the first paragraph."",
 				},
 				{
 					""guid"" : ""061a4bad-eaa8-4365-9a19-8150621a9a44"",
-					""contents"" : ""This is the second paragraph."",
+					""content"" : ""This is the second paragraph."",
 				}
 			]
 		},
