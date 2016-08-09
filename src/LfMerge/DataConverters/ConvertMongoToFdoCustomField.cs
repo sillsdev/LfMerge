@@ -81,7 +81,7 @@ namespace LfMerge.DataConverters
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
-			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
+//			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
 			if (fieldName == null)
 				return false;
 

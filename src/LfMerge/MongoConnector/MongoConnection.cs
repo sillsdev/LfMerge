@@ -281,8 +281,8 @@ namespace LfMerge.MongoConnector
 
 				update = builder.Combine(updates);
 
-				Logger.Debug("Built an input systems update that looks like {0}",
-					update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
+//				Logger.Debug("Built an input systems update that looks like {0}",
+//					update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
 				collection.FindOneAndUpdate(filter, update, updateOptions);
 			}
 
@@ -299,7 +299,7 @@ namespace LfMerge.MongoConnector
 		/// <returns>True if mongodb was updated</returns>
 		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
-			Logger.Debug("Setting {0} custom field setting(s)", lfCustomFieldList.Count());
+//			Logger.Debug("Setting {0} custom field setting(s)", lfCustomFieldList.Count());
 
 			var builder = Builders<MongoProjectRecord>.Update;
 			var previousUpdates = new List<UpdateDefinition<MongoProjectRecord>>();
@@ -484,7 +484,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = new FilterDefinitionBuilder<TDocument>();
 			FilterDefinition<TDocument> filter = filterBuilder.Eq("guid", guid.ToString());
 			bool result = UpdateRecordImpl(project, data, filter, collectionName, whichDb);
-			Logger.Debug("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
+//			Logger.Debug("Done saving {0} {1} into Mongo DB", typeof(TDocument), guid);
 			return result;
 		}
 
@@ -550,7 +550,7 @@ namespace LfMerge.MongoConnector
 			var filterBuilder = Builders<LfOptionList>.Filter;
 			FilterDefinition<LfOptionList> filter = filterBuilder.Eq(optionList => optionList.Code, listCode);
 			bool result = UpdateRecordImpl(project, data, filter, MagicStrings.LfCollectionNameForOptionLists, MongoDbSelector.ProjectDatabase);
-			Logger.Debug("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
+//			Logger.Debug("Done saving {0} with list code {1} into Mongo DB", typeof(LfOptionList), listCode);
 			return result;
 		}
 
