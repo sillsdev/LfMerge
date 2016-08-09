@@ -456,6 +456,17 @@ namespace LfMerge.DataConverters
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
+
+			// DateModified and DateCreated can be confusing, because LF and FDO are doing two different
+			// things with them. In FDO, there is just one DateModified and one DateCreated; simple. But
+			// in LF, there is an AuthorInfo record as well, which contains its own ModifiedDate and CreatedDate
+			// fields. (Note the word order: there's LfEntry.DateCreated, and LfEntry.AuthorInfo.CreatedDate).
+
+			// The conversion we have chosen to use is: AuthorInfo will correspond to FDO. So FDO.DateCreated
+			// becomes AuthorInfo.CreatedDate, and FDO.DateModified becomes AuthorInfo.ModifiedDate. The two
+			// fields on the LF entry will instead refer to when the *Mongo record* was created or modified,
+			// and the LfEntry.DateCreated and LfEntry.DateModified fields will never be put into FDO.
+
 			// Use AuthorInfo for dates as this should always reflect user changes (Mongo or FDO)
 			// Weirdly, FDO expects Dates to be in LOCAL time, not UTC.
 			if (lfEntry.AuthorInfo != null)

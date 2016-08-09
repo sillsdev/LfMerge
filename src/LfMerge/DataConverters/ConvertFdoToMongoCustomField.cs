@@ -206,8 +206,23 @@ namespace LfMerge.DataConverters
 #else
 						List<CoreWritingSystemDefinition> wsesForThisField;
 #endif
-						wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
+						// GetWritingSystemList() in FW 8.3 is buggy and doesn't properly handle the kwsAnal and kwsVern cases, so we handle them here instead.
+						switch (fieldWs) {
+						case WritingSystemServices.kwsAnal:
+							wsesForThisField = new List<IWritingSystem> { cache.LangProject.DefaultAnalysisWritingSystem };
+							break;
+						case WritingSystemServices.kwsVern:
+							wsesForThisField = new List<IWritingSystem> { cache.LangProject.DefaultVernacularWritingSystem };
+							break;
+						default:
+							wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
+							break;
+						}
+#if FW8_COMPAT
 						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.Id);
+#else
+						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.LanguageTag);
+#endif
 						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
 						// is a single-line custom field, trim the WSes down to just the first one
 						if (lfCustomFieldType.StartsWith("Single"))

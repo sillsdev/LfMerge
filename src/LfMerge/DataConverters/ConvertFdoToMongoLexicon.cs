@@ -60,13 +60,15 @@ namespace LfMerge.DataConverters
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
+			#if FW8_COMPAT
 			List<string> VernacularWss = Cache.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.Id).ToList();
 			List<string> AnalysisWss = Cache.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.Id).ToList();
 			List<string> PronunciationWss = Cache.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.Id).ToList();
-			Logger.Debug("Vernacular ({0}), Analysis ({1}), Pronunciation ({2})",
-				String.Join(", ", VernacularWss),
-				String.Join(", ", AnalysisWss),
-				String.Join(", ", PronunciationWss));
+			#else
+			List<string> VernacularWss = Cache.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			List<string> AnalysisWss = Cache.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			List<string> PronunciationWss = Cache.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			#endif
 			Connection.SetInputSystems(LfProject, lfWsList, VernacularWss, AnalysisWss, PronunciationWss);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
@@ -221,6 +223,16 @@ namespace LfMerge.DataConverters
 			// (which would produce "-s" instead of "s" for the English plural suffix, for instance)
 			lfEntry.CitationForm = ToMultiText(fdoEntry.CitationForm);
 			lfEntry.Note = ToMultiText(fdoEntry.Comment);
+
+			// DateModified and DateCreated can be confusing, because LF and FDO are doing two different
+			// things with them. In FDO, there is just one DateModified and one DateCreated; simple. But
+			// in LF, there is an AuthorInfo record as well, which contains its own ModifiedDate and CreatedDate
+			// fields. (Note the word order: there's LfEntry.DateCreated, and LfEntry.AuthorInfo.CreatedDate).
+
+			// The conversion we have chosen to use is: AuthorInfo will correspond to FDO. So FDO.DateCreated
+			// becomes AuthorInfo.CreatedDate, and FDO.DateModified becomes AuthorInfo.ModifiedDate. The two
+			// fields on the LF entry will instead refer to when the *Mongo record* was created or modified,
+			// and the LfEntry.DateCreated and LfEntry.DateModified fields will never be put into FDO.
 
 			// LanguageForge needs this modified to know there is changed data
 			lfEntry.DateModified = fdoEntry.DateModified.ToUniversalTime();
