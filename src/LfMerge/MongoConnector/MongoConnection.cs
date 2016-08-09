@@ -381,6 +381,8 @@ namespace LfMerge.MongoConnector
 					continue; // Don't change Languageforge-internal IDs either
 				if (prop.GetValue(doc) == null)
 				{
+					if (prop.Name == "DateCreated")
+						continue; // Once DateCreated exists, it should never be unset
 					updates.Add(builder.Unset(prop.Name));
 					continue;
 				}
