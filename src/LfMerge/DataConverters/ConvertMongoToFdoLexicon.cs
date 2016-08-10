@@ -721,10 +721,10 @@ namespace LfMerge.DataConverters
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
-			if (lfEntry.Etymology == null &&
-				lfEntry.EtymologyComment == null &&
-				lfEntry.EtymologyGloss == null &&
-				lfEntry.EtymologySource == null)
+			if ((lfEntry.Etymology        == null || lfEntry.Etymology       .IsEmpty) &&
+			    (lfEntry.EtymologyComment == null || lfEntry.EtymologyComment.IsEmpty) &&
+			    (lfEntry.EtymologyGloss   == null || lfEntry.EtymologyGloss  .IsEmpty) &&
+			    (lfEntry.EtymologySource  == null || lfEntry.EtymologySource .IsEmpty))
 			{
 				if (fdoEtymology == null)
 					return; // Don't delete an Etymology object if there was none already
@@ -746,7 +746,7 @@ namespace LfMerge.DataConverters
 		public void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
-			if (lfEntry.Lexeme == null)
+			if (lfEntry.Lexeme == null || lfEntry.Lexeme.IsEmpty)
 			{
 				if (fdoLexeme == null)
 					return;
@@ -765,10 +765,10 @@ namespace LfMerge.DataConverters
 		{
 			// var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
 			ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.FirstOrDefault();
-			if (lfEntry.Pronunciation == null &&
-				lfEntry.CvPattern == null &&
-				lfEntry.Tone == null &&
-				lfEntry.Location == null)
+			if ((lfEntry.Pronunciation == null || lfEntry.Pronunciation.IsEmpty) &&
+			    (lfEntry.CvPattern     == null || lfEntry.CvPattern    .IsEmpty) &&
+			    (lfEntry.Tone          == null || lfEntry.Tone         .IsEmpty) &&
+			    (lfEntry.Location      == null || lfEntry.Location     .IsEmpty))
 			{
 				// No pronunication at all in LF: either there was never one, or we deleted it
 				if (fdoPronunciation == null)
