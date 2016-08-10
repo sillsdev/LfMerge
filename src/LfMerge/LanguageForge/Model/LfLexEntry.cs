@@ -71,7 +71,7 @@ namespace LfMerge.LanguageForge.Model
 		public bool ShouldSerializeMorphologyType() { return !String.IsNullOrEmpty(MorphologyType); }
 		public bool ShouldSerializeNote() { return _ShouldSerializeLfMultiText(Note); }
 		public bool ShouldSerializePronunciation() { return _ShouldSerializeLfMultiText(Pronunciation); }
-		public bool ShouldSerializePronunciationGuid() { return PronunciationGuid != System.Guid.Empty; }
+		public bool ShouldSerializePronunciationGuid() { return false; } // DELETE the PronunciationGuid! We don't actually need it!
 		public bool ShouldSerializeSummaryDefinition() { return _ShouldSerializeLfMultiText(SummaryDefinition); }
 		public bool ShouldSerializeTone() { return _ShouldSerializeLfMultiText(Tone); }
 	}

@@ -270,7 +270,6 @@ namespace LfMerge.DataConverters
 			if (fdoEntry.PronunciationsOS.Count > 0)
 			{
 				ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.First();
-				lfEntry.PronunciationGuid = fdoPronunciation.Guid;
 				lfEntry.Pronunciation = ToMultiText(fdoPronunciation.Form);
 				lfEntry.CvPattern = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.CVPattern);
 				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.Tone);

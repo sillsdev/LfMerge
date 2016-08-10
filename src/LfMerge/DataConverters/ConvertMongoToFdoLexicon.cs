@@ -720,12 +720,20 @@ namespace LfMerge.DataConverters
 
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
+			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
 			if (lfEntry.Etymology == null &&
 				lfEntry.EtymologyComment == null &&
 				lfEntry.EtymologyGloss == null &&
 				lfEntry.EtymologySource == null)
-				return; // Don't create an Etymology object if there's nothing to assign
-			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+			{
+				if (fdoEtymology == null)
+					return; // Don't delete an Etymology object if there was none already
+				else
+				{
+					fdoEtymology.Delete();
+					return;
+				}
+			}
 			if (fdoEtymology == null)
 				fdoEtymology = CreateOwnedEtymology(fdoEntry); // Also sets owning field on fdoEntry
 			SetMultiStringFrom(fdoEtymology.Form, lfEntry.Etymology);
@@ -737,9 +745,17 @@ namespace LfMerge.DataConverters
 
 		public void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			if (lfEntry.Lexeme == null)
-				return;
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
+			if (lfEntry.Lexeme == null)
+			{
+				if (fdoLexeme == null)
+					return;
+				else
+				{
+					fdoLexeme.Delete();
+					return;
+				}
+			}
 			if (fdoLexeme == null)
 				fdoLexeme = CreateOwnedLexemeForm(fdoEntry, lfEntry.MorphologyType); // Also sets owning field on fdoEntry
 			SetMultiStringFrom(fdoLexeme.Form, lfEntry.Lexeme);
@@ -747,15 +763,24 @@ namespace LfMerge.DataConverters
 
 		public void SetPronunciation(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
+			// var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
+			ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.FirstOrDefault();
 			if (lfEntry.Pronunciation == null &&
 				lfEntry.CvPattern == null &&
 				lfEntry.Tone == null &&
 				lfEntry.Location == null)
 			{
-				return;
+				// No pronunication at all in LF: either there was never one, or we deleted it
+				if (fdoPronunciation == null)
+					return;  // There was never a pronunciation; we're fine
+				else
+					fdoEntry.PronunciationsOS.First().Delete();
 			}
-			var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
-
+			if (fdoPronunciation == null)
+			{
+				fdoPronunciation = GetInstance<ILexPronunciationFactory>().Create();
+				fdoEntry.PronunciationsOS.Add(fdoPronunciation);
+			}
 			fdoPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
 			fdoPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);
