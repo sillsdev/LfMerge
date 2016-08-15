@@ -12,6 +12,8 @@ namespace LfMerge.DataConverters
 	public class ConvertMongoToFdoTsStrings
 	{
 		private static Regex spanRegex = new Regex(@"<span\s+(lang=""([^""]+)"")?\s*(class=""([^""]+)"")?\s*(lang=""([^""]+)"")?\s*>(.*?)</span\s*>");
+		private static Regex styleRegex = new Regex("styleName_([^ ]+)");
+		private static Regex guidRegex = new Regex("guid_([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})");
 
 		public ConvertMongoToFdoTsStrings()
 		{
@@ -28,7 +30,7 @@ namespace LfMerge.DataConverters
 			return matches.Count;
 		}
 
-		public static IEnumerable<string> GetSpanTexts(string source)
+		public static List<string> GetSpanTexts(string source)
 		{
 			MatchCollection matches = spanRegex.Matches(source);
 			var result = new List<string>();
@@ -39,7 +41,7 @@ namespace LfMerge.DataConverters
 			return result;
 		}
 
-		public static IEnumerable<string> GetSpanLanguages(string source)
+		public static List<string> GetSpanLanguages(string source)
 		{
 			MatchCollection matches = spanRegex.Matches(source);
 			var result = new List<string>();
@@ -49,6 +51,27 @@ namespace LfMerge.DataConverters
 					result.Add(match.Groups[2].Value);
 				else if (match.Groups[5].Success)
 					result.Add(match.Groups[6].Value);
+			}
+			return result;
+		}
+
+		public static List<Guid> GetSpanGuids(string source)
+		{
+			MatchCollection matches = spanRegex.Matches(source);
+			var result = new List<Guid>();
+			foreach (Match match in matches)
+			{
+				if (match.Groups[3].Success)
+				{
+					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
+					foreach (string cls in classes)
+					{
+						Guid g;
+						Match m = guidRegex.Match(cls);
+						if (m.Success && m.Groups[1].Success && Guid.TryParse(m.Groups[1].Value, out g))
+							result.Add(g);
+					}
+				}
 			}
 			return result;
 		}

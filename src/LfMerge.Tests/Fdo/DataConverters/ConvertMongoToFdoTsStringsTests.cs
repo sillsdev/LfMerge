@@ -129,6 +129,44 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("grc"));
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("fr"));
 		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans()
+		{
+			Guid[] guidsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanGuids(noSpans)  .ToArray();
+			Guid[] guidsInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoLangs) .ToArray();
+			Guid[] guidsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanGuids(twoStyles).ToArray();
+			Guid[] guidsInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuids) .ToArray();
+			Guid[] guidsInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanGuids(oneGuidOneStyle) .ToArray();
+			Guid[] guidsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsOneStyle).ToArray();
+			Guid[] guidsInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesNoLangs) .ToArray();
+			Guid[] guidsInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesOneLang) .ToArray();
+			Guid[] guidsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesTwoLangs).ToArray();
+
+			Assert.That(guidsInZeroSpans.Length, Is.EqualTo(0));
+			Assert.That(guidsInTwoLangs.Length,  Is.EqualTo(0));
+			Assert.That(guidsInTwoStyles.Length, Is.EqualTo(0));
+			Assert.That(guidsInTwoGuids.Length,  Is.EqualTo(2));
+			Assert.That(guidsInOneGuidOneStyle.Length,  Is.EqualTo(1));
+			Assert.That(guidsInTwoGuidsOneStyle.Length, Is.EqualTo(2));
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(2));
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(2));
+			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
+
+			Assert.That(guidsInTwoGuids[0], Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuids[1], Is.EqualTo(secondGuid));
+
+			Assert.That(guidsInOneGuidOneStyle[0],  Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsOneStyle[0], Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsOneStyle[1], Is.EqualTo(secondGuid));
+
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[0],  Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[1],  Is.EqualTo(secondGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang[0],  Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang[1],  Is.EqualTo(secondGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo(secondGuid));
+		}
 	}
 }
 
