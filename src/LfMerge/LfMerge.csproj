@@ -177,6 +177,7 @@
     <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxy.cs" />
     <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
     <Compile Include="LanguageForge\Config\LfConfigMultiParagraph.cs" />
+    <Compile Include="DataConverters\ConvertMongoToFdoTsStrings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
