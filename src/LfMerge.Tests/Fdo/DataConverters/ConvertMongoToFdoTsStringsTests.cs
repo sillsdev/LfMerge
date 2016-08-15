@@ -167,6 +167,41 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo(firstGuid));
 			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo(secondGuid));
 		}
+
+		[Test]
+		public void CanExtractStylesFromSpans()
+		{
+			string[] stylesInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanStyles(noSpans)  .ToArray();
+			string[] stylesInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoLangs) .ToArray();
+			string[] stylesInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanStyles(twoStyles).ToArray();
+			string[] stylesInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuids) .ToArray();
+			string[] stylesInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanStyles(oneGuidOneStyle) .ToArray();
+			string[] stylesInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsOneStyle).ToArray();
+			string[] stylesInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesNoLangs) .ToArray();
+			string[] stylesInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesOneLang) .ToArray();
+			string[] stylesInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesTwoLangs).ToArray();
+
+			Assert.That(stylesInZeroSpans.Length, Is.EqualTo(0));
+			Assert.That(stylesInTwoLangs.Length,  Is.EqualTo(0));
+			Assert.That(stylesInTwoStyles.Length, Is.EqualTo(2));
+			Assert.That(stylesInTwoGuids.Length,  Is.EqualTo(0));
+			Assert.That(stylesInOneGuidOneStyle.Length,  Is.EqualTo(1));
+			Assert.That(stylesInTwoGuidsOneStyle.Length, Is.EqualTo(1));
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(2));
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(2));
+			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
+
+			Assert.That(stylesInTwoStyles[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoStyles[1], Is.EqualTo("Italic"));
+			Assert.That(stylesInOneGuidOneStyle[0],  Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsOneStyle[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[0],  Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[1],  Is.EqualTo("Italic"));
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang[0],  Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang[1],  Is.EqualTo("Italic"));
+			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("Italic"));
+		}
 	}
 }
 

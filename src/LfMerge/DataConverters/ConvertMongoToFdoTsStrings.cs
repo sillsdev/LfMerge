@@ -75,6 +75,26 @@ namespace LfMerge.DataConverters
 			}
 			return result;
 		}
+
+		public static List<string> GetSpanStyles(string source)
+		{
+			MatchCollection matches = spanRegex.Matches(source);
+			var result = new List<string>();
+			foreach (Match match in matches)
+			{
+				if (match.Groups[3].Success)
+				{
+					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
+					foreach (string cls in classes)
+					{
+						Match m = styleRegex.Match(cls);
+						if (m.Success && m.Groups[1].Success)
+							result.Add(m.Groups[1].Value);
+					}
+				}
+			}
+			return result;
+		}
 	}
 }
 
