@@ -202,6 +202,162 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("Bold"));
 			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("Italic"));
 		}
+
+		[Test]
+		public void CanExtractRunsFromSpans()
+		{
+			Run[] runsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanRuns(noSpans)  .ToArray();
+			Run[] runsInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoLangs) .ToArray();
+			Run[] runsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanRuns(twoStyles).ToArray();
+			Run[] runsInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuids) .ToArray();
+			Run[] runsInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanRuns(oneGuidOneStyle) .ToArray();
+			Run[] runsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsOneStyle).ToArray();
+			Run[] runsInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesNoLangs) .ToArray();
+			Run[] runsInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesOneLang) .ToArray();
+			Run[] runsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesTwoLangs).ToArray();
+
+			Assert.That(runsInZeroSpans.Length, Is.EqualTo(1));
+			Assert.That(runsInTwoLangs.Length,  Is.EqualTo(5));
+			Assert.That(runsInTwoStyles.Length, Is.EqualTo(5));
+			Assert.That(runsInTwoGuids.Length,  Is.EqualTo(5));
+			Assert.That(runsInOneGuidOneStyle.Length,  Is.EqualTo(5));
+			Assert.That(runsInTwoGuidsOneStyle.Length, Is.EqualTo(5));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(5));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(5));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(5));
+
+			Assert.That(runsInZeroSpans[0].Content,   Is.EqualTo(noSpans));
+			Assert.That(runsInZeroSpans[0].Lang,      Is.Null);
+			Assert.That(runsInZeroSpans[0].StyleName, Is.Null);
+
+			Assert.That(runsInTwoLangs[0].Content,   Is.EqualTo("foo"));
+			Assert.That(runsInTwoLangs[0].Lang,      Is.Null);
+			Assert.That(runsInTwoLangs[0].StyleName, Is.Null);
+			Assert.That(runsInTwoLangs[1].Content,   Is.EqualTo("σπιθαμή"));
+			Assert.That(runsInTwoLangs[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoLangs[1].StyleName, Is.Null);
+			Assert.That(runsInTwoLangs[2].Content,   Is.EqualTo("bar"));
+			Assert.That(runsInTwoLangs[2].Lang,      Is.Null);
+			Assert.That(runsInTwoLangs[2].StyleName, Is.Null);
+			Assert.That(runsInTwoLangs[3].Content,   Is.EqualTo("portée"));
+			Assert.That(runsInTwoLangs[3].Lang,      Is.EqualTo("fr"));
+			Assert.That(runsInTwoLangs[3].StyleName, Is.Null);
+			Assert.That(runsInTwoLangs[4].Content,   Is.EqualTo("baz"));
+			Assert.That(runsInTwoLangs[4].Lang,      Is.Null);
+			Assert.That(runsInTwoLangs[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoStyles[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoStyles[0].Lang,      Is.Null);
+			Assert.That(runsInTwoStyles[0].StyleName, Is.Null);
+			Assert.That(runsInTwoStyles[1].Content,   Is.EqualTo("bold"));
+			Assert.That(runsInTwoStyles[1].Lang,      Is.Null);
+			Assert.That(runsInTwoStyles[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoStyles[2].Content,   Is.EqualTo(" and "));
+			Assert.That(runsInTwoStyles[2].Lang,      Is.Null);
+			Assert.That(runsInTwoStyles[2].StyleName, Is.Null);
+			Assert.That(runsInTwoStyles[3].Content,   Is.EqualTo("italic"));
+			Assert.That(runsInTwoStyles[3].Lang,      Is.Null);
+			Assert.That(runsInTwoStyles[3].StyleName, Is.EqualTo("Italic"));
+			Assert.That(runsInTwoStyles[4].Content,   Is.EqualTo(" text"));
+			Assert.That(runsInTwoStyles[4].Lang,      Is.Null);
+			Assert.That(runsInTwoStyles[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoGuids[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoGuids[0].Lang,      Is.Null);
+			Assert.That(runsInTwoGuids[0].StyleName, Is.Null);
+			Assert.That(runsInTwoGuids[1].Content,   Is.EqualTo("two"));
+			Assert.That(runsInTwoGuids[1].Lang,      Is.Null);
+			Assert.That(runsInTwoGuids[1].StyleName, Is.Null);
+			Assert.That(runsInTwoGuids[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoGuids[2].Lang,      Is.Null);
+			Assert.That(runsInTwoGuids[2].StyleName, Is.Null);
+			Assert.That(runsInTwoGuids[3].Content,   Is.EqualTo("guid"));
+			Assert.That(runsInTwoGuids[3].Lang,      Is.Null);
+			Assert.That(runsInTwoGuids[3].StyleName, Is.Null);
+			Assert.That(runsInTwoGuids[4].Content,   Is.EqualTo(" classes, but no language spans"));
+			Assert.That(runsInTwoGuids[4].Lang,      Is.Null);
+			Assert.That(runsInTwoGuids[4].StyleName, Is.Null);
+
+			Assert.That(runsInOneGuidOneStyle[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInOneGuidOneStyle[0].Lang,      Is.Null);
+			Assert.That(runsInOneGuidOneStyle[0].StyleName, Is.Null);
+			Assert.That(runsInOneGuidOneStyle[1].Content,   Is.EqualTo("bold"));
+			Assert.That(runsInOneGuidOneStyle[1].Lang,      Is.Null);
+			Assert.That(runsInOneGuidOneStyle[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInOneGuidOneStyle[2].Content,   Is.EqualTo(" and "));
+			Assert.That(runsInOneGuidOneStyle[2].Lang,      Is.Null);
+			Assert.That(runsInOneGuidOneStyle[2].StyleName, Is.Null);
+			Assert.That(runsInOneGuidOneStyle[3].Content,   Is.EqualTo("guid-containing"));
+			Assert.That(runsInOneGuidOneStyle[3].Lang,      Is.Null);
+			Assert.That(runsInOneGuidOneStyle[3].StyleName, Is.Null);
+			Assert.That(runsInOneGuidOneStyle[4].Content,   Is.EqualTo(" text"));
+			Assert.That(runsInOneGuidOneStyle[4].Lang,      Is.Null);
+			Assert.That(runsInOneGuidOneStyle[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoGuidsOneStyle[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoGuidsOneStyle[0].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[0].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[1].Content,   Is.EqualTo("two"));
+			Assert.That(runsInTwoGuidsOneStyle[1].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoGuidsOneStyle[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoGuidsOneStyle[2].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[2].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[3].Content,   Is.EqualTo("guid"));
+			Assert.That(runsInTwoGuidsOneStyle[3].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[3].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[4].Content,   Is.EqualTo(" classes, and the first is bold, but there are no language spans"));
+			Assert.That(runsInTwoGuidsOneStyle[4].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsOneStyle[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[1].Content,   Is.EqualTo("two (B)"));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[1].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[2].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[2].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[3].Content,   Is.EqualTo("guid (I)"));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[3].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[3].StyleName, Is.EqualTo("Italic"));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].Content,   Is.EqualTo(" classes, and two styles, but there are no language spans"));
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[1].Content,   Is.EqualTo("two (B)"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[1].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[2].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[2].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[3].Content,   Is.EqualTo("guid (I,fr)"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[3].Lang,      Is.EqualTo("fr"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[3].StyleName, Is.EqualTo("Italic"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].Content,   Is.EqualTo(" classes, and two styles, but there are no language spans"));
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].StyleName, Is.Null);
+
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Content,   Is.EqualTo("two (B,grc)"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[2].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[2].StyleName, Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[3].Content,   Is.EqualTo("guid (I,fr)"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[3].Lang,      Is.EqualTo("fr"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[3].StyleName, Is.EqualTo("Italic"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[4].Content,   Is.EqualTo(" classes, and two styles, but there are no language spans"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[4].Lang,      Is.Null);
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[4].StyleName, Is.Null);
+		}
 	}
 }
 

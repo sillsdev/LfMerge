@@ -9,9 +9,17 @@ using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.DataConverters
 {
+	public struct Run
+	{
+		public string Content;
+		public string StyleName;
+		public string Lang;
+	}
+
 	public class ConvertMongoToFdoTsStrings
 	{
-		private static Regex spanRegex = new Regex(@"<span\s+(lang=""([^""]+)"")?\s*(class=""([^""]+)"")?\s*(lang=""([^""]+)"")?\s*>(.*?)</span\s*>");
+		private static Regex spanRegex = new Regex("(<span[^>]*>.*?</span>)");
+		private static Regex spanContentsRegex = new Regex(@"<span\s+(lang=""([^""]+)"")?\s*(class=""([^""]+)"")?\s*(lang=""([^""]+)"")?\s*>(.*?)</span\s*>");
 		private static Regex styleRegex = new Regex("styleName_([^ ]+)");
 		private static Regex guidRegex = new Regex("guid_([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})");
 
@@ -26,13 +34,13 @@ namespace LfMerge.DataConverters
 
 		public static int SpanCount(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			return matches.Count;
 		}
 
 		public static List<string> GetSpanTexts(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			var result = new List<string>();
 			foreach (Match match in matches)
 			{
@@ -43,7 +51,7 @@ namespace LfMerge.DataConverters
 
 		public static List<string> GetSpanLanguages(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			var result = new List<string>();
 			foreach (Match match in matches)
 			{
@@ -57,7 +65,7 @@ namespace LfMerge.DataConverters
 
 		public static List<Guid> GetSpanGuids(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			var result = new List<Guid>();
 			foreach (Match match in matches)
 			{
@@ -78,7 +86,7 @@ namespace LfMerge.DataConverters
 
 		public static List<string> GetSpanStyles(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			var result = new List<string>();
 			foreach (Match match in matches)
 			{
@@ -92,6 +100,45 @@ namespace LfMerge.DataConverters
 							result.Add(m.Groups[1].Value);
 					}
 				}
+			}
+			return result;
+		}
+
+		public static List<Run> GetSpanRuns(string source)
+		{
+			string[] parts = spanRegex.Split(source);
+			var result = new List<Run>();
+			foreach (string part in parts)
+			{
+				Run run = new Run();
+				Match match = spanContentsRegex.Match(part);
+				if (!match.Success || match.Groups.Count < 8 || !match.Groups[7].Success)
+				{
+					// We're outside a span
+					run.Content = part;
+					run.Lang = null;
+					run.StyleName = null;
+					result.Add(run);
+					continue;
+				}
+				// We're inside a span
+				run.Content = match.Groups[7].Value;
+				if (match.Groups[1].Success && match.Groups[2].Success)
+					run.Lang = match.Groups[2].Value;
+				else if (match.Groups[5].Success && match.Groups[6].Success)
+					run.Lang = match.Groups[6].Value;
+				if (match.Groups[3].Success)
+				{
+					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
+					foreach (string cls in classes)
+					{
+						Match m = styleRegex.Match(cls);
+						if (m.Success && m.Groups[1].Success)
+							run.StyleName = m.Groups[1].Value;
+						// No need to parse GUIDs out, but if we did need to, that code would go here
+					}
+				}
+				result.Add(run);
 			}
 			return result;
 		}
