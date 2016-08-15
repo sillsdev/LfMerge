@@ -13,7 +13,7 @@ namespace LfMerge.DataConverters
 	{
 		private static Regex spanRegex = new Regex("<span[^>]*>");
 		private static Regex spanEndRegex = new Regex("</span[ ]*>");
-		private static Regex spanContentsRegex = new Regex("<span[^>]*>([^<]*)</span[ ]*>");
+		private static Regex spanContentsRegex = new Regex(@"<span\s+(lang=""([^""]+)"")?\s*(class=""([^""]+)"")?\s*(lang=""([^""]+)"")?\s*>(.*?)</span\s*>");
 
 		public ConvertMongoToFdoTsStrings()
 		{
@@ -26,7 +26,7 @@ namespace LfMerge.DataConverters
 
 		public static int SpanCount(string source)
 		{
-			MatchCollection matches = spanRegex.Matches(source);
+			MatchCollection matches = spanContentsRegex.Matches(source);
 			return matches.Count;
 		}
 
@@ -36,7 +36,21 @@ namespace LfMerge.DataConverters
 			var result = new List<string>();
 			foreach (Match match in matches)
 			{
-				result.Add(match.Groups[1].Value);
+				result.Add(match.Groups[7].Value);
+			}
+			return result.ToArray();
+		}
+
+		public static string[] GetSpanLanguages(string source)
+		{
+			MatchCollection matches = spanContentsRegex.Matches(source);
+			var result = new List<string>();
+			foreach (Match match in matches)
+			{
+				if (match.Groups[1].Success)
+					result.Add(match.Groups[2].Value);
+				else if (match.Groups[4].Success)
+					result.Add(match.Groups[6].Value);
 			}
 			return result.ToArray();
 		}
