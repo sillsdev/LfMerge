@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using LfMerge.DataConverters;
 using NUnit.Framework;
@@ -27,8 +28,8 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		[Test]
 		public void CanExtractTextInsideSpans()
 		{
-			string[] textInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanTexts(noSpans);
-			string[] textInTwoSpans  = ConvertMongoToFdoTsStrings.GetSpanTexts(hasSpans);
+			string[] textInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanTexts(noSpans).ToArray();
+			string[] textInTwoSpans  = ConvertMongoToFdoTsStrings.GetSpanTexts(hasSpans).ToArray();
 
 			Assert.That(textInZeroSpans.Length, Is.EqualTo(0));
 			Assert.That(textInTwoSpans.Length,  Is.EqualTo(2));
@@ -40,8 +41,8 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		public void CanClassifySpansByLanguage()
 		{
 			// Spans will look like: <span lang="en" class="guid_123-456 styleName_DefaultText"</span>
-			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(noSpans);
-			string[] langsInTwoSpans  = ConvertMongoToFdoTsStrings.GetSpanLanguages(hasSpans);
+			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(noSpans).ToArray();
+			string[] langsInTwoSpans  = ConvertMongoToFdoTsStrings.GetSpanLanguages(hasSpans).ToArray();
 
 			Assert.That(langsInZeroSpans.Length, Is.EqualTo(0));
 			Assert.That(langsInTwoSpans.Length,  Is.EqualTo(2));
