@@ -20,8 +20,20 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		[Test]
 		public void CanDetectSpans()
 		{
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(hasSpans), Is.EqualTo(2));
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(noSpans),  Is.EqualTo(0));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(hasSpans), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanExtractTextInsideSpans()
+		{
+			string[] textInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanTexts(noSpans);
+			string[] textInTwoSpans  = ConvertMongoToFdoTsStrings.GetSpanTexts(hasSpans);
+
+			Assert.That(textInZeroSpans.Length, Is.EqualTo(0));
+			Assert.That(textInTwoSpans.Length,  Is.EqualTo(2));
+			Assert.That(textInTwoSpans[0], Is.EqualTo("σπιθαμή"));
+			Assert.That(textInTwoSpans[1], Is.EqualTo("portée"));
 		}
 	}
 }
