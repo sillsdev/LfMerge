@@ -47,7 +47,7 @@ namespace LfMerge.DataConverters
 			{
 				if (match.Groups[1].Success)
 					result.Add(match.Groups[2].Value);
-				else if (match.Groups[4].Success)
+				else if (match.Groups[5].Success)
 					result.Add(match.Groups[6].Value);
 			}
 			return result;
