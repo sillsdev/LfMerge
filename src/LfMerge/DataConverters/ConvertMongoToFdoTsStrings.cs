@@ -14,6 +14,7 @@ namespace LfMerge.DataConverters
 		public string Content;
 		public string StyleName;
 		public string Lang;
+		public Guid? Guid;
 	}
 
 	public class ConvertMongoToFdoTsStrings
@@ -111,13 +112,15 @@ namespace LfMerge.DataConverters
 			foreach (string part in parts)
 			{
 				Run run = new Run();
+				run.Content = null;
+				run.Lang = null;
+				run.StyleName = null;
+				run.Guid = null;
 				Match match = spanContentsRegex.Match(part);
 				if (!match.Success || match.Groups.Count < 8 || !match.Groups[7].Success)
 				{
 					// We're outside a span
 					run.Content = part;
-					run.Lang = null;
-					run.StyleName = null;
 					result.Add(run);
 					continue;
 				}
@@ -135,7 +138,10 @@ namespace LfMerge.DataConverters
 						Match m = styleRegex.Match(cls);
 						if (m.Success && m.Groups[1].Success)
 							run.StyleName = m.Groups[1].Value;
-						// No need to parse GUIDs out, but if we did need to, that code would go here
+						Guid g;
+						m = guidRegex.Match(cls);
+						if (m.Success && m.Groups[1].Success && Guid.TryParse(m.Groups[1].Value, out g))
+							run.Guid = g;
 					}
 				}
 				result.Add(run);
