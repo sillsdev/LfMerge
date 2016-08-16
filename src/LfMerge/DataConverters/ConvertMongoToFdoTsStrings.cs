@@ -35,74 +35,37 @@ namespace LfMerge.DataConverters
 
 		public static int SpanCount(string source)
 		{
-			MatchCollection matches = spanContentsRegex.Matches(source);
-			return matches.Count;
+			List<Run> runs = GetSpanRuns(source);
+			return runs.Where(RunWasSpan).Count();
 		}
 
-		public static List<string> GetSpanTexts(string source)
+		public static bool RunWasSpan(Run run)
 		{
-			MatchCollection matches = spanContentsRegex.Matches(source);
-			var result = new List<string>();
-			foreach (Match match in matches)
-			{
-				result.Add(match.Groups[7].Value);
-			}
-			return result;
+			return run.Lang != null || run.StyleName != null || run.Guid != null;
 		}
 
-		public static List<string> GetSpanLanguages(string source)
+		public static IEnumerable<string> GetSpanTexts(string source)
 		{
-			MatchCollection matches = spanContentsRegex.Matches(source);
-			var result = new List<string>();
-			foreach (Match match in matches)
-			{
-				if (match.Groups[1].Success)
-					result.Add(match.Groups[2].Value);
-				else if (match.Groups[5].Success)
-					result.Add(match.Groups[6].Value);
-			}
-			return result;
+			IEnumerable<Run> runs = GetSpanRuns(source).Where(RunWasSpan);
+			return runs.Select(run => run.Content);
 		}
 
-		public static List<Guid> GetSpanGuids(string source)
+		public static IEnumerable<string> GetSpanLanguages(string source)
 		{
-			MatchCollection matches = spanContentsRegex.Matches(source);
-			var result = new List<Guid>();
-			foreach (Match match in matches)
-			{
-				if (match.Groups[3].Success)
-				{
-					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
-					foreach (string cls in classes)
-					{
-						Guid g;
-						Match m = guidRegex.Match(cls);
-						if (m.Success && m.Groups[1].Success && Guid.TryParse(m.Groups[1].Value, out g))
-							result.Add(g);
-					}
-				}
-			}
-			return result;
+			IEnumerable<Run> runs = GetSpanRuns(source).Where(run => run.Lang != null);
+			return runs.Select(run => run.Lang);
 		}
 
-		public static List<string> GetSpanStyles(string source)
+		public static IEnumerable<Guid> GetSpanGuids(string source)
 		{
-			MatchCollection matches = spanContentsRegex.Matches(source);
-			var result = new List<string>();
-			foreach (Match match in matches)
-			{
-				if (match.Groups[3].Success)
-				{
-					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
-					foreach (string cls in classes)
-					{
-						Match m = styleRegex.Match(cls);
-						if (m.Success && m.Groups[1].Success)
-							result.Add(m.Groups[1].Value);
-					}
-				}
-			}
-			return result;
+			IEnumerable<Run> runs = GetSpanRuns(source).Where(run => run.Guid != null);
+			return runs.Select(run => run.Guid.Value);
+		}
+
+		public static IEnumerable<string> GetSpanStyles(string source)
+		{
+			IEnumerable<Run> runs = GetSpanRuns(source).Where(run => run.StyleName != null);
+			return runs.Select(run => run.StyleName);
 		}
 
 		public static List<Run> GetSpanRuns(string source)
