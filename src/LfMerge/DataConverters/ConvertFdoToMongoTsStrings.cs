@@ -50,6 +50,9 @@ namespace LfMerge.DataConverters
 			// Result: class="propi_1_ktptWs_1 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman"
 			//
 			// TODO: Write that ordered list in a slightly more structured way now that I've got it all down on screen.
+
+			// TODO: Write this function on Wednesday.
+			throw new NotImplementedException();
 		}
 
 		internal static string IntPropertyName(FwTextPropType prop)
@@ -87,20 +90,12 @@ namespace LfMerge.DataConverters
 				return "ktptFirstIndent";
 			case FwTextPropType.ktptLeadingIndent:
 				return "ktptLeadingIndent";
-			case FwTextPropType.ktptMarginLeading:
-				return "ktptMarginLeading";
 			case FwTextPropType.ktptTrailingIndent:
 				return "ktptTrailingIndent";
-			case FwTextPropType.ktptMarginTrailing:
-				return "ktptMarginTrailing";
 			case FwTextPropType.ktptSpaceBefore:
 				return "ktptSpaceBefore";
-			case FwTextPropType.ktptMswMarginTop:
-				return "ktptMswMarginTop";
 			case FwTextPropType.ktptSpaceAfter:
 				return "ktptSpaceAfter";
-			case FwTextPropType.ktptMarginBottom:
-				return "ktptMarginBottom";
 			case FwTextPropType.ktptTabDef:
 				return "ktptTabDef";
 			case FwTextPropType.ktptLineHeight:
