@@ -28,9 +28,24 @@ namespace LfMerge.DataConverters
 		{
 		}
 
-		public ITsString SpansToRuns(string source)
+		public static ITsString SpanStrToTsString(string source, int mainWs, ILgWritingSystemFactory wsf)
 		{
-			throw new NotImplementedException();
+			// How to build up an ITsString via an ITsIncStrBldr -
+			// 1. Use SetIntPropValues or SetStrPropValues to set a property "to be applied to any subsequent append operations".
+			// 2. THEN use Append(string s) to add a string, which will "pick up" the properties set in step 1.
+			// See ScrFootnoteFactory.CreateRunFromStringRep() in FdoFactoryAdditions.cs for a good example.
+			List<Run> runs = GetSpanRuns(source);
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			foreach (Run run in runs)
+			{
+				// To remove a string property, you set it to null, so we can just use StyleName directly whether or not it's null.
+				builder.SetStrPropValue((int)FwTextPropType.ktptNamedStyle, run.StyleName);
+				int runWs = (run.Lang == null) ? mainWs : wsf.GetWsFromStr(run.Lang);
+				builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, runWs);
+				// We don't care about Guids in this function, so run.Guid is ignored
+				builder.Append(run.Content);
+			}
+			return builder.GetString();
 		}
 
 		public static int SpanCount(string source)
