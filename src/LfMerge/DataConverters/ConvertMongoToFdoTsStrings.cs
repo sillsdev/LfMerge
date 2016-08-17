@@ -9,11 +9,26 @@ using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.DataConverters
 {
+	// TsString int properties have *two* ints, a value and a variation. The variation is only important for a few
+	// property types, but we need to preserve it nonetheless.
+	public struct IntProperty
+	{
+		public int Value;
+		public int Variation;
+		public IntProperty(int value, int variation)
+		{
+			Value = value;
+			Variation = variation;
+		}
+	}
+
 	public struct Run
 	{
 		public string Content;
 		public string StyleName;
 		public string Lang;
+		public Dictionary<int, IntProperty> IntProperties;
+		public Dictionary<int, string> StringProperties;
 		public Guid? Guid;
 	}
 
@@ -23,6 +38,8 @@ namespace LfMerge.DataConverters
 		private static Regex spanContentsRegex = new Regex(@"<span\s+(?<langAttr1>lang=""(?<langText1>[^""]+)"")?\s*(?<classAttr>class=""(?<classText>[^""]+)"")?\s*(?<langAttr2>lang=""(?<langText2>[^""]+)"")?\s*>(?<spanText>.*?)</span\s*>");
 		private static Regex styleRegex = new Regex("styleName_([^ ]+)");
 		private static Regex guidRegex = new Regex("guid_([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})");
+		private static Regex intPropRegex = new Regex(@"propi_(?<propNum>\d+)_(?<propName>[^_]+)_(?<propValue>-?\d+)_(?<propVariation>\d+)");
+		private static Regex strPropRegex = new Regex(@"props_(?<propNum>\d+)_(?<propName>[^_]+)_(?<propValue>.+)");
 
 		public ConvertMongoToFdoTsStrings()
 		{
@@ -43,6 +60,13 @@ namespace LfMerge.DataConverters
 				int runWs = (run.Lang == null) ? mainWs : wsf.GetWsFromStr(run.Lang);
 				builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, runWs);
 				// We don't care about Guids in this function, so run.Guid is ignored
+				// But we do need to set any other int or string properties that were in the original
+				if (run.IntProperties != null)
+					foreach (KeyValuePair<int, IntProperty> prop in run.IntProperties)
+						builder.SetIntPropValues(prop.Key, prop.Value.Variation, prop.Value.Value);
+				if (run.StringProperties != null)
+					foreach (KeyValuePair<int, string> prop in run.StringProperties)
+						builder.SetStrPropValue(prop.Key, prop.Value);
 				builder.Append(run.Content);
 			}
 			return builder.GetString();
@@ -115,11 +139,35 @@ namespace LfMerge.DataConverters
 					{
 						Match m = styleRegex.Match(cls);
 						if (m.Success && m.Groups[1].Success)
-							run.StyleName = m.Groups[1].Value;
+							run.StyleName = m.Groups[1].Value.Replace("_SPACE_", " ");
 						Guid g;
 						m = guidRegex.Match(cls);
 						if (m.Success && m.Groups[1].Success && Guid.TryParse(m.Groups[1].Value, out g))
 							run.Guid = g;
+						m = intPropRegex.Match(cls);
+						if (m.Success && m.Groups["propNum"].Success && m.Groups["propValue"].Success && m.Groups["propVariation"].Success)
+						{
+							if (run.IntProperties == null)
+								run.IntProperties = new Dictionary<int, IntProperty>();
+							int propNum;
+							int propValue;
+							int propVariation;
+							if (Int32.TryParse(m.Groups["propNum"].Value, out propNum) &&
+								Int32.TryParse(m.Groups["propValue"].Value, out propValue) &&
+								Int32.TryParse(m.Groups["propVariation"].Value, out propVariation))
+							{
+								run.IntProperties[propNum] = new IntProperty(propValue, propVariation);
+							}
+						}
+						m = strPropRegex.Match(cls);
+						if (m.Success && m.Groups["propNum"].Success && m.Groups["propValue"].Success)
+						{
+							if (run.StringProperties == null)
+								run.StringProperties = new Dictionary<int, string>();
+							int propNum;
+							if (Int32.TryParse(m.Groups["propNum"].Value, out propNum))
+								run.StringProperties[propNum] = m.Groups["propValue"].Value.Replace("_SPACE_", " ");
+						}
 					}
 				}
 				result.Add(run);

@@ -965,6 +965,20 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 4), Is.EqualTo(wsEn));
+
+			// Extra int property "propi_4_ktptSuperscript_1_0" on second span; first should return "none"
+			ITsTextProps props;
+			int variation;
+			int superscript;
+			props = tsStrFromTwoStylesTwoLangsOneOtherProperty.get_Properties(1);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			Assert.That(superscript, Is.EqualTo(-1)); // -1 means "property not found"
+			Assert.That(variation, Is.EqualTo(-1));
+			// Second span (fourth run, so index 3) should have it
+			props = tsStrFromTwoStylesTwoLangsOneOtherProperty.get_Properties(3);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			Assert.That(superscript, Is.EqualTo(1));
+			Assert.That(variation, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -992,6 +1006,26 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 4), Is.EqualTo(wsEn));
+
+			// Extra int property "propi_4_ktptSuperscript_1_0" on second span; first should return "none"
+			// Extra string property "props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman" on second span; first should return "none"
+			ITsTextProps props;
+			int variation;
+			int superscript;
+			string fontFamily;
+			props = tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_Properties(1);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			fontFamily = props.GetStrPropValue((int)FwTextPropType.ktptFontFamily);
+			Assert.That(superscript, Is.EqualTo(-1)); // -1 means "property not found" for int properties
+			Assert.That(variation, Is.EqualTo(-1));
+			Assert.That(fontFamily, Is.Null); // null means "property not found" for string properties
+			// Second span (fourth run, so index 3) should have both properties
+			props = tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_Properties(3);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			fontFamily = props.GetStrPropValue((int)FwTextPropType.ktptFontFamily);
+			Assert.That(fontFamily, Is.EqualTo("Times New Roman"));
+			Assert.That(superscript, Is.EqualTo(1));
+			Assert.That(variation, Is.EqualTo(0));
 		}
 
 		// Helper functions for TsString test
