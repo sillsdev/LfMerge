@@ -6,6 +6,7 @@ using SIL.CoreImpl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace LfMerge.DataConverters
 {
@@ -35,7 +36,7 @@ namespace LfMerge.DataConverters
 			return tss.Text;
 		}
 
-		public static string TextFromTsString(ITsString tss)
+		public static string TextFromTsString(ITsString tss, ILgWritingSystemFactory wsf)
 		{
 			// This will replace SafeTsStringText, and will actually deal with <span> elements
 
@@ -43,25 +44,103 @@ namespace LfMerge.DataConverters
 			// will be replaced with lang="(wsStr)" and class="styleName_PropValue". Other properties, that
 			// LF doesn't process, will be preserved in the class attribute as well, as follows:
 			//
-			// 1) Take value of string property, replace all space characters with "_SPACE_".
-			// 2) Take name of property and turn it into a string (sadly, enum's ToString() won't work here since there are multiple enums with the same int value).
-			// 3) Depending on whether it's an int or string prop, use "propi" or "props".
+			// 1) Determine whether the property is an int property or a string property.
+			// 2) Call either IntPropertyName() or StringPropertyName() to get its name.
+			// 3) Create a class string in format "propC_N_NAME_VALUE" where:
+			//      - C is "i" for int props or "s" for string props
+			//      - N is the property number
+			//      - NAME is, of course, the property name
+			//      - VALUE is the property's value, with two special cases:
+			//          * in string properties, spaces are first replaced by "_SPACE_"
+			//          * in int properties, there's a value and a "variation", and VALUE is both of them separated by _
 			//
-			// Result: class="propi_1_ktptWs_1 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman"
-			//
-			// TODO: Write that ordered list in a slightly more structured way now that I've got it all down on screen.
+			// Result: class="propi_1_ktptWs_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman"
 
 			// TODO: Write this function on Wednesday.
-			throw new NotImplementedException();
+			int[] intPropsToSkip = new int[] { (int)FwTextPropType.ktptWs };
+			int[] strPropsToSkip = new int[] { (int)FwTextPropType.ktptNamedStyle };
+			int mainWs = tss.get_WritingSystem(0);
+			var resultBuilder = new StringBuilder();
+			for (int i = 0, n = tss.RunCount; i < n; i++)
+			{
+				string runText = tss.get_RunText(i);
+				ITsTextProps props = tss.get_Properties(i);
+				// int ignored;
+				// int ws = props.GetIntPropValues((int)FwTextPropType.ktptWs, out ignored);
+				int ws = tss.get_WritingSystem(i);  // Simpler than GetIntPropValues((int)FwTextPropType.ktptWs)
+				string namedStyle = props.GetStrPropValue((int)FwTextPropType.ktptNamedStyle);
+				List<string> classes = ClassesFromTsTextProps(props, intPropsToSkip, strPropsToSkip);
+
+				bool needSpan = false;
+				string langAttr = null;
+				string classAttr = null;
+				if (ws != mainWs)
+				{
+					needSpan = true;
+					langAttr = String.Format(" lang=\"{0}\"", wsf.GetStrFromWs(ws));
+				}
+				if (namedStyle != null)
+				{
+					needSpan = true;
+					classes.Insert(0, String.Format("styleName_{0}", namedStyle.Replace(" ", "_SPACE_")));
+				}
+				if (classes.Count > 0)
+				{
+					needSpan = true;
+					classAttr = String.Format(" class=\"{0}\"", String.Join(" ", classes));
+				}
+
+				if (needSpan)
+				{
+					var spanBuilder = new StringBuilder();
+					spanBuilder.Append("<span");
+					if (langAttr != null)
+						spanBuilder.Append(langAttr);
+					if (classAttr != null)
+						spanBuilder.Append(classAttr);
+					spanBuilder.Append(">");
+					spanBuilder.Append(runText);
+					spanBuilder.Append("</span>");
+					resultBuilder.Append(spanBuilder.ToString());
+				}
+				else
+					resultBuilder.Append(runText);
+			}
+			return resultBuilder.ToString();
 		}
 
-		internal static string IntPropertyName(int prop)
+		public static List<string> ClassesFromTsTextProps(ITsTextProps props, int[] intPropsToSkip, int[] strPropsToSkip)
+		{
+			var classes = new List<string>();
+			for (int i = 0, n = props.IntPropCount; i < n; i++)
+			{
+				int propNum;
+				int variation;
+				int propValue = props.GetIntProp(i, out propNum, out variation);
+				if (intPropsToSkip.Contains(propNum))
+					continue;
+				string className = String.Format("propi_{0}_{1}_{2}_{3}", propNum, IntPropertyName(propNum), propValue, variation);
+				classes.Add(className);
+			}
+			for (int i = 0, n = props.StrPropCount; i < n; i++)
+			{
+				int propNum;
+				string propValue = props.GetStrProp(i, out propNum).Replace(" ", "_SPACE_");
+				string className = String.Format("props_{0}_{1}_{2}", propNum, StringPropertyName(propNum), propValue);
+				if (strPropsToSkip.Contains(propNum))
+					continue;
+				classes.Add(className);
+			}
+			return classes;
+		}
+
+		internal static string IntPropertyName(int propNum)
 		{
 			// UGH. But we can't use enum.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
 			// different FwTextPropType values with the value 1 (FwTextPropType.ktptWs and FwTextPropType.ktptFontFamily) and
 			// the C# spec says you can't count on which one ToString() will return in that case. So we have to do this nonsense.
 			// Furthermore, since the TsString functions return an int, not an enum, we have to match it as an int.
-			switch (prop)
+			switch (propNum)
 			{
 			case (int)FwTextPropType.ktptWs:
 				return "ktptWs";
@@ -164,13 +243,13 @@ namespace LfMerge.DataConverters
 			}
 		}
 
-		internal static string StringPropertyName(int prop)
+		internal static string StringPropertyName(int propNum)
 		{
 			// UGH. But we can't use enum.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
 			// different FwTextPropType values with the value 1 (FwTextPropType.ktptWs and FwTextPropType.ktptFontFamily) and
 			// the C# spec says you can't count on which one ToString() will return in that case. So we have to do this nonsense.
 			// Furthermore, since the TsString functions return an int, not an enum, we have to match it as an int.
-			switch (prop)
+			switch (propNum)
 			{
 			case (int)FwTextPropType.ktptFontFamily:
 				return "ktptFontFamily";
