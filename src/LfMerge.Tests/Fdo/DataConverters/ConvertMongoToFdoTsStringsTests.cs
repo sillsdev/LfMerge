@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using LfMerge.DataConverters;
 using NUnit.Framework;
+using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.Common.COMInterfaces;
 
@@ -1026,6 +1027,97 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(fontFamily, Is.EqualTo("Times New Roman"));
 			Assert.That(superscript, Is.EqualTo(1));
 			Assert.That(variation, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_SingleRunString()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append("Just English text");
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_StringWithTwoLanguages()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append("Some English text");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.Append("du texte français");
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_StringWithThreeLanguages()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append("Some English text");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.Append("du texte français");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.Append("Ελληνικά");
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_StringWithThreeLanguagesAndArbitraryProperties()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append("Some English text");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptAlign, (int)FwTextPropVar.ktpvDefault, 2);
+			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
+			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
+			builder.Append("du texte français");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
+			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
+			builder.Append("Ελληνικά");
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
 		}
 
 		// Helper functions for TsString test
