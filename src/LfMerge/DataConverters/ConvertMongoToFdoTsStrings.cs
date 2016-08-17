@@ -20,7 +20,7 @@ namespace LfMerge.DataConverters
 	public class ConvertMongoToFdoTsStrings
 	{
 		private static Regex spanRegex = new Regex("(<span[^>]*>.*?</span>)");
-		private static Regex spanContentsRegex = new Regex(@"<span\s+(lang=""([^""]+)"")?\s*(class=""([^""]+)"")?\s*(lang=""([^""]+)"")?\s*>(.*?)</span\s*>");
+		private static Regex spanContentsRegex = new Regex(@"<span\s+(?<langAttr1>lang=""(?<langText1>[^""]+)"")?\s*(?<classAttr>class=""(?<classText>[^""]+)"")?\s*(?<langAttr2>lang=""(?<langText2>[^""]+)"")?\s*>(?<spanText>.*?)</span\s*>");
 		private static Regex styleRegex = new Regex("styleName_([^ ]+)");
 		private static Regex guidRegex = new Regex("guid_([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})");
 
@@ -95,7 +95,7 @@ namespace LfMerge.DataConverters
 				run.StyleName = null;
 				run.Guid = null;
 				Match match = spanContentsRegex.Match(part);
-				if (!match.Success || match.Groups.Count < 8 || !match.Groups[7].Success)
+				if (!match.Success || match.Groups.Count < 8 || !match.Groups["spanText"].Success)
 				{
 					// We're outside a span
 					run.Content = part;
@@ -103,14 +103,14 @@ namespace LfMerge.DataConverters
 					continue;
 				}
 				// We're inside a span
-				run.Content = match.Groups[7].Value;
-				if (match.Groups[1].Success && match.Groups[2].Success)
-					run.Lang = match.Groups[2].Value;
-				else if (match.Groups[5].Success && match.Groups[6].Success)
-					run.Lang = match.Groups[6].Value;
-				if (match.Groups[3].Success)
+				run.Content = match.Groups["spanText"].Value;
+				if (match.Groups["langAttr1"].Success && match.Groups["langText1"].Success)
+					run.Lang = match.Groups["langText1"].Value;
+				else if (match.Groups["langAttr2"].Success && match.Groups["langText2"].Success)
+					run.Lang = match.Groups["langText2"].Value;
+				if (match.Groups["classAttr"].Success && match.Groups["classText"].Success)
 				{
-					string[] classes = match.Groups[4].Value.Split(null);  // Split on any whitespace
+					string[] classes = match.Groups["classText"].Value.Split(null);  // Split on any whitespace
 					foreach (string cls in classes)
 					{
 						Match m = styleRegex.Match(cls);
