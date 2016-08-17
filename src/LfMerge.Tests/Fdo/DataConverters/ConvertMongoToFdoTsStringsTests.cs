@@ -15,7 +15,7 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		// *****************
 		//     Test data
 		// *****************
-		private string noSpans   = "fooσπιθαμήbarportéebaz";
+		private string zeroSpans = "fooσπιθαμήbarportéebaz";
 		private string twoLangs  = "foo<span lang=\"grc\">σπιθαμή</span>bar<span lang=\"fr\">portée</span>baz";
 		private string twoStyles = "this has <span class=\"styleName_Bold\">bold</span> and <span class=\"styleName_Italic\">italic</span> text";
 		private string twoGuids  = "this has <span class=\"guid_01234567-1234-4321-89ab-0123456789ab\">two</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab\">guid</span> classes, but no language spans";
@@ -36,202 +36,365 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		//     Tests
 		// *************
 		[Test]
-		public void CanDetectSpans()
+		public void CanDetectSpans_ZeroSpans()
 		{
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(noSpans),   Is.EqualTo(0));
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoLangs),  Is.EqualTo(2));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(zeroSpans), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoLangs()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoLangs), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoStyles()
+		{
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoStyles), Is.EqualTo(2));
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuids),  Is.EqualTo(2));
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(oneGuidOneStyle),  Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoGuids()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuids), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_OneGuidOneStyle()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(oneGuidOneStyle), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoGuidsOneStyle()
+		{
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsOneStyle), Is.EqualTo(2));
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsTwoStylesNoLangs),  Is.EqualTo(2));
-			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsTwoStylesOneLang),  Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsTwoStylesNoLangs), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoGuidsTwoStylesOneLang()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsTwoStylesOneLang), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoGuidsTwoStylesTwoLangs()
+		{
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoGuidsTwoStylesTwoLangs), Is.EqualTo(2));
 		}
 
 		[Test]
-		public void CanExtractTextInsideSpans()
+		public void CanExtractTextInsideSpans_ZeroSpans()
 		{
-			string[] textInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanTexts(noSpans)  .ToArray();
-			string[] textInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanTexts(twoLangs) .ToArray();
-			string[] textInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanTexts(twoStyles).ToArray();
-			string[] textInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuids) .ToArray();
-			string[] textInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanTexts(oneGuidOneStyle) .ToArray();
-			string[] textInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsOneStyle).ToArray();
-			string[] textInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesNoLangs) .ToArray();
-			string[] textInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesOneLang) .ToArray();
-			string[] textInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesTwoLangs).ToArray();
-
+			string[] textInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanTexts(zeroSpans).ToArray();
 			Assert.That(textInZeroSpans.Length, Is.EqualTo(0));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoLangs()
+		{
+			string[] textInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanTexts(twoLangs).ToArray();
 			Assert.That(textInTwoLangs.Length, Is.EqualTo(2));
 			Assert.That(textInTwoLangs[0], Is.EqualTo("σπιθαμή"));
 			Assert.That(textInTwoLangs[1], Is.EqualTo("portée"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoStyles()
+		{
+			string[] textInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanTexts(twoStyles).ToArray();
 			Assert.That(textInTwoStyles.Length, Is.EqualTo(2));
 			Assert.That(textInTwoStyles[0], Is.EqualTo("bold"));
 			Assert.That(textInTwoStyles[1], Is.EqualTo("italic"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoGuids()
+		{
+			string[] textInTwoGuids = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuids).ToArray();
 			Assert.That(textInTwoGuids.Length, Is.EqualTo(2));
 			Assert.That(textInTwoGuids[0], Is.EqualTo("two"));
 			Assert.That(textInTwoGuids[1], Is.EqualTo("guid"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_OneGuidOneStyle()
+		{
+			string[] textInOneGuidOneStyle = ConvertMongoToFdoTsStrings.GetSpanTexts(oneGuidOneStyle).ToArray();
 			Assert.That(textInOneGuidOneStyle.Length, Is.EqualTo(2));
 			Assert.That(textInOneGuidOneStyle[0], Is.EqualTo("bold"));
 			Assert.That(textInOneGuidOneStyle[1], Is.EqualTo("guid-containing"));
-
+		}
+		[Test]
+		public void CanExtractTextInsideSpans_TwoGuidsOneStyle()
+		{
+			string[] textInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsOneStyle).ToArray();
 			Assert.That(textInTwoGuidsOneStyle.Length, Is.EqualTo(2));
 			Assert.That(textInTwoGuidsOneStyle[0], Is.EqualTo("two"));
 			Assert.That(textInTwoGuidsOneStyle[1], Is.EqualTo("guid"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			string[] textInTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesNoLangs).ToArray();
 			Assert.That(textInTwoGuidsTwoStylesNoLangs.Length, Is.EqualTo(2));
 			Assert.That(textInTwoGuidsTwoStylesNoLangs[0], Is.EqualTo("two (B)"));
 			Assert.That(textInTwoGuidsTwoStylesNoLangs[1], Is.EqualTo("guid (I)"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoGuidsTwoStylesOneLang()
+		{
+			string[] textInTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesOneLang).ToArray();
 			Assert.That(textInTwoGuidsTwoStylesOneLang.Length, Is.EqualTo(2));
 			Assert.That(textInTwoGuidsTwoStylesOneLang[0], Is.EqualTo("two (B)"));
 			Assert.That(textInTwoGuidsTwoStylesOneLang[1], Is.EqualTo("guid (I,fr)"));
+		}
 
+		[Test]
+		public void CanExtractTextInsideSpans_TwoGuidsTwoStylesTwoLangs()
+		{
+			string[] textInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesTwoLangs).ToArray();
 			Assert.That(textInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
 			Assert.That(textInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("two (B,grc)"));
 			Assert.That(textInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("guid (I,fr)"));
 		}
 
 		[Test]
-		public void CanClassifySpansByLanguage()
+		public void CanClassifySpansByLanguage_ZeroSpans()
 		{
-			// Spans will look like: <span lang="en" class="guid_123-456 styleName_DefaultText"</span>
-			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(noSpans)  .ToArray();
-			string[] langsInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoLangs) .ToArray();
-			string[] langsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStyles).ToArray();
-			string[] langsInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuids) .ToArray();
-			string[] langsInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanLanguages(oneGuidOneStyle) .ToArray();
-			string[] langsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsOneStyle).ToArray();
-			string[] langsInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesNoLangs) .ToArray();
-			string[] langsInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesOneLang) .ToArray();
-			string[] langsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesTwoLangs).ToArray();
-
+			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(zeroSpans).ToArray();
 			Assert.That(langsInZeroSpans.Length, Is.EqualTo(0));
+		}
 
-			Assert.That(langsInTwoLangs.Length,  Is.EqualTo(2));
+		[Test]
+		public void CanClassifySpansByLanguage_TwoLangs()
+		{
+			string[] langsInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoLangs).ToArray();
+			Assert.That(langsInTwoLangs.Length, Is.EqualTo(2));
 			Assert.That(langsInTwoLangs[0], Is.EqualTo("grc"));
 			Assert.That(langsInTwoLangs[1], Is.EqualTo("fr"));
-
+		}
+		[Test]
+		public void CanClassifySpansByLanguage_TwoStyles()
+		{
+			string[] langsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStyles).ToArray();
 			Assert.That(langsInTwoStyles.Length, Is.EqualTo(0));
-			Assert.That(langsInTwoGuids.Length,  Is.EqualTo(0));
-			Assert.That(langsInOneGuidOneStyle.Length,  Is.EqualTo(0));
+		}
+		[Test]
+		public void CanClassifySpansByLanguage_TwoGuids()
+		{
+			string[] langsInTwoGuids = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuids).ToArray();
+			Assert.That(langsInTwoGuids.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_OneGuidOneStyle()
+		{
+			string[] langsInOneGuidOneStyle = ConvertMongoToFdoTsStrings.GetSpanLanguages(oneGuidOneStyle).ToArray();
+			Assert.That(langsInOneGuidOneStyle.Length, Is.EqualTo(0));
+		}
+		[Test]
+		public void CanClassifySpansByLanguage_TwoGuidsOneStyle()
+		{
+			string[] langsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsOneStyle).ToArray();
 			Assert.That(langsInTwoGuidsOneStyle.Length, Is.EqualTo(0));
+		}
 
-			Assert.That(langsInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(0));
-			Assert.That(langsInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(1));
+		[Test]
+		public void CanClassifySpansByLanguage_TwoGuidsTwoStylesNoLangs()
+		{
+			string[] langsInTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesNoLangs).ToArray();
+			Assert.That(langsInTwoGuidsTwoStylesNoLangs.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_TwoGuidsTwoStylesOneLang()
+		{
+			string[] langsInTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesOneLang).ToArray();
+			Assert.That(langsInTwoGuidsTwoStylesOneLang.Length, Is.EqualTo(1));
+			Assert.That(langsInTwoGuidsTwoStylesOneLang[0], Is.EqualTo("fr"));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_TwoGuidsTwoStylesTwoLangs()
+		{
+			string[] langsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesTwoLangs).ToArray();
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
-
-			Assert.That(langsInTwoGuidsTwoStylesOneLang[0],  Is.EqualTo("fr"));
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("grc"));
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("fr"));
 		}
 
 		[Test]
-		public void CanExtractGuidsFromSpans()
+		public void CanExtractGuidsFromSpans_ZeroSpans()
 		{
-			Guid[] guidsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanGuids(noSpans)  .ToArray();
-			Guid[] guidsInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoLangs) .ToArray();
-			Guid[] guidsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanGuids(twoStyles).ToArray();
-			Guid[] guidsInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuids) .ToArray();
-			Guid[] guidsInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanGuids(oneGuidOneStyle) .ToArray();
-			Guid[] guidsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsOneStyle).ToArray();
-			Guid[] guidsInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesNoLangs) .ToArray();
-			Guid[] guidsInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesOneLang) .ToArray();
-			Guid[] guidsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesTwoLangs).ToArray();
-
+			Guid[] guidsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanGuids(zeroSpans).ToArray();
 			Assert.That(guidsInZeroSpans.Length, Is.EqualTo(0));
-			Assert.That(guidsInTwoLangs.Length,  Is.EqualTo(0));
-			Assert.That(guidsInTwoStyles.Length, Is.EqualTo(0));
-			Assert.That(guidsInTwoGuids.Length,  Is.EqualTo(2));
-			Assert.That(guidsInOneGuidOneStyle.Length,  Is.EqualTo(1));
-			Assert.That(guidsInTwoGuidsOneStyle.Length, Is.EqualTo(2));
-			Assert.That(guidsInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(2));
-			Assert.That(guidsInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(2));
-			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
+		}
 
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoLangs()
+		{
+			Guid[] guidsInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanGuids(twoLangs).ToArray();
+			Assert.That(guidsInTwoLangs.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoStyles()
+		{
+			Guid[] guidsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanGuids(twoStyles).ToArray();
+			Assert.That(guidsInTwoStyles.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoGuids()
+		{
+			Guid[] guidsInTwoGuids = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuids).ToArray();
+			Assert.That(guidsInTwoGuids.Length, Is.EqualTo(2));
 			Assert.That(guidsInTwoGuids[0], Is.EqualTo(firstGuid));
 			Assert.That(guidsInTwoGuids[1], Is.EqualTo(secondGuid));
+		}
 
-			Assert.That(guidsInOneGuidOneStyle[0],  Is.EqualTo(firstGuid));
+		[Test]
+		public void CanExtractGuidsFromSpans_OneGuidOneStyle()
+		{
+			Guid[] guidsInOneGuidOneStyle = ConvertMongoToFdoTsStrings.GetSpanGuids(oneGuidOneStyle).ToArray();
+			Assert.That(guidsInOneGuidOneStyle.Length, Is.EqualTo(1));
+			Assert.That(guidsInOneGuidOneStyle[0], Is.EqualTo(firstGuid));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoGuidsOneStyle()
+		{
+			Guid[] guidsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsOneStyle).ToArray();
+			Assert.That(guidsInTwoGuidsOneStyle.Length, Is.EqualTo(2));
 			Assert.That(guidsInTwoGuidsOneStyle[0], Is.EqualTo(firstGuid));
 			Assert.That(guidsInTwoGuidsOneStyle[1], Is.EqualTo(secondGuid));
+		}
 
-			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[0],  Is.EqualTo(firstGuid));
-			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[1],  Is.EqualTo(secondGuid));
-			Assert.That(guidsInTwoGuidsTwoStylesOneLang[0],  Is.EqualTo(firstGuid));
-			Assert.That(guidsInTwoGuidsTwoStylesOneLang[1],  Is.EqualTo(secondGuid));
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			Guid[] guidsInTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesNoLangs).ToArray();
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs.Length, Is.EqualTo(2));
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[0], Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesNoLangs[1], Is.EqualTo(secondGuid));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoGuidsTwoStylesOneLang()
+		{
+			Guid[] guidsInTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesOneLang).ToArray();
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang.Length, Is.EqualTo(2));
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang[0], Is.EqualTo(firstGuid));
+			Assert.That(guidsInTwoGuidsTwoStylesOneLang[1], Is.EqualTo(secondGuid));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoGuidsTwoStylesTwoLangs()
+		{
+			Guid[] guidsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanGuids(twoGuidsTwoStylesTwoLangs).ToArray();
+			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
 			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo(firstGuid));
 			Assert.That(guidsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo(secondGuid));
 		}
 
 		[Test]
-		public void CanExtractStylesFromSpans()
+		public void CanExtractStylesFromSpans_ZeroSpans()
 		{
-			string[] stylesInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanStyles(noSpans)  .ToArray();
-			string[] stylesInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoLangs) .ToArray();
-			string[] stylesInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanStyles(twoStyles).ToArray();
-			string[] stylesInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuids) .ToArray();
-			string[] stylesInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanStyles(oneGuidOneStyle) .ToArray();
-			string[] stylesInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsOneStyle).ToArray();
-			string[] stylesInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesNoLangs) .ToArray();
-			string[] stylesInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesOneLang) .ToArray();
-			string[] stylesInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesTwoLangs).ToArray();
-
+			string[] stylesInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanStyles(zeroSpans).ToArray();
 			Assert.That(stylesInZeroSpans.Length, Is.EqualTo(0));
-			Assert.That(stylesInTwoLangs.Length,  Is.EqualTo(0));
-			Assert.That(stylesInTwoStyles.Length, Is.EqualTo(2));
-			Assert.That(stylesInTwoGuids.Length,  Is.EqualTo(0));
-			Assert.That(stylesInOneGuidOneStyle.Length,  Is.EqualTo(1));
-			Assert.That(stylesInTwoGuidsOneStyle.Length, Is.EqualTo(1));
-			Assert.That(stylesInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(2));
-			Assert.That(stylesInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(2));
-			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
+		}
 
+		[Test]
+		public void CanExtractStylesFromSpans_TwoLangs()
+		{
+			string[] stylesInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanStyles(twoLangs).ToArray();
+			Assert.That(stylesInTwoLangs.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoStyles()
+		{
+			string[] stylesInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanStyles(twoStyles).ToArray();
+			Assert.That(stylesInTwoStyles.Length, Is.EqualTo(2));
 			Assert.That(stylesInTwoStyles[0], Is.EqualTo("Bold"));
 			Assert.That(stylesInTwoStyles[1], Is.EqualTo("Italic"));
-			Assert.That(stylesInOneGuidOneStyle[0],  Is.EqualTo("Bold"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoGuids()
+		{
+			string[] stylesInTwoGuids = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuids).ToArray();
+			Assert.That(stylesInTwoGuids.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_OneGuidOneStyle()
+		{
+			string[] stylesInOneGuidOneStyle = ConvertMongoToFdoTsStrings.GetSpanStyles(oneGuidOneStyle).ToArray();
+			Assert.That(stylesInOneGuidOneStyle.Length, Is.EqualTo(1));
+			Assert.That(stylesInOneGuidOneStyle[0], Is.EqualTo("Bold"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoGuidsOneStyle()
+		{
+			string[] stylesInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsOneStyle).ToArray();
+			Assert.That(stylesInTwoGuidsOneStyle.Length, Is.EqualTo(1));
 			Assert.That(stylesInTwoGuidsOneStyle[0], Is.EqualTo("Bold"));
-			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[0],  Is.EqualTo("Bold"));
-			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[1],  Is.EqualTo("Italic"));
-			Assert.That(stylesInTwoGuidsTwoStylesOneLang[0],  Is.EqualTo("Bold"));
-			Assert.That(stylesInTwoGuidsTwoStylesOneLang[1],  Is.EqualTo("Italic"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			string[] stylesInTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesNoLangs).ToArray();
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs.Length, Is.EqualTo(2));
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesNoLangs[1], Is.EqualTo("Italic"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoGuidsTwoStylesOneLang()
+		{
+			string[] stylesInTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesOneLang).ToArray();
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang.Length, Is.EqualTo(2));
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoGuidsTwoStylesOneLang[1], Is.EqualTo("Italic"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoGuidsTwoStylesTwoLangs()
+		{
+			string[] stylesInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanStyles(twoGuidsTwoStylesTwoLangs).ToArray();
+			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
 			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("Bold"));
 			Assert.That(stylesInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("Italic"));
 		}
 
 		[Test]
-		public void CanExtractRunsFromSpans()
+		public void CanExtractRunsFromSpans_ZeroSpans()
 		{
-			Run[] runsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanRuns(noSpans)  .ToArray();
-			Run[] runsInTwoLangs  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoLangs) .ToArray();
-			Run[] runsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanRuns(twoStyles).ToArray();
-			Run[] runsInTwoGuids  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuids) .ToArray();
-			Run[] runsInOneGuidOneStyle  = ConvertMongoToFdoTsStrings.GetSpanRuns(oneGuidOneStyle) .ToArray();
-			Run[] runsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsOneStyle).ToArray();
-			Run[] runsInTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesNoLangs) .ToArray();
-			Run[] runsInTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesOneLang) .ToArray();
-			Run[] runsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesTwoLangs).ToArray();
-
+			Run[] runsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanRuns(zeroSpans).ToArray();
 			Assert.That(runsInZeroSpans.Length, Is.EqualTo(1));
-			Assert.That(runsInTwoLangs.Length,  Is.EqualTo(5));
-			Assert.That(runsInTwoStyles.Length, Is.EqualTo(5));
-			Assert.That(runsInTwoGuids.Length,  Is.EqualTo(5));
-			Assert.That(runsInOneGuidOneStyle.Length,  Is.EqualTo(5));
-			Assert.That(runsInTwoGuidsOneStyle.Length, Is.EqualTo(5));
-			Assert.That(runsInTwoGuidsTwoStylesNoLangs.Length,  Is.EqualTo(5));
-			Assert.That(runsInTwoGuidsTwoStylesOneLang.Length,  Is.EqualTo(5));
-			Assert.That(runsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(5));
-
 			Assert.That(runsInZeroSpans[0].Content,   Is.EqualTo("fooσπιθαμήbarportéebaz"));
 			Assert.That(runsInZeroSpans[0].Lang,      Is.Null);
 			Assert.That(runsInZeroSpans[0].Guid,      Is.Null);
 			Assert.That(runsInZeroSpans[0].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoLangs()
+		{
+			Run[] runsInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanRuns(twoLangs).ToArray();
+			Assert.That(runsInTwoLangs.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoLangs[0].Content,   Is.EqualTo("foo"));
 			Assert.That(runsInTwoLangs[0].Lang,      Is.Null);
 			Assert.That(runsInTwoLangs[0].Guid,      Is.Null);
@@ -252,7 +415,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoLangs[4].Lang,      Is.Null);
 			Assert.That(runsInTwoLangs[4].Guid,      Is.Null);
 			Assert.That(runsInTwoLangs[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoStyles()
+		{
+			Run[] runsInTwoStyles = ConvertMongoToFdoTsStrings.GetSpanRuns(twoStyles).ToArray();
+			Assert.That(runsInTwoStyles.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoStyles[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoStyles[0].Lang,      Is.Null);
 			Assert.That(runsInTwoStyles[0].Guid,      Is.Null);
@@ -273,7 +442,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoStyles[4].Lang,      Is.Null);
 			Assert.That(runsInTwoStyles[4].Guid,      Is.Null);
 			Assert.That(runsInTwoStyles[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoGuids()
+		{
+			Run[] runsInTwoGuids = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuids).ToArray();
+			Assert.That(runsInTwoGuids.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoGuids[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoGuids[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuids[0].Guid,      Is.Null);
@@ -296,7 +471,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoGuids[4].Lang,      Is.Null);
 			Assert.That(runsInTwoGuids[4].Guid,      Is.Null);
 			Assert.That(runsInTwoGuids[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_OneGuidOneStyle()
+		{
+			Run[] runsInOneGuidOneStyle = ConvertMongoToFdoTsStrings.GetSpanRuns(oneGuidOneStyle).ToArray();
+			Assert.That(runsInOneGuidOneStyle.Length, Is.EqualTo(5));
 			Assert.That(runsInOneGuidOneStyle[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInOneGuidOneStyle[0].Lang,      Is.Null);
 			Assert.That(runsInOneGuidOneStyle[0].Guid,      Is.Null);
@@ -318,7 +499,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInOneGuidOneStyle[4].Lang,      Is.Null);
 			Assert.That(runsInOneGuidOneStyle[4].Guid,      Is.Null);
 			Assert.That(runsInOneGuidOneStyle[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoGuidsOneStyle()
+		{
+			Run[] runsInTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsOneStyle).ToArray();
+			Assert.That(runsInTwoGuidsOneStyle.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoGuidsOneStyle[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoGuidsOneStyle[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsOneStyle[0].Guid,      Is.Null);
@@ -341,7 +528,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoGuidsOneStyle[4].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsOneStyle[4].Guid,      Is.Null);
 			Assert.That(runsInTwoGuidsOneStyle[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			Run[] runsInTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesNoLangs).ToArray();
+			Assert.That(runsInTwoGuidsTwoStylesNoLangs.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[0].Guid,      Is.Null);
@@ -364,7 +557,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].Guid,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesNoLangs[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoGuidsTwoStylesOneLang()
+		{
+			Run[] runsInTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesOneLang).ToArray();
+			Assert.That(runsInTwoGuidsTwoStylesOneLang.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[0].Guid,      Is.Null);
@@ -387,7 +586,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].Guid,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesOneLang[4].StyleName, Is.Null);
+		}
 
+		[Test]
+		public void CanExtractRunsFromSpans_TwoGuidsTwoStylesTwoLangs()
+		{
+			Run[] runsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanRuns(twoGuidsTwoStylesTwoLangs).ToArray();
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(5));
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Content,   Is.EqualTo("this has "));
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Guid,      Is.Null);
@@ -413,149 +618,181 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		}
 
 		[Test]
-		public void CanCreateTsStringsFromSpans()
+		public void CanCreateTsStringsFromSpans_ZeroSpans()
 		{
-			ITsString tsStrFromZeroSpans = ConvertMongoToFdoTsStrings.SpanStrToTsString(noSpans,   _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoLangs  = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoLangs,  _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoStyles = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStyles, _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoGuids  = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuids,  _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromOneGuidOneStyle  = ConvertMongoToFdoTsStrings.SpanStrToTsString(oneGuidOneStyle,  _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsOneStyle, _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoGuidsTwoStylesNoLangs  = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesNoLangs,  _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoGuidsTwoStylesOneLang  = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesOneLang,  _wsEn, _cache.WritingSystemFactory);
-			ITsString tsStrFromTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesTwoLangs, _wsEn, _cache.WritingSystemFactory);
-
-			int wsEn  = _wsEn;
-			int wsFr  = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
-
+			ITsString tsStrFromZeroSpans = ConvertMongoToFdoTsStrings.SpanStrToTsString(zeroSpans,  _wsEn, _cache.WritingSystemFactory);
 			Assert.That(tsStrFromZeroSpans, Is.Not.Null);
-			Assert.That(tsStrFromTwoLangs,  Is.Not.Null);
-			Assert.That(tsStrFromTwoStyles, Is.Not.Null);
-			Assert.That(tsStrFromTwoGuids,  Is.Not.Null);
-			Assert.That(tsStrFromOneGuidOneStyle,  Is.Not.Null);
-			Assert.That(tsStrFromTwoGuidsOneStyle, Is.Not.Null);
-			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs,  Is.Not.Null);
-			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang,  Is.Not.Null);
-			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs, Is.Not.Null);
-
 			Assert.That(tsStrFromZeroSpans.Text, Is.EqualTo("fooσπιθαμήbarportéebaz"));
-			Assert.That(tsStrFromTwoLangs.Text,  Is.EqualTo("fooσπιθαμήbarportéebaz"));
-			Assert.That(tsStrFromTwoStyles.Text, Is.EqualTo("this has bold and italic text"));
-			Assert.That(tsStrFromTwoGuids.Text,  Is.EqualTo("this has two different guid classes, but no language spans"));
-			Assert.That(tsStrFromOneGuidOneStyle.Text,  Is.EqualTo("this has bold and guid-containing text"));
-			Assert.That(tsStrFromTwoGuidsOneStyle.Text, Is.EqualTo("this has two different guid classes, and the first is bold, but there are no language spans"));
-			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.Text,  Is.EqualTo("this has two (B) different guid (I) classes, and two styles, but there are no language spans"));
-			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.Text,  Is.EqualTo("this has two (B) different guid (I,fr) classes, and two styles, and one language span"));
-			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.Text, Is.EqualTo("this has two (B,grc) different guid (I,fr) classes, and two styles, and two language spans"));
-
 			Assert.That(tsStrFromZeroSpans.RunCount, Is.EqualTo(1));
 			Assert.That(tsStrFromZeroSpans.get_RunText(0), Is.EqualTo("fooσπιθαμήbarportéebaz"));
+			Assert.That(GetStyle(tsStrFromZeroSpans, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromZeroSpans, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoLangs()
+		{
+			ITsString tsStrFromTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoLangs, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoLangs, Is.Not.Null);
+			Assert.That(tsStrFromTwoLangs.Text, Is.EqualTo("fooσπιθαμήbarportéebaz"));
 			Assert.That(tsStrFromTwoLangs.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoLangs.get_RunText(0), Is.EqualTo("foo"));
 			Assert.That(tsStrFromTwoLangs.get_RunText(1), Is.EqualTo("σπιθαμή"));
 			Assert.That(tsStrFromTwoLangs.get_RunText(2), Is.EqualTo("bar"));
 			Assert.That(tsStrFromTwoLangs.get_RunText(3), Is.EqualTo("portée"));
 			Assert.That(tsStrFromTwoLangs.get_RunText(4), Is.EqualTo("baz"));
+			Assert.That(GetStyle(tsStrFromTwoLangs, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoLangs, 1), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoLangs, 2), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoLangs, 3), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoLangs, 4), Is.Null);
+			int wsEn = _wsEn;
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			Assert.That(GetWs(tsStrFromTwoLangs, 0), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoLangs, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoLangs, 2), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoLangs, 3), Is.EqualTo(wsFr));
+			Assert.That(GetWs(tsStrFromTwoLangs, 4), Is.EqualTo(wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoStyles()
+		{
+			ITsString tsStrFromTwoStyles = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStyles, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoStyles, Is.Not.Null);
+			Assert.That(tsStrFromTwoStyles.Text, Is.EqualTo("this has bold and italic text"));
 			Assert.That(tsStrFromTwoStyles.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoStyles.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromTwoStyles.get_RunText(1), Is.EqualTo("bold"));
 			Assert.That(tsStrFromTwoStyles.get_RunText(2), Is.EqualTo(" and "));
 			Assert.That(tsStrFromTwoStyles.get_RunText(3), Is.EqualTo("italic"));
 			Assert.That(tsStrFromTwoStyles.get_RunText(4), Is.EqualTo(" text"));
+			Assert.That(GetStyle(tsStrFromTwoStyles, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoStyles, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromTwoStyles, 2), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoStyles, 3), Is.EqualTo("Italic"));
+			Assert.That(GetStyle(tsStrFromTwoStyles, 4), Is.Null);
+			Assert.That(GetWs(tsStrFromTwoStyles, 0), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoStyles, 1), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoStyles, 2), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoStyles, 3), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoStyles, 4), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoGuids()
+		{
+			ITsString tsStrFromTwoGuids = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuids, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoGuids, Is.Not.Null);
+			Assert.That(tsStrFromTwoGuids.Text, Is.EqualTo("this has two different guid classes, but no language spans"));
 			Assert.That(tsStrFromTwoGuids.RunCount, Is.EqualTo(1));
 			Assert.That(tsStrFromTwoGuids.get_RunText(0), Is.EqualTo("this has two different guid classes, but no language spans"));
+			Assert.That(GetStyle(tsStrFromTwoGuids, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromTwoGuids, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_OneGuidOneStyle()
+		{
+			ITsString tsStrFromOneGuidOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(oneGuidOneStyle, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromOneGuidOneStyle, Is.Not.Null);
+			Assert.That(tsStrFromOneGuidOneStyle.Text, Is.EqualTo("this has bold and guid-containing text"));
 			Assert.That(tsStrFromOneGuidOneStyle.RunCount, Is.EqualTo(3));
 			Assert.That(tsStrFromOneGuidOneStyle.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromOneGuidOneStyle.get_RunText(1), Is.EqualTo("bold"));
 			Assert.That(tsStrFromOneGuidOneStyle.get_RunText(2), Is.EqualTo(" and guid-containing text"));
+			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 2), Is.Null);
+			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 0), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 1), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 2), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoGuidsOneStyle()
+		{
+			ITsString tsStrFromTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsOneStyle, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoGuidsOneStyle, Is.Not.Null);
+			Assert.That(tsStrFromTwoGuidsOneStyle.Text, Is.EqualTo("this has two different guid classes, and the first is bold, but there are no language spans"));
 			Assert.That(tsStrFromTwoGuidsOneStyle.RunCount, Is.EqualTo(3));
 			Assert.That(tsStrFromTwoGuidsOneStyle.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromTwoGuidsOneStyle.get_RunText(1), Is.EqualTo("two"));
 			Assert.That(tsStrFromTwoGuidsOneStyle.get_RunText(2), Is.EqualTo(" different guid classes, and the first is bold, but there are no language spans"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 2), Is.Null);
+			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 0), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 1), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 2), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesNoLangs()
+		{
+			ITsString tsStrFromTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesNoLangs, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs, Is.Not.Null);
+			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.Text, Is.EqualTo("this has two (B) different guid (I) classes, and two styles, but there are no language spans"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.get_RunText(1), Is.EqualTo("two (B)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.get_RunText(3), Is.EqualTo("guid (I)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.get_RunText(4), Is.EqualTo(" classes, and two styles, but there are no language spans"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 2), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 3), Is.EqualTo("Italic"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 4), Is.Null);
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 0), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 1), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 2), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 3), Is.EqualTo(_wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 4), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesOneLang()
+		{
+			ITsString tsStrFromTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesOneLang, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang, Is.Not.Null);
+			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.Text, Is.EqualTo("this has two (B) different guid (I,fr) classes, and two styles, and one language span"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.get_RunText(1), Is.EqualTo("two (B)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.get_RunText(3), Is.EqualTo("guid (I,fr)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.get_RunText(4), Is.EqualTo(" classes, and two styles, and one language span"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 2), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 3), Is.EqualTo("Italic"));
+			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 4), Is.Null);
+			int wsEn = _wsEn;
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 0), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 1), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 2), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 3), Is.EqualTo(wsFr));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 4), Is.EqualTo(wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesTwoLangs()
+		{
+			ITsString tsStrFromTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesTwoLangs, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs, Is.Not.Null);
+			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.Text, Is.EqualTo("this has two (B,grc) different guid (I,fr) classes, and two styles, and two language spans"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(0), Is.EqualTo("this has "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(1), Is.EqualTo("two (B,grc)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(3), Is.EqualTo("guid (I,fr)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(4), Is.EqualTo(" classes, and two styles, and two language spans"));
-
-			Assert.That(GetStyle(tsStrFromZeroSpans, 0), Is.Null);
-			Assert.That(GetWs(tsStrFromZeroSpans, 0), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoLangs, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoLangs, 1), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoLangs, 2), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoLangs, 3), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoLangs, 4), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoLangs, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoLangs, 1), Is.EqualTo(wsGrc));
-			Assert.That(GetWs(tsStrFromTwoLangs, 2), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoLangs, 3), Is.EqualTo(wsFr));
-			Assert.That(GetWs(tsStrFromTwoLangs, 4), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoStyles, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoStyles, 1), Is.EqualTo("Bold"));
-			Assert.That(GetStyle(tsStrFromTwoStyles, 2), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoStyles, 3), Is.EqualTo("Italic"));
-			Assert.That(GetStyle(tsStrFromTwoStyles, 4), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoStyles, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStyles, 1), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStyles, 2), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStyles, 3), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStyles, 4), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoGuids, 0), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoGuids, 0), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 1), Is.EqualTo("Bold"));
-			Assert.That(GetStyle(tsStrFromOneGuidOneStyle, 2), Is.Null);
-			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 1), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromOneGuidOneStyle, 2), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 1), Is.EqualTo("Bold"));
-			Assert.That(GetStyle(tsStrFromTwoGuidsOneStyle, 2), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 1), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsOneStyle, 2), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 1), Is.EqualTo("Bold"));
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 2), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 3), Is.EqualTo("Italic"));
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesNoLangs, 4), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 1), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 2), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 3), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesNoLangs, 4), Is.EqualTo(wsEn));
-
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 0), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 1), Is.EqualTo("Bold"));
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 2), Is.Null);
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 3), Is.EqualTo("Italic"));
-			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 4), Is.Null);
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 1), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 2), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 3), Is.EqualTo(wsFr));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 4), Is.EqualTo(wsEn));
-
+			int wsEn = _wsEn;
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 2), Is.Null);
