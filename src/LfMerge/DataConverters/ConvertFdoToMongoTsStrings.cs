@@ -55,146 +55,148 @@ namespace LfMerge.DataConverters
 			throw new NotImplementedException();
 		}
 
-		internal static string IntPropertyName(FwTextPropType prop)
+		internal static string IntPropertyName(int prop)
 		{
-			// UGH. But we can't use prop.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
+			// UGH. But we can't use enum.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
 			// different FwTextPropType values with the value 1 (FwTextPropType.ktptWs and FwTextPropType.ktptFontFamily) and
 			// the C# spec says you can't count on which one ToString() will return in that case. So we have to do this nonsense.
+			// Furthermore, since the TsString functions return an int, not an enum, we have to match it as an int.
 			switch (prop)
 			{
-			case FwTextPropType.ktptWs:
+			case (int)FwTextPropType.ktptWs:
 				return "ktptWs";
-			case FwTextPropType.ktptItalic:
+			case (int)FwTextPropType.ktptItalic:
 				return "ktptItalic";
-			case FwTextPropType.ktptBold:
+			case (int)FwTextPropType.ktptBold:
 				return "ktptBold";
-			case FwTextPropType.ktptSuperscript:
+			case (int)FwTextPropType.ktptSuperscript:
 				return "ktptSuperscript";
-			case FwTextPropType.ktptUnderline:
+			case (int)FwTextPropType.ktptUnderline:
 				return "ktptUnderline";
-			case FwTextPropType.ktptFontSize:
+			case (int)FwTextPropType.ktptFontSize:
 				return "ktptFontSize";
-			case FwTextPropType.ktptOffset:
+			case (int)FwTextPropType.ktptOffset:
 				return "ktptOffset";
-			case FwTextPropType.ktptForeColor:
+			case (int)FwTextPropType.ktptForeColor:
 				return "ktptForeColor";
-			case FwTextPropType.ktptBackColor:
+			case (int)FwTextPropType.ktptBackColor:
 				return "ktptBackColor";
-			case FwTextPropType.ktptUnderColor:
+			case (int)FwTextPropType.ktptUnderColor:
 				return "ktptUnderColor";
-			case FwTextPropType.ktptBaseWs:
+			case (int)FwTextPropType.ktptBaseWs:
 				return "ktptBaseWs";
-			case FwTextPropType.ktptAlign:
+			case (int)FwTextPropType.ktptAlign:
 				return "ktptAlign";
-			case FwTextPropType.ktptFirstIndent:
+			case (int)FwTextPropType.ktptFirstIndent:
 				return "ktptFirstIndent";
-			case FwTextPropType.ktptLeadingIndent:
+			case (int)FwTextPropType.ktptLeadingIndent:
 				return "ktptLeadingIndent";
-			case FwTextPropType.ktptTrailingIndent:
+			case (int)FwTextPropType.ktptTrailingIndent:
 				return "ktptTrailingIndent";
-			case FwTextPropType.ktptSpaceBefore:
+			case (int)FwTextPropType.ktptSpaceBefore:
 				return "ktptSpaceBefore";
-			case FwTextPropType.ktptSpaceAfter:
+			case (int)FwTextPropType.ktptSpaceAfter:
 				return "ktptSpaceAfter";
-			case FwTextPropType.ktptTabDef:
+			case (int)FwTextPropType.ktptTabDef:
 				return "ktptTabDef";
-			case FwTextPropType.ktptLineHeight:
+			case (int)FwTextPropType.ktptLineHeight:
 				return "ktptLineHeight";
-			case FwTextPropType.ktptParaColor:
+			case (int)FwTextPropType.ktptParaColor:
 				return "ktptParaColor";
-			case FwTextPropType.ktptSpellCheck:
+			case (int)FwTextPropType.ktptSpellCheck:
 				return "ktptSpellCheck";
-			case FwTextPropType.ktptMarginTop:
+			case (int)FwTextPropType.ktptMarginTop:
 				return "ktptMarginTop";
-			case FwTextPropType.ktptRightToLeft:
+			case (int)FwTextPropType.ktptRightToLeft:
 				return "ktptRightToLeft";
-			case FwTextPropType.ktptDirectionDepth:
+			case (int)FwTextPropType.ktptDirectionDepth:
 				return "ktptDirectionDepth";
-			case FwTextPropType.ktptPadLeading:
+			case (int)FwTextPropType.ktptPadLeading:
 				return "ktptPadLeading";
-			case FwTextPropType.ktptPadTrailing:
+			case (int)FwTextPropType.ktptPadTrailing:
 				return "ktptPadTrailing";
-			case FwTextPropType.ktptPadTop:
+			case (int)FwTextPropType.ktptPadTop:
 				return "ktptPadTop";
-			case FwTextPropType.ktptPadBottom:
+			case (int)FwTextPropType.ktptPadBottom:
 				return "ktptPadBottom";
-			case FwTextPropType.ktptBorderTop:
+			case (int)FwTextPropType.ktptBorderTop:
 				return "ktptBorderTop";
-			case FwTextPropType.ktptBorderBottom:
+			case (int)FwTextPropType.ktptBorderBottom:
 				return "ktptBorderBottom";
-			case FwTextPropType.ktptBorderLeading:
+			case (int)FwTextPropType.ktptBorderLeading:
 				return "ktptBorderLeading";
-			case FwTextPropType.ktptBorderTrailing:
+			case (int)FwTextPropType.ktptBorderTrailing:
 				return "ktptBorderTrailing";
-			case FwTextPropType.ktptBorderColor:
+			case (int)FwTextPropType.ktptBorderColor:
 				return "ktptBorderColor";
-			case FwTextPropType.ktptBulNumScheme:
+			case (int)FwTextPropType.ktptBulNumScheme:
 				return "ktptBulNumScheme";
-			case FwTextPropType.ktptBulNumStartAt:
+			case (int)FwTextPropType.ktptBulNumStartAt:
 				return "ktptBulNumStartAt";
-			case FwTextPropType.ktptKeepWithNext:
+			case (int)FwTextPropType.ktptKeepWithNext:
 				return "ktptKeepWithNext";
-			case FwTextPropType.ktptKeepTogether:
+			case (int)FwTextPropType.ktptKeepTogether:
 				return "ktptKeepTogether";
-			case FwTextPropType.ktptHyphenate:
+			case (int)FwTextPropType.ktptHyphenate:
 				return "ktptHyphenate";
-			case FwTextPropType.ktptMaxLines:
+			case (int)FwTextPropType.ktptMaxLines:
 				return "ktptMaxLines";
-			case FwTextPropType.ktptCellBorderWidth:
+			case (int)FwTextPropType.ktptCellBorderWidth:
 				return "ktptCellBorderWidth";
-			case FwTextPropType.ktptCellSpacing:
+			case (int)FwTextPropType.ktptCellSpacing:
 				return "ktptCellSpacing";
-			case FwTextPropType.ktptCellPadding:
+			case (int)FwTextPropType.ktptCellPadding:
 				return "ktptCellPadding";
-			case FwTextPropType.ktptEditable:
+			case (int)FwTextPropType.ktptEditable:
 				return "ktptEditable";
-			case FwTextPropType.ktptSetRowDefaults:
+			case (int)FwTextPropType.ktptSetRowDefaults:
 				return "ktptSetRowDefaults";
-			case FwTextPropType.ktptRelLineHeight:
+			case (int)FwTextPropType.ktptRelLineHeight:
 				return "ktptRelLineHeight";
-			case FwTextPropType.ktptTableRule:
+			case (int)FwTextPropType.ktptTableRule:
 				return "ktptTableRule";
-			case FwTextPropType.ktptWidowOrphanControl:
+			case (int)FwTextPropType.ktptWidowOrphanControl:
 				return "ktptWidowOrphanControl";
-			case FwTextPropType.ktptMarkItem:
+			case (int)FwTextPropType.ktptMarkItem:
 				return "ktptMarkItem";
 			default:
 				return "ktptUnknownIntProperty";
 			}
 		}
 
-		internal static string StringPropertyName(FwTextPropType prop)
+		internal static string StringPropertyName(int prop)
 		{
-			// UGH. But we can't use prop.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
+			// UGH. But we can't use enum.ToString() because the FwTextPropType enum was "overloaded"; that is, there are two
 			// different FwTextPropType values with the value 1 (FwTextPropType.ktptWs and FwTextPropType.ktptFontFamily) and
 			// the C# spec says you can't count on which one ToString() will return in that case. So we have to do this nonsense.
+			// Furthermore, since the TsString functions return an int, not an enum, we have to match it as an int.
 			switch (prop)
 			{
-			case FwTextPropType.ktptFontFamily:
+			case (int)FwTextPropType.ktptFontFamily:
 				return "ktptFontFamily";
-			case FwTextPropType.ktptCharStyle:
+			case (int)FwTextPropType.ktptCharStyle:
 				return "ktptCharStyle";
-			case FwTextPropType.ktptParaStyle:
+			case (int)FwTextPropType.ktptParaStyle:
 				return "ktptParaStyle";
-			case FwTextPropType.ktptTabList:
+			case (int)FwTextPropType.ktptTabList:
 				return "ktptTabList";
-			case FwTextPropType.ktptTags:
+			case (int)FwTextPropType.ktptTags:
 				return "ktptTags";
-			case FwTextPropType.ktptObjData:
+			case (int)FwTextPropType.ktptObjData:
 				return "ktptObjData";
-			case FwTextPropType.ktptFontVariations:
+			case (int)FwTextPropType.ktptFontVariations:
 				return "ktptFontVariations";
-			case FwTextPropType.ktptNamedStyle:
+			case (int)FwTextPropType.ktptNamedStyle:
 				return "ktptNamedStyle";  // We handle this one specially, but keep it in the switch statement anyway
-			case FwTextPropType.ktptBulNumTxtBef:
+			case (int)FwTextPropType.ktptBulNumTxtBef:
 				return "ktptBulNumTxtBef";
-			case FwTextPropType.ktptBulNumTxtAft:
+			case (int)FwTextPropType.ktptBulNumTxtAft:
 				return "ktptBulNumTxtAft";
-			case FwTextPropType.ktptBulNumFontInfo:
+			case (int)FwTextPropType.ktptBulNumFontInfo:
 				return "ktptBulNumFontInfo";
-			case FwTextPropType.ktptWsStyle:
+			case (int)FwTextPropType.ktptWsStyle:
 				return "ktptWsStyle";
-			case FwTextPropType.ktptFieldName:
+			case (int)FwTextPropType.ktptFieldName:
 				return "ktptFieldName";
 			default:
 				return "ktptUnknownStringProperty";
