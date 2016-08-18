@@ -303,7 +303,7 @@ namespace LfMerge.DataConverters
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
-					ITsString newValue = TsStringUtils.MakeTss(foundData, foundWsId);
+					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, cache.WritingSystemFactory);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
 						return false;
 					else

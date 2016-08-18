@@ -117,7 +117,7 @@ namespace LfMerge.DataConverters
 						fdoPara = fdoStText.InsertNewTextPara(i, styleForNewParas);
 					}
 				}
-				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Contents, wsId);
+				fdoPara.Contents = ConvertMongoToFdoTsStrings.SpanStrToTsString(lfPara.Contents, wsId, fdoStText.Cache.WritingSystemFactory);
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace LfMerge.DataConverters
 						fdoPara = fdoStText.InsertNewTextPara(fdoIdx, lfPara.StyleName);
 					}
 				}
-				fdoPara.Contents = TsStringUtils.MakeTss(lfPara.Content, wsId);
+				fdoPara.Contents = ConvertMongoToFdoTsStrings.SpanStrToTsString(lfPara.Content, wsId, fdoStText.Cache.WritingSystemFactory);
 				// It turns out that FDO often has an empty StyleName for the normal, default paragraph style. So in those
 				// cases, where we've gotten an empty StyleName in the LfParagraph object, we should NOT change it to be
 				// the default paragraph style, as that can cause round-tripping problems.

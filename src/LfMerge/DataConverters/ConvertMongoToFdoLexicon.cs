@@ -286,7 +286,7 @@ namespace LfMerge.DataConverters
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
-			return TsStringUtils.MakeTss(stringAndWsId.Item1, stringAndWsId.Item2);
+			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, Cache.WritingSystemFactory);
 		}
 
 		public string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
@@ -333,7 +333,7 @@ namespace LfMerge.DataConverters
 					caption = "";
 					captionWs = Cache.DefaultAnalWs;
 				}
-				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
+				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, Cache.WritingSystemFactory);
 				result = GetInstance<ICmPictureFactory>().Create(guid);
 				result.UpdatePicture(pictureName, captionTss, CmFolderTags.LocalPictures, captionWs);
 				owner.PicturesOS.Add(result);
