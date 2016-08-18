@@ -7,7 +7,7 @@ using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
-using SIL.CoreImpl; // For TsStringUtils
+using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
 using System;
 using System.Collections.Generic;
@@ -190,6 +190,7 @@ namespace LfMerge.DataConverters
 			//
 			// But for now, these #if...#endif blocks are enough. - 2016-03 RM
 #if FW8_COMPAT
+			// Note that we can't use ILgWritingSystemFactory here, because it doesn't have some methods we need later on.
 			IWritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
 #else
 			WritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
@@ -222,6 +223,9 @@ namespace LfMerge.DataConverters
 				}
 				*/
 
+				// TODO: It might be possible to rewrite this code to NOT rely on TryGet() after all, in which case we could
+				// use the ILgWritingSystemFactory interface and remove one point of FW 8-to-9 API incompatibility.
+
 				if (wsManager.TryGet(lfWs.Tag, out ws))
 				{
 					ws.Abbreviation = lfWs.Abbreviation;
@@ -238,6 +242,8 @@ namespace LfMerge.DataConverters
 					// LF doesn't distinguish between vernacular/analysis WS, so we'll
 					// only assign the project language code to vernacular.
 					// All other WS assigned to analysis.
+
+					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
 					if (lfWs.Tag.Equals(vernacularLanguageCode))
 						Cache.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
@@ -266,7 +272,7 @@ namespace LfMerge.DataConverters
 			foreach (ILgWritingSystem ws in wsesToSearch)
 			{
 				LfStringField field;
-				if (input.TryGetValue(ws.Id, out field) && !String.IsNullOrEmpty(field.Value))
+				if (input.TryGetValue(ws.Id, out field) && field != null && !field.IsEmpty)
 				{
 //					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
 					return new Tuple<string, int>(field.Value, ws.Handle);
