@@ -271,8 +271,8 @@ namespace LfMerge.DataConverters
 			{
 				ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.First();
 				lfEntry.Pronunciation = ToMultiText(fdoPronunciation.Form);
-				lfEntry.CvPattern = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.CVPattern);
-				lfEntry.Tone = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoPronunciation.Tone);
+				lfEntry.CvPattern = LfMultiText.FromSingleITsString(fdoPronunciation.CVPattern, Cache.WritingSystemFactory);
+				lfEntry.Tone = LfMultiText.FromSingleITsString(fdoPronunciation.Tone, Cache.WritingSystemFactory);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
 				lfEntry.Location = ToStringField(LocationListCode, fdoPronunciation.LocationRA);
 			}
@@ -397,7 +397,7 @@ namespace LfMerge.DataConverters
 				IEnumerable<string> reversalEntries = fdoSense.ReversalEntriesRC.Select(fdoReversalEntry => fdoReversalEntry.LongName);
 				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
 			}
-			lfSense.ScientificName = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoSense.ScientificName);
+			lfSense.ScientificName = LfMultiText.FromSingleITsString(fdoSense.ScientificName, Cache.WritingSystemFactory);
 			lfSense.SemanticDomain = ToStringArrayField(SemDomListCode, fdoSense.SemanticDomainsRC);
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
@@ -405,7 +405,7 @@ namespace LfMerge.DataConverters
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
-				lfSense.Source = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoSense.Source);
+				lfSense.Source = LfMultiText.FromSingleITsString(fdoSense.Source, Cache.WritingSystemFactory);
 			}
 			lfSense.Status = ToStringArrayField(StatusListCode, fdoSense.StatusRA);
 			lfSense.Usages = ToStringArrayField(UsageTypeListCode, fdoSense.UsageTypesRC);
@@ -497,7 +497,7 @@ namespace LfMerge.DataConverters
 			lfExample.Guid = fdoExample.Guid;
 			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
-			lfExample.Reference = LfMultiText.FromSingleITsStringMapping(AnalysisWritingSystem.Id, fdoExample.Reference);
+			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, Cache.WritingSystemFactory);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
@@ -592,11 +592,11 @@ namespace LfMerge.DataConverters
 		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			if (updateMongoList)
 				Connection.UpdateRecord(project, lfChangedOptionList, listCode);
-			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
 		}
 	}
 }

@@ -18,6 +18,7 @@ namespace LfMerge.DataConverters
 		protected Dictionary<string, LfOptionListItem> _lfOptionListItemByStrKey;
 		protected Dictionary<Guid, string> _lfOptionListItemKeyByGuid;
 		protected ILogger _logger;
+		protected ILgWritingSystemFactory _wsf;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LfMerge.DataConverters.ConvertFdoToMongoOptionList"/> class.
@@ -26,9 +27,10 @@ namespace LfMerge.DataConverters
 		/// <param name="wsForKeys">Ws for keys.</param>
 		/// <param name="listCode">List code.</param>
 		/// <param name="logger">Logger.</param>
-		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger)
+		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger, ILgWritingSystemFactory wsf)
 		{
 			_logger = logger;
+			_wsf = wsf;
 			_wsForKeys = wsForKeys;
 			if (lfOptionList == null)
 				lfOptionList = MakeEmptyOptionList(listCode);
@@ -103,7 +105,7 @@ namespace LfMerge.DataConverters
 			}
 			else
 			{
-				return ConvertFdoToMongoTsStrings.SafeTsStringText(fdoOptionListItem.Abbreviation.get_String(ws));
+				return ConvertFdoToMongoTsStrings.TextFromTsString(fdoOptionListItem.Abbreviation.get_String(ws), _wsf);
 			}
 		}
 
@@ -182,10 +184,10 @@ namespace LfMerge.DataConverters
 		protected void SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
 		{
 			//const char ORC = '\xfffc';
-			item.Abbreviation = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.BestAnalysisVernacularAlternative);
+			item.Abbreviation = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.BestAnalysisVernacularAlternative, _wsf);
 			if (setKey)
-				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Abbreviation.get_String(_wsForKeys)));
-			item.Value = ConvertFdoToMongoTsStrings.SafeTsStringText(poss.Name.BestAnalysisVernacularAlternative);
+				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsForKeys), _wsf));
+			item.Value = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Name.BestAnalysisVernacularAlternative, _wsf);
 			item.Guid = poss.Guid;
 		}
 
