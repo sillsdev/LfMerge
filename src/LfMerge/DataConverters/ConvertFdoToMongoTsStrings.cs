@@ -12,30 +12,6 @@ namespace LfMerge.DataConverters
 {
 	public class ConvertFdoToMongoTsStrings
 	{
-		private int[] _wsSearchOrder;
-
-		public ConvertFdoToMongoTsStrings(IEnumerable<int> wsPreferences)
-		{
-			_wsSearchOrder = wsPreferences.ToArray();
-		}
-
-		public ConvertFdoToMongoTsStrings(IEnumerable<ILgWritingSystem> wsPreferences)
-		{
-			_wsSearchOrder = wsPreferences.Select(ws => ws.Handle).ToArray();
-		}
-
-		public ConvertFdoToMongoTsStrings(IEnumerable<string> wsPreferences, IWritingSystemManager wsManager)
-		{
-			_wsSearchOrder = wsPreferences.Select(wsName => wsManager.GetWsFromStr(wsName)).ToArray();
-		}
-
-		public static string SafeTsStringText(ITsString tss)
-		{
-			if (tss == null)
-				return null;
-			return tss.Text;
-		}
-
 		public static string TextFromTsString(ITsString tss, ILgWritingSystemFactory wsf)
 		{
 			// This will replace SafeTsStringText, and will actually deal with <span> elements
@@ -56,6 +32,8 @@ namespace LfMerge.DataConverters
 			//
 			// Result: class="propi_1_ktptWs_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman"
 
+			if (tss == null)
+				return null;
 			int[] intPropsToSkip = new int[] { (int)FwTextPropType.ktptWs };
 			int[] strPropsToSkip = new int[] { (int)FwTextPropType.ktptNamedStyle };
 			int mainWs = tss.get_WritingSystem(0);
@@ -277,26 +255,6 @@ namespace LfMerge.DataConverters
 			default:
 				return "ktptUnknownStringProperty";
 			}
-		}
-
-		public string BestString(IMultiAccessorBase multiString)
-		{
-			// If this is an IMultiStringAccessor, we can just hand it off to GetBestAlternative
-			var accessor = multiString as IMultiStringAccessor;
-			if (accessor != null)
-			{
-				int wsActual;
-				return SafeTsStringText(accessor.GetBestAlternative(out wsActual, _wsSearchOrder));
-			}
-			// JUst a MultiAccessorBase? Then search manually
-			string result;
-			foreach (int wsId in _wsSearchOrder)
-			{
-				result = SafeTsStringText(multiString.StringOrNull(wsId));
-				if (result != null)
-					return result;
-			}
-			return null;
 		}
 	}
 }

@@ -140,11 +140,11 @@ namespace LfMerge.Tests.Fdo
 		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = _conn.GetLfOptionListByCode(project, listCode);
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, _env.Logger);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, _env.Logger, _cache.WritingSystemFactory);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			if (updateMongoList)
 				_conn.UpdateRecord(project, lfChangedOptionList, listCode);
-			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, _env.Logger);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, _env.Logger, _cache.WritingSystemFactory);
 		}
 
 		[TearDown]

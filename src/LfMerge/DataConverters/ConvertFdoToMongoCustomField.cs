@@ -272,14 +272,14 @@ namespace LfMerge.DataConverters
 				if (cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
 				{
 					if (parentList.Name != null)
-						result = ConvertFdoToMongoTsStrings.SafeTsStringText(parentList.Name.BestAnalysisVernacularAlternative);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
 						return result;
 					}
 					if (parentList.Abbreviation != null)
-						result = ConvertFdoToMongoTsStrings.SafeTsStringText(parentList.Abbreviation.BestAnalysisVernacularAlternative);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
@@ -405,13 +405,6 @@ namespace LfMerge.DataConverters
 					result.Add("guid", fieldGuid, fieldGuid != null);
 				bsonForThisField = result;
 			}
-		}
-
-		private BsonValue GetCustomListValues(ICmPossibility obj, int flid)
-		{
-			if (obj == null) return null;
-			// TODO: Consider using obj.NameHierarchyString instead of obj.Name.BestAnalysisVernacularAlternative.Text
-			return new BsonString(obj.Name.BestAnalysisVernacularAlternative.Text);
 		}
 
 		/// <summary>

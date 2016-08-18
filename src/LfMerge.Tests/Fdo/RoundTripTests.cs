@@ -355,11 +355,6 @@ namespace LfMerge.Tests.Fdo
 					examples[0].Example.SetVernacularDefaultWritingSystem("New value for this test");
 					examples[1].Example.SetVernacularDefaultWritingSystem("Second value for this test");
 				});
-			Console.WriteLine("FDO Example just got manually set to {0} for GUID {1} and HVO {2}",
-				examples[0].Example.BestAnalysisVernacularAlternative.Text,
-				examples[0].Guid,
-				examples[0].Hvo
-			);
 
 			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
@@ -375,11 +370,6 @@ namespace LfMerge.Tests.Fdo
 					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
 				});
-			Console.WriteLine("FDO Example just got manually and wrongly set to {0} for GUID {1} and HVO {2}",
-				examples[0].Example.BestAnalysisVernacularAlternative.Text,
-				examples[0].Guid,
-				examples[0].Hvo
-			);
 
 			// Save original mongo data
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();

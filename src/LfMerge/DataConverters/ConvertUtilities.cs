@@ -36,12 +36,12 @@ namespace LfMerge.DataConverters
 		/// </summary>
 		/// <returns>The LFParagraph.</returns>
 		/// <param name="fdoPara">FDO StTxtPara object to convert.</param>
-		public static LfParagraph FdoParaToLfPara(IStTxtPara fdoPara)
+		public static LfParagraph FdoParaToLfPara(IStTxtPara fdoPara, ILgWritingSystemFactory wsf)
 		{
 			var lfPara = new LfParagraph();
 			lfPara.Guid = fdoPara.Guid;
 			lfPara.StyleName = fdoPara.StyleName;
-			lfPara.Content = ConvertFdoToMongoTsStrings.SafeTsStringText(fdoPara.Contents);
+			lfPara.Content = ConvertFdoToMongoTsStrings.TextFromTsString(fdoPara.Contents, wsf);
 			return lfPara;
 		}
 
@@ -70,7 +70,7 @@ namespace LfMerge.DataConverters
 		{
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			var result = new LfMultiParagraph();
-			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para)).ToList();
+			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para, wsManager)).ToList();
 			// StText objects in FDO have a single primary writing system, unlike MultiString or MultiUnicode objects
 			int fieldWs = metaDataCacheAccessor.GetFieldWs(flid);
 			string wsStr = wsManager.GetStrFromWs(fieldWs);
