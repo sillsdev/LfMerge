@@ -400,6 +400,11 @@ namespace LfMerge.MongoConnector
 					continue; // Mongo doesn't allow changing Mongo IDs
 				if (prop.GetCustomAttributes<BsonElementAttribute>().Any(attr => attr.ElementName == "id"))
 					continue; // Don't change Languageforge-internal IDs either
+				if (prop.Name == "DateCreated" && prop.PropertyType == typeof(DateTime) && (DateTime)prop.GetValue(doc) == default(DateTime))
+				{
+					// Refuse to reset DateCreated in Mongo to 0001-01-01, since that's NEVER correct
+					continue;
+				}
 				if (prop.GetValue(doc) == null)
 				{
 					if (prop.Name == "DateCreated")
