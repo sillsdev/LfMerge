@@ -100,6 +100,15 @@ namespace LfMerge.Tests
 		{
 			return RunHgCommand(repoPath, "tip --template \"{node|short}\"");
 		}
+
+		public static string GetUsernameFromHgrc(string repoPath)
+		{
+			var hgrc = Path.Combine(repoPath, ".hg", "hgrc");
+			var parser = new IniDataParser();
+			var iniData = parser.Parse(File.ReadAllText(hgrc));
+			return iniData["ui"]["username"];
+		}
+
 	}
 }
 

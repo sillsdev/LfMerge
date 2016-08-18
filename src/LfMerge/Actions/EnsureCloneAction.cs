@@ -152,7 +152,8 @@ namespace LfMerge.Actions
 				{ "fullPathToProject", projectFolderPath },
 				{ "languageDepotRepoName", project.LanguageDepotProject.Identifier },
 				{ "fdoDataModelVersion", FdoCache.ModelVersion },
-				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) }
+				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) },
+				{ "user", "Language Forge"}
 			};
 			return LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", Progress, options,
 				out cloneResult);
