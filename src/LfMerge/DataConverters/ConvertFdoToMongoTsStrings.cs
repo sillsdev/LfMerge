@@ -56,19 +56,16 @@ namespace LfMerge.DataConverters
 			//
 			// Result: class="propi_1_ktptWs_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman"
 
-			// TODO: Write this function on Wednesday.
 			int[] intPropsToSkip = new int[] { (int)FwTextPropType.ktptWs };
 			int[] strPropsToSkip = new int[] { (int)FwTextPropType.ktptNamedStyle };
 			int mainWs = tss.get_WritingSystem(0);
 			var resultBuilder = new StringBuilder();
-			for (int i = 0, n = tss.RunCount; i < n; i++)
+			foreach (TsRunPart run in tss.Runs())
 			{
-				string runText = tss.get_RunText(i);
-				ITsTextProps props = tss.get_Properties(i);
-				// int ignored;
-				// int ws = props.GetIntPropValues((int)FwTextPropType.ktptWs, out ignored);
-				int ws = tss.get_WritingSystem(i);  // Simpler than GetIntPropValues((int)FwTextPropType.ktptWs)
-				string namedStyle = props.GetStrPropValue((int)FwTextPropType.ktptNamedStyle);
+				string runText = run.Text;
+				ITsTextProps props = run.Props;
+				int ws = props.GetWs();
+				string namedStyle = props.Style();
 				List<string> classes = ClassesFromTsTextProps(props, intPropsToSkip, strPropsToSkip);
 
 				bool needSpan = false;
