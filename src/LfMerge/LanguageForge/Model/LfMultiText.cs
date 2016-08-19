@@ -22,14 +22,19 @@ namespace LfMerge.LanguageForge.Model
 				string wsstr = wsManager.GetStrFromWs(wsid);
 				ITsString value = other.get_String(wsid);
 				string text = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
-				newInstance.Add(wsstr, LfStringField.FromString(text));
+				LfStringField field = LfStringField.FromString(text);
+				if (field != null)
+					newInstance.Add(wsstr, field);
 			}
 			return newInstance;
 		}
 
 		public static LfMultiText FromSingleStringMapping(string key, string value)
 		{
-			return new LfMultiText { { key, LfStringField.FromString(value) } };
+			LfStringField field = LfStringField.FromString(value);
+			if (field == null)
+				return null;
+			return new LfMultiText { { key, field } };
 		}
 
 		public static LfMultiText FromSingleITsString(ITsString value, ILgWritingSystemFactory wsManager)
@@ -38,7 +43,10 @@ namespace LfMerge.LanguageForge.Model
 			int wsId = value.get_WritingSystem(0);
 			string wsStr = wsManager.GetStrFromWs(wsId);
 			string text = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
-			return new LfMultiText { { wsStr, LfStringField.FromString(text) } };
+			LfStringField field = LfStringField.FromString(text);
+			if (field == null)
+				return null;
+			return new LfMultiText { { wsStr, field } };
 		}
 
 		public static LfMultiText FromMultiITsString(ITsMultiString value, ILgWritingSystemFactory wsManager)
@@ -53,7 +61,9 @@ namespace LfMerge.LanguageForge.Model
 				if (!string.IsNullOrEmpty(wsStr))
 				{
 					string valueStr = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsManager);
-					mt.Add(wsStr, LfStringField.FromString(valueStr));
+					LfStringField field = LfStringField.FromString(valueStr);
+					if (field != null)
+						mt.Add(wsStr, field);
 				}
 				//MainClass.Logger.Warning("Adding multistring ws: {0}, str {1}", wsStr, valueStr);
 			}

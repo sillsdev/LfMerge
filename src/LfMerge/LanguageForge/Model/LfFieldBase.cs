@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using MongoDB.Bson;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LfMerge.LanguageForge.Model
 {
@@ -10,12 +11,12 @@ namespace LfMerge.LanguageForge.Model
 		// Used in subclasses to help reduce size of MongoDB JSON serializations
 		protected bool _ShouldSerializeLfMultiText(LfMultiText value)
 		{
-			return value != null && !value.IsEmpty;
+			return value != null && !value.IsEmpty && value.Values.AsEnumerable().All(field => field != null && !field.IsEmpty);
 		}
 
 		protected bool _ShouldSerializeLfStringArrayField(LfStringArrayField value)
 		{
-			return value != null && !value.IsEmpty;
+			return value != null && !value.IsEmpty && value.Values.TrueForAll(s => !string.IsNullOrEmpty(s));
 		}
 
 		protected bool _ShouldSerializeLfStringField(LfStringField value)
