@@ -40,6 +40,8 @@ namespace LfMerge.DataConverters
 			var resultBuilder = new StringBuilder();
 			foreach (TsRunPart run in tss.Runs())
 			{
+				if (run == null)
+					continue;
 				string runText = run.Text;
 				ITsTextProps props = run.Props;
 				int ws = props.GetWs();
@@ -81,7 +83,10 @@ namespace LfMerge.DataConverters
 				else
 					resultBuilder.Append(runText);
 			}
-			return resultBuilder.ToString();
+			string result = resultBuilder.ToString();
+			if (String.IsNullOrEmpty(result))
+				result = null; // We prefer nulls rather than empty strings
+			return result;
 		}
 
 		public static List<string> ClassesFromTsTextProps(ITsTextProps props, int[] intPropsToSkip, int[] strPropsToSkip)
