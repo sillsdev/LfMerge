@@ -87,7 +87,7 @@ namespace LfMerge.Tests.Fdo.DataConverters
 				"customField_entry_Cust_Single_Line_All",
 				"customField_entry_Cust_Single_ListRef"
 			};
-			CollectionAssert.AreEqual(customDataDocument[0].AsBsonDocument.Names, expectedCustomFieldNames);
+			CollectionAssert.AreEquivalent(expectedCustomFieldNames, customDataDocument[0].AsBsonDocument.Names);
 		}
 
 	}

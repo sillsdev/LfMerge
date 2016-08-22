@@ -29,51 +29,6 @@ namespace LfMerge.LanguageForge.Model
 			if (source == null) return null;
 			return new LfStringArrayField { Values = new List<string> { source } };
 		}
-
-		public static LfStringArrayField FromSingleITsString(ITsString source)
-		{
-			if (source == null || source.Text == null) return null;
-			return FromSingleString(source.Text);
-		}
-
-		public static LfStringArrayField FromBestAnalysisVernaculars(IEnumerable<IMultiAccessorBase> source)
-		{
-			return new LfStringArrayField
-			{
-				Values = new List<string>(source.Select(multiString => multiString.BestAnalysisVernacularAlternative.Text))
-			};
-		}
-
-		public static LfStringArrayField FromPossibilityAbbrevs(IEnumerable<ICmPossibility> possibilities)
-		{
-			return FromBestAnalysisVernaculars(
-				possibilities.Select(multiString => multiString.Abbreviation));
-		}
-
-		public static LfStringArrayField FromPossibilityNames(IEnumerable<ICmPossibility> possibilities)
-		{
-			return FromBestAnalysisVernaculars(
-				possibilities.Select(multiString => multiString.Name));
-		}
-
-		public static LfStringArrayField FromPossibilityAbbrevHierarchies(IEnumerable<ICmPossibility> possibilities)
-		{
-			return FromStrings(
-				possibilities.Select(multiString => multiString.AbbrevHierarchyString));
-		}
-
-		public static LfStringArrayField FromPossibilityNameHierarchies(IEnumerable<ICmPossibility> possibilities)
-		{
-			return FromStrings(
-				possibilities.Select(multiString => multiString.NameHierarchyString));
-		}
-
-		public static LfStringArrayField FromSinglePossibilityAbbrev(ICmPossibility possibility)
-		{
-			if (possibility == null) return null;
-			if (possibility.Abbreviation == null) return null;
-			return FromSingleITsString(possibility.Abbreviation.BestAnalysisVernacularAlternative);
-		}
 	}
 }
 

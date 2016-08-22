@@ -81,7 +81,7 @@ namespace LfMerge.DataConverters
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
 			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
 			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
-			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
+//			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
 			if (fieldName == null)
 				return false;
 
@@ -151,18 +151,28 @@ namespace LfMerge.DataConverters
 					// Shortcut: if text contents haven't changed, we don't want to change anything at all
 					BsonValue currentFdoTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
 						cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
-					if (currentFdoTextContents == null && value == null)
+					if ((currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null) &&
+						(value == BsonNull.Value || value == null))
 						return false;
 					if (currentFdoTextContents != null && currentFdoTextContents.Equals(value))
 					{
 						// No changes needed.
 						return false;
 					}
-					// BsonDocument passed in contains "value", and MAY contain "guids". ParseCustomStTextValuesFromBson
-					// wants only a "value" element inside the doc, so we'll need to construct a new doc for the StTextValues.
+					// BsonDocument passed in contains "paragraphs". ParseCustomStTextValuesFromBson wants only a "value" element
+					// inside the doc, so we'll need to construct a new doc for the StTextValues.
 					BsonDocument doc = value.AsBsonDocument;
 					LfMultiParagraph multiPara = BsonSerializer.Deserialize<LfMultiParagraph>(doc);
-					int wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
+					// Now we have another way to check for "old value and new value were the same": if the FDO multiparagraph was empty,
+					// GetCustomStTextValues will have returned null -- so if this multiPara has no paragraphs, that's also an unchanged situation
+					if ((multiPara.Paragraphs == null || multiPara.Paragraphs.Count <= 0) &&
+					    (currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null))
+						return false;
+					int wsId;
+					if (multiPara.InputSystem == null)
+						wsId = cache.MetaDataCacheAccessor.GetFieldWs(flid);
+					else
+						wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
 
 					return true;
@@ -303,8 +313,8 @@ namespace LfMerge.DataConverters
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
-					ITsString newValue = TsStringUtils.MakeTss(foundData, foundWsId);
-					if (oldValue != null && oldValue.Text == newValue.Text)
+					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, cache.WritingSystemFactory);
+					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
 						return false;
 					else
 					{

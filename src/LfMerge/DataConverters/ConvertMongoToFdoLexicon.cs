@@ -7,7 +7,7 @@ using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
 using LfMerge.Settings;
-using SIL.CoreImpl; // For TsStringUtils
+using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
 using System;
 using System.Collections.Generic;
@@ -190,6 +190,7 @@ namespace LfMerge.DataConverters
 			//
 			// But for now, these #if...#endif blocks are enough. - 2016-03 RM
 #if FW8_COMPAT
+			// Note that we can't use ILgWritingSystemFactory here, because it doesn't have some methods we need later on.
 			IWritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
 #else
 			WritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
@@ -222,6 +223,9 @@ namespace LfMerge.DataConverters
 				}
 				*/
 
+				// TODO: It might be possible to rewrite this code to NOT rely on TryGet() after all, in which case we could
+				// use the ILgWritingSystemFactory interface and remove one point of FW 8-to-9 API incompatibility.
+
 				if (wsManager.TryGet(lfWs.Tag, out ws))
 				{
 					ws.Abbreviation = lfWs.Abbreviation;
@@ -238,6 +242,8 @@ namespace LfMerge.DataConverters
 					// LF doesn't distinguish between vernacular/analysis WS, so we'll
 					// only assign the project language code to vernacular.
 					// All other WS assigned to analysis.
+
+					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
 					if (lfWs.Tag.Equals(vernacularLanguageCode))
 						Cache.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
@@ -266,9 +272,9 @@ namespace LfMerge.DataConverters
 			foreach (ILgWritingSystem ws in wsesToSearch)
 			{
 				LfStringField field;
-				if (input.TryGetValue(ws.Id, out field) && !String.IsNullOrEmpty(field.Value))
+				if (input.TryGetValue(ws.Id, out field) && field != null && !field.IsEmpty)
 				{
-					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
+//					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
 					return new Tuple<string, int>(field.Value, ws.Handle);
 				}
 			}
@@ -276,8 +282,8 @@ namespace LfMerge.DataConverters
 			// Last-ditch option: just grab the first non-empty string we can find
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(Cache);
 			if (kv.Value == null) return null;
-			Logger.Debug("Returning first non-empty TsString from {0} for writing system with ID {1}",
-				kv.Value, kv.Key);
+//			Logger.Debug("Returning first non-empty TsString from {0} for writing system with ID {1}",
+//				kv.Value, kv.Key);
 			return new Tuple<string, int>(kv.Value, kv.Key);
 		}
 
@@ -286,7 +292,7 @@ namespace LfMerge.DataConverters
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
-			return TsStringUtils.MakeTss(stringAndWsId.Item1, stringAndWsId.Item2);
+			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, Cache.WritingSystemFactory);
 		}
 
 		public string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
@@ -333,7 +339,7 @@ namespace LfMerge.DataConverters
 					caption = "";
 					captionWs = Cache.DefaultAnalWs;
 				}
-				ITsString captionTss = TsStringUtils.MakeTss(caption, captionWs);
+				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, Cache.WritingSystemFactory);
 				result = GetInstance<ICmPictureFactory>().Create(guid);
 				result.UpdatePicture(pictureName, captionTss, CmFolderTags.LocalPictures, captionWs);
 				owner.PicturesOS.Add(result);
@@ -456,6 +462,17 @@ namespace LfMerge.DataConverters
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
+
+			// DateModified and DateCreated can be confusing, because LF and FDO are doing two different
+			// things with them. In FDO, there is just one DateModified and one DateCreated; simple. But
+			// in LF, there is an AuthorInfo record as well, which contains its own ModifiedDate and CreatedDate
+			// fields. (Note the word order: there's LfEntry.DateCreated, and LfEntry.AuthorInfo.CreatedDate).
+
+			// The conversion we have chosen to use is: AuthorInfo will correspond to FDO. So FDO.DateCreated
+			// becomes AuthorInfo.CreatedDate, and FDO.DateModified becomes AuthorInfo.ModifiedDate. The two
+			// fields on the LF entry will instead refer to when the *Mongo record* was created or modified,
+			// and the LfEntry.DateCreated and LfEntry.DateModified fields will never be put into FDO.
+
 			// Use AuthorInfo for dates as this should always reflect user changes (Mongo or FDO)
 			// Weirdly, FDO expects Dates to be in LOCAL time, not UTC.
 			if (lfEntry.AuthorInfo != null)
@@ -503,11 +520,11 @@ namespace LfMerge.DataConverters
 			// Ignoring lfExample.AuthorInfo.ModifiedDate;
 			// Ignoring lfExample.ExampleId; // TODO: is this different from a LIFT ID?
 			SetMultiStringFrom(fdoExample.Example, lfExample.Sentence);
-			Logger.Debug("FDO Example just got set to {0} for GUID {1} and HVO {2}",
-				ConvertFdoToMongoTsStrings.SafeTsStringText(fdoExample.Example.BestAnalysisVernacularAlternative),
-				fdoExample.Guid,
-				fdoExample.Hvo
-			);
+//			Logger.Debug("FDO Example just got set to {0} for GUID {1} and HVO {2}",
+//				ConvertFdoToMongoTsStrings.SafeTsStringText(fdoExample.Example.BestAnalysisVernacularAlternative),
+//				fdoExample.Guid,
+//				fdoExample.Hvo
+//			);
 			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
 				fdoExample.DoNotPublishInRC, lfExample.ExamplePublishIn,
 				Cache.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
@@ -601,10 +618,10 @@ namespace LfMerge.DataConverters
 				{
 					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA,
 						pos, secondaryPos, Logger); // It's fine if secondaryPos is null
-					Logger.Debug("Part of speech of {0} has been set to {1}{2}",
-						fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(),
-						pos,
-						secondaryPos == null ? "" : String.Format("with secondary part of speech {0}", secondaryPos));
+//					Logger.Debug("Part of speech of {0} has been set to {1}{2}",
+//						fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(),
+//						pos,
+//						secondaryPos == null ? "" : String.Format("with secondary part of speech {0}", secondaryPos));
 				}
 			}
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);
@@ -709,12 +726,20 @@ namespace LfMerge.DataConverters
 
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			if (lfEntry.Etymology == null &&
-				lfEntry.EtymologyComment == null &&
-				lfEntry.EtymologyGloss == null &&
-				lfEntry.EtymologySource == null)
-				return; // Don't create an Etymology object if there's nothing to assign
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+			if ((lfEntry.Etymology        == null || lfEntry.Etymology       .IsEmpty) &&
+			    (lfEntry.EtymologyComment == null || lfEntry.EtymologyComment.IsEmpty) &&
+			    (lfEntry.EtymologyGloss   == null || lfEntry.EtymologyGloss  .IsEmpty) &&
+			    (lfEntry.EtymologySource  == null || lfEntry.EtymologySource .IsEmpty))
+			{
+				if (fdoEtymology == null)
+					return; // Don't delete an Etymology object if there was none already
+				else
+				{
+					fdoEtymology.Delete();
+					return;
+				}
+			}
 			if (fdoEtymology == null)
 				fdoEtymology = CreateOwnedEtymology(fdoEntry); // Also sets owning field on fdoEntry
 			SetMultiStringFrom(fdoEtymology.Form, lfEntry.Etymology);
@@ -726,9 +751,17 @@ namespace LfMerge.DataConverters
 
 		public void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			if (lfEntry.Lexeme == null)
-				return;
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
+			if (lfEntry.Lexeme == null || lfEntry.Lexeme.IsEmpty)
+			{
+				if (fdoLexeme == null)
+					return;
+				else
+				{
+					fdoLexeme.Delete();
+					return;
+				}
+			}
 			if (fdoLexeme == null)
 				fdoLexeme = CreateOwnedLexemeForm(fdoEntry, lfEntry.MorphologyType); // Also sets owning field on fdoEntry
 			SetMultiStringFrom(fdoLexeme.Form, lfEntry.Lexeme);
@@ -736,15 +769,24 @@ namespace LfMerge.DataConverters
 
 		public void SetPronunciation(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			if (lfEntry.Pronunciation == null &&
-				lfEntry.CvPattern == null &&
-				lfEntry.Tone == null &&
-				lfEntry.Location == null)
+			// var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
+			ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.FirstOrDefault();
+			if ((lfEntry.Pronunciation == null || lfEntry.Pronunciation.IsEmpty) &&
+			    (lfEntry.CvPattern     == null || lfEntry.CvPattern    .IsEmpty) &&
+			    (lfEntry.Tone          == null || lfEntry.Tone         .IsEmpty) &&
+			    (lfEntry.Location      == null || lfEntry.Location     .IsEmpty))
 			{
-				return;
+				// No pronunication at all in LF: either there was never one, or we deleted it
+				if (fdoPronunciation == null)
+					return;  // There was never a pronunciation; we're fine
+				else
+					fdoEntry.PronunciationsOS.First().Delete();
 			}
-			var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
-
+			if (fdoPronunciation == null)
+			{
+				fdoPronunciation = GetInstance<ILexPronunciationFactory>().Create();
+				fdoEntry.PronunciationsOS.Add(fdoPronunciation);
+			}
 			fdoPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
 			fdoPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
 			SetMultiStringFrom(fdoPronunciation.Form, lfEntry.Pronunciation);

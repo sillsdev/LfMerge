@@ -21,33 +21,20 @@ namespace LfMerge.LanguageForge.Model
 			{
 				string wsstr = wsManager.GetStrFromWs(wsid);
 				ITsString value = other.get_String(wsid);
-				newInstance.Add(wsstr, new LfStringField { Value = value.Text });
-				// TODO: Deal with runs; using just ITsString.Text will discard any useful information found in Run elements, if present.
-				// Example code follows:
-				/*
-				foreach (TsRunPart run in value.Runs())
-				{
-					if (run.Props.Style() == null)
-						Console.WriteLine("No style");
-					else
-						Console.WriteLine("Run style {0}", run.Props.Style());
-					Console.WriteLine("Run writing system {0}", wsManager.GetStrFromWs(run.Props.GetWs()));
-					Console.WriteLine("Run text {0}", run.Text);
-				}
-				*/
+				string text = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
+				LfStringField field = LfStringField.FromString(text);
+				if (field != null)
+					newInstance.Add(wsstr, field);
 			}
 			return newInstance;
 		}
 
 		public static LfMultiText FromSingleStringMapping(string key, string value)
 		{
-			return new LfMultiText { { key, new LfStringField { Value = value } } };
-		}
-
-		public static LfMultiText FromSingleITsStringMapping(string key, ITsString value)
-		{
-			if (value == null || value.Text == null) return null;
-			return new LfMultiText { { key, new LfStringField { Value = value.Text } } };
+			LfStringField field = LfStringField.FromString(value);
+			if (field == null)
+				return null;
+			return new LfMultiText { { key, field } };
 		}
 
 		public static LfMultiText FromSingleITsString(ITsString value, ILgWritingSystemFactory wsManager)
@@ -55,7 +42,11 @@ namespace LfMerge.LanguageForge.Model
 			if (value == null || value.Text == null) return null;
 			int wsId = value.get_WritingSystem(0);
 			string wsStr = wsManager.GetStrFromWs(wsId);
-			return new LfMultiText { { wsStr, new LfStringField { Value = value.Text } } };
+			string text = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
+			LfStringField field = LfStringField.FromString(text);
+			if (field == null)
+				return null;
+			return new LfMultiText { { wsStr, field } };
 		}
 
 		public static LfMultiText FromMultiITsString(ITsMultiString value, ILgWritingSystemFactory wsManager)
@@ -65,10 +56,15 @@ namespace LfMerge.LanguageForge.Model
 			for (int index = 0; index < value.StringCount; index++)
 			{
 				int wsId;
-				string valueStr = value.GetStringFromIndex(index, out wsId).Text;
+				ITsString tss = value.GetStringFromIndex(index, out wsId);
 				string wsStr = wsManager.GetStrFromWs(wsId);
 				if (!string.IsNullOrEmpty(wsStr))
-					mt.Add(wsStr, new LfStringField { Value = valueStr });
+				{
+					string valueStr = LfMerge.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsManager);
+					LfStringField field = LfStringField.FromString(valueStr);
+					if (field != null)
+						mt.Add(wsStr, field);
+				}
 				//MainClass.Logger.Warning("Adding multistring ws: {0}, str {1}", wsStr, valueStr);
 			}
 			return mt;

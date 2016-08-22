@@ -112,7 +112,7 @@ namespace LfMerge.Tests.Fdo
 				return "[" + String.Join(",", value as int[]) + "]";
 			var tsString = value as ITsString;
 			if (tsString != null)
-				return tsString.Text;
+				return ConvertFdoToMongoTsStrings.TextFromTsString(tsString, _cache.WritingSystemFactory);
 			var multi = value as IMultiAccessorBase;
 			if (multi != null)
 			{
@@ -129,7 +129,7 @@ namespace LfMerge.Tests.Fdo
 				{
 					sb.Append(ws);
 					sb.Append(": ");
-					sb.Append(multi.get_String(ws).Text);
+					sb.Append(ConvertFdoToMongoTsStrings.TextFromTsString(multi.get_String(ws), _cache.WritingSystemFactory));
 					sb.Append(", ");
 				}
 				sb.Append("}");
@@ -235,11 +235,12 @@ namespace LfMerge.Tests.Fdo
 				var tsStringAfterTest = valueAfterTest as ITsString;
 				if (tsStringBeforeTest != null && tsStringAfterTest != null)
 				{
-					if (tsStringBeforeTest.Text != tsStringAfterTest.Text)
+					TsStringDiffInfo diffInfo = TsStringUtils.GetDiffsInTsStrings(tsStringBeforeTest, tsStringAfterTest);
+					if (diffInfo != null)
 					{
 						differencesByName[fieldName] = new Tuple<string, string>(
-							tsStringBeforeTest.Text,
-							tsStringAfterTest.Text
+							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringBeforeTest, _cache.WritingSystemFactory),
+							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringAfterTest, _cache.WritingSystemFactory)
 						);
 					}
 					continue;
@@ -261,8 +262,8 @@ namespace LfMerge.Tests.Fdo
 					}
 					foreach (int wsId in wsIds)
 					{
-						string beforeStr = multiStrBeforeTest.get_String(wsId).Text;
-						string afterStr = multiStrAfterTest.get_String(wsId).Text;
+						string beforeStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrBeforeTest.get_String(wsId), _cache.WritingSystemFactory);
+						string afterStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrAfterTest.get_String(wsId), _cache.WritingSystemFactory);
 						if (beforeStr != afterStr)
 						{
 							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);

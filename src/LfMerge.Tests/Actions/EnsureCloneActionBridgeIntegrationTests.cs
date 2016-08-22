@@ -175,6 +175,8 @@ namespace LfMerge.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(MercurialTestHelper.GetUsernameFromHgrc(_lfProject.ProjectDir),
+				Is.EqualTo("Language Forge"));
 		}
 
 		/// <summary>
