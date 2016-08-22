@@ -38,14 +38,14 @@ namespace LfMerge.DataConverters
 			int[] strPropsToSkip = new int[] { (int)FwTextPropType.ktptNamedStyle };
 			int mainWs = tss.get_WritingSystem(0);
 			var resultBuilder = new StringBuilder();
-			foreach (TsRunPart run in tss.Runs())
+			for (int i = 0, n = tss.RunCount; i < n; i++)
 			{
-				if (run == null)
-					continue;
-				string runText = run.Text;
-				ITsTextProps props = run.Props;
-				int ws = props.GetWs();
-				string namedStyle = props.Style();
+				string runText = tss.get_RunText(i);
+				ITsTextProps props = tss.get_Properties(i);
+				// int ignored;
+				// int ws = props.GetIntPropValues((int)FwTextPropType.ktptWs, out ignored);
+				int ws = tss.get_WritingSystem(i);  // Simpler than GetIntPropValues((int)FwTextPropType.ktptWs)
+				string namedStyle = props.GetStrPropValue((int)FwTextPropType.ktptNamedStyle);
 				List<string> classes = ClassesFromTsTextProps(props, intPropsToSkip, strPropsToSkip);
 
 				bool needSpan = false;
