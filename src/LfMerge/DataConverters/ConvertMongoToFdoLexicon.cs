@@ -19,6 +19,19 @@ using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.DataConverters
 {
+	public class EntryCounts {
+		public int Added    { get; set; }
+		public int Modified { get; set; }
+		public int Deleted  { get; set; }
+
+		public EntryCounts()
+		{
+			this.Added    = 0;
+			this.Modified = 0;
+			this.Deleted  = 0;
+		}
+	}
+
 	public class ConvertMongoToFdoLexicon
 	{
 		public LfMergeSettingsIni Settings { get; set; }
@@ -28,6 +41,7 @@ namespace LfMerge.DataConverters
 		public ILogger Logger { get; set; }
 		public IMongoConnection Connection { get; set; }
 		public MongoProjectRecord ProjectRecord { get; set; }
+		public EntryCounts EntryCounts { get; set; }
 
 		public IEnumerable<ILgWritingSystem> AnalysisWritingSystems;
 		public IEnumerable<ILgWritingSystem> VernacularWritingSystems;
@@ -59,6 +73,7 @@ namespace LfMerge.DataConverters
 		public ConvertMongoToFdoLexicon(LfMergeSettingsIni settings, ILfProject lfproject, ILogger logger,
 			IMongoConnection connection, MongoProjectRecord projectRecord)
 		{
+			EntryCounts = new EntryCounts();
 			Settings = settings;
 			LfProject = lfproject;
 			Logger = logger;
@@ -303,11 +318,26 @@ namespace LfMerge.DataConverters
 			return stringAndWsId.Item1;
 		}
 
-		public ILexEntry GetOrCreateEntryByGuid(Guid guid)
+		// This GetOrCreate() function takes an extra out parameter so we can correctly update
+		// the entry counts in LfLexEntryToFdoLexEntry(). We don't update the counts here
+		// because we don't yet know if the LF entry was deleted (in which case we wouldn't
+		// want to update Added or Modified). The wantCreation parameter is there because if
+		// the LF entry was deleted, we don't want to actually create the FDO entry (it would
+		// just be immediately deleted again).
+		public ILexEntry GetOrCreateEntryByGuid(Guid guid, bool wantCreation, out bool createdEntry)
 		{
 			ILexEntry result;
+			createdEntry = false;
 			if (!GetInstance<ILexEntryRepository>().TryGetObject(guid, out result))
-				result = GetInstance<ILexEntryFactory>().Create(guid, Cache.LanguageProject.LexDbOA);
+			{
+				if (wantCreation)
+				{
+					createdEntry = true;
+					result = GetInstance<ILexEntryFactory>().Create(guid, Cache.LanguageProject.LexDbOA);
+				}
+				else
+					result = null;
+			}
 			return result;
 		}
 
@@ -440,14 +470,29 @@ namespace LfMerge.DataConverters
 		public void LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid ?? Guid.Empty;
-			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid);
+			bool createdEntry = false;
+			bool wantCreation = !lfEntry.IsDeleted;
+			ILexEntry fdoEntry = GetOrCreateEntryByGuid(guid, wantCreation, out createdEntry);
 			if (lfEntry.IsDeleted)
 			{
 				// LF entry deleted: delete the corresponding FDO entry
 				if (fdoEntry == null)
 					return; // No need to delete an FDO entry that doesn't exist
 				if (fdoEntry.CanDelete)
+				{
+					if (createdEntry)
+					{
+						// This FDO entry, which was deleted in LF, was apparently "created" by FDO.
+						// In reality, it was created just to be deleted, and we should optimize that away.
+						Logger.Warning("LfMerge managed to create FDO entry {0} just to immediately delete it again. This is inefficient and should be fixed.",
+							fdoEntry.Guid);
+					}
+					else
+					{
+						EntryCounts.Deleted++;
+					}
 					fdoEntry.Delete();
+				}
 				else
 				{
 					Logger.Warning("Problem: need to delete FDO entry {0}, but its CanDelete flag is false.",
@@ -455,10 +500,9 @@ namespace LfMerge.DataConverters
 				}
 				return; // Don't set fields on a deleted entry
 			}
-			string entryNameForDebugging = "";
-			if (lfEntry.Lexeme != null && lfEntry.Lexeme.Values != null)
-				entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
-			Logger.Info("Processing entry {0} ({1}) from LF lexicon", guid, entryNameForDebugging);
+			// Used for detecting whether we modified the FDO entry, or whether we were simply
+			// setting fields to the same value they had before.
+			DateTime modifiedDateBeforeChanges = fdoEntry.DateModified;
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
@@ -480,6 +524,7 @@ namespace LfMerge.DataConverters
 				fdoEntry.DateCreated = lfEntry.AuthorInfo.CreatedDate.ToLocalTime();
 				fdoEntry.DateModified = lfEntry.AuthorInfo.ModifiedDate.ToLocalTime();
 			}
+
 			SetMultiStringFrom(fdoEntry.Bibliography, lfEntry.EntryBibliography);
 			SetMultiStringFrom(fdoEntry.Restrictions, lfEntry.EntryRestrictions);
 			SetEtymologyFields(fdoEntry, lfEntry);
@@ -508,6 +553,18 @@ namespace LfMerge.DataConverters
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields,
 				lfEntry.CustomFieldGuids);
+
+			DateTime modifiedDateAfterChanges = fdoEntry.DateModified;
+			if (createdEntry)
+				EntryCounts.Added++;
+			else if (modifiedDateBeforeChanges != modifiedDateAfterChanges)
+				EntryCounts.Modified++;
+			// else do nothing to the entry counts
+
+			string entryNameForDebugging = "";
+			if (lfEntry.Lexeme != null && lfEntry.Lexeme.Values != null)
+				entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
+			Logger.Info("MongoToFdo: Converted FdoEntry {0} ({1})", guid, entryNameForDebugging);
 		}
 
 		public void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
@@ -800,6 +857,11 @@ namespace LfMerge.DataConverters
 		public IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
 		{
 			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
+		}
+
+		public void ResetEntryCounts()
+		{
+			EntryCounts = new EntryCounts();
 		}
 	}
 }

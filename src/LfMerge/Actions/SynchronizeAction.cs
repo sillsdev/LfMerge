@@ -39,10 +39,23 @@ namespace LfMerge.Actions
 		{
 			using (MainClass.Container.BeginLifetimeScope())
 			{
-				GetAction(ActionNames.TransferMongoToFdo).Run(project);
+				var transferAction = GetAction(ActionNames.TransferMongoToFdo);
+				transferAction.Run(project);
 				LanguageForgeProject.DisposeFwProject(project);
 
+				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
+				if (transferAction is TransferMongoToFdoAction)
+				{
+					// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
+					var action = (TransferMongoToFdoAction)transferAction;
+					entriesAdded    = action.EntryCounts.Added;
+					entriesModified = action.EntryCounts.Modified;
+					entriesDeleted  = action.EntryCounts.Deleted;
+				}
 				Logger.Notice("Syncing");
+				string commitMessage = LfMergeBridgeServices.FormatCommitMessageForLfMerge(entriesAdded, entriesModified, entriesDeleted);
+				if (commitMessage == null)  // Shouldn't happen, but be careful anyway
+					commitMessage = "Language Forge Send/Receive";  // Desperate fallback
 
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 
@@ -54,7 +67,8 @@ namespace LfMerge.Actions
 					{"fwdataFilename", project.FwDataPath},
 					{"fdoDataModelVersion", FdoCache.ModelVersion },
 					{"languageDepotRepoName", "Language Depot"},
-					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)}
+					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)},
+					{"commitMessage", commitMessage}
 				};
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
 					options, out syncResult))
