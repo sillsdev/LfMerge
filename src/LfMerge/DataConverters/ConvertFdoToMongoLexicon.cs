@@ -94,7 +94,7 @@ namespace LfMerge.DataConverters
 
 		public void RunConversion()
 		{
-			Logger.Notice("FdoToMongo: Converting lexicon");
+			Logger.Notice("FdoToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
@@ -391,11 +391,6 @@ namespace LfMerge.DataConverters
 				//foreach (var fdoPic in fdoSense.PicturesOS)
 				//	lfSense.Pictures.Add(FdoPictureToLfPicture(fdoPic));
 			}
-			foreach (LfPicture picture in lfSense.Pictures)
-			{
-				// TODO: Remove this debugging foreach loop once we know pictures are working
-				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption.FirstNonEmptyString(), picture.FileName);
-			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
 			lfSense.SensePublishIn = ToStringArrayField(PublishInListCode, fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
@@ -483,8 +478,6 @@ namespace LfMerge.DataConverters
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
-			//Logger.Debug("Custom fields for this sense: {0}", lfSense.CustomFields);
-			//Logger.Debug("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -528,8 +521,6 @@ namespace LfMerge.DataConverters
 
 			lfExample.CustomFields = customFieldsBson;
 			lfExample.CustomFieldGuids = customFieldGuids;
-			//Logger.Debug("Custom fields for this example: {0}", result.CustomFields);
-			//Logger.Debug("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return lfExample;
 		}
 

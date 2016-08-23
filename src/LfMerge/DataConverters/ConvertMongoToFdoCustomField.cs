@@ -179,8 +179,6 @@ namespace LfMerge.DataConverters
 				}
 
 			case CellarPropertyType.ReferenceAtomic:
-				int log_fieldWs = fdoMetaData.GetFieldWs(flid);
-				string log_fieldWsStr = servLoc.WritingSystemManager.GetStrFromWs(log_fieldWs);
 				if (fieldGuids.First() != Guid.Empty)
 				{
 					int referencedHvo = data.get_ObjFromGuid(fieldGuids.First());

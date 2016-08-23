@@ -127,7 +127,7 @@ namespace LfMerge.DataConverters
 
 		public void RunConversion()
 		{
-			Logger.Notice("MongoToFdo: Converting lexicon");
+			Logger.Notice("MongoToFdo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			EntryCounts.Reset();
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
@@ -154,7 +154,6 @@ namespace LfMerge.DataConverters
 				});
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
-			Logger.Debug("MongoToFdo: done");
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
