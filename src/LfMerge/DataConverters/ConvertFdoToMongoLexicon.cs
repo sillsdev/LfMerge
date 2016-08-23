@@ -370,8 +370,16 @@ namespace LfMerge.DataConverters
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
 				IPartOfSpeech pos = ConvertFdoToMongoPartsOfSpeech.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
-				lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
-				lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
+				if (pos == null)
+					Logger.Warning("Got MSA of unknown type {0} in sense {1} in project {2}",
+						fdoSense.MorphoSyntaxAnalysisRA.GetType().Name,
+						fdoSense.Guid,
+						LfProject.ProjectCode);
+				else
+				{
+					lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
+					lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
+				}
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)

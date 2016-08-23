@@ -38,7 +38,6 @@ namespace LfMerge.Settings
 
 		public void Initialize(IniData parsedConfig)
 		{
-			Console.WriteLine("LfMergeSettingsIni.Initialize() was called with config: {0}", parsedConfig);
 //			if (Current != null)
 //				return;
 
@@ -244,8 +243,8 @@ namespace LfMerge.Settings
 			string globalIni = File.Exists(globalConfigFilename) ? File.ReadAllText(globalConfigFilename, utf8) : "";
 			if (String.IsNullOrEmpty(globalIni))
 			{
-				// TODO: Make all these Console.WriteLine calls into proper logging calls
-				Console.WriteLine("Warning: no global configuration found. Will use default settings.");
+				// Can't use the log yet, so report warnings to Console.WriteLine
+				Console.WriteLine("LfMerge: Warning: no global configuration found. Will use default settings.");
 			}
 			IniData globalConfig;
 			try
@@ -254,7 +253,7 @@ namespace LfMerge.Settings
 			}
 			catch (ParsingException e)
 			{
-				Console.WriteLine("Warning: Error parsing global configuration file. Will use default settings.");
+				Console.WriteLine("LfMerge: Warning: Error parsing global configuration file. Will use default settings.");
 				Console.WriteLine("Error follows: {0}", e.ToString());
 				globalConfig = null; // Merging null is perfectly acceptable to IniParser
 			}

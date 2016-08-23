@@ -130,7 +130,6 @@ namespace LfMerge.DataConverters.CanonicalSources
 			{
 				extra++;
 				item.Key = origKey + extra.ToString();
-				Console.WriteLine("For canonical item {0}, trying key {1}", origKey, item.Key);
 			}
 		}
 	}
