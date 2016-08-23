@@ -31,8 +31,11 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig _lfProjectConfig;
 
+		public LfMerge.DataConverters.EntryCounts EntryCounts { get; set; }
+
 		public TransferMongoToFdoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings, logger)
 		{
+			EntryCounts = new EntryCounts();
 			_connection = conn;
 			_projectRecordFactory = factory;
 		}
@@ -81,6 +84,7 @@ namespace LfMerge.Actions
 
 			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, _connection, _projectRecord);
 			converter.RunConversion();
+			EntryCounts = converter.EntryCounts;
 		}
 
 		protected override ActionNames NextActionName
