@@ -10,6 +10,7 @@ using LfMerge.Logging;
 using LfMerge.LanguageForge.Config;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
+using LfMerge.Reporting;
 using LfMerge.Settings;
 using MongoDB.Driver;
 using SIL.CoreImpl;
@@ -31,11 +32,11 @@ namespace LfMerge.Actions
 
 		private ILfProjectConfig _lfProjectConfig;
 
-		public LfMerge.DataConverters.EntryCounts EntryCounts { get; set; }
+		public EntryCounts EntryCounts { get; set; }
 
-		public TransferMongoToFdoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory) : base(settings, logger)
+		public TransferMongoToFdoAction(LfMergeSettingsIni settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory, EntryCounts entryCounts) : base(settings, logger)
 		{
-			EntryCounts = new EntryCounts();
+			EntryCounts = entryCounts;
 			_connection = conn;
 			_projectRecordFactory = factory;
 		}
@@ -82,9 +83,8 @@ namespace LfMerge.Actions
 				return;
 			}
 
-			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, _connection, _projectRecord);
+			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, _connection, _projectRecord, EntryCounts);
 			converter.RunConversion();
-			EntryCounts = converter.EntryCounts;
 		}
 
 		protected override ActionNames NextActionName

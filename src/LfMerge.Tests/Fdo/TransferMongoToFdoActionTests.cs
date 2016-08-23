@@ -191,9 +191,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -217,9 +217,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -244,9 +244,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -265,9 +265,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(1));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
 		}
 
 		[Test]
@@ -291,17 +291,17 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify zero on second run
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -326,17 +326,17 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify zero on second run
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -355,17 +355,17 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(1));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
 
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify zero on second run
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -389,9 +389,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
 			// Setup second run
 			newEntry = new LfLexEntry();
@@ -407,11 +407,11 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Added,    Is.EqualTo(1));
 			// Modified and Deleted shouldn't have changed, but check Added first
 			// since that's the main point of this test
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -436,9 +436,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(1));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
 			// Setup second run
 			string changedLexeme2 = "second modified lexeme for this test";
@@ -452,11 +452,11 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify second run
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
 			// Added and Deleted shouldn't have changed, but check Modified first
 			// since that's the main point of this test
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
 
 		[Test]
@@ -475,9 +475,9 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(1));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
 
 			entry = _conn.GetLfLexEntryByGuid(entryGuid);
 			entry.IsDeleted = true;
@@ -487,14 +487,14 @@ namespace LfMerge.Tests.Fdo
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify second run
-			Assert.That(sutMongoToFdo.EntryCounts.Deleted,  Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 			// Added and Modified shouldn't have changed either, but check Deleted first
 			// since that's the main point of this test
-			Assert.That(sutMongoToFdo.EntryCounts.Added,    Is.EqualTo(0));
-			Assert.That(sutMongoToFdo.EntryCounts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
 		}
 
-		#if false
+		#if false  // We've changed how we handle OptionLists since these tests were written, and they are no longer valid
 		[Test]
 		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
 		{

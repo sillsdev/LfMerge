@@ -178,6 +178,7 @@
     <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
     <Compile Include="LanguageForge\Config\LfConfigMultiParagraph.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoTsStrings.cs" />
+    <Compile Include="Reporting\EntryCounts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -202,6 +203,7 @@
     <Folder Include="DataConverters\" />
     <Folder Include="Settings\" />
     <Folder Include="Logging\" />
+    <Folder Include="Reporting\" />
     <Folder Include="Actions\Infrastructure\" />
     <Folder Include="LanguageForge\Infrastructure\" />
     <Folder Include="DataConverters\CanonicalSources\" />

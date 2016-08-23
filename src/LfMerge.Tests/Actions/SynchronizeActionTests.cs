@@ -9,6 +9,7 @@ using LfMerge;
 using LfMerge.Actions;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
+using LfMerge.Reporting;
 using LfMerge.Settings;
 using LfMerge.Tests;
 using NUnit.Framework;
@@ -42,6 +43,7 @@ namespace LfMerge.Tests.Actions
 
 		private TestEnvironment _env;
 		private MongoConnectionDouble _mongoConnection;
+		private EntryCounts _counts;
 		private MongoProjectRecordFactory _recordFactory;
 		private LanguageForgeProject _lfProject;
 		private LanguageDepotMock _lDProject;
@@ -59,6 +61,7 @@ namespace LfMerge.Tests.Actions
 		{
 			_env = new TestEnvironment();
 			_env.Settings.CommitWhenDone = true;
+			_counts = MainClass.Container.Resolve<EntryCounts>();
 			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
 
@@ -415,7 +418,7 @@ namespace LfMerge.Tests.Actions
 
 			// Exercise
 			var transferMongoToFdo = new TransferMongoToFdoAction(_env.Settings, _env.Logger,
-				_mongoConnection, _recordFactory);
+				_mongoConnection, _recordFactory, _counts);
 			transferMongoToFdo.Run(_lfProject);
 
 			// Verify

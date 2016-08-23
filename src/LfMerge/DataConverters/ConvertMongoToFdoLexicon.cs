@@ -1,11 +1,11 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using LfMerge.DataConverters;
 using LfMerge.DataConverters.CanonicalSources;
 using LfMerge.FieldWorks;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
+using LfMerge.Reporting;
 using LfMerge.Settings;
 using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
@@ -19,19 +19,6 @@ using SIL.FieldWorks.FDO.Infrastructure;
 
 namespace LfMerge.DataConverters
 {
-	public class EntryCounts {
-		public int Added    { get; set; }
-		public int Modified { get; set; }
-		public int Deleted  { get; set; }
-
-		public EntryCounts()
-		{
-			this.Added    = 0;
-			this.Modified = 0;
-			this.Deleted  = 0;
-		}
-	}
-
 	public class ConvertMongoToFdoLexicon
 	{
 		public LfMergeSettingsIni Settings { get; set; }
@@ -71,9 +58,9 @@ namespace LfMerge.DataConverters
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
 		public ConvertMongoToFdoLexicon(LfMergeSettingsIni settings, ILfProject lfproject, ILogger logger,
-			IMongoConnection connection, MongoProjectRecord projectRecord)
+			IMongoConnection connection, MongoProjectRecord projectRecord, EntryCounts entryCounts)
 		{
-			EntryCounts = new EntryCounts();
+			EntryCounts = entryCounts;
 			Settings = settings;
 			LfProject = lfproject;
 			Logger = logger;
@@ -141,6 +128,7 @@ namespace LfMerge.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("MongoToFdo: Converting lexicon");
+			EntryCounts.Reset();
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				LfWsToFdoWs(ProjectRecord.InputSystems));
@@ -857,11 +845,6 @@ namespace LfMerge.DataConverters
 		public IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
 		{
 			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
-		}
-
-		public void ResetEntryCounts()
-		{
-			EntryCounts = new EntryCounts();
 		}
 	}
 }
