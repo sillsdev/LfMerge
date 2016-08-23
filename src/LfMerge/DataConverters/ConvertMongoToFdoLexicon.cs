@@ -662,10 +662,6 @@ namespace LfMerge.DataConverters
 				{
 					ConvertMongoToFdoPartsOfSpeech.SetPartOfSpeech(fdoSense.MorphoSyntaxAnalysisRA,
 						pos, secondaryPos, Logger); // It's fine if secondaryPos is null
-//					Logger.Debug("Part of speech of {0} has been set to {1}{2}",
-//						fdoSense.MorphoSyntaxAnalysisRA.GetGlossOfFirstSense(),
-//						pos,
-//						secondaryPos == null ? "" : String.Format("with secondary part of speech {0}", secondaryPos));
 				}
 			}
 			SetMultiStringFrom(fdoSense.PhonologyNote, lfSense.PhonologyNote);

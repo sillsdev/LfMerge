@@ -349,7 +349,6 @@ namespace LfMerge.MongoConnector
 			exampleCustomFieldOrder = new List<string>();
 			foreach (var customFieldKVP in lfCustomFieldList)
 			{
-				Logger.Debug("Writing custom field config for {0}", customFieldKVP.Key);
 				if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
 				{
 					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));

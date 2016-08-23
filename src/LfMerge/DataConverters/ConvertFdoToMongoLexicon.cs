@@ -199,7 +199,6 @@ namespace LfMerge.DataConverters
 		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			if (fdoEntry == null) return null;
-			Logger.Debug("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
