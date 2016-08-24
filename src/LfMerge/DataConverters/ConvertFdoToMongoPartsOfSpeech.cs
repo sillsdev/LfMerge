@@ -25,8 +25,6 @@ namespace LfMerge.DataConverters
 			case MoUnclassifiedAffixMsaTags.kClassId:
 				return ((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA;
 			default:
-				// TODO: Make this a log message, not Console.WriteLine
-				Console.WriteLine("Got MSA of unknown type {0}", msa.GetType().Name);
 				return null;
 			}
 		}

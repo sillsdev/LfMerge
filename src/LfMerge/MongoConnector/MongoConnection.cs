@@ -85,7 +85,7 @@ namespace LfMerge.MongoConnector
 		}
 
 		private IMongoDatabase GetDatabase(string databaseName) {
-			return dbs.GetOrAdd(databaseName, client.Value.GetDatabase(databaseName));
+			return dbs.GetOrAdd(databaseName, () => client.Value.GetDatabase(databaseName));
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project) {
@@ -349,7 +349,6 @@ namespace LfMerge.MongoConnector
 			exampleCustomFieldOrder = new List<string>();
 			foreach (var customFieldKVP in lfCustomFieldList)
 			{
-				Logger.Debug("Writing custom field config for {0}", customFieldKVP.Key);
 				if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
 				{
 					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));

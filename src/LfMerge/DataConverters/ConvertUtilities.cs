@@ -146,7 +146,6 @@ namespace LfMerge.DataConverters
 				if (fdoIdx >= fdoStText.ParagraphsOS.Count)
 				{
 					// Past the end of existing FDO paras: create new para at end
-					Console.WriteLine("Appending new para with style name {0} and contents {1}", lfPara.StyleName, lfPara.Content);
 					fdoPara = fdoStText.AddNewTextPara(lfPara.StyleName);
 				}
 				else

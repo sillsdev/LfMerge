@@ -6,6 +6,7 @@ using LfMerge.DataConverters;
 using LfMerge.LanguageForge.Model;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
+using LfMerge.Reporting;
 using LfMerge.Settings;
 using Palaso.IO;
 using Palaso.TestUtilities;
@@ -88,6 +89,7 @@ namespace LfMerge.Tests.Fdo
 
 		protected TestEnvironment _env;
 		protected MongoConnectionDouble _conn;
+		protected EntryCounts _counts;
 		protected MongoProjectRecordFactory _recordFactory;
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
@@ -102,6 +104,7 @@ namespace LfMerge.Tests.Fdo
 		{
 			_env = new TestEnvironment(resetLfProjectsDuringCleanup: false);
 			_conn = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			_counts = MainClass.Container.Resolve<EntryCounts>();
 			if (_conn == null)
 				throw new AssertionException("FDO tests need a mock MongoConnection that stores data in order to work.");
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
@@ -118,7 +121,8 @@ namespace LfMerge.Tests.Fdo
 				_env.Settings,
 				_env.Logger,
 				_conn,
-				_recordFactory
+				_recordFactory,
+				_counts
 			);
 
 			sutFdoToMongo = new TransferFdoToMongoAction(

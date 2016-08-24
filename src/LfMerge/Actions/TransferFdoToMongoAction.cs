@@ -40,21 +40,18 @@ namespace LfMerge.Actions
 		protected override void DoRun(ILfProject project)
 		{
 			// TODO: These checks might be overkill; consider removing some of them
-			Logger.Debug("FdoToMongo: starting");
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
 				Logger.Error("Can't find FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
-			Logger.Debug("FdoToMongo: getting cache");
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
 				Logger.Error("Can't find cache for FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
-			Logger.Debug("FdoToMongo: serviceLocator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{

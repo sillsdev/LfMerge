@@ -17,6 +17,7 @@ using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -179,7 +180,321 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
 		}
 
-		#if false
+		[Test]
+		public void Action_WithNoChangesFromMongo_ShouldCountZeroChanges()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_WithOneNewEntry_ShouldCountOneAdded()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+
+			LfLexEntry newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string newLexeme = "new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_WithOneModifiedEntry_ShouldCountOneModified()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string changedLexeme = "modified lexeme for this test";
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_WithOneDeletedEntry_ShouldCountOneDeleted()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
+		}
+
+		[Test]
+		public void Action_WithOneNewEntry_ShouldNotCountThatNewEntryOnSecondRun()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+
+			LfLexEntry newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string newLexeme = "new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			// Exercise again
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify zero on second run
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_WithOneModifiedEntry_ShouldNotCountThatModifiedEntryOnSecondRun()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string changedLexeme = "modified lexeme for this test";
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			// Exercise again
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify zero on second run
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_WithOneDeletedEntry_ShouldNotCountThatDeletedEntryOnSecondRun()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
+
+			// Exercise again
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify zero on second run
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_RunTwiceWithOneNewEntryEachTime_ShouldCountTwoAddedInTotal()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+
+			LfLexEntry newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string newLexeme = "new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			// Setup second run
+			newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			newLexeme = "second new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			// Modified and Deleted shouldn't have changed, but check Added first
+			// since that's the main point of this test
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_RunTwiceWithTheSameEntryModifiedEachTime_ShouldCountTwoModifiedInTotal()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string changedLexeme = "modified lexeme for this test";
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			// Setup second run
+			string changedLexeme2 = "second modified lexeme for this test";
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise second run
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify second run
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			// Added and Deleted shouldn't have changed, but check Modified first
+			// since that's the main point of this test
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_RunTwiceWithTheSameEntryDeletedEachTime_ShouldCountJustOneDeletedInTotal()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(1));
+
+			entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise second run
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify second run
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+			// Added and Modified shouldn't have changed either, but check Deleted first
+			// since that's the main point of this test
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+		}
+
+		#if false  // We've changed how we handle OptionLists since these tests were written, and they are no longer valid
 		[Test]
 		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
 		{

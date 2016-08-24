@@ -179,10 +179,6 @@ namespace LfMerge.DataConverters
 				}
 
 			case CellarPropertyType.ReferenceAtomic:
-				Console.WriteLine("ReferenceAtomic field named {0} with value {1}", fieldName, value.ToJson());
-				int log_fieldWs = fdoMetaData.GetFieldWs(flid);
-				string log_fieldWsStr = servLoc.WritingSystemManager.GetStrFromWs(log_fieldWs);
-				Console.WriteLine("Writing system for this field has ID {0} and name ({1})", log_fieldWs, log_fieldWsStr);
 				if (fieldGuids.First() != Guid.Empty)
 				{
 					int referencedHvo = data.get_ObjFromGuid(fieldGuids.First());
@@ -246,8 +242,6 @@ namespace LfMerge.DataConverters
 
 					// Step 1: Check if any of the fieldGuids is Guid.Empty, which would indicate a brand-new object that wasn't in FDO
 					List<string> fieldData = valueAsStringArray.Values;
-					Console.WriteLine("Reference collection had values {0}", String.Join(", ", fieldData));
-					Console.WriteLine("Reference collection had GUIDs {0}", guidOrGuids.ToJson());
 					IEnumerable<ICmPossibility> fieldObjs = fieldGuids.Zip<Guid, string, ICmPossibility>(fieldData, (thisGuid, thisData) =>
 						{
 							ICmPossibility newPoss;
@@ -351,7 +345,6 @@ namespace LfMerge.DataConverters
 				remainingFieldNames.Remove(fieldName);
 				if (fieldValue != BsonNull.Value)
 				{
-					Console.WriteLine("Setting custom field {0} with data {1} and GUID(s) {2}", fieldName, fieldValue.ToJson(), fieldGuidOrGuids.ToJson());
 					SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
 				}
 			}
@@ -362,7 +355,7 @@ namespace LfMerge.DataConverters
 				// BsonValue fieldGuidOrGuids = customFieldGuids.GetValue(fieldName, BsonNull.Value);
 				// SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
 				// Above lines commented out until we can create new custom fields correctly. 2015-11 RM
-				Console.WriteLine("Custom field {0} skipped because we're not yet creating new custom fields in FDO", fieldName);
+				logger.Warning("Custom field {0} from LF skipped, because we're not yet creating new custom fields in FDO", fieldName);
 			}
 		}
 	}

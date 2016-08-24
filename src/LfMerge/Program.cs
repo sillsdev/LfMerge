@@ -10,6 +10,7 @@ using LfMerge.Actions.Infrastructure;
 using LfMerge.LanguageForge.Infrastructure;
 using LfMerge.Logging;
 using LfMerge.MongoConnector;
+using LfMerge.Reporting;
 using LfMerge.Queues;
 using LfMerge.Settings;
 using Palaso.IO.FileLock;
@@ -34,6 +35,7 @@ namespace LfMerge
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<MongoConnection>().SingleInstance().As<IMongoConnection>().ExternallyOwned();
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
+			containerBuilder.RegisterType<EntryCounts>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
 			containerBuilder.RegisterType<LanguageForgeProxy>().As<ILanguageForgeProxy>();
 			Actions.Action.Register(containerBuilder);

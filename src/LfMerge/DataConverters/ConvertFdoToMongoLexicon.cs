@@ -94,7 +94,7 @@ namespace LfMerge.DataConverters
 
 		public void RunConversion()
 		{
-			Logger.Notice("FdoToMongo: Converting lexicon");
+			Logger.Notice("FdoToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
@@ -199,7 +199,6 @@ namespace LfMerge.DataConverters
 		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			if (fdoEntry == null) return null;
-			Logger.Debug("Converting FDO LexEntry with GUID {0}", fdoEntry.Guid);
 
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
@@ -370,8 +369,16 @@ namespace LfMerge.DataConverters
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
 				IPartOfSpeech pos = ConvertFdoToMongoPartsOfSpeech.FromMSA(fdoSense.MorphoSyntaxAnalysisRA, out secondaryPos);
-				lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
-				lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
+				if (pos == null)
+					Logger.Warning("Got MSA of unknown type {0} in sense {1} in project {2}",
+						fdoSense.MorphoSyntaxAnalysisRA.GetType().Name,
+						fdoSense.Guid,
+						LfProject.ProjectCode);
+				else
+				{
+					lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
+					lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
+				}
 			}
 			lfSense.PhonologyNote = ToMultiText(fdoSense.PhonologyNote);
 			if (fdoSense.PicturesOS != null)
@@ -382,11 +389,6 @@ namespace LfMerge.DataConverters
 				//lfSense.Pictures = new List<LfPicture>();
 				//foreach (var fdoPic in fdoSense.PicturesOS)
 				//	lfSense.Pictures.Add(FdoPictureToLfPicture(fdoPic));
-			}
-			foreach (LfPicture picture in lfSense.Pictures)
-			{
-				// TODO: Remove this debugging foreach loop once we know pictures are working
-				Logger.Debug("Picture with caption {0} and filename {1}", picture.Caption.FirstNonEmptyString(), picture.FileName);
 			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
 			lfSense.SensePublishIn = ToStringArrayField(PublishInListCode, fdoSense.PublishIn);
@@ -475,8 +477,6 @@ namespace LfMerge.DataConverters
 
 			lfSense.CustomFields = customFieldsBson;
 			lfSense.CustomFieldGuids = customFieldGuids;
-			//Logger.Debug("Custom fields for this sense: {0}", lfSense.CustomFields);
-			//Logger.Debug("Custom field GUIDs for this sense: {0}", lfSense.CustomFieldGuids);
 
 			return lfSense;
 		}
@@ -520,8 +520,6 @@ namespace LfMerge.DataConverters
 
 			lfExample.CustomFields = customFieldsBson;
 			lfExample.CustomFieldGuids = customFieldGuids;
-			//Logger.Debug("Custom fields for this example: {0}", result.CustomFields);
-			//Logger.Debug("Custom field GUIDs for this example: {0}", result.CustomFieldGuids);
 			return lfExample;
 		}
 
