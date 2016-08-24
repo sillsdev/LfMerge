@@ -85,7 +85,7 @@ namespace LfMerge.MongoConnector
 		}
 
 		private IMongoDatabase GetDatabase(string databaseName) {
-			return dbs.GetOrAdd(databaseName, client.Value.GetDatabase(databaseName));
+			return dbs.GetOrAdd(databaseName, () => client.Value.GetDatabase(databaseName));
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project) {
