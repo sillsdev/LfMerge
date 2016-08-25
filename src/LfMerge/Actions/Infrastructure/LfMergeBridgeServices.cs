@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace LfMerge.Actions.Infrastructure
 {
@@ -25,13 +26,24 @@ namespace LfMerge.Actions.Infrastructure
 			return string.Empty;
 		}
 
+		public static string NumEntries(int count, string after)
+		{
+			if (count <= 0)
+				return String.Empty;
+			return String.Format("{0} entr{1} {2}", count, (count == 1) ? "y" : "ies", after);
+		}
+
 		public static string FormatCommitMessageForLfMerge(int entriesAdded, int entriesModified, int entriesDeleted)
 		{
-			if (entriesAdded == 0 && entriesModified == 0 && entriesDeleted == 0)
-				return "Language Forge Send/Receive, with no changes from previous Send/Receive.";
-			// TODO: Any other text that we want in the commit message?
-			return String.Format("Language Forge Send/Receive. Compared to the previous Send/Receive, {0} entries were added, {1} entries were modified, and {2} entries were deleted.",
-				entriesAdded, entriesModified, entriesDeleted);
+			if (entriesAdded <= 0 && entriesModified <= 0 && entriesDeleted <= 0)
+				return "Language Forge S/R";
+			IEnumerable<string> commitData = new string[3] {
+				NumEntries(entriesAdded,    "added"),
+				NumEntries(entriesModified, "modified"),
+				NumEntries(entriesDeleted,  "deleted")
+			}.Where(s => !String.IsNullOrEmpty(s));
+			return String.Format("Language Forge: {0}", String.Join(", ", commitData));
+			// Sample output: "Language Forge: 4 entries added, 2 entries modified, 1 entry deleted".
 		}
 	}
 }

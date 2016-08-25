@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Actions;
+using LfMerge.Actions.Infrastructure;
 using LfMerge.DataConverters;
 using LfMerge.LanguageForge.Model;
 using LfMerge.MongoConnector;
@@ -194,6 +195,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge S/R"));
 		}
 
 		[Test]
@@ -220,6 +224,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(1));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry added"));
 		}
 
 		[Test]
@@ -236,8 +243,7 @@ namespace LfMerge.Tests.Fdo
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
-			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
-			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
@@ -247,6 +253,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(1));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry modified"));
 		}
 
 		[Test]
@@ -268,6 +277,112 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(1));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry deleted"));
+		}
+
+		[Test]
+		public void Action_WithTwoNewEntries_ShouldCountTwoAdded()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+
+			LfLexEntry newEntry = new LfLexEntry();
+			newEntry.Guid = Guid.NewGuid();
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string newLexeme = "new lexeme for this test";
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
+			newEntry.AuthorInfo = new LfAuthorInfo();
+			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry);
+
+			LfLexEntry newEntry2 = new LfLexEntry();
+			newEntry2.Guid = Guid.NewGuid();
+			string newLexeme2 = "new lexeme #2 for this test";
+			newEntry2.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme2);
+			newEntry2.AuthorInfo = new LfAuthorInfo();
+			newEntry2.AuthorInfo.CreatedDate = DateTime.UtcNow;
+			newEntry2.AuthorInfo.ModifiedDate = newEntry2.AuthorInfo.CreatedDate;
+			_conn.UpdateMockLfLexEntry(newEntry2);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(2));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 2 entries added"));
+		}
+
+		[Test]
+		public void Action_WithTwoModifiedEntries_ShouldCountTwoModified()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			string changedLexeme = "modified lexeme for this test";
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
+			LfLexEntry kenEntry = _conn.GetLfLexEntryByGuid(kenGuid);
+			string changedLexeme2 = "modified lexeme #2 for this test";
+			kenEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
+			kenEntry.AuthorInfo = new LfAuthorInfo();
+			kenEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(kenEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(2));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 2 entries modified"));
+		}
+
+		[Test]
+		public void Action_WithTwoDeletedEntries_ShouldCountTwoDeleted()
+		{
+			// Setup
+			var lfProj = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
+			entry = _conn.GetLfLexEntryByGuid(kenGuid);
+			entry.IsDeleted = true;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(2));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 2 entries deleted"));
 		}
 
 		[Test]
@@ -295,6 +410,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry added"));
+
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
@@ -302,6 +420,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge S/R"));
 		}
 
 		[Test]
@@ -318,8 +439,7 @@ namespace LfMerge.Tests.Fdo
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
-			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
-			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
@@ -330,6 +450,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(1));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry modified"));
+
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
@@ -337,6 +460,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge S/R"));
 		}
 
 		[Test]
@@ -359,6 +485,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(1));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry deleted"));
+
 			// Exercise again
 			sutMongoToFdo.Run(lfProj);
 
@@ -366,6 +495,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge S/R"));
 		}
 
 		[Test]
@@ -393,6 +525,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry added"));
+
 			// Setup second run
 			newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -412,6 +547,9 @@ namespace LfMerge.Tests.Fdo
 			// since that's the main point of this test
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry added"));
 		}
 
 		[Test]
@@ -428,8 +566,7 @@ namespace LfMerge.Tests.Fdo
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
-			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
-			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
@@ -440,12 +577,14 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(1));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry modified"));
+
 			// Setup second run
 			string changedLexeme2 = "second modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
 			entry.AuthorInfo = new LfAuthorInfo();
-			entry.AuthorInfo.CreatedDate = DateTime.UtcNow;
-			entry.AuthorInfo.ModifiedDate = entry.AuthorInfo.CreatedDate;
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise second run
@@ -457,6 +596,9 @@ namespace LfMerge.Tests.Fdo
 			// since that's the main point of this test
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry modified"));
 		}
 
 		[Test]
@@ -479,6 +621,9 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(1));
 
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge: 1 entry deleted"));
+
 			entry = _conn.GetLfLexEntryByGuid(entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
@@ -492,6 +637,9 @@ namespace LfMerge.Tests.Fdo
 			// since that's the main point of this test
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
+
+			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
+				Is.EqualTo("Language Forge S/R"));
 		}
 
 		#if false  // We've changed how we handle OptionLists since these tests were written, and they are no longer valid
