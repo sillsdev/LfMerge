@@ -5,8 +5,9 @@ using System.IO;
 using Autofac;
 using CommandLine;
 using IniParser.Model;
-using LfMerge.Queues;
-using LfMerge.Settings;
+using LfMerge.Core;
+using LfMerge.Core.Queues;
+using LfMerge.Core.Settings;
 
 namespace LfMerge.TestApp
 {
@@ -19,10 +20,10 @@ namespace LfMerge.TestApp
 				return;
 
 			var folder = Path.Combine(Path.GetTempPath(), "LfMerge.TestApp");
-			LfMergeSettingsIni.ConfigDir = folder;
+			LfMergeSettings.ConfigDir = folder;
 
 			MainClass.Container = MainClass.RegisterTypes().Build();
-			var settings = MainClass.Container.Resolve<LfMergeSettingsIni>();
+			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			var config = new IniData();
 			var main = config.Global;
 			main["BaseDir"] = folder;
@@ -32,7 +33,7 @@ namespace LfMerge.TestApp
 			Directory.CreateDirectory(queueDir);
 			File.WriteAllText(Path.Combine(queueDir, options.PriorityProject), string.Empty);
 
-			MainClass.Main(new string[0]);
+			Program.Main(new string[0]);
 		}
 	}
 }
