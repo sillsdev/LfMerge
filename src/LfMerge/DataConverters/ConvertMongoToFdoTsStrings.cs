@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 using SIL.FieldWorks.Common.COMInterfaces;
@@ -122,12 +123,12 @@ namespace LfMerge.DataConverters
 				if (!match.Success || match.Groups.Count < 8 || !match.Groups["spanText"].Success)
 				{
 					// We're outside a span
-					run.Content = part;
+					run.Content = WebUtility.HtmlDecode(part);
 					result.Add(run);
 					continue;
 				}
 				// We're inside a span
-				run.Content = match.Groups["spanText"].Value;
+				run.Content = WebUtility.HtmlDecode(match.Groups["spanText"].Value);
 				if (match.Groups["langAttr1"].Success && match.Groups["langText1"].Success)
 					run.Lang = match.Groups["langText1"].Value;
 				else if (match.Groups["langAttr2"].Success && match.Groups["langText2"].Success)

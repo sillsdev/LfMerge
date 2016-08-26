@@ -6,6 +6,7 @@ using SIL.CoreImpl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace LfMerge.DataConverters
@@ -40,7 +41,7 @@ namespace LfMerge.DataConverters
 			var resultBuilder = new StringBuilder();
 			for (int i = 0, n = tss.RunCount; i < n; i++)
 			{
-				string runText = tss.get_RunText(i);
+				string runText = WebUtility.HtmlEncode(tss.get_RunText(i));
 				ITsTextProps props = tss.get_Properties(i);
 				// int ignored;
 				// int ws = props.GetIntPropValues((int)FwTextPropType.ktptWs, out ignored);
