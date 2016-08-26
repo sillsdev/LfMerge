@@ -70,6 +70,7 @@ namespace LfMerge.DataConverters
 		{
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			var result = new LfMultiParagraph();
+			// result.Guid = obj.Guid;  // TODO: See if this would break LF PHP
 			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para, wsManager)).ToList();
 			// StText objects in FDO have a single primary writing system, unlike MultiString or MultiUnicode objects
 			int fieldWs = metaDataCacheAccessor.GetFieldWs(flid);
@@ -90,6 +91,12 @@ namespace LfMerge.DataConverters
 				if (!guidsInLf.Contains(para.Guid))
 					parasToDelete.Add(para);
 			}
+			foreach (IStTxtPara para in parasToDelete)
+			{
+				if (para.CanDelete)
+					para.Delete();
+			}
+
 			// Step 2: Step through LF and FDO paragraphs, adding new paragraphs as needed.
 			// (We step through FDO paras *by integer index* so that inserting new paragraphs into FDO will place them in the right location)
 			int fdoIdx = 0;

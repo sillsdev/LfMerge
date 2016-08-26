@@ -2,11 +2,14 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.LanguageForge.Model
 {
-	public class LfMultiParagraph : LfFieldBase
+	public class LfMultiParagraph : LfFieldBase, IHasNullableGuid
 	{
+		[BsonRepresentation(BsonType.String)]
 		public Guid? Guid { get; set; }
 		public string InputSystem { get; set; }
 		public List<LfParagraph> Paragraphs { get; set; }
