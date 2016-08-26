@@ -6,6 +6,7 @@ using SIL.CoreImpl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace LfMerge.DataConverters
@@ -40,7 +41,7 @@ namespace LfMerge.DataConverters
 			var resultBuilder = new StringBuilder();
 			foreach (TsRunPart run in tss.Runs())
 			{
-				string runText = run.Text;
+				string runText = WebUtility.HtmlEncode(run.Text);
 				ITsTextProps props = run.Props;
 				int ws = props.GetWs();
 				string namedStyle = props.Style();
