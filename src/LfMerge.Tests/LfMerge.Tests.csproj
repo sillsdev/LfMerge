@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</ProjectGuid>
+    <ProjectGuid>{40EC1EB4-F1EA-4FD7-9A4E-1ACA5BA31FC3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Tests</RootNamespace>
     <AssemblyName>LfMerge.Tests</AssemblyName>
@@ -18,7 +18,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -27,48 +26,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <DebugSymbols>true</DebugSymbols>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="CommandLine">
-      <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac">
-      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="Palaso.TestUtilities">
       <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
     </Reference>
     <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Extras.Moq">
-      <HintPath>..\..\packages\Autofac.Extras.Moq.4.0.0\lib\net45\Autofac.Extras.Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="INIFileParser">
-      <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Driver.Core">
-      <HintPath>..\..\packages\MongoDB.Driver.Core.2.2.1\lib\net45\MongoDB.Driver.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Bson">
-      <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
       <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="BasicUtils">
@@ -80,44 +47,11 @@
     <Reference Include="COMInterfaces">
       <Package>lfmerge-fdo</Package>
     </Reference>
-    <Reference Include="Palaso">
-      <HintPath>..\..\lib\Palaso.dll</HintPath>
-    </Reference>
-    <Reference Include="LfMergeBridge">
-      <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProcessingStateTests.cs" />
-    <Compile Include="TestEnvironment.cs" />
     <Compile Include="OptionsTests.cs" />
-    <Compile Include="Queues\QueueTests.cs" />
-    <Compile Include="Actions\ActionTests.cs" />
-    <Compile Include="LanguageDepotProjectTests.cs" />
-    <Compile Include="BidirectionalDictionaryTests.cs" />
-    <Compile Include="TestDoubles.cs" />
-    <Compile Include="TestEnvironmentAttribute.cs" />
-    <Compile Include="SampleData.cs" />
-    <Compile Include="Settings\LfMergeSettingsIniTests.cs" />
-    <Compile Include="GlobalTestFixture.cs" />
-    <Compile Include="Fdo\FdoTestBase.cs" />
-    <Compile Include="Fdo\RoundTripBase.cs" />
-    <Compile Include="Fdo\RoundTripTests.cs" />
-    <Compile Include="Fdo\TransferMongoToFdoActionTests.cs" />
-    <Compile Include="Fdo\TransferFdoToMongoActionTests.cs" />
-    <Compile Include="Fdo\DataConverters\ConvertFdoToMongoCustomFieldTests.cs" />
-    <Compile Include="LanguageDepotMock.cs" />
-    <Compile Include="Actions\SynchronizeActionTests.cs" />
-    <Compile Include="Actions\EnsureCloneActionTests.cs" />
-    <Compile Include="TestLogger.cs" />
-    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxyTests.cs" />
-    <Compile Include="LanguageForgeProxyMock.cs" />
-    <Compile Include="MercurialTestHelper.cs" />
-    <Compile Include="Actions\EnsureCloneActionBridgeIntegrationTests.cs" />
-    <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
-    <Compile Include="MercurialServer.cs" />
-    <Compile Include="Fdo\DataConverters\ConvertMongoToFdoTsStringsTests.cs" />
+    <Compile Include="QueueIntegrationTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -128,10 +62,13 @@
       <Project>{0E79BC8D-9AE4-4B2C-ACFB-D8C1B2BC3D4F}</Project>
       <Name>LfMerge</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Folder Include="LanguageForge\" />
-    <Folder Include="LanguageForge\Infrastructure\" />
+    <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj">
+      <Project>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</Project>
+      <Name>LfMerge.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LfMerge.Core.Tests\LfMerge.Core.Tests.csproj">
+      <Project>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</Project>
+      <Name>LfMerge.Core.Tests</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -3,8 +3,8 @@
 using System;
 using CommandLine;
 using CommandLine.Text;
-using LfMerge.Queues;
-using LfMerge.Actions;
+using LfMerge.Core.Queues;
+using LfMerge.Core.Actions;
 
 namespace LfMerge
 {
@@ -20,6 +20,7 @@ namespace LfMerge
 		[Option('p', "project", HelpText = "Process the specified project first")]
 		public string PriorityProject { get; set; }
 
+
 		[HelpOption('h', "help")]
 		public string GetUsage()
 		{
@@ -29,52 +30,6 @@ namespace LfMerge
 		[ParserState]
 		public IParserState LastParserState { get; set; }
 
-		public ActionNames FirstAction
-		{
-			get { return GetActionForQueue(QueueNames.Edit); }
-		}
-
-		// REVIEW: improve naming of this method. This method returns the next action for the
-		// purpose of enumerating over all actions. It doesn't return the next action that should
-		// logically be run. That is returned by IAction.NextAction.
-		public ActionNames GetNextAction(ActionNames currentAction)
-		{
-			int nextAction = ((int)currentAction) + 1;
-
-			if (nextAction > (int)ActionNames.TransferFdoToMongo)
-				nextAction = 0;
-			return (ActionNames)nextAction;
-		}
-
-		public static ActionNames GetActionForQueue(QueueNames queue)
-		{
-			switch (queue)
-			{
-				case QueueNames.Edit:
-					return ActionNames.Edit;
-				case QueueNames.None:
-					break;
-				case QueueNames.Synchronize:
-					return ActionNames.Synchronize;
-			}
-			return ActionNames.None;
-		}
-
-		public static QueueNames GetQueueForAction(ActionNames action)
-		{
-			switch (action)
-			{
-				case ActionNames.TransferMongoToFdo:
-				case ActionNames.Synchronize:
-					return QueueNames.Synchronize;
-				case ActionNames.Commit:
-				case ActionNames.None:
-				case ActionNames.Edit:
-				case ActionNames.TransferFdoToMongo:
-					break;
-			}
-			return QueueNames.None;
-		}
 
 		public static Options ParseCommandLineArgs(string[] args)
 		{
