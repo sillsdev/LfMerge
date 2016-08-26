@@ -793,9 +793,8 @@ namespace LfMerge.Tests.Fdo
 			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
 		}
 
-		// Custom MultiPara is called customField_entry_Cust_MultiPara
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteParagraphsInCustomMultiParaField()
+		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToAddAndModifyParagraphsInCustomMultiParaField()
 		{
 			// Create
 			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
@@ -817,14 +816,97 @@ namespace LfMerge.Tests.Fdo
 			else
 				Assert.Fail("Got something from the MultiPara field that wasn't an IStText. Test is unable to continue.");
 
-//			IEnumerable<int> customFields = mdc.GetFieldIds().Where(flid => mdc.IsCustom(flid));
-//			int flidMultiPara = customFields.FirstOrDefault(flid => mdc.GetFieldName(flid) == "customField_entry_Cust_MultiPara");
-//			Assert.That(flidMultiPara, Is.Not.EqualTo(0), "Cannot test custom MultiPara field since it was not found in the test data");
-
-			// Need to check three things:
+			// Here we check two things:
 			// 1) Can we add paragraphs?
-			// 2) Can we delete paragraphs?
-			// 3) Can we change existing paragraphs?
+			// 2) Can we change existing paragraphs?
+			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
+			// BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			BsonDocument customFieldsBson = lfEntry.CustomFields;
+			Assert.That(customFieldsBson.Contains("customField_entry_Cust_MultiPara"), Is.True,
+				"Couldn't find custom MultiPara field. Expected customField_entry_Cust_MultiPara as a field name, but found: " +
+				String.Join(", ", customFieldsBson.ToDictionary().Keys));
+			BsonDocument multiParaBson = customFieldsBson["customField_entry_Cust_MultiPara"].AsBsonDocument;
+			BsonArray paras = multiParaBson["paragraphs"].AsBsonArray;
+			Assert.That(paras.Count, Is.EqualTo(2));
+			// Save contents for later testing
+			string   firstParaText = paras[0].AsBsonDocument["content"].AsString;
+			string  secondParaText = paras[1].AsBsonDocument["content"].AsString;
+			string changedParaText = "Modified paragraph for this test";
+			string   addedParaText = "New paragraph for this test";
+			// Modify second paragraph
+			paras[1].AsBsonDocument.Set("content", changedParaText);
+			// And insert a new para in between the two
+			paras.Insert(1, new BsonDocument("content", addedParaText));
+			Assert.That(paras.Count, Is.EqualTo(3));
+			// Rebuild customFieldValues
+			multiParaBson.Set("paragraphs", paras);
+			customFieldsBson.Set("customField_entry_Cust_MultiPara", multiParaBson);
+			// Update Mongo connection double with rebuilt customFieldValues
+			lfEntry.CustomFields = customFieldsBson;
+			_conn.UpdateMockLfLexEntry(lfEntry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProject);
+
+			// Verify
+			// First via BSON ...
+			fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			customFieldsBson = customFieldValues["customFields"].AsBsonDocument;
+			multiParaBson = customFieldsBson["customField_entry_Cust_MultiPara"].AsBsonDocument;
+			paras = multiParaBson["paragraphs"].AsBsonArray;
+			Assert.That(paras.Count, Is.EqualTo(3));
+			Assert.That(paras[0].AsBsonDocument["content"].AsString, Is.EqualTo(firstParaText));
+			Assert.That(paras[1].AsBsonDocument["content"].AsString, Is.Not.EqualTo(secondParaText));
+			Assert.That(paras[1].AsBsonDocument["content"].AsString, Is.EqualTo(addedParaText));
+			Assert.That(paras[2].AsBsonDocument["content"].AsString, Is.Not.EqualTo(secondParaText));
+			Assert.That(paras[2].AsBsonDocument["content"].AsString, Is.EqualTo(changedParaText));
+
+			// ... then via FDO directly
+			hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
+			fdoMultiPara = null;
+			if (referencedObject is IStText)
+				fdoMultiPara = (IStText)referencedObject;
+			else
+				Assert.Fail("After test, got something from the MultiPara field that wasn't an IStText. That's a test failure since it really shouldn't happen.");
+			Assert.That(fdoMultiPara.ParagraphsOS.Count, Is.EqualTo(3));
+			Assert.That(fdoMultiPara.ParagraphsOS[2].IsFinalParaInText, Is.True);
+			Assert.That(fdoMultiPara.ParagraphsOS[0] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(firstParaText));
+			Assert.That(fdoMultiPara.ParagraphsOS[1] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.Not.EqualTo(secondParaText));
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.EqualTo(addedParaText));
+			Assert.That(fdoMultiPara.ParagraphsOS[2] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.Not.EqualTo(secondParaText));
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.EqualTo(changedParaText));
+		}
+
+		[Test]
+		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToDeleteParagraphsInCustomMultiParaField()
+		{
+			// Create
+			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			sutFdoToMongo.Run(lfProject);
+
+			FdoCache cache = lfProject.FieldWorksProject.Cache;
+			IFwMetaDataCacheManaged mdc = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			ISilDataAccess data = cache.DomainDataByFlid;
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			var fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(fdoEntry, Is.Not.Null, "Cannot test custom MultiPara field since the entry with GUID {0} was not found in the test data", TestEntryGuidStr);
+			int flidMultiPara = mdc.GetFieldIds().Where(flid => mdc.GetFieldName(flid) == "Cust MultiPara").FirstOrDefault();
+			Assert.That(flidMultiPara, Is.Not.EqualTo(0));
+			int hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			ICmObject referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
+			IStText fdoMultiPara = null;
+			if (referencedObject is IStText)
+				fdoMultiPara = (IStText)referencedObject;
+			else
+				Assert.Fail("Got something from the MultiPara field that wasn't an IStText. Test is unable to continue.");
+
+			// Here we check just one thing:
+			// 1) Can we delete paragraphs?
 			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
 			// BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
 			BsonDocument customFieldsBson = lfEntry.CustomFields;
