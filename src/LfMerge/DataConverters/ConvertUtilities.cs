@@ -79,55 +79,8 @@ namespace LfMerge.DataConverters
 			return result;
 		}
 
-		private struct LfTxtPara { // For SetCustomStTextValues -- nicer than using a tuple
-			public Guid Guid;
-			public string Contents;
-		}
-		// TODO: If LanguageForge allows editing paragraph styles in multi-paragraph fields, the styleForNewParas parameter
-		// will need to become a list of styles, one per paragraph. At that point we might as well add the style to the LfTxtPara
-		// struct, and pass a list of such structs into SetCustomStTextValues.
-		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<Guid> lfGuids, IEnumerable<string> lfParaContents, int wsId, string styleForNewParas)
-		{
-			LfTxtPara[] lfParas = lfGuids.Zip(lfParaContents, (g, s) => new LfTxtPara { Guid=g, Contents=s }).ToArray();
-			// Step 1: Delete all FDO paragraphs that are no longer found in LF
-			var guidsInLf = new HashSet<Guid>(lfGuids);
-			var parasToDelete = new HashSet<IStTxtPara>();
-			for (int i = 0, count = fdoStText.ParagraphsOS.Count; i < count; i++)
-			{
-				IStTxtPara para = fdoStText[i];
-				if (!guidsInLf.Contains(para.Guid))
-					parasToDelete.Add(para);
-			}
-			// Step 2: Step through LF and FDO paragraphs *by integer index* and copy texts over, adding new paras as needed
-			for (int i = 0, count = lfParas.Length; i < count; i++)
-			{
-				LfTxtPara lfPara = lfParas[i];
-				IStTxtPara fdoPara;
-				if (i >= fdoStText.ParagraphsOS.Count)
-				{
-					// Past the end of existing FDO paras: create new para at end
-					fdoPara = fdoStText.AddNewTextPara(styleForNewParas);
-				}
-				else
-				{
-					fdoPara = fdoStText[i];
-					if (fdoPara.Guid != lfPara.Guid)
-					{
-						// A new para was inserted into LF at this point; duplicate that in FDO
-						fdoPara = fdoStText.InsertNewTextPara(i, styleForNewParas);
-					}
-				}
-				fdoPara.Contents = ConvertMongoToFdoTsStrings.SpanStrToTsString(lfPara.Contents, wsId, fdoStText.Cache.WritingSystemFactory);
-			}
-		}
-
 		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId)
 		{
-			// Output format:
-			// { "ws": "en",
-			//   "paras": [ { "guid": "123", "styleName": "normal", "contents": "First paragraph" },
-			//              { "guid": "456", "styleName": "italic", "contents": "Second paragraph" } ] }
-
 			// Step 1: Delete all FDO paragraphs that are no longer found in LF
 			var guidsInLf = new HashSet<Guid>(lfParas.Where(p => p.Guid != null).Select(p => p.Guid.Value));
 			var parasToDelete = new HashSet<IStTxtPara>();
