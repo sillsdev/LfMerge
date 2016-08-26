@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 
 using SIL.FieldWorks.Common.COMInterfaces;
@@ -44,6 +43,13 @@ namespace LfMerge.DataConverters
 
 		public ConvertMongoToFdoTsStrings()
 		{
+		}
+
+		public static string HtmlDecode(string encoded)
+		{
+			// System.Net.WebUtility.HtmlEncode and HtmlDecode is over-zealous (we do NOT want non-Roman characters
+			// encoded, for example). So we have to write our own. Thankfully, it isn't hard at all.
+			return encoded.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
 		}
 
 		public static ITsString SpanStrToTsString(string source, int mainWs, ILgWritingSystemFactory wsf)
@@ -123,12 +129,12 @@ namespace LfMerge.DataConverters
 				if (!match.Success || match.Groups.Count < 8 || !match.Groups["spanText"].Success)
 				{
 					// We're outside a span
-					run.Content = WebUtility.HtmlDecode(part);
+					run.Content = HtmlDecode(part);
 					result.Add(run);
 					continue;
 				}
 				// We're inside a span
-				run.Content = WebUtility.HtmlDecode(match.Groups["spanText"].Value);
+				run.Content = HtmlDecode(match.Groups["spanText"].Value);
 				if (match.Groups["langAttr1"].Success && match.Groups["langText1"].Success)
 					run.Lang = match.Groups["langText1"].Value;
 				else if (match.Groups["langAttr2"].Success && match.Groups["langText2"].Success)

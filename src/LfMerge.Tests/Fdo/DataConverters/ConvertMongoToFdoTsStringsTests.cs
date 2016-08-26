@@ -31,7 +31,7 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		private string containsAngleBrackets = "strings with <angle brackets> need to be HTML-escaped";
 		private string containsAngleBracketsEscaped = "strings with &lt;angle brackets&gt; need to be HTML-escaped";
 		private string containsHtml = "especially if they would be <script type=\"text/javascript\">alert('security holes');</script>...";
-		private string containsHtmlEscaped = "especially if they would be &lt;script type=&quot;text/javascript&quot;&gt;alert(&#39;security holes&#39;);&lt;/script&gt;...";
+		private string containsHtmlEscaped = "especially if they would be &lt;script type=\"text/javascript\"&gt;alert('security holes');&lt;/script&gt;...";
 
 		private Guid firstGuid  = Guid.Parse("01234567-1234-4321-89ab-0123456789ab");
 		private Guid secondGuid = Guid.Parse("98765432-1234-4321-89ab-0123456789ab");
