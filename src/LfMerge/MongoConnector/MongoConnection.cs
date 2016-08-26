@@ -69,67 +69,6 @@ namespace LfMerge.MongoConnector
 			//new MongoRegistrarForLfFields().RegisterClassMappings();
 		}
 
-		/// <summary>
-		/// Attempt to make a Mongo DB operation safe from MongoWaitQueueFullExceptions. If a MongoWaitQueueFullException
-		/// is thrown, wait a little while (so that connections will be returned to the pool) and then try again. If too
-		/// many retries are attempted without success, give up and re-throw the last MongoWaitQueueFullException caught.
-		/// This overload of SafeMongoOperation is for a function (or lambda) returning void.
-		/// </summary>
-		/// <param name="operation">Void-returning function (or lambda) containing the Mongo operation to attempt.</param>
-		/// <param name="maxRetries">Max retries before giving up (default 5).</param>
-		/// <param name="msBetweenRetries">How many milliseconds to wait between retries (default half a second, 500 ms).</param>
-		public static void SafeMongoOperation(Action operation, int maxRetries = 5, int msBetweenRetries = 500)
-		{
-			MongoWaitQueueFullException lastException = null;
-			for (int i = 0; i < maxRetries; i++)
-			{
-				try
-				{
-					operation();
-					return;
-				}
-				catch (MongoWaitQueueFullException e)
-				{
-					lastException = e;
-					System.Threading.Thread.Sleep(msBetweenRetries);
-					continue;
-				}
-			}
-			if (lastException != null)
-				throw lastException;
-		}
-
-		/// <summary>
-		/// Attempt to make a Mongo DB operation safe from MongoWaitQueueFullExceptions. If a MongoWaitQueueFullException
-		/// is thrown, wait a little while (so that connections will be returned to the pool) and then try again. If too
-		/// many retries are attempted without success, give up and re-throw the last MongoWaitQueueFullException caught.
-		/// This overload of SafeMongoOperation is for a function (or lambda) returning a value.
-		/// </summary>
-		/// <param name="operation">Void-returning function (or lambda) containing the Mongo operation to attempt.</param>
-		/// <param name="maxRetries">Max retries before giving up (default 5).</param>
-		/// <param name="msBetweenRetries">How many milliseconds to wait between retries (default half a second, 500 ms).</param>
-		public static TReturn SafeMongoOperation<TReturn>(Func<TReturn> operation, int maxRetries = 5, int msBetweenRetries = 500)
-		{
-			MongoWaitQueueFullException lastException = null;
-			for (int i = 0; i < maxRetries; i++)
-			{
-				try
-				{
-					return operation();
-				}
-				catch (MongoWaitQueueFullException e)
-				{
-					lastException = e;
-					System.Threading.Thread.Sleep(msBetweenRetries);
-					continue;
-				}
-			}
-			if (lastException != null)
-				throw lastException;
-			// We should never get to this point, but in case we do, try one last time. If this one throws an exception, let it bubble up to the caller.
-			return operation();
-		}
-
 		public MongoConnection(LfMergeSettingsIni settings, ILogger logger)
 		{
 			_settings = settings;
@@ -146,7 +85,7 @@ namespace LfMerge.MongoConnector
 		}
 
 		private IMongoDatabase GetDatabase(string databaseName) {
-			return dbs.GetOrAdd(databaseName, dbName => SafeMongoOperation(() => client.Value.GetDatabase(dbName)));
+			return dbs.GetOrAdd(databaseName, dbName => client.Value.GetDatabase(dbName));
 		}
 
 		public IMongoDatabase GetProjectDatabase(ILfProject project) {
@@ -160,10 +99,10 @@ namespace LfMerge.MongoConnector
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<TDocument> collection = SafeMongoOperation(() => db.GetCollection<TDocument>(collectionName));
-			using (IAsyncCursor<TDocument> cursor = SafeMongoOperation(() => collection.Find<TDocument>(filter)).ToCursor())
+			IMongoCollection<TDocument> collection = db.GetCollection<TDocument>(collectionName);
+			using (IAsyncCursor<TDocument> cursor = collection.Find<TDocument>(filter).ToCursor())
 			{
-				while (SafeMongoOperation(() => cursor.MoveNext()))
+				while (cursor.MoveNext())
 					foreach (TDocument doc in cursor.Current) // IAsyncCursor returns results in batches
 						yield return doc;
 			}
@@ -182,8 +121,8 @@ namespace LfMerge.MongoConnector
 		public MongoProjectRecord GetProjectRecord(ILfProject project)
 		{
 			IMongoDatabase db = GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> collection = SafeMongoOperation(() => db.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords));
-			return SafeMongoOperation(() => collection.Find(proj => proj.ProjectCode == project.ProjectCode))
+			IMongoCollection<MongoProjectRecord> collection = db.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
+			return collection.Find(proj => proj.ProjectCode == project.ProjectCode)
 				.Limit(1).FirstOrDefault();
 		}
 
@@ -196,7 +135,7 @@ namespace LfMerge.MongoConnector
 		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<BsonDocument> lexicon = SafeMongoOperation(() => db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon));
+			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
 			filter.Add("dateModified", new BsonDocument("$ne", BsonNull.Value));
@@ -204,12 +143,10 @@ namespace LfMerge.MongoConnector
 			projection.Add("guid", 1);
 			projection.Add("dateModified", 1);
 			Dictionary<Guid, DateTime> results =
-				SafeMongoOperation(() =>
-					lexicon
-					.Find(filter)
-					.Project(projection)
-					.ToEnumerable()
-				)
+				lexicon
+				.Find(filter)
+				.Project(projection)
+				.ToEnumerable()
 				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString) && doc.Contains("dateModified"))
 				.ToDictionary(doc => Guid.Parse(doc.GetValue("guid").AsString),
 				              doc => doc.GetValue("dateModified").AsBsonDateTime.ToUniversalTime());
@@ -273,12 +210,11 @@ namespace LfMerge.MongoConnector
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
 
 			IMongoDatabase mongoDb = GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> collection = SafeMongoOperation(() =>
-				mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords));
+			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
 			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
 				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetInputSystems() is ever called.
 			};
-			MongoProjectRecord oldProjectRecord = SafeMongoOperation(() => collection.FindOneAndUpdate(filter, update, updateOptions));
+			MongoProjectRecord oldProjectRecord = collection.FindOneAndUpdate(filter, update, updateOptions);
 
 			// For initial clone, also update field writing systems accordingly
 			if (project.IsInitialClone)
@@ -347,7 +283,7 @@ namespace LfMerge.MongoConnector
 
 //				Logger.Debug("Built an input systems update that looks like {0}",
 //					update.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToJson());
-				SafeMongoOperation(() => collection.FindOneAndUpdate(filter, update, updateOptions));
+				collection.FindOneAndUpdate(filter, update, updateOptions);
 			}
 
 			return true;
@@ -371,8 +307,7 @@ namespace LfMerge.MongoConnector
 			FilterDefinition<MongoProjectRecord> filter = Builders<MongoProjectRecord>.Filter.Eq(record => record.ProjectCode, project.ProjectCode);
 
 			IMongoDatabase mongoDb = GetMainDatabase();
-			IMongoCollection<MongoProjectRecord> collection = SafeMongoOperation(() =>
-				mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords));
+			IMongoCollection<MongoProjectRecord> collection = mongoDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
 			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
 				IsUpsert = false // If there's no project record, we do NOT want to create one. That should have been done before SetCustomFieldConfig() is ever called.
 			};
@@ -443,9 +378,9 @@ namespace LfMerge.MongoConnector
 			try
 			{
 				if (previousUpdates.Count > 0)
-					SafeMongoOperation(() => collection.FindOneAndUpdate(filter, previousUpdate, updateOptions));
+					collection.FindOneAndUpdate(filter, previousUpdate, updateOptions);
 				if (currentUpdates.Count > 0)
-					SafeMongoOperation(() => collection.FindOneAndUpdate(filter, currentUpdate, updateOptions));
+					collection.FindOneAndUpdate(filter, currentUpdate, updateOptions);
 				return true;
 			}
 			catch (MongoCommandException e)
@@ -577,7 +512,7 @@ namespace LfMerge.MongoConnector
 			// 2. This is an *update*, but dirtySR was already 0; do not decrement.
 			// 3. This is an *update*, and dirtySR was >0; decrement.
 			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<LfLexEntry> coll = SafeMongoOperation(() => db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon));
+			IMongoCollection<LfLexEntry> coll = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
 			LfLexEntry updateResult;
 			if (coll.Count(filter) == 0)
 			{
@@ -585,7 +520,7 @@ namespace LfMerge.MongoConnector
 				// BuildUpdate() function (for handling Nullable<Guid> fields, for example), and we want to
 				// make sure that gets applied for both inserts and updates. So we'll do an upsert even though
 				// we *know* there's no previous data
-				updateResult = SafeMongoOperation(() => coll.FindOneAndUpdate(filter, coreUpdate, upsert));
+				updateResult = coll.FindOneAndUpdate(filter, coreUpdate, upsert);
 				return (updateResult != null);
 			}
 			else
@@ -601,7 +536,7 @@ namespace LfMerge.MongoConnector
 				// Precisely one of the next two calls can succeed.
 				try
 				{
-					updateResult = SafeMongoOperation(() => coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert));
+					updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
 					if (updateResult != null)
 						return true;
 				}
@@ -609,7 +544,7 @@ namespace LfMerge.MongoConnector
 				{
 					Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
 				}
-				updateResult = SafeMongoOperation(() => coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert));
+				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
 				return (updateResult != null);
 			}
 		}
@@ -631,11 +566,11 @@ namespace LfMerge.MongoConnector
 			else
 				mongoDb = GetMainDatabase();
 			UpdateDefinition<TDocument> update = BuildUpdate(data);
-			IMongoCollection<TDocument> collection = SafeMongoOperation(() => mongoDb.GetCollection<TDocument>(collectionName));
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
 			};
-			SafeMongoOperation(() => collection.FindOneAndUpdate(filter, update, updateOptions));
+			collection.FindOneAndUpdate(filter, update, updateOptions);
 			return true;
 		}
 
@@ -643,9 +578,9 @@ namespace LfMerge.MongoConnector
 		public bool RemoveRecord(ILfProject project, Guid guid)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<LfLexEntry> collection = SafeMongoOperation(() => db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon));
+			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
 			FilterDefinition<LfLexEntry> filter = Builders<LfLexEntry>.Filter.Eq(entry => entry.Guid, guid);
-			var removeResult = SafeMongoOperation(() => collection.DeleteOne(filter));
+			var removeResult = collection.DeleteOne(filter);
 			return (removeResult != null);
 		}
 	}
