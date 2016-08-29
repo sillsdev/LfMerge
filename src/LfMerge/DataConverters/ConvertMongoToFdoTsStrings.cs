@@ -49,6 +49,8 @@ namespace LfMerge.DataConverters
 		{
 			// System.Net.WebUtility.HtmlEncode and HtmlDecode is over-zealous (we do NOT want non-Roman characters
 			// encoded, for example). So we have to write our own. Thankfully, it isn't hard at all.
+			if (encoded == null)
+				return null;
 			return encoded.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
 		}
 
