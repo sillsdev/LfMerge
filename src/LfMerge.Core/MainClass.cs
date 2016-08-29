@@ -18,7 +18,7 @@ namespace LfMerge.Core
 		public static IContainer Container { get; internal set; }
 		public static ILogger Logger { get; set; }
 
-		public static void Initialize()
+		static MainClass()
 		{
 			if (Container == null)
 				Container = RegisterTypes().Build();
