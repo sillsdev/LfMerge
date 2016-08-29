@@ -60,6 +60,8 @@ namespace LfMerge.DataConverters
 			// 1. Use SetIntPropValues or SetStrPropValues to set a property "to be applied to any subsequent append operations".
 			// 2. THEN use Append(string s) to add a string, which will "pick up" the properties set in step 1.
 			// See ScrFootnoteFactory.CreateRunFromStringRep() in FdoFactoryAdditions.cs for a good example.
+			if (source == null)
+				return null;
 			List<Run> runs = GetSpanRuns(source);
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			foreach (Run run in runs)
@@ -118,7 +120,10 @@ namespace LfMerge.DataConverters
 
 		public static List<Run> GetSpanRuns(string source)
 		{
-			string[] parts = spanRegex.Split(source);
+			if (source == null)
+				return new List<Run>();
+			string decodedSource = HtmlDecode(source);
+			string[] parts = spanRegex.Split(decodedSource);
 			var result = new List<Run>();
 			foreach (string part in parts)
 			{
@@ -131,12 +136,12 @@ namespace LfMerge.DataConverters
 				if (!match.Success || match.Groups.Count < 8 || !match.Groups["spanText"].Success)
 				{
 					// We're outside a span
-					run.Content = HtmlDecode(part);
+					run.Content = part;
 					result.Add(run);
 					continue;
 				}
 				// We're inside a span
-				run.Content = HtmlDecode(match.Groups["spanText"].Value);
+				run.Content = match.Groups["spanText"].Value;
 				if (match.Groups["langAttr1"].Success && match.Groups["langText1"].Success)
 					run.Lang = match.Groups["langText1"].Value;
 				else if (match.Groups["langAttr2"].Success && match.Groups["langText2"].Success)
