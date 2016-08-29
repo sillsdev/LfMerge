@@ -45,12 +45,23 @@ namespace LfMerge.DataConverters
 		{
 		}
 
+		public static string HtmlDecode(string encoded)
+		{
+			// System.Net.WebUtility.HtmlEncode and HtmlDecode is over-zealous (we do NOT want non-Roman characters
+			// encoded, for example). So we have to write our own. Thankfully, it isn't hard at all.
+			if (encoded == null)
+				return null;
+			return encoded.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
+		}
+
 		public static ITsString SpanStrToTsString(string source, int mainWs, ILgWritingSystemFactory wsf)
 		{
 			// How to build up an ITsString via an ITsIncStrBldr -
 			// 1. Use SetIntPropValues or SetStrPropValues to set a property "to be applied to any subsequent append operations".
 			// 2. THEN use Append(string s) to add a string, which will "pick up" the properties set in step 1.
 			// See ScrFootnoteFactory.CreateRunFromStringRep() in FdoFactoryAdditions.cs for a good example.
+			if (source == null)
+				return null;
 			List<Run> runs = GetSpanRuns(source);
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			foreach (Run run in runs)
@@ -109,7 +120,10 @@ namespace LfMerge.DataConverters
 
 		public static List<Run> GetSpanRuns(string source)
 		{
-			string[] parts = spanRegex.Split(source);
+			if (source == null)
+				return new List<Run>();
+			string decodedSource = HtmlDecode(source);
+			string[] parts = spanRegex.Split(decodedSource);
 			var result = new List<Run>();
 			foreach (string part in parts)
 			{

@@ -28,6 +28,13 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		private string twoStylesTwoLangsOneOtherProperty   = "this has <span lang=\"grc\" class=\"styleName_Bold\">two</span> different <span class=\"propi_4_ktptSuperscript_1_0 styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and one extra int property";
 		private string twoStylesTwoLangsTwoOtherProperties = "this has <span lang=\"grc\" class=\"styleName_Bold\">two (B,grc)</span> different <span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and two extra properties, one int and one str";
 
+		private string twoStylesTwoLangsTwoOtherPropertiesEscaped = "this has &lt;span lang=\"grc\" class=\"styleName_Bold\"&gt;two (B,grc)&lt;/span&gt; different &lt;span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\"&gt;spans&lt;/span&gt;, two styles, and two language spans -- and two extra properties, one int and one str";
+
+		private string containsAngleBrackets = "strings with <angle brackets> need to be HTML-escaped";
+		private string containsAngleBracketsEscaped = "strings with &lt;angle brackets&gt; need to be HTML-escaped";
+		private string containsHtml = "especially if they would be <script type=\"text/javascript\">alert('security holes');</script>...";
+		private string containsHtmlEscaped = "especially if they would be &lt;script type=\"text/javascript\"&gt;alert('security holes');&lt;/script&gt;...";
+
 		private Guid firstGuid  = Guid.Parse("01234567-1234-4321-89ab-0123456789ab");
 		private Guid secondGuid = Guid.Parse("98765432-1234-4321-89ab-0123456789ab");
 
@@ -102,6 +109,26 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		public void CanDetectSpans_TwoStylesTwoLangsTwoOtherProperties()
 		{
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoStylesTwoLangsTwoOtherProperties), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(twoStylesTwoLangsTwoOtherPropertiesEscaped), Is.EqualTo(2));
+		}
+
+		[Test]
+		public void CanDetectSpans_ContainsAngleBrackets()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsAngleBrackets), Is.EqualTo(0));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsAngleBracketsEscaped), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanDetectSpans_ContainsHtml()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsHtml), Is.EqualTo(0));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsHtmlEscaped), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -201,6 +228,33 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void CanExtractTextInsideSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			string[] textInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanTexts(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
+			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(2));
+			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("two (B,grc)"));
+			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1], Is.EqualTo("spans"));
+		}
+
+		[Test]
+		public void CanExtractTextInsideSpans_ContainsAngleBrackets()
+		{
+			string[] textInContainsAngleBrackets = ConvertMongoToFdoTsStrings.GetSpanTexts(containsAngleBrackets).ToArray();
+			string[] textInContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.GetSpanTexts(containsAngleBracketsEscaped).ToArray();
+			Assert.That(textInContainsAngleBrackets.Length, Is.EqualTo(0));
+			Assert.That(textInContainsAngleBracketsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractTextInsideSpans_ContainsHtml()
+		{
+			string[] textInContainsHtml = ConvertMongoToFdoTsStrings.GetSpanTexts(containsHtml).ToArray();
+			string[] textInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanTexts(containsHtmlEscaped).ToArray();
+			Assert.That(textInContainsHtml.Length, Is.EqualTo(0));
+			Assert.That(textInContainsHtmlEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
 		public void CanClassifySpansByLanguage_ZeroSpans()
 		{
 			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(zeroSpans).ToArray();
@@ -281,6 +335,33 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties.Length, Is.EqualTo(2));
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("grc"));
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties[1], Is.EqualTo("fr"));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			string[] langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
+			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(2));
+			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1], Is.EqualTo("fr"));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_ContainsAngleBrackets()
+		{
+			string[] langsInContainsAngleBrackets = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsAngleBrackets).ToArray();
+			string[] langsInContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsAngleBracketsEscaped).ToArray();
+			Assert.That(langsInContainsAngleBrackets.Length, Is.EqualTo(0));
+			Assert.That(langsInContainsAngleBracketsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_ContainsHtml()
+		{
+			string[] langsInContainsHtml = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsHtml).ToArray();
+			string[] langsInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsHtmlEscaped).ToArray();
+			Assert.That(langsInContainsHtml.Length, Is.EqualTo(0));
+			Assert.That(langsInContainsHtmlEscaped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -368,6 +449,31 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		{
 			Guid[] guidsInTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.GetSpanGuids(twoStylesTwoLangsTwoOtherProperties).ToArray();
 			Assert.That(guidsInTwoStylesTwoLangsTwoOtherProperties.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			Guid[] guidsInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanGuids(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
+			Assert.That(guidsInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_ContainsAngleBrackets()
+		{
+			Guid[] guidsInContainsAngleBrackets = ConvertMongoToFdoTsStrings.GetSpanGuids(containsAngleBrackets).ToArray();
+			Guid[] guidsInContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsAngleBracketsEscaped).ToArray();
+			Assert.That(guidsInContainsAngleBrackets.Length, Is.EqualTo(0));
+			Assert.That(guidsInContainsAngleBracketsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_ContainsHtml()
+		{
+			Guid[] guidsInContainsHtml = ConvertMongoToFdoTsStrings.GetSpanGuids(containsHtml).ToArray();
+			Guid[] guidsInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsHtmlEscaped).ToArray();
+			Assert.That(guidsInContainsHtml.Length, Is.EqualTo(0));
+			Assert.That(guidsInContainsHtmlEscaped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -459,6 +565,33 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			Assert.That(stylesInTwoStylesTwoLangsTwoOtherProperties.Length, Is.EqualTo(2));
 			Assert.That(stylesInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("Bold"));
 			Assert.That(stylesInTwoStylesTwoLangsTwoOtherProperties[1], Is.EqualTo("Default Paragraph Style"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			string[] stylesInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanStyles(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
+			Assert.That(stylesInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(2));
+			Assert.That(stylesInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("Bold"));
+			Assert.That(stylesInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1], Is.EqualTo("Default Paragraph Style"));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_ContainsAngleBrackets()
+		{
+			string[] stylesInContainsAngleBrackets = ConvertMongoToFdoTsStrings.GetSpanStyles(containsAngleBrackets).ToArray();
+			string[] stylesInContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsAngleBracketsEscaped).ToArray();
+			Assert.That(stylesInContainsAngleBrackets.Length, Is.EqualTo(0));
+			Assert.That(stylesInContainsAngleBracketsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_ContainsHtml()
+		{
+			string[] stylesInContainsHtml = ConvertMongoToFdoTsStrings.GetSpanStyles(containsHtml).ToArray();
+			string[] stylesInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsHtmlEscaped).ToArray();
+			Assert.That(stylesInContainsHtml.Length, Is.EqualTo(0));
+			Assert.That(stylesInContainsHtmlEscaped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -754,6 +887,67 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void CanExtractRunsFromSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			Run[] runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanRuns(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(5));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].Content,   Is.EqualTo("this has "));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].Lang,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].Guid,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].StyleName, Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Content,   Is.EqualTo("two (B,grc)"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Guid,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].StyleName, Is.EqualTo("Bold"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[2].Content,   Is.EqualTo(" different "));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[2].Lang,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[2].Guid,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[2].StyleName, Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[3].Content,   Is.EqualTo("spans"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[3].Lang,      Is.EqualTo("fr"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[3].Guid,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[3].StyleName, Is.EqualTo("Default Paragraph Style"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[4].Content,   Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[4].Lang,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[4].Guid,      Is.Null);
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[4].StyleName, Is.Null);
+		}
+
+		[Test]
+		public void CanExtractRunsFromSpans_ContainsAngleBrackets()
+		{
+			Run[] runsInContainsAngleBrackets = ConvertMongoToFdoTsStrings.GetSpanRuns(containsAngleBrackets).ToArray();
+			Assert.That(runsInContainsAngleBrackets.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsAngleBrackets[0].Content,   Is.EqualTo(containsAngleBrackets));
+			Assert.That(runsInContainsAngleBrackets[0].Lang,      Is.Null);
+			Assert.That(runsInContainsAngleBrackets[0].Guid,      Is.Null);
+			Assert.That(runsInContainsAngleBrackets[0].StyleName, Is.Null);
+			Run[] runsInContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.GetSpanRuns(containsAngleBracketsEscaped).ToArray();
+			Assert.That(runsInContainsAngleBracketsEscaped.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsAngleBracketsEscaped[0].Content,   Is.EqualTo(containsAngleBrackets));
+			Assert.That(runsInContainsAngleBracketsEscaped[0].Lang,      Is.Null);
+			Assert.That(runsInContainsAngleBracketsEscaped[0].Guid,      Is.Null);
+			Assert.That(runsInContainsAngleBracketsEscaped[0].StyleName, Is.Null);
+		}
+
+		[Test]
+		public void CanExtractRunsFromSpans_ContainsHtml()
+		{
+			Run[] runsInContainsHtml = ConvertMongoToFdoTsStrings.GetSpanRuns(containsHtml).ToArray();
+			Assert.That(runsInContainsHtml.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsHtml[0].Content,   Is.EqualTo(containsHtml));
+			Assert.That(runsInContainsHtml[0].Lang,      Is.Null);
+			Assert.That(runsInContainsHtml[0].Guid,      Is.Null);
+			Assert.That(runsInContainsHtml[0].StyleName, Is.Null);
+			Run[] runsInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanRuns(containsHtmlEscaped).ToArray();
+			Assert.That(runsInContainsHtmlEscaped.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsHtmlEscaped[0].Content,   Is.EqualTo(containsHtml));
+			Assert.That(runsInContainsHtmlEscaped[0].Lang,      Is.Null);
+			Assert.That(runsInContainsHtmlEscaped[0].Guid,      Is.Null);
+			Assert.That(runsInContainsHtmlEscaped[0].StyleName, Is.Null);
+		}
+
+		[Test]
 		public void CanCreateTsStringsFromSpans_ZeroSpans()
 		{
 			ITsString tsStrFromZeroSpans = ConvertMongoToFdoTsStrings.SpanStrToTsString(zeroSpans,  _wsEn, _cache.WritingSystemFactory);
@@ -1030,6 +1224,91 @@ namespace LfMerge.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void CanCreateTsStringsFromSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
+		{
+			ITsString tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherPropertiesEscaped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, Is.Not.Null);
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.Text, Is.EqualTo("this has two (B,grc) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.RunCount, Is.EqualTo(5));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(0), Is.EqualTo("this has "));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(1), Is.EqualTo("two (B,grc)"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(2), Is.EqualTo(" different "));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(3), Is.EqualTo("spans"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
+			int wsEn = _wsEn;
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 0), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo("Bold"));
+			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 2), Is.Null);
+			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 3), Is.EqualTo("Default Paragraph Style"));
+			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 4), Is.Null);
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 0), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 2), Is.EqualTo(wsEn));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 3), Is.EqualTo(wsFr));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 4), Is.EqualTo(wsEn));
+
+			// Extra int property "propi_4_ktptSuperscript_1_0" on second span; first should return "none"
+			// Extra string property "props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman" on second span; first should return "none"
+			ITsTextProps props;
+			int variation;
+			int superscript;
+			string fontFamily;
+			props = tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_Properties(1);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			fontFamily = props.GetStrPropValue((int)FwTextPropType.ktptFontFamily);
+			Assert.That(superscript, Is.EqualTo(-1)); // -1 means "property not found" for int properties
+			Assert.That(variation, Is.EqualTo(-1));
+			Assert.That(fontFamily, Is.Null); // null means "property not found" for string properties
+			// Second span (fourth run, so index 3) should have both properties
+			props = tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_Properties(3);
+			superscript = props.GetIntPropValues((int)FwTextPropType.ktptSuperscript, out variation);
+			fontFamily = props.GetStrPropValue((int)FwTextPropType.ktptFontFamily);
+			Assert.That(fontFamily, Is.EqualTo("Times New Roman"));
+			Assert.That(superscript, Is.EqualTo(1));
+			Assert.That(variation, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_ContainsAngleBrackets()
+		{
+			ITsString tsStrFromContainsAngleBrackets = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBrackets, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsAngleBrackets, Is.Not.Null);
+			Assert.That(tsStrFromContainsAngleBrackets.Text, Is.EqualTo(containsAngleBrackets));
+			Assert.That(tsStrFromContainsAngleBrackets.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsAngleBrackets.get_RunText(0), Is.EqualTo(containsAngleBrackets));
+			Assert.That(GetStyle(tsStrFromContainsAngleBrackets, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsAngleBrackets, 0), Is.EqualTo(_wsEn));
+			ITsString tsStrFromContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBracketsEscaped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsAngleBracketsEscaped, Is.Not.Null);
+			Assert.That(tsStrFromContainsAngleBracketsEscaped.Text, Is.EqualTo(containsAngleBrackets));
+			Assert.That(tsStrFromContainsAngleBracketsEscaped.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsAngleBracketsEscaped.get_RunText(0), Is.EqualTo(containsAngleBrackets));
+			Assert.That(GetStyle(tsStrFromContainsAngleBracketsEscaped, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsAngleBracketsEscaped, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_ContainsHtml()
+		{
+			ITsString tsStrFromContainsHtml = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtml, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsHtml, Is.Not.Null);
+			Assert.That(tsStrFromContainsHtml.Text, Is.EqualTo(containsHtml));
+			Assert.That(tsStrFromContainsHtml.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsHtml.get_RunText(0), Is.EqualTo(containsHtml));
+			Assert.That(GetStyle(tsStrFromContainsHtml, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsHtml, 0), Is.EqualTo(_wsEn));
+			ITsString tsStrFromContainsHtmlEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtmlEscaped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsHtmlEscaped, Is.Not.Null);
+			Assert.That(tsStrFromContainsHtmlEscaped.Text, Is.EqualTo(containsHtml));
+			Assert.That(tsStrFromContainsHtmlEscaped.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsHtmlEscaped.get_RunText(0), Is.EqualTo(containsHtml));
+			Assert.That(GetStyle(tsStrFromContainsHtmlEscaped, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsHtmlEscaped, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
 		public void TsStringsCanRoundTrip_SingleRunString()
 		{
 			// Setup
@@ -1118,6 +1397,144 @@ namespace LfMerge.Tests.Fdo.DataConverters
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_ContainsAngleBrackets()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsAngleBrackets);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_ContainsHtml()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsHtml);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_ContainsAngleBracketsEscaped()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsAngleBracketsEscaped);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTrip_ContainsHtmlEscaped()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsHtmlEscaped);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsAreHtmlEscapedWhenConvertedToSpanText_ContainsAngleBrackets()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsAngleBrackets);
+			ITsString tss = builder.GetString();
+
+			// Exercise
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+
+			// Verify
+			Assert.That(text, Is.EqualTo(containsAngleBracketsEscaped));
+		}
+
+		[Test]
+		public void TsStringsAreHtmlEscapedWhenConvertedToSpanText_ContainsHtml()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsHtml);
+			ITsString tss = builder.GetString();
+
+			// Exercise
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+
+			// Verify
+			Assert.That(text, Is.EqualTo(containsHtmlEscaped));
+		}
+
+		[Test]
+		public void TsStringsAreHtmlUnescapedWhenConvertedBackFromSpanText_ContainsAngleBrackets()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			string text = containsAngleBracketsEscaped;
+
+			// Exercise
+			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Verify
+			Assert.That(tss.Text, Is.EqualTo(containsAngleBrackets));
+		}
+
+		[Test]
+		public void TsStringsAreHtmlUnescapedWhenConvertedBackFromSpanText_ContainsHtml()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			string text = containsHtmlEscaped;
+
+			// Exercise
+			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Verify
+			Assert.That(tss.Text, Is.EqualTo(containsHtml));
 		}
 
 		// Helper functions for TsString test
