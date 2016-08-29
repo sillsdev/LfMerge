@@ -487,6 +487,12 @@ namespace LfMerge.DataConverters
 				}
 				return; // Don't set fields on a deleted entry
 			}
+
+			// only update FDO from mongo if the entryDateModified are not equal
+//			if (fdoEntry.DateModified != lfEntry.DateModified) {
+//				// all further FDO update code below inside this condition
+//			}
+
 			// Used for detecting whether we modified the FDO entry, or whether we were simply
 			// setting fields to the same value they had before.
 			DateTime modifiedDateBeforeChanges = fdoEntry.DateModified;

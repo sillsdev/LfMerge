@@ -107,6 +107,19 @@ namespace LfMerge.DataConverters
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
+				// before converting a lflexentry, just compare modification dates
+//				if (!EntryModificationDatesAreEqual(previousModificationDates, fdoEntry) {
+//					lfEntry.DateModified = DateTime.UtcNow;
+//					LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+//					string entryNameForDebugging;
+//					if (lfEntry.Lexeme == null)
+//						entryNameForDebugging = "<null lexeme>";
+//					else
+//						entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
+//					lfEntry.IsDeleted = false;
+//					Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
+//					Connection.UpdateRecord(LfProject, lfEntry);
+//				}
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				string entryNameForDebugging;
 				if (lfEntry.Lexeme == null)
