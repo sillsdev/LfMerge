@@ -76,6 +76,16 @@ namespace LfMerge.Core
 			Settings = settings;
 		}
 
+		public void PutOnHold(string errorMessage)
+		{
+			if (errorMessage == null)
+				// Fallback. ALWAYS provide an error message when you call this function, otherwise
+				// the user will see this VERY uninformative error message. Don't let that happen.
+				errorMessage = "Project going on hold due to unspecified error";
+			_errorMessage = errorMessage; // Avoid setting this one via property so that we don't update state file yet
+			SRState = SendReceiveStates.HOLD; // But set this one via property so that state file is updated, just once.
+		}
+
 		protected virtual void SetProperty<T>(ref T property, T value)
 		{
 			property = value;

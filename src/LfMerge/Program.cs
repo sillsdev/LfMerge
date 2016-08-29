@@ -93,9 +93,10 @@ namespace LfMerge
 			}
 			catch (Exception e)
 			{
-				MainClass.Logger.Error("Putting project {0} on hold due to unhandled exception: \n{1}", projectCode, e);
+				string errorMsg = String.Format("Putting project {0} on hold due to unhandled exception: \n{1}", projectCode, e);
+				MainClass.Logger.Error(errorMsg);
 				if (project != null)
-					project.State.SRState = ProcessingState.SendReceiveStates.HOLD;
+					project.State.PutOnHold(errorMsg);
 			}
 			finally
 			{
