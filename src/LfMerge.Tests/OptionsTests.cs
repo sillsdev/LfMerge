@@ -17,7 +17,7 @@ namespace LfMerge.Tests
 			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(sut.PriorityProject, Is.EqualTo(expectedPrioProj));
+			Assert.That(sut.ProjectCode, Is.EqualTo(expectedPrioProj));
 		}
 
 		[TestCase(new[] {"-q", "NotAQueue"}, null, TestName = "Invalid args")]
@@ -39,7 +39,7 @@ namespace LfMerge.Tests
 			var sut = Options.ParseCommandLineArgs(args);
 
 			// Verify
-			Assert.That(sut.PriorityProject, Is.EqualTo(expectedFirstProject));
+			Assert.That(sut.ProjectCode, Is.EqualTo(expectedFirstProject));
 		}
 
 	}

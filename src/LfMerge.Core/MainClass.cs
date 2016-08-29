@@ -1,13 +1,15 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Linq;
+using System.Reflection;
 using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.LanguageForge.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Reporting;
 using LfMerge.Core.Queues;
+using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using Palaso.Progress;
 
@@ -28,10 +30,14 @@ namespace LfMerge.Core
 
 		internal static ContainerBuilder RegisterTypes()
 		{
+			string programName = null;
+			var attributes = Assembly.GetEntryAssembly().GetCustomAttributes<AssemblyTitleAttribute>().ToArray();
+			if (attributes.Length > 0)
+				programName = attributes[0].Title;
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettings>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
-				.WithParameter(new TypedParameter(typeof(string), "LfMerge"));
+				.WithParameter(new TypedParameter(typeof(string), programName));
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();

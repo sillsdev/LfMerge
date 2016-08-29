@@ -19,7 +19,7 @@ namespace LfMerge.Core.Queues
 
 		IQueue NextQueueWithWork { get; }
 
-		IAction CurrentAction { get; }
+		ActionNames CurrentActionName { get; }
 	}
 }
 

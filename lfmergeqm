@@ -1,4 +1,13 @@
 #!/bin/sh
 # LfMerge Queue Manager
-# to make the transition easier we simply call lfmerge until the QM is implemented
-exec $(dirname $0)/lfmerge "$@"
+
+DBVERSION=$(basename $(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1))
+LIB=/usr/lib/lfmerge/$DBVERSION
+SHARE=/usr/share/lfmerge/$DBVERSION
+
+cd "$SHARE"
+RUNMODE=INSTALLED
+. ./environ
+cd "$LIB"
+
+exec mono --debug "$LIB"/LfMergeQueueManager.exe "$@"

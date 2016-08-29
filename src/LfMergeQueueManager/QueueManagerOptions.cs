@@ -3,27 +3,20 @@
 using System;
 using CommandLine;
 using CommandLine.Text;
-using LfMerge.Core.Actions;
 
-namespace LfMerge
+namespace LfMerge.QueueManager
 {
-	public class Options
+	public class QueueManagerOptions
 	{
-		public static Options Current;
+		public static QueueManagerOptions Current;
 
-		public Options()
+		public QueueManagerOptions()
 		{
 			Current = this;
 		}
 
-		[Option('p', "project", HelpText = "Process the specified project")]
-		public string ProjectCode { get; set; }
-
-		[Option("clone", HelpText = "Clone the specified project if needed")]
-		public bool CloneProject { get; set; }
-
-		[Option("action", HelpText = "The action to perform")]
-		public ActionNames CurrentAction { get; set; }
+		[Option('p', "project", HelpText = "Process the specified project first")]
+		public string PriorityProject { get; set; }
 
 		[HelpOption('h', "help")]
 		public string GetUsage()
@@ -34,9 +27,10 @@ namespace LfMerge
 		[ParserState]
 		public IParserState LastParserState { get; set; }
 
-		public static Options ParseCommandLineArgs(string[] args)
+
+		public static QueueManagerOptions ParseCommandLineArgs(string[] args)
 		{
-			var options = new Options();
+			var options = new QueueManagerOptions();
 			if (Parser.Default.ParseArguments(args, options))
 			{
 				Current = options;
