@@ -31,8 +31,11 @@ namespace LfMerge.Core.Actions
 				if (newState.HasValue)
 				{
 					if (newState.Value == ProcessingState.SendReceiveStates.HOLD)
+					{
 						// When going on hold, do so via the new PutOnHold() function so we record an error message
-						project.State.PutOnHold("Error during synchronize: " + line);
+						project.State.PutOnHold("Error during synchronize of {0}: {1}",
+							project.ProjectCode, line);
+					}
 					else
 						project.State.SRState = newState.Value;
 				}

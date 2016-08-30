@@ -48,8 +48,8 @@ namespace LfMerge.Core.Actions
 			var line = LfMergeBridgeServices.GetLineContaining(cloneResult, errorString);
 			if (!string.IsNullOrEmpty(line))
 			{
-				Logger.Error("Error during initial clone: " + line);
-				project.State.PutOnHold("Error during initial clone: " + line);
+				Logger.Error("Error during initial clone of {0}: {1}", project.ProjectCode, line);
+				project.State.PutOnHold("Error during initial clone of {0}: {1}", project.ProjectCode, line);
 				return true;
 			}
 			return false;
@@ -130,16 +130,20 @@ namespace LfMerge.Core.Actions
 				if (e.GetType().Name == "ArgumentOutOfRangeException" &&
 					e.Message == "Cannot update to any branch.")
 				{
-					project.State.PutOnHold("Error during initial clone: " + e.ToString());
+					project.State.PutOnHold("Error during initial clone of {0}: {1}",
+						project.ProjectCode, e);
 					throw;
 				}
 				if (e.GetType().Name == "RepositoryAuthorizationException")
 				{
-					Logger.Error("Initial clone authorization exception");
-					project.State.PutOnHold("Error during initial clone: authorization exception from remote repository");
+					Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
+					project.State.PutOnHold(
+						"Error during initial clone of {0}: authorization exception from remote repository",
+						project.ProjectCode);
 					throw;
 				}
-				Logger.Error("Got {0} exception trying to clone: {1}", e.GetType(), e.Message);
+				Logger.Error("Got {0} exception trying to clone {1}: {2}", e.GetType(),
+					project.ProjectCode, e.Message);
 				throw;
 			}
 		}
