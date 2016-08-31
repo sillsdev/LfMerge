@@ -478,6 +478,7 @@ namespace LfMerge.Core.DataConverters
 					{
 						EntryCounts.Deleted++;
 					}
+					Logger.Info("MongoToFdo: Deleted FdoEntry {0} ({1})", guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 					fdoEntry.Delete();
 				}
 				else
@@ -487,9 +488,19 @@ namespace LfMerge.Core.DataConverters
 				}
 				return; // Don't set fields on a deleted entry
 			}
-			// Used for detecting whether we modified the FDO entry, or whether we were simply
-			// setting fields to the same value they had before.
-			DateTime modifiedDateBeforeChanges = fdoEntry.DateModified;
+			// Has LF entry changed since last time we set FDO values?
+			if (lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() <= fdoEntry.DateModified)
+			{
+				if (createdEntry)
+				{
+					// Entry was created in LF, so we need to create & populate it in FDO. Don't skip it.
+				}
+				else
+				{
+					// No changes detected since last time, so we won't change the FDO entry
+					return;
+				}
+			}
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end
 			SetMultiStringFrom(fdoEntry.CitationForm, lfEntry.CitationForm);
@@ -524,11 +535,6 @@ namespace LfMerge.Core.DataConverters
 			// TODO: Do something like the following line (can't do exactly that because PrimaryMorphType is read-only)
 			// fdoEntry.PrimaryMorphType = new PossibilityListConverter(fdoEntry.PrimaryMorphType.OwningList).GetByName(lfEntry.MorphologyType) as IMoMorphType;
 
-
-			/* TODO: Process the following fields too
-					lfEntry.Environments;
-			*/
-
 			/* LfLexEntry fields not mapped:
 			lfEntry.Environments // Don't know how to handle this one. TODO: Research it.
 			lfEntry.LiftId // TODO: Figure out how to handle this one. In fdoEntry, it's a constructed value.
@@ -541,17 +547,13 @@ namespace LfMerge.Core.DataConverters
 			_convertCustomField.SetCustomFieldsForThisCmObject(fdoEntry, "entry", lfEntry.CustomFields,
 				lfEntry.CustomFieldGuids);
 
-			DateTime modifiedDateAfterChanges = fdoEntry.DateModified;
+			// If we got this far, we either created or modified this entry
 			if (createdEntry)
 				EntryCounts.Added++;
-			else if (modifiedDateBeforeChanges != modifiedDateAfterChanges)
+			else
 				EntryCounts.Modified++;
-			// else do nothing to the entry counts
 
-			string entryNameForDebugging = "";
-			if (lfEntry.Lexeme != null && lfEntry.Lexeme.Values != null)
-				entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
-			Logger.Info("MongoToFdo: Converted FdoEntry {0} ({1})", guid, entryNameForDebugging);
+			Logger.Info("MongoToFdo: {0} FdoEntry {1} ({2})", createdEntry ? "Created" : "Modified", guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 		}
 
 		public void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)

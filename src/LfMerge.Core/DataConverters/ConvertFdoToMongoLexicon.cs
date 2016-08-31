@@ -107,23 +107,21 @@ namespace LfMerge.Core.DataConverters
 
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
-				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
-				string entryNameForDebugging;
-				if (lfEntry.Lexeme == null)
-					entryNameForDebugging = "<null lexeme>";
-				else
-					entryNameForDebugging = String.Join(", ", lfEntry.Lexeme.Values.Select(x => x.Value ?? ""));
-				lfEntry.IsDeleted = false;
-				if (lfEntry.Guid.HasValue)
+				bool createdEntry = false;
+				DateTime previousDateModified;
+				if (!previousModificationDates.TryGetValue(fdoEntry.Guid, out previousDateModified))
 				{
-					DateTime lastModifiedDate;
-					if (previousModificationDates.TryGetValue(lfEntry.Guid.Value, out lastModifiedDate))
-					{
-						if (lastModifiedDate != lfEntry.DateModified)
-							lfEntry.DateModified = DateTime.UtcNow;
-					}
+					// Looks like this entry is new in FDO
+					createdEntry = true;
+					previousDateModified = DateTime.MinValue; // Ensure it will seem modified when comparing it later
 				}
-				Logger.Info("FdoToMongo: Converted LfEntry {0} ({1})", lfEntry.Guid, entryNameForDebugging);
+				// Remember that FDO's DateModified is stored in local time for some incomprehensible reason...
+				if (!createdEntry && previousDateModified.ToLocalTime() >= fdoEntry.DateModified)
+					// Hasn't been modified since last time: just skip this record entirely
+					continue;
+				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+				lfEntry.IsDeleted = false;
+				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
 			LfProject.IsInitialClone = false;
@@ -144,7 +142,13 @@ namespace LfMerge.Core.DataConverters
 				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
 				    !Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{
+					if (lfEntry.IsDeleted)
+						// Don't need to delete this record twice
+						continue;
+
 					lfEntry.IsDeleted = true;
+					lfEntry.DateModified = DateTime.UtcNow;
+					Logger.Info("FdoToMongo: Deleted LfEntry {0} ({1})", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 					Connection.UpdateRecord(LfProject, lfEntry);
 				}
 			}
@@ -233,14 +237,13 @@ namespace LfMerge.Core.DataConverters
 			// fields on the LF entry will instead refer to when the *Mongo record* was created or modified,
 			// and the LfEntry.DateCreated and LfEntry.DateModified fields will never be put into FDO.
 
-			// LanguageForge needs this modified to know there is changed data
-			lfEntry.DateModified = fdoEntry.DateModified.ToUniversalTime();
+			var now = DateTime.UtcNow;
 			if (LfProject.IsInitialClone)
 			{
-				var now = DateTime.UtcNow;
 				lfEntry.DateCreated = now;
-				lfEntry.DateModified = now;
 			}
+			// LanguageForge needs this modified to know there is changed data
+			lfEntry.DateModified = now;
 
 			if (lfEntry.AuthorInfo == null)
 				lfEntry.AuthorInfo = new LfAuthorInfo();

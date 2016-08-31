@@ -46,6 +46,20 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
+		/// Return a name suitable for logging from an entry
+		/// </summary>
+		/// <returns>The lexeme(s), if present, otherwise something suitable.</returns>
+		/// <param name="lfEntry">LF entry we want to write about in the log.</param>
+		public static string EntryNameForDebugging(LfLexEntry lfEntry)
+		{
+			if (lfEntry == null)
+				return "<null entry>";
+			if (lfEntry.Lexeme == null || lfEntry.Lexeme.Values == null)
+				return "<null lexeme>";
+			return String.Join(", ", lfEntry.Lexeme.Values.Where(x => x != null && !x.IsEmpty).Select(x => x.Value));
+		}
+
+		/// <summary>
 		/// Turn a custom StText field into a BsonDocument suitable for storing in Mongo. Returns
 		/// </summary>
 		/// <returns>A BsonDocument with the following structure:

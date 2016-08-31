@@ -140,18 +140,22 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
-			filter.Add("dateModified", new BsonDocument("$ne", BsonNull.Value));
+			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare FDO DateModified to previous FDO DateModified.
+			filter.Add("authorInfo.modifiedDate", new BsonDocument("$ne", BsonNull.Value));
 			var projection = new BsonDocument();
 			projection.Add("guid", 1);
-			projection.Add("dateModified", 1);
+			projection.Add("authorInfo.modifiedDate", 1);
 			Dictionary<Guid, DateTime> results =
 				lexicon
 				.Find(filter)
 				.Project(projection)
 				.ToEnumerable()
-				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString) && doc.Contains("dateModified"))
+				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString)
+					&& doc.Contains("authorInfo") && doc["authorInfo"].BsonType == BsonType.Document
+					&& doc["authorInfo"].AsBsonDocument.Contains("modifiedDate")
+					&& doc["authorInfo"].AsBsonDocument["modifiedDate"].BsonType == BsonType.DateTime)
 				.ToDictionary(doc => Guid.Parse(doc.GetValue("guid").AsString),
-				              doc => doc.GetValue("dateModified").AsBsonDateTime.ToUniversalTime());
+				              doc => doc["authorInfo"].AsBsonDocument.GetValue("modifiedDate").AsBsonDateTime.ToUniversalTime());
 			return results;
 		}
 
