@@ -47,12 +47,17 @@ namespace LfMerge.Core.Settings
 			string templatesDir = main["TemplatesDir"] ?? "Templates";
 			string mongoHostname = main["MongoHostname"] ?? "localhost";
 			string mongoPort = main["MongoPort"] ?? "27017";
+			int mongoPortAsInt;
+			if (Int32.TryParse(mongoPort, out mongoPortAsInt))
+				{ } // No need to do anything if Mongo port parses correctly as an int
+			else
+				mongoPortAsInt = 27017; // Default to Mongo's default port if settings value can't parse
 			string mongoMainDatabaseName = main["MongoMainDatabaseName"] ?? "scriptureforge";
 			string mongoDatabaseNamePrefix = main["MongoDatabaseNamePrefix"] ?? "sf_";
 			string verboseProgress = main["VerboseProgress"] ?? "";
 			string phpSourcePath = main["PhpSourcePath"] ?? "/var/www/languageforge.org/htdocs";
 
-			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPort,
+			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPortAsInt,
 				mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress, phpSourcePath);
 
 			// TODO: Should this CreateDirectories() call live somewhere else?
@@ -62,7 +67,7 @@ namespace LfMerge.Core.Settings
 		private string[] QueueDirectories { get; set; }
 
 		private void SetAllMembers(string baseDir, string webworkDir, string templatesDir,
-			string mongoHostname, string mongoPort, string mongoDatabaseNamePrefix,
+			string mongoHostname, int mongoPort, string mongoDatabaseNamePrefix,
 			string mongoMainDatabaseName, string verboseProgress, string phpSourcePath)
 		{
 			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
@@ -79,7 +84,9 @@ namespace LfMerge.Core.Settings
 			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(baseDir, "syncqueue");
 
 			MongoDatabaseNamePrefix = mongoDatabaseNamePrefix;
-			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort);
+			MongoDbHostNameAndPort = String.Format("{0}:{1}", mongoHostname, mongoPort.ToString());
+			MongoDbHostName = mongoHostname;
+			MongoDbPort = mongoPort;
 			MongoMainDatabaseName = mongoMainDatabaseName;
 
 			PhpSourcePath = phpSourcePath;
@@ -103,6 +110,8 @@ namespace LfMerge.Core.Settings
 				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
 				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
+				other.MongoDbHostName == MongoDbHostName &&
+				other.MongoDbPort == MongoDbPort &&
 				other.MongoMainDatabaseName == MongoMainDatabaseName &&
 				other.ProjectsDirectory == ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
@@ -122,6 +131,8 @@ namespace LfMerge.Core.Settings
 				DefaultProjectsDirectory.GetHashCode() ^
 				MongoDatabaseNamePrefix.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^
+				MongoDbHostName.GetHashCode() ^
+				MongoDbPort.GetHashCode() ^
 				MongoMainDatabaseName.GetHashCode() ^
 				ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^
@@ -193,6 +204,10 @@ namespace LfMerge.Core.Settings
 		}
 
 		public string MongoDbHostNameAndPort { get; private set; }
+
+		public string MongoDbHostName { get; private set; }
+
+		public int MongoDbPort { get; private set; }
 
 		public string MongoMainDatabaseName { get; private set; }
 
