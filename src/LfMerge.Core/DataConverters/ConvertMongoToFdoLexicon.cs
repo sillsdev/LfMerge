@@ -489,7 +489,7 @@ namespace LfMerge.Core.DataConverters
 				return; // Don't set fields on a deleted entry
 			}
 			// Has LF entry changed since last time we set FDO values?
-			if (lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() <= fdoEntry.DateModified)
+			if (lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() == fdoEntry.DateModified)
 			{
 				if (createdEntry)
 				{

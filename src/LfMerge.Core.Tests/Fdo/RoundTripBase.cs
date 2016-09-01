@@ -95,9 +95,18 @@ namespace LfMerge.Core.Tests.Fdo
 			foreach (var diff in differences)
 				if (diff.Key.Contains("Date"))
 				{
-					DateTime first = new DateTime(Int64.Parse(diff.Value.Item1));
-					DateTime second = new DateTime(Int64.Parse(diff.Value.Item2));
-					Console.WriteLine("{0}: {1} => {2}", diff.Key, first, second);
+					long first, second;
+					if (Int64.TryParse(diff.Value.Item1, out first) &&
+						Int64.TryParse(diff.Value.Item1, out second))
+					{
+						// Some date values come back from BSON as int64 timestamps.
+						// Convert to proper DateTimes for easier parsing of the error log.
+						DateTime firstDT = new DateTime(first);
+						DateTime secondDT = new DateTime(second);
+						Console.WriteLine("{0}: {1} => {2}", diff.Key, firstDT, secondDT);
+					}
+					else
+						Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);
 				}
 				else
 					Console.WriteLine("{0}: {1} => {2}", diff.Key, diff.Value.Item1, diff.Value.Item2);

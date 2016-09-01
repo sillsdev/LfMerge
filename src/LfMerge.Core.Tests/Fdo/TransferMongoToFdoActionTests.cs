@@ -34,6 +34,7 @@ namespace LfMerge.Core.Tests.Fdo
 			var data = new SampleData();
 			string newDefinition = "New definition for this unit test";
 			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = newDefinition;
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
 
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 
@@ -82,6 +83,8 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Exercise adding 1 picture with 2 captions. Note that the picture that was previously attached
 			// to this FDO entry will end up being deleted, because it does not have a corresponding picture in LF.
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			sutMongoToFdo.Run(lfProj);
 
 			// Verify "Added" picture is now the only picture on the sense (because the "old" picture was deleted),
@@ -146,8 +149,11 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 
 			// Exercise running Action twice
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			sutMongoToFdo.Run(lfProj);
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			sutMongoToFdo.Run(lfProj);
 
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;

@@ -108,7 +108,7 @@ namespace LfMerge.Core.Actions
 
 		public void Run(ILfProject project)
 		{
-			Logger.Notice("Action {0} started", Name);
+			Logger.Notice("Action.{0} started", Name);
 
 			PreRun(project);
 

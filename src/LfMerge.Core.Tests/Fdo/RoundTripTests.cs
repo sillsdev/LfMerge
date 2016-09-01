@@ -189,6 +189,7 @@ namespace LfMerge.Core.Tests.Fdo
 			string originalLexeme = originalLfEntry.Lexeme[vernacularWS].Value;
 			string changedLexeme = "Changed lexeme for this test";
 			originalLfEntry.Lexeme[vernacularWS].Value = changedLexeme;
+			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 
 			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
@@ -199,6 +200,7 @@ namespace LfMerge.Core.Tests.Fdo
 			sutMongoToFdo.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalLfEntry.Lexeme[vernacularWS].Value = changedLexemeDuringUpdate;
+			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 			sutFdoToMongo.Run(lfProject);
 
@@ -228,6 +230,8 @@ namespace LfMerge.Core.Tests.Fdo
 			originalLfEntry.Lexeme[vernacularWS].Value = originalLexeme;
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("lexeme");
+			differencesByName.Remove("dateModified");
+			differencesByName.Remove("authorInfo.modifiedDate");
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
@@ -275,6 +279,7 @@ namespace LfMerge.Core.Tests.Fdo
 			string changedSense1Definition = "Changed sense1 definition for this test";
 			originalEntry.Senses[0].Definition["en"].Value = changedSense0Definition;
 			originalEntry.Senses[1].Definition["en"].Value = changedSense1Definition;
+			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
@@ -282,6 +287,7 @@ namespace LfMerge.Core.Tests.Fdo
 			string changedDefinitionDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Definition["en"].Value = changedDefinitionDuringUpdate;
 			originalEntry.Senses[1].Definition["en"].Value = changedDefinitionDuringUpdate;
+			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Verify
@@ -332,6 +338,8 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			differencesByName.Remove("dateModified");
+			differencesByName.Remove("authorInfo.modifiedDate");
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
@@ -383,6 +391,7 @@ namespace LfMerge.Core.Tests.Fdo
 			string changedSense0Example1Translation = "Changed sense0 example1 sentence for this test";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedSense0Example0Translation;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedSense0Example1Translation;
+			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
@@ -390,6 +399,7 @@ namespace LfMerge.Core.Tests.Fdo
 			string changedTranslationDuringUpdate = "This value should be overwritten by FdoToMongo";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedTranslationDuringUpdate;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedTranslationDuringUpdate;
+			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Verify
@@ -448,6 +458,8 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 			differencesByName = GetMongoDifferences(originalEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("senses");
+			differencesByName.Remove("dateModified");
+			differencesByName.Remove("authorInfo.modifiedDate");
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 		}
@@ -502,6 +514,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Delete
 			newEntry.IsDeleted = true;
+			newEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(newEntry);
 			originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
@@ -549,6 +562,7 @@ namespace LfMerge.Core.Tests.Fdo
 			newSense.PartOfSpeech = LfStringField.FromString(newPartOfSpeech);
 			lfEntry.Senses.Add(newSense);
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(3));
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			string newEntryGuidStr = lfEntry.Guid.ToString();
 
@@ -588,6 +602,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Delete
 			lfEntry.Senses.Remove(newSense);
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			originalData = _conn.GetLfLexEntries();
 			Assert.That(lfEntry.Senses.Count(), Is.EqualTo(2));
@@ -639,6 +654,7 @@ namespace LfMerge.Core.Tests.Fdo
 			newExample.Translation = LfMultiText.FromSingleStringMapping(vernacularWS, newTranslation);
 			lfSense.Examples.Add(newExample);
 			Assert.That(lfSense.Examples.Count, Is.EqualTo(3));
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			string newEntryGuidStr = lfEntry.Guid.ToString();
 
@@ -681,6 +697,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Delete
 			lfSense.Examples.Remove(newExample);
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			originalData = _conn.GetLfLexEntries();
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
@@ -732,6 +749,7 @@ namespace LfMerge.Core.Tests.Fdo
 			newPicture.FileName = newFilename;
 			lfSense.Pictures.Add(newPicture);
 			Assert.That(lfSense.Pictures.Count, Is.EqualTo(2));
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			string newEntryGuidStr = lfEntry.Guid.ToString();
 
@@ -774,6 +792,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Delete
 			lfSense.Pictures.Remove(newPicture);
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 			originalData = _conn.GetLfLexEntries();
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
@@ -843,6 +862,7 @@ namespace LfMerge.Core.Tests.Fdo
 			customFieldsBson.Set("customField_entry_Cust_MultiPara", multiParaBson);
 			// Update Mongo connection double with rebuilt customFieldValues
 			lfEntry.CustomFields = customFieldsBson;
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 
 			// Exercise
@@ -927,6 +947,7 @@ namespace LfMerge.Core.Tests.Fdo
 			customFieldsBson.Set("customField_entry_Cust_MultiPara", multiParaBson);
 			// Update Mongo connection double with rebuilt customFieldValues
 			lfEntry.CustomFields = customFieldsBson;
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(lfEntry);
 
 			// Exercise

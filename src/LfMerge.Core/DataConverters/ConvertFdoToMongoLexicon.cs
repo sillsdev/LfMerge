@@ -116,9 +116,11 @@ namespace LfMerge.Core.DataConverters
 					previousDateModified = DateTime.MinValue; // Ensure it will seem modified when comparing it later
 				}
 				// Remember that FDO's DateModified is stored in local time for some incomprehensible reason...
-				if (!createdEntry && previousDateModified.ToLocalTime() >= fdoEntry.DateModified)
+				if (!createdEntry && previousDateModified.ToLocalTime() == fdoEntry.DateModified)
+				{
 					// Hasn't been modified since last time: just skip this record entirely
 					continue;
+				}
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
 				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));

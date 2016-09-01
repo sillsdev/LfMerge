@@ -233,7 +233,7 @@ namespace LfMerge.Core.Tests
 
 		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
-			return _storedLfLexEntries.ToDictionary(kv => kv.Key, kv => kv.Value.DateModified);
+			return _storedLfLexEntries.ToDictionary(kv => kv.Key, kv => kv.Value.AuthorInfo.ModifiedDate);
 		}
 
 		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
