@@ -33,16 +33,27 @@ namespace LfMerge.Core.Tests
 		}
 
 		[Test]
-		[Ignore("Currently we don't have the required fields in mongodb")]
 		public void ExistingProject()
 		{
 			// relies on a project being manually added to MongoDB with projectCode "proja"
+			// To make this stop being ignored, run the following command in the "scriptureforge" database of your local MongoDB:
+			// db.projects.insert({projectCode: "proja", projectName: "ZZZ Project A for unit tests", sendReceiveProjectIdentifier: "proja-langdepot", sendReceiveProject: {name: "Fake project for unit tests", repository: "http://public.example.com", role: "manager"} })
 
 			// Setup
 			var sut = new LanguageDepotProject(_env.Settings, _env.Logger);
 
 			// Exercise
-			sut.Initialize("proja");
+			try
+			{
+				sut.Initialize("proja");
+			}
+			catch (ArgumentException e)
+			{
+				if (e.Message.StartsWith("Can't find project code"))
+					Assert.Ignore("Can't run this test until a project named \"proja\" exists in local MongoDB");
+				else
+					throw;
+			}
 
 			// Verify
 			Assert.That(sut.Identifier, Is.EqualTo("proja-langdepot"));
