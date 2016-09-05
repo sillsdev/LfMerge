@@ -68,5 +68,9 @@
       <Project>{0E79BC8D-9AE4-4B2C-ACFB-D8C1B2BC3D4F}</Project>
       <Name>LfMerge</Name>
     </ProjectReference>
+    <ProjectReference Include="..\src\LfMerge.Core\LfMerge.Core.csproj">
+      <Project>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</Project>
+      <Name>LfMerge.Core</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

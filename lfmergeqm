@@ -1,0 +1,4 @@
+#!/bin/sh
+# LfMerge Queue Manager
+# to make the transition easier we simply call lfmerge until the QM is implemented
+exec $(dirname $0)/lfmerge "$@"
