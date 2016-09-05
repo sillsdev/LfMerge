@@ -50,7 +50,9 @@ namespace LfMerge.Core.Actions
 			{
 				var transferAction = GetAction(ActionNames.TransferMongoToFdo);
 				transferAction.Run(project);
+				Logger.Debug("About to dispose FW project {0}", project.ProjectCode);
 				LanguageForgeProject.DisposeFwProject(project);
+				Logger.Debug("Successfully disposed FW project {0}", project.ProjectCode);
 
 				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
 				if (transferAction is TransferMongoToFdoAction)
