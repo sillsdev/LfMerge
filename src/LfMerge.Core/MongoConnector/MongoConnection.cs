@@ -240,8 +240,9 @@ namespace LfMerge.Core.MongoConnector
 					IEnumerable<string> senseFields = senses.Fields.Where(kv => kv.Value is LfConfigMultiText).Select(kv => kv.Key);
 					foreach (string fieldName in senseFields)
 					{
-						if (!_vernacularWsFieldsList.Contains(fieldName) && !_pronunciationWsFieldsList.Contains(fieldName))
-							analysisFields.Add("senses.fields." + fieldName);
+						var sensesFieldName = "senses.fields." + fieldName;
+						if (!_vernacularWsFieldsList.Contains(sensesFieldName) && !_pronunciationWsFieldsList.Contains(sensesFieldName))
+							analysisFields.Add(sensesFieldName);
 					}
 					if (senses.Fields.ContainsKey("examples"))
 					{
@@ -249,8 +250,9 @@ namespace LfMerge.Core.MongoConnector
 						IEnumerable<string> exampleFields = examples.Fields.Where(kv => kv.Value is LfConfigMultiText).Select(kv => kv.Key);
 						foreach (string fieldName in exampleFields)
 						{
-							if (!_vernacularWsFieldsList.Contains(fieldName) && !_pronunciationWsFieldsList.Contains(fieldName))
-								analysisFields.Add("senses.fields.examples.fields." + fieldName);
+							var examplesFieldName = "senses.fields.examples.fields." + fieldName;
+							if (!_vernacularWsFieldsList.Contains(examplesFieldName) && !_pronunciationWsFieldsList.Contains(examplesFieldName))
+								analysisFields.Add(examplesFieldName);
 						}
 					}
 				}
