@@ -17,18 +17,18 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		//     Test data
 		// *****************
 		private string zeroSpans = "fooσπιθαμήbarportéebaz";
-		private string twoLangs  = "foo<span lang=\"grc\">σπιθ<αμή</span>bar<span lang=\"fr\">port>ée</span>baz";
+		private string twoLangs  = "foo<span lang=\"qaa-x-kal\">σπιθ<αμή</span>bar<span lang=\"fr\">port>ée</span>baz";
 		private string twoStyles = "this has <span class=\"styleName_Bold\">bold</span> and <span class=\"styleName_Default_SPACE_Paragraph_SPACE_Style\">italic</span> text";
 		private string twoGuids  = "this has <span class=\"guid_01234567-1234-4321-89ab-0123456789ab\">two</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab\">guid</span> classes, but no language spans";
 		private string oneGuidOneStyle  = "this has <span class=\"styleName_Bold\">bold</span> and <span class=\"guid_01234567-1234-4321-89ab-0123456789ab\">guid-containing</span> text";
 		private string twoGuidsOneStyle = "this has <span class=\"guid_01234567-1234-4321-89ab-0123456789ab styleName_Bold\">two</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab\">guid</span> classes, and the first is bold, but there are no language spans";
 		private string twoGuidsTwoStylesNoLangs  = "this has <span class=\"guid_01234567-1234-4321-89ab-0123456789ab styleName_Bold\">two (B)</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab styleName_Default_SPACE_Paragraph_SPACE_Style\">guid (I)</span> classes, and two styles, but there are no language spans";
 		private string twoGuidsTwoStylesOneLang  = "this has <span class=\"guid_01234567-1234-4321-89ab-0123456789ab styleName_Bold\">two (B)</span> different <span lang=\"fr\" class=\"guid_98765432-1234-4321-89ab-0123456789ab styleName_Default_SPACE_Paragraph_SPACE_Style\">guid (I,fr)</span> classes, and two styles, and one language span";
-		private string twoGuidsTwoStylesTwoLangs = "this has <span lang=\"grc\" class=\"guid_01234567-1234-4321-89ab-0123456789ab styleName_Bold\">two (B,grc)</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">guid (I,fr)</span> classes, and two styles, and two language spans";
-		private string twoStylesTwoLangsOneOtherProperty   = "this has <span lang=\"grc\" class=\"styleName_Bold\">two</span> different <span class=\"propi_4_ktptSuperscript_1_0 styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and one extra int property";
-		private string twoStylesTwoLangsTwoOtherProperties = "this has <span lang=\"grc\" class=\"styleName_Bold\">two (B,grc)</span> different <span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and two extra properties, one int and one str";
+		private string twoGuidsTwoStylesTwoLangs = "this has <span lang=\"qaa-x-kal\" class=\"guid_01234567-1234-4321-89ab-0123456789ab styleName_Bold\">two (B,qaa-x-kal)</span> different <span class=\"guid_98765432-1234-4321-89ab-0123456789ab styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">guid (I,fr)</span> classes, and two styles, and two language spans";
+		private string twoStylesTwoLangsOneOtherProperty   = "this has <span lang=\"qaa-x-kal\" class=\"styleName_Bold\">two</span> different <span class=\"propi_4_ktptSuperscript_1_0 styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and one extra int property";
+		private string twoStylesTwoLangsTwoOtherProperties = "this has <span lang=\"qaa-x-kal\" class=\"styleName_Bold\">two (B,qaa-x-kal)</span> different <span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\">spans</span>, two styles, and two language spans -- and two extra properties, one int and one str";
 
-		private string twoStylesTwoLangsTwoOtherPropertiesEscaped = "this has &lt;span lang=\"grc\" class=\"styleName_Bold\"&gt;two (B,grc)&lt;/span&gt; different &lt;span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\"&gt;spans&lt;/span&gt;, two styles, and two language spans -- and two extra properties, one int and one str";
+		private string twoStylesTwoLangsTwoOtherPropertiesEscaped = "this has &lt;span lang=\"qaa-x-kal\" class=\"styleName_Bold\"&gt;two (B,qaa-x-kal)&lt;/span&gt; different &lt;span class=\"propi_4_ktptSuperscript_1_0 props_1_ktptFontFamily_Times_SPACE_New_SPACE_Roman styleName_Default_SPACE_Paragraph_SPACE_Style\" lang=\"fr\"&gt;spans&lt;/span&gt;, two styles, and two language spans -- and two extra properties, one int and one str";
 
 		private string containsAngleBrackets = "strings with <angle brackets> need to be HTML-escaped";
 		private string containsAngleBracketsEscaped = "strings with &lt;angle brackets&gt; need to be HTML-escaped";
@@ -205,7 +205,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] textInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanTexts(twoGuidsTwoStylesTwoLangs).ToArray();
 			Assert.That(textInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
-			Assert.That(textInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("two (B,grc)"));
+			Assert.That(textInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(textInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("guid (I,fr)"));
 		}
 
@@ -223,7 +223,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] textInTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.GetSpanTexts(twoStylesTwoLangsTwoOtherProperties).ToArray();
 			Assert.That(textInTwoStylesTwoLangsTwoOtherProperties.Length, Is.EqualTo(2));
-			Assert.That(textInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("two (B,grc)"));
+			Assert.That(textInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(textInTwoStylesTwoLangsTwoOtherProperties[1], Is.EqualTo("spans"));
 		}
 
@@ -232,7 +232,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] textInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanTexts(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
 			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(2));
-			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("two (B,grc)"));
+			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(textInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1], Is.EqualTo("spans"));
 		}
 
@@ -266,7 +266,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] langsInTwoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoLangs).ToArray();
 			Assert.That(langsInTwoLangs.Length, Is.EqualTo(2));
-			Assert.That(langsInTwoLangs[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoLangs[0], Is.EqualTo("qaa-x-kal"));
 			Assert.That(langsInTwoLangs[1], Is.EqualTo("fr"));
 		}
 		[Test]
@@ -315,7 +315,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] langsInTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoGuidsTwoStylesTwoLangs).ToArray();
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs.Length, Is.EqualTo(2));
-			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[0], Is.EqualTo("qaa-x-kal"));
 			Assert.That(langsInTwoGuidsTwoStylesTwoLangs[1], Is.EqualTo("fr"));
 		}
 
@@ -324,7 +324,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] langsInTwoStylesTwoLangsOneOtherProperty = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStylesTwoLangsOneOtherProperty).ToArray();
 			Assert.That(langsInTwoStylesTwoLangsOneOtherProperty.Length, Is.EqualTo(2));
-			Assert.That(langsInTwoStylesTwoLangsOneOtherProperty[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoStylesTwoLangsOneOtherProperty[0], Is.EqualTo("qaa-x-kal"));
 			Assert.That(langsInTwoStylesTwoLangsOneOtherProperty[1], Is.EqualTo("fr"));
 		}
 
@@ -333,7 +333,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] langsInTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStylesTwoLangsTwoOtherProperties).ToArray();
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties.Length, Is.EqualTo(2));
-			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties[0], Is.EqualTo("qaa-x-kal"));
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherProperties[1], Is.EqualTo("fr"));
 		}
 
@@ -342,7 +342,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			string[] langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(twoStylesTwoLangsTwoOtherPropertiesEscaped).ToArray();
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped.Length, Is.EqualTo(2));
-			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("grc"));
+			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0], Is.EqualTo("qaa-x-kal"));
 			Assert.That(langsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1], Is.EqualTo("fr"));
 		}
 
@@ -615,7 +615,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoLangs[0].Guid,      Is.Null);
 			Assert.That(runsInTwoLangs[0].StyleName, Is.Null);
 			Assert.That(runsInTwoLangs[1].Content,   Is.EqualTo("σπιθ<αμή"));
-			Assert.That(runsInTwoLangs[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoLangs[1].Lang,      Is.EqualTo("qaa-x-kal"));
 			Assert.That(runsInTwoLangs[1].Guid,      Is.Null);
 			Assert.That(runsInTwoLangs[1].StyleName, Is.Null);
 			Assert.That(runsInTwoLangs[2].Content,   Is.EqualTo("bar"));
@@ -812,8 +812,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Lang,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].Guid,      Is.Null);
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[0].StyleName, Is.Null);
-			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Content,   Is.EqualTo("two (B,grc)"));
-			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Content,   Is.EqualTo("two (B,qaa-x-kal)"));
+			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Lang,      Is.EqualTo("qaa-x-kal"));
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Guid,      Is.Not.Null);
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].Guid,      Is.EqualTo(firstGuid));
 			Assert.That(runsInTwoGuidsTwoStylesTwoLangs[1].StyleName, Is.EqualTo("Bold"));
@@ -842,7 +842,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[0].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[0].StyleName, Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[1].Content,   Is.EqualTo("two"));
-			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[1].Lang,      Is.EqualTo("qaa-x-kal"));
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[1].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[1].StyleName, Is.EqualTo("Bold"));
 			Assert.That(runsInTwoStylesTwoLangsOneOtherProperty[2].Content,   Is.EqualTo(" different "));
@@ -868,8 +868,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[0].Lang,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[0].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[0].StyleName, Is.Null);
-			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].Content,   Is.EqualTo("two (B,grc)"));
-			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].Content,   Is.EqualTo("two (B,qaa-x-kal)"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].Lang,      Is.EqualTo("qaa-x-kal"));
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[1].StyleName, Is.EqualTo("Bold"));
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherProperties[2].Content,   Is.EqualTo(" different "));
@@ -895,8 +895,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].Lang,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[0].StyleName, Is.Null);
-			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Content,   Is.EqualTo("two (B,grc)"));
-			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Lang,      Is.EqualTo("grc"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Content,   Is.EqualTo("two (B,qaa-x-kal)"));
+			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Lang,      Is.EqualTo("qaa-x-kal"));
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].Guid,      Is.Null);
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[1].StyleName, Is.EqualTo("Bold"));
 			Assert.That(runsInTwoStylesTwoLangsTwoOtherPropertiesEscaped[2].Content,   Is.EqualTo(" different "));
@@ -978,9 +978,9 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(GetStyle(tsStrFromTwoLangs, 4), Is.Null);
 			int wsEn = _wsEn;
 			int wsFr = _wsConverter.GetWsFromStr("fr");
-			int wsGrc = _wsConverter.GetWsFromStr("grc");
+			int wsKal = _wsConverter.GetWsFromStr("qaa-x-kal");
 			Assert.That(GetWs(tsStrFromTwoLangs, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoLangs, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoLangs, 1), Is.EqualTo(wsKal));
 			Assert.That(GetWs(tsStrFromTwoLangs, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoLangs, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoLangs, 4), Is.EqualTo(wsEn));
@@ -1113,23 +1113,23 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			ITsString tsStrFromTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesTwoLangs, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs, Is.Not.Null);
-			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.Text, Is.EqualTo("this has two (B,grc) different guid (I,fr) classes, and two styles, and two language spans"));
+			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.Text, Is.EqualTo("this has two (B,qaa-x-kal) different guid (I,fr) classes, and two styles, and two language spans"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(0), Is.EqualTo("this has "));
-			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(1), Is.EqualTo("two (B,grc)"));
+			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(1), Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(3), Is.EqualTo("guid (I,fr)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(4), Is.EqualTo(" classes, and two styles, and two language spans"));
 			int wsEn = _wsEn;
 			int wsFr = _wsConverter.GetWsFromStr("fr");
-			int wsGrc = _wsConverter.GetWsFromStr("grc");
+			int wsKal = _wsConverter.GetWsFromStr("qaa-x-kal");
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 2), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 3), Is.EqualTo("Default Paragraph Style"));
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 4), Is.Null);
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 1), Is.EqualTo(wsKal));
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesTwoLangs, 4), Is.EqualTo(wsEn));
@@ -1149,14 +1149,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and one extra int property"));
 			int wsEn = _wsEn;
 			int wsFr = _wsConverter.GetWsFromStr("fr");
-			int wsGrc = _wsConverter.GetWsFromStr("grc");
+			int wsKal = _wsConverter.GetWsFromStr("qaa-x-kal");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 2), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 3), Is.EqualTo("Default Paragraph Style"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 4), Is.Null);
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 1), Is.EqualTo(wsKal));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsOneOtherProperty, 4), Is.EqualTo(wsEn));
@@ -1181,23 +1181,23 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			ITsString tsStrFromTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherProperties, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties, Is.Not.Null);
-			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.Text, Is.EqualTo("this has two (B,grc) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.Text, Is.EqualTo("this has two (B,qaa-x-kal) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(0), Is.EqualTo("this has "));
-			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(1), Is.EqualTo("two (B,grc)"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(1), Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(3), Is.EqualTo("spans"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
 			int wsEn = _wsEn;
 			int wsFr = _wsConverter.GetWsFromStr("fr");
-			int wsGrc = _wsConverter.GetWsFromStr("grc");
+			int wsKal = _wsConverter.GetWsFromStr("qaa-x-kal");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 2), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 3), Is.EqualTo("Default Paragraph Style"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 4), Is.Null);
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 1), Is.EqualTo(wsKal));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 4), Is.EqualTo(wsEn));
@@ -1228,23 +1228,23 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			ITsString tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherPropertiesEscaped, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, Is.Not.Null);
-			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.Text, Is.EqualTo("this has two (B,grc) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.Text, Is.EqualTo("this has two (B,qaa-x-kal) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.RunCount, Is.EqualTo(5));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(0), Is.EqualTo("this has "));
-			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(1), Is.EqualTo("two (B,grc)"));
+			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(1), Is.EqualTo("two (B,qaa-x-kal)"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(2), Is.EqualTo(" different "));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(3), Is.EqualTo("spans"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
 			int wsEn = _wsEn;
 			int wsFr = _wsConverter.GetWsFromStr("fr");
-			int wsGrc = _wsConverter.GetWsFromStr("grc");
+			int wsKal = _wsConverter.GetWsFromStr("qaa-x-kal");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 2), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 3), Is.EqualTo("Default Paragraph Style"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 4), Is.Null);
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 0), Is.EqualTo(wsEn));
-			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo(wsGrc));
+			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo(wsKal));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 2), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 3), Is.EqualTo(wsFr));
 			Assert.That(GetWs(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 4), Is.EqualTo(wsEn));
@@ -1355,7 +1355,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			builder.Append("Some English text");
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("qaa-x-kal"));
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
@@ -1380,7 +1380,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("qaa-x-kal"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
 			builder.Append("Ελληνικά");
@@ -1522,11 +1522,11 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			builder.Append("Some English text");
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("qaa-x-kal"));
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
-			string text = "Some English text<span lang=\"fr\">du texte français</span><span lang=\"grc\">Ελληνικά</span>";
+			string text = "Some English text<span lang=\"fr\">du texte français</span><span lang=\"qaa-x-kal\">Ελληνικά</span>";
 
 			// Round-trip
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
@@ -1551,13 +1551,13 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("qaa-x-kal"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
-			string text = "Some English text<span lang=\"fr\" class=\"propi_17_ktptAlign_2_0 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Default_SPACE_Paragraph_SPACE_Style\">du texte français</span><span lang=\"grc\" class=\"propi_17_ktptAlign_2_0 propi_18_ktptFirstIndent_12000_1 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Some_SPACE_Other_SPACE_Style\">Ελληνικά</span>";
+			string text = "Some English text<span lang=\"fr\" class=\"propi_17_ktptAlign_2_0 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Default_SPACE_Paragraph_SPACE_Style\">du texte français</span><span lang=\"qaa-x-kal\" class=\"propi_17_ktptAlign_2_0 propi_18_ktptFirstIndent_12000_1 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Some_SPACE_Other_SPACE_Style\">Ελληνικά</span>";
 
 			// Round-trip
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);

@@ -114,6 +114,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			_lfProj = FdoTestFixture.lfProj;
 			_cache = _lfProj.FieldWorksProject.Cache;
+			_wsConverter = new ConvertWritingSystems(_cache);
 			_wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			_undoHelper = new UndoableUnitOfWorkHelper(_cache.ActionHandlerAccessor, "undo", "redo");
 			_undoHelper.RollBack = true;
