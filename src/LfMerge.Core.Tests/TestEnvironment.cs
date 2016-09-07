@@ -22,13 +22,13 @@ namespace LfMerge.Core.Tests
 		private readonly TemporaryFolder _languageForgeServerFolder;
 		private bool _resetLfProjectsDuringCleanup;
 		public LfMergeSettings Settings;
-		private MongoConnectionDouble _mongoConnection;
+		private MongoConnection _mongoConnection;
 		public ILogger Logger { get { return MainClass.Logger; }}
 
 		static TestEnvironment()
 		{
 			// Need to call MongoConnectionDouble.Initialize() exactly once, before any tests are run -- so do it here
-			MongoConnectionDouble.Initialize();
+			MongoConnection.Initialize();
 		}
 
 		public TestEnvironment(bool registerSettingsModelDouble = true,
@@ -48,18 +48,20 @@ namespace LfMerge.Core.Tests
 			Directory.CreateDirectory(Settings.ProjectsDirectory);
 			Directory.CreateDirectory(Settings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
-			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnection;
 		}
 
 		private string TestName
 		{
 			get
 			{
-				var testName = TestContext.CurrentContext.Test.Name;
-				var firstInvalidChar = testName.IndexOfAny(Path.GetInvalidPathChars());
-				if (firstInvalidChar >= 0)
-					testName = testName.Substring(0, firstInvalidChar);
-				return testName;
+				// TODO: This is fragile. It doesn't work with nunit-console
+				return "RealMongoTest";
+//				var testName = TestContext.CurrentContext.Test.Name;
+//				var firstInvalidChar = testName.IndexOfAny(Path.GetInvalidPathChars());
+//				if (firstInvalidChar >= 0)
+//					testName = testName.Substring(0, firstInvalidChar);
+//				return testName;
 			}
 		}
 
@@ -74,7 +76,7 @@ namespace LfMerge.Core.Tests
 				.WithParameter(new TypedParameter(typeof(string), TestName));
 
 
-			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
+			containerBuilder.RegisterType<MongoConnection>().As<IMongoConnection>().SingleInstance();
 
 			if (registerLfProxyMock)
 				containerBuilder.RegisterType<LanguageForgeProxyMock>().As<ILanguageForgeProxy>();
@@ -99,8 +101,8 @@ namespace LfMerge.Core.Tests
 
 		public void Dispose()
 		{
-			if (_mongoConnection != null)
-				_mongoConnection.Reset();
+//			if (_mongoConnection != null)
+//				_mongoConnection.Reset();
 
 			MainClass.Container.Dispose();
 			MainClass.Container = null;

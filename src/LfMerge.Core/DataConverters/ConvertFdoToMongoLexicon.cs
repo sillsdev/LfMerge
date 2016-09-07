@@ -105,8 +105,22 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
-			foreach (ILexEntry fdoEntry in repo.AllInstances())
+			int start = Environment.TickCount;
+			int last = start;
+			var i = 0;
+			var x = repo.AllInstances();
+			foreach (ILexEntry fdoEntry in x)
 			{
+				if (i++ % 1000 == 0)
+				{
+					int tick = Environment.TickCount;
+					Console.WriteLine(tick - last);
+					last = tick;
+				}
+//				if (i > 10000)
+//				{
+//					break;
+//				}
 				bool createdEntry = false;
 				DateTime previousDateModified;
 				if (!previousModificationDates.TryGetValue(fdoEntry.Guid, out previousDateModified))
@@ -123,15 +137,17 @@ namespace LfMerge.Core.DataConverters
 				}
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
-				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
-				Connection.UpdateRecord(LfProject, lfEntry);
+//				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
+//				Connection.UpdateRecord(LfProject, lfEntry);
 			}
 			LfProject.IsInitialClone = false;
 
-			RemoveMongoEntriesDeletedInFdo();
+//			RemoveMongoEntriesDeletedInFdo();
 
-			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
-			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
+//			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
+//			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
+
+			Console.WriteLine(Environment.TickCount - start);
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()
@@ -206,6 +222,7 @@ namespace LfMerge.Core.DataConverters
 		{
 			if (fdoEntry == null) return null;
 
+			// Review: Move these out of the foreach loop CP 2016-09
 			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
 			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
 
@@ -219,10 +236,11 @@ namespace LfMerge.Core.DataConverters
 			// Other fields of fdoLexeme (AllomorphEnvironments, LiftResidue, MorphTypeRA, etc.) not mapped
 
 			// Fields below in alphabetical order by ILexSense property, except for Lexeme
-			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
-			{
+			// Do nothing quicker.  CP 2016-09
+//			foreach (IMoForm allomorph in fdoEntry.AlternateFormsOS)
+//			{
 				// Do nothing; LanguageForge doesn't currently handle allomorphs, so we don't convert them
-			}
+//			}
 			lfEntry.EntryBibliography = ToMultiText(fdoEntry.Bibliography);
 			// TODO: Consider whether to use fdoEntry.CitationFormWithAffixType instead
 			// (which would produce "-s" instead of "s" for the English plural suffix, for instance)
