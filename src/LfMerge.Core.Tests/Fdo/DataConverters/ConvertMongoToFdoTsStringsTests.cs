@@ -950,7 +950,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_ZeroSpans()
 		{
-			ITsString tsStrFromZeroSpans = ConvertMongoToFdoTsStrings.SpanStrToTsString(zeroSpans,  _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromZeroSpans = ConvertMongoToFdoTsStrings.SpanStrToTsString(zeroSpans,  _wsEn, _wsConverter);
 			Assert.That(tsStrFromZeroSpans, Is.Not.Null);
 			Assert.That(tsStrFromZeroSpans.Text, Is.EqualTo("fooσπιθαμήbarportéebaz"));
 			Assert.That(tsStrFromZeroSpans.RunCount, Is.EqualTo(1));
@@ -962,7 +962,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoLangs()
 		{
-			ITsString tsStrFromTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoLangs, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoLangs, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoLangs, Is.Not.Null);
 			Assert.That(tsStrFromTwoLangs.Text, Is.EqualTo("fooσπιθ<αμήbarport>éebaz"));
 			Assert.That(tsStrFromTwoLangs.RunCount, Is.EqualTo(5));
@@ -977,8 +977,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(GetStyle(tsStrFromTwoLangs, 3), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoLangs, 4), Is.Null);
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
+			int wsGrc = _wsConverter.GetWsFromStr("grc");
 			Assert.That(GetWs(tsStrFromTwoLangs, 0), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoLangs, 1), Is.EqualTo(wsGrc));
 			Assert.That(GetWs(tsStrFromTwoLangs, 2), Is.EqualTo(wsEn));
@@ -989,7 +989,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoStyles()
 		{
-			ITsString tsStrFromTwoStyles = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStyles, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoStyles = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStyles, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStyles, Is.Not.Null);
 			Assert.That(tsStrFromTwoStyles.Text, Is.EqualTo("this has bold and italic text"));
 			Assert.That(tsStrFromTwoStyles.RunCount, Is.EqualTo(5));
@@ -1013,7 +1013,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoGuids()
 		{
-			ITsString tsStrFromTwoGuids = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuids, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoGuids = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuids, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuids, Is.Not.Null);
 			Assert.That(tsStrFromTwoGuids.Text, Is.EqualTo("this has two different guid classes, but no language spans"));
 			Assert.That(tsStrFromTwoGuids.RunCount, Is.EqualTo(1));
@@ -1025,7 +1025,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_OneGuidOneStyle()
 		{
-			ITsString tsStrFromOneGuidOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(oneGuidOneStyle, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromOneGuidOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(oneGuidOneStyle, _wsEn, _wsConverter);
 			Assert.That(tsStrFromOneGuidOneStyle, Is.Not.Null);
 			Assert.That(tsStrFromOneGuidOneStyle.Text, Is.EqualTo("this has bold and guid-containing text"));
 			Assert.That(tsStrFromOneGuidOneStyle.RunCount, Is.EqualTo(3));
@@ -1043,7 +1043,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoGuidsOneStyle()
 		{
-			ITsString tsStrFromTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsOneStyle, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoGuidsOneStyle = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsOneStyle, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuidsOneStyle, Is.Not.Null);
 			Assert.That(tsStrFromTwoGuidsOneStyle.Text, Is.EqualTo("this has two different guid classes, and the first is bold, but there are no language spans"));
 			Assert.That(tsStrFromTwoGuidsOneStyle.RunCount, Is.EqualTo(3));
@@ -1061,7 +1061,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesNoLangs()
 		{
-			ITsString tsStrFromTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesNoLangs, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoGuidsTwoStylesNoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesNoLangs, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs, Is.Not.Null);
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.Text, Is.EqualTo("this has two (B) different guid (I) classes, and two styles, but there are no language spans"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesNoLangs.RunCount, Is.EqualTo(5));
@@ -1085,7 +1085,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesOneLang()
 		{
-			ITsString tsStrFromTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesOneLang, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoGuidsTwoStylesOneLang = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesOneLang, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang, Is.Not.Null);
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.Text, Is.EqualTo("this has two (B) different guid (I,fr) classes, and two styles, and one language span"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesOneLang.RunCount, Is.EqualTo(5));
@@ -1100,7 +1100,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 3), Is.EqualTo("Default Paragraph Style"));
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesOneLang, 4), Is.Null);
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 0), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 1), Is.EqualTo(wsEn));
 			Assert.That(GetWs(tsStrFromTwoGuidsTwoStylesOneLang, 2), Is.EqualTo(wsEn));
@@ -1111,7 +1111,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoGuidsTwoStylesTwoLangs()
 		{
-			ITsString tsStrFromTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesTwoLangs, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoGuidsTwoStylesTwoLangs = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoGuidsTwoStylesTwoLangs, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs, Is.Not.Null);
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.Text, Is.EqualTo("this has two (B,grc) different guid (I,fr) classes, and two styles, and two language spans"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.RunCount, Is.EqualTo(5));
@@ -1121,8 +1121,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(3), Is.EqualTo("guid (I,fr)"));
 			Assert.That(tsStrFromTwoGuidsTwoStylesTwoLangs.get_RunText(4), Is.EqualTo(" classes, and two styles, and two language spans"));
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
+			int wsGrc = _wsConverter.GetWsFromStr("grc");
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoGuidsTwoStylesTwoLangs, 2), Is.Null);
@@ -1138,7 +1138,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoStylesTwoLangsOneOtherProperty()
 		{
-			ITsString tsStrFromTwoStylesTwoLangsOneOtherProperty = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsOneOtherProperty, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoStylesTwoLangsOneOtherProperty = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsOneOtherProperty, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty, Is.Not.Null);
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty.Text, Is.EqualTo("this has two different spans, two styles, and two language spans -- and one extra int property"));
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty.RunCount, Is.EqualTo(5));
@@ -1148,8 +1148,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty.get_RunText(3), Is.EqualTo("spans"));
 			Assert.That(tsStrFromTwoStylesTwoLangsOneOtherProperty.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and one extra int property"));
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
+			int wsGrc = _wsConverter.GetWsFromStr("grc");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsOneOtherProperty, 2), Is.Null);
@@ -1179,7 +1179,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoStylesTwoLangsTwoOtherProperties()
 		{
-			ITsString tsStrFromTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherProperties, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoStylesTwoLangsTwoOtherProperties = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherProperties, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties, Is.Not.Null);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.Text, Is.EqualTo("this has two (B,grc) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.RunCount, Is.EqualTo(5));
@@ -1189,8 +1189,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(3), Is.EqualTo("spans"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherProperties.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
+			int wsGrc = _wsConverter.GetWsFromStr("grc");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherProperties, 2), Is.Null);
@@ -1226,7 +1226,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_TwoStylesTwoLangsTwoOtherPropertiesEscaped()
 		{
-			ITsString tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherPropertiesEscaped, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(twoStylesTwoLangsTwoOtherPropertiesEscaped, _wsEn, _wsConverter);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, Is.Not.Null);
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.Text, Is.EqualTo("this has two (B,grc) different spans, two styles, and two language spans -- and two extra properties, one int and one str"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.RunCount, Is.EqualTo(5));
@@ -1236,8 +1236,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(3), Is.EqualTo("spans"));
 			Assert.That(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped.get_RunText(4), Is.EqualTo(", two styles, and two language spans -- and two extra properties, one int and one str"));
 			int wsEn = _wsEn;
-			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
-			int wsGrc = _cache.WritingSystemFactory.GetWsFromStr("grc");
+			int wsFr = _wsConverter.GetWsFromStr("fr");
+			int wsGrc = _wsConverter.GetWsFromStr("grc");
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 0), Is.Null);
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 1), Is.EqualTo("Bold"));
 			Assert.That(GetStyle(tsStrFromTwoStylesTwoLangsTwoOtherPropertiesEscaped, 2), Is.Null);
@@ -1273,14 +1273,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_ContainsAngleBrackets()
 		{
-			ITsString tsStrFromContainsAngleBrackets = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBrackets, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromContainsAngleBrackets = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBrackets, _wsEn, _wsConverter);
 			Assert.That(tsStrFromContainsAngleBrackets, Is.Not.Null);
 			Assert.That(tsStrFromContainsAngleBrackets.Text, Is.EqualTo(containsAngleBrackets));
 			Assert.That(tsStrFromContainsAngleBrackets.RunCount, Is.EqualTo(1));
 			Assert.That(tsStrFromContainsAngleBrackets.get_RunText(0), Is.EqualTo(containsAngleBrackets));
 			Assert.That(GetStyle(tsStrFromContainsAngleBrackets, 0), Is.Null);
 			Assert.That(GetWs(tsStrFromContainsAngleBrackets, 0), Is.EqualTo(_wsEn));
-			ITsString tsStrFromContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBracketsEscaped, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromContainsAngleBracketsEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsAngleBracketsEscaped, _wsEn, _wsConverter);
 			Assert.That(tsStrFromContainsAngleBracketsEscaped, Is.Not.Null);
 			Assert.That(tsStrFromContainsAngleBracketsEscaped.Text, Is.EqualTo(containsAngleBrackets));
 			Assert.That(tsStrFromContainsAngleBracketsEscaped.RunCount, Is.EqualTo(1));
@@ -1292,14 +1292,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		[Test]
 		public void CanCreateTsStringsFromSpans_ContainsHtml()
 		{
-			ITsString tsStrFromContainsHtml = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtml, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromContainsHtml = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtml, _wsEn, _wsConverter);
 			Assert.That(tsStrFromContainsHtml, Is.Not.Null);
 			Assert.That(tsStrFromContainsHtml.Text, Is.EqualTo(containsHtml));
 			Assert.That(tsStrFromContainsHtml.RunCount, Is.EqualTo(1));
 			Assert.That(tsStrFromContainsHtml.get_RunText(0), Is.EqualTo(containsHtml));
 			Assert.That(GetStyle(tsStrFromContainsHtml, 0), Is.Null);
 			Assert.That(GetWs(tsStrFromContainsHtml, 0), Is.EqualTo(_wsEn));
-			ITsString tsStrFromContainsHtmlEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtmlEscaped, _wsEn, _cache.WritingSystemFactory);
+			ITsString tsStrFromContainsHtmlEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsHtmlEscaped, _wsEn, _wsConverter);
 			Assert.That(tsStrFromContainsHtmlEscaped, Is.Not.Null);
 			Assert.That(tsStrFromContainsHtmlEscaped.Text, Is.EqualTo(containsHtml));
 			Assert.That(tsStrFromContainsHtmlEscaped.RunCount, Is.EqualTo(1));
@@ -1312,15 +1312,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_SingleRunString()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Just English text");
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1331,17 +1330,16 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_StringWithTwoLanguages()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1352,19 +1350,18 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_StringWithThreeLanguages()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1375,24 +1372,23 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_StringWithThreeLanguagesAndArbitraryProperties()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptAlign, (int)FwTextPropVar.ktpvDefault, 2);
 			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1403,15 +1399,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsAngleBrackets()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsAngleBrackets);
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1422,15 +1417,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsHtml()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsHtml);
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1441,15 +1435,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsAngleBracketsEscaped()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsAngleBracketsEscaped);
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1460,15 +1453,14 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsHtmlEscaped()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsHtmlEscaped);
 			ITsString tss = builder.GetString();
 
 			// Round-trip
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Compare
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1479,7 +1471,6 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_SingleRunString()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Just English text");
@@ -1488,8 +1479,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = "Just English text";
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1502,19 +1493,18 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_StringWithTwoLanguages()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
 			ITsString tss = builder.GetString();
 
 			string text = "Some English text<span lang=\"fr\">du texte français</span>";
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1527,21 +1517,20 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_StringWithThreeLanguages()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
 			builder.Append("Ελληνικά");
 			ITsString tss = builder.GetString();
 
 			string text = "Some English text<span lang=\"fr\">du texte français</span><span lang=\"grc\">Ελληνικά</span>";
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1554,16 +1543,15 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_StringWithThreeLanguagesAndArbitraryProperties()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append("Some English text");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("fr"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptAlign, (int)FwTextPropVar.ktpvDefault, 2);
 			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
 			builder.Append("du texte français");
-			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsConverter.GetWsFromStr("grc"));
 			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
 			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
 			builder.Append("Ελληνικά");
@@ -1572,8 +1560,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = "Some English text<span lang=\"fr\" class=\"propi_17_ktptAlign_2_0 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Default_SPACE_Paragraph_SPACE_Style\">du texte français</span><span lang=\"grc\" class=\"propi_17_ktptAlign_2_0 propi_18_ktptFirstIndent_12000_1 props_2_ktptCharStyle_Default_SPACE_Character_SPACE_Style props_3_ktptParaStyle_Some_SPACE_Other_SPACE_Style\">Ελληνικά</span>";
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1586,7 +1574,6 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_ContainsAngleBrackets()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsAngleBrackets);
@@ -1595,8 +1582,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = containsAngleBracketsEscaped;
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1609,7 +1596,6 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsCanRoundTripMongoToFdoToMongo_ContainsHtml()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsHtml);
@@ -1618,8 +1604,8 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = containsHtmlEscaped;
 
 			// Round-trip
-			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
-			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Compare
 			Assert.That(text2, Is.EqualTo(text));
@@ -1632,14 +1618,13 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsAreHtmlEscapedWhenConvertedToSpanText_ContainsAngleBrackets()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsAngleBrackets);
 			ITsString tss = builder.GetString();
 
 			// Exercise
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Verify
 			Assert.That(text, Is.EqualTo(containsAngleBracketsEscaped));
@@ -1649,14 +1634,13 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsAreHtmlEscapedWhenConvertedToSpanText_ContainsHtml()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsHtml);
 			ITsString tss = builder.GetString();
 
 			// Exercise
-			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, _wsConverter);
 
 			// Verify
 			Assert.That(text, Is.EqualTo(containsHtmlEscaped));
@@ -1666,11 +1650,10 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsAreHtmlUnescapedWhenConvertedBackFromSpanText_ContainsAngleBrackets()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			string text = containsAngleBracketsEscaped;
 
 			// Exercise
-			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Verify
 			Assert.That(tss.Text, Is.EqualTo(containsAngleBrackets));
@@ -1680,11 +1663,10 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void TsStringsAreHtmlUnescapedWhenConvertedBackFromSpanText_ContainsHtml()
 		{
 			// Setup
-			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
 			string text = containsHtmlEscaped;
 
 			// Exercise
-			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			ITsString tss = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, _wsConverter);
 
 			// Verify
 			Assert.That(tss.Text, Is.EqualTo(containsHtml));

@@ -36,12 +36,12 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <returns>The LFParagraph.</returns>
 		/// <param name="fdoPara">FDO StTxtPara object to convert.</param>
-		public static LfParagraph FdoParaToLfPara(IStTxtPara fdoPara, ILgWritingSystemFactory wsf)
+		public static LfParagraph FdoParaToLfPara(IStTxtPara fdoPara, ConvertWritingSystems wsConverter)
 		{
 			var lfPara = new LfParagraph();
 			lfPara.Guid = fdoPara.Guid;
 			lfPara.StyleName = fdoPara.StyleName;
-			lfPara.Content = ConvertFdoToMongoTsStrings.TextFromTsString(fdoPara.Contents, wsf);
+			lfPara.Content = ConvertFdoToMongoTsStrings.TextFromTsString(fdoPara.Contents, wsConverter);
 			return lfPara;
 		}
 
@@ -73,28 +73,28 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="metaDataCacheAccessor">Meta data cache accessor from FDO, used to get the integer ID of this field's writing system.</param>
 		/// <param name="fallbackWs">Writing system to fall back to if we can't figure it out any other way (usually the default user ws).</param>
 		public static BsonValue GetCustomStTextValues(IStText obj, int flid,
-			IWritingSystemManager wsManager, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
+			ConvertWritingSystems wsConverter, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
 		{
-			LfMultiParagraph result = GetCustomStTextValuesAsLfMultiPara(obj, flid, wsManager, metaDataCacheAccessor, fallbackWs);
+			LfMultiParagraph result = GetCustomStTextValuesAsLfMultiPara(obj, flid, wsConverter, metaDataCacheAccessor, fallbackWs);
 			return result.ToBsonDocument();
 		}
 
 		public static LfMultiParagraph GetCustomStTextValuesAsLfMultiPara(IStText obj, int flid,
-			IWritingSystemManager wsManager, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
+			ConvertWritingSystems wsConverter, IFwMetaDataCache metaDataCacheAccessor, int fallbackWs)
 		{
 			if (obj == null || obj.ParagraphsOS == null || obj.ParagraphsOS.Count == 0) return null;
 			var result = new LfMultiParagraph();
 			// result.Guid = obj.Guid;  // TODO: See if this would break LF PHP
-			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para, wsManager)).ToList();
+			result.Paragraphs = obj.ParagraphsOS.OfType<IStTxtPara>().Where(para => para.Contents != null).Select(para => FdoParaToLfPara(para, wsConverter)).ToList();
 			// StText objects in FDO have a single primary writing system, unlike MultiString or MultiUnicode objects
 			int fieldWs = metaDataCacheAccessor.GetFieldWs(flid);
-			string wsStr = wsManager.GetStrFromWs(fieldWs);
-			if (wsStr == null) wsStr = wsManager.GetStrFromWs(fallbackWs);
+			string wsStr = wsConverter.GetStrFromWs(fieldWs);
+			if (wsStr == null) wsStr = wsConverter.GetStrFromWs(fallbackWs);
 			result.InputSystem = wsStr;
 			return result;
 		}
 
-		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId)
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, int wsId, ConvertWritingSystems wsConverter)
 		{
 			// Step 1: Delete all FDO paragraphs that are no longer found in LF
 			var guidsInLf = new HashSet<Guid>(lfParas.Where(p => p.Guid != null).Select(p => p.Guid.Value));
@@ -131,7 +131,7 @@ namespace LfMerge.Core.DataConverters
 						fdoPara = fdoStText.InsertNewTextPara(fdoIdx, lfPara.StyleName);
 					}
 				}
-				fdoPara.Contents = ConvertMongoToFdoTsStrings.SpanStrToTsString(lfPara.Content, wsId, fdoStText.Cache.WritingSystemFactory);
+				fdoPara.Contents = ConvertMongoToFdoTsStrings.SpanStrToTsString(lfPara.Content, wsId, wsConverter);
 				// It turns out that FDO often has an empty StyleName for the normal, default paragraph style. So in those
 				// cases, where we've gotten an empty StyleName in the LfParagraph object, we should NOT change it to be
 				// the default paragraph style, as that can cause round-tripping problems.
@@ -151,9 +151,9 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Convenience overload
-		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas)
+		public static void SetCustomStTextValues(IStText fdoStText, IEnumerable<LfParagraph> lfParas, ConvertWritingSystems wsConverter)
 		{
-			SetCustomStTextValues(fdoStText, lfParas, fdoStText.MainWritingSystem);
+			SetCustomStTextValues(fdoStText, lfParas, fdoStText.MainWritingSystem, wsConverter);
 		}
 	}
 }

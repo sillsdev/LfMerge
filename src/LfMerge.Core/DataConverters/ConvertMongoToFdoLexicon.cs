@@ -38,6 +38,7 @@ namespace LfMerge.Core.DataConverters
 		private int _wsEn;
 		#endif
 		private ConvertMongoToFdoCustomField _convertCustomField;
+		private ConvertWritingSystems wsConverter;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
@@ -69,6 +70,7 @@ namespace LfMerge.Core.DataConverters
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
+			wsConverter = new ConvertWritingSystems(Cache);
 			// These writing system search orders will be used in BestStringAndWsFromMultiText and related functions
 			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
 			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
@@ -294,7 +296,7 @@ namespace LfMerge.Core.DataConverters
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
-			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, Cache.WritingSystemFactory);
+			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, wsConverter);
 		}
 
 		public string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
@@ -356,7 +358,7 @@ namespace LfMerge.Core.DataConverters
 					caption = "";
 					captionWs = Cache.DefaultAnalWs;
 				}
-				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, Cache.WritingSystemFactory);
+				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, wsConverter);
 				result = GetInstance<ICmPictureFactory>().Create(guid);
 				result.UpdatePicture(pictureName, captionTss, CmFolderTags.LocalPictures, captionWs);
 				owner.PicturesOS.Add(result);
@@ -763,7 +765,7 @@ namespace LfMerge.Core.DataConverters
 		public void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
 		{
 			if (source != null)
-				source.WriteToFdoMultiString(dest, Cache.ServiceLocator.WritingSystemManager);
+				source.WriteToFdoMultiString(dest, wsConverter);
 		}
 
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)

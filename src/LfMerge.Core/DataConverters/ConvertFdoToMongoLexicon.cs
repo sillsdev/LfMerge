@@ -27,6 +27,12 @@ namespace LfMerge.Core.DataConverters
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
+		// Cached repos, factories, etc. from FDO since calling ServiceLocator repeatedly is really expensive
+		private ICmObjectRepository _objRepo;
+		private ILexEntryRepository _entryRepo;
+
+		private ConvertWritingSystems wsConverter;
+
 		public int _wsEn;
 
 		public ConvertFdoToMongoCustomField _convertCustomField;
@@ -57,6 +63,13 @@ namespace LfMerge.Core.DataConverters
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
 			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+
+			// Save a bunch of things from FDO that we'll need repeatedly
+			IFdoServiceLocator servLoc = Cache.ServiceLocator;
+			_objRepo = servLoc.ObjectRepository;
+			_entryRepo = servLoc.GetInstance<ILexEntryRepository>();
+
+			wsConverter = new ConvertWritingSystems(Cache);
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
@@ -95,8 +108,7 @@ namespace LfMerge.Core.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("FdoToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
-			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
-			if (repo == null)
+			if (_entryRepo == null)
 			{
 				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.ProjectCode);
 				return;
@@ -105,7 +117,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
-			foreach (ILexEntry fdoEntry in repo.AllInstances())
+			foreach (ILexEntry fdoEntry in _entryRepo.AllInstances())
 			{
 				bool createdEntry = false;
 				DateTime previousDateModified;
@@ -141,13 +153,12 @@ namespace LfMerge.Core.DataConverters
 			{
 				if (lfEntry.Guid == null)
 					continue;
-				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
-				    !Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
+				if (lfEntry.IsDeleted)
+					// Don't need to delete this record twice
+					continue;
+				if (!_objRepo.IsValidObjectId(lfEntry.Guid.Value) ||
+					!_objRepo.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{
-					if (lfEntry.IsDeleted)
-						// Don't need to delete this record twice
-						continue;
-
 					lfEntry.IsDeleted = true;
 					lfEntry.DateModified = DateTime.UtcNow;
 					Logger.Info("FdoToMongo: Deleted LfEntry {0} ({1})", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
@@ -156,28 +167,16 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		// Shorthand for getting an instance from the cache's service locator
-		public T GetInstance<T>()
-		{
-			return Cache.ServiceLocator.GetInstance<T>();
-		}
-
-		// Shorthand for getting an instance (keyed by a string key) from the cache's service locator
-		public T GetInstance<T>(string key)
-		{
-			return Cache.ServiceLocator.GetInstance<T>(key);
-		}
-
 		public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
 		{
 			if (fdoMultiString == null) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, Cache.ServiceLocator.WritingSystemManager);
+			return LfMultiText.FromFdoMultiString(fdoMultiString, wsConverter);
 		}
 
-		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
+		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ConvertWritingSystems wsConverter)
 		{
-			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
+			if ((fdoMultiString == null) || (wsConverter == null)) return null;
+			return LfMultiText.FromFdoMultiString(fdoMultiString, wsConverter);
 		}
 
 		public LfStringField ToStringField(string listCode, ICmPossibility fdoPoss)
@@ -275,8 +274,8 @@ namespace LfMerge.Core.DataConverters
 			{
 				ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.First();
 				lfEntry.Pronunciation = ToMultiText(fdoPronunciation.Form);
-				lfEntry.CvPattern = LfMultiText.FromSingleITsString(fdoPronunciation.CVPattern, Cache.WritingSystemFactory);
-				lfEntry.Tone = LfMultiText.FromSingleITsString(fdoPronunciation.Tone, Cache.WritingSystemFactory);
+				lfEntry.CvPattern = LfMultiText.FromSingleITsString(fdoPronunciation.CVPattern, wsConverter);
+				lfEntry.Tone = LfMultiText.FromSingleITsString(fdoPronunciation.Tone, wsConverter);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
 				lfEntry.Location = ToStringField(LocationListCode, fdoPronunciation.LocationRA);
 			}
@@ -405,7 +404,7 @@ namespace LfMerge.Core.DataConverters
 				IEnumerable<string> reversalEntries = fdoSense.ReversalEntriesRC.Select(fdoReversalEntry => fdoReversalEntry.LongName);
 				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
 			}
-			lfSense.ScientificName = LfMultiText.FromSingleITsString(fdoSense.ScientificName, Cache.WritingSystemFactory);
+			lfSense.ScientificName = LfMultiText.FromSingleITsString(fdoSense.ScientificName, wsConverter);
 			lfSense.SemanticDomain = ToStringArrayField(SemDomListCode, fdoSense.SemanticDomainsRC);
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
@@ -413,7 +412,7 @@ namespace LfMerge.Core.DataConverters
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
-				lfSense.Source = LfMultiText.FromSingleITsString(fdoSense.Source, Cache.WritingSystemFactory);
+				lfSense.Source = LfMultiText.FromSingleITsString(fdoSense.Source, wsConverter);
 			}
 			lfSense.Status = ToStringArrayField(StatusListCode, fdoSense.StatusRA);
 			lfSense.Usages = ToStringArrayField(UsageTypeListCode, fdoSense.UsageTypesRC);
@@ -503,7 +502,7 @@ namespace LfMerge.Core.DataConverters
 			lfExample.Guid = fdoExample.Guid;
 			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
-			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, Cache.WritingSystemFactory);
+			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, wsConverter);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
@@ -596,11 +595,11 @@ namespace LfMerge.Core.DataConverters
 		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, wsConverter);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			if (updateMongoList)
 				Connection.UpdateRecord(project, lfChangedOptionList, listCode);
-			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, wsConverter);
 		}
 	}
 }

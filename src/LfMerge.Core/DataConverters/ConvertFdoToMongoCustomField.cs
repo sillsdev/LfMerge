@@ -25,6 +25,7 @@ namespace LfMerge.Core.DataConverters
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
 
+		private ConvertWritingSystems wsConverter;
 		private int _wsEn;
 
 		/// <summary>
@@ -53,7 +54,8 @@ namespace LfMerge.Core.DataConverters
 			this.cache = cache;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
-			_wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
+			this.wsConverter = new ConvertWritingSystems(cache);
+			_wsEn = wsConverter.GetWsFromStr("en");
 
 			GuidToListCode = new Dictionary<Guid, string>
 			{
@@ -272,14 +274,14 @@ namespace LfMerge.Core.DataConverters
 				if (cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
 				{
 					if (parentList.Name != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, wsConverter);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
 						return result;
 					}
 					if (parentList.Abbreviation != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, wsConverter);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
@@ -361,7 +363,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.MultiUnicode:
 				ITsMultiString tss = data.get_MultiStringProp(hvo, flid);
 				if (tss != null && tss.StringCount > 0)
-					fieldValue = LfMultiText.FromMultiITsString(tss, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromMultiITsString(tss, wsConverter).AsBsonDocument();
 				break;
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
@@ -383,7 +385,7 @@ namespace LfMerge.Core.DataConverters
 				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					fieldValue = null;
 				else
-					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromSingleITsString(iTsValue, wsConverter).AsBsonDocument();
 				break;
 			default:
 				fieldValue = null;
@@ -486,7 +488,7 @@ namespace LfMerge.Core.DataConverters
 			referencedObjectGuids.Add(referencedObject.Guid);
 			if (referencedObject is IStText)
 				return ConvertUtilities.GetCustomStTextValues((IStText)referencedObject, flid,
-					cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
+					wsConverter, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
 			else if (referencedObject is ICmPossibility)
 			{
 				//return GetCustomListValues((ICmPossibility)referencedObject, flid);

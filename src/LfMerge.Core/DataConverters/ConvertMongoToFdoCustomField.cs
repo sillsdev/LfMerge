@@ -22,6 +22,7 @@ namespace LfMerge.Core.DataConverters
 		private IFdoServiceLocator servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
+		private ConvertWritingSystems wsConverter;
 
 		public ConvertMongoToFdoCustomField(FdoCache cache, ILogger logger)
 		{
@@ -29,6 +30,7 @@ namespace LfMerge.Core.DataConverters
 			servLoc = cache.ServiceLocator;
 			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
+			wsConverter = new ConvertWritingSystems(cache);
 		}
 
 		public Guid ParseGuidOrDefault(string input)
@@ -150,7 +152,7 @@ namespace LfMerge.Core.DataConverters
 					}
 					// Shortcut: if text contents haven't changed, we don't want to change anything at all
 					BsonValue currentFdoTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
-						cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
+						wsConverter, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
 					if ((currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null) &&
 						(value == BsonNull.Value || value == null))
 						return false;
@@ -173,7 +175,7 @@ namespace LfMerge.Core.DataConverters
 						wsId = cache.MetaDataCacheAccessor.GetFieldWs(flid);
 					else
 						wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
-					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
+					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId, wsConverter);
 
 					return true;
 				}
@@ -307,7 +309,7 @@ namespace LfMerge.Core.DataConverters
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
-					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, cache.WritingSystemFactory);
+					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, wsConverter);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
 						return false;
 					else

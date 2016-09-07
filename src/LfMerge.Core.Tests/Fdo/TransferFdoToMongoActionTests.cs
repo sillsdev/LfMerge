@@ -237,7 +237,7 @@ namespace LfMerge.Core.Tests.Fdo
 			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
 			var converter = new ConvertFdoToMongoOptionList(null, wsEn,
 				MagicStrings.LfOptionListCodeForGrammaticalInfo, new LfMerge.Core.Logging.NullLogger(),
-				_cache.WritingSystemFactory);
+				_wsConverter);
 			LfOptionList lfGrammar = converter.PrepareOptionListUpdate(cache.LanguageProject.PartsOfSpeechOA);
 			LfOptionListItem itemForTest = lfGrammar.Items.First();
 			Guid g = itemForTest.Guid.Value;

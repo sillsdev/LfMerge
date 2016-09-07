@@ -121,7 +121,7 @@ namespace LfMerge.Core.Tests.Fdo
 				return "[" + String.Join(",", value as int[]) + "]";
 			var tsString = value as ITsString;
 			if (tsString != null)
-				return ConvertFdoToMongoTsStrings.TextFromTsString(tsString, _cache.WritingSystemFactory);
+				return ConvertFdoToMongoTsStrings.TextFromTsString(tsString, _wsConverter);
 			var multi = value as IMultiAccessorBase;
 			if (multi != null)
 			{
@@ -138,7 +138,7 @@ namespace LfMerge.Core.Tests.Fdo
 				{
 					sb.Append(ws);
 					sb.Append(": ");
-					sb.Append(ConvertFdoToMongoTsStrings.TextFromTsString(multi.get_String(ws), _cache.WritingSystemFactory));
+					sb.Append(ConvertFdoToMongoTsStrings.TextFromTsString(multi.get_String(ws), _wsConverter));
 					sb.Append(", ");
 				}
 				sb.Append("}");
@@ -248,8 +248,8 @@ namespace LfMerge.Core.Tests.Fdo
 					if (diffInfo != null)
 					{
 						differencesByName[fieldName] = new Tuple<string, string>(
-							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringBeforeTest, _cache.WritingSystemFactory),
-							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringAfterTest, _cache.WritingSystemFactory)
+							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringBeforeTest, _wsConverter),
+							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringAfterTest, _wsConverter)
 						);
 					}
 					continue;
@@ -271,8 +271,8 @@ namespace LfMerge.Core.Tests.Fdo
 					}
 					foreach (int wsId in wsIds)
 					{
-						string beforeStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrBeforeTest.get_String(wsId), _cache.WritingSystemFactory);
-						string afterStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrAfterTest.get_String(wsId), _cache.WritingSystemFactory);
+						string beforeStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrBeforeTest.get_String(wsId), _wsConverter);
+						string afterStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrAfterTest.get_String(wsId), _wsConverter);
 						if (beforeStr != afterStr)
 						{
 							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);

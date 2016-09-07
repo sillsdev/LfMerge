@@ -54,7 +54,7 @@ namespace LfMerge.Core.DataConverters
 			return encoded.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
 		}
 
-		public static ITsString SpanStrToTsString(string source, int mainWs, ILgWritingSystemFactory wsf)
+		public static ITsString SpanStrToTsString(string source, int mainWs, ConvertWritingSystems wsConverter)
 		{
 			// How to build up an ITsString via an ITsIncStrBldr -
 			// 1. Use SetIntPropValues or SetStrPropValues to set a property "to be applied to any subsequent append operations".
@@ -68,7 +68,7 @@ namespace LfMerge.Core.DataConverters
 			{
 				// To remove a string property, you set it to null, so we can just use StyleName directly whether or not it's null.
 				builder.SetStrPropValue((int)FwTextPropType.ktptNamedStyle, run.StyleName);
-				int runWs = (run.Lang == null) ? mainWs : wsf.GetWsFromStr(run.Lang);
+				int runWs = (run.Lang == null) ? mainWs : wsConverter.GetWsFromStr(run.Lang);
 				builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, runWs);
 				// We don't care about Guids in this function, so run.Guid is ignored
 				// But we do need to set any other int or string properties that were in the original

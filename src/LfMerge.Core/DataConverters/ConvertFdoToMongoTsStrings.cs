@@ -21,7 +21,7 @@ namespace LfMerge.Core.DataConverters
 			return decoded.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
 		}
 
-		public static string TextFromTsString(ITsString tss, ILgWritingSystemFactory wsf)
+		public static string TextFromTsString(ITsString tss, ConvertWritingSystems wsConverter)
 		{
 			// This will replace SafeTsStringText, and will actually deal with <span> elements
 
@@ -63,7 +63,7 @@ namespace LfMerge.Core.DataConverters
 				if (ws != mainWs)
 				{
 					needSpan = true;
-					langAttr = String.Format(" lang=\"{0}\"", wsf.GetStrFromWs(ws));
+					langAttr = String.Format(" lang=\"{0}\"", wsConverter.GetStrFromWs(ws));
 				}
 				if (namedStyle != null)
 				{

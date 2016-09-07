@@ -93,6 +93,7 @@ namespace LfMerge.Core.Tests.Fdo
 		protected MongoProjectRecordFactory _recordFactory;
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
+		protected ConvertWritingSystems _wsConverter;
 		protected int _wsEn;
 		protected Dictionary<string, ConvertFdoToMongoOptionList> _listConverters;
 		protected UndoableUnitOfWorkHelper _undoHelper;
@@ -144,11 +145,11 @@ namespace LfMerge.Core.Tests.Fdo
 		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = _conn.GetLfOptionListByCode(project, listCode);
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, _env.Logger, _cache.WritingSystemFactory);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, _env.Logger, _wsConverter);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			if (updateMongoList)
 				_conn.UpdateRecord(project, lfChangedOptionList, listCode);
-			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, _env.Logger, _cache.WritingSystemFactory);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, _env.Logger, _wsConverter);
 		}
 
 		[TearDown]

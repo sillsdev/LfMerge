@@ -117,6 +117,7 @@
     <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
     <Compile Include="MercurialServer.cs" />
     <Compile Include="Fdo\DataConverters\ConvertMongoToFdoTsStringsTests.cs" />
+    <Compile Include="Fdo\DataConverters\ConvertWritingSystemsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

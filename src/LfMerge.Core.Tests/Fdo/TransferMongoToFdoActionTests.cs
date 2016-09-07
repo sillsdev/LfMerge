@@ -106,7 +106,7 @@ namespace LfMerge.Core.Tests.Fdo
 				Is.EqualTo(expectedExternalFileName));
 
 			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.
-				ToMultiText(entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
+				ToMultiText(entry.SensesOS[0].PicturesOS[0].Caption, _wsConverter);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
 			string expectedNewVernacularCaption = expectedNewCaption["qaa-x-kal"].Value;
