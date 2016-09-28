@@ -25,6 +25,7 @@ namespace LfMerge.Core.DataConverters
 		public ILfProject LfProject { get; set; }
 		public FwProject FwProject { get; set; }
 		public FdoCache Cache { get; set; }
+		public FwServiceLocatorCache ServiceLocator { get; protected set; }
 		public ILogger Logger { get; set; }
 		public IMongoConnection Connection { get; set; }
 		public MongoProjectRecord ProjectRecord { get; set; }
@@ -69,9 +70,10 @@ namespace LfMerge.Core.DataConverters
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
+			ServiceLocator = FwProject.ServiceLocator;
 			// These writing system search orders will be used in BestStringAndWsFromMultiText and related functions
-			AnalysisWritingSystems = Cache.LanguageProject.CurrentAnalysisWritingSystems;
-			VernacularWritingSystems = Cache.LanguageProject.CurrentVernacularWritingSystems;
+			AnalysisWritingSystems = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
+			VernacularWritingSystems = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
 
 			ListConverters = new Dictionary<string, ConvertMongoToFdoOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
@@ -87,24 +89,24 @@ namespace LfMerge.Core.DataConverters
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
 			#if false
-			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
-			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
-			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode, Cache.LanguageProject.SemanticDomainListOA);
-			ListConverters[AcademicDomainListCode] = PrepareOptionListConverter(AcademicDomainListCode, Cache.LanguageProject.LexDbOA.DomainTypesOA);
-			ListConverters[LocationListCode] = PrepareOptionListConverter(LocationListCode, Cache.LanguageProject.LocationsOA);
-			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode, Cache.LanguageProject.LexDbOA.UsageTypesOA);
-			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode, Cache.LanguageProject.LexDbOA.SenseTypesOA);
-			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode, Cache.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode, Cache.LanguageProject.LexDbOA.PublicationTypesOA);
-			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode, Cache.LanguageProject.StatusOA);
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode, ServiceLocator.LanguageProject.PartsOfSpeechOA);
+			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode, ServiceLocator.LanguageProject.SemanticDomainListOA);
+			ListConverters[AcademicDomainListCode] = PrepareOptionListConverter(AcademicDomainListCode, ServiceLocator.LanguageProject.LexDbOA.DomainTypesOA);
+			ListConverters[LocationListCode] = PrepareOptionListConverter(LocationListCode, ServiceLocator.LanguageProject.LocationsOA);
+			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
+			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
+			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
+			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
+			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 			#endif
 
-			if (Cache.LanguageProject != null && Cache.LanguageProject.TranslationTagsOA != null)
+			if (ServiceLocator.LanguageProject != null && ServiceLocator.LanguageProject.TranslationTagsOA != null)
 			{
-				_freeTranslationType = Cache.ServiceLocator.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation)
+				_freeTranslationType = ServiceLocator.ObjectRepository.GetObject(LangProjectTags.kguidTranFreeTranslation)
 					as ICmPossibility;
 				if (_freeTranslationType == null) // Shouldn't happen, but let's have a fallback possibility
-					_freeTranslationType = Cache.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
+					_freeTranslationType = ServiceLocator.LanguageProject.TranslationTagsOA.PossibilitiesOS.FirstOrDefault();
 			}
 		}
 
@@ -135,7 +137,7 @@ namespace LfMerge.Core.DataConverters
 
 			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 			// Set English ws handle again in case it changed
-			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 			#endif
 
 			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
@@ -157,15 +159,9 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
-		public T GetInstance<T>()
+		public T GetInstance<T>() where T : class
 		{
-			return Cache.ServiceLocator.GetInstance<T>();
-		}
-
-		// Shorthand for getting an instance (keyed by a string key) from the cache's service locator
-		public T GetInstance<T>(string key)
-		{
-			return Cache.ServiceLocator.GetInstance<T>(key);
+			return ServiceLocator.GetInstance<T>();
 		}
 
 		public IEnumerable<LfLexEntry> GetLexicon(ILfProject project)
@@ -193,9 +189,9 @@ namespace LfMerge.Core.DataConverters
 			// But for now, these #if...#endif blocks are enough. - 2016-03 RM
 #if FW8_COMPAT
 			// Note that we can't use ILgWritingSystemFactory here, because it doesn't have some methods we need later on.
-			IWritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
+			IWritingSystemManager wsManager = ServiceLocator.WritingSystemManager;
 #else
-			WritingSystemManager wsManager = Cache.ServiceLocator.WritingSystemManager;
+			WritingSystemManager wsManager = ServiceLocator.WritingSystemManager;
 #endif
 			if (wsManager == null)
 			{
@@ -247,9 +243,9 @@ namespace LfMerge.Core.DataConverters
 
 					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
 					if (lfWs.Tag.Equals(vernacularLanguageCode))
-						Cache.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
+						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
-						Cache.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
+						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
 					
 				}
 			}
@@ -265,8 +261,8 @@ namespace LfMerge.Core.DataConverters
 			}
 
 			IEnumerable<ILgWritingSystem> wsesToSearch = isAnalysisField ?
-				Cache.LanguageProject.AnalysisWritingSystems :
-				Cache.LanguageProject.VernacularWritingSystems;
+				ServiceLocator.LanguageProject.AnalysisWritingSystems :
+				ServiceLocator.LanguageProject.VernacularWritingSystems;
 //			List<Tuple<int, string>> wsesToSearch = isAnalysisField ?
 //				_analysisWsIdsAndNamesInSearchOrder :
 //				_vernacularWsIdsAndNamesInSearchOrder;
@@ -294,7 +290,7 @@ namespace LfMerge.Core.DataConverters
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
 				return null;
-			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, Cache.WritingSystemFactory);
+			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
 		}
 
 		public string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
@@ -320,7 +316,7 @@ namespace LfMerge.Core.DataConverters
 				if (wantCreation)
 				{
 					createdEntry = true;
-					result = GetInstance<ILexEntryFactory>().Create(guid, Cache.LanguageProject.LexDbOA);
+					result = GetInstance<ILexEntryFactory>().Create(guid, ServiceLocator.LanguageProject.LexDbOA);
 				}
 				else
 					result = null;
@@ -356,7 +352,7 @@ namespace LfMerge.Core.DataConverters
 					caption = "";
 					captionWs = Cache.DefaultAnalWs;
 				}
-				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, Cache.WritingSystemFactory);
+				ITsString captionTss = ConvertMongoToFdoTsStrings.SpanStrToTsString(caption, captionWs, ServiceLocator.WritingSystemFactory);
 				result = GetInstance<ICmPictureFactory>().Create(guid);
 				result.UpdatePicture(pictureName, captionTss, CmFolderTags.LocalPictures, captionWs);
 				owner.PicturesOS.Add(result);
@@ -573,7 +569,7 @@ namespace LfMerge.Core.DataConverters
 //			);
 			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
 				fdoExample.DoNotPublishInRC, lfExample.ExamplePublishIn,
-				Cache.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
+				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
 			);
 			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample,
@@ -680,7 +676,7 @@ namespace LfMerge.Core.DataConverters
 
 			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
 				fdoSense.DoNotPublishInRC, lfSense.SensePublishIn,
-				Cache.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
+				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
 			);
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
 			fdoSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
@@ -763,7 +759,7 @@ namespace LfMerge.Core.DataConverters
 		public void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
 		{
 			if (source != null)
-				source.WriteToFdoMultiString(dest, Cache.ServiceLocator.WritingSystemManager);
+				source.WriteToFdoMultiString(dest, ServiceLocator.WritingSystemManager);
 		}
 
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)

@@ -24,6 +24,10 @@ namespace LfMerge.Core.FieldWorks
 			_project = new ProjectIdentifier(settings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
+			if (Cache != null)
+			{
+				ServiceLocator = new FwServiceLocatorCache(Cache.ServiceLocator);
+			}
 		}
 
 		#region Disposable stuff
@@ -56,6 +60,7 @@ namespace LfMerge.Core.FieldWorks
 				if (Cache != null)
 					Cache.Dispose();
 			}
+			ServiceLocator = null;
 			Cache = null;
 			IsDisposed = true;
 		}
@@ -63,6 +68,8 @@ namespace LfMerge.Core.FieldWorks
 		#endregion
 
 		public FdoCache Cache { get; private set; }
+
+		public FwServiceLocatorCache ServiceLocator { get; private set; }
 
 		private FdoCache TryGetFdoCache()
 		{

@@ -24,6 +24,7 @@ namespace LfMerge.Core.DataConverters
 		public ILfProject LfProject { get; protected set; }
 		public FwProject FwProject { get; protected set; }
 		public FdoCache Cache { get; protected set; }
+		public FwServiceLocatorCache ServiceLocator { get; protected set; }
 		public ILogger Logger { get; protected set; }
 		public IMongoConnection Connection { get; protected set; }
 
@@ -56,31 +57,32 @@ namespace LfMerge.Core.DataConverters
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
-			_wsEn = Cache.WritingSystemFactory.GetWsFromStr("en");
+			ServiceLocator = FwProject.ServiceLocator;
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 
 			// Reconcile writing systems from FDO and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = FdoWsToLfWs();
 			#if FW8_COMPAT
-			List<string> VernacularWss = Cache.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.Id).ToList();
-			List<string> AnalysisWss = Cache.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.Id).ToList();
-			List<string> PronunciationWss = Cache.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.Id).ToList();
+			List<string> VernacularWss = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.Id).ToList();
+			List<string> AnalysisWss = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.Id).ToList();
+			List<string> PronunciationWss = ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.Id).ToList();
 			#else
-			List<string> VernacularWss = Cache.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.LanguageTag).ToList();
-			List<string> AnalysisWss = Cache.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.LanguageTag).ToList();
-			List<string> PronunciationWss = Cache.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			List<string> VernacularWss = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			List<string> AnalysisWss = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.LanguageTag).ToList();
+			List<string> PronunciationWss = ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.LanguageTag).ToList();
 			#endif
 			Connection.SetInputSystems(LfProject, lfWsList, VernacularWss, AnalysisWss, PronunciationWss);
 
 			ListConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
-			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, Cache.LanguageProject.PartsOfSpeechOA);
-			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, Cache.LanguageProject.SemanticDomainListOA, updateMongoList: false);
-			ListConverters[AcademicDomainListCode] = ConvertOptionListFromFdo(LfProject, AcademicDomainListCode, Cache.LanguageProject.LexDbOA.DomainTypesOA);
-			ListConverters[LocationListCode] = ConvertOptionListFromFdo(LfProject, LocationListCode, Cache.LanguageProject.LocationsOA);
-			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, Cache.LanguageProject.LexDbOA.UsageTypesOA);
-			ListConverters[SenseTypeListCode] = ConvertOptionListFromFdo(LfProject, SenseTypeListCode, Cache.LanguageProject.LexDbOA.SenseTypesOA);
-			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, Cache.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, Cache.LanguageProject.LexDbOA.PublicationTypesOA);
-			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, Cache.LanguageProject.StatusOA);
+			ListConverters[GrammarListCode] = ConvertOptionListFromFdo(LfProject, GrammarListCode, ServiceLocator.LanguageProject.PartsOfSpeechOA);
+			ListConverters[SemDomListCode] = ConvertOptionListFromFdo(LfProject, SemDomListCode, ServiceLocator.LanguageProject.SemanticDomainListOA, updateMongoList: false);
+			ListConverters[AcademicDomainListCode] = ConvertOptionListFromFdo(LfProject, AcademicDomainListCode, ServiceLocator.LanguageProject.LexDbOA.DomainTypesOA);
+			ListConverters[LocationListCode] = ConvertOptionListFromFdo(LfProject, LocationListCode, ServiceLocator.LanguageProject.LocationsOA);
+			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
+			ListConverters[SenseTypeListCode] = ConvertOptionListFromFdo(LfProject, SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
+			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
+			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
+			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in _convertCustomField.GetCustomFieldParentLists())
@@ -141,8 +143,8 @@ namespace LfMerge.Core.DataConverters
 			{
 				if (lfEntry.Guid == null)
 					continue;
-				if (!Cache.ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
-				    !Cache.ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
+				if (!ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
+				    !ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{
 					if (lfEntry.IsDeleted)
 						// Don't need to delete this record twice
@@ -157,21 +159,15 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
-		public T GetInstance<T>()
+		public T GetInstance<T>() where T : class
 		{
-			return Cache.ServiceLocator.GetInstance<T>();
-		}
-
-		// Shorthand for getting an instance (keyed by a string key) from the cache's service locator
-		public T GetInstance<T>(string key)
-		{
-			return Cache.ServiceLocator.GetInstance<T>(key);
+			return ServiceLocator.GetInstance<T>();
 		}
 
 		public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
 		{
 			if (fdoMultiString == null) return null;
-			return LfMultiText.FromFdoMultiString(fdoMultiString, Cache.ServiceLocator.WritingSystemManager);
+			return LfMultiText.FromFdoMultiString(fdoMultiString, ServiceLocator.WritingSystemManager);
 		}
 
 		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
@@ -206,8 +202,8 @@ namespace LfMerge.Core.DataConverters
 		{
 			if (fdoEntry == null) return null;
 
-			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = ServiceLocator.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
 
 			var lfEntry = new LfLexEntry();
 
@@ -275,8 +271,8 @@ namespace LfMerge.Core.DataConverters
 			{
 				ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.First();
 				lfEntry.Pronunciation = ToMultiText(fdoPronunciation.Form);
-				lfEntry.CvPattern = LfMultiText.FromSingleITsString(fdoPronunciation.CVPattern, Cache.WritingSystemFactory);
-				lfEntry.Tone = LfMultiText.FromSingleITsString(fdoPronunciation.Tone, Cache.WritingSystemFactory);
+				lfEntry.CvPattern = LfMultiText.FromSingleITsString(fdoPronunciation.CVPattern, ServiceLocator.WritingSystemFactory);
+				lfEntry.Tone = LfMultiText.FromSingleITsString(fdoPronunciation.Tone, ServiceLocator.WritingSystemFactory);
 				// TODO: Map fdoPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
 				lfEntry.Location = ToStringField(LocationListCode, fdoPronunciation.LocationRA);
 			}
@@ -349,8 +345,8 @@ namespace LfMerge.Core.DataConverters
 		{
 			var lfSense = new LfSense();
 
-			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
-			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = ServiceLocator.LanguageProject.DefaultAnalysisWritingSystem;
 
 			lfSense.Guid = fdoSense.Guid;
 			lfSense.Gloss = ToMultiText(fdoSense.Gloss);
@@ -405,7 +401,7 @@ namespace LfMerge.Core.DataConverters
 				IEnumerable<string> reversalEntries = fdoSense.ReversalEntriesRC.Select(fdoReversalEntry => fdoReversalEntry.LongName);
 				lfSense.ReversalEntries = LfStringArrayField.FromStrings(reversalEntries);
 			}
-			lfSense.ScientificName = LfMultiText.FromSingleITsString(fdoSense.ScientificName, Cache.WritingSystemFactory);
+			lfSense.ScientificName = LfMultiText.FromSingleITsString(fdoSense.ScientificName, ServiceLocator.WritingSystemFactory);
 			lfSense.SemanticDomain = ToStringArrayField(SemDomListCode, fdoSense.SemanticDomainsRC);
 			lfSense.SemanticsNote = ToMultiText(fdoSense.SemanticsNote);
 			// fdoSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
@@ -413,7 +409,7 @@ namespace LfMerge.Core.DataConverters
 			lfSense.SociolinguisticsNote = ToMultiText(fdoSense.SocioLinguisticsNote);
 			if (fdoSense.Source != null)
 			{
-				lfSense.Source = LfMultiText.FromSingleITsString(fdoSense.Source, Cache.WritingSystemFactory);
+				lfSense.Source = LfMultiText.FromSingleITsString(fdoSense.Source, ServiceLocator.WritingSystemFactory);
 			}
 			lfSense.Status = ToStringArrayField(StatusListCode, fdoSense.StatusRA);
 			lfSense.Usages = ToStringArrayField(UsageTypeListCode, fdoSense.UsageTypesRC);
@@ -497,13 +493,13 @@ namespace LfMerge.Core.DataConverters
 		{
 			var lfExample = new LfExample();
 
-			ILgWritingSystem AnalysisWritingSystem = Cache.LanguageProject.DefaultAnalysisWritingSystem;
-			ILgWritingSystem VernacularWritingSystem = Cache.LanguageProject.DefaultVernacularWritingSystem;
+			ILgWritingSystem AnalysisWritingSystem = ServiceLocator.LanguageProject.DefaultAnalysisWritingSystem;
+			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = fdoExample.Guid;
 			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
-			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, Cache.WritingSystemFactory);
+			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, ServiceLocator.WritingSystemFactory);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
@@ -562,11 +558,11 @@ namespace LfMerge.Core.DataConverters
 		private Dictionary<string, LfInputSystemRecord> FdoWsToLfWs()
 		{
 			// Using var here so that we'll stay compatible with both FW 8 and 9 (the type of these two lists changed between 8 and 9).
-			var vernacularWSList = Cache.LanguageProject.CurrentVernacularWritingSystems;
-			var analysisWSList = Cache.LanguageProject.CurrentAnalysisWritingSystems;
+			var vernacularWSList = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
+			var analysisWSList = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
-			foreach (var fdoWs in Cache.LanguageProject.AllWritingSystems)
+			foreach (var fdoWs in ServiceLocator.LanguageProject.AllWritingSystems)
 			{
 				var lfWs = new LfInputSystemRecord()
 				{
@@ -596,11 +592,11 @@ namespace LfMerge.Core.DataConverters
 		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
-			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
+			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, ServiceLocator.WritingSystemFactory);
 			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(fdoOptionList);
 			if (updateMongoList)
 				Connection.UpdateRecord(project, lfChangedOptionList, listCode);
-			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, Cache.WritingSystemFactory);
+			return new ConvertFdoToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, ServiceLocator.WritingSystemFactory);
 		}
 	}
 }
