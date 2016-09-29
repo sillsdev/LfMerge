@@ -136,7 +136,8 @@ namespace LfMerge.Core.LanguageForge.Model
 				int wsId = wsManager.GetWsFromStr(kv.Key);
 				if (wsId == 0) continue; // Skip any unidentified writing systems
 				string value = kv.Value.Value;
-				dest.set_String(wsId, value);
+				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToFdoTsStrings.SpanStrToTsString(value, wsId, wsManager);
+				dest.set_String(wsId, tss);
 			}
 		}
 

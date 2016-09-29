@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using Autofac;
 using LfMerge.Core.Actions;
+using LfMerge.Core.DataConverters;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.MongoConnector;
@@ -167,7 +168,7 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(entry, Is.Not.Null);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
-					entry.CitationForm.SetVernacularDefaultWritingSystem("New value for this test");
+					entry.CitationForm.SetVernacularDefaultWritingSystem("New value with <angle> brackets & ampersands for this test");
 				});
 
 			// Save field values before test, to compare with values after test
@@ -206,7 +207,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Verify
 			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
-			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
+			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value with <angle> brackets & ampersands for this test"));
 
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
@@ -361,7 +362,7 @@ namespace LfMerge.Core.Tests.Fdo
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
 					examples[0].Example.SetVernacularDefaultWritingSystem("New value for this test");
-					examples[1].Example.SetVernacularDefaultWritingSystem("Second value for this test");
+					examples[1].Example.SetVernacularDefaultWritingSystem("Second value with < and & for this test");
 				});
 
 			BsonDocument[] customFieldValues = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
@@ -410,7 +411,9 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
 			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
 			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
-			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("Second value for this test"));
+			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("Second value with < and & for this test"));
+			string spanText = ConvertFdoToMongoTsStrings.TextFromTsString(examples[1].Example.VernacularDefaultWritingSystem, cache.WritingSystemFactory);
+			Assert.That(spanText, Is.EqualTo("Second value with &lt; and &amp; for this test"));
 
 			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
@@ -641,7 +644,7 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(fdoSense.ExamplesOS.Count, Is.EqualTo(2));
 
 			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
-			string newSentence = "new sentence for this test";
+			string newSentence = "new sentence with <span lang=\"grc\">Ελλη<ν&amp;ικά</span> in it for this test";
 			string newTranslation = "new translation for this test";
 			LfLexEntry lfEntry = _conn.GetLfLexEntries().First(e => e.Guid == entryGuid);
 			Assert.That(lfEntry.Senses.Count, Is.GreaterThan(0));
@@ -850,8 +853,9 @@ namespace LfMerge.Core.Tests.Fdo
 			// Save contents for later testing
 			string   firstParaText = paras[0].AsBsonDocument["content"].AsString;
 			string  secondParaText = paras[1].AsBsonDocument["content"].AsString;
-			string changedParaText = "Modified paragraph for this test";
-			string   addedParaText = "New paragraph for this test";
+			string changedParaText = "Modified paragraph with <span lang=\"grc\">Ελληνικα</span> in it";
+			string changedMinusTag = "Modified paragraph with Ελληνικα in it";
+			string   addedParaText = "New paragraph for &lt;this&gt; test";
 			// Modify second paragraph
 			paras[1].AsBsonDocument.Set("content", changedParaText);
 			// And insert a new para in between the two
@@ -896,10 +900,13 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(firstParaText));
 			Assert.That(fdoMultiPara.ParagraphsOS[1] is IStTxtPara, Is.True);
 			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.Not.EqualTo(secondParaText));
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.EqualTo(addedParaText));
+			string escapedParaText = ConvertMongoToFdoTsStrings.HtmlDecode(addedParaText);
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.EqualTo(escapedParaText));
 			Assert.That(fdoMultiPara.ParagraphsOS[2] is IStTxtPara, Is.True);
 			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.Not.EqualTo(secondParaText));
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.EqualTo(changedParaText));
+			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.EqualTo(changedMinusTag));
+			string thirdParagraphWithSpans = ConvertFdoToMongoTsStrings.TextFromTsString(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents, cache.WritingSystemFactory);
+			Assert.That(thirdParagraphWithSpans, Is.EqualTo(changedParaText));
 		}
 
 		[Test]
