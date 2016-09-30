@@ -175,6 +175,7 @@
     <Compile Include="Settings\DefaultLfMergeSettings.cs" />
     <Compile Include="Settings\LfMergeSettings.cs" />
     <Compile Include="MainClass.cs" />
+    <Compile Include="FieldWorks\FwServiceLocatorCache.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
