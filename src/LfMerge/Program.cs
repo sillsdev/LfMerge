@@ -1,18 +1,31 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Diagnostics;
 using System.IO;
 using Autofac;
 using LfMerge.Core;
 using LfMerge.Core.Actions;
+using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
+using Palaso.IO;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge
 {
 	public class Program
 	{
+		private static string GetModelSpecificDirectory(string modelVersion)
+		{
+			var dir = FileLocator.DirectoryOfTheApplicationExecutable;
+			if (dir.IndexOf(FdoCache.ModelVersion, StringComparison.Ordinal) >= 0)
+				return dir.Replace(FdoCache.ModelVersion, modelVersion);
+
+			// fall back: append model version. This at least prevents an infinite loop
+			return Path.Combine(dir, modelVersion);
+		}
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -23,6 +36,7 @@ namespace LfMerge
 			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
 				FdoCache.ModelVersion, string.Join(" ", args));
 
+			string differentModelVersion = null;
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			try
 			{
@@ -31,7 +45,7 @@ namespace LfMerge
 
 				MongoConnection.Initialize();
 
-				RunAction(options.ProjectCode, options.CurrentAction);
+				differentModelVersion = RunAction(options.ProjectCode, options.CurrentAction);
 			}
 			catch (Exception e)
 			{
@@ -44,14 +58,43 @@ namespace LfMerge
 				Cleanup();
 			}
 
-			MainClass.Logger.Notice("LfMerge finished");
+			if (!string.IsNullOrEmpty(differentModelVersion))
+			{
+				// Call the correct model version specific LfMerge executable
+				MainClass.Logger.Notice("Starting LfMerge for model version '{0}'",
+					differentModelVersion);
+
+				var startInfo = new ProcessStartInfo("LfMerge.exe");
+				startInfo.Arguments = string.Format("-p {0} --action {1}", options.ProjectCode,
+					options.CurrentAction);
+				startInfo.CreateNoWindow = true;
+				startInfo.ErrorDialog = false;
+				startInfo.UseShellExecute = false;
+				startInfo.WorkingDirectory = GetModelSpecificDirectory(differentModelVersion);
+				try
+				{
+					using (var process = Process.Start(startInfo))
+					{
+						process.WaitForExit();
+					}
+				}
+				catch (Exception e)
+				{
+					MainClass.Logger.Error(
+						"LfMerge-{0}: Unhandled exception trying to start '{1}' '{2}' in '{3}'\n{4}",
+						FdoCache.ModelVersion, startInfo.FileName, startInfo.Arguments,
+						startInfo.WorkingDirectory, e);
+				}
+			}
+
+			MainClass.Logger.Notice("LfMerge-{0} finished", FdoCache.ModelVersion);
 		}
 
-		private static void RunAction(string projectCode, ActionNames currentAction)
+		private static string RunAction(string projectCode, ActionNames currentAction)
 		{
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			LanguageForgeProject project = null;
-			var stopwatch = new System.Diagnostics.Stopwatch();
+			var stopwatch = new Stopwatch();
 			try
 			{
 				MainClass.Logger.Notice("ProjectCode {0}", projectCode);
@@ -60,11 +103,30 @@ namespace LfMerge
 				project.State.StartTimestamp = CurrentUnixTimestamp();
 				stopwatch.Start();
 
-				var ensureClone = LfMerge.Core.Actions.Action.GetAction(ActionNames.EnsureClone);
-				ensureClone.Run(project);
+				if (Options.Current.CloneProject)
+				{
+					var ensureClone = LfMerge.Core.Actions.Action.GetAction(ActionNames.EnsureClone);
+					ensureClone.Run(project);
+
+					if (ChorusHelper.RemoteDataIsForDifferentModelVersion)
+					{
+						// The repo is for an older model version
+						var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+						return chorusHelper.ModelVersion;
+					}
+				}
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+				{
 					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
+
+					if (ChorusHelper.RemoteDataIsForDifferentModelVersion)
+					{
+						// The repo is for an older model version
+						var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+						return chorusHelper.ModelVersion;
+					}
+				}
 			}
 			catch (Exception e)
 			{
@@ -85,6 +147,7 @@ namespace LfMerge
 				// Dispose FDO cache to free memory
 				LanguageForgeProject.DisposeFwProject(project);
 			}
+			return null;
 		}
 
 		/// <summary>

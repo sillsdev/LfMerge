@@ -6,6 +6,7 @@ using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Settings;
 using SIL.FieldWorks.FDO;
+using Palaso.Code;
 
 namespace LfMerge.Core.Actions
 {
@@ -55,13 +56,13 @@ namespace LfMerge.Core.Actions
 				Logger.Debug("Successfully disposed FW project {0}", project.ProjectCode);
 
 				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
-				if (transferAction is TransferMongoToFdoAction)
+				// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
+				var transferMongoToFdoAction = transferAction as TransferMongoToFdoAction;
+				if (transferMongoToFdoAction != null)
 				{
-					// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
-					var action = (TransferMongoToFdoAction)transferAction;
-					entriesAdded    = action.EntryCounts.Added;
-					entriesModified = action.EntryCounts.Modified;
-					entriesDeleted  = action.EntryCounts.Deleted;
+					entriesAdded    = transferMongoToFdoAction.EntryCounts.Added;
+					entriesModified = transferMongoToFdoAction.EntryCounts.Modified;
+					entriesDeleted  = transferMongoToFdoAction.EntryCounts.Deleted;
 				}
 				Logger.Notice("Syncing");
 				string commitMessage = LfMergeBridgeServices.FormatCommitMessageForLfMerge(entriesAdded, entriesModified, entriesDeleted);
@@ -88,7 +89,27 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				if (SyncResultedInError(project, syncResult,
+				const string branchString = "Cannot commit to current branch ";
+				var line = LfMergeBridgeServices.GetLineContaining(syncResult, branchString);
+				if (!string.IsNullOrEmpty(line))
+				{
+					var index = line.IndexOf(branchString, StringComparison.Ordinal);
+					Require.That(index >= 0);
+
+					var modelVersion = line.Substring(index + branchString.Length, 7);
+					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
+					{
+						SyncResultedInError(project, syncResult, branchString,
+							ProcessingState.SendReceiveStates.HOLD);
+						Logger.Error("Error during sync of '{0}': " +
+							"clone model version '{1}' less than minimal supported model version '{2}'.",
+							project.ProjectCode, modelVersion, MagicStrings.MinimalModelVersion);
+						return;
+					}
+					ChorusHelper.SetModelVersion(modelVersion);
+					return;
+				}
+				else if (SyncResultedInError(project, syncResult,
 						"Cannot create a repository at this point in LF development.",
 						ProcessingState.SendReceiveStates.HOLD) ||
 					// REVIEW: should we set the state to HOLD if we don't have previous commits?
@@ -99,7 +120,7 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				var line = LfMergeBridgeServices.GetLineContaining(syncResult, "No changes from others");
+				line = LfMergeBridgeServices.GetLineContaining(syncResult, "No changes from others");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Notice(line);

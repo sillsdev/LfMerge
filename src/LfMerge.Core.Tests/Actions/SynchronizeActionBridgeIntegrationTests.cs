@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using Autofac;
 using LfMerge.Core.Actions;
+using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
 using Palaso.TestUtilities;
@@ -41,9 +42,19 @@ namespace LfMerge.Core.Tests.Actions
 			return repoDir;
 		}
 
+		private static string ModelVersion
+		{
+			get
+			{
+				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+				return chorusHelper.ModelVersion;
+			}
+		}
+
 		[SetUp]
 		public void Setup()
 		{
+			MagicStrings.SetMinimalModelVersion(FdoCache.ModelVersion);
 			_env = new TestEnvironment();
 			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name);
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
@@ -132,10 +143,12 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a hg repo that doesn't contain a branch for the current model version
+			const string modelVersion = "7000067";
+			MagicStrings.SetMinimalModelVersion(modelVersion);
 			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7000067");
-			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath, "7000067");
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, modelVersion);
+			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath, modelVersion);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
 			SynchronizeActionTests.LDServer.Start();
 
@@ -143,9 +156,8 @@ namespace LfMerge.Core.Tests.Actions
 			_synchronizeAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(),
-				Is.StringContaining("Cannot commit to current branch"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(ModelVersion, Is.EqualTo(modelVersion));
 		}
 
 		[Test]

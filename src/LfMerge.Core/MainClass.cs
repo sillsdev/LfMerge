@@ -31,9 +31,13 @@ namespace LfMerge.Core
 		internal static ContainerBuilder RegisterTypes()
 		{
 			string programName = null;
-			var attributes = Assembly.GetEntryAssembly().GetCustomAttributes<AssemblyTitleAttribute>().ToArray();
-			if (attributes.Length > 0)
-				programName = attributes[0].Title;
+			var assembly = Assembly.GetEntryAssembly(); // will be null when running unit tests in MD
+			if (assembly != null)
+			{
+				var attributes = assembly.GetCustomAttributes<AssemblyTitleAttribute>().ToArray();
+				if (attributes.Length > 0)
+					programName = attributes[0].Title;
+			}
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettings>().SingleInstance().AsSelf();
 			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()

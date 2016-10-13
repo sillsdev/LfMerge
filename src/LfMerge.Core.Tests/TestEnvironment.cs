@@ -81,7 +81,7 @@ namespace LfMerge.Core.Tests
 
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>();
+				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>().SingleInstance();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 

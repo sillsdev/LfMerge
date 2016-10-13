@@ -107,6 +107,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
+			int i = 1;
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				bool createdEntry = false;
@@ -125,7 +126,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
-				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
+				Logger.Info("{3} - FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i++);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
 			LfProject.IsInitialClone = false;

@@ -7,6 +7,11 @@ namespace LfMerge.Core
 {
 	public static class MagicStrings
 	{
+		static MagicStrings()
+		{
+			MinimalModelVersion = "7000068";
+		}
+
 		public static Dictionary<string, string> FdoOptionlistNames = new Dictionary<string, string>()
 		{
 			// Option lists that are currently used in LF (as of 2016-03-01)
@@ -85,6 +90,15 @@ namespace LfMerge.Core
 
 		// Other magic strings that don't fall into any particular category
 		public const string UnknownString = "***";
+
+		// Minimal supported model version (static property to support testing)
+		public static string MinimalModelVersion { get; private set; }
+
+		// Allow to set minimal model version during unit testing
+		public static void SetMinimalModelVersion(string minimalModelVersion)
+		{
+			MinimalModelVersion = minimalModelVersion;
+		}
 	}
 }
 
