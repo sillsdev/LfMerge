@@ -8,10 +8,9 @@ export XDG_CONFIG_HOME=$HOME/.config
 export BUILD = Release
 export MONO_PREFIX=/opt/mono-sil
 
-DBVERSION = $(shell dpkg -l | grep lfmerge-fdo-[0-9] | sort -r | cut --characters=17-23)
-DESTDIR   = debian/lfmerge
-LIB       = usr/lib/lfmerge/$(DBVERSION)
-SHARE     = usr/share/lfmerge/$(DBVERSION)
+DESTDIR   = debian/lfmerge-__DatabaseVersion__
+LIB       = usr/lib/lfmerge/__DatabaseVersion__
+SHARE     = usr/share/lfmerge/__DatabaseVersion__
 
 %:
 	dh $@ --with=cli --parallel
@@ -20,7 +19,7 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	. ./environ && \
-		xbuild /p:Configuration=$(BUILD) /t:CompileOnly build/LfMerge.proj
+		xbuild /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /t:CompileOnly build/LfMerge.proj
 
 override_dh_auto_test:
 

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Highest FW database model version that lfmerge supports
+MaxDbVersion=7000068
+
+# Minimal FW database model version that lfmerge supports
+MinDbVersion=7000068
+
+# FW database model version to package
+CurDbVersion="$1"
+
+if [ "$CurDbVersion" == "" ]; then
+	CurDbVersion=$MaxDbVersion
+fi
+
+cd "$(dirname $0)"
+
+AllLfMergeVersions=$(for ((i=$MinDbVersion; i<=$MaxDbVersion; i++)); do \
+		echo -n "lfmerge-$i,"; \
+	done)
+
+cpp -D__DatabaseVersion__="$CurDbVersion" -D__MaxDbVersion__="$MaxDbVersion" \
+	-D__allLfMergeVersions__="$AllLfMergeVersions" -P -traditional-cpp control.in -o control
+
+sed "s/__DatabaseVersion__/$CurDbVersion/g" rules.in > rules && chmod +x rules
