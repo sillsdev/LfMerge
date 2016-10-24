@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Xml;
 using LfMerge.Core.Settings;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
@@ -18,9 +19,11 @@ namespace LfMerge.Core.FieldWorks
 		private readonly IThreadedProgress _progress = new ThreadedProgress();
 		private readonly IFdoUI _fdoUi;
 		private readonly ProjectIdentifier _project;
+		private readonly bool _disableDataMigration;
 
-		public FwProject(LfMergeSettings settings, string database)
+		public FwProject(LfMergeSettings settings, string database, bool disableDataMigration = true)
 		{
+			_disableDataMigration = disableDataMigration;
 			_project = new ProjectIdentifier(settings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
@@ -80,7 +83,7 @@ namespace LfMerge.Core.FieldWorks
 				return null;
 			}
 
-			var settings = new FdoSettings {DisableDataMigration = true};
+			var settings = new FdoSettings {DisableDataMigration = _disableDataMigration};
 
 			try
 			{
@@ -111,6 +114,21 @@ namespace LfMerge.Core.FieldWorks
 
 			return fdoCache;
 		}
+
+		public static string GetModelVersion(string project)
+		{
+			using (var reader = new XmlTextReader(project))
+			{
+				if (!reader.ReadToFollowing("languageproject"))
+				{
+					MainClass.Logger.Error("Can't find <languageproject> element for '{0}'", project);
+					return null;
+				}
+				return reader.GetAttribute("version");
+			}
+		}
+
+
 	}
 }
 
