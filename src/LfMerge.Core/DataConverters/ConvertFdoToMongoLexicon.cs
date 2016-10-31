@@ -251,13 +251,26 @@ namespace LfMerge.Core.DataConverters
 			lfEntry.AuthorInfo.ModifiedByUserRef = null;
 			lfEntry.AuthorInfo.ModifiedDate = fdoEntry.DateModified.ToUniversalTime();
 
+#if DBVERSION_7000068
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+#else
+			// TODO: Once LF's data model is updated from a single etymology to an array,
+			// convert all of them instead of just the first. E.g.,
+			// foreach (ILexEtymology fdoEtymology in fdoEntry.EtymologyOS) { ... }
+			ILexEtymology fdoEtymology = null;
+			if (fdoEntry.EtymologyOS.Count > 0)
+				fdoEtymology = fdoEntry.EtymologyOS.First();
+#endif
 			if (fdoEtymology != null)
 			{
 				lfEntry.Etymology = ToMultiText(fdoEtymology.Form);
 				lfEntry.EtymologyComment = ToMultiText(fdoEtymology.Comment);
 				lfEntry.EtymologyGloss = ToMultiText(fdoEtymology.Gloss);
+#if DBVERSION_7000068
 				lfEntry.EtymologySource = LfMultiText.FromSingleStringMapping(AnalysisWritingSystem.Id, fdoEtymology.Source);
+#else
+				lfEntry.EtymologySource = ToMultiText(fdoEtymology.LanguageNotes);
+#endif
 				// fdoEtymology.LiftResidue not mapped
 			}
 			lfEntry.Guid = fdoEntry.Guid;

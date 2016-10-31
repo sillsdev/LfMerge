@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000068</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
     <ProjectGuid>{40EC1EB4-F1EA-4FD7-9A4E-1ACA5BA31FC3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Tests</RootNamespace>

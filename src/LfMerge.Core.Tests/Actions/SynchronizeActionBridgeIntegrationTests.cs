@@ -59,13 +59,13 @@ namespace LfMerge.Core.Tests.Actions
 			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name);
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
-			SynchronizeActionTests.LDProjectFolderPath =
+			LanguageDepotMock.ProjectFolderPath =
 				Path.Combine(_lDSettings.WebWorkDirectory, TestLangProj);
-			Directory.CreateDirectory(SynchronizeActionTests.LDProjectFolderPath);
-			_lfProject = LanguageForgeProject.Create(_env.Settings, TestLangProj);
+			Directory.CreateDirectory(LanguageDepotMock.ProjectFolderPath);
+			_lfProject = LanguageForgeProject.Create(TestLangProj);
 			_synchronizeAction = new SynchronizeAction(_env.Settings, _env.Logger);
 			_workDir = Directory.GetCurrentDirectory();
-			SynchronizeActionTests.LDServer = new MercurialServer(SynchronizeActionTests.LDProjectFolderPath);
+			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 
 		[TearDown]
@@ -81,10 +81,10 @@ namespace LfMerge.Core.Tests.Actions
 				_languageDepotFolder.Dispose();
 			_env.Dispose();
 
-			if (SynchronizeActionTests.LDServer != null)
+			if (LanguageDepotMock.Server != null)
 			{
-				SynchronizeActionTests.LDServer.Stop();
-				SynchronizeActionTests.LDServer = null;
+				LanguageDepotMock.Server.Stop();
+				LanguageDepotMock.Server = null;
 			}
 		}
 
@@ -123,11 +123,11 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a empty hg repo
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 
 			// Execute
 			_synchronizeAction.Run(_lfProject);
@@ -145,12 +145,12 @@ namespace LfMerge.Core.Tests.Actions
 			// Create a hg repo that doesn't contain a branch for the current model version
 			const string modelVersion = "7000067";
 			MagicStrings.SetMinimalModelVersion(modelVersion);
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, modelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath, modelVersion);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 
 			// Execute
 			_synchronizeAction.Run(_lfProject);
@@ -164,7 +164,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void Error_NewerBranch()
 		{
 			// Setup
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
@@ -172,13 +172,13 @@ namespace LfMerge.Core.Tests.Actions
 			// Simulate a user with a newer FLEx version doing a S/R
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7100000");
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "Commit with newer FLEx version");
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 
 			// Execute
 			_synchronizeAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("pulled a higher higher model"));
+			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Allow data migration for project"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -188,7 +188,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			TestEnvironment.CopyFwProjectTo(TestLangProj, _lDSettings.WebWorkDirectory);
 			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 			var ldDirectory = Path.Combine(_lDSettings.WebWorkDirectory, TestLangProj);
 			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
 
@@ -210,7 +210,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			var ldDirectory = CopyModifiedProjectAsTestLangProj(_lDSettings.WebWorkDirectory);
 			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
 
 			// Execute
@@ -232,7 +232,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			CopyModifiedProjectAsTestLangProj(_env.Settings.WebWorkDirectory);
 			TestEnvironment.CopyFwProjectTo(TestLangProj, _lDSettings.WebWorkDirectory);
-			SynchronizeActionTests.LDServer.Start();
+			LanguageDepotMock.Server.Start();
 			var oldHashOfUs = MercurialTestHelper.GetRevisionOfWorkingSet(_lfProject.ProjectDir);
 
 			// Execute

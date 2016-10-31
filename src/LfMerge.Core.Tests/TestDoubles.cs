@@ -67,7 +67,7 @@ namespace LfMerge.Core.Tests
 
 	public class LanguageForgeProjectAccessor: LanguageForgeProject
 	{
-		protected LanguageForgeProjectAccessor(LfMergeSettings settings): base(settings, null)
+		protected LanguageForgeProjectAccessor(): base(null)
 		{
 		}
 
@@ -328,8 +328,8 @@ namespace LfMerge.Core.Tests
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
-			var server = SynchronizeActionTests.LDServer;
-			return server != null ? server.Url : SynchronizeActionTests.LDProjectFolderPath;
+			var server = LanguageDepotMock.Server;
+			return server != null && server.IsStarted ? server.Url : LanguageDepotMock.ProjectFolderPath;
 		}
 	}
 

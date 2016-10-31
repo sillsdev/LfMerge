@@ -25,6 +25,9 @@ namespace LfMerge
 		[Option("action", HelpText = "The action to perform")]
 		public ActionNames CurrentAction { get; set; }
 
+		[Option("migrate", HelpText = "Allow data migration")]
+		public bool AllowDataMigration { get; set; }
+
 		[HelpOption('h', "help")]
 		public string GetUsage()
 		{

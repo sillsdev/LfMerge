@@ -8,9 +8,14 @@ namespace LfMerge.Core.Tests
 {
 	public class LanguageDepotMock : LanguageForgeProject
 	{
-		public LanguageDepotMock(LfMergeSettings settings, string projectCode)
-			: base(settings, projectCode)
+		public LanguageDepotMock(string projectCode, LfMergeSettings settings)
+			: base(projectCode, settings)
 		{
 		}
+
+		public static string ProjectFolderPath { get; set; }
+
+		public static MercurialServer Server { get; set; }
+
 	}
 }

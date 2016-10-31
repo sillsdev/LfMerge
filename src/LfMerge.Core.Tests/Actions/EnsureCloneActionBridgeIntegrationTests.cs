@@ -43,6 +43,7 @@ namespace LfMerge.Core.Tests.Actions
 		private TemporaryFolder _languageDepotFolder;
 		private LanguageForgeProject _lfProject;
 		private EnsureCloneAction _EnsureCloneAction;
+		private const string TestLangProj = "testlangproj";
 
 		[SetUp]
 		public void Setup()
@@ -51,12 +52,12 @@ namespace LfMerge.Core.Tests.Actions
 			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name);
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
-			SynchronizeActionTests.LDProjectFolderPath =
-				Path.Combine(_lDSettings.WebWorkDirectory, TestContext.CurrentContext.Test.Name);
-			Directory.CreateDirectory(SynchronizeActionTests.LDProjectFolderPath);
-			_lfProject = LanguageForgeProject.Create(_env.Settings,
-				TestContext.CurrentContext.Test.Name);
+			LanguageDepotMock.ProjectFolderPath =
+				Path.Combine(_lDSettings.WebWorkDirectory, TestContext.CurrentContext.Test.Name, TestLangProj);
+			Directory.CreateDirectory(LanguageDepotMock.ProjectFolderPath);
+			_lfProject = LanguageForgeProject.Create(TestLangProj);
 			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger);
+			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 
 		[TearDown]
@@ -65,6 +66,12 @@ namespace LfMerge.Core.Tests.Actions
 			if (_languageDepotFolder != null)
 				_languageDepotFolder.Dispose();
 			_env.Dispose();
+
+			if (LanguageDepotMock.Server != null)
+			{
+				LanguageDepotMock.Server.Stop();
+				LanguageDepotMock.Server = null;
+			}
 		}
 
 		private static string ModelVersion
@@ -81,7 +88,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a non-FLEx hg repo (in this case an empty repo)
-			MercurialTestHelper.InitializeHgRepo(SynchronizeActionTests.LDProjectFolderPath);
+			MercurialTestHelper.InitializeHgRepo(LanguageDepotMock.ProjectFolderPath);
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);
@@ -98,7 +105,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a hg repo that doesn't contain a branch for the current model version
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7000060"); // simulate a too old version
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
@@ -121,7 +128,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a hg repo that doesn't contain a branch for the current model version
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7000065"); // simulate a too old version
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
@@ -141,7 +148,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a hg repo that doesn't contain a branch for the current model version
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
 
@@ -163,7 +170,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void Error_CloneHasHigherModelVersion()
 		{
 			// Setup
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
@@ -184,7 +191,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void Success_AlreadyOnIt()
 		{
 			// Setup
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
@@ -203,7 +210,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void Success_Update()
 		{
 			// Setup
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
@@ -221,26 +228,15 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
 
-		/// <summary>
-		/// LfMergeBridge contains code to deal with the situation that the directory already
-		/// exists (will clone in different directory), however this will never happen with
-		/// LfMerge because we will delete the target directory if it already exists before
-		/// calling LfMergeBridge.
-		/// </summary>
 		[Test]
-		public void Success_DirectoryAlreadyExists()
+		public void Success_DirectoryAlreadyExists_ShouldRecreateFwdataFile()
 		{
 			// Setup
-			var lDProjectFolderPath = SynchronizeActionTests.LDProjectFolderPath;
-			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
-			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-
-			// Simulate an existing different repo in the target location
-			var existingTargetDir = _lfProject.ProjectDir;
-			MercurialTestHelper.InitializeHgRepo(existingTargetDir);
-			File.WriteAllText(Path.Combine(existingTargetDir, "test"), string.Empty);
-			MercurialTestHelper.HgCommit(existingTargetDir, "Initial commit");
+			TestEnvironment.CopyFwProjectTo(TestLangProj,
+				Path.Combine(LanguageDepotMock.ProjectFolderPath, ".."));
+			LanguageDepotMock.Server.Start();
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			File.Delete(_lfProject.FwDataPath);
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);

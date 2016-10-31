@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000068</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
     <ProjectGuid>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core.Tests</RootNamespace>
@@ -15,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -25,6 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
+    <DefineConstants>TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -69,23 +70,39 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <Package>lfmerge-fdo</Package>
     </Reference>
-    <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
     <Reference Include="LfMergeBridge">
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.31880, Culture=neutral">
+      <Package>lfmerge-fdo-7000069</Package>
+    </Reference>
+    <Reference Include="BasicUtils, Version=8.3.1.31864, Culture=neutral">
+      <Package>lfmerge-fdo-7000069</Package>
+    </Reference>
+    <Reference Include="COMInterfaces, Version=8.3.1.31872, Culture=neutral">
+      <Package>lfmerge-fdo-7000069</Package>
+    </Reference>
+    <Reference Include="CoreImpl, Version=8.3.1.31872, Culture=neutral">
+      <Package>lfmerge-fdo-7000069</Package>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
+    <Reference Include="FDO">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="BasicUtils">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="COMInterfaces">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

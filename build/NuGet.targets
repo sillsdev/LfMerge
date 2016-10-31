@@ -22,7 +22,6 @@
 
 	<PropertyGroup>
 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
-		<PackagesConfig>$(ProjectDir)packages.config</PackagesConfig>
 
 		<!-- NuGet command -->
 		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/NuGet.exe</NuGetExePath>

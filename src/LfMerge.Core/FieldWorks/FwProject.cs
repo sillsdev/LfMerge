@@ -19,11 +19,9 @@ namespace LfMerge.Core.FieldWorks
 		private readonly IThreadedProgress _progress = new ThreadedProgress();
 		private readonly IFdoUI _fdoUi;
 		private readonly ProjectIdentifier _project;
-		private readonly bool _disableDataMigration;
 
-		public FwProject(LfMergeSettings settings, string database, bool disableDataMigration = true)
+		public FwProject(LfMergeSettings settings, string database)
 		{
-			_disableDataMigration = disableDataMigration;
 			_project = new ProjectIdentifier(settings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
@@ -70,6 +68,8 @@ namespace LfMerge.Core.FieldWorks
 
 		#endregion
 
+		public static bool AllowDataMigration { get; set; }
+
 		public FdoCache Cache { get; private set; }
 
 		public FwServiceLocatorCache ServiceLocator { get; private set; }
@@ -83,7 +83,7 @@ namespace LfMerge.Core.FieldWorks
 				return null;
 			}
 
-			var settings = new FdoSettings {DisableDataMigration = _disableDataMigration};
+			var settings = new FdoSettings {DisableDataMigration = !AllowDataMigration};
 
 			try
 			{
@@ -117,6 +117,9 @@ namespace LfMerge.Core.FieldWorks
 
 		public static string GetModelVersion(string project)
 		{
+			if (!File.Exists(project))
+				return null;
+
 			using (var reader = new XmlTextReader(project))
 			{
 				if (!reader.ReadToFollowing("languageproject"))

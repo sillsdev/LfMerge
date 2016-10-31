@@ -109,6 +109,11 @@
 						guid="1a705846-a814-4289-8594-4b874faca6cc"
 						t="r" />
 				</ShowComplexFormsIn>
+				<VariantEntryTypes>
+					<refseq
+						guid="3942addb-99fd-43e9-ab7d-99025ceb0d4e"
+						t="r" />
+				</VariantEntryTypes>
 			</ownseq>
 		</EntryRefs>
 		<HomographNumber

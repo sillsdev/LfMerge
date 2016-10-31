@@ -17,6 +17,11 @@ namespace LfMerge.Core.FieldWorks
 
 		#region IFdoUI implementation
 
+		public void DisplayCircularRefBreakerReport(string msg, string caption)
+		{
+			MainClass.Logger.Warning(msg);
+		}
+
 		public bool ConflictingSave()
 		{
 			MainClass.Logger.Error("ConsoleFdoUI.ConflictingSave...");

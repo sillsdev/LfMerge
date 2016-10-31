@@ -6,12 +6,11 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using LfMerge.Core;
-using LfMerge.Core.Actions;
-using LfMerge.Core.MongoConnector;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
 using Palaso.IO.FileLock;
-using System.Diagnostics;
+using SIL.FieldWorks.FDO;
 
 namespace LfMerge.QueueManager
 {
@@ -47,7 +46,12 @@ namespace LfMerge.QueueManager
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						RunAction(projectCode, queue.CurrentActionName);
+						var projectPath = Path.Combine(settings.ProjectsDirectory,
+							projectCode, string.Format("{0}{1}", projectCode,
+								FdoFileHelper.ksFwDataXmlFileExtension));
+						var modelVersion = FwProject.GetModelVersion(projectPath);
+						MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
+							modelVersion, true);
 
 						// TODO: Verify actions complete before dequeuing
 						queue.DequeueProject(projectCode);
@@ -68,27 +72,6 @@ namespace LfMerge.QueueManager
 			}
 
 			MainClass.Logger.Notice("LfMergeQueueManager finished");
-		}
-
-		private static void RunAction(string projectCode, ActionNames currentAction)
-		{
-			var startInfo = new ProcessStartInfo("LfMerge.exe");
-			startInfo.Arguments = string.Format("--clone -p {0} --action {1}", projectCode, currentAction);
-			startInfo.CreateNoWindow = true;
-			startInfo.ErrorDialog = false;
-			startInfo.UseShellExecute = false;
-			try
-			{
-				using (var process = Process.Start(startInfo))
-				{
-					process.WaitForExit();
-				}
-			}
-			catch (Exception e)
-			{
-				MainClass.Logger.Error("LfMergeQueueManager: Unhandled exception trying to start {0} {1}\n{2}",
-					startInfo.FileName, startInfo.Arguments, e);
-			}
 		}
 
 		private static bool CheckSetup(LfMergeSettings settings)

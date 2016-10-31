@@ -397,6 +397,7 @@ namespace LfMerge.Core.DataConverters
 			return GetInstance<ICmTranslationFactory>().Create(owner, typeOfNewTranslation);
 		}
 
+#if DBVERSION_7000068
 		public ILexEtymology CreateOwnedEtymology(ILexEntry owner)
 		{
 			// Have to use a different approach for OA fields: factory doesn't have Create(guid, owner)
@@ -404,6 +405,14 @@ namespace LfMerge.Core.DataConverters
 			owner.EtymologyOA = result;
 			return result;
 		}
+#else
+		public IFdoOwningSequence<ILexEtymology> CreateOwnedEtymology(ILexEntry owner)
+		{
+			#warning TODO: implement this for 7000069
+			MainClass.Logger.Warning("Implement mapping of Etymology fields for 7000069");
+			return null;
+		}
+#endif
 
 		public IMoForm CreateOwnedLexemeForm(ILexEntry owner, string morphologyType)
 		{
@@ -764,19 +773,20 @@ namespace LfMerge.Core.DataConverters
 
 		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+#if DBVERSION_7000068
+			var fdoEtymology = fdoEntry.EtymologyOA;
 			if ((lfEntry.Etymology        == null || lfEntry.Etymology       .IsEmpty) &&
-			    (lfEntry.EtymologyComment == null || lfEntry.EtymologyComment.IsEmpty) &&
-			    (lfEntry.EtymologyGloss   == null || lfEntry.EtymologyGloss  .IsEmpty) &&
-			    (lfEntry.EtymologySource  == null || lfEntry.EtymologySource .IsEmpty))
+				(lfEntry.EtymologyComment == null || lfEntry.EtymologyComment.IsEmpty) &&
+				(lfEntry.EtymologyGloss   == null || lfEntry.EtymologyGloss  .IsEmpty) &&
+				(lfEntry.EtymologySource  == null || lfEntry.EtymologySource .IsEmpty))
 			{
 				if (fdoEtymology == null)
 					return; // Don't delete an Etymology object if there was none already
 				else
 				{
-					fdoEtymology.Delete();
-					return;
-				}
+				fdoEtymology.Delete();
+				return;
+			}
 			}
 			if (fdoEtymology == null)
 				fdoEtymology = CreateOwnedEtymology(fdoEntry); // Also sets owning field on fdoEntry
@@ -784,7 +794,11 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(fdoEtymology.Comment, lfEntry.EtymologyComment);
 			SetMultiStringFrom(fdoEtymology.Gloss, lfEntry.EtymologyGloss);
 			if (lfEntry.EtymologySource != null)
+#if DBVERSION_7000068
 				fdoEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource);
+#else
+				SetMultiStringFrom(fdoEtymology.LanguageNotes, lfEntry.EtymologySource);
+#endif
 		}
 
 		public void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)

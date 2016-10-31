@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
-using SIL.FieldWorks.FDO;
 using Palaso.Code;
+using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Actions
 {
@@ -89,17 +90,17 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				const string branchString = "Cannot commit to current branch ";
-				var line = LfMergeBridgeServices.GetLineContaining(syncResult, branchString);
+				const string cannotCommitCurrentBranch = "Cannot commit to current branch '";
+				var line = LfMergeBridgeServices.GetLineContaining(syncResult, cannotCommitCurrentBranch);
 				if (!string.IsNullOrEmpty(line))
 				{
-					var index = line.IndexOf(branchString, StringComparison.Ordinal);
+					var index = line.IndexOf(cannotCommitCurrentBranch, StringComparison.Ordinal);
 					Require.That(index >= 0);
 
-					var modelVersion = line.Substring(index + branchString.Length, 7);
+					var modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length, 7);
 					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
 					{
-						SyncResultedInError(project, syncResult, branchString,
+						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,
 							ProcessingState.SendReceiveStates.HOLD);
 						Logger.Error("Error during sync of '{0}': " +
 							"clone model version '{1}' less than minimal supported model version '{2}'.",
@@ -109,7 +110,27 @@ namespace LfMerge.Core.Actions
 					ChorusHelper.SetModelVersion(modelVersion);
 					return;
 				}
-				else if (SyncResultedInError(project, syncResult,
+
+				const string pulledHigherModel = "pulled a higher model '";
+				line = LfMergeBridgeServices.GetLineContaining(syncResult, pulledHigherModel);
+				if (!string.IsNullOrEmpty(line))
+				{
+					var index = line.IndexOf(pulledHigherModel, StringComparison.Ordinal);
+					Require.That(index >= 0);
+
+					var modelVersion = line.Substring(index + pulledHigherModel.Length, 7);
+					ChorusHelper.SetModelVersion(modelVersion);
+
+					// The .hg branch has a higher model version than the .fwdata file. We allow
+					// data migrations and try again.
+					Logger.Notice("Allow data migration for project '{0}' to migrate to model version '{1}'",
+						project.ProjectCode, modelVersion);
+					FwProject.AllowDataMigration = true;
+
+					return;
+				}
+
+				if (SyncResultedInError(project, syncResult,
 						"Cannot create a repository at this point in LF development.",
 						ProcessingState.SendReceiveStates.HOLD) ||
 					// REVIEW: should we set the state to HOLD if we don't have previous commits?

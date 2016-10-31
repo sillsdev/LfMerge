@@ -20,20 +20,20 @@ namespace LfMerge.Core
 		private readonly string _projectCode;
 		private ILanguageDepotProject _languageDepotProject;
 
-		public static LanguageForgeProject Create(LfMergeSettings settings, string projectCode)
+		public static LanguageForgeProject Create(string projectCode)
 		{
 			LanguageForgeProject project;
 			if (CachedProjects.TryGetValue(projectCode, out project))
 				return project;
 
-			project = new LanguageForgeProject(settings, projectCode);
+			project = new LanguageForgeProject(projectCode);
 			CachedProjects.Add(projectCode, project);
 			return project;
 		}
 
-		protected LanguageForgeProject(LfMergeSettings settings, string projectCode)
+		protected LanguageForgeProject(string projectCode, LfMergeSettings settings = null)
 		{
-			_settings = settings;
+			_settings = settings ?? MainClass.Container.Resolve<LfMergeSettings>();
 			_projectCode = projectCode.ToLowerInvariant();
 			_state = ProcessingState.Deserialize(projectCode);
 			IsInitialClone = false;

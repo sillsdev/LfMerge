@@ -123,7 +123,7 @@ namespace LfMerge.Core.Actions
 			{
 				DoRun(project);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
 				// An exception during initial clone means we'll want to
 				// perform an initial clone next time this project is run

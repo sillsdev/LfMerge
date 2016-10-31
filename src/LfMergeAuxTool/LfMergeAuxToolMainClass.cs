@@ -39,7 +39,8 @@ namespace LfMergeAuxTool
 				{
 					var project = Path.Combine(Path.GetDirectoryName(options.Project),
 						Path.GetFileNameWithoutExtension(options.Project));
-					using (new FwProject(new LfMergeSettings(), project, false))
+					FwProject.AllowDataMigration = true;
+					using (new FwProject(new LfMergeSettings(), project))
 					{
 						Console.WriteLine("Migrated {0} from {1} to {2}",
 							Path.GetFileName(options.Project), oldVersion,

@@ -153,7 +153,8 @@
 		<DoNotUseForParsing
 			val="False" />
 		<Etymology>
-			<LexEtymology
+			<ownseq
+				class="LexEtymology"
 				guid="d7d67133-0f3a-416c-ad71-8a7cd4b88376">
 				<Comment>
 					<AStr
@@ -168,19 +169,32 @@
 					</AStr>
 				</Comment>
 				<Form>
-					<AUni
-						ws="qaa-x-kal">etymology</AUni>
+					<AStr
+						ws="qaa-x-kal">
+						<Run
+							ws="qaa-x-kal">etymology</Run>
+					</AStr>
 				</Form>
 				<Gloss>
-					<AUni
-						ws="en">English gloss</AUni>
-					<AUni
-						ws="fr">French gloss</AUni>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">English gloss</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">French gloss</Run>
+					</AStr>
 				</Gloss>
-				<Source>
-					<Uni>source</Uni>
-				</Source>
-			</LexEtymology>
+				<LanguageNotes>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">source</Run>
+					</AStr>
+				</LanguageNotes>
+			</ownseq>
 		</Etymology>
 		<HomographNumber
 			val="0" />
@@ -228,10 +242,16 @@
 			</MoStemMsa>
 		</MorphoSyntaxAnalyses>
 		<Restrictions>
-			<AUni
-				ws="en">English restrictions</AUni>
-			<AUni
-				ws="fr">French restrictions</AUni>
+			<AStr
+				ws="en">
+				<Run
+					ws="en">English restrictions</Run>
+			</AStr>
+			<AStr
+				ws="fr">
+				<Run
+					ws="fr">French restrictions</Run>
+			</AStr>
 		</Restrictions>
 		<Senses>
 			<ownseq
@@ -478,10 +498,16 @@
 					</ownseq>
 				</Pictures>
 				<Restrictions>
-					<AUni
-						ws="en">These are English restrictions.</AUni>
-					<AUni
-						ws="fr">These are French restrictions.</AUni>
+					<AStr
+						ws="en">
+						<Run
+							ws="en">These are English restrictions.</Run>
+					</AStr>
+					<AStr
+						ws="fr">
+						<Run
+							ws="fr">These are French restrictions.</Run>
+					</AStr>
 				</Restrictions>
 				<ReversalEntries>
 					<refcol

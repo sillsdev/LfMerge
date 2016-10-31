@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Highest FW database model version that lfmerge supports
-MaxDbVersion=7000068
+MaxDbVersion=7000069
 
 # Minimal FW database model version that lfmerge supports
 MinDbVersion=7000068

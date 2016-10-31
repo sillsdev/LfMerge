@@ -27,6 +27,36 @@
 			val="0" />
 	</StStyle>
 	<StStyle
+		guid="164123a0-ca12-4c44-bd69-d5fb9d4b1a0b">
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Dictionary-SenseNumber</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">The number before each sense in an entry.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
 		guid="1b25e2a0-5f78-40d1-943a-2b14caccf860">
 		<Context
 			val="0" />
@@ -126,6 +156,66 @@
 		<Usage>
 			<AUni
 				ws="en">Used for sense numbers in cross-references</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="25d17a96-4130-49c5-8f2b-497c1953556a">
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Reversal-Headword</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				bold="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">The reversal form at the start of a reversal entry.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="282f9ae7-d4dc-4c9b-93b5-413a7d3986b1">
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Reversal-Vernacular</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				italic="invert" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Used for items in reversal entries that contain vernacular text.</AUni>
 		</Usage>
 		<UserLevel
 			val="1" />
@@ -279,7 +369,8 @@
 			<Prop
 				bulNumScheme="101"
 				bulNumStartAt="1"
-				firstIndent="-18000" />
+				firstIndent="-9000"
+				leadingIndent="21000" />
 		</Rules>
 		<Structure
 			val="0" />
@@ -429,6 +520,43 @@
 			val="1" />
 	</StStyle>
 	<StStyle
+		guid="501c3363-065d-465a-baad-15d0787f9ded">
+		<BasedOn>
+			<objsur
+				guid="80a47ed1-1e29-40d4-9aa0-d3041a8ca9dc"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Reversal-Subentry</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				leadingIndent="21000"
+				spaceBefore="0" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Each paragraph of Subentry information that is added to a reversal entry if there are subentries.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
 		guid="54791325-0cb4-4fca-9a9f-86f1cd4cc79c">
 		<Context
 			val="0" />
@@ -484,6 +612,43 @@
 			val="0" />
 	</StStyle>
 	<StStyle
+		guid="693aedeb-1f1a-4f1f-b6cd-4a2a96a1dc37">
+		<BasedOn>
+			<objsur
+				guid="7a194e30-4c8c-4934-83ad-b12ecc47a768"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Dictionary-Subsubentry</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				firstIndent="0"
+				leadingIndent="33000"
+				spaceBefore="0" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Each paragraph of Subsubentry information that is added to the entry if there are subsubentries.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
 		guid="6de6e4d1-0c06-4102-86e2-82faf7bf9811">
 		<Context
 			val="14" />
@@ -514,6 +679,11 @@
 	</StStyle>
 	<StStyle
 		guid="6ed2cb3d-f6db-4af5-9de9-75669ce26f46">
+		<BasedOn>
+			<objsur
+				guid="3f844794-09d1-45fa-9d75-05c62e2b836d"
+				t="r" />
+		</BasedOn>
 		<Context
 			val="14" />
 		<Function
@@ -572,7 +742,8 @@
 			<Prop
 				bulNumScheme="10"
 				bulNumStartAt="1"
-				firstIndent="-18000" />
+				firstIndent="-9000"
+				leadingIndent="21000" />
 		</Rules>
 		<Structure
 			val="0" />
@@ -683,7 +854,7 @@
 		</Name>
 		<Rules>
 			<Prop
-				firstIndent="-36000"
+				firstIndent="-12000"
 				leadingIndent="9000"
 				spaceAfter="2000"
 				spaceBefore="1000" />
@@ -723,9 +894,6 @@
 			<Prop
 				fontsize="10000"
 				fontsizeUnit="mpt"
-				lineHeight="12000"
-				lineHeightType="atLeast"
-				lineHeightUnit="mpt"
 				spaceAfter="6000"
 				spaceBefore="0" />
 		</Rules>
@@ -773,6 +941,44 @@
 			val="1" />
 	</StStyle>
 	<StStyle
+		guid="80a47ed1-1e29-40d4-9aa0-d3041a8ca9dc">
+		<BasedOn>
+			<objsur
+				guid="7d2c80cd-af87-4d56-8337-cfd389b775bb"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Reversal-Normal</Uni>
+		</Name>
+		<Rules>
+			<Prop
+				firstIndent="-12000"
+				leadingIndent="9000"
+				spaceAfter="2000"
+				spaceBefore="1000" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Base style for everything in the Reversal view.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
 		guid="879d3c6f-8e62-4887-a4af-27feb88c2af1">
 		<BasedOn>
 			<objsur
@@ -799,8 +1005,9 @@
 		</Next>
 		<Rules>
 			<Prop
-				leadingIndent="36000"
-				trailingIndent="36000" />
+				firstIndent="0"
+				leadingIndent="21000"
+				trailingIndent="21000" />
 		</Rules>
 		<Structure
 			val="0" />
@@ -809,6 +1016,35 @@
 		<Usage>
 			<AUni
 				ws="en">Extended (paragraph size or larger) quotation</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
+	</StStyle>
+	<StStyle
+		guid="89670d4f-71d4-4878-b2ff-815e45512be1">
+		<Context
+			val="14" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Dictionary-Context</Uni>
+		</Name>
+		<Rules>
+			<Prop />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="1" />
+		<Usage>
+			<AUni
+				ws="en">Base style for Before/After/Between content in Dictionary and Reversal views.</AUni>
 		</Usage>
 		<UserLevel
 			val="1" />
@@ -835,8 +1071,8 @@
 		</Name>
 		<Rules>
 			<Prop
-				firstIndent="-18000"
-				leadingIndent="45000"
+				firstIndent="-12000"
+				leadingIndent="21000"
 				spaceBefore="0" />
 		</Rules>
 		<Structure
@@ -873,7 +1109,7 @@
 		<Rules>
 			<Prop
 				firstIndent="0"
-				leadingIndent="45000"
+				leadingIndent="21000"
 				spaceBefore="0" />
 		</Rules>
 		<Structure
@@ -945,7 +1181,7 @@
 		<Rules>
 			<Prop
 				firstIndent="0"
-				leadingIndent="45000"
+				leadingIndent="21000"
 				spaceBefore="0" />
 		</Rules>
 		<Structure
@@ -1423,6 +1659,50 @@
 			val="0" />
 		<UserLevel
 			val="0" />
+	</StStyle>
+	<StStyle
+		guid="dd807cae-4b18-4354-934d-99632b663f9e">
+		<BasedOn>
+			<objsur
+				guid="7a194e30-4c8c-4934-83ad-b12ecc47a768"
+				t="r" />
+		</BasedOn>
+		<Context
+			val="5" />
+		<Function
+			val="0" />
+		<IsBuiltIn
+			val="True" />
+		<IsModified
+			val="False" />
+		<IsPublishedTextStyle
+			val="False" />
+		<Name>
+			<Uni>Dictionary-LetterHeading</Uni>
+		</Name>
+		<Next>
+			<objsur
+				guid="7a194e30-4c8c-4934-83ad-b12ecc47a768"
+				t="r" />
+		</Next>
+		<Rules>
+			<Prop
+				bold="invert"
+				fontsize="14000"
+				fontsizeUnit="mpt"
+				spaceAfter="3000"
+				spaceBefore="12000" />
+		</Rules>
+		<Structure
+			val="0" />
+		<Type
+			val="0" />
+		<Usage>
+			<AUni
+				ws="en">Letter headings in the dictionary.</AUni>
+		</Usage>
+		<UserLevel
+			val="1" />
 	</StStyle>
 	<StStyle
 		guid="e4b31d7f-d564-4e61-bd51-97718154d39a">

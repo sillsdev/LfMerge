@@ -104,18 +104,16 @@ namespace LfMerge.Core.Actions
 			{
 				// Check if an initial clone needs to be performed
 				if (File.Exists(Settings.GetStateFileName(project.ProjectCode)) &&
-					(project.State.SRState != ProcessingState.SendReceiveStates.CLONING))
+					project.State.SRState != ProcessingState.SendReceiveStates.CLONING &&
+					File.Exists(project.FwDataPath))
 				{
 					return;
 				}
-				Logger.Notice("Initial clone for project {0}", project.ProjectCode);
-				// Since we're in here, the previous clone was not finished, so remove and start over
 				var cloneLocation = project.ProjectDir;
-				if (Directory.Exists(cloneLocation))
-				{
-					Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
-					Directory.Delete(cloneLocation, true);
-				}
+				if (RepoAlreadyExists(cloneLocation))
+					Logger.Notice("Repairing clone of project {0}", project.ProjectCode);
+				else
+					Logger.Notice("Initial clone for project {0}", project.ProjectCode);
 				project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 
 				string cloneResult;
@@ -152,6 +150,7 @@ namespace LfMerge.Core.Actions
 							project.ProjectCode, cloneModelVersion, MagicStrings.MinimalModelVersion);
 						return;
 					}
+					Logger.Info(line);
 					ChorusHelper.SetModelVersion(cloneModelVersion);
 				}
 				else
@@ -191,6 +190,11 @@ namespace LfMerge.Core.Actions
 			}
 		}
 
+		private static bool RepoAlreadyExists(string projectFolderPath)
+		{
+			return Directory.Exists(projectFolderPath);
+		}
+
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,
 			out string cloneResult)
 		{
@@ -201,7 +205,8 @@ namespace LfMerge.Core.Actions
 				{ "fdoDataModelVersion", FdoCache.ModelVersion },
 				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) },
 				{ "user", "Language Forge" },
-				{ "deleteRepoIfNoSuchBranch", "false" }
+				{ "deleteRepoIfNoSuchBranch", "false" },
+				{ "onlyRepairRepo", RepoAlreadyExists(projectFolderPath) ? "true" : "false" }
 			};
 			return LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", Progress, options,
 				out cloneResult);

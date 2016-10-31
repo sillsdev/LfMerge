@@ -50,13 +50,9 @@ namespace LfMerge.Core.FieldWorks
 			return backgroundTask(this, parameters);
 		}
 
-		public bool Canceled
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public bool Canceled { get { return false; } }
+
+		public bool IsCanceling { get { return false; }}
 
 		#endregion
 	}
