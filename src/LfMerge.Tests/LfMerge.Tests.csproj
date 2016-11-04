@@ -15,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -24,6 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
+    <DefineConstants>TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -36,17 +37,33 @@
     <Reference Include="Palaso.TestUtilities">
       <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
+    </Reference>
+    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
     <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
     <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo</Package>
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
     <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo</Package>
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

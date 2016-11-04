@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
     <ProjectGuid>{28882F30-358B-4E1C-A934-076D9EE6ACFC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LfMergeAuxTool</RootNamespace>
@@ -14,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -24,6 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
+    <DefineConstants>TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
@@ -33,9 +35,6 @@
     <Reference Include="CommandLine">
       <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="FDO, Version=8.3.1.31880, Culture=neutral">
-      <Package>lfmerge-fdo-7000069</Package>
-    </Reference>
     <Reference Include="LfMergeBridge">
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
     </Reference>
@@ -43,8 +42,21 @@
       <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="CoreImpl, Version=8.3.1.31872, Culture=neutral">
-      <Package>lfmerge-fdo-7000069</Package>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
+    <Reference Include="FDO">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

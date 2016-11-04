@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
     <ProjectGuid>{AFD8D8A6-2D98-482F-B367-6C0268B61154}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LfMerge.QueueManager</RootNamespace>
@@ -14,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -29,7 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>FW8_COMPAT</DefineConstants>
+    <DefineConstants>TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -49,20 +50,36 @@
     <Reference Include="LfMergeBridge">
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
     </Reference>
-    <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
+    </Reference>
+    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
+    <Reference Include="FDO">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="BasicUtils">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="COMInterfaces">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>lfmerge-fdo-7000068</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
