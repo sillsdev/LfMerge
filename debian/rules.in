@@ -63,7 +63,10 @@ override_dh_auto_install:
 	# Remove files that are also in lfmerge-fdo and unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
 		rm *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
-		rm Autofac.dll* icu.net.dll* L10NSharp.dll* Palaso.* && \
+		rm Autofac.dll* BasicUtils.dll* COMInterfaces.dll* CoreImpl.dll* Db4objects.* FDO.dll* \
+			FixFwDataDll.dll* ICSharpCode.SharpZipLib.dll* icu.net.dll* L10NSharp.dll* \
+			Logos.Utility.dll* Microsoft.Practices.ServiceLocation.dll* Palaso.dll* Palaso.Lift.dll* \
+			protobuf-net.dll* PhonEnvValidator.dll* SilUtils.dll* StructureMap.dll* XMLUtils.dll* && \
 		rm LfMergeAuxTool.exe*
 	# Install environ file
 	install -d $(DBDESTDIR)/$(SHARE)
