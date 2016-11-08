@@ -8,9 +8,12 @@ export XDG_CONFIG_HOME=$HOME/.config
 export BUILD = Release
 export MONO_PREFIX=/opt/mono-sil
 
-DESTDIR   = debian/lfmerge-__DatabaseVersion__
-LIB       = usr/lib/lfmerge/__DatabaseVersion__
-SHARE     = usr/share/lfmerge/__DatabaseVersion__
+# Model version dependent DESTDIR
+DBDESTDIR     = debian/lfmerge-__DatabaseVersion__
+# Common DESTDIR
+COMMONDESTDIR = debian/lfmerge
+LIB           = usr/lib/lfmerge/__DatabaseVersion__
+SHARE         = usr/share/lfmerge/__DatabaseVersion__
 
 %:
 	dh $@ --with=cli --parallel
@@ -30,59 +33,58 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	# Install binaries
-	install -d $(DESTDIR)/$(LIB)
-	install -m 644 output/$(BUILD)/*.* $(DESTDIR)/$(LIB)
-	install -m 755 output/$(BUILD)/chorusmerge $(DESTDIR)/$(LIB)
-	install -d $(DESTDIR)/$(LIB)/Mercurial
-	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext
-	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/convert
-	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/highlight
-	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/largefiles
-	install -d $(DESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
-	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial
-	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
-	install -d $(DESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
-	install -d $(DESTDIR)/$(LIB)/MercurialExtensions
-	install -d $(DESTDIR)/$(LIB)/MercurialExtensions/fixutf8
-	install -m 755 Mercurial/hg $(DESTDIR)/$(LIB)/Mercurial
-	install -m 644 Mercurial/mercurial.ini $(DESTDIR)/$(LIB)/Mercurial
-	install -m 644 Mercurial/hgext/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext
-	install -m 644 Mercurial/hgext/convert/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/convert
-	install -m 644 Mercurial/hgext/highlight/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/highlight
-	install -m 644 Mercurial/hgext/largefiles/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/largefiles
-	install -m 644 Mercurial/hgext/zeroconf/*.* $(DESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
-	install -m 644 Mercurial/mercurial/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial
-	install -m 644 Mercurial/mercurial/hgweb/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
-	install -m 644 Mercurial/mercurial/httpclient/*.* $(DESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
-	install -m 644 MercurialExtensions/fixutf8/*.* $(DESTDIR)/$(LIB)/MercurialExtensions/fixutf8
+	install -d $(DBDESTDIR)/$(LIB)
+	install -m 644 output/$(BUILD)/*.* $(DBDESTDIR)/$(LIB)
+	install -m 755 output/$(BUILD)/chorusmerge $(DBDESTDIR)/$(LIB)
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/hgext
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/hgext/convert
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/hgext/highlight
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/hgext/largefiles
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/mercurial
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
+	install -d $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
+	install -d $(DBDESTDIR)/$(LIB)/MercurialExtensions
+	install -d $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
+	install -m 755 Mercurial/hg $(DBDESTDIR)/$(LIB)/Mercurial
+	install -m 644 Mercurial/mercurial.ini $(DBDESTDIR)/$(LIB)/Mercurial
+	install -m 644 Mercurial/hgext/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext
+	install -m 644 Mercurial/hgext/convert/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/convert
+	install -m 644 Mercurial/hgext/highlight/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/highlight
+	install -m 644 Mercurial/hgext/largefiles/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/largefiles
+	install -m 644 Mercurial/hgext/zeroconf/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
+	install -m 644 Mercurial/mercurial/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial
+	install -m 644 Mercurial/mercurial/hgweb/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
+	install -m 644 Mercurial/mercurial/httpclient/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
+	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
 	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config
-	echo "fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py" >> $(DESTDIR)/$(LIB)/Mercurial/mercurial.ini
+	echo "fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py" >> $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
 	# Remove files that are also in lfmerge-fdo and unit test related files
-	cd $(DESTDIR)/$(LIB) && \
+	cd $(DBDESTDIR)/$(LIB) && \
 		rm *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
 		rm Autofac.dll* icu.net.dll* L10NSharp.dll* Palaso.* && \
 		rm LfMergeAuxTool.exe*
 	# Install environ file
-	install -d $(DESTDIR)/$(SHARE)
-	install -m 644 environ $(DESTDIR)/$(SHARE)
-	install -d $(DESTDIR)/$(SHARE)/Mercurial/doc
-	install -m 644 Mercurial/doc/*.* $(DESTDIR)/$(SHARE)/Mercurial/doc
+	install -d $(DBDESTDIR)/$(SHARE)
+	install -m 644 environ $(DBDESTDIR)/$(SHARE)
+	install -d $(DBDESTDIR)/$(SHARE)/Mercurial/doc
+	install -m 644 Mercurial/doc/*.* $(DBDESTDIR)/$(SHARE)/Mercurial/doc
 	# Install wrapper script
-	install -d $(DESTDIR)/usr/bin
-	install -m 755 lfmerge $(DESTDIR)/usr/bin
-	install -m 755 lfmergeqm $(DESTDIR)/usr/bin
+	install -d $(COMMONDESTDIR)/usr/bin
+	install -m 755 lfmerge $(COMMONDESTDIR)/usr/bin
+	install -m 755 lfmergeqm $(COMMONDESTDIR)/usr/bin
 	# Install conf file
-	install -d $(DESTDIR)/etc/languageforge/conf
-	install -m 644 debian/sendreceive.conf $(DESTDIR)/etc/languageforge/conf
+	install -d $(COMMONDESTDIR)/etc/languageforge/conf
+	install -m 644 debian/sendreceive.conf $(COMMONDESTDIR)/etc/languageforge/conf
 	# Create working directories
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/state
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/webwork
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/mergequeue
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/commitqueue
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/receivequeue
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/sendqueue
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/webwork
-	mkdir -p $(DESTDIR)/var/lib/languageforge/lexicon/sendreceive/Templates
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/state
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/webwork
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/mergequeue
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/commitqueue
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/receivequeue
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/sendqueue
+	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/Templates
 
 # Don't export any assemblies to other packages
 override_dh_makeclilibs:
