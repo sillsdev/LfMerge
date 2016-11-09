@@ -78,16 +78,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
-    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
     </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -135,6 +135,7 @@
     <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
     <Compile Include="MercurialServer.cs" />
     <Compile Include="Fdo\DataConverters\ConvertMongoToFdoTsStringsTests.cs" />
+    <Compile Include="Actions\Infrastructure\ChorusHelperTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -144,6 +145,7 @@
   <ItemGroup>
     <Folder Include="LanguageForge\" />
     <Folder Include="LanguageForge\Infrastructure\" />
+    <Folder Include="Actions\Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj">

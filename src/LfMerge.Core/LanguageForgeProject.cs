@@ -118,9 +118,9 @@ namespace LfMerge.Core
 		{
 			get
 			{
-				string uri = "http://hg-public.languagedepot.org";
+				string uri = "https://hg-public.languagedepot.org";
 				if (LanguageDepotProject.Repository != null && LanguageDepotProject.Repository.Contains("private"))
-					uri = "http://hg-private.languagedepot.org";
+					uri = "https://hg-private.languagedepot.org";
 				return uri;
 			}
 		}
