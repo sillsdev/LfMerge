@@ -11,6 +11,7 @@ lib/
 build/LfMerge.files
 data/php/
 data/testlangproj*/*.bak
+debian/changelog
 debian/control
 debian/rules
 _ReSharper.LfMerge

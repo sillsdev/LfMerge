@@ -22,4 +22,5 @@ AllLfMergeVersions=$(for ((i=$MinDbVersion; i<=$MaxDbVersion; i++)); do \
 cpp -D__DatabaseVersion__="$CurDbVersion" -D__MaxDbVersion__="$MaxDbVersion" \
 	-D__allLfMergeVersions__="$AllLfMergeVersions" -P -traditional-cpp control.in -o control
 
+sed "s/__DatabaseVersion__/$CurDbVersion/g" changelog.in > changelog
 sed "s/__DatabaseVersion__/$CurDbVersion/g" rules.in > rules && chmod +x rules
