@@ -26,8 +26,8 @@ namespace LfMerge.Core.Tests
 			var result = CommandLineRunner.Run(MercurialTestHelper.HgCommand,
 				args, RepoPath, 120, new NullProgress());
 			Assert.That(result.ExitCode, Is.EqualTo(0),
-				string.Format("hg {0}\nStdOut: {1}\nStdErr: {2}", args,
-					result.StandardOutput, result.StandardError));
+				string.Format("hg {0} (running in {1})\nStdOut: {2}\nStdErr: {3}", args,
+					RepoPath, result.StandardOutput, result.StandardError));
 			var regex = new Regex("^listening at ([^ ]+)");
 			Assert.That(regex.IsMatch(result.StandardOutput), Is.True);
 			var match = regex.Match(result.StandardOutput);
