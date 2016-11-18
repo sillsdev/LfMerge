@@ -29,7 +29,15 @@ namespace LfMerge.Core.Actions
 			var line = LfMergeBridgeServices.GetLineContaining(syncResult, errorString);
 			if (!string.IsNullOrEmpty(line))
 			{
-				Logger.Error(line);
+				if (line.Contains("Exception"))
+				{
+					 IEnumerable<string> stackTrace = LfMergeBridgeServices.GetLineAndStackTraceContaining(syncResult, errorString);
+					 Logger.Error(String.Join(Environment.NewLine, stackTrace));  // We want entire stack trace logged as a single log entry, so don't use Logger.LogMany()
+				}
+				else
+				{
+					Logger.Error(line);
+				}
 				if (newState.HasValue)
 				{
 					if (newState.Value == ProcessingState.SendReceiveStates.HOLD)

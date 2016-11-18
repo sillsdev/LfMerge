@@ -183,6 +183,53 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
+		public void Error_InvalidUtf8InXml()
+		{
+			// Setup
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			LanguageDepotMock.Server.Start();
+			var ldDirectory = Path.Combine(_lDSettings.WebWorkDirectory, TestLangProj);
+			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
+			var fwdataPath = Path.Combine(_env.Settings.WebWorkDirectory, TestLangProj, TestLangProj + ".fwdata");
+			TestEnvironment.OverwriteBytesInFile(fwdataPath, new byte[] {0xc0, 0xc1}, 25);  // 0xC0 and 0xC1 are always invalid byte values in UTF-8
+
+			// Execute
+			_synchronizeAction.Run(_lfProject);
+
+			// Verify
+			string errors = _env.Logger.GetErrors();
+			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: Invalid data ---> System.Text.DecoderFallbackException"));
+			// Stack trace should also have been logged
+			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+		}
+
+		[Test]
+		public void Error_WrongXmlEncoding()
+		{
+			// Setup
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			LanguageDepotMock.Server.Start();
+			var ldDirectory = Path.Combine(_lDSettings.WebWorkDirectory, TestLangProj);
+			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
+			var fwdataPath = Path.Combine(_env.Settings.WebWorkDirectory, TestLangProj, TestLangProj + ".fwdata");
+			TestEnvironment.ChangeFileEncoding(fwdataPath, System.Text.Encoding.UTF8, System.Text.Encoding.UTF32);
+			// Note that the XML file will still claim the encoding is UTF-8!
+
+			// Execute
+			_synchronizeAction.Run(_lfProject);
+
+			// Verify
+			string errors = _env.Logger.GetErrors();
+			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: Document element did not appear."));
+			// Stack trace should also have been logged
+			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+		}
+
+		[Test]
 		public void Success_NoNewChangesFromOthersAndUs()
 		{
 			// Setup
