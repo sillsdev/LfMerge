@@ -165,6 +165,7 @@ namespace LfMerge.Core.Actions
 					GetActualClonePath(cloneLocation, line);
 
 					InitialTransferToMongoAfterClone(project);
+					project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
 				}
 			}
 			catch (Exception e)

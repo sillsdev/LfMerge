@@ -23,7 +23,7 @@ namespace LfMerge.Core
 			CLONING,
 
 			/// <summary>
-			/// The project got cloned, but the initial transfer to mongo hasn't happened yet
+			/// The project has just been successfully cloned, so no further action is necessary during this run of LfMerge
 			/// </summary>
 			CLONED,
 

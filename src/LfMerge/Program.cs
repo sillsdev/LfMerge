@@ -91,7 +91,8 @@ namespace LfMerge
 					return chorusHelper.ModelVersion;
 				}
 
-				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+				    project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
 				{
 					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
 
