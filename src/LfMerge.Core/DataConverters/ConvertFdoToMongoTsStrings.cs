@@ -14,11 +14,26 @@ namespace LfMerge.Core.DataConverters
 	{
 		public static string HtmlEncode(string decoded)
 		{
-			// System.Net.WebUtility.HtmlEncode and HtmlDecode is over-zealous (we do NOT want non-Roman characters
+			// System.Net.WebUtility.HtmlEncode and HtmlDecode are over-zealous (we do NOT want non-Roman characters
 			// encoded, for example). So we have to write our own. Thankfully, it isn't hard at all.
 			if (decoded == null)
 				return null;
 			return decoded.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+		}
+
+		public static string HexEncode(string decoded)
+		{
+			// System.Net.WebUtility.HtmlEncode and HtmlDecode are ALSO under-zealous! In the case of ObjData properties,
+			// they can (and often do) contain null bytes and ASCII control characters (U+0000 through U+001F), which HtmlEncode
+			// and HtmlDecode don't escape. So for ObjData, we convert it to hex and store it that way.
+
+			char[] chars = decoded.ToCharArray();
+			StringBuilder result = new StringBuilder(chars.Length * 4);
+			foreach (char c in chars)
+			{
+				result.Append(((UInt16)c).ToString("X4"));
+			}
+			return result.ToString();
 		}
 
 		public static string TextFromTsString(ITsString tss, ILgWritingSystemFactory wsf)
@@ -114,7 +129,14 @@ namespace LfMerge.Core.DataConverters
 			for (int i = 0, n = props.StrPropCount; i < n; i++)
 			{
 				int propNum;
-				string propValue = props.GetStrProp(i, out propNum).Replace(" ", "_SPACE_");
+				string propValue = props.GetStrProp(i, out propNum);
+				if (propNum == (int)FwTextStringProp.kstpObjData)
+				{
+					// Object data can have arbitrary bytes, including null.
+					propValue = HexEncode(propValue);
+				}
+				// In any other property type, the only problematic value is a space character.
+				propValue = propValue.Replace(" ", "_SPACE_");
 				string className = String.Format("props_{0}_{1}_{2}", propNum, StringPropertyName(propNum), propValue);
 				if (strPropsToSkip.Contains(propNum))
 					continue;

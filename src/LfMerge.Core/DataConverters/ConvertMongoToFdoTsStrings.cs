@@ -2,7 +2,9 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using SIL.FieldWorks.Common.COMInterfaces;
@@ -54,6 +56,23 @@ namespace LfMerge.Core.DataConverters
 			return encoded.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
 		}
 
+		public static string HexDecode(string encoded)
+		{
+			// System.Net.WebUtility.HtmlEncode and HtmlDecode are ALSO under-zealous! In the case of ObjData properties,
+			// they can (and often do) contain null bytes and ASCII control characters (U+0000 through U+001F), which HtmlEncode
+			// and HtmlDecode don't escape. So for ObjData, we convert it to hex and store it that way.
+			int len = encoded.Length;
+			StringBuilder result = new StringBuilder(len / 4);
+			for (int i = 0; i < len; i += 4)
+			{
+				string hex = encoded.Substring(i, 4);
+				UInt16 parsed;
+				if (UInt16.TryParse(hex, NumberStyles.AllowHexSpecifier, NumberFormatInfo.InvariantInfo, out parsed))
+					result.Append((char)parsed);
+			}
+			return result.ToString();
+		}
+
 		public static ITsString SpanStrToTsString(string source, int mainWs, ILgWritingSystemFactory wsf)
 		{
 			// How to build up an ITsString via an ITsIncStrBldr -
@@ -64,8 +83,10 @@ namespace LfMerge.Core.DataConverters
 				return null;
 			List<Run> runs = GetSpanRuns(source);
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			// Will become: ITsIncStrBldr builder = TsStringUtils.MakeIncStrBldr();  // Add "using SIL.CoreImpl;" when this line is uncommented.
 			foreach (Run run in runs)
 			{
+				builder.ClearProps(); // Make sure there aren't leftover properties from previous run
 				// To remove a string property, you set it to null, so we can just use StyleName directly whether or not it's null.
 				builder.SetStrPropValue((int)FwTextPropType.ktptNamedStyle, run.StyleName);
 				int runWs = (run.Lang == null) ? mainWs : wsf.GetWsFromStr(run.Lang);
@@ -180,7 +201,16 @@ namespace LfMerge.Core.DataConverters
 								run.StringProperties = new Dictionary<int, string>();
 							int propNum;
 							if (Int32.TryParse(m.Groups["propNum"].Value, out propNum))
-								run.StringProperties[propNum] = m.Groups["propValue"].Value.Replace("_SPACE_", " ");
+							{
+								string propValue = m.Groups["propValue"].Value;
+								if (propNum == (int)FwTextStringProp.kstpObjData)
+								{
+									// Since object data can have arbitrary bytes, including null, we hex-encoded it in ClassesFromTsTextProps.
+									propValue = HexDecode(propValue);
+								}
+								// In any other property type, the only problematic value is a space character.
+								run.StringProperties[propNum] = propValue.Replace("_SPACE_", " ");
+							}
 						}
 					}
 				}
