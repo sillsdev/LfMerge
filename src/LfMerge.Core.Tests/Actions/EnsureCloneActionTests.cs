@@ -70,8 +70,8 @@ namespace LfMerge.Core.Tests.Actions
 			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
-				"State should be SYNCING");
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
+				"State should be CLONED");
 			// TestDouble doesn't write state file
 			Assert.That(File.Exists(_env.Settings.GetStateFileName(_projectCode)), Is.False,
 				"State file shouldn't exist yet");
@@ -97,8 +97,8 @@ namespace LfMerge.Core.Tests.Actions
 			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
-				"State should be SYNCING");
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
+				"State should be CLONED");
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
 				"Didn't clone project");
 		}

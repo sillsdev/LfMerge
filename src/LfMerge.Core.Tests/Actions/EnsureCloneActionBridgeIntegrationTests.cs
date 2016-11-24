@@ -201,7 +201,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
 			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
@@ -221,7 +221,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
 			Assert.That(MercurialTestHelper.GetUsernameFromHgrc(_lfProject.ProjectDir),
 				Is.EqualTo("Language Forge"));
 			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
@@ -243,7 +243,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
 			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
