@@ -40,7 +40,6 @@ namespace LfMerge.Core.DataConverters
 //		private const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
 		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
 		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
-		private const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
 		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
 		private IDictionary<string, ConvertFdoToMongoOptionList> ListConverters;
@@ -79,7 +78,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
 			ListConverters[SenseTypeListCode] = ConvertOptionListFromFdo(LfProject, SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
@@ -405,7 +403,6 @@ namespace LfMerge.Core.DataConverters
 				//	lfSense.Pictures.Add(FdoPictureToLfPicture(fdoPic));
 			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
-			lfSense.SensePublishIn = ToStringArrayField(PublishInListCode, fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
 
 			if (fdoSense.ReversalEntriesRC != null)
@@ -474,6 +471,7 @@ namespace LfMerge.Core.DataConverters
 			fdoSense.ThesaurusItemsRC;
 			fdoSense.LiftResidue;
 			fdoSense.LexSenseOutline;
+			fdoSense.PublishIn;
 			*/
 
 			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses", ListConverters, lfCustomFieldList);
@@ -509,12 +507,12 @@ namespace LfMerge.Core.DataConverters
 			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = fdoExample.Guid;
-			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
 			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, ServiceLocator.WritingSystemFactory);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
+			// fdoExample.PublishIn;
 
 			// NOTE: Currently, LanguageForge only stores one translation per example, whereas FDO can store
 			// multiple translations with (possibly) different statuses (as freeform strings, like "old", "updated",

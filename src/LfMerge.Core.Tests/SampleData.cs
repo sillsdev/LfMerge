@@ -296,9 +296,6 @@ namespace LfMerge.Core.Tests
 					""graphology""
 				]
 			},
-			""sensePublishIn"" : {
-				""values"" : [ ]
-			},
 			""anthropologyCategories"" : {
 				""values"" : [
 					""130"",
@@ -371,9 +368,6 @@ namespace LfMerge.Core.Tests
 				""value"" : null
 			},
 			""academicDomains"" : {
-				""values"" : [ ]
-			},
-			""sensePublishIn"" : {
 				""values"" : [ ]
 			},
 			""anthropologyCategories"" : {
@@ -512,7 +506,6 @@ namespace LfMerge.Core.Tests
 						""reversalEntries"",
 						""senseType"",
 						""academicDomains"",
-						""sensePublishIn"",
 						""anthropologyCategories"",
 						""senseImportResidue"",
 						""status"",
@@ -548,7 +541,6 @@ namespace LfMerge.Core.Tests
 								""sentence"",
 								""translation"",
 								""reference"",
-								""examplePublishIn"",
 								""customField_examples_Cust_Example""
 							],
 							""fields"" : {
@@ -579,12 +571,6 @@ namespace LfMerge.Core.Tests
 									""inputSystems"" : [ ],
 									""displayMultiline"" : false,
 									""type"" : ""multitext"",
-									""hideIfEmpty"" : true
-								},
-								""examplePublishIn"" : {
-									""label"" : ""Publish In"",
-									""listCode"" : ""do-not-publish-in"",
-									""type"" : ""multioptionlist"",
 									""hideIfEmpty"" : true
 								},
 								""customField_examples_Cust_Example"" : {
@@ -744,12 +730,6 @@ namespace LfMerge.Core.Tests
 						""academicDomains"" : {
 							""label"" : ""Academic Domains"",
 							""listCode"" : ""domain-type"",
-							""type"" : ""multioptionlist"",
-							""hideIfEmpty"" : true
-						},
-						""sensePublishIn"" : {
-							""label"" : ""Publish In"",
-							""listCode"" : ""do-not-publish-in"",
 							""type"" : ""multioptionlist"",
 							""hideIfEmpty"" : true
 						},
@@ -1198,10 +1178,6 @@ namespace LfMerge.Core.Tests
 						""show"" : true,
 						""type"" : ""basic""
 					},
-					""sensePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
-					},
 					""anthropologyCategories"" : {
 						""show"" : true,
 						""type"" : ""basic""
@@ -1221,10 +1197,6 @@ namespace LfMerge.Core.Tests
 						""inputSystems"" : [ ],
 						""show"" : true,
 						""type"" : ""multitext""
-					},
-					""examplePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
 					},
 					""customField_entry_Cust_MultiPara"" : {
 						""overrideInputSystems"" : false,
@@ -1500,10 +1472,6 @@ namespace LfMerge.Core.Tests
 						""show"" : true,
 						""type"" : ""basic""
 					},
-					""sensePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
-					},
 					""anthropologyCategories"" : {
 						""show"" : true,
 						""type"" : ""basic""
@@ -1523,10 +1491,6 @@ namespace LfMerge.Core.Tests
 						""inputSystems"" : [ ],
 						""show"" : true,
 						""type"" : ""multitext""
-					},
-					""examplePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
 					},
 					""customField_entry_Cust_MultiPara"" : {
 						""overrideInputSystems"" : false,
@@ -1802,10 +1766,6 @@ namespace LfMerge.Core.Tests
 						""show"" : true,
 						""type"" : ""basic""
 					},
-					""sensePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
-					},
 					""anthropologyCategories"" : {
 						""show"" : true,
 						""type"" : ""basic""
@@ -1825,10 +1785,6 @@ namespace LfMerge.Core.Tests
 						""inputSystems"" : [ ],
 						""show"" : true,
 						""type"" : ""multitext""
-					},
-					""examplePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
 					},
 					""customField_entry_Cust_MultiPara"" : {
 						""overrideInputSystems"" : false,
@@ -2104,10 +2060,6 @@ namespace LfMerge.Core.Tests
 						""show"" : true,
 						""type"" : ""basic""
 					},
-					""sensePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
-					},
 					""anthropologyCategories"" : {
 						""show"" : true,
 						""type"" : ""basic""
@@ -2127,10 +2079,6 @@ namespace LfMerge.Core.Tests
 						""inputSystems"" : [ ],
 						""show"" : true,
 						""type"" : ""multitext""
-					},
-					""examplePublishIn"" : {
-						""show"" : true,
-						""type"" : ""basic""
 					},
 					""customField_entry_Cust_MultiPara"" : {
 						""overrideInputSystems"" : false,

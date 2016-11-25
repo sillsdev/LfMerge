@@ -59,7 +59,6 @@ namespace LfMerge.Core.DataConverters
 			{
 				{cache.LanguageProject.LexDbOA.DomainTypesOA.Guid, MagicStrings.LfOptionListCodeForAcademicDomainTypes},
 				{cache.LanguageProject.AnthroListOA.Guid, MagicStrings.LfOptionListCodeForAnthropologyCodes},
-				{cache.LanguageProject.LexDbOA.PublicationTypesOA.Guid, MagicStrings.LfOptionListCodeForDoNotPublishIn},
 				{cache.LanguageProject.PartsOfSpeechOA.Guid, MagicStrings.LfOptionListCodeForGrammaticalInfo},
 				{cache.LanguageProject.LocationsOA.Guid, MagicStrings.LfOptionListCodeForLocations},
 				{cache.LanguageProject.SemanticDomainListOA.Guid, MagicStrings.LfOptionListCodeForSemanticDomains},

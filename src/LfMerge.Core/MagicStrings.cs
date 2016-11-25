@@ -24,7 +24,6 @@ namespace LfMerge.Core
 			{ LfOptionListCodeForReversalTypes, "Reversal Entries" },
 			{ LfOptionListCodeForSenseTypes, "Type" },
 			{ LfOptionListCodeForAnthropologyCodes, "Anthropology Categories" },
-			{ LfOptionListCodeForDoNotPublishIn, "Publish In" }, // Yes, the "do not" is present in the code but missing from the name...
 			{ LfOptionListCodeForStatus, "Status" },
 
 			// Option lists found in FW, but not currently used in LF (as of 2016-03-01)
@@ -53,7 +52,6 @@ namespace LfMerge.Core
 		public const string LfOptionListCodeForReversalTypes = "reversal-type";
 		public const string LfOptionListCodeForSenseTypes = "sense-type";
 		public const string LfOptionListCodeForAnthropologyCodes = "anthro-code";
-		public const string LfOptionListCodeForDoNotPublishIn = "do-not-publish-in";
 		public const string LfOptionListCodeForStatus = "status";
 
 		// Option lists found in FW, but not currently used in LF (as of 2016-03-01)

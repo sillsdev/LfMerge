@@ -51,7 +51,6 @@ namespace LfMerge.Core.DataConverters
 //		private const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
 		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
 		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
-		private const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
 		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
 		private IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
@@ -83,7 +82,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode);
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
-			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
@@ -97,7 +95,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 			#endif
 
@@ -559,10 +556,6 @@ namespace LfMerge.Core.DataConverters
 //				fdoExample.Guid,
 //				fdoExample.Hvo
 //			);
-			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
-				fdoExample.DoNotPublishInRC, lfExample.ExamplePublishIn,
-				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
-			);
 			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample,
 				_freeTranslationType);
@@ -666,10 +659,6 @@ namespace LfMerge.Core.DataConverters
 			// lfSense.SenseId; // TODO: What do I do with this one?
 			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 
-			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
-				fdoSense.DoNotPublishInRC, lfSense.SensePublishIn,
-				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
-			);
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
 			fdoSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);

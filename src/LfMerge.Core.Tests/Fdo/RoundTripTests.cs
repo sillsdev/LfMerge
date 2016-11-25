@@ -599,7 +599,6 @@ namespace LfMerge.Core.Tests.Fdo
 			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId"); // Automatically set by FDO
 			differencesByName.Remove("guid"); // Automatically set by FDO
-			differencesByName.Remove("sensePublishIn"); // Automatically set by FDO
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
