@@ -259,6 +259,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
@@ -271,6 +272,9 @@ namespace LfMerge.Core.Tests.Actions
 			// But the FDO modified date (AuthorInfo.ModifiedDate in LF) should be updated.
 			Assert.That(updatedLfAuthorInfoModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -304,6 +308,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
@@ -322,6 +327,9 @@ namespace LfMerge.Core.Tests.Actions
 			var cache = _lfProject.FieldWorksProject.Cache;
 			Assert.That(()=> cache.ServiceLocator.GetObject(_testEntryGuid),
 				Throws.InstanceOf<KeyNotFoundException>());
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -357,6 +365,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify LD modified entry remains and LF marks not deleted
@@ -367,6 +376,9 @@ namespace LfMerge.Core.Tests.Actions
 			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -400,6 +412,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify modified LF entry wins
@@ -412,6 +425,9 @@ namespace LfMerge.Core.Tests.Actions
 			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]

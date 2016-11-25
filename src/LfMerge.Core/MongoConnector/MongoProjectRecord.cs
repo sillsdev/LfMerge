@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
+using System;
 using System.Collections.Generic;
 
 namespace LfMerge.Core.MongoConnector
@@ -18,6 +19,7 @@ namespace LfMerge.Core.MongoConnector
 		public string LanguageCode { get; set; }
 		public string ProjectCode { get; set; }
 		public string ProjectName { get; set; }
+		public DateTime? LastSyncedDate { get; set; }
 		public LfProjectConfig Config { get; set; }
 
 		public MongoProjectRecord()
