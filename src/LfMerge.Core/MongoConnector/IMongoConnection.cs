@@ -26,6 +26,8 @@ namespace LfMerge.Core.MongoConnector
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 		bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate);  // TODO: Decide if this is really where this method belongs
+
+		bool FlushBulkUpdates(); // NOTE: I don't want to actually use this API for real, this is just for testing purposes.
 	}
 }
 

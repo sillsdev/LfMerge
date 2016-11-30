@@ -500,6 +500,50 @@ namespace LfMerge.Core.MongoConnector
 			return result;
 		}
 
+		private Dictionary<ILfProject, List<UpdateOneModel<LfLexEntry>>> bulkUpdates = new Dictionary<ILfProject, List<UpdateOneModel<LfLexEntry>>>();
+
+		public bool FlushBulkUpdates()
+		{
+			try
+			{
+				foreach (var kv in bulkUpdates)
+				{
+					ILfProject project = kv.Key;
+					List<UpdateOneModel<LfLexEntry>> updates = kv.Value;
+					IMongoDatabase db = GetProjectDatabase(project);
+					IMongoCollection<LfLexEntry> coll = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+					coll.BulkWrite(updates);
+
+					// Also ensure that no DirtySR field goes below 0
+					FilterDefinition<LfLexEntry> filter = Builders<LfLexEntry>.Filter.Empty;  // The "empty" filter matches everything
+					UpdateDefinition<LfLexEntry> update = Builders<LfLexEntry>.Update.Max(entry => entry.DirtySR, 0);
+					coll.UpdateMany(filter, update);
+				}
+			}
+			catch (MongoCommandException e)
+			{
+				Logger.Error("{0}: Possibly need to upgrade MongoDB to 3.2 or later", e);
+				throw;
+			}
+			return true;
+		}
+
+		private void AddUpdateForLaterBulkProcessing(ILfProject project, FilterDefinition<LfLexEntry> filter, UpdateDefinition<LfLexEntry> update, FindOneAndUpdateOptions<LfLexEntry> options)
+		{
+			var model = new UpdateOneModel<LfLexEntry>(filter, update) { IsUpsert = options.IsUpsert };
+			List<UpdateOneModel<LfLexEntry>> updates;
+			if (bulkUpdates.TryGetValue(project, out updates))
+			{
+				updates.Add(model);
+			}
+			else
+			{
+				updates = new List<UpdateOneModel<LfLexEntry>>();
+				updates.Add(model);
+				bulkUpdates[project] = updates;
+			}
+		}
+
 		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
 			var filterBuilder = Builders<LfLexEntry>.Filter;
@@ -513,12 +557,9 @@ namespace LfMerge.Core.MongoConnector
 				IsUpsert = true,
 				ReturnDocument = ReturnDocument.After
 			};
-			// Special handling for LfLexEntry records: we need to decrement dirtySR iff it's >0, but Mongo
-			// doesn't allow an update like "{'$inc': {dirtySR: -1}, '$max': {dirtySR: 0}}". We have to use
-			// filters for that, and that means there are THREE possibilities:
-			// 1. This is an *insert*, where dirtySR should be set to 0.
-			// 2. This is an *update*, but dirtySR was already 0; do not decrement.
-			// 3. This is an *update*, and dirtySR was >0; decrement.
+			// Special handling for LfLexEntry records: dirtySR should be set to 0 on new entries, or
+			// decremented if this is not a new entry. (The FlushBulkUpdates function later sets it back
+			// to 0 if the decrement dropped it below 0, so this is safe.)
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<LfLexEntry> coll = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
 			LfLexEntry updateResult;
@@ -528,32 +569,16 @@ namespace LfMerge.Core.MongoConnector
 				// BuildUpdate() function (for handling Nullable<Guid> fields, for example), and we want to
 				// make sure that gets applied for both inserts and updates. So we'll do an upsert even though
 				// we *know* there's no previous data
-				updateResult = coll.FindOneAndUpdate(filter, coreUpdate, upsert);
-				return (updateResult != null);
+				AddUpdateForLaterBulkProcessing(project, filter, coreUpdate, upsert);
+				// TODO: That "upsert" parameter can become a boolean now, since that's the only part of it we use. Reduce GC pressure.
+				return true;
 			}
 			else
 			{
 				var updateBuilder = Builders<LfLexEntry>.Update;
-				var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
-				var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
 				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
-				// Future version will use Max to decrement DirtySR.  MongoDB will need to be version 2.6+.
-				// which may not be currently installed. Decrementing DirtySR isn't needed for LfMerge v1.1
-				// var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
-				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Set(item => item.DirtySR, 0));
-				// Precisely one of the next two calls can succeed.
-				try
-				{
-					updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
-					if (updateResult != null)
-						return true;
-				}
-				catch (MongoCommandException e)
-				{
-					Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
-				}
-				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
-				return (updateResult != null);
+				AddUpdateForLaterBulkProcessing(project, filter, decrementUpdate, doNotUpsert);
+				return true;
 			}
 		}
 
@@ -568,18 +593,24 @@ namespace LfMerge.Core.MongoConnector
 
 		private bool UpdateRecordImpl<TDocument>(ILfProject project, TDocument data, FilterDefinition<TDocument> filter, string collectionName, MongoDbSelector whichDb)
 		{
+			UpdateOneModel<TDocument> updateModel = UpdateRecordImplBulk(project, data, filter, collectionName, whichDb);
 			IMongoDatabase mongoDb;
 			if (whichDb == MongoDbSelector.ProjectDatabase)
 				mongoDb = GetProjectDatabase(project);
 			else
 				mongoDb = GetMainDatabase();
-			UpdateDefinition<TDocument> update = BuildUpdate(data);
-			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
 			};
-			collection.FindOneAndUpdate(filter, update, updateOptions);
+			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
+			collection.FindOneAndUpdate(updateModel.Filter, updateModel.Update, updateOptions);
 			return true;
+		}
+
+		private UpdateOneModel<TDocument> UpdateRecordImplBulk<TDocument>(ILfProject project, TDocument data, FilterDefinition<TDocument> filter, string collectionName, MongoDbSelector whichDb)
+		{
+			UpdateDefinition<TDocument> update = BuildUpdate(data);
+			return new UpdateOneModel<TDocument>(filter, update) { IsUpsert = true };
 		}
 
 		// Don't use this to remove LF entries.  Set IsDeleted field instead

@@ -130,6 +130,7 @@ namespace LfMerge.Core.DataConverters
 			RemoveMongoEntriesDeletedInFdo();
 
 			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
+			Connection.FlushBulkUpdates();  // TODO: Implement this in mock Mongo connection as well.
 			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
 		}
 

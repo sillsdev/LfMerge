@@ -118,6 +118,8 @@ namespace LfMerge.Core.Tests
 			new MongoRegistrarForLfConfig().RegisterClassMappings();
 		}
 
+		public bool FlushBulkUpdates() { return true; } // TODO: We probably don't actually want this API. Rethink it. Use this just for testing.
+
 		private readonly Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
 		private readonly Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
 		private readonly Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
