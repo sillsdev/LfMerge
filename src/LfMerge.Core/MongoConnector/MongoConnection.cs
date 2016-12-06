@@ -561,6 +561,8 @@ namespace LfMerge.Core.MongoConnector
 			}
 		}
 
+		// TODO: Consider whether this should be renamed to PrepareBulkRecordUpdate, and the previous UpdateRecord function should
+		// be kept as well, for the times when we might want to update an LfLexEntry individually (and immediately).
 		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
 			var filterBuilder = Builders<LfLexEntry>.Filter;

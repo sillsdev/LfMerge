@@ -136,7 +136,7 @@ namespace LfMerge.Core.DataConverters
 
 		private void RemoveMongoEntriesDeletedInFdo()
 		{
-			IEnumerable<LfLexEntry> lfEntries = Connection.GetLfLexEntryGuids(LfProject, includeDeletedEntries: false);
+			IEnumerable<LfLexEntry> lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			foreach (LfLexEntry lfEntry in lfEntries)
 			{
 				if (lfEntry.Guid == null)
@@ -146,7 +146,7 @@ namespace LfMerge.Core.DataConverters
 				if (!ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
 				    !ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{
-					Logger.Info("FdoToMongo: Deleted LfEntry {0}", lfEntry.Guid.Value);
+					Logger.Info("FdoToMongo: Deleted LfEntry {0} ({1})", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 					Connection.MarkLfLexEntryDeleted(LfProject, lfEntry.Guid.Value);
 				}
 			}
