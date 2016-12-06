@@ -575,6 +575,8 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="owner">Owning sense.</param>
 		private void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
+			if (lfPicture == null || lfPicture.FileName == null)
+				return;  // Do nothing if there's no picture to convert
 			Guid guid = lfPicture.Guid ?? Guid.Empty;
 			int captionWs = Cache.DefaultAnalWs;
 			string caption = "";
