@@ -141,6 +141,8 @@ namespace LfMerge.Core.DataConverters
 			{
 				if (lfEntry.Guid == null)
 					continue;
+				if (lfEntry.IsDeleted)
+					continue;
 				if (!ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
 				    !ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{

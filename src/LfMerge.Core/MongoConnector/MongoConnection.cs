@@ -120,11 +120,8 @@ namespace LfMerge.Core.MongoConnector
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
-			FilterDefinitionBuilder<LfLexEntry> filterBuilder = Builders<LfLexEntry>.Filter;
-			FilterDefinition<LfLexEntry> filter = filterBuilder.Ne(entry => entry.Guid, null);
-			if (!includeDeletedEntries)
-				filter = filterBuilder.And(filter, filterBuilder.Ne(entry => entry.IsDeleted, true));
-			ProjectionDefinition<LfLexEntry> projection = Builders<LfLexEntry>.Projection.Include(entry => entry.Guid);
+			FilterDefinition<LfLexEntry> filter = Builders<LfLexEntry>.Filter.Empty;
+			ProjectionDefinition<LfLexEntry> projection = Builders<LfLexEntry>.Projection.Include(entry => entry.Guid).Include(entry => entry.IsDeleted);
 			using (IAsyncCursor<LfLexEntry> cursor = collection.Find<LfLexEntry>(filter).Project<LfLexEntry>(projection).ToCursor())
 			{
 				while (cursor.MoveNext())
