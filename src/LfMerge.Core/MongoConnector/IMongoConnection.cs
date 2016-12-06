@@ -19,7 +19,8 @@ namespace LfMerge.Core.MongoConnector
 		Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project);
 		bool UpdateRecord(ILfProject project, LfLexEntry data);
 		bool UpdateRecord(ILfProject project, LfOptionList data, string listCode);
-		bool RemoveRecord(ILfProject project, Guid guid);
+		IEnumerable<LfLexEntry> GetLfLexEntryGuids(ILfProject project, bool includeDeletedEntries = false);
+		bool MarkLfLexEntryDeleted(ILfProject project, Guid guid);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);

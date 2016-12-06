@@ -125,18 +125,18 @@ namespace LfMerge.Core.DataConverters
 				Logger.Info("{3} - FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i++);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
+			Connection.FlushBulkUpdates();
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInFdo();
 
 			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
-			Connection.FlushBulkUpdates();  // TODO: Implement this in mock Mongo connection as well.
 			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()
 		{
-			IEnumerable<LfLexEntry> lfEntries = Connection.GetRecords<LfLexEntry>(LfProject, MagicStrings.LfCollectionNameForLexicon);
+			IEnumerable<LfLexEntry> lfEntries = Connection.GetLfLexEntryGuids(LfProject, includeDeletedEntries: false);
 			foreach (LfLexEntry lfEntry in lfEntries)
 			{
 				if (lfEntry.Guid == null)
@@ -144,16 +144,11 @@ namespace LfMerge.Core.DataConverters
 				if (!ServiceLocator.ObjectRepository.IsValidObjectId(lfEntry.Guid.Value) ||
 				    !ServiceLocator.ObjectRepository.GetObject(lfEntry.Guid.Value).IsValidObject)
 				{
-					if (lfEntry.IsDeleted)
-						// Don't need to delete this record twice
-						continue;
-
-					lfEntry.IsDeleted = true;
-					lfEntry.DateModified = DateTime.UtcNow;
-					Logger.Info("FdoToMongo: Deleted LfEntry {0} ({1})", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
-					Connection.UpdateRecord(LfProject, lfEntry);
+					Logger.Info("FdoToMongo: Deleted LfEntry {0}", lfEntry.Guid.Value);
+					Connection.MarkLfLexEntryDeleted(LfProject, lfEntry.Guid.Value);
 				}
 			}
+			Connection.FlushBulkUpdates();
 		}
 
 		// Shorthand for getting an instance from the cache's service locator

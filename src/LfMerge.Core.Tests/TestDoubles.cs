@@ -273,9 +273,23 @@ namespace LfMerge.Core.Tests
 			return true;
 		}
 
-		public bool RemoveRecord(ILfProject project, Guid guid)
+		public IEnumerable<LfLexEntry> GetLfLexEntryGuids(ILfProject project, bool includeDeletedEntries = false)
 		{
-			_storedLfLexEntries.Remove(guid);
+			if (includeDeletedEntries)
+				return _storedLfLexEntries.Values.Select(DeepCopy);
+			else
+				return _storedLfLexEntries.Values.Where(entry => !entry.IsDeleted).Select(DeepCopy);
+		}
+
+		public bool MarkLfLexEntryDeleted(ILfProject project, Guid guid)
+		{
+			LfLexEntry entry;
+			if (_storedLfLexEntries.TryGetValue(guid, out entry))
+			{
+				entry.IsDeleted = true;
+				entry.DateModified = DateTime.UtcNow;
+				_storedLfLexEntries[guid] = entry;  // Not actually needed, but let's be explicit about our intentions
+			}
 			return true;
 		}
 

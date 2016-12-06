@@ -115,6 +115,24 @@ namespace LfMerge.Core.MongoConnector
 			return GetRecords<TDocument>(project, collectionName, _ => true);
 		}
 
+		// NOTE: This returns LfLexEntry objects, but ONLY their Guid field will be set!
+		public IEnumerable<LfLexEntry> GetLfLexEntryGuids(ILfProject project, bool includeDeletedEntries = false)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+			FilterDefinitionBuilder<LfLexEntry> filterBuilder = Builders<LfLexEntry>.Filter;
+			FilterDefinition<LfLexEntry> filter = filterBuilder.Ne(entry => entry.Guid, null);
+			if (!includeDeletedEntries)
+				filter = filterBuilder.And(filter, filterBuilder.Ne(entry => entry.IsDeleted, true));
+			ProjectionDefinition<LfLexEntry> projection = Builders<LfLexEntry>.Projection.Include(entry => entry.Guid);
+			using (IAsyncCursor<LfLexEntry> cursor = collection.Find<LfLexEntry>(filter).Project<LfLexEntry>(projection).ToCursor())
+			{
+				while (cursor.MoveNext())
+					foreach (LfLexEntry entry in cursor.Current) // IAsyncCursor returns results in batches
+						yield return entry;
+			}
+		}
+
 		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
 		{
 			return GetRecords<LfOptionList>(project, MagicStrings.LfCollectionNameForOptionLists, list => list.Code == listCode).FirstOrDefault();
@@ -412,6 +430,8 @@ namespace LfMerge.Core.MongoConnector
 					// Refuse to reset DateCreated in Mongo to 0001-01-01, since that's NEVER correct
 					continue;
 				}
+				if (prop.Name == "DirtySR")
+					continue; // This one is set elsewhere
 				if (prop.GetValue(doc) == null)
 				{
 					if (prop.Name == "DateCreated")
@@ -528,9 +548,9 @@ namespace LfMerge.Core.MongoConnector
 			return true;
 		}
 
-		private void AddUpdateForLaterBulkProcessing(ILfProject project, FilterDefinition<LfLexEntry> filter, UpdateDefinition<LfLexEntry> update, FindOneAndUpdateOptions<LfLexEntry> options)
+		private void AddUpdateForLaterBulkProcessing(ILfProject project, FilterDefinition<LfLexEntry> filter, UpdateDefinition<LfLexEntry> update, bool isUpsert)
 		{
-			var model = new UpdateOneModel<LfLexEntry>(filter, update) { IsUpsert = options.IsUpsert };
+			var model = new UpdateOneModel<LfLexEntry>(filter, update) { IsUpsert = isUpsert };
 			List<UpdateOneModel<LfLexEntry>> updates;
 			if (bulkUpdates.TryGetValue(project, out updates))
 			{
@@ -549,14 +569,7 @@ namespace LfMerge.Core.MongoConnector
 			var filterBuilder = Builders<LfLexEntry>.Filter;
 			FilterDefinition<LfLexEntry> filter = filterBuilder.Eq(entry => entry.Guid, data.Guid);
 			UpdateDefinition<LfLexEntry> coreUpdate = BuildUpdate(data);
-			var doNotUpsert = new FindOneAndUpdateOptions<LfLexEntry> {
-				IsUpsert = false,
-				ReturnDocument = ReturnDocument.Before
-			};
-			var upsert = new FindOneAndUpdateOptions<LfLexEntry> {
-				IsUpsert = true,
-				ReturnDocument = ReturnDocument.After
-			};
+
 			// Special handling for LfLexEntry records: dirtySR should be set to 0 on new entries, or
 			// decremented if this is not a new entry. (The FlushBulkUpdates function later sets it back
 			// to 0 if the decrement dropped it below 0, so this is safe.)
@@ -565,11 +578,11 @@ namespace LfMerge.Core.MongoConnector
 			LfLexEntry updateResult;
 			if (coll.Count(filter) == 0)
 			{
-				// Theoretically, we could just do an InsertOne() here. But we have special logic in the
+				// Theoretically, we could just build an InsertOneModel here. But we have special logic in the
 				// BuildUpdate() function (for handling Nullable<Guid> fields, for example), and we want to
-				// make sure that gets applied for both inserts and updates. So we'll do an upsert even though
-				// we *know* there's no previous data
-				AddUpdateForLaterBulkProcessing(project, filter, coreUpdate, upsert);
+				// make sure that gets applied for both inserts and updates. So we'll do an update with upsert
+				// even though we *know* there's no previous data.
+				AddUpdateForLaterBulkProcessing(project, filter, coreUpdate, isUpsert: true);
 				// TODO: That "upsert" parameter can become a boolean now, since that's the only part of it we use. Reduce GC pressure.
 				return true;
 			}
@@ -577,7 +590,7 @@ namespace LfMerge.Core.MongoConnector
 			{
 				var updateBuilder = Builders<LfLexEntry>.Update;
 				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
-				AddUpdateForLaterBulkProcessing(project, filter, decrementUpdate, doNotUpsert);
+				AddUpdateForLaterBulkProcessing(project, filter, decrementUpdate, isUpsert: false);
 				return true;
 			}
 		}
@@ -613,14 +626,16 @@ namespace LfMerge.Core.MongoConnector
 			return new UpdateOneModel<TDocument>(filter, update) { IsUpsert = true };
 		}
 
-		// Don't use this to remove LF entries.  Set IsDeleted field instead
-		public bool RemoveRecord(ILfProject project, Guid guid)
+		// Don't remove LF entries from Mongo. Set IsDeleted field instead. (And always set DateModified and DirtySR).
+		public bool MarkLfLexEntryDeleted(ILfProject project, Guid guid)
 		{
-			IMongoDatabase db = GetProjectDatabase(project);
-			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
 			FilterDefinition<LfLexEntry> filter = Builders<LfLexEntry>.Filter.Eq(entry => entry.Guid, guid);
-			var removeResult = collection.DeleteOne(filter);
-			return (removeResult != null);
+			UpdateDefinition<LfLexEntry> update = Builders<LfLexEntry>.Update
+				.Set(entry => entry.IsDeleted, true)
+				.Set(entry => entry.DateModified, DateTime.UtcNow)
+				.Inc(entry => entry.DirtySR, -1);
+			AddUpdateForLaterBulkProcessing(project, filter, update, isUpsert: false);
+			return true;
 		}
 
 		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
