@@ -42,7 +42,6 @@ L10NSharp.dll*=>lib/
 Ionic.Zip.dll*=>lib/
 Spart.dll*=>lib/
 SIL.Linux.Logging.dll*=>lib/
-icu.net.dll*=>lib/
 
 
 [TC::ChorusWin32LfmergeCont]
