@@ -314,6 +314,13 @@ namespace LfMerge.Core.DataConverters
 				{
 					createdEntry = true;
 					result = GetInstance<ILexEntryFactory>().Create(guid, ServiceLocator.LanguageProject.LexDbOA);
+					// TODO: Consider changing this to the following:
+					// var msa = new SandboxGenericMSA();
+					// result = GetInstance<ILexEntryFactory>().Create(GetInstance<IMoMorphTypeRepository>().GetObject(MoMorphTypeTags.kguidMorphStem), lexemeFormTs, (ITsString) null, msa);
+					// However, this creates an empty Sense object -- and we already set the morph type when we set the LexemeFormOA. That should be enough.
+
+					// If we do make that change, then the function signature will become:
+					// private ILexEntry GetOrCreateEntryByGuid(Guid guid, bool wantCreation, ITsString lexemeFormTs, out bool createdEntry)
 				}
 				else
 					result = null;
@@ -399,6 +406,7 @@ namespace LfMerge.Core.DataConverters
 			// morphologyType is a string because that's how it's (currently, as of Nov 2015)
 			// stored in LF's Mongo database.
 			IMoForm result;
+			Guid morphGuid;
 			var stemFactory = GetInstance<IMoStemAllomorphFactory>();
 			var affixFactory = GetInstance<IMoAffixAllomorphFactory>();
 			// TODO: This list of hardcoded strings might belong in an enum, rather than here
@@ -409,33 +417,58 @@ namespace LfMerge.Core.DataConverters
 			case "root":
 			case "stem":
 			case "particle":
-			case "clitic":
-			case "proclitic":
-			case "enclitic":
 			case "phrase":
 			case "discontiguous phrase":
-			case null: // Consider "stem" as the default in case of null
-				result = stemFactory.Create();
-				break;
-
 			case "circumfix":
-			case "prefix":
-			case "suffix":
-			case "infix":
-			case "prefixing interfix":
-			case "infixing interfix":
-			case "suffixing interfix":
-			case "simulfix":
-			case "suprafix":
-				result = affixFactory.Create();
+			// Also consider "stem" as the default in case of null or empty morph type
+			case null:
+			case "":
+				morphGuid = MoMorphTypeTags.kguidMorphStem;
 				break;
 
+			// TODO: Decide if "phrase" and "discontiguous phrase" should be treated as stems the way FW's FindMorphType() function
+			// does, or if we want to use MoMorphTypeTags.kguidMorphPhrase and MoMorphTypeTags.kguidMorphDiscontiguousPhrase
+			// even though FieldWorks doesn't appear to use those.
+
+			case "clitic":
+				morphGuid = MoMorphTypeTags.kguidMorphClitic;
+				break;
+			case "proclitic":
+				morphGuid = MoMorphTypeTags.kguidMorphProclitic;
+				break;
+			case "enclitic":
+				morphGuid = MoMorphTypeTags.kguidMorphEnclitic;
+				break;
+			case "prefix":
+			case "prefixing interfix":  // FDO's MorphServices prefers to consider "prefixing interfix" as a prefix
+				morphGuid = MoMorphTypeTags.kguidMorphPrefix;
+				break;
+			case "infix":
+			case "infixing interfix":  // FDO's MorphServices prefers to consider "infixing interfix" as an infix
+				morphGuid = MoMorphTypeTags.kguidMorphInfix;
+				break;
+			case "suffix":
+			case "suffixing interfix":  // FDO's MorphServices prefers to consider "suffixing interfix" as a suffix
+				morphGuid = MoMorphTypeTags.kguidMorphSuffix;
+				break;
+			case "simulfix":
+				morphGuid = MoMorphTypeTags.kguidMorphSimulfix;
+				break;
+			case "suprafix":
+				morphGuid = MoMorphTypeTags.kguidMorphSuprafix;
+				break;
 			default:
 				Logger.Warning("Unrecognized morphology type \"{0}\" in word {1}", morphologyType, owner.Guid);
-				result = stemFactory.Create();
+				morphGuid = MoMorphTypeTags.kguidMorphStem;
 				break;
 			}
-			owner.LexemeFormOA = result;
+			if (morphGuid == MoMorphTypeTags.kguidMorphStem)
+				result = stemFactory.Create();
+			else
+				result = affixFactory.Create();
+			owner.LexemeFormOA = result;  // MUST do this assignment *before* assigning result.MorphTypeRA, otherwise FDO throws a NullReferenceException
+			result.MorphTypeRA = GetInstance<IMoMorphTypeRepository>().GetObject(morphGuid);
+			Logger.Debug("Just set LexemeFormOA to {0}, with MorphType {1}", result == null ? "(null)" : result.ToString(), result == null ? "(null lexeme form)" : result.MorphTypeRA == null ? "(null morphtype)" : result.MorphTypeRA.ToString());
 			return result;
 		}
 
