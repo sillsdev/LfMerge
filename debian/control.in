@@ -10,6 +10,7 @@ Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  wget,
  pkg-config,
  mono-sil,
+ libicu-dev,
  lfmerge-fdo-__DatabaseVersion__
 
 #if __DatabaseVersion__ == __MaxDbVersion__
