@@ -20,7 +20,6 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
-    <Commandlineparameters>--clone -p test-eb-sena3-flex --action Synchronize</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -32,6 +31,43 @@
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>FW8_COMPAT</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
+    <DatabaseVersion>7000068</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000068</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Commandlineparameters>--clone -p test-eb-sena3-flex --action Synchronize</Commandlineparameters>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
+    <DatabaseVersion>7000069</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000069</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
+    <DatabaseVersion>7000070</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000070</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
