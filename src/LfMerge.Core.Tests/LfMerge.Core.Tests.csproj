@@ -103,9 +103,6 @@
     <Reference Include="MongoDB.Bson">
       <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
@@ -117,41 +114,14 @@
     <Reference Include="FDO, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000070\BasicUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000070\COMInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreImpl, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000070\CoreImpl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
     <Reference Include="FDO, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
     <Reference Include="FDO">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
       <Package>lfmerge-fdo-7000068</Package>
     </Reference>
   </ItemGroup>
