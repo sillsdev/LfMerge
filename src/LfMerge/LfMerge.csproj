@@ -94,9 +94,6 @@
     <Reference Include="INIFileParser">
       <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
