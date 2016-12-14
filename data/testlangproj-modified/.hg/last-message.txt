@@ -1,1 +1,1 @@
-[FLEx Bridge: 2.1] sync
+[LfMergeBridge: 2.5.0.0] Language Forge S/R

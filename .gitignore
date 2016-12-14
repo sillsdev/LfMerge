@@ -8,8 +8,12 @@ MercurialExtensions/
 Mercurial/
 Downloads/
 lib/
-data/php/
 build/LfMerge.files
+data/php/
+data/testlangproj*/*.bak
+debian/changelog
+debian/control
+debian/rules
 _ReSharper.LfMerge
 *.suo
 *.user
@@ -20,4 +24,3 @@ _ReSharper.LfMerge
 *.swp
 *.iml
 *~
-data/testlangproj*/*.bak

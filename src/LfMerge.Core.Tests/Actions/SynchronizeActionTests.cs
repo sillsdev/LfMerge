@@ -21,8 +21,6 @@ namespace LfMerge.Core.Tests.Actions
 	[TestFixture, Category("LongRunning"), Category("IntegrationTests")]
 	public class SynchronizeActionTests
 	{
-		public static string LDProjectFolderPath;
-
 		/* testlangproj is the original LD repo
 		 * testlangproj-modified contains:
 		 * 	a modified entry - ztestmain
@@ -54,15 +52,13 @@ namespace LfMerge.Core.Tests.Actions
 		private Guid _testDeletedEntryGuid;
 		private TransferFdoToMongoAction _transferFdoToMongo;
 
-		public static MercurialServer LDServer { get; set; }
-
 		[SetUp]
 		public void Setup()
 		{
 			_env = new TestEnvironment();
 			_env.Settings.CommitWhenDone = true;
 			_counts = MainClass.Container.Resolve<EntryCounts>();
-			_lfProject = LanguageForgeProject.Create(_env.Settings, testProjectCode);
+			_lfProject = LanguageForgeProject.Create(testProjectCode);
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _env.Settings.WebWorkDirectory);
 
 			// Guids are named for the diffs for the modified test project
@@ -73,7 +69,7 @@ namespace LfMerge.Core.Tests.Actions
 			_languageDepotFolder = new TemporaryFolder("SyncTestLD");
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
-			LDProjectFolderPath = Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode);
+			LanguageDepotMock.ProjectFolderPath = Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode);
 
 			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 			if (_mongoConnection == null)
@@ -172,7 +168,7 @@ namespace LfMerge.Core.Tests.Actions
 			lfEntry.Senses[0].Gloss["en"].Value = lfChangedGloss;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry, Is.Not.Null);
@@ -195,7 +191,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -210,7 +206,7 @@ namespace LfMerge.Core.Tests.Actions
 			int createdEntryCount = originalMongoData.Count(e => e.Guid == _testCreatedEntryGuid);
 			Assert.That(createdEntryCount, Is.EqualTo(0));
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
@@ -238,7 +234,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			//Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -255,7 +251,7 @@ namespace LfMerge.Core.Tests.Actions
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
@@ -263,6 +259,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
@@ -275,6 +272,9 @@ namespace LfMerge.Core.Tests.Actions
 			// But the FDO modified date (AuthorInfo.ModifiedDate in LF) should be updated.
 			Assert.That(updatedLfAuthorInfoModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -300,7 +300,7 @@ namespace LfMerge.Core.Tests.Actions
 			IEnumerable<LfLexEntry> updatedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
@@ -308,6 +308,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
@@ -326,6 +327,9 @@ namespace LfMerge.Core.Tests.Actions
 			var cache = _lfProject.FieldWorksProject.Cache;
 			Assert.That(()=> cache.ServiceLocator.GetObject(_testEntryGuid),
 				Throws.InstanceOf<KeyNotFoundException>());
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -333,7 +337,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -353,7 +357,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(updatedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
 			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
@@ -361,6 +365,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify LD modified entry remains and LF marks not deleted
@@ -371,6 +376,9 @@ namespace LfMerge.Core.Tests.Actions
 			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
@@ -378,7 +386,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LDProjectFolderPath);
+			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
 			_transferFdoToMongo.Run(_lfProject);
@@ -394,7 +402,7 @@ namespace LfMerge.Core.Tests.Actions
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
-			_lDProject = new LanguageDepotMock(_lDSettings, testProjectCode);
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			Assert.That(()=> lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid),
 				Throws.InstanceOf<KeyNotFoundException>());
@@ -404,6 +412,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify modified LF entry wins
@@ -416,6 +425,9 @@ namespace LfMerge.Core.Tests.Actions
 			DateTime updatedLfDateModified = updatedLfEntry.DateModified;
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
+			var lastSyncDate = _mongoConnection.GetLastSyncedDate(_lfProject);
+			Assert.That(lastSyncDate, Is.Not.Null);
+			Assert.That(lastSyncDate ?? DateTime.MinValue, Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]

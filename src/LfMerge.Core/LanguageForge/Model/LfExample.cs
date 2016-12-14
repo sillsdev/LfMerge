@@ -33,7 +33,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public bool ShouldSerializeTranslation() { return _ShouldSerializeLfMultiText(Translation); }
 		public bool ShouldSerializeTranslationGuid() { return TranslationGuid != System.Guid.Empty; }
 		public bool ShouldSerializeReference() { return _ShouldSerializeLfMultiText(Reference); }
-		public bool ShouldSerializeExamplePublishIn() { return _ShouldSerializeLfStringArrayField(ExamplePublishIn); }
+		public bool ShouldSerializeExamplePublishIn() { return false; }  // Get rid of this one if we find it
 		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
 		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
 	}

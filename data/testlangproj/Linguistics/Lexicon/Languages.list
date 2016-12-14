@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Languages>
+	<CmPossibilityList
+		guid="487c15b0-2ced-4417-8b77-9075f4a21e5f">
+		<Abbreviation>
+			<AUni
+				ws="en">Lgs</AUni>
+			<AUni
+				ws="es">Ids</AUni>
+			<AUni
+				ws="fr">Lgs</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2016-07-25 18:48:18.000" />
+		<DateModified
+			val="2016-07-25 18:48:18.000" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="-1073741824" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Languages</AUni>
+			<AUni
+				ws="es">Idiomas</AUni>
+			<AUni
+				ws="fr">Langues</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="-1073741824" />
+		<PreventDuplicates
+			val="True" />
+		<PreventNodeChoices
+			val="True" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-3" />
+	</CmPossibilityList>
+</Languages>

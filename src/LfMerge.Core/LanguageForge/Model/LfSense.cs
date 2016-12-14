@@ -80,7 +80,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public bool ShouldSerializeReversalEntries() { return _ShouldSerializeLfStringArrayField(ReversalEntries); }
 		public bool ShouldSerializeSenseType() { return _ShouldSerializeLfStringField(SenseType); }
 		public bool ShouldSerializeAcademicDomains() { return _ShouldSerializeLfStringArrayField(AcademicDomains); }
-		public bool ShouldSerializeSensePublishIn() { return _ShouldSerializeLfStringArrayField(SensePublishIn); }
+		public bool ShouldSerializeSensePublishIn() { return false; }  // Get rid of this one if we find it
 		public bool ShouldSerializeAnthropologyCategories() { return _ShouldSerializeLfStringArrayField(AnthropologyCategories); }
 		public bool ShouldSerializeStatus() { return _ShouldSerializeLfStringArrayField(Status); }
 

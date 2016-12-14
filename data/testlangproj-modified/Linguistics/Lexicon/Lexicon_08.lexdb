@@ -660,21 +660,6 @@
 			val="2007-1-17 19:24:21.750" />
 		<DoNotUseForParsing
 			val="False" />
-		<EntryRefs>
-			<ownseq
-				class="LexEntryRef"
-				guid="197d6e98-50b0-4df1-b625-82526ba0df7b">
-				<ComplexEntryTypes>
-					<refseq
-						guid="98c273c4-f723-4fb0-80df-eede2204dfca"
-						t="r" />
-				</ComplexEntryTypes>
-				<HideMinorEntry
-					val="0" />
-				<RefType
-					val="1" />
-			</ownseq>
-		</EntryRefs>
 		<HomographNumber
 			val="0" />
 		<LexemeForm>

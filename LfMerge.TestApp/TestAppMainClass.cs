@@ -31,7 +31,7 @@ namespace LfMerge.TestApp
 
 			var queueDir = settings.GetQueueDirectory(QueueNames.Synchronize);
 			Directory.CreateDirectory(queueDir);
-			File.WriteAllText(Path.Combine(queueDir, options.PriorityProject), string.Empty);
+			File.WriteAllText(Path.Combine(queueDir, options.ProjectCode), string.Empty);
 
 			Program.Main(new string[0]);
 		}

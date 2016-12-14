@@ -48,7 +48,7 @@ namespace LfMerge.Core.Tests.Fdo
 			);
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
 			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.DefaultProjectsDirectory);
-			lfProj = LanguageForgeProject.Create(Settings, testProjectCode);
+			lfProj = LanguageForgeProject.Create(testProjectCode);
 		}
 
 		[TearDown]

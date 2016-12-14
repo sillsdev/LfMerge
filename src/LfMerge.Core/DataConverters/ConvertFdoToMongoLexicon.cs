@@ -1,5 +1,9 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using LfMerge.Core;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Config;
@@ -10,44 +14,37 @@ using MongoDB.Bson;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.DomainServices;
-using SIL.FieldWorks.FDO.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace LfMerge.Core.DataConverters
 {
 	public class ConvertFdoToMongoLexicon
 	{
-		public ILfProject LfProject { get; protected set; }
-		public FwProject FwProject { get; protected set; }
-		public FdoCache Cache { get; protected set; }
-		public FwServiceLocatorCache ServiceLocator { get; protected set; }
-		public ILogger Logger { get; protected set; }
-		public IMongoConnection Connection { get; protected set; }
+		private ILfProject LfProject { get; set; }
+		private FwProject FwProject { get; set; }
+		private FdoCache Cache { get; set; }
+		private FwServiceLocatorCache ServiceLocator { get; set; }
+		private ILogger Logger { get; set; }
+		private IMongoConnection Connection { get; set; }
 
-		public int _wsEn;
+		private int _wsEn;
 
-		public ConvertFdoToMongoCustomField _convertCustomField;
+		private ConvertFdoToMongoCustomField _convertCustomField;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo (etc.) are real mouthfuls
-		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-		public const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
-		public const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
-//		public const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
-		public const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
-		public const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
-//		public const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
-		public const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
-		public const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
-		public const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
-		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+		private const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+		private const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
+		private const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
+//		private const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
+		private const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
+		private const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
+//		private const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
+		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
+		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
+		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
-		public IDictionary<string, ConvertFdoToMongoOptionList> ListConverters;
+		private IDictionary<string, ConvertFdoToMongoOptionList> ListConverters;
 
-		public ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
+		//private ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
 		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection)
 		{
@@ -81,7 +78,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = ConvertOptionListFromFdo(LfProject, UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
 			ListConverters[SenseTypeListCode] = ConvertOptionListFromFdo(LfProject, SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = ConvertOptionListFromFdo(LfProject, PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 
 			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
@@ -107,6 +103,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
+			int i = 1;
 			foreach (ILexEntry fdoEntry in repo.AllInstances())
 			{
 				bool createdEntry = false;
@@ -125,7 +122,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
 				lfEntry.IsDeleted = false;
-				Logger.Info("FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
+				Logger.Info("{3} - FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i++);
 				Connection.UpdateRecord(LfProject, lfEntry);
 			}
 			LfProject.IsInitialClone = false;
@@ -159,35 +156,35 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
-		public T GetInstance<T>() where T : class
+		private T GetInstance<T>() where T : class
 		{
 			return ServiceLocator.GetInstance<T>();
 		}
 
-		public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
+		private LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString)
 		{
 			if (fdoMultiString == null) return null;
 			return LfMultiText.FromFdoMultiString(fdoMultiString, ServiceLocator.WritingSystemManager);
 		}
 
-		static public LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
+		public static LfMultiText ToMultiText(IMultiAccessorBase fdoMultiString, ILgWritingSystemFactory fdoWritingSystemManager)
 		{
 			if ((fdoMultiString == null) || (fdoWritingSystemManager == null)) return null;
 			return LfMultiText.FromFdoMultiString(fdoMultiString, fdoWritingSystemManager);
 		}
 
-		public LfStringField ToStringField(string listCode, ICmPossibility fdoPoss)
+		private LfStringField ToStringField(string listCode, ICmPossibility fdoPoss)
 		{
 			return LfStringField.FromString(ListConverters[listCode].LfItemKeyString(fdoPoss, _wsEn));
 		}
 
-		public LfStringArrayField ToStringArrayField(string listCode, IEnumerable<ICmPossibility> fdoPossCollection)
+		private LfStringArrayField ToStringArrayField(string listCode, IEnumerable<ICmPossibility> fdoPossCollection)
 		{
 			return LfStringArrayField.FromStrings(ListConverters[listCode].LfItemKeyStrings(fdoPossCollection, _wsEn));
 		}
 
 		// Special case: LF sense Status field is a StringArray, but FDO sense status is single possibility
-		public LfStringArrayField ToStringArrayField(string listCode, ICmPossibility fdoPoss)
+		private LfStringArrayField ToStringArrayField(string listCode, ICmPossibility fdoPoss)
 		{
 			return LfStringArrayField.FromSingleString(ListConverters[listCode].LfItemKeyString(fdoPoss, _wsEn));
 		}
@@ -198,7 +195,7 @@ namespace LfMerge.Core.DataConverters
 		/// <returns>LF entry
 		/// <param name="fdoEntry">Fdo entry.</param>
 		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		public LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			if (fdoEntry == null) return null;
 
@@ -250,13 +247,26 @@ namespace LfMerge.Core.DataConverters
 			lfEntry.AuthorInfo.ModifiedByUserRef = null;
 			lfEntry.AuthorInfo.ModifiedDate = fdoEntry.DateModified.ToUniversalTime();
 
+#if DBVERSION_7000068
 			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+#else
+			// TODO: Once LF's data model is updated from a single etymology to an array,
+			// convert all of them instead of just the first. E.g.,
+			// foreach (ILexEtymology fdoEtymology in fdoEntry.EtymologyOS) { ... }
+			ILexEtymology fdoEtymology = null;
+			if (fdoEntry.EtymologyOS.Count > 0)
+				fdoEtymology = fdoEntry.EtymologyOS.First();
+#endif
 			if (fdoEtymology != null)
 			{
 				lfEntry.Etymology = ToMultiText(fdoEtymology.Form);
 				lfEntry.EtymologyComment = ToMultiText(fdoEtymology.Comment);
 				lfEntry.EtymologyGloss = ToMultiText(fdoEtymology.Gloss);
+#if DBVERSION_7000068
 				lfEntry.EtymologySource = LfMultiText.FromSingleStringMapping(AnalysisWritingSystem.Id, fdoEtymology.Source);
+#else
+				lfEntry.EtymologySource = ToMultiText(fdoEtymology.LanguageNotes);
+#endif
 				// fdoEtymology.LiftResidue not mapped
 			}
 			lfEntry.Guid = fdoEntry.Guid;
@@ -341,7 +351,7 @@ namespace LfMerge.Core.DataConverters
 		/// <returns>LF sense
 		/// <param name="fdoSense">Fdo sense.</param>
 		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		public LfSense FdoSenseToLfSense(ILexSense fdoSense, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfSense FdoSenseToLfSense(ILexSense fdoSense, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			var lfSense = new LfSense();
 
@@ -393,7 +403,6 @@ namespace LfMerge.Core.DataConverters
 				//	lfSense.Pictures.Add(FdoPictureToLfPicture(fdoPic));
 			}
 			lfSense.SenseBibliography = ToMultiText(fdoSense.Bibliography);
-			lfSense.SensePublishIn = ToStringArrayField(PublishInListCode, fdoSense.PublishIn);
 			lfSense.SenseRestrictions = ToMultiText(fdoSense.Restrictions);
 
 			if (fdoSense.ReversalEntriesRC != null)
@@ -462,6 +471,7 @@ namespace LfMerge.Core.DataConverters
 			fdoSense.ThesaurusItemsRC;
 			fdoSense.LiftResidue;
 			fdoSense.LexSenseOutline;
+			fdoSense.PublishIn;
 			*/
 
 			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses", ListConverters, lfCustomFieldList);
@@ -489,7 +499,7 @@ namespace LfMerge.Core.DataConverters
 		/// <returns>LF example
 		/// <param name="fdoExample">Fdo example.</param>
 		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		public LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
 		{
 			var lfExample = new LfExample();
 
@@ -497,12 +507,12 @@ namespace LfMerge.Core.DataConverters
 			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = fdoExample.Guid;
-			lfExample.ExamplePublishIn = ToStringArrayField(PublishInListCode, fdoExample.PublishIn);
 			lfExample.Sentence = ToMultiText(fdoExample.Example);
 			lfExample.Reference = LfMultiText.FromSingleITsString(fdoExample.Reference, ServiceLocator.WritingSystemFactory);
 			// ILexExampleSentence fields we currently do not convert:
 			// fdoExample.DoNotPublishInRC;
 			// fdoExample.LiftResidue;
+			// fdoExample.PublishIn;
 
 			// NOTE: Currently, LanguageForge only stores one translation per example, whereas FDO can store
 			// multiple translations with (possibly) different statuses (as freeform strings, like "old", "updated",
@@ -525,7 +535,7 @@ namespace LfMerge.Core.DataConverters
 			return lfExample;
 		}
 
-		public LfPicture FdoPictureToLfPicture(ICmPicture fdoPicture)
+		private LfPicture FdoPictureToLfPicture(ICmPicture fdoPicture)
 		{
 			var result = new LfPicture();
 			result.Caption = ToMultiText(fdoPicture.Caption);
@@ -544,7 +554,7 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public static string FdoPictureFilenameToLfPictureFilename(string fdoInternalFilename)
+		private static string FdoPictureFilenameToLfPictureFilename(string fdoInternalFilename)
 		{
 			// Remove "Pictures" directory from internal path name
 			// If the incoming internal path doesn't begin with "Pictures", then preserve the full external path.
@@ -589,7 +599,7 @@ namespace LfMerge.Core.DataConverters
 			return lfWsList;
 		}
 
-		public ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
+		private ConvertFdoToMongoOptionList ConvertOptionListFromFdo(ILfProject project, string listCode, ICmPossibilityList fdoOptionList, bool updateMongoList = true)
 		{
 			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
 			var converter = new ConvertFdoToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, ServiceLocator.WritingSystemFactory);

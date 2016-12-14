@@ -255,13 +255,13 @@ namespace LfMerge.Core.Tests.Queues
 			Assert.That(() => sut.DequeueProject("foo"), Throws.Nothing);
 		}
 
-		[TestCase(QueueNames.Edit, typeof(EditAction))]
-		[TestCase(QueueNames.Synchronize, typeof(SynchronizeAction))]
-		public void CurrentAction_Works(QueueNames queueName, Type expectedType)
+		[TestCase(QueueNames.Edit, ActionNames.Edit)]
+		[TestCase(QueueNames.Synchronize, ActionNames.Synchronize)]
+		public void CurrentAction_Works(QueueNames queueName, ActionNames expectedAction)
 		{
 			var sut = Queue.GetQueue(queueName);
 
-			Assert.That(sut.CurrentAction, Is.TypeOf(expectedType));
+			Assert.That(sut.CurrentActionName, Is.EqualTo(expectedAction));
 		}
 
 		[TestCase(ActionNames.None, QueueNames.None)]

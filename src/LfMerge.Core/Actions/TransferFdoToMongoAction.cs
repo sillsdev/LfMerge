@@ -61,6 +61,8 @@ namespace LfMerge.Core.Actions
 
 			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection);
 			_lexiconConverter.RunConversion();
+
+			_connection.SetLastSyncedDate(project, DateTime.UtcNow);
 		}
 
 		protected override ActionNames NextActionName

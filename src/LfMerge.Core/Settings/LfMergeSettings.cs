@@ -225,18 +225,22 @@ namespace LfMerge.Core.Settings
 			SaveSettings(ConfigFile);
 		}
 
+		private static IniParserConfiguration CreateIniParserConfiguration()
+		{
+			return new IniParserConfiguration {
+				// ThrowExceptionsOnError = false,
+				CommentString = "#",
+				SkipInvalidLines = true
+			};
+		}
+
 		public void SaveSettings(string fileName)
 		{
 			if (ParsedConfig == null)
 				ParsedConfig = new IniData();
 			// Note that this will persist the merged global & user configurations, not the original global config.
 			// Since we don't call this method from production code, this is not an issue.
-			// TODO: parserConfig is also created in ParseFiles. Consider making it a static member for consistency.
-			var parserConfig = new IniParserConfiguration {
-				// ThrowExceptionsOnError = false,
-				CommentString = "#",
-				SkipInvalidLines = true
-			};
+			var parserConfig = CreateIniParserConfiguration();
 			var parser = new IniDataParser(parserConfig);
 			var fileParser = new FileIniDataParser(parser);
 			var utf8 = new UTF8Encoding(false);
@@ -246,11 +250,7 @@ namespace LfMerge.Core.Settings
 		public static IniData ParseFiles(string defaultConfig, string globalConfigFilename)
 		{
 			var utf8 = new UTF8Encoding(false);
-			var parserConfig = new IniParserConfiguration {
-				// ThrowExceptionsOnError = false,
-				CommentString = "#",
-				SkipInvalidLines = true
-			};
+			var parserConfig = CreateIniParserConfiguration();
 
 			var parser = new IniDataParser(parserConfig);
 			IniData result = parser.Parse(DefaultLfMergeSettings.DefaultIniText);

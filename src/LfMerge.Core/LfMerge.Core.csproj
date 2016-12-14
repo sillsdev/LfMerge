@@ -3,10 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
     <ProjectGuid>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core</RootNamespace>
-    <AssemblyName>LibLfMerge</AssemblyName>
+    <AssemblyName>LfMerge.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -14,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -29,13 +30,16 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>FW8_COMPAT</DefineConstants>
+    <DefineConstants>FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="icu.net">
+      <HintPath>..\..\packages\icu.net.2.0.0\lib\net40\icu.net.dll</HintPath>
     </Reference>
     <Reference Include="INIFileParser">
       <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
@@ -52,18 +56,6 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral">
       <Package>lfmerge-fdo</Package>
     </Reference>
@@ -77,6 +69,34 @@
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
+    </Reference>
+    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
+    <Reference Include="FDO">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="BasicUtils">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="COMInterfaces">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
+    <Reference Include="CoreImpl">
+      <Package>lfmerge-fdo-7000068</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -180,10 +200,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\..\lib\icu.net.dll.config" Condition="'$(OS)'!='Windows_NT'">
-      <Link>icu.net.dll.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\..\lib\chorusmerge">
       <Link>chorusmerge</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

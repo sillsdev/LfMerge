@@ -190,21 +190,6 @@ namespace LfMerge.Core.DataConverters
 			SetPossibilitiesCollection(dest, FromStringArrayField<T>(source));
 		}
 
-		// Assumption: "source" contains valid keys. CAUTION: No error checking is done to ensure that this is true.
-		// This is used for fields like DoNotPublishIn, where LF contains the "inverse" (a PublishIn field)
-		public void UpdateInvertedPossibilitiesFromStringArray<T>(IFdoReferenceCollection<T> dest, LfStringArrayField source, IEnumerable<T> universeOfPossibilities)
-			where T: class, ICmPossibility
-		{
-			// Start with everything
-			HashSet<T> remainingPossibilities = new HashSet<T>(universeOfPossibilities);
-			// Then deduct the possibilities found in the LF source field
-			IEnumerable<T> possibilitesInCurrentField = FromStringArrayField<T>(source);
-			foreach (T poss in possibilitesInCurrentField)
-				remainingPossibilities.Remove(poss);
-			// And set the collection to whatever's left over
-			SetPossibilitiesCollection<T>(dest, remainingPossibilities.ToList());
-		}
-
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 		#if false  // Once we are populating FDO from LF OptionLists, the entire block of functions below will be useful. Until then, they're commented out.
 		public ICmPossibility FromAbbrevAndName(string abbrev, string name, string userWs)

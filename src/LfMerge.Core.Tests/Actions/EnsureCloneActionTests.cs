@@ -43,7 +43,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Setup
 			var nonExistingProjectCode = Path.GetRandomFileName().ToLowerInvariant();
-			var lfProject = LanguageForgeProject.Create(_env.Settings, nonExistingProjectCode);
+			var lfProject = LanguageForgeProject.Create(nonExistingProjectCode);
 
 			// Execute
 			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger, false).Run(lfProject),
@@ -57,7 +57,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void EnsureClone_StateFileDoesntExistAndStateNotCloning_ClonesProject()
 		{
 			// Not a valid real-world scenario, but we test this anyway
-			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
 			lfProject.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 			Assert.That(File.Exists(_env.Settings.GetStateFileName(_projectCode)), Is.False,
@@ -70,8 +70,8 @@ namespace LfMerge.Core.Tests.Actions
 			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
-				"State should be SYNCING");
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
+				"State should be CLONED");
 			// TestDouble doesn't write state file
 			Assert.That(File.Exists(_env.Settings.GetStateFileName(_projectCode)), Is.False,
 				"State file shouldn't exist yet");
@@ -84,7 +84,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			var projectCode = TestContext.CurrentContext.Test.Name.ToLowerInvariant();
-			var lfProject = LanguageForgeProject.Create(_env.Settings, projectCode);
+			var lfProject = LanguageForgeProject.Create(projectCode);
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, projectCode);
 			lfProject.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 			Assert.That(File.Exists(_env.Settings.GetStateFileName(_projectCode)), Is.False,
@@ -97,8 +97,8 @@ namespace LfMerge.Core.Tests.Actions
 			new EnsureCloneActionDouble(_env.Settings, _env.Logger).Run(lfProject);
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING),
-				"State should be SYNCING");
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
+				"State should be CLONED");
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
 				"Didn't clone project");
 		}
@@ -107,7 +107,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void EnsureClone_StateFileExistsStateNotCloning_DoesntCloneProject()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
 			lfProject.State.SRState = ProcessingState.SendReceiveStates.HOLD;
 			File.Create(_env.Settings.GetStateFileName(_projectCode));
@@ -131,7 +131,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void EnsureClone_StateFileExistsStateCloning_CloneProject()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
 			File.Create(_env.Settings.GetStateFileName(_projectCode));
 			lfProject.State.SRState = ProcessingState.SendReceiveStates.CLONING;
@@ -155,7 +155,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
 			Directory.CreateDirectory(projectDir);
-			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
 			Assert.That(Directory.Exists(projectDir), Is.True,
 				"Didn't create webwork directory: " + projectDir);
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.False,
@@ -167,33 +167,6 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
 				"Didn't clone project");
-		}
-
-		[Test]
-		public void EnsureClone_ProjectDirDoesExist_DeleteAndClonesProject()
-		{
-			// Setup and clone once
-			var ensureCloneAction = new EnsureCloneActionDouble(_env.Settings, _env.Logger);
-			var lfProject = LanguageForgeProject.Create(_env.Settings, _projectCode);
-			ensureCloneAction.Run(lfProject);
-			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
-			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
-				"Didn't clone project the first time");
-			DateTime originalCreationDateTime = Directory.GetCreationTimeUtc(projectDir);
-
-			// wait 1s so that we get a different timestamp when we
-			// execute another clone into the same directory.
-			// Note: since test double doesn't write state files, EnsureClone will do another initial clone
-			Thread.Sleep(1000);
-			ensureCloneAction.Run(lfProject);
-			DateTime newCreationDateTime = Directory.GetCreationTimeUtc(projectDir);
-
-			// Verify
-			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
-				"Didn't clone project the second time");
-			Assert.Less(originalCreationDateTime, newCreationDateTime,
-				"Second project creation time {0} is not newer than first project creation time {1}",
-				newCreationDateTime, originalCreationDateTime);
 		}
 	}
 }

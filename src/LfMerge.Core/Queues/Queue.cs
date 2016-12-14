@@ -34,7 +34,7 @@ namespace LfMerge.Core.Queues
 
 		public static IQueue FirstQueueWithWork
 		{
-			get { return GetNextQueueWithWork(Actions.Action.FirstAction); }
+			get { return GetNextQueueWithWork(Actions.Action.FirstActionName); }
 		}
 
 		public static QueueNames GetQueueForAction(ActionNames action)
@@ -114,12 +114,12 @@ namespace LfMerge.Core.Queues
 
 		public IQueue NextQueueWithWork
 		{
-			get { return GetNextQueueWithWork(Actions.Action.GetActionForQueue(Name)); }
+			get { return GetNextQueueWithWork(Actions.Action.GetActionNameForQueue(Name)); }
 		}
 
-		public IAction CurrentAction
+		public ActionNames CurrentActionName
 		{
-			get { return Actions.Action.GetAction(Actions.Action.GetActionForQueue(Name)); }
+			get { return Actions.Action.GetActionNameForQueue(Name); }
 		}
 		#endregion
 

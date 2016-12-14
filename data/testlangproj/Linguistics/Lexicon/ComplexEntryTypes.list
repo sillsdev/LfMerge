@@ -55,7 +55,7 @@
 				guid="1f6ae209-141a-40db-983c-bee93af0ca3c">
 				<Abbreviation>
 					<AUni
-						ws="en">comp. of</AUni>
+						ws="en">comp.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -132,8 +132,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">comp.</AUni>
+						ws="en">comp. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Compound of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -146,7 +150,7 @@
 				guid="98c273c4-f723-4fb0-80df-eede2204dfca">
 				<Abbreviation>
 					<AUni
-						ws="en">der. of</AUni>
+						ws="en">der.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -490,8 +494,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">der.</AUni>
+						ws="en">der. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Derivative of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -504,7 +512,7 @@
 				guid="b2276dec-b1a6-4d82-b121-fd114c009c59">
 				<Abbreviation>
 					<AUni
-						ws="en">id. of</AUni>
+						ws="en">id.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -926,8 +934,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">id.</AUni>
+						ws="en">id. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Idiom of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -940,7 +952,7 @@
 				guid="cce519d8-a9c5-4f28-9c7d-5370788bfbd5">
 				<Abbreviation>
 					<AUni
-						ws="en">kt. phr. of</AUni>
+						ws="en">kt. phr.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -984,8 +996,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">kt. phr.</AUni>
+						ws="en">kt. phr. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Keyterm Phrase of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -998,7 +1014,7 @@
 				guid="35cee792-74c8-444e-a9b7-ed0461d4d3b7">
 				<Abbreviation>
 					<AUni
-						ws="en">ph. v. of</AUni>
+						ws="en">ph. v.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -1144,8 +1160,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">ph. v.</AUni>
+						ws="en">ph. v. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Phrasal Verb of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -1158,7 +1178,7 @@
 				guid="9466d126-246e-400b-8bba-0703e09bc567">
 				<Abbreviation>
 					<AUni
-						ws="en">say. of</AUni>
+						ws="en">say.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -1202,8 +1222,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">say.</AUni>
+						ws="en">say. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Saying of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -1216,7 +1240,7 @@
 				guid="73266a3a-48e8-4bd7-8c84-91c730340b7d">
 				<Abbreviation>
 					<AUni
-						ws="en">contr. of</AUni>
+						ws="en">contr.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="0" />
@@ -1350,14 +1374,56 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">contr.</AUni>
+						ws="en">contr. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Contraction of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
 					val="0" />
 				<UnderStyle
 					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="fec038ed-6a8c-4fa5-bc96-a4f515a98c50">
+				<Abbreviation>
+					<AUni
+						ws="en">unspec. comp. form</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2016-10-03 15:00:00.000" />
+				<DateModified
+					val="2016-10-03 15:00:00.000" />
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="True" />
+				<Name>
+					<AUni
+						ws="en">Unspecified Complex Form</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">unspec. comp. form of</AUni>
+				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Unspecified Complex Form of</AUni>
+				</ReverseName>
+				<SortSpec
+					val="-1073741824" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="-1073741824" />
 			</ownseq>
 		</Possibilities>
 		<PreventChoiceAboveLevel

@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
+using Palaso.Code;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Actions
@@ -27,7 +29,15 @@ namespace LfMerge.Core.Actions
 			var line = LfMergeBridgeServices.GetLineContaining(syncResult, errorString);
 			if (!string.IsNullOrEmpty(line))
 			{
-				Logger.Error(line);
+				if (line.Contains("Exception"))
+				{
+					 IEnumerable<string> stackTrace = LfMergeBridgeServices.GetLineAndStackTraceContaining(syncResult, errorString);
+					 Logger.Error(String.Join(Environment.NewLine, stackTrace));  // We want entire stack trace logged as a single log entry, so don't use Logger.LogMany()
+				}
+				else
+				{
+					Logger.Error(line);
+				}
 				if (newState.HasValue)
 				{
 					if (newState.Value == ProcessingState.SendReceiveStates.HOLD)
@@ -55,13 +65,13 @@ namespace LfMerge.Core.Actions
 				Logger.Debug("Successfully disposed FW project {0}", project.ProjectCode);
 
 				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
-				if (transferAction is TransferMongoToFdoAction)
+				// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
+				var transferMongoToFdoAction = transferAction as TransferMongoToFdoAction;
+				if (transferMongoToFdoAction != null)
 				{
-					// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
-					var action = (TransferMongoToFdoAction)transferAction;
-					entriesAdded    = action.EntryCounts.Added;
-					entriesModified = action.EntryCounts.Modified;
-					entriesDeleted  = action.EntryCounts.Deleted;
+					entriesAdded    = transferMongoToFdoAction.EntryCounts.Added;
+					entriesModified = transferMongoToFdoAction.EntryCounts.Modified;
+					entriesDeleted  = transferMongoToFdoAction.EntryCounts.Deleted;
 				}
 				Logger.Notice("Syncing");
 				string commitMessage = LfMergeBridgeServices.FormatCommitMessageForLfMerge(entriesAdded, entriesModified, entriesDeleted);
@@ -88,6 +98,46 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
+				const string cannotCommitCurrentBranch = "Cannot commit to current branch '";
+				var line = LfMergeBridgeServices.GetLineContaining(syncResult, cannotCommitCurrentBranch);
+				if (!string.IsNullOrEmpty(line))
+				{
+					var index = line.IndexOf(cannotCommitCurrentBranch, StringComparison.Ordinal);
+					Require.That(index >= 0);
+
+					var modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length, 7);
+					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
+					{
+						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,
+							ProcessingState.SendReceiveStates.HOLD);
+						Logger.Error("Error during sync of '{0}': " +
+							"clone model version '{1}' less than minimal supported model version '{2}'.",
+							project.ProjectCode, modelVersion, MagicStrings.MinimalModelVersion);
+						return;
+					}
+					ChorusHelper.SetModelVersion(modelVersion);
+					return;
+				}
+
+				const string pulledHigherModel = "pulled a higher model '";
+				line = LfMergeBridgeServices.GetLineContaining(syncResult, pulledHigherModel);
+				if (!string.IsNullOrEmpty(line))
+				{
+					var index = line.IndexOf(pulledHigherModel, StringComparison.Ordinal);
+					Require.That(index >= 0);
+
+					var modelVersion = line.Substring(index + pulledHigherModel.Length, 7);
+					ChorusHelper.SetModelVersion(modelVersion);
+
+					// The .hg branch has a higher model version than the .fwdata file. We allow
+					// data migrations and try again.
+					Logger.Notice("Allow data migration for project '{0}' to migrate to model version '{1}'",
+						project.ProjectCode, modelVersion);
+					FwProject.AllowDataMigration = true;
+
+					return;
+				}
+
 				if (SyncResultedInError(project, syncResult,
 						"Cannot create a repository at this point in LF development.",
 						ProcessingState.SendReceiveStates.HOLD) ||
@@ -99,7 +149,7 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				var line = LfMergeBridgeServices.GetLineContaining(syncResult, "No changes from others");
+				line = LfMergeBridgeServices.GetLineContaining(syncResult, "No changes from others");
 				if (!string.IsNullOrEmpty(line))
 				{
 					Logger.Notice(line);

@@ -25,6 +25,7 @@ namespace LfMerge.Core.MongoConnector
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
+		bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate);  // TODO: Decide if this is really where this method belongs
 	}
 }
 

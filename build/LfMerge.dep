@@ -6,7 +6,7 @@
 Type=TeamCity
 Url=http://build.palaso.org
 
-[TC::ChorusPrecise64lfmergeCont]
+[TC::ChorusTrusty64lfmergeCont]
 Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
@@ -14,7 +14,7 @@ Condition=Linux
 Path=MercurialExtensions/**/*.py=>MercurialExtensions
 
 
-[TC::ChorusPrecise64lfmergeCont]
+[TC::ChorusTrusty64lfmergeCont]
 Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
@@ -22,7 +22,7 @@ Condition=Linux32
 Path=Mercurial-i686.zip!**=>.
 
 
-[TC::ChorusPrecise64lfmergeCont]
+[TC::ChorusTrusty64lfmergeCont]
 Name=chorus-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
@@ -30,7 +30,7 @@ Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::PalasoPrecise64lfmergeContinuous]
+[TC::PalasoTrusty64lfmergeContinuous]
 Name=palaso-trusty64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
@@ -42,7 +42,6 @@ L10NSharp.dll*=>lib/
 Ionic.Zip.dll*=>lib/
 Spart.dll*=>lib/
 SIL.Linux.Logging.dll*=>lib/
-icu.net.dll*=>lib/
 
 
 [TC::ChorusWin32LfmergeCont]

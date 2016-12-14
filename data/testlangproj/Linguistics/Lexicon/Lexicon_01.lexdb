@@ -8,7 +8,9 @@
 				val="2001-7-24 19:33:9.563" />
 			<DateModified
 				val="2007-12-20 22:13:32.950" />
+			<DialectLabels />
 			<DomainTypes />
+			<ExtendedNoteTypes />
 			<Introduction>
 				<StText
 					guid="45b78bcf-2400-48d5-a9c1-973447d36d4e">
@@ -30,6 +32,7 @@
 				val="False" />
 			<IsHeadwordCitationForm
 				val="False" />
+			<Languages />
 			<MorphTypes />
 			<Name>
 				<AUni
@@ -44,7 +47,7 @@
 						<Uni>FlexStyles</Uni>
 					</Name>
 					<Version
-						val="59d5d68e-8509-4e6d-854a-7480dafd2a27" />
+						val="001a124e-181e-45e9-8b35-e8f695e1fbdb" />
 				</CmResource>
 			</Resources>
 			<ReversalIndexes />
@@ -67,21 +70,6 @@
 			val="2007-1-17 17:15:44.763" />
 		<DoNotUseForParsing
 			val="False" />
-		<EntryRefs>
-			<ownseq
-				class="LexEntryRef"
-				guid="596d4e7c-86d6-45ab-b50b-0cad78a91a25">
-				<HideMinorEntry
-					val="0" />
-				<RefType
-					val="0" />
-				<VariantEntryTypes>
-					<refseq
-						guid="fcc61889-00e6-467b-9cf0-8c4f48b9a486"
-						t="r" />
-				</VariantEntryTypes>
-			</ownseq>
-		</EntryRefs>
 		<HomographNumber
 			val="0" />
 		<LexemeForm>

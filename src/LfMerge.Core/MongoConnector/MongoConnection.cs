@@ -591,6 +591,22 @@ namespace LfMerge.Core.MongoConnector
 			var removeResult = collection.DeleteOne(filter);
 			return (removeResult != null);
 		}
+
+		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
+		{
+			// Rather than use UpdateRecordImpl, we want to build a custom update that updates just this one record.
+			var filterBuilder = Builders<MongoProjectRecord>.Filter;
+			var updateBuilder = Builders<MongoProjectRecord>.Update;
+			var filter = filterBuilder.Eq(record => record.ProjectCode, project.ProjectCode);
+			var update = updateBuilder.Set(record => record.LastSyncedDate, newSyncedDate);
+			var mainDb = GetMainDatabase();
+			var collection = mainDb.GetCollection<MongoProjectRecord>(MagicStrings.LfCollectionNameForProjectRecords);
+			var updateOptions = new FindOneAndUpdateOptions<MongoProjectRecord> {
+				IsUpsert = false  // I believe this is the default, but safer to be explicit
+			};
+			var result = collection.FindOneAndUpdate(filter, update, updateOptions);
+			return (result != null);
+		}
 	}
 }
 

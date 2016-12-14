@@ -55,7 +55,7 @@
 				guid="024b62c9-93b3-41a0-ab19-587a0030219a">
 				<Abbreviation>
 					<AUni
-						ws="en">dial. var. of</AUni>
+						ws="en">dial. var.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -99,8 +99,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">dial. var.</AUni>
+						ws="en">dial. var. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Dialectal Variant of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -113,7 +117,7 @@
 				guid="4343b1ef-b54f-4fa4-9998-271319a6d74c">
 				<Abbreviation>
 					<AUni
-						ws="en">fr. var. of</AUni>
+						ws="en">fr. var.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -157,8 +161,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">fr. var.</AUni>
+						ws="en">fr. var. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Free Variant of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -171,7 +179,7 @@
 				guid="fcc61889-00e6-467b-9cf0-8c4f48b9a486">
 				<Abbreviation>
 					<AUni
-						ws="en">inf. var. of</AUni>
+						ws="en">inf. var.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -425,8 +433,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">inf. var.</AUni>
+						ws="en">inf. var. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Inflectional Variant of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<SubPossibilities>
@@ -474,6 +486,10 @@
 							<AUni
 								ws="en">1pl</AUni>
 						</ReverseAbbr>
+						<ReverseName>
+							<AUni
+								ws="en">first person plural of</AUni>
+						</ReverseName>
 						<SortSpec
 							val="0" />
 						<UnderColor
@@ -492,7 +508,7 @@
 				guid="0c4663b3-4d9a-47af-b9a1-c8565d8112ed">
 				<Abbreviation>
 					<AUni
-						ws="en">sp. var. of</AUni>
+						ws="en">sp. var.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="-1073741824" />
@@ -542,8 +558,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">sp. var.</AUni>
+						ws="en">sp. var. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Spelling Variant of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<UnderColor
@@ -556,7 +576,7 @@
 				guid="01d4fbc1-3b0c-4f52-9163-7ab0d4f4711c">
 				<Abbreviation>
 					<AUni
-						ws="en">irreg. infl. of</AUni>
+						ws="en">irreg. infl.</AUni>
 				</Abbreviation>
 				<BackColor
 					val="0" />
@@ -618,8 +638,12 @@
 				</Name>
 				<ReverseAbbr>
 					<AUni
-						ws="en">irreg. infl.</AUni>
+						ws="en">irreg. infl. of</AUni>
 				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Irregularly Inflected Form of</AUni>
+				</ReverseName>
 				<SortSpec
 					val="0" />
 				<SubPossibilities>
@@ -628,7 +652,7 @@
 						guid="a32f1d1c-4832-46a2-9732-c2276d6547e8">
 						<Abbreviation>
 							<AUni
-								ws="en">pl. of</AUni>
+								ws="en">pl.</AUni>
 						</Abbreviation>
 						<BackColor
 							val="0" />
@@ -676,8 +700,12 @@
 						</Name>
 						<ReverseAbbr>
 							<AUni
-								ws="en">pl.</AUni>
+								ws="en">pl. of</AUni>
 						</ReverseAbbr>
+						<ReverseName>
+							<AUni
+								ws="en">Plural of</AUni>
+						</ReverseName>
 						<SortSpec
 							val="0" />
 						<UnderColor
@@ -690,7 +718,7 @@
 						guid="837ebe72-8c1d-4864-95d9-fa313c499d78">
 						<Abbreviation>
 							<AUni
-								ws="en">pst. of</AUni>
+								ws="en">pst.</AUni>
 						</Abbreviation>
 						<BackColor
 							val="0" />
@@ -738,8 +766,12 @@
 						</Name>
 						<ReverseAbbr>
 							<AUni
-								ws="en">pst.</AUni>
+								ws="en">pst. of</AUni>
 						</ReverseAbbr>
+						<ReverseName>
+							<AUni
+								ws="en">Past of</AUni>
+						</ReverseName>
 						<SortSpec
 							val="0" />
 						<UnderColor
@@ -752,6 +784,44 @@
 					val="0" />
 				<UnderStyle
 					val="0" />
+			</ownseq>
+			<ownseq
+				class="LexEntryType"
+				guid="3942addb-99fd-43e9-ab7d-99025ceb0d4e">
+				<Abbreviation>
+					<AUni
+						ws="en">unspec. var.</AUni>
+				</Abbreviation>
+				<BackColor
+					val="-1073741824" />
+				<DateCreated
+					val="2016-10-03 15:00:00.000" />
+				<DateModified
+					val="2016-10-03 15:00:00.000" />
+				<ForeColor
+					val="-1073741824" />
+				<Hidden
+					val="False" />
+				<IsProtected
+					val="True" />
+				<Name>
+					<AUni
+						ws="en">Unspecified Variant</AUni>
+				</Name>
+				<ReverseAbbr>
+					<AUni
+						ws="en">unspec. var. of</AUni>
+				</ReverseAbbr>
+				<ReverseName>
+					<AUni
+						ws="en">Unspecified Variant of</AUni>
+				</ReverseName>
+				<SortSpec
+					val="-1073741824" />
+				<UnderColor
+					val="-1073741824" />
+				<UnderStyle
+					val="-1073741824" />
 			</ownseq>
 		</Possibilities>
 		<PreventChoiceAboveLevel

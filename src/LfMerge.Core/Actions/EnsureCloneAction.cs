@@ -64,6 +64,32 @@ namespace LfMerge.Core.Actions
 		}
 
 		/// <summary>
+		/// Dig out actual clone path from 'line'.
+		/// </summary>
+		private static string GetActualClonePath(string expectedCloneLocation, string line)
+		{
+			const string folder = "folder '";
+			var folderIndex = line.IndexOf(folder, StringComparison.InvariantCulture);
+			if (folderIndex >= 0)
+			{
+				var actualClonePath = line.Substring(folderIndex + folder.Length).TrimEnd('.').TrimEnd('\'');
+				Require.That(expectedCloneLocation == actualClonePath,
+					"Something changed in LfMergeBridge so that we cloned in a different directory");
+				return actualClonePath;
+			}
+			return expectedCloneLocation;
+		}
+
+		private void ReportNoSuchBranchFailure(ILfProject project, string cloneLocation,
+			string cloneResult, string line)
+		{
+			var clonePath = GetActualClonePath(cloneLocation, line);
+			if (Directory.Exists(clonePath))
+				Directory.Delete(clonePath, true);
+			CloneResultedInError(project, cloneResult, "no such branch");
+		}
+
+		/// <summary>
 		/// Ensures a Send/Receive project from Language Depot is properly
 		/// cloned into the WebWork directory for LfMerge.Core.
 		/// A project will be cloned if:
@@ -78,18 +104,16 @@ namespace LfMerge.Core.Actions
 			{
 				// Check if an initial clone needs to be performed
 				if (File.Exists(Settings.GetStateFileName(project.ProjectCode)) &&
-					(project.State.SRState != ProcessingState.SendReceiveStates.CLONING))
+					project.State.SRState != ProcessingState.SendReceiveStates.CLONING &&
+					File.Exists(project.FwDataPath))
 				{
 					return;
 				}
-				Logger.Notice("Initial clone for project {0}", project.ProjectCode);
-				// Since we're in here, the previous clone was not finished, so remove and start over
 				var cloneLocation = project.ProjectDir;
-				if (Directory.Exists(cloneLocation))
-				{
-					Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
-					Directory.Delete(cloneLocation, true);
-				}
+				if (RepoAlreadyExists(cloneLocation))
+					Logger.Notice("Repairing clone of project {0}", project.ProjectCode);
+				else
+					Logger.Notice("Initial clone for project {0}", project.ProjectCode);
 				project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 
 				string cloneResult;
@@ -100,30 +124,50 @@ namespace LfMerge.Core.Actions
 				}
 
 				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project") ||
-					CloneResultedInError(project, cloneResult, "no such branch") ||
 					CloneResultedInError(project, cloneResult, "new repository with no commits") ||
 					CloneResultedInError(project, cloneResult, "clone has higher model"))
 				{
 					return;
 				}
 
-				var line = LfMergeBridgeServices.GetLineContaining(cloneResult,
-					"new clone created on branch");
-				Require.That(!string.IsNullOrEmpty(line),
-					"Looks like the clone was not successful, but we didn't get an understandable error");
-
-				// Dig out actual clone path from 'line'.
-				const string folder = "folder '";
-				var folderIndex = line.IndexOf(folder, StringComparison.InvariantCulture);
-				if (folderIndex >= 0)
+				string line = LfMergeBridgeServices.GetLineContaining(cloneResult, "no such branch");
+				if (!string.IsNullOrEmpty(line))
 				{
-					var actualClonePath = line.Substring(folderIndex + folder.Length)
-						.TrimEnd('.').TrimEnd('\'');
-					Require.That(cloneLocation == actualClonePath,
-						"Something changed in LfMergeBridge so that we cloned in a different directory");
-				}
+					const string modelString = "Highest available model '";
+					var index = line.IndexOf(modelString, StringComparison.Ordinal);
+					if (index < 0)
+					{
+						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line);
+						return;
+					}
 
-				InitialTransferToMongoAfterClone(project);
+					var cloneModelVersion = line.Substring(index + modelString.Length, 7);
+					if (int.Parse(cloneModelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
+					{
+						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line);
+						Logger.Error("Error during initial clone of '{0}': " +
+							"clone model version '{1}' less than minimal supported model version '{2}'.",
+							project.ProjectCode, cloneModelVersion, MagicStrings.MinimalModelVersion);
+						return;
+					}
+					Logger.Info(line);
+					ChorusHelper.SetModelVersion(cloneModelVersion);
+				}
+				else
+				{
+					ChorusHelper.SetModelVersion(FdoCache.ModelVersion);
+					line = LfMergeBridgeServices.GetLineContaining(cloneResult,
+						"new clone created on branch");
+					Require.That(!string.IsNullOrEmpty(line),
+						"Looks like the clone was not successful, but we didn't get an understandable error");
+
+					// verify clone path
+					GetActualClonePath(cloneLocation, line);
+
+					InitialTransferToMongoAfterClone(project);
+					Logger.Notice("Initial clone completed; setting state to CLONED");
+					project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
+				}
 			}
 			catch (Exception e)
 			{
@@ -148,6 +192,11 @@ namespace LfMerge.Core.Actions
 			}
 		}
 
+		private static bool RepoAlreadyExists(string projectFolderPath)
+		{
+			return Directory.Exists(projectFolderPath);
+		}
+
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,
 			out string cloneResult)
 		{
@@ -157,12 +206,13 @@ namespace LfMerge.Core.Actions
 				{ "languageDepotRepoName", project.LanguageDepotProject.Identifier },
 				{ "fdoDataModelVersion", FdoCache.ModelVersion },
 				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) },
-				{ "user", "Language Forge"}
+				{ "user", "Language Forge" },
+				{ "deleteRepoIfNoSuchBranch", "false" },
+				{ "onlyRepairRepo", RepoAlreadyExists(projectFolderPath) ? "true" : "false" }
 			};
 			return LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Clone", Progress, options,
 				out cloneResult);
 		}
-
 	}
 }
 

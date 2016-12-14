@@ -54,7 +54,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void NextAction(QueueNames queueName, ActionNames[] expectedActionNames)
 		{
 			var actions = new List<ActionNames>();
-			for (var sut = Queue.GetQueue(queueName).CurrentAction;
+			for (var sut = Action.GetAction(Queue.GetQueue(queueName).CurrentActionName);
 				sut != null;
 				sut = sut.NextAction)
 			{
@@ -71,7 +71,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
+			var lfProj = LanguageForgeProject.Create("proja");
 			var sut = Action.GetAction(actionName);
 
 			// Exercise
@@ -90,7 +90,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(_env.Settings, "proja");
+			var lfProj = LanguageForgeProject.Create("proja");
 			var state = Factory.Deserialize("proja") as ProcessingStateDouble;
 			state.SRState = ProcessingState.SendReceiveStates.HOLD;
 			state.ResetSavedStates();
@@ -109,7 +109,7 @@ namespace LfMerge.Core.Tests.Actions
 		[TestCase(QueueNames.Synchronize, ActionNames.Synchronize)]
 		public void GetActionFromQueue(QueueNames queue, ActionNames expectedAction)
 		{
-			Assert.That(Action.GetActionForQueue(queue), Is.EqualTo(expectedAction));
+			Assert.That(Action.GetActionNameForQueue(queue), Is.EqualTo(expectedAction));
 		}
 
 		[TestCase(ActionNames.None, ActionNames.EnsureClone)]

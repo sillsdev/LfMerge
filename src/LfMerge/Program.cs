@@ -1,16 +1,14 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using Autofac;
 using LfMerge.Core;
 using LfMerge.Core.Actions;
+using LfMerge.Core.Actions.Infrastructure;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Queues;
-using LfMerge.Core.Settings;
-using Palaso.IO.FileLock;
 
 namespace LfMerge
 {
@@ -23,37 +21,20 @@ namespace LfMerge
 			if (options == null)
 				return;
 
-			MainClass.Logger.Notice("LfMerge starting with args: {0}", string.Join(" ", args));
+			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
+				MainClass.ModelVersion, string.Join(" ", args));
 
-			var settings = MainClass.Container.Resolve<LfMergeSettings>();
-			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
+			FwProject.AllowDataMigration = options.AllowDataMigration;
+
+			string differentModelVersion = null;
 			try
 			{
-				if (!fileLock.TryAcquireLock())
-				{
-					MainClass.Logger.Error("Can't acquire file lock - is another instance running?");
-					return;
-				}
-				MainClass.Logger.Notice("Lock acquired");
-
-				if (!CheckSetup(settings))
+				if (!MainClass.CheckSetup())
 					return;
 
 				MongoConnection.Initialize();
 
-				for (var queue = Queue.FirstQueueWithWork;
-					queue != null;
-					queue = queue.NextQueueWithWork)
-				{
-					var clonedQueue = queue.QueuedProjects.ToList();
-					foreach (var projectCode in clonedQueue)
-					{
-						RunAction(projectCode, queue.CurrentAction);
-
-						// TODO: Verify actions complete before dequeuing
-						queue.DequeueProject(projectCode);
-					}
-				}
+				differentModelVersion = RunAction(options.ProjectCode, options.CurrentAction);
 			}
 			catch (Exception e)
 			{
@@ -62,38 +43,71 @@ namespace LfMerge
 			}
 			finally
 			{
-				if (fileLock != null)
-					fileLock.ReleaseLock();
-
 				MainClass.Container.Dispose();
 				Cleanup();
 			}
 
-			MainClass.Logger.Notice("LfMerge finished");
+			if (!string.IsNullOrEmpty(differentModelVersion))
+			{
+				MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
+					differentModelVersion, false);
+			}
+
+			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);
 		}
 
-		private static void RunAction(string projectCode, IAction currentAction)
+		private static string RunAction(string projectCode, ActionNames currentAction)
 		{
-			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			LanguageForgeProject project = null;
-			var stopwatch = new System.Diagnostics.Stopwatch();
+			var stopwatch = new Stopwatch();
 			try
 			{
 				MainClass.Logger.Notice("ProjectCode {0}", projectCode);
-				project = LanguageForgeProject.Create(settings, projectCode);
+				project = LanguageForgeProject.Create(projectCode);
 
 				project.State.StartTimestamp = CurrentUnixTimestamp();
 				stopwatch.Start();
 
+				if (Options.Current.CloneProject)
+				{
+					var cloneLocation = project.ProjectDir;
+					if (Directory.Exists(cloneLocation) && !File.Exists(project.FwDataPath))
+					{
+						// If we a .hg directory but no project file it means the previous clone
+						// was not finished, so remove and start over
+						MainClass.Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
+						Directory.Delete(cloneLocation, true);
+						project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
+					}
+				}
+
 				var ensureClone = LfMerge.Core.Actions.Action.GetAction(ActionNames.EnsureClone);
 				ensureClone.Run(project);
 
-				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
-					currentAction.Run(project);
+				if (ChorusHelper.RemoteDataIsForDifferentModelVersion)
+				{
+					// The repo is for an older model version
+					var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+					return chorusHelper.ModelVersion;
+				}
+
+				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+				    project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
+				{
+					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
+
+					if (ChorusHelper.RemoteDataIsForDifferentModelVersion)
+					{
+						// The repo is for an older model version
+						var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+						return chorusHelper.ModelVersion;
+					}
+				}
 			}
 			catch (Exception e)
 			{
-				string errorMsg = String.Format("Putting project {0} on hold due to unhandled exception: \n{1}", projectCode, e);
+				string errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
+					projectCode, e);
 				MainClass.Logger.Error(errorMsg);
 				if (project != null)
 					project.State.PutOnHold(errorMsg);
@@ -103,12 +117,16 @@ namespace LfMerge
 				stopwatch.Stop();
 				if (project != null && project.State != null)
 					project.State.PreviousRunTotalMilliseconds = stopwatch.ElapsedMilliseconds;
-				if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+				if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+					!ChorusHelper.RemoteDataIsForDifferentModelVersion)
+				{
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
+				}
 
 				// Dispose FDO cache to free memory
 				LanguageForgeProject.DisposeFwProject(project);
 			}
+			return null;
 		}
 
 		/// <summary>
@@ -119,24 +137,7 @@ namespace LfMerge
 			LanguageForgeProject.DisposeProjectCache();
 		}
 
-		private static bool CheckSetup(LfMergeSettings settings)
-		{
-			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
-			string[] folderPaths = new[] { Path.Combine(homeFolder, ".local"),
-				Path.GetDirectoryName(settings.WebWorkDirectory) };
-			foreach (string folderPath in folderPaths)
-			{
-				if (!Directory.Exists(folderPath))
-				{
-					MainClass.Logger.Notice("Folder '{0}' doesn't exist", folderPath);
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		private static DateTime _unixEpoch = new DateTime(1970, 1, 1);
+		private static readonly DateTime _unixEpoch = new DateTime(1970, 1, 1);
 
 		private static long CurrentUnixTimestamp()
 		{

@@ -54,12 +54,12 @@ namespace LfMerge.Core.Actions
 
 		protected abstract void DoRun(ILfProject project);
 
-		public static ActionNames FirstAction
+		public static ActionNames FirstActionName
 		{
-			get { return GetActionForQueue(QueueNames.Edit); }
+			get { return GetActionNameForQueue(QueueNames.Edit); }
 		}
 
-		public static ActionNames GetActionForQueue(QueueNames queue)
+		public static ActionNames GetActionNameForQueue(QueueNames queue)
 		{
 			switch (queue)
 			{
@@ -123,7 +123,7 @@ namespace LfMerge.Core.Actions
 			{
 				DoRun(project);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
 				// An exception during initial clone means we'll want to
 				// perform an initial clone next time this project is run

@@ -17,7 +17,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldForThisCmObject_ShouldGetSingleLineAll()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			var converter = new ConvertFdoToMongoCustomField(cache,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
@@ -40,7 +40,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldForThisCmObject_ShouldGetMultiListRef()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			var converter = new ConvertFdoToMongoCustomField(cache,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
@@ -64,7 +64,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldsForThisCmObject_ShouldGetCustomFieldSettings()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;

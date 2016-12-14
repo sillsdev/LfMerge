@@ -1,5 +1,9 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
@@ -9,10 +13,6 @@ using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.DomainServices;
 using SIL.FieldWorks.FDO.Infrastructure;
@@ -21,18 +21,18 @@ namespace LfMerge.Core.DataConverters
 {
 	public class ConvertMongoToFdoLexicon
 	{
-		public LfMergeSettings Settings { get; set; }
-		public ILfProject LfProject { get; set; }
-		public FwProject FwProject { get; set; }
-		public FdoCache Cache { get; set; }
-		public FwServiceLocatorCache ServiceLocator { get; protected set; }
-		public ILogger Logger { get; set; }
-		public IMongoConnection Connection { get; set; }
-		public MongoProjectRecord ProjectRecord { get; set; }
-		public EntryCounts EntryCounts { get; set; }
+		private LfMergeSettings Settings { get; set; }
+		private ILfProject LfProject { get; set; }
+		private FwProject FwProject { get; set; }
+		private FdoCache Cache { get; set; }
+		private FwServiceLocatorCache ServiceLocator { get; set; }
+		private ILogger Logger { get; set; }
+		private IMongoConnection Connection { get; set; }
+		private MongoProjectRecord ProjectRecord { get; set; }
+		private EntryCounts EntryCounts { get; set; }
 
-		public IEnumerable<ILgWritingSystem> AnalysisWritingSystems;
-		public IEnumerable<ILgWritingSystem> VernacularWritingSystems;
+		//private IEnumerable<ILgWritingSystem> _analysisWritingSystems;
+		//private IEnumerable<ILgWritingSystem> _vernacularWritingSystems;
 
 		#if false  // Only used in "update FDO from LF option lists" code, so commented out with
 		// the rest of that code to avoid compiler warnings
@@ -42,19 +42,18 @@ namespace LfMerge.Core.DataConverters
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
-		public const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
-		public const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
-		public const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
-//		public const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
-		public const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
-		public const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
-//		public const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
-		public const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
-		public const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
-		public const string PublishInListCode = MagicStrings.LfOptionListCodeForDoNotPublishIn;
-		public const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+		private const string GrammarListCode = MagicStrings.LfOptionListCodeForGrammaticalInfo;
+		private const string SemDomListCode = MagicStrings.LfOptionListCodeForSemanticDomains;
+		private const string AcademicDomainListCode = MagicStrings.LfOptionListCodeForAcademicDomainTypes;
+//		private const string EnvironListCode = MagicStrings.LfOptionListCodeForEnvironments;  // Skip since we're not currently converting this (LF data model is too different)
+		private const string LocationListCode = MagicStrings.LfOptionListCodeForLocations;
+		private const string UsageTypeListCode = MagicStrings.LfOptionListCodeForUsageTypes;
+//		private const string ReversalTypeListCode = MagicStrings.LfOptionListCodeForReversalTypes;  // Skip since we're not currently converting this (LF data model is too different)
+		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
+		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
+		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
 
-		public IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
+		private IDictionary<string, ConvertMongoToFdoOptionList> ListConverters;
 
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
@@ -72,8 +71,8 @@ namespace LfMerge.Core.DataConverters
 			Cache = FwProject.Cache;
 			ServiceLocator = FwProject.ServiceLocator;
 			// These writing system search orders will be used in BestStringAndWsFromMultiText and related functions
-			AnalysisWritingSystems = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
-			VernacularWritingSystems = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
+			//_analysisWritingSystems = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
+			//_vernacularWritingSystems = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
 
 			ListConverters = new Dictionary<string, ConvertMongoToFdoOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
@@ -83,7 +82,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode);
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
-			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
@@ -97,7 +95,6 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[UsageTypeListCode] = PrepareOptionListConverter(UsageTypeListCode, ServiceLocator.LanguageProject.LexDbOA.UsageTypesOA);
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
-			ListConverters[PublishInListCode] = PrepareOptionListConverter(PublishInListCode, ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 			#endif
 
@@ -110,7 +107,7 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
+		private ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
 		{
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
 			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), 
@@ -159,12 +156,12 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
-		public T GetInstance<T>() where T : class
+		private T GetInstance<T>() where T : class
 		{
 			return ServiceLocator.GetInstance<T>();
 		}
 
-		public IEnumerable<LfLexEntry> GetLexicon(ILfProject project)
+		private IEnumerable<LfLexEntry> GetLexicon(ILfProject project)
 		{
 			return Connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
@@ -173,7 +170,7 @@ namespace LfMerge.Core.DataConverters
 		/// Converts the list of LF input systems and adds them to FDO writing systems
 		/// </summary>
 		/// <param name="lfWsList">List of LF input systems.</param>
-		public void LfWsToFdoWs(Dictionary<string, LfInputSystemRecord> lfWsList)
+		private void LfWsToFdoWs(Dictionary<string, LfInputSystemRecord> lfWsList)
 		{
 			// Between FW 8.2 and 9, a few classes and interfaces were renamed. The ones most relevant here are
 			// IWritingSystemManager (interface was removed and replaced with the WritingSystemManager concrete class),
@@ -251,7 +248,7 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input, bool isAnalysisField = true)
+		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			if (input == null) return null;
 			if (input.Count == 0)
@@ -285,7 +282,7 @@ namespace LfMerge.Core.DataConverters
 			return new Tuple<string, int>(kv.Value, kv.Key);
 		}
 
-		public ITsString BestTsStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
+		private ITsString BestTsStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
@@ -293,7 +290,7 @@ namespace LfMerge.Core.DataConverters
 			return ConvertMongoToFdoTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
 		}
 
-		public string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
+		private string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
 			if (stringAndWsId == null)
@@ -307,7 +304,7 @@ namespace LfMerge.Core.DataConverters
 		// want to update Added or Modified). The wantCreation parameter is there because if
 		// the LF entry was deleted, we don't want to actually create the FDO entry (it would
 		// just be immediately deleted again).
-		public ILexEntry GetOrCreateEntryByGuid(Guid guid, bool wantCreation, out bool createdEntry)
+		private ILexEntry GetOrCreateEntryByGuid(Guid guid, bool wantCreation, out bool createdEntry)
 		{
 			ILexEntry result;
 			createdEntry = false;
@@ -317,6 +314,13 @@ namespace LfMerge.Core.DataConverters
 				{
 					createdEntry = true;
 					result = GetInstance<ILexEntryFactory>().Create(guid, ServiceLocator.LanguageProject.LexDbOA);
+					// TODO: Consider changing this to the following:
+					// var msa = new SandboxGenericMSA();
+					// result = GetInstance<ILexEntryFactory>().Create(GetInstance<IMoMorphTypeRepository>().GetObject(MoMorphTypeTags.kguidMorphStem), lexemeFormTs, (ITsString) null, msa);
+					// However, this creates an empty Sense object -- and we already set the morph type when we set the LexemeFormOA. That should be enough.
+
+					// If we do make that change, then the function signature will become:
+					// private ILexEntry GetOrCreateEntryByGuid(Guid guid, bool wantCreation, ITsString lexemeFormTs, out bool createdEntry)
 				}
 				else
 					result = null;
@@ -324,7 +328,7 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public ILexExampleSentence GetOrCreateExampleByGuid(Guid guid, ILexSense owner)
+		private ILexExampleSentence GetOrCreateExampleByGuid(Guid guid, ILexSense owner)
 		{
 			ILexExampleSentence result;
 			if (!GetInstance<ILexExampleSentenceRepository>().TryGetObject(guid, out result))
@@ -341,7 +345,7 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="pictureName">Picture path name.</param>
 		/// <param name="caption">Caption.</param>
 		/// <param name="captionWs">Caption writing system.</param>
-		public ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner, string pictureName,
+		private ICmPicture GetOrCreatePictureByGuid(Guid guid, ILexSense owner, string pictureName,
 			string caption, int captionWs)
 		{
 			ICmPicture result;
@@ -360,7 +364,7 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public ILexPronunciation GetOrCreatePronunciationByGuid(Guid guid, ILexEntry owner)
+		private ILexPronunciation GetOrCreatePronunciationByGuid(Guid guid, ILexEntry owner)
 		{
 			ILexPronunciation result;
 			if (!GetInstance<ILexPronunciationRepository>().TryGetObject(guid, out result))
@@ -371,7 +375,7 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public ILexSense GetOrCreateSenseByGuid(Guid guid, ILexEntry owner)
+		private ILexSense GetOrCreateSenseByGuid(Guid guid, ILexEntry owner)
 		{
 			ILexSense result;
 			if (!GetInstance<ILexSenseRepository>().TryGetObject(guid, out result))
@@ -379,7 +383,7 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner,
+		private ICmTranslation FindOrCreateTranslationByGuid(Guid guid, ILexExampleSentence owner,
 			ICmPossibility typeOfNewTranslation)
 		{
 			// If it's already in the owning list, use that object
@@ -397,19 +401,12 @@ namespace LfMerge.Core.DataConverters
 			return GetInstance<ICmTranslationFactory>().Create(owner, typeOfNewTranslation);
 		}
 
-		public ILexEtymology CreateOwnedEtymology(ILexEntry owner)
-		{
-			// Have to use a different approach for OA fields: factory doesn't have Create(guid, owner)
-			ILexEtymology result = GetInstance<ILexEtymologyFactory>().Create();
-			owner.EtymologyOA = result;
-			return result;
-		}
-
-		public IMoForm CreateOwnedLexemeForm(ILexEntry owner, string morphologyType)
+		private IMoForm CreateOwnedLexemeForm(ILexEntry owner, string morphologyType)
 		{
 			// morphologyType is a string because that's how it's (currently, as of Nov 2015)
 			// stored in LF's Mongo database.
 			IMoForm result;
+			Guid morphGuid;
 			var stemFactory = GetInstance<IMoStemAllomorphFactory>();
 			var affixFactory = GetInstance<IMoAffixAllomorphFactory>();
 			// TODO: This list of hardcoded strings might belong in an enum, rather than here
@@ -420,37 +417,62 @@ namespace LfMerge.Core.DataConverters
 			case "root":
 			case "stem":
 			case "particle":
-			case "clitic":
-			case "proclitic":
-			case "enclitic":
 			case "phrase":
 			case "discontiguous phrase":
-			case null: // Consider "stem" as the default in case of null
-				result = stemFactory.Create();
-				break;
-
 			case "circumfix":
-			case "prefix":
-			case "suffix":
-			case "infix":
-			case "prefixing interfix":
-			case "infixing interfix":
-			case "suffixing interfix":
-			case "simulfix":
-			case "suprafix":
-				result = affixFactory.Create();
+			// Also consider "stem" as the default in case of null or empty morph type
+			case null:
+			case "":
+				morphGuid = MoMorphTypeTags.kguidMorphStem;
 				break;
 
+			// TODO: Decide if "phrase" and "discontiguous phrase" should be treated as stems the way FW's FindMorphType() function
+			// does, or if we want to use MoMorphTypeTags.kguidMorphPhrase and MoMorphTypeTags.kguidMorphDiscontiguousPhrase
+			// even though FieldWorks doesn't appear to use those.
+
+			case "clitic":
+				morphGuid = MoMorphTypeTags.kguidMorphClitic;
+				break;
+			case "proclitic":
+				morphGuid = MoMorphTypeTags.kguidMorphProclitic;
+				break;
+			case "enclitic":
+				morphGuid = MoMorphTypeTags.kguidMorphEnclitic;
+				break;
+			case "prefix":
+			case "prefixing interfix":  // FDO's MorphServices prefers to consider "prefixing interfix" as a prefix
+				morphGuid = MoMorphTypeTags.kguidMorphPrefix;
+				break;
+			case "infix":
+			case "infixing interfix":  // FDO's MorphServices prefers to consider "infixing interfix" as an infix
+				morphGuid = MoMorphTypeTags.kguidMorphInfix;
+				break;
+			case "suffix":
+			case "suffixing interfix":  // FDO's MorphServices prefers to consider "suffixing interfix" as a suffix
+				morphGuid = MoMorphTypeTags.kguidMorphSuffix;
+				break;
+			case "simulfix":
+				morphGuid = MoMorphTypeTags.kguidMorphSimulfix;
+				break;
+			case "suprafix":
+				morphGuid = MoMorphTypeTags.kguidMorphSuprafix;
+				break;
 			default:
 				Logger.Warning("Unrecognized morphology type \"{0}\" in word {1}", morphologyType, owner.Guid);
-				result = stemFactory.Create();
+				morphGuid = MoMorphTypeTags.kguidMorphStem;
 				break;
 			}
-			owner.LexemeFormOA = result;
+			if (morphGuid == MoMorphTypeTags.kguidMorphStem)
+				result = stemFactory.Create();
+			else
+				result = affixFactory.Create();
+			owner.LexemeFormOA = result;  // MUST do this assignment *before* assigning result.MorphTypeRA, otherwise FDO throws a NullReferenceException
+			result.MorphTypeRA = GetInstance<IMoMorphTypeRepository>().GetObject(morphGuid);
+			Logger.Debug("Just set LexemeFormOA to {0}, with MorphType {1}", result == null ? "(null)" : result.ToString(), result == null ? "(null lexeme form)" : result.MorphTypeRA == null ? "(null morphtype)" : result.MorphTypeRA.ToString());
 			return result;
 		}
 
-		public void LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
+		private void LfLexEntryToFdoLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid ?? Guid.Empty;
 			bool createdEntry = false;
@@ -552,7 +574,7 @@ namespace LfMerge.Core.DataConverters
 			Logger.Info("MongoToFdo: {0} FdoEntry {1} ({2})", createdEntry ? "Created" : "Modified", guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 		}
 
-		public void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
+		private void LfExampleToFdoExample(LfExample lfExample, ILexSense owner)
 		{
 			Guid guid = lfExample.Guid ?? Guid.Empty;
 			if (guid == Guid.Empty)
@@ -567,10 +589,6 @@ namespace LfMerge.Core.DataConverters
 //				fdoExample.Guid,
 //				fdoExample.Hvo
 //			);
-			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
-				fdoExample.DoNotPublishInRC, lfExample.ExamplePublishIn,
-				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
-			);
 			fdoExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, fdoExample,
 				_freeTranslationType);
@@ -588,8 +606,10 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <param name="lfPicture">Lf picture.</param>
 		/// <param name="owner">Owning sense.</param>
-		public void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
+		private void LfPictureToFdoPicture(LfPicture lfPicture, ILexSense owner)
 		{
+			if (lfPicture == null || lfPicture.FileName == null)
+				return;  // Do nothing if there's no picture to convert
 			Guid guid = lfPicture.Guid ?? Guid.Empty;
 			int captionWs = Cache.DefaultAnalWs;
 			string caption = "";
@@ -615,7 +635,7 @@ namespace LfMerge.Core.DataConverters
 			// Ignoring fdoPicture.Description and other fdoPicture fields since LF won't touch them
 		}
 
-		public void LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
+		private void LfSenseToFdoSense(LfSense lfSense, ILexEntry owner)
 		{
 			Guid guid = lfSense.Guid ?? Guid.Empty;
 			if (guid == Guid.Empty)
@@ -674,10 +694,6 @@ namespace LfMerge.Core.DataConverters
 			// lfSense.SenseId; // TODO: What do I do with this one?
 			fdoSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 
-			ListConverters[PublishInListCode].UpdateInvertedPossibilitiesFromStringArray(
-				fdoSense.DoNotPublishInRC, lfSense.SensePublishIn,
-				ServiceLocator.LanguageProject.LexDbOA.PublicationTypesOA.ReallyReallyAllPossibilities
-			);
 			SetMultiStringFrom(fdoSense.Restrictions, lfSense.SenseRestrictions);
 			fdoSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
 			SetMultiStringFrom(fdoSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
@@ -707,7 +723,7 @@ namespace LfMerge.Core.DataConverters
 		// This is a pattern that we use several times in the Mongo->FDO conversion
 		// (LfSense.Examples, LfSense.Pictures, LfEntry.Senses), so this function exists to
 		// generalize that pattern.
-		public void SetFdoListFromLfList<TLfChild, TFdoParent, TFdoChild>(
+		private void SetFdoListFromLfList<TLfChild, TFdoParent, TFdoChild>(
 			TFdoParent fdoParent,
 			IList<TFdoChild> fdoChildList,
 			IList<TLfChild> lfChildList,
@@ -737,7 +753,7 @@ namespace LfMerge.Core.DataConverters
 				fdoChildToDelete.Delete();
 		}
 
-		public Guid GuidFromLiftId(string liftId)
+		private Guid GuidFromLiftId(string liftId)
 		{
 			Guid result;
 			if (String.IsNullOrEmpty(liftId))
@@ -756,15 +772,19 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <param name="dest">FDO multi string whose values will be set.</param>
 		/// <param name="source">Source of multistring values.</param>
-		public void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
+		private void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
 		{
 			if (source != null)
 				source.WriteToFdoMultiString(dest, ServiceLocator.WritingSystemManager);
 		}
 
-		public void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
+		private void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
-			ILexEtymology fdoEtymology = fdoEntry.EtymologyOA;
+#if DBVERSION_7000068
+			var fdoEtymology = fdoEntry.EtymologyOA;
+#else
+			var fdoEtymology = fdoEntry.EtymologyOS.FirstOrDefault();
+#endif
 			if ((lfEntry.Etymology        == null || lfEntry.Etymology       .IsEmpty) &&
 			    (lfEntry.EtymologyComment == null || lfEntry.EtymologyComment.IsEmpty) &&
 			    (lfEntry.EtymologyGloss   == null || lfEntry.EtymologyGloss  .IsEmpty) &&
@@ -772,22 +792,35 @@ namespace LfMerge.Core.DataConverters
 			{
 				if (fdoEtymology == null)
 					return; // Don't delete an Etymology object if there was none already
-				else
-				{
+#if DBVERSION_7000068
 					fdoEtymology.Delete();
+#else
+				fdoEntry.EtymologyOS.First().Delete();
+#endif
 					return;
 				}
-			}
 			if (fdoEtymology == null)
-				fdoEtymology = CreateOwnedEtymology(fdoEntry); // Also sets owning field on fdoEntry
+			{
+				fdoEtymology = GetInstance<ILexEtymologyFactory>().Create();
+#if DBVERSION_7000068
+				fdoEntry.EtymologyOA = fdoEtymology;
+#else
+				fdoEntry.EtymologyOS.Add(fdoEtymology);
+#endif
+			}
+
 			SetMultiStringFrom(fdoEtymology.Form, lfEntry.Etymology);
 			SetMultiStringFrom(fdoEtymology.Comment, lfEntry.EtymologyComment);
 			SetMultiStringFrom(fdoEtymology.Gloss, lfEntry.EtymologyGloss);
 			if (lfEntry.EtymologySource != null)
+#if DBVERSION_7000068
 				fdoEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource);
+#else
+				SetMultiStringFrom(fdoEtymology.LanguageNotes, lfEntry.EtymologySource);
+#endif
 		}
 
-		public void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
+		private void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
 			if (lfEntry.Lexeme == null || lfEntry.Lexeme.IsEmpty)
@@ -805,7 +838,7 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(fdoLexeme.Form, lfEntry.Lexeme);
 		}
 
-		public void SetPronunciation(ILexEntry fdoEntry, LfLexEntry lfEntry)
+		private void SetPronunciation(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 			// var fdoPronunciation = GetOrCreatePronunciationByGuid(lfEntry.PronunciationGuid, fdoEntry);
 			ILexPronunciation fdoPronunciation = fdoEntry.PronunciationsOS.FirstOrDefault();
@@ -835,7 +868,7 @@ namespace LfMerge.Core.DataConverters
 			// Not handling fdoPronunciation.LiftResidue
 		}
 
-		public IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
+		private IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
 		{
 			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
 		}

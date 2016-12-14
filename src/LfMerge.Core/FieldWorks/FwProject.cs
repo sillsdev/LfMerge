@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Xml;
 using LfMerge.Core.Settings;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
@@ -67,6 +68,8 @@ namespace LfMerge.Core.FieldWorks
 
 		#endregion
 
+		public static bool AllowDataMigration { get; set; }
+
 		public FdoCache Cache { get; private set; }
 
 		public FwServiceLocatorCache ServiceLocator { get; private set; }
@@ -80,7 +83,7 @@ namespace LfMerge.Core.FieldWorks
 				return null;
 			}
 
-			var settings = new FdoSettings {DisableDataMigration = true};
+			var settings = new FdoSettings {DisableDataMigration = !AllowDataMigration};
 
 			try
 			{
@@ -111,6 +114,24 @@ namespace LfMerge.Core.FieldWorks
 
 			return fdoCache;
 		}
+
+		public static string GetModelVersion(string project)
+		{
+			if (!File.Exists(project))
+				return null;
+
+			using (var reader = new XmlTextReader(project))
+			{
+				if (!reader.ReadToFollowing("languageproject"))
+				{
+					MainClass.Logger.Error("Can't find <languageproject> element for '{0}'", project);
+					return null;
+				}
+				return reader.GetAttribute("version");
+			}
+		}
+
+
 	}
 }
 

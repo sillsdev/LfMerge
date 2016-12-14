@@ -23,7 +23,7 @@ namespace LfMerge.Core
 			CLONING,
 
 			/// <summary>
-			/// The project got cloned, but the initial transfer to mongo hasn't happened yet
+			/// The project has just been successfully cloned, so no further action is necessary during this run of LfMerge
 			/// </summary>
 			CLONED,
 
@@ -243,7 +243,10 @@ namespace LfMerge.Core
 					}
 				}
 				// If the state file is nonexistent or invalid Json, set the project back to CLONING
-				MainClass.Logger.Error("State file was invalid Json, so setting the project back to CLONING");
+				if (!File.Exists(fileName))
+					MainClass.Logger.Error("State file doesn't exist, so setting the project back to CLONING");
+				else
+					MainClass.Logger.Error("State file was invalid Json, so setting the project back to CLONING");
 				return new ProcessingState(projectCode, Settings);
 			}
 		}

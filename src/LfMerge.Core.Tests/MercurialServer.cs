@@ -32,6 +32,7 @@ namespace LfMerge.Core.Tests
 			Assert.That(regex.IsMatch(result.StandardOutput), Is.True);
 			var match = regex.Match(result.StandardOutput);
 			Url = match.Groups[1].Captures[0].Value;
+			IsStarted = true;
 		}
 
 		public void Stop()
@@ -43,10 +44,13 @@ namespace LfMerge.Core.Tests
 			CommandLineRunner.Run("kill", "-9 " + pid, Directory.GetCurrentDirectory(),
 				120, new NullProgress());
 			File.Delete(_pidFile);
+			IsStarted = false;
 		}
 
 		public string Url { get; private set; }
 
 		public string RepoPath { get; private set; }
+
+		public bool IsStarted { get; private set; }
 	}
 }

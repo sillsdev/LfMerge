@@ -67,7 +67,7 @@ namespace LfMerge.Core.Tests
 
 	public class LanguageForgeProjectAccessor: LanguageForgeProject
 	{
-		protected LanguageForgeProjectAccessor(LfMergeSettings settings): base(settings, null)
+		protected LanguageForgeProjectAccessor(): base(null)
 		{
 		}
 
@@ -122,6 +122,7 @@ namespace LfMerge.Core.Tests
 		private readonly Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
 		private readonly Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 		private Dictionary<string, LfConfigFieldBase> _storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
+		private Dictionary<string, DateTime?> _storedLastSyncDate = new Dictionary<string, DateTime?>();
 
 		public void Reset()
 		{
@@ -275,6 +276,21 @@ namespace LfMerge.Core.Tests
 			_storedLfLexEntries.Remove(guid);
 			return true;
 		}
+
+		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
+		{
+			// No-op
+			_storedLastSyncDate[project.ProjectCode] = newSyncedDate;
+			return true;
+		}
+
+		public DateTime? GetLastSyncedDate(ILfProject project)
+		{
+			DateTime? result = null;
+			if (_storedLastSyncDate.TryGetValue(project.ProjectCode, out result))
+				return result;
+			return null;
+		}
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory
@@ -328,8 +344,8 @@ namespace LfMerge.Core.Tests
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
-			var server = SynchronizeActionTests.LDServer;
-			return server != null ? server.Url : SynchronizeActionTests.LDProjectFolderPath;
+			var server = LanguageDepotMock.Server;
+			return server != null && server.IsStarted ? server.Url : LanguageDepotMock.ProjectFolderPath;
 		}
 	}
 

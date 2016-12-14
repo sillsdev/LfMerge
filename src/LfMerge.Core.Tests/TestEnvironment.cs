@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using Autofac;
 using IniParser.Parser;
 using LfMerge.Core.Actions.Infrastructure;
@@ -81,7 +82,7 @@ namespace LfMerge.Core.Tests
 
 			if (registerSettingsModel)
 			{
-				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>();
+				containerBuilder.RegisterType<ChorusHelperDouble>().As<ChorusHelper>().SingleInstance();
 				containerBuilder.RegisterType<MongoProjectRecordFactoryDouble>().As<MongoProjectRecordFactory>();
 			}
 
@@ -178,6 +179,37 @@ namespace LfMerge.Core.Tests
 				startDir = Path.Combine(startDir, "..");
 			}
 			return Path.GetFullPath(startDir);
+		}
+
+		public static void ChangeFileEncoding(string fileName, Encoding inEncoding, Encoding outEncoding)
+		{
+			if (!File.Exists(fileName))
+				return;
+
+			string s = null;
+			using (StreamReader r = new StreamReader(fileName, inEncoding))
+			{
+				s = r.ReadToEnd();
+			}
+			if (s != null)
+			{
+				using (StreamWriter w = new StreamWriter(fileName, false, outEncoding))
+				{
+					w.Write(s);
+				}
+			}
+		}
+
+		public static void OverwriteBytesInFile(string fileName, byte[] bytes, int offset)
+		{
+			if (!File.Exists(fileName))
+				return;
+
+			using (FileStream f = new FileStream(fileName, FileMode.OpenOrCreate))
+			{
+				f.Seek(offset, SeekOrigin.Begin);
+				f.Write(bytes, 0, bytes.Length);
+			}
 		}
 
 //		public string WriteFile(string fileName, string xmlForEntries, string directory)

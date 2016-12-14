@@ -1,0 +1,42 @@
+Source: lfmerge-__DatabaseVersion__
+Section: misc
+Priority: optional
+Maintainer: Eberhard Beilharz <eb1@sil.org>
+Standards-Version: 3.9.5
+Homepage: https://languageforge.org/
+Vcs-Git: git://github.com/sillsdev/LfMerge.git
+Vcs-Browser: https://github.com/sillsdev/LfMerge
+Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
+ wget,
+ pkg-config,
+ mono-sil,
+ libicu-dev,
+ lfmerge-fdo-__DatabaseVersion__
+
+#if __DatabaseVersion__ == __MaxDbVersion__
+Package: lfmerge
+Architecture: any
+Depends: __allLfMergeVersions__
+ lfmerge-__DatabaseVersion__ (>= ${binary:Version})
+Description: LanguageForge Send/Receive
+ lfmerge is a tool that is used by the LanguageForge server
+ to share data with language depot. Since this tool makes assumptions
+ about the location and content of files it is probably not very useful
+ outside of languageforge development and should probably not be
+ installed.
+ .
+ This metapackage installs the database dependent versions of lfmerge.
+#endif
+
+Package: lfmerge-__DatabaseVersion__
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ pkg-config,
+ mono-sil,
+ lfmerge-fdo-__DatabaseVersion__
+Description: LanguageForge Send/Receive for model version __DatabaseVersion__
+ lfmerge is a tool that is used by the LanguageForge server
+ to share data with language depot. Since this tool makes assumptions
+ about the location and content of files it is probably not very useful
+ outside of languageforge development and should probably not be
+ installed.

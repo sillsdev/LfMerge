@@ -42,21 +42,17 @@ namespace LfMerge.Core.FieldWorks
 
 		public object RunTask(Func<IThreadedProgress, object[], object> backgroundTask, params object[] parameters)
 		{
-			return _synchronizeInvoke.Invoke(backgroundTask, parameters);
+			return backgroundTask(this, parameters);
 		}
 
 		public object RunTask(bool fDisplayUi, Func<IThreadedProgress, object[], object> backgroundTask, params object[] parameters)
 		{
-			return _synchronizeInvoke.Invoke(backgroundTask, parameters);
+			return backgroundTask(this, parameters);
 		}
 
-		public bool Canceled
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public bool Canceled { get { return false; } }
+
+		public bool IsCanceling { get { return false; }}
 
 		#endregion
 	}

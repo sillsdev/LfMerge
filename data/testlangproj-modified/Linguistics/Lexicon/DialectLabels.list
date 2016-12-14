@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DialectLabels>
+	<CmPossibilityList
+		guid="a3a8188b-ab00-4a43-b925-a1eed62287ba">
+		<Abbreviation>
+			<AUni
+				ws="en">Dials</AUni>
+		</Abbreviation>
+		<DateCreated
+			val="2016-08-09 18:48:18.000" />
+		<DateModified
+			val="2016-08-09 18:48:18.000" />
+		<Depth
+			val="1" />
+		<DisplayOption
+			val="-1073741824" />
+		<IsClosed
+			val="False" />
+		<IsSorted
+			val="True" />
+		<IsVernacular
+			val="False" />
+		<ItemClsid
+			val="7" />
+		<ListVersion
+			val="00000000-0000-0000-0000-000000000000" />
+		<Name>
+			<AUni
+				ws="en">Dialect Labels</AUni>
+		</Name>
+		<PreventChoiceAboveLevel
+			val="-1073741824" />
+		<PreventDuplicates
+			val="True" />
+		<PreventNodeChoices
+			val="True" />
+		<UseExtendedFields
+			val="False" />
+		<WsSelector
+			val="-6" />
+	</CmPossibilityList>
+</DialectLabels>

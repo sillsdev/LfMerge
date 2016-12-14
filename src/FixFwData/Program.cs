@@ -10,10 +10,12 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Palaso.Reporting;
 using SIL.FieldWorks.FixData;
+using SIL.Utils;
+
 #if __MonoCS__
+using Palaso.PlatformUtilities;
 using SIL.Linux.Logging;
 #endif
-using SIL.Utils;
 
 namespace FixFwData
 {
@@ -64,13 +66,13 @@ namespace FixFwData
 			ErrorReport.EmailAddress = "flex_errors@sil.org";
 			ErrorReport.AddStandardProperties();
 #if __MonoCS__
-			if (MiscUtils.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
+			if (Platform.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
 				ExceptionHandler.Init(new SyslogExceptionHandler("FixFwData"));
 			else
 #endif
 				ExceptionHandler.Init();
 #if __MonoCS__
-			if (MiscUtils.IsUnix)
+			if (Platform.IsUnix)
 				logger = new SyslogLogger("FixFwData");
 #endif
 		}

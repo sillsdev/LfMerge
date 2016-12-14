@@ -26,6 +26,29 @@ namespace LfMerge.Core.Actions.Infrastructure
 			return string.Empty;
 		}
 
+		public static IEnumerable<string> GetLineAndStackTraceContaining(string somethingForClient, string searchedFor)
+		{
+			bool found = false;
+			foreach (var line in GetLinesFromLfBridge(somethingForClient))
+			{
+				if (found)
+				{
+					if (line.StartsWith("  "))
+						yield return line;
+					else
+					{
+						found = false;
+						yield break;
+					}
+				}
+				else if (line.Contains(searchedFor))
+				{
+					yield return line;
+					found = true;
+				}
+			}
+		}
+
 		public static string NumEntries(int count, string after)
 		{
 			if (count <= 0)

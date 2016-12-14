@@ -29,7 +29,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepOriginalValuesInEntries()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -86,7 +86,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInSenses()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -124,7 +124,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInExampleSentences()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -161,7 +161,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInEntries()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -241,7 +241,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInSenses()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -349,7 +349,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInExample()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			var cache = lfProject.FieldWorksProject.Cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
@@ -471,7 +471,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewEntry()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 			ILexEntryRepository entryRepo = lfProject.FieldWorksProject.Cache.ServiceLocator.GetInstance<ILexEntryRepository>();
 			Assert.That(entryRepo.Count, Is.EqualTo(FdoTestBase.OriginalNumOfFdoEntries));
@@ -539,7 +539,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewSense()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
@@ -599,7 +599,6 @@ namespace LfMerge.Core.Tests.Fdo
 			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId"); // Automatically set by FDO
 			differencesByName.Remove("guid"); // Automatically set by FDO
-			differencesByName.Remove("sensePublishIn"); // Automatically set by FDO
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
@@ -628,7 +627,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewExample()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
@@ -723,7 +722,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewPicture()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 			IFdoServiceLocator servLoc = lfProject.FieldWorksProject.Cache.ServiceLocator;
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
@@ -819,7 +818,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToAddAndModifyParagraphsInCustomMultiParaField()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
@@ -913,7 +912,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToDeleteParagraphsInCustomMultiParaField()
 		{
 			// Create
-			var lfProject = LanguageForgeProject.Create(_env.Settings, TestProjectCode);
+			var lfProject = LanguageForgeProject.Create(TestProjectCode);
 			sutFdoToMongo.Run(lfProject);
 
 			FdoCache cache = lfProject.FieldWorksProject.Cache;

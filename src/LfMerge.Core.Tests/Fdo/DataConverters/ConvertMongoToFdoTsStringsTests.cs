@@ -1372,6 +1372,45 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void TsStringCanRoundTripFdoToMongoToFdo_StringWithThreeLanguagesAndObjectDataAndArbitraryProperties()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append("Some English text");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("fr"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptAlign, (int)FwTextPropVar.ktpvDefault, 2);
+			builder.SetStrPropValue((int)FwTextPropType.ktptCharStyle, "Default Character Style");
+			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Default Paragraph Style");
+			builder.Append("du texte français");
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, wsf.GetWsFromStr("grc"));
+			builder.SetIntPropValues((int)FwTextPropType.ktptFirstIndent, (int)FwTextPropVar.ktpvMilliPoint, 12000);
+			builder.SetStrPropValue((int)FwTextPropType.ktptParaStyle, "Some Other Style");
+			builder.Append("Ελληνικά");
+			ITsString tss = builder.GetString();
+			// Also check that GUIDs in object properties (marked with Object Replacement Character) will round-trip
+			ITsStrBldr bldr = tss.GetBldr();
+			Guid origGuid = Guid.NewGuid();
+			TsStringUtils.InsertOrcIntoPara(origGuid, FwObjDataTypes.kodtNameGuidHot, bldr, 2, 2, _wsEn);
+			tss = bldr.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+
+			// Verify that ORC still contains appropriate GUID
+			int runIdx2 = tss2.get_RunAt(2);
+			Guid actualGuid = TsStringUtils.GetGuidFromRun(tss2, runIdx2);
+			Assert.That(actualGuid, Is.EqualTo(origGuid));
+
+		}
+
+		[Test]
 		public void TsStringCanRoundTripFdoToMongoToFdo_StringWithThreeLanguagesAndArbitraryProperties()
 		{
 			// Setup
