@@ -110,7 +110,7 @@ namespace LfMerge.Core.Tests
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
 
-			DirectoryFinder.ResetStaticVars();
+			DirectoryFinder.UnitTestHelper.ResetStaticVars();
 		}
 
 		public string LanguageForgeFolder

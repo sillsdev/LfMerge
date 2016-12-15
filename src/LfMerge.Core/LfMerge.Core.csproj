@@ -115,7 +115,7 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
     <Reference Include="FDO">
-      <Package>lfmerge-fdo-7000068</Package>
+      <HintPath>\usr\lib\lfmerge\7000068\FDO.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
