@@ -68,6 +68,14 @@
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
+    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000070\BasicUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="FixFwDataDll, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000070\FixFwDataDll.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
     <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
       <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
