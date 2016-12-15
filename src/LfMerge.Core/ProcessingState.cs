@@ -244,9 +244,9 @@ namespace LfMerge.Core
 				}
 				// If the state file is nonexistent or invalid Json, set the project back to CLONING
 				if (!File.Exists(fileName))
-					MainClass.Logger.Error("State file doesn't exist, so setting the project back to CLONING");
+					MainClass.Logger.Notice("State file doesn't exist, so setting the project back to CLONING");
 				else
-					MainClass.Logger.Error("State file was invalid Json, so setting the project back to CLONING");
+					MainClass.Logger.Notice("State file was invalid Json, so setting the project back to CLONING");
 				return new ProcessingState(projectCode, Settings);
 			}
 		}
