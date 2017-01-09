@@ -73,7 +73,7 @@ namespace LfMerge
 					var cloneLocation = project.ProjectDir;
 					if (Directory.Exists(cloneLocation) && !File.Exists(project.FwDataPath))
 					{
-						// If we a .hg directory but no project file it means the previous clone
+						// If we have a .hg directory but no project file it means the previous clone
 						// was not finished, so remove and start over
 						MainClass.Logger.Notice("Cleaning out previous failed clone at {0}", cloneLocation);
 						Directory.Delete(cloneLocation, true);
@@ -92,7 +92,7 @@ namespace LfMerge
 				}
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
-				    project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
+					project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
 				{
 					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
 
