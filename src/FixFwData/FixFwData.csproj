@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{FF82CEC0-353A-4E79-AB7E-6AFEF1F15EC2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -108,10 +108,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="BasicUtils, Version=8.3.2.0, Culture=neutral">
       <HintPath>\usr\lib\lfmerge\7000070\BasicUtils.dll</HintPath>
     </Reference>
-    <Reference Include="FixFwDataDll, Version=8.3.1.0, Culture=neutral">
+    <Reference Include="FixFwDataDll, Version=8.3.2.0, Culture=neutral">
       <HintPath>\usr\lib\lfmerge\7000070\FixFwDataDll.dll</HintPath>
     </Reference>
   </ItemGroup>

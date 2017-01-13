@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core.Tests</RootNamespace>
@@ -114,16 +114,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
-    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="FDO, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="BasicUtils, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000070\BasicUtils.dll</HintPath>
     </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="COMInterfaces, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000070\COMInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="CoreImpl, Version=8.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000070\CoreImpl.dll</HintPath>
     </Reference>
   </ItemGroup>
