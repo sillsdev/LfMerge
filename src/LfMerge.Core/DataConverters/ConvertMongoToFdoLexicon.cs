@@ -110,7 +110,7 @@ namespace LfMerge.Core.DataConverters
 		private ConvertMongoToFdoOptionList PrepareOptionListConverter(string listCode)
 		{
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
-			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(), 
+			return new ConvertMongoToFdoOptionList(GetInstance<ICmPossibilityRepository>(),
 				optionListToConvert, Logger, CanonicalOptionListSource.Create(listCode));
 		}
 
@@ -243,7 +243,7 @@ namespace LfMerge.Core.DataConverters
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
-					
+
 				}
 			}
 		}
@@ -778,6 +778,16 @@ namespace LfMerge.Core.DataConverters
 				source.WriteToFdoMultiString(dest, ServiceLocator.WritingSystemManager);
 		}
 
+		/// <summary>
+		/// Clears all text in all writing systems in an FDO MultiString object
+		/// </summary>
+		private void ClearMultiString(IMultiStringAccessor multiString)
+		{
+			if (multiString == null) return;
+			foreach (int wsId in multiString.AvailableWritingSystemIds)
+				multiString.set_String(wsId, string.Empty);
+		}
+
 		private void SetEtymologyFields(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 #if DBVERSION_7000068
@@ -793,12 +803,12 @@ namespace LfMerge.Core.DataConverters
 				if (fdoEtymology == null)
 					return; // Don't delete an Etymology object if there was none already
 #if DBVERSION_7000068
-					fdoEtymology.Delete();
+				fdoEtymology.Delete();
 #else
 				fdoEntry.EtymologyOS.First().Delete();
 #endif
-					return;
-				}
+				return;
+			}
 			if (fdoEtymology == null)
 			{
 				fdoEtymology = GetInstance<ILexEtymologyFactory>().Create();
@@ -823,18 +833,15 @@ namespace LfMerge.Core.DataConverters
 		private void SetLexeme(ILexEntry fdoEntry, LfLexEntry lfEntry)
 		{
 			IMoForm fdoLexeme = fdoEntry.LexemeFormOA;
-			if (lfEntry.Lexeme == null || lfEntry.Lexeme.IsEmpty)
-			{
-				if (fdoLexeme == null)
-					return;
-				else
-				{
-					fdoLexeme.Delete();
-					return;
-				}
-			}
 			if (fdoLexeme == null)
 				fdoLexeme = CreateOwnedLexemeForm(fdoEntry, lfEntry.MorphologyType); // Also sets owning field on fdoEntry
+			if (lfEntry.Lexeme == null || lfEntry.Lexeme.IsEmpty)
+			{
+				ClearMultiString(fdoLexeme.Form);
+				return;
+			}
+			// TODO: Fold the "ClearMultiString" logic into SetMultiStringFrom so that it will *reset* any MultiString fields that aren't there in LF.
+			// TODO: But first, check if that's necessary.
 			SetMultiStringFrom(fdoLexeme.Form, lfEntry.Lexeme);
 		}
 
