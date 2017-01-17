@@ -4,31 +4,21 @@
 		<version
 			number="" />
 		<generation
-			date="2016-05-05T07:22:31" />
+			date="2016-10-31T17:05:13" />
 		<language
 			type="de" />
 	</identity>
-	<collations>
-		<collation>
-			<base>
-				<alias
-					source="de" />
-			</base>
-			<special
-				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-				<palaso:sortRulesType
-					value="OtherLanguage" />
-			</special>
-		</collation>
-	</collations>
+	<collations />
 	<special
 		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 		<palaso:abbreviation
-			value="Ger" />
+			value="de" />
 		<palaso:defaultFontFamily
-			value="Times New Roman" />
+			value="Charis SIL" />
 		<palaso:languageName
 			value="German" />
+		<palaso:spellCheckingId
+			value="de" />
 		<palaso:version
 			value="2" />
 	</special>
@@ -40,7 +30,7 @@
 				locale="en-US"
 				os="Win32NT" />
 			<palaso2:keyboard
-				layout="us"
+				layout="English"
 				locale="en-US"
 				os="Unix" />
 		</palaso2:knownKeyboards>
@@ -51,15 +41,7 @@
 		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
 		<fw:graphiteEnabled
 			value="False" />
-		<fw:matchedPairs
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;MatchedPairs&gt;   &lt;pair open=&quot;(&quot; close=&quot;)&quot; permitParaSpanning=&quot;false&quot; /&gt; &lt;/MatchedPairs&gt;" />
-		<fw:punctuationPatterns
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;PunctuationPatterns&gt;   &lt;pattern value=&quot;“ &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot; „&quot; context=&quot;WordInitial&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot; ‚&quot; context=&quot;WordInitial&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;‘ &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;: &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;! &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot; (&quot; context=&quot;WordInitial&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;.) &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;), &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;&amp;#x27;&quot; context=&quot;WordMedial&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;-&quot; context=&quot;WordMedial&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;; &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;? &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;. &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt;   &lt;pattern value=&quot;, &quot; context=&quot;WordFinal&quot; valid=&quot;true&quot; /&gt; &lt;/PunctuationPatterns&gt;" />
-		<fw:quotationMarks
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;QuotationMarks LangUsedFrom=&quot;de&quot; ContinuationType=&quot;RequireAll&quot; ContinuationMark=&quot;Opening&quot;&gt;   &lt;Levels&gt;  &lt;Pair Opening=&quot;„&quot; Closing=&quot;“&quot; /&gt;  &lt;Pair Opening=&quot;‚&quot; Closing=&quot;‘&quot; /&gt;   &lt;/Levels&gt; &lt;/QuotationMarks&gt;" />
 		<fw:validChars
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;ValidCharacters&gt;   &lt;WordForming&gt;a￼A￼ä￼Ä￼b￼B￼c￼C￼d￼D￼e￼E￼f￼F￼g￼G￼h￼H￼i￼I￼j￼J￼k￼K￼l￼L￼m￼M￼n￼N￼o￼O￼ö￼Ö￼p￼P￼q￼Q￼r￼R￼s￼S￼ß￼t￼T￼u￼U￼ü￼Ü￼v￼V￼w￼W￼x￼X￼y￼Y￼z￼Z￼'￼-&lt;/WordForming&gt;   &lt;Numeric&gt;0￼1￼2￼3￼4￼5￼6￼7￼8￼9&lt;/Numeric&gt;   &lt;Other&gt; ￼U+0020￼,￼;￼:￼!￼?￼.￼‘￼‚￼&quot;￼“￼„￼(￼)￼[￼]￼{￼}￼/￼&amp;amp;&lt;/Other&gt; &lt;/ValidCharacters&gt;" />
-		<fw:windowsLCID
-			value="1031" />
+			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;ValidCharacters&gt;   &lt;WordForming&gt;‌￼‍￼-￼'￼་￼༌￼⁰￼¹￼²￼³￼⁴￼⁵￼⁶￼⁷￼⁸￼⁹￼ꞌ￼Ꞌ&lt;/WordForming&gt;   &lt;Numeric /&gt;   &lt;Other /&gt; &lt;/ValidCharacters&gt;" />
 	</special>
 </ldml>
