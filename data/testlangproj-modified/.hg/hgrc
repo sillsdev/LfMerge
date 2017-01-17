@@ -1,13 +1,10 @@
 [ui]
 merge = chorusmerge
 username = ira
-
 [merge-tools]
 chorusmerge.premerge = False
-chorusmerge.executable = /home/eberhard/Develop/LfMerge/output/Debug/chorusmerge
-
+chorusmerge.executable = /home/ira/fwrepo/flexbridge/output/DebugMono/chorusmerge
 [format]
-
 [extensions]
 hgext.graphlog = 
 convert = 

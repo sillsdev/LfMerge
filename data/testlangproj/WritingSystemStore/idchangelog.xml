@@ -98,5 +98,59 @@
 			TimeStamp="2016-05-05T07:20:14Z">
 			<Id>pt</Id>
 		</Add>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>de</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>en-US</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>en</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>es</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>fr</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>grc</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>hbo</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>pt</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
+			TimeStamp="2017-01-17T14:14:25Z">
+			<Id>zh-CN</Id>
+		</Delete>
 	</Changes>
 </WritingSystemChangeLog>

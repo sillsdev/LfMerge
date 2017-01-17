@@ -4,7 +4,7 @@
 		<version
 			number="" />
 		<generation
-			date="2016-05-05T07:15:06" />
+			date="2016-12-14T01:46:11" />
 		<language
 			type="en" />
 	</identity>
@@ -24,7 +24,7 @@
 	<special
 		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 		<palaso:abbreviation
-			value="en" />
+			value="Eng" />
 		<palaso:defaultFontFamily
 			value="Times New Roman" />
 		<palaso:languageName
@@ -39,12 +39,40 @@
 		<palaso2:knownKeyboards>
 			<palaso2:keyboard
 				layout="US"
+				locale="en-AU"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="US"
+				locale="en-CA"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="United Kingdom"
+				locale="en-GB"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="United States-International"
 				locale="en-US"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="US"
+				locale="en-US"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="Spanish"
+				locale="es-ES"
+				os="Win32NT" />
+			<palaso2:keyboard
+				layout="IPA Unicode 6.2 (ver 1.4 US) MSK"
+				locale="is-IS"
 				os="Win32NT" />
 			<palaso2:keyboard
 				layout="English"
 				locale="en-US"
 				os="Unix" />
+			<palaso2:keyboard
+				layout="Devanagari"
+				locale=""
+				os="Win32NT" />
 			<palaso2:keyboard
 				layout="us"
 				locale="en-US"
@@ -59,7 +87,5 @@
 			value="False" />
 		<fw:validChars
 			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;ValidCharacters&gt;   &lt;WordForming&gt;‌￼‍￼'￼-￼་￼༌￼⁰￼¹￼²￼³￼⁴￼⁵￼⁶￼⁷￼⁸￼⁹￼ꞌ￼Ꞌ&lt;/WordForming&gt;   &lt;Numeric /&gt;   &lt;Other /&gt; &lt;/ValidCharacters&gt;" />
-		<fw:windowsLCID
-			value="1033" />
 	</special>
 </ldml>
