@@ -774,7 +774,9 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="source">Source of multistring values.</param>
 		private void SetMultiStringFrom(IMultiStringAccessor dest, LfMultiText source)
 		{
-			if (source != null)
+			if (source == null)
+				ClearMultiString(dest);
+			else
 				source.WriteToFdoMultiString(dest, ServiceLocator.WritingSystemManager);
 		}
 
