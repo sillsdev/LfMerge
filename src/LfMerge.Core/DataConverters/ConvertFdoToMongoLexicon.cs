@@ -80,7 +80,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromFdo(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromFdo(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
 
-			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, logger);
+			_convertCustomField = new ConvertFdoToMongoCustomField(Cache, ServiceLocator, logger);
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in _convertCustomField.GetCustomFieldParentLists())
 			{
 				string listCode = pair.Key;
@@ -100,7 +100,13 @@ namespace LfMerge.Core.DataConverters
 				return;
 			}
 
-			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+			// Custom field configuration AND view configuration should all be set at once
+			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
+			Dictionary<string, string> lfCustomFieldTypes = new Dictionary<string, string>();
+			_convertCustomField.WriteCustomFieldConfig(lfCustomFieldList, lfCustomFieldTypes);
+			Connection.SetCustomFieldConfig(LfProject, lfCustomFieldList);
+			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, lfCustomFieldList, lfCustomFieldTypes);
+
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
 			int i = 1;
@@ -120,7 +126,7 @@ namespace LfMerge.Core.DataConverters
 					// Hasn't been modified since last time: just skip this record entirely
 					continue;
 				}
-				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry, _lfCustomFieldList);
+				LfLexEntry lfEntry = FdoLexEntryToLfLexEntry(fdoEntry);
 				lfEntry.IsDeleted = false;
 				Logger.Info("{3} - FdoToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i++);
 				Connection.UpdateRecord(LfProject, lfEntry);
@@ -128,9 +134,6 @@ namespace LfMerge.Core.DataConverters
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInFdo();
-
-			Connection.SetCustomFieldConfig(LfProject, _lfCustomFieldList);
-			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, _lfCustomFieldList);
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()
@@ -194,8 +197,7 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <returns>LF entry
 		/// <param name="fdoEntry">Fdo entry.</param>
-		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfLexEntry FdoLexEntryToLfLexEntry(ILexEntry fdoEntry)
 		{
 			if (fdoEntry == null) return null;
 
@@ -289,10 +291,10 @@ namespace LfMerge.Core.DataConverters
 			lfEntry.EntryRestrictions = ToMultiText(fdoEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
 				lfEntry.Senses = new List<LfSense>();
-			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(s => FdoSenseToLfSense(s, lfCustomFieldList)));
+			lfEntry.Senses.AddRange(fdoEntry.SensesOS.Select(FdoSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(fdoEntry.SummaryDefinition);
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoEntry, "entry", ListConverters, lfCustomFieldList);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoEntry, "entry", ListConverters);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -350,8 +352,7 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <returns>LF sense
 		/// <param name="fdoSense">Fdo sense.</param>
-		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		private LfSense FdoSenseToLfSense(ILexSense fdoSense, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfSense FdoSenseToLfSense(ILexSense fdoSense)
 		{
 			var lfSense = new LfSense();
 
@@ -370,7 +371,7 @@ namespace LfMerge.Core.DataConverters
 			lfSense.EncyclopedicNote = ToMultiText(fdoSense.EncyclopedicInfo);
 			if (fdoSense.ExamplesOS != null)
 			{
-				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(e => FdoExampleToLfExample(e, lfCustomFieldList)));
+				lfSense.Examples = new List<LfExample>(fdoSense.ExamplesOS.Select(FdoExampleToLfExample));
 			}
 
 			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
@@ -474,7 +475,7 @@ namespace LfMerge.Core.DataConverters
 			fdoSense.PublishIn;
 			*/
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses", ListConverters, lfCustomFieldList);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoSense, "senses", ListConverters);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -498,8 +499,7 @@ namespace LfMerge.Core.DataConverters
 		/// </summary>
 		/// <returns>LF example
 		/// <param name="fdoExample">Fdo example.</param>
-		/// <param name="lfCustomFieldList">Updated dictionary of custom field name and custom field settings.</param>
-		private LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		private LfExample FdoExampleToLfExample(ILexExampleSentence fdoExample)
 		{
 			var lfExample = new LfExample();
 
@@ -526,7 +526,7 @@ namespace LfMerge.Core.DataConverters
 				lfExample.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoExample, "examples", ListConverters, lfCustomFieldList);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(fdoExample, "examples", ListConverters);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 

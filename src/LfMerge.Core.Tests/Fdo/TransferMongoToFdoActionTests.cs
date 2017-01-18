@@ -30,7 +30,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_Should_UpdateDefinitions()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			var data = new SampleData();
 			string newDefinition = "New definition for this unit test";
 			data.bsonTestData["senses"][0]["definition"]["en"]["value"] = newDefinition;
@@ -58,7 +58,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_ChangedWithSampleData_ShouldUpdatePictures()
 		{
 			// Setup initial Mongo project has 1 picture and 2 captions
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			var data = new SampleData();
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 			string expectedInternalFileName = Path.Combine("Pictures", data.bsonTestData["senses"][0]["pictures"][0]["fileName"].ToString());
@@ -69,8 +69,8 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
 			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
-			ILexEntryRepository entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			FdoCache cache = _cache;
+			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			int originalNumOfFdoPictures = entryRepo.AllInstances().
 				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
 			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
@@ -89,7 +89,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			// Verify "Added" picture is now the only picture on the sense (because the "old" picture was deleted),
 			// and that it has 2 captions with the expected values.
-			entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			int numOfFdoPictures = entryRepo.AllInstances().
 				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
 			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
@@ -128,7 +128,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_RunTwice_ShouldNotDuplicatePictures()
 		{
 			// Setup initial Mongo project has 1 picture and 2 captions
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			var data = new SampleData();
 			int newMongoPictureCount = data.bsonTestData["senses"][0]["pictures"].AsBsonArray.Count;
 			int newMongoCaptionCount = data.bsonTestData["senses"][0]["pictures"][0]["caption"].AsBsonDocument.Count();
@@ -136,15 +136,15 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
 			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
-			ILexEntryRepository entryRepo = cache.ServiceLocator.GetInstance<ILexEntryRepository>();
+			FdoCache cache = _cache;
+			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			int originalNumOfFdoPictures = entryRepo.AllInstances().Count(
 				e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
 			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
 			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
 			string expectedGuidStrBefore = data.bsonTestData["guid"].AsString;
 			Guid expectedGuidBefore = Guid.Parse(expectedGuidStrBefore);
-			var entryBefore = cache.ServiceLocator.GetObject(expectedGuidBefore) as ILexEntry;
+			var entryBefore = entryRepo.GetObject(expectedGuidBefore);
 			Assert.That(entryBefore.SensesOS.Count, Is.GreaterThan(0));
 			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 
@@ -158,7 +158,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
-			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
+			var entry = entryRepo.GetObject(expectedGuid);
 			Assert.IsNotNull(entry);
 			Assert.That(entry.Guid, Is.EqualTo(expectedGuid));
 
@@ -170,7 +170,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithEmptyMongoGrammar_ShouldPreserveFdoGrammarEntries()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
@@ -191,7 +191,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithNoChangesFromMongo_ShouldCountZeroChanges()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 
 			// Exercise
@@ -210,7 +210,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneNewEntry_ShouldCountOneAdded()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -239,7 +239,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneModifiedEntry_ShouldCountOneModified()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -268,7 +268,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneDeletedEntry_ShouldCountOneDeleted()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -292,7 +292,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithTwoNewEntries_ShouldCountTwoAdded()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -330,7 +330,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithTwoModifiedEntries_ShouldCountTwoModified()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -367,7 +367,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithTwoDeletedEntries_ShouldCountTwoDeleted()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -395,7 +395,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneNewEntry_ShouldNotCountThatNewEntryOnSecondRun()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -435,7 +435,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneModifiedEntry_ShouldNotCountThatModifiedEntryOnSecondRun()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -475,7 +475,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneDeletedEntry_ShouldNotCountThatDeletedEntryOnSecondRun()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -510,7 +510,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_RunTwiceWithOneNewEntryEachTime_ShouldCountTwoAddedInTotal()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -562,7 +562,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_RunTwiceWithTheSameEntryModifiedEachTime_ShouldCountTwoModifiedInTotal()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -611,7 +611,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_RunTwiceWithTheSameEntryDeletedEachTime_ShouldCountJustOneDeletedInTotal()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			sutFdoToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
@@ -653,7 +653,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
@@ -686,7 +686,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneItemInMongoGrammarThatHasNoGuidAndIsNotWellKnown_ShouldAddOneNewItemInFdoGrammar()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
@@ -731,7 +731,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneWellKnownItemAndCorrectGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
@@ -764,7 +764,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
@@ -797,7 +797,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneWellKnownTopLevelItemButNoGuidInMongoGrammar_ShouldAddOnlyOneNewGrammarEntry()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			var data = new SampleData();
@@ -821,7 +821,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneWellKnownItemThatHasOneParentButNoGuidInMongoGrammar_ShouldAddTwoNewGrammarEntries()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			var data = new SampleData();
@@ -845,7 +845,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithOneWellKnownItemThatHasOneParentButNoGuidInMongoGrammar_ShouldAddTwoGrammarEntriesWithCorrectNamesAndParents()
 		{
 			// Setup
-			var lfProj = LanguageForgeProject.Create(TestProjectCode);
+			var lfProj = _lfProj;
 			FdoCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();

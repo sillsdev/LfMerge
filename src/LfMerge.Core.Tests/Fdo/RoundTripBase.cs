@@ -175,9 +175,8 @@ namespace LfMerge.Core.Tests.Fdo
 		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
-			var convertCustomField = new ConvertFdoToMongoCustomField(cache, new LfMerge.Core.Logging.NullLogger());
-			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters, lfCustomFieldList);
+			var convertCustomField = new ConvertFdoToMongoCustomField(cache, _servLoc, new LfMerge.Core.Logging.NullLogger());
+			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters);
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)

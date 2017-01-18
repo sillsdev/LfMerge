@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using MongoDB.Bson;
@@ -19,15 +20,15 @@ namespace LfMerge.Core.DataConverters
 	public class ConvertMongoToFdoCustomField
 	{
 		private FdoCache cache;
-		private IFdoServiceLocator servLoc;
+		private FwServiceLocatorCache servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
 
-		public ConvertMongoToFdoCustomField(FdoCache cache, ILogger logger)
+		public ConvertMongoToFdoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
 		{
 			this.cache = cache;
-			servLoc = cache.ServiceLocator;
-			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			this.servLoc = serviceLocator;
+			this.fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 		}
 
@@ -48,7 +49,7 @@ namespace LfMerge.Core.DataConverters
 				// TODO: If this happens, we're probably importing a newly-created possibility list, so we should
 				// probably create it in FDO using ConvertMongoToFdoOptionList. Implementation needed.
 			}
-			return (ICmPossibilityList)servLoc.GetObject(parentListGuid);
+			return servLoc.GetInstance<ICmPossibilityListRepository>().GetObject(parentListGuid);
 		}
 
 		/// <summary>
@@ -133,7 +134,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.OwningAtomic:
 				{
 					// Custom field is a MultiparagraphText, which is an IStText object in FDO
-					IStTextRepository textRepo = cache.ServiceLocator.GetInstance<IStTextRepository>();
+					IStTextRepository textRepo = servLoc.GetInstance<IStTextRepository>();
 					Guid fieldGuid = fieldGuids.FirstOrDefault();
 					IStText text;
 					if (!textRepo.TryGetObject(fieldGuid, out text))
@@ -150,7 +151,7 @@ namespace LfMerge.Core.DataConverters
 					}
 					// Shortcut: if text contents haven't changed, we don't want to change anything at all
 					BsonValue currentFdoTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
-						cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
+						servLoc.WritingSystemManager, fdoMetaData, cache.DefaultUserWs);
 					if ((currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null) &&
 						(value == BsonNull.Value || value == null))
 						return false;
@@ -170,9 +171,9 @@ namespace LfMerge.Core.DataConverters
 						return false;
 					int wsId;
 					if (multiPara.InputSystem == null)
-						wsId = cache.MetaDataCacheAccessor.GetFieldWs(flid);
+						wsId = fdoMetaData.GetFieldWs(flid);
 					else
-						wsId = cache.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
+						wsId = servLoc.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
 
 					return true;
@@ -250,7 +251,7 @@ namespace LfMerge.Core.DataConverters
 								return newPoss;
 							}
 							else {
-								newPoss = servLoc.GetObject(thisGuid) as ICmPossibility;
+								newPoss = servLoc.GetInstance<ICmPossibilityRepository>().GetObject(thisGuid);
 								return newPoss;
 							}
 						});
@@ -298,16 +299,16 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-					int wsIdForField = cache.MetaDataCacheAccessor.GetFieldWs(flid);
-					string wsStrForField = cache.WritingSystemFactory.GetStrFromWs(wsIdForField);
+					int wsIdForField = fdoMetaData.GetFieldWs(flid);
+					string wsStrForField = servLoc.WritingSystemFactory.GetStrFromWs(wsIdForField);
 					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
 					string foundWs = kv.Key ?? string.Empty;
 					string foundData = kv.Value ?? string.Empty;
-					int foundWsId = cache.WritingSystemFactory.GetWsFromStr(foundWs);
+					int foundWsId = servLoc.WritingSystemFactory.GetWsFromStr(foundWs);
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
-					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, cache.WritingSystemFactory);
+					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, servLoc.WritingSystemFactory);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
 						return false;
 					else
@@ -326,9 +327,10 @@ namespace LfMerge.Core.DataConverters
 		public void SetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType, BsonDocument customFieldValues, BsonDocument customFieldGuids)
 		{
 			if (customFieldValues == null) return;
-			List<int> customFieldIds = new List<int>(
+
+			IEnumerable<int> customFieldIds =
 				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
-				.Where(flid => cache.GetIsCustomField(flid)));
+				.Where(flid => cache.GetIsCustomField(flid));
 
 			var remainingFieldNames = new HashSet<string>(customFieldValues.Select(elem => elem.Name));
 			foreach (int flid in customFieldIds)

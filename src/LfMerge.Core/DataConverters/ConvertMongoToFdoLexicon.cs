@@ -137,7 +137,7 @@ namespace LfMerge.Core.DataConverters
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 			#endif
 
-			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, Logger);
+			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, ServiceLocator, Logger);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>

@@ -3,6 +3,7 @@
 using Autofac;
 using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
@@ -93,6 +94,7 @@ namespace LfMerge.Core.Tests.Fdo
 		protected MongoProjectRecordFactory _recordFactory;
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
+		protected FwServiceLocatorCache _servLoc;
 		protected int _wsEn;
 		protected Dictionary<string, ConvertFdoToMongoOptionList> _listConverters;
 		protected UndoableUnitOfWorkHelper _undoHelper;
@@ -113,6 +115,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			_lfProj = FdoTestFixture.lfProj;
 			_cache = _lfProj.FieldWorksProject.Cache;
+			_servLoc = new FwServiceLocatorCache(_cache.ServiceLocator);
 			_wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			_undoHelper = new UndoableUnitOfWorkHelper(_cache.ActionHandlerAccessor, "undo", "redo");
 			_undoHelper.RollBack = true;
@@ -131,7 +134,7 @@ namespace LfMerge.Core.Tests.Fdo
 				_conn
 			);
 
-			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _env.Logger);
+			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _servLoc, _env.Logger);
 			_listConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in convertCustomField.GetCustomFieldParentLists())
 			{
