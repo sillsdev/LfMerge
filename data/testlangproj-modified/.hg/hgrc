@@ -9,3 +9,4 @@ chorusmerge.executable = /home/ira/fwrepo/flexbridge/output/DebugMono/chorusmerg
 hgext.graphlog = 
 convert = 
 fixutf8 = /home/eberhard/Develop/LfMerge/MercurialExtensions/fixutf8/fixutf8.py
+rebase =
