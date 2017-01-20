@@ -41,6 +41,10 @@
 				layout="US"
 				locale="en-US"
 				os="Win32NT" />
+			<palaso2:keyboard
+				layout="English"
+				locale="en-US"
+				os="Unix" />
 		</palaso2:knownKeyboards>
 		<palaso2:version
 			value="2" />

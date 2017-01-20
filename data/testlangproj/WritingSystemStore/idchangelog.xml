@@ -100,56 +100,104 @@
 		</Add>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>ar-IQ</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>de</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>dv</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>en-US</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>en</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>es</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>fr-fonipa</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>fr</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>grc</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>hbo</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>pt</Id>
 		</Delete>
 		<Delete
 			Producer="LfMergeAuxTool"
-			ProducerVersion="Version 1.0.6226 (apparent build date: 17-Jan-2017)"
-			TimeStamp="2017-01-17T14:14:25Z">
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>qaa-Zxxx-x-kal-AUDIO</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>qaa-fonipa-x-kal</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>qaa-x-fwt</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>qaa-x-kal</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
+			<Id>qaa-x-sta</Id>
+		</Delete>
+		<Delete
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6228 (apparent build date: 19-Jan-2017)"
+			TimeStamp="2017-01-20T11:52:39Z">
 			<Id>zh-CN</Id>
 		</Delete>
 	</Changes>
