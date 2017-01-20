@@ -24,7 +24,7 @@
 	<special
 		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
 		<palaso:abbreviation
-			value="en" />
+			value="Eng" />
 		<palaso:defaultFontFamily
 			value="Times New Roman" />
 		<palaso:languageName

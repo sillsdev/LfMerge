@@ -5,8 +5,10 @@ username = ira
 chorusmerge.premerge = False
 chorusmerge.executable = /home/ira/fwrepo/flexbridge/output/DebugMono/chorusmerge
 [format]
+[eol]
+only-consistent = False
 [extensions]
+eol = 
 hgext.graphlog = 
 convert = 
 fixutf8 = /home/eberhard/Develop/LfMerge/MercurialExtensions/fixutf8/fixutf8.py
-rebase =
