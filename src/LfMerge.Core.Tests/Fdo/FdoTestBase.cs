@@ -5,18 +5,15 @@ using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
-using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.IO;
 using Palaso.TestUtilities;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace LfMerge.Core.Tests.Fdo
 {

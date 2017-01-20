@@ -2,7 +2,6 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
-using LfMerge.Core;
 using NUnit.Framework;
 
 namespace LfMerge.Core.Tests

@@ -3,10 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.DataConverters.CanonicalSources
 {

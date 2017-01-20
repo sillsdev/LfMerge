@@ -10,7 +10,6 @@ using LfMerge.Core.LanguageForge.Infrastructure;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;

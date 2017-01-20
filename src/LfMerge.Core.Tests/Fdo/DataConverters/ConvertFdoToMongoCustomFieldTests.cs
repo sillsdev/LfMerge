@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using LfMerge.Core.DataConverters;
-using LfMerge.Core.LanguageForge.Config;
-using LfMerge.Core.Tests.Fdo;
 using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;

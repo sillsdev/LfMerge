@@ -2,11 +2,9 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters;
 using NUnit.Framework;
 using SIL.CoreImpl;
-using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.Core.Tests.Fdo.DataConverters

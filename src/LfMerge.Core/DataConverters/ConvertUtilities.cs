@@ -3,16 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
-using LfMerge.Core.Logging;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Application;
-using SIL.FieldWorks.FDO.DomainServices;
-using SIL.FieldWorks.FDO.Infrastructure;
 using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.Core.DataConverters

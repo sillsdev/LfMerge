@@ -2,7 +2,6 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using CommandLine;
-using LfMerge;
 
 namespace LfMerge.TestApp
 {

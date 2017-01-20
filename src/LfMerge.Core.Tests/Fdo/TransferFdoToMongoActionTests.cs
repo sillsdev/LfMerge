@@ -1,12 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Autofac;
 using NUnit.Framework;
-using LfMerge.Core;
-using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
-using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Tests;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using SIL.FieldWorks.FDO;
