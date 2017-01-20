@@ -307,11 +307,15 @@ namespace LfMerge.Core.Tests
 				Id = new ObjectId(),
 				InputSystems = new Dictionary<string, LfInputSystemRecord>() {
 					{"en", new LfInputSystemRecord {
-							Abbreviation = "en",
+							Abbreviation = "Eng",
 							Tag = "en",
 							LanguageName = "English",
 							IsRightToLeft = false } },
 					{"fr", new LfInputSystemRecord {
+							// this should probably be a three-letter abbreviation like Fre,
+							// but since our test data has the two letter abbreviation for this ws
+							// we have to stick with it so that we don't introduce an unwanted
+							// change.
 							Abbreviation = "fr",
 							Tag = "fr",
 							LanguageName = "French",
