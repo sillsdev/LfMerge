@@ -1,2 +1,5 @@
 trash/
 undo*
+*/.hg/*-message.txt
+*/.hg/cache/
+
