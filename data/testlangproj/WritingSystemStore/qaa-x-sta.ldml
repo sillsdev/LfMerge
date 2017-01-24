@@ -4,7 +4,7 @@
 		<version
 			number="" />
 		<generation
-			date="2016-05-05T07:15:06" />
+			date="2016-05-05T07:22:31" />
 		<language
 			type="qaa" />
 		<variant
@@ -31,6 +31,10 @@
 		<palaso2:knownKeyboards>
 			<palaso2:keyboard
 				layout="us"
+				locale="en-US"
+				os="Unix" />
+			<palaso2:keyboard
+				layout="English"
 				locale="en-US"
 				os="Unix" />
 		</palaso2:knownKeyboards>
