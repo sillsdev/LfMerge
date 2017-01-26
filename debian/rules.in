@@ -9,11 +9,11 @@ export BUILD = Release
 export MONO_PREFIX=/opt/mono-sil
 
 # Model version dependent DESTDIR
-DBDESTDIR     = debian/lfmerge-__DatabaseVersion__
+DBDESTDIR		= debian/lfmerge-__DatabaseVersion__
 # Common DESTDIR
-COMMONDESTDIR = debian/lfmerge
-LIB           = usr/lib/lfmerge/__DatabaseVersion__
-SHARE         = usr/share/lfmerge/__DatabaseVersion__
+COMMONDESTDIR	= debian/lfmerge
+LIB				= usr/lib/lfmerge/__DatabaseVersion__
+SHARE			= usr/share/lfmerge/__DatabaseVersion__
 
 %:
 	dh $@ --with=cli --parallel
@@ -63,12 +63,7 @@ override_dh_auto_install:
 	# Remove files that are also in lfmerge-fdo and unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
 		rm -f *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
-		rm -f Autofac.dll* BasicUtils.dll* COMInterfaces.dll* CoreImpl.dll* Db4objects.* FDO.dll* \
-			FixFwDataDll.dll* ICSharpCode.SharpZipLib.dll* icu.net.dll* L10NSharp.dll* \
-			Logos.Utility.dll* Microsoft.Practices.ServiceLocation.dll* Palaso.dll* Palaso.Lift.dll* \
-			protobuf-net.dll* PhonEnvValidator.dll* ScrUtilsInterfaces.dll* SharedScrUtils.dll* \
-			SilUtils.dll* StructureMap.dll* Tools.dll* XMLUtils.dll* && \
-		rm -f LfMergeAuxTool.exe*
+		rm -f FDO.dll* FixFwDataDll.dll*
 	# Install environ file
 	install -d $(DBDESTDIR)/$(SHARE)
 	install -m 644 environ $(DBDESTDIR)/$(SHARE)
@@ -103,6 +98,7 @@ override_dh_clideps:
 	PATH=$(MONO_PREFIX)/bin:$(PATH) \
 	dh_clideps internal-mono  -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
+		--exclude-moduleref=icuuc58.dll --exclude-moduleref=icuin58.dll \
 		--exclude-moduleref=icuuc57.dll --exclude-moduleref=icuin57.dll \
 		--exclude-moduleref=icuuc56.dll --exclude-moduleref=icuin56.dll \
 		--exclude-moduleref=icuuc55.dll --exclude-moduleref=icuin55.dll \
