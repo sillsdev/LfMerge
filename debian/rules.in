@@ -105,8 +105,11 @@ override_dh_clideps:
 		--exclude-moduleref=icuuc54.dll --exclude-moduleref=icuin54.dll \
 		--exclude-moduleref=icuuc52.dll --exclude-moduleref=icuin52.dll \
 		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll \
-		--exclude-moduleref=libhunspell \
-		--exclude-moduleref=libicuuc.so --exclude-moduleref=libicui18n.so
+		--exclude-moduleref=libicuuc.so --exclude-moduleref=libicui18n.so \
+		--exclude-moduleref=icu.net --exclude-moduleref=libdl.so \
+		--exclude-moduleref=libhunspell --exclude-moduleref=Autofac \
+		--exclude-moduleref=CommandLine --exclude-moduleref=NDesk.DBus \
+		--exclude-moduleref=INIFileParser --exclude-moduleref=Newtonsoft.Json
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
