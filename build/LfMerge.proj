@@ -140,6 +140,8 @@
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
 			Condition="'$(OS)'=='Unix'"/>
+		<Exec Command='bash -c "ln -sf ../Mercurial ."' WorkingDirectory="$(RootDir)/output"
+			Condition="'$(OS)'=='Unix'"/>
 		<CallTarget Targets="TestOnly"/>
 	</Target>
 
