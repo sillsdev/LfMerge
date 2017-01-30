@@ -321,6 +321,7 @@ namespace LfMerge.Core.Tests
 				LanguageCode = "fr",
 				ProjectCode = project.ProjectCode,
 				ProjectName = project.ProjectCode,
+				SendReceiveProjectIdentifier = null,
 				Config = sampleConfig
 			};
 		}
@@ -352,8 +353,9 @@ namespace LfMerge.Core.Tests
 	{
 		private readonly bool _projectExists;
 
-		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger, bool projectExists = true):
-			base(settings, logger)
+		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger,
+			MongoProjectRecordFactory projectRecordFactory, bool projectExists = true):
+			base(settings, logger, projectRecordFactory)
 		{
 			_projectExists = projectExists;
 		}
