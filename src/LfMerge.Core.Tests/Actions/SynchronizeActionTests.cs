@@ -146,7 +146,7 @@ namespace LfMerge.Core.Tests.Actions
 			// do it indirectly by re-cloning the repo from LD and checking the new clone.
 			_lfProject.FieldWorksProject.Dispose();
 			Directory.Delete(_lfProject.ProjectDir, true);
-			var ensureClone = new EnsureCloneAction(_env.Settings, _env.Logger);
+			var ensureClone = new EnsureCloneAction(_env.Settings, _env.Logger, _recordFactory);
 			ensureClone.Run(_lfProject);
 			return GetGlossFromFdo(testEntryGuid, expectedSensesCount);
 		}

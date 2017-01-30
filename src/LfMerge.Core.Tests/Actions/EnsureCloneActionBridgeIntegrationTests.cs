@@ -5,6 +5,7 @@ using Autofac;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
+using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
 using Palaso.TestUtilities;
@@ -25,8 +26,8 @@ namespace LfMerge.Core.Tests.Actions
 	{
 		private class EnsureCloneActionWithoutMongo: EnsureCloneAction
 		{
-			public EnsureCloneActionWithoutMongo(LfMergeSettings settings, ILogger logger)
-				: base(settings, logger)
+			public EnsureCloneActionWithoutMongo(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory factory)
+				: base(settings, logger, factory)
 			{
 			}
 
@@ -41,6 +42,7 @@ namespace LfMerge.Core.Tests.Actions
 		private LfMergeSettings _lDSettings;
 		private TemporaryFolder _languageDepotFolder;
 		private LanguageForgeProject _lfProject;
+		private MongoProjectRecordFactoryDouble _mongoProjectRecordFactory;
 		private EnsureCloneAction _EnsureCloneAction;
 		private const string TestLangProj = "testlangproj";
 
@@ -55,7 +57,8 @@ namespace LfMerge.Core.Tests.Actions
 				Path.Combine(_lDSettings.WebWorkDirectory, TestContext.CurrentContext.Test.Name, TestLangProj);
 			Directory.CreateDirectory(LanguageDepotMock.ProjectFolderPath);
 			_lfProject = LanguageForgeProject.Create(TestLangProj);
-			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger);
+			_mongoProjectRecordFactory = MainClass.Container.Resolve<LfMerge.Core.MongoConnector.MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
+			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger, _mongoProjectRecordFactory);
 			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 
