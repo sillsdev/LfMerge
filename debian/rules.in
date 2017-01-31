@@ -58,8 +58,15 @@ override_dh_auto_install:
 	install -m 644 Mercurial/mercurial/hgweb/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
 	install -m 644 Mercurial/mercurial/httpclient/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
 	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
-	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config
-	echo "fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py" >> $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
+	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
+	# wrong line endings, so we re-create the entire file
+	cat <<- __EOF__
+		[extensions]
+		eol=
+		hgext.graphlog=
+		convert=
+		fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py
+	__EOF__ > $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
 	# Remove files that are also in lfmerge-fdo and unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
 		rm -f *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
