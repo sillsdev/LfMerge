@@ -15,6 +15,15 @@ COMMONDESTDIR	= debian/lfmerge
 LIB				= usr/lib/lfmerge/__DatabaseVersion__
 SHARE			= usr/share/lfmerge/__DatabaseVersion__
 
+define MERCURIAL_INI
+[extensions]
+eol=
+hgext.graphlog=
+convert=
+fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py
+endef
+export MERCURIAL_INI
+
 %:
 	dh $@ --with=cli --parallel
 
@@ -60,13 +69,7 @@ override_dh_auto_install:
 	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
 	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
 	# wrong line endings, so we re-create the entire file
-	cat <<- __EOF__
-		[extensions]
-		eol=
-		hgext.graphlog=
-		convert=
-		fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py
-	__EOF__ > $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
+	echo "$$MERCURIAL_INI" > $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
 	# Remove files that are also in lfmerge-fdo and unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
 		rm -f *.Tests.dll* *.TestApp.exe* Palaso.TestUtilities.dll* nunit.framework.dll *Moq.dll && \
