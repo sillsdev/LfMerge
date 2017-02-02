@@ -4,6 +4,7 @@ using System;
 using Autofac;
 using Palaso.Network;
 using SIL.FieldWorks.FDO;
+using LfMerge.Core.Settings;
 
 namespace LfMerge.Core.Actions.Infrastructure
 {
@@ -11,6 +12,10 @@ namespace LfMerge.Core.Actions.Infrastructure
 	{
 		public virtual string GetSyncUri(ILfProject project)
 		{
+			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			if (!string.IsNullOrEmpty(settings.LanguageDepotRepoUri))
+				return settings.LanguageDepotRepoUri;
+
 			var uriBldr = new UriBuilder(project.LanguageDepotProjectUri);
 			uriBldr.UserName = "x";
 			uriBldr.Password = "x";

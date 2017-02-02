@@ -22,7 +22,7 @@ namespace LfMerge.Core.FieldWorks
 
 		public FwProject(LfMergeSettings settings, string database)
 		{
-			_project = new ProjectIdentifier(settings, database);
+			_project = new ProjectIdentifier(settings.FdoDirectorySettings, database);
 			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
 			Cache = TryGetFdoCache();
 			if (Cache != null)

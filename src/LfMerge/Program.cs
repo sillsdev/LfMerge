@@ -9,6 +9,7 @@ using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.MongoConnector;
+using LfMerge.Core.Settings;
 
 namespace LfMerge
 {
@@ -23,6 +24,9 @@ namespace LfMerge
 
 			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
 				MainClass.ModelVersion, string.Join(" ", args));
+
+			if (!string.IsNullOrEmpty(options.ConfigDir))
+				LfMergeSettings.ConfigDir = options.ConfigDir;
 
 			FwProject.AllowDataMigration = options.AllowDataMigration;
 
@@ -50,7 +54,7 @@ namespace LfMerge
 			if (!string.IsNullOrEmpty(differentModelVersion))
 			{
 				MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
-					differentModelVersion, false);
+					differentModelVersion, false, options.ConfigDir);
 			}
 
 			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);
