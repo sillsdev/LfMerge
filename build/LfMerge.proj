@@ -78,7 +78,6 @@
 		<Message Text="Build Complete"/>
 	</Target>
 
-
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
@@ -120,6 +119,7 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
+		<FileUpdate File="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../" ReplacementText="fixutf8=$(RootDir)/"/>
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
