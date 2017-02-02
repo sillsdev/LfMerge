@@ -1,5 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.Collections.Generic;
 using Autofac;
 using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
@@ -12,8 +14,6 @@ using Palaso.TestUtilities;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
-using System;
-using System.Collections.Generic;
 
 namespace LfMerge.Core.Tests.Fdo
 {
@@ -45,7 +45,7 @@ namespace LfMerge.Core.Tests.Fdo
 				languageForgeServerFolder: LanguageForgeFolder
 			);
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
-			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.DefaultProjectsDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.FdoDirectorySettings.DefaultProjectsDirectory);
 			lfProj = LanguageForgeProject.Create(testProjectCode);
 		}
 

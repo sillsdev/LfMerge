@@ -16,6 +16,7 @@ MongoDatabaseNamePrefix = sf_
 VerboseProgress = false
 PhpSourcePath = /var/www/languageforge.org/htdocs
 ";
+		// optional, usually not set: LanguageDepotRepoUri =
 	}
 }
 
