@@ -108,7 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
-    <Reference Include="FixFwDataDll, Version=8.3.2.0, Culture=neutral">
+    <Reference Include="FixFwDataDll">
       <HintPath>\usr\lib\lfmerge\7000070\FixFwDataDll.dll</HintPath>
     </Reference>
   </ItemGroup>
