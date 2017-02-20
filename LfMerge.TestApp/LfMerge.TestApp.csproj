@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{B514E195-C83F-4CC9-A9BF-7F5A31952AAF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LfMerge.TestApp</RootNamespace>
