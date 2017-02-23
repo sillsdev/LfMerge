@@ -45,15 +45,18 @@ namespace LfMerge.QueueManager
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
+						// Dequeue project before executing the action.
+						// This fixes https://trello.com/c/HwvpS6w1
+						// REVIEW: is there ever a situation where we'd not want to dequeue the
+						// project?
+						queue.DequeueProject(projectCode);
+
 						var projectPath = Path.Combine(settings.ProjectsDirectory,
 							projectCode, string.Format("{0}{1}", projectCode,
 								FdoFileHelper.ksFwDataXmlFileExtension));
 						var modelVersion = FwProject.GetModelVersion(projectPath);
 						MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
 							modelVersion, true);
-
-						// TODO: Verify actions complete before dequeuing
-						queue.DequeueProject(projectCode);
 					}
 				}
 			}
