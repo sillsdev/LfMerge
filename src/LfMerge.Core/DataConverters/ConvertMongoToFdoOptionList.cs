@@ -6,7 +6,6 @@ using System.Linq;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
-using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.DataConverters

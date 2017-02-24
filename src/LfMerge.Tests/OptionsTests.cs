@@ -2,8 +2,6 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using NUnit.Framework;
-using LfMerge.Core.Queues;
-using LfMerge.Core.Actions;
 
 namespace LfMerge.Tests
 {

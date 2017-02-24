@@ -13,7 +13,7 @@
 		<Depth
 			val="1" />
 		<DisplayOption
-			val="-1073741824" />
+			val="0" />
 		<IsClosed
 			val="False" />
 		<IsSorted
@@ -29,7 +29,7 @@
 				ws="en">Dialect Labels</AUni>
 		</Name>
 		<PreventChoiceAboveLevel
-			val="-1073741824" />
+			val="0" />
 		<PreventDuplicates
 			val="True" />
 		<PreventNodeChoices

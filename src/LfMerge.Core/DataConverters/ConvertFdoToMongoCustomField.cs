@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Infrastructure;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
@@ -22,6 +22,7 @@ namespace LfMerge.Core.DataConverters
 	public class ConvertFdoToMongoCustomField
 	{
 		private FdoCache cache;
+		private FwServiceLocatorCache servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
 
@@ -37,7 +38,7 @@ namespace LfMerge.Core.DataConverters
 			{CellarPropertyType.String, "Single_Line"},
 			{CellarPropertyType.MultiString, "MultiText"},
 			{CellarPropertyType.MultiUnicode, "MultiText"},
-			{CellarPropertyType.OwningAtom, "MultiParagraph"}, // Equivalent to MinObj
+			{CellarPropertyType.OwningAtomic, "MultiParagraph"}, // Equivalent to MinObj
 			{CellarPropertyType.ReferenceAtomic, "Single_ListRef"},
 
 			// The following custom fields currently aren't displayed in LF
@@ -48,33 +49,34 @@ namespace LfMerge.Core.DataConverters
 		private Dictionary<Guid, string> GuidToListCode;
 		private Dictionary<string, string> _fieldNameToFieldType;
 
-		public ConvertFdoToMongoCustomField(FdoCache cache, ILogger logger)
+		public ConvertFdoToMongoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
 		{
 			this.cache = cache;
-			fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			this.servLoc = serviceLocator;
+			this.fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
-			_wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
+			_wsEn = servLoc.WritingSystemFactory.GetWsFromStr("en");
 
 			GuidToListCode = new Dictionary<Guid, string>
 			{
-				{cache.LanguageProject.LexDbOA.DomainTypesOA.Guid, MagicStrings.LfOptionListCodeForAcademicDomainTypes},
-				{cache.LanguageProject.AnthroListOA.Guid, MagicStrings.LfOptionListCodeForAnthropologyCodes},
-				{cache.LanguageProject.PartsOfSpeechOA.Guid, MagicStrings.LfOptionListCodeForGrammaticalInfo},
-				{cache.LanguageProject.LocationsOA.Guid, MagicStrings.LfOptionListCodeForLocations},
-				{cache.LanguageProject.SemanticDomainListOA.Guid, MagicStrings.LfOptionListCodeForSemanticDomains},
-				{cache.LanguageProject.LexDbOA.SenseTypesOA.Guid, MagicStrings.LfOptionListCodeForSenseTypes},
-				{cache.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
-				{cache.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
+				{servLoc.LanguageProject.LexDbOA.DomainTypesOA.Guid, MagicStrings.LfOptionListCodeForAcademicDomainTypes},
+				{servLoc.LanguageProject.AnthroListOA.Guid, MagicStrings.LfOptionListCodeForAnthropologyCodes},
+				{servLoc.LanguageProject.PartsOfSpeechOA.Guid, MagicStrings.LfOptionListCodeForGrammaticalInfo},
+				{servLoc.LanguageProject.LocationsOA.Guid, MagicStrings.LfOptionListCodeForLocations},
+				{servLoc.LanguageProject.SemanticDomainListOA.Guid, MagicStrings.LfOptionListCodeForSemanticDomains},
+				{servLoc.LanguageProject.LexDbOA.SenseTypesOA.Guid, MagicStrings.LfOptionListCodeForSenseTypes},
+				{servLoc.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
+				{servLoc.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
 			_fieldNameToFieldType = new Dictionary<string, string>();
 		}
 
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
 		{
-			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, false);
+			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, lfCustomFieldTypes, false);
 		}
 
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, bool isTest)
+		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes, bool isTest)
 		{
 			var customFieldSpecs = new List<CustomFieldSpec>();
 			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
@@ -111,8 +113,8 @@ namespace LfMerge.Core.DataConverters
 				fdoMetaData.GetFields(LexExampleSentenceTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
 				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
 
-			var listRepo = cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>();
-			
+			var listRepo = servLoc.GetInstance<ICmPossibilityListRepository>();
+
 			foreach (int flid in customFieldIds)
 			{
 				Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
@@ -121,6 +123,95 @@ namespace LfMerge.Core.DataConverters
 			}
 
 			return lfCustomFieldLists;
+		}
+
+		/// <summary>
+		/// Write the custom field config into the provided dictionary
+		/// </summary>
+		/// <param name="lfCustomFieldConfig">Dictionary to receive LF custom field configuration settings (keys are field names
+		/// as found in LF, e.g. customField_entry_MyCustomField)</param>
+		public void WriteCustomFieldConfig(
+			Dictionary<string, LfConfigFieldBase> lfCustomFieldConfig,
+			Dictionary<string, string> lfCustomFieldTypes)
+		{
+			WriteCustomFieldConfigForOneFieldSourceType(LexEntryTags.kClassId, "entry",  lfCustomFieldConfig, lfCustomFieldTypes);
+			WriteCustomFieldConfigForOneFieldSourceType(LexSenseTags.kClassId, "senses", lfCustomFieldConfig, lfCustomFieldTypes);
+			WriteCustomFieldConfigForOneFieldSourceType(LexExampleSentenceTags.kClassId, "examples", lfCustomFieldConfig, lfCustomFieldTypes);
+		}
+
+		public void WriteCustomFieldConfigForOneFieldSourceType(
+			int classId,
+			string fieldSourceType,  // Can be either "entry", "senses", or "examples"
+			Dictionary<string, LfConfigFieldBase> lfCustomFieldConfig,
+			Dictionary<string, string> lfCustomFieldTypes
+		)
+		{
+			IEnumerable<int> customFieldIds =
+				fdoMetaData.GetFields(classId, false, (int)CellarPropertyTypeFilter.All)
+				.Where(flid => cache.GetIsCustomField(flid));
+			foreach (int flid in customFieldIds)
+			{
+				string label = fdoMetaData.GetFieldNameOrNull(flid);
+				if (label == null)
+					continue;
+				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, fieldSourceType);
+				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();  // TODO: Comment this one OUT. Bad design.
+				lfCustomFieldTypes[lfCustomFieldName] = fdoFieldType.ToString();
+				string lfCustomFieldType;
+				if (CellarPropertyTypeToLfCustomFieldType.TryGetValue(fdoFieldType, out lfCustomFieldType))
+				{
+					// Get custom field configuration info
+					LfConfigFieldBase fieldConfig = null;
+
+					if (lfCustomFieldType.EndsWith("ListRef"))
+					{
+						// List references, whether single or multi, need a list code
+						string listCode = GetParentListCode(flid);
+						fieldConfig = GetLfCustomFieldOptionListConfig(label, lfCustomFieldType, listCode);
+					}
+					else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtomic]) {
+						// Multiparagraphs don't need writing systems
+						fieldConfig = GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
+					}
+					else
+					{
+						// Single line or MultiText fields need writing systems
+						int fieldWs = fdoMetaData.GetFieldWs(flid);
+						// That's a "magic" ws, which we need to expand into a (list of) real writing system(s).
+#if FW8_COMPAT
+						var wsesForThisField = new List<IWritingSystem>();
+#else
+						var wsesForThisField = new List<CoreWritingSystemDefinition>();
+#endif
+						// GetWritingSystemList() in FW 8.3 is buggy and doesn't properly handle the kwsAnal and kwsVern cases, so we handle them here instead.
+						switch (fieldWs) {
+						case WritingSystemServices.kwsAnal:
+							wsesForThisField.Add(servLoc.LanguageProject.DefaultAnalysisWritingSystem);
+							break;
+						case WritingSystemServices.kwsVern:
+							wsesForThisField.Add(servLoc.LanguageProject.DefaultVernacularWritingSystem);
+							break;
+						default:
+							wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
+							break;
+						}
+#if FW8_COMPAT
+						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.Id);
+#else
+						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.LanguageTag);
+#endif
+						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
+						// is a single-line custom field, trim the WSes down to just the first one
+						if (lfCustomFieldType.StartsWith("Single"))
+							inputSystems = inputSystems.Take(1);
+						fieldConfig = GetLfCustomFieldMultiTextConfig(label, lfCustomFieldType, inputSystems.ToList());
+					}
+
+					if (fieldConfig != null)
+						lfCustomFieldConfig[lfCustomFieldName] = fieldConfig;
+				}
+			}
 		}
 
 		/// <summary>
@@ -150,11 +241,8 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="cmObj">Cm object.</param>
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
 		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
-		/// <param name="lfCustomFieldList">Dictionary to receive LF custom field configuration settings (keys are field names
-		/// as found in LF, e.g. customField_entry_MyCustomField)</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
-			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
-			Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+			IDictionary<string, ConvertFdoToMongoOptionList> listConverters)
 		{
 			if (cmObj == null) return null;
 
@@ -171,65 +259,7 @@ namespace LfMerge.Core.DataConverters
 				if (label == null)
 					return null;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, objectType);
-				BsonDocument bsonForThisField;
-				string lfCustomFieldType;
-				string listCode = string.Empty;
-				GetCustomFieldData(cmObj.Hvo, flid, objectType, listConverters,
-					out bsonForThisField, out lfCustomFieldType);
-
-				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();
-
-				if (!string.IsNullOrEmpty(lfCustomFieldType))
-				{
-					// Get custom field configuration info
-					if (lfCustomFieldType.EndsWith("ListRef"))
-					{
-						// List references, whether single or multi, need a list code
-						listCode = GetParentListCode(flid);
-						lfCustomFieldList[lfCustomFieldName] =
-							GetLfCustomFieldOptionListConfig(label, lfCustomFieldType, listCode);
-					}
-					else if (lfCustomFieldType == CellarPropertyTypeToLfCustomFieldType[CellarPropertyType.OwningAtom]) {
-						// Multiparagraphs don't need writing systems
-						// TODO: Or do they?
-						lfCustomFieldList[lfCustomFieldName] =
-							GetLfCustomFieldMultiParagraphConfig(label, lfCustomFieldType);
-					}
-					else
-					{
-						// Single line or MultiText fields need writing systems
-						int fieldWs = fdoMetaData.GetFieldWs(flid);
-#if FW8_COMPAT
-						List<IWritingSystem> wsesForThisField;
-#else
-						List<CoreWritingSystemDefinition> wsesForThisField;
-#endif
-						// GetWritingSystemList() in FW 8.3 is buggy and doesn't properly handle the kwsAnal and kwsVern cases, so we handle them here instead.
-						switch (fieldWs) {
-						case WritingSystemServices.kwsAnal:
-							wsesForThisField = new List<IWritingSystem> { cache.LangProject.DefaultAnalysisWritingSystem };
-							break;
-						case WritingSystemServices.kwsVern:
-							wsesForThisField = new List<IWritingSystem> { cache.LangProject.DefaultVernacularWritingSystem };
-							break;
-						default:
-							wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
-							break;
-						}
-#if FW8_COMPAT
-						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.Id);
-#else
-						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.LanguageTag);
-#endif
-						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
-						// is a single-line custom field, trim the WSes down to just the first one
-						if (lfCustomFieldType.StartsWith("Single"))
-							inputSystems = inputSystems.Take(1);
-						lfCustomFieldList[lfCustomFieldName] =
-							GetLfCustomFieldMultiTextConfig(label, lfCustomFieldType, inputSystems.ToList());
-					}
-				}
+				BsonDocument bsonForThisField = GetCustomFieldData(cmObj.Hvo, flid, objectType, listConverters);
 
 				if (bsonForThisField != null)
 				{
@@ -268,17 +298,17 @@ namespace LfMerge.Core.DataConverters
 					return result;
 				// If it wasn't in GuidToListCode, it's a custom field we haven't actually seen yet
 				ICmPossibilityList parentList;
-				if (cache.ServiceLocator.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
+				if (servLoc.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
 				{
 					if (parentList.Name != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
 						return result;
 					}
 					if (parentList.Abbreviation != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, cache.WritingSystemFactory);
+						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
@@ -310,13 +340,9 @@ namespace LfMerge.Core.DataConverters
 		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
 		/// </param>
 		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
-		/// <param name="customFieldType">output string of LF custom field type</param>
-		private void GetCustomFieldData(int hvo, int flid, string fieldSourceType,
-			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
-			out BsonDocument bsonForThisField, out string customFieldType)
+		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType,
+			IDictionary<string, ConvertFdoToMongoOptionList> listConverters)
 		{
-			bsonForThisField = null;
-			customFieldType = string.Empty;
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
@@ -360,7 +386,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.MultiUnicode:
 				ITsMultiString tss = data.get_MultiStringProp(hvo, flid);
 				if (tss != null && tss.StringCount > 0)
-					fieldValue = LfMultiText.FromMultiITsString(tss, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromMultiITsString(tss, servLoc.WritingSystemManager).AsBsonDocument();
 				break;
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
@@ -382,7 +408,7 @@ namespace LfMerge.Core.DataConverters
 				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					fieldValue = null;
 				else
-					fieldValue = LfMultiText.FromSingleITsString(iTsValue, cache.ServiceLocator.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromSingleITsString(iTsValue, servLoc.WritingSystemManager).AsBsonDocument();
 				break;
 			default:
 				fieldValue = null;
@@ -391,9 +417,8 @@ namespace LfMerge.Core.DataConverters
 				break;
 			}
 
-			CellarPropertyTypeToLfCustomFieldType.TryGetValue(fdoFieldType, out customFieldType);
 			if (fieldValue == null)
-				return;
+				return null;
 			else
 			{
 				var result = new BsonDocument();
@@ -402,7 +427,7 @@ namespace LfMerge.Core.DataConverters
 					result.Add("guid", fieldGuid, ((BsonArray)fieldGuid).Count > 0);
 				else
 					result.Add("guid", fieldGuid, fieldGuid != null);
-				bsonForThisField = result;
+				return result;
 			}
 		}
 
@@ -445,7 +470,6 @@ namespace LfMerge.Core.DataConverters
 
 		private LfConfigMultiParagraph GetLfCustomFieldMultiParagraphConfig(string label, string lfCustomFieldType)
 		{
-			// TODO: Might need to record input system
 			if (lfCustomFieldType == null)
 				return null;
 			return new LfConfigMultiParagraph {
@@ -485,7 +509,7 @@ namespace LfMerge.Core.DataConverters
 			referencedObjectGuids.Add(referencedObject.Guid);
 			if (referencedObject is IStText)
 				return ConvertUtilities.GetCustomStTextValues((IStText)referencedObject, flid,
-					cache.ServiceLocator.WritingSystemManager, cache.MetaDataCacheAccessor, cache.DefaultUserWs);
+					servLoc.WritingSystemManager, fdoMetaData, cache.DefaultUserWs);
 			else if (referencedObject is ICmPossibility)
 			{
 				//return GetCustomListValues((ICmPossibility)referencedObject, flid);

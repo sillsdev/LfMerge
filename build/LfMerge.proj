@@ -78,7 +78,6 @@
 		<Message Text="Build Complete"/>
 	</Target>
 
-
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
@@ -120,6 +119,7 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
+		<FileUpdate File="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../" ReplacementText="fixutf8=$(RootDir)/"/>
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
@@ -139,6 +139,8 @@
 				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/$(DbModelVersion)/%(FileName)%(Extension)')" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
+			Condition="'$(OS)'=='Unix'"/>
+		<Exec Command='bash -c "ln -sf ../Mercurial ."' WorkingDirectory="$(RootDir)/output"
 			Condition="'$(OS)'=='Unix'"/>
 		<CallTarget Targets="TestOnly"/>
 	</Target>

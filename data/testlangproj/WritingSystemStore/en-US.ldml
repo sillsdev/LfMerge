@@ -4,7 +4,7 @@
 		<version
 			number="" />
 		<generation
-			date="2016-06-22T15:44:18" />
+			date="2016-10-28T13:51:30" />
 		<language
 			type="en" />
 		<territory
@@ -41,6 +41,10 @@
 				layout="English"
 				locale="en-US"
 				os="Unix" />
+			<palaso2:keyboard
+				layout="US"
+				locale="en-US"
+				os="Win32NT" />
 		</palaso2:knownKeyboards>
 		<palaso2:version
 			value="2" />

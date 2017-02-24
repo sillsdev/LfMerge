@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;

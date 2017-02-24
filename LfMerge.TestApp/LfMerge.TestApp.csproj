@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{B514E195-C83F-4CC9-A9BF-7F5A31952AAF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LfMerge.TestApp</RootNamespace>
@@ -30,13 +31,49 @@
     <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
+    <DatabaseVersion>7000068</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\output\Debug\7000068</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Commandlineparameters>-p hickenplatt</Commandlineparameters>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
+    <DatabaseVersion>7000069</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\output\Debug\7000069</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Commandlineparameters>-p hickenplatt</Commandlineparameters>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
+    <DatabaseVersion>7000070</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\output\Debug\7000070</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Commandlineparameters>-p hickenplatt</Commandlineparameters>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="FDO">
-      <Package>lfmerge-fdo</Package>
     </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
@@ -52,6 +89,21 @@
     </Reference>
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
+    <Reference Include="FDO">
+      <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
+    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
+      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
+    <Reference Include="FDO">
+      <HintPath>\usr\lib\lfmerge\7000068\FDO.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

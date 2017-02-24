@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;

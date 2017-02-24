@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using SIL.CoreImpl;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.Common.COMInterfaces;
 using MongoDB.Bson;
@@ -131,6 +130,9 @@ namespace LfMerge.Core.LanguageForge.Model
 
 		public void WriteToFdoMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
 		{
+			if (dest == null)
+				return;
+			HashSet<int> destWsIdsToClear = new HashSet<int>(dest.AvailableWritingSystemIds);
 			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{
 				int wsId = wsManager.GetWsFromStr(kv.Key);
@@ -138,6 +140,11 @@ namespace LfMerge.Core.LanguageForge.Model
 				string value = kv.Value.Value;
 				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToFdoTsStrings.SpanStrToTsString(value, wsId, wsManager);
 				dest.set_String(wsId, tss);
+				destWsIdsToClear.Remove(wsId);
+			}
+			foreach (int wsId in destWsIdsToClear)
+			{
+				dest.set_String(wsId, string.Empty);
 			}
 		}
 

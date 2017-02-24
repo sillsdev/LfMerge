@@ -33,9 +33,9 @@ namespace LfMerge.Core.Tests
 			var sut = new LfMergeSettingsAccessor();
 			sut.Initialize(Path.GetTempPath(), "projects", "templates");
 
-			Assert.That(sut.ProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
-			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
-			Assert.That(sut.TemplateDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "templates")));
+			Assert.That(sut.FdoDirectorySettings.ProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
+			Assert.That(sut.FdoDirectorySettings.DefaultProjectsDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "projects")));
+			Assert.That(sut.FdoDirectorySettings.TemplateDirectory, Is.EqualTo(Path.Combine(Path.GetTempPath(), "templates")));
 		}
 
 		[Test]
@@ -44,9 +44,9 @@ namespace LfMerge.Core.Tests
 			var sut = new LfMergeSettingsAccessor();
 			sut.Initialize(Path.GetTempPath(), "/projects", "/foo/templates");
 
-			Assert.That(sut.ProjectsDirectory, Is.EqualTo("/projects"));
-			Assert.That(sut.DefaultProjectsDirectory, Is.EqualTo("/projects"));
-			Assert.That(sut.TemplateDirectory, Is.EqualTo("/foo/templates"));
+			Assert.That(sut.FdoDirectorySettings.ProjectsDirectory, Is.EqualTo("/projects"));
+			Assert.That(sut.FdoDirectorySettings.DefaultProjectsDirectory, Is.EqualTo("/projects"));
+			Assert.That(sut.FdoDirectorySettings.TemplateDirectory, Is.EqualTo("/foo/templates"));
 		}
 
 		[Test]

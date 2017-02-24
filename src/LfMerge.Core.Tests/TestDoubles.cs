@@ -13,7 +13,6 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
-using LfMerge.Core.Tests.Actions;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
@@ -308,11 +307,15 @@ namespace LfMerge.Core.Tests
 				Id = new ObjectId(),
 				InputSystems = new Dictionary<string, LfInputSystemRecord>() {
 					{"en", new LfInputSystemRecord {
-							Abbreviation = "en",
+							Abbreviation = "Eng",
 							Tag = "en",
 							LanguageName = "English",
 							IsRightToLeft = false } },
 					{"fr", new LfInputSystemRecord {
+							// this should probably be a three-letter abbreviation like Fre,
+							// but since our test data has the two letter abbreviation for this ws
+							// we have to stick with it so that we don't introduce an unwanted
+							// change.
 							Abbreviation = "fr",
 							Tag = "fr",
 							LanguageName = "French",
@@ -322,6 +325,7 @@ namespace LfMerge.Core.Tests
 				LanguageCode = "fr",
 				ProjectCode = project.ProjectCode,
 				ProjectName = project.ProjectCode,
+				SendReceiveProjectIdentifier = null,
 				Config = sampleConfig
 			};
 		}
@@ -353,8 +357,9 @@ namespace LfMerge.Core.Tests
 	{
 		private readonly bool _projectExists;
 
-		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger, bool projectExists = true):
-			base(settings, logger)
+		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger,
+			MongoProjectRecordFactory projectRecordFactory, bool projectExists = true):
+			base(settings, logger, projectRecordFactory)
 		{
 			_projectExists = projectExists;
 		}

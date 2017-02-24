@@ -191,11 +191,6 @@
 			<ownseq
 				class="LexEntryRef"
 				guid="5d6cf94d-9e10-403a-93fe-6db7c65ed6e1">
-				<ComplexEntryTypes>
-					<refseq
-						guid="fec038ed-6a8c-4fa5-bc96-a4f515a98c50"
-						t="r" />
-				</ComplexEntryTypes>
 				<ComponentLexemes>
 					<refseq
 						guid="1a705846-a814-4289-8594-4b874faca6cc"
@@ -205,6 +200,11 @@
 					val="0" />
 				<RefType
 					val="0" />
+				<VariantEntryTypes>
+					<refseq
+						guid="3942addb-99fd-43e9-ab7d-99025ceb0d4e"
+						t="r" />
+				</VariantEntryTypes>
 			</ownseq>
 		</EntryRefs>
 		<HomographNumber

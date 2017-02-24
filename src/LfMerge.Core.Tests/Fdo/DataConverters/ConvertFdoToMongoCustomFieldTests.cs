@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using LfMerge.Core.DataConverters;
-using LfMerge.Core.LanguageForge.Config;
-using LfMerge.Core.Tests.Fdo;
 using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
@@ -17,17 +15,15 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldForThisCmObject_ShouldGetSingleLineAll()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
-			var cache = lfProject.FieldWorksProject.Cache;
-			var converter = new ConvertFdoToMongoCustomField(cache,
+			var lfProject = _lfProj;
+			var converter = new ConvertFdoToMongoCustomField(_cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 
 			// Exercise
-			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters, _lfCustomFieldList);
+			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
 
 			// Verify English and french values
 			Assert.That(customDataDocument[0]["customField_entry_Cust_Single_Line_All"].AsBsonDocument.GetElement(0).Value["value"].ToString(),
@@ -40,18 +36,17 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldForThisCmObject_ShouldGetMultiListRef()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
-			var cache = lfProject.FieldWorksProject.Cache;
-			var converter = new ConvertFdoToMongoCustomField(cache,
+			var lfProject = _lfProj;
+			var cache = _cache;
+			var converter = new ConvertFdoToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
 			Assert.That(entry, Is.Not.Null);
 
 			// Exercise
-			Dictionary<string, LfConfigFieldBase>_lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			ILexSense[] senses = entry.SensesOS.ToArray();
-			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters, _lfCustomFieldList);
+			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters);
 
 			// Verify.  (Note, in the fwdata file, the custom item labels are in reverse order)
 			Assert.That(customDataDocument[0].AsBsonDocument["customField_senses_Cust_Multi_ListRef"]["values"][1].ToString(),
@@ -64,18 +59,16 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		public void GetCustomFieldsForThisCmObject_ShouldGetCustomFieldSettings()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
-			var cache = lfProject.FieldWorksProject.Cache;
+			var lfProject = _lfProj;
+			var cache = _cache;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
 			Assert.That(entry, Is.Not.Null);
-			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache,
+			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 
 			// Exercise
-			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry",
-				_listConverters, lfCustomFieldList);
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
 
 			// Verify
 			var expectedCustomFieldNames = new List<string>

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using SIL.FieldWorks.FDO;
-using System;
-using System.Collections.Generic;
 
 namespace LfMerge.Core.DataConverters
 {

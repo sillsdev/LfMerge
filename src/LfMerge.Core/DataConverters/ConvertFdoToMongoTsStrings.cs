@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
 using SIL.CoreImpl;
 using System;
 using System.Collections.Generic;
