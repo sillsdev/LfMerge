@@ -1,0 +1,15 @@
+mode: ContinuousDeployment
+next-version: 1.0
+branches:
+  live:
+    mode: ContinuousDelivery
+    tag:
+    regex: live
+  qa:
+    mode: ContinuousDelivery
+    tag: beta
+    regex: qa
+  master:
+    tag: alpha
+ignore:
+  sha: []
