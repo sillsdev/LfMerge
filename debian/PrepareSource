@@ -16,7 +16,7 @@ fi
 cd "$(dirname $0)"
 
 AllLfMergeVersions=$(for ((i=$MinDbVersion; i<=$MaxDbVersion; i++)); do \
-		echo -n "lfmerge-$i,"; \
+		echo -n "lfmerge-$i (>= \${binary:Version}),"; \
 	done)
 
 cpp -D__DatabaseVersion__="$CurDbVersion" -D__MaxDbVersion__="$MaxDbVersion" \
