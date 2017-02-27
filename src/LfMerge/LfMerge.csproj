@@ -110,7 +110,7 @@
     <Compile Include="Options.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+  <Import Project="..\..\packages\GitVersionTask.4.0.1\Build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.1\Build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
