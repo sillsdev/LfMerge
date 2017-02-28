@@ -3,12 +3,13 @@ next-version: 1.0
 branches:
   live:
     tag:
-    regex: live
+    regex: (origin/)?live
     is-mainline: true
   qa:
     tag: beta
-    regex: qa
+    regex: (origin/)?qa
   master:
     tag: alpha
+    regex: (origin/)?master
 ignore:
   sha: []

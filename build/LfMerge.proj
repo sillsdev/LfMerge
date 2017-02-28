@@ -87,6 +87,7 @@
 		<CreateProperty Value="~$(PreReleaseLabel)-$(PreReleaseNumber)" Condition="'$(PreReleaseLabel)' != ''">
 			<Output TaskParameter="Value" PropertyName="PreReleaseTag"/>
 		</CreateProperty>
+		<Message Text="Building package version $(MajorMinorPatch)$(PreReleaseTag)"/>
 		<WriteLinesToFile File="$(RootDir)/package-version" Overwrite="true"
 			Lines="export PackageVersion=$(MajorMinorPatch)$(PreReleaseTag)" />
 	</Target>
