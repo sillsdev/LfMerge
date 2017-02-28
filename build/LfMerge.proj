@@ -11,7 +11,6 @@
 	<UsingTask TaskName="NUnitTeamCity"
 		AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll"
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
-	<UsingTask TaskName="GetVersion" AssemblyFile="$(RootDir)/packages/GitVersionTask.4.0.0-beta0009/build/GitVersionTask.dll" />
 
 	<Import Project="NuGet.targets"/>
 
@@ -79,17 +78,6 @@
 	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
-		<GetVersion SolutionDirectory="$(RootDir)">
-			<Output TaskParameter="MajorMinorPatch" PropertyName="MajorMinorPatch"/>
-			<Output TaskParameter="PreReleaseLabel" PropertyName="PreReleaseLabel"/>
-			<Output TaskParameter="PreReleaseNumber" PropertyName="PreReleaseNumber"/>
-		</GetVersion>
-		<CreateProperty Value="~$(PreReleaseLabel)-$(PreReleaseNumber)" Condition="'$(PreReleaseLabel)' != ''">
-			<Output TaskParameter="Value" PropertyName="PreReleaseTag"/>
-		</CreateProperty>
-		<Message Text="Building package version $(MajorMinorPatch)$(PreReleaseTag)"/>
-		<WriteLinesToFile File="$(RootDir)/package-version" Overwrite="true"
-			Lines="export PackageVersion=$(MajorMinorPatch)$(PreReleaseTag)" />
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
