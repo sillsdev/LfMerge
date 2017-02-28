@@ -1,14 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTarget="Test">
 	<PropertyGroup>
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
-		<BUILD_NUMBER Condition="'$(BUILD_NUMBER)'==''">1.2.3.4</BUILD_NUMBER>
-		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies). -->
-		<Version>0.1</Version>
 	</PropertyGroup>
 
-	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnitTeamCity"
@@ -17,6 +11,8 @@
 	<UsingTask TaskName="NUnitTeamCity"
 		AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll"
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
+	<UsingTask TaskName="GetVersion" AssemblyFile="$(RootDir)/packages/GitVersionTask.4.0.0-beta0011/build/GitVersionTask.dll" />
+	<UsingTask TaskName="WriteVersionInfoToBuildLog" AssemblyFile="$(RootDir)/packages/GitVersionTask.4.0.0-beta0011/build/GitVersionTask.dll" />
 
 	<Import Project="NuGet.targets"/>
 
@@ -40,40 +36,8 @@
 		</CreateProperty>
 	</Target>
 
-	<Target Name="VersionNumbers">
-		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
-		<Message Text="RootDir=$(RootDir)"/>
-
-		<Split Input="$(BUILD_NUMBER)" Delimiter="." OutputSubString="2">
-			<Output TaskParameter="ReturnValue" PropertyName="BuildCounter" />
-		</Split>
-
-		<Message Text="BuildCounter: $(BuildCounter)" Importance="high"/>
-
-		<CreateProperty Value="$(Version).$(BuildCounter).0">
-			<Output PropertyName="FileVersion" TaskParameter="Value"/>
-		</CreateProperty>
-
-		<Message Text="Version: $(FileVersion)" Importance="high"/>
-	</Target>
-
-	<ItemGroup>
-		<AssemblyInfoFiles Include="$(RootDir)/**/AssemblyInfo.cs"/>
-	</ItemGroup>
-
-	<Target Name="SetAssemblyVersion" DependsOnTargets="VersionNumbers">
-	  <StampAssemblies Version="$(Version).0.0" FileVersion="$(FileVersion)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
-	</Target>
-
-	<PropertyGroup>
-		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
-	</PropertyGroup>
-
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
-		<!-- SetAssemblyVersion has problems on TC with mono 4.0.
-		<CallTarget Targets="SetAssemblyVersion"/>
-		-->
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
 	</Target>
@@ -116,6 +80,16 @@
 	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
+		<GetVersion SolutionDirectory="$(RootDir)">
+			<Output TaskParameter="MajorMinorPatch" PropertyName="MajorMinorPatch"/>
+			<Output TaskParameter="PreReleaseLabel" PropertyName="PreReleaseLabel"/>
+			<Output TaskParameter="PreReleaseNumber" PropertyName="PreReleaseNumber"/>
+		</GetVersion>
+		<CreateProperty Value="~$(PreReleaseLabel)-$(PreReleaseNumber)" Condition="'$(PreReleaseLabel)' != ''">
+			<Output TaskParameter="Value" PropertyName="PreReleaseTag"/>
+		</CreateProperty>
+		<WriteLinesToFile File="$(RootDir)/package-version" Overwrite="true"
+			Lines="export PackageVersion=$(MajorMinorPatch)$(PreReleaseTag)" />
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">

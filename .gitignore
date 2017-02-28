@@ -15,6 +15,7 @@ debian/changelog
 debian/control
 debian/rules
 _ReSharper.LfMerge
+package-version
 *.suo
 *.user
 *.pdb

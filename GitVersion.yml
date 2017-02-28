@@ -1,12 +1,11 @@
-mode: ContinuousDeployment
+mode: Mainline
 next-version: 1.0
 branches:
   live:
-    mode: ContinuousDelivery
     tag:
     regex: live
+    is-mainline: true
   qa:
-    mode: ContinuousDelivery
     tag: beta
     regex: qa
   master:
