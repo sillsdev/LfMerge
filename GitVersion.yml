@@ -6,9 +6,11 @@ branches:
     regex: (origin/)?live
     is-mainline: true
   qa:
+    mode: ContinuousDeployment
     tag: beta
     regex: (origin/)?qa
   master:
+    mode: ContinuousDeployment
     tag: alpha
     regex: (origin/)?master
 ignore:
