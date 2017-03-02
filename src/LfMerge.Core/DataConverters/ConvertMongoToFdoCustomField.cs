@@ -69,7 +69,7 @@ namespace LfMerge.Core.DataConverters
 			List<Guid> fieldGuids = new List<Guid>();
 			if (guidOrGuids == null || guidOrGuids == BsonNull.Value)
 			{
-				fieldGuids.Add(Guid.Empty);
+				// Leave fieldGuids as an empty list
 			}
 			else
 			{
@@ -179,9 +179,9 @@ namespace LfMerge.Core.DataConverters
 				}
 
 			case CellarPropertyType.ReferenceAtomic:
-				if (fieldGuids.First() != Guid.Empty)
+				if (fieldGuids.FirstOrDefault() != Guid.Empty)
 				{
-					int referencedHvo = data.get_ObjFromGuid(fieldGuids.First());
+					int referencedHvo = data.get_ObjFromGuid(fieldGuids.FirstOrDefault());
 					int oldHvo = data.get_ObjectProp(hvo, flid);
 					if (referencedHvo == oldHvo)
 						return false;
@@ -246,11 +246,17 @@ namespace LfMerge.Core.DataConverters
 
 					// Step 1: Check if any of the fieldGuids is Guid.Empty, which would indicate a brand-new object that wasn't in FDO
 					List<string> fieldData = valueAsStringArray.Values;
+					while (fieldGuids.Count < valueAsStringArray.Values.Count)
+					{
+						fieldGuids.Add(Guid.Empty); // Ensure the Zip can run all the way through
+					}
 					IEnumerable<ICmPossibility> fieldObjs = fieldGuids.Zip<Guid, string, ICmPossibility>(fieldData, (thisGuid, thisData) =>
 						{
 							ICmPossibility newPoss;
 							if (thisGuid == default(Guid)) {
 								newPoss = ((ICmPossibilityList)parentList).FindOrCreatePossibility(thisData, fieldWs);
+								// TODO: If this is a new possibility, then we need to populate it with ALL the corresponding data from LF,
+								// which we don't necessarily have at this point. Need to make that a separate step in the Send/Receive.
 								return newPoss;
 							}
 							else {
