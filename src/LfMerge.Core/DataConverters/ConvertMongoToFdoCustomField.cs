@@ -222,13 +222,17 @@ namespace LfMerge.Core.DataConverters
 				{
 					if (value == null || value == BsonNull.Value)
 					{
-						// FDO writes multi-references if their list is empty, but not if it's null
-						int oldValue = data.get_ObjectProp(hvo, flid);
-						if (oldValue == FdoCache.kNullHvo)
+						// Can't write null to a collection or sequence in FDO; it's forbidden. So data.SetObjProp(hvo, flid, FdoCache.kNullHvo) will not work.
+						// Instead, we delete all items from the existing collection or sequence, and thus store an empty coll/seq in FDO.
+						int oldSize = data.get_VecSize(hvo, flid);
+						if (oldSize == 0)
+						{
+							// It was already empty, so leave it unchanged so we don't cause unnecessary changes in the .fwdata XML (and unnecessary Mercurial commits).
 							return false;
+						}
 						else
 						{
-							data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
+							data.Replace(hvo, flid, 0, oldSize, null, 0); // This is how you set an empty array
 							return true;
 						}
 					}
@@ -260,6 +264,12 @@ namespace LfMerge.Core.DataConverters
 					// Following logic inspired by XmlImportData.CopyCustomFieldData in FieldWorks source
 					int[] oldHvosArray = data.VecProp(hvo, flid);
 					int[] newHvosArray = fieldObjs.Select(poss => poss.Hvo).ToArray();
+					// Shortcut check
+					if (oldHvosArray.SequenceEqual(newHvosArray))
+					{
+						// Nothing to do, so return now so that we don't cause unnecessary changes and commits in Mercurial
+						return false;
+					}
 					HashSet<int> newHvos = new HashSet<int>(newHvosArray);
 					HashSet<int> combinedHvos = new HashSet<int>();
 					// Loop backwards so deleting items won't mess up indices of subsequent deletions
@@ -280,17 +290,6 @@ namespace LfMerge.Core.DataConverters
 						// This item was added in the new list
 						data.Replace(hvo, flid, combinedHvos.Count, combinedHvos.Count, new int[] { newHvo }, 1);
 						combinedHvos.Add(newHvo);
-					}
-					// Now (and not before), replace an empty list with null in the custom field value
-					if (data.VecProp(hvo, flid).Length == 0)
-					{
-						if (data.get_ObjectProp(hvo, flid) == FdoCache.kNullHvo)
-							return false;
-						else
-						{
-							data.SetObjProp(hvo, flid, FdoCache.kNullHvo);
-							return true;
-						}
 					}
 					return true;
 				}
