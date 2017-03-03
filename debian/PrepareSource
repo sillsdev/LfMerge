@@ -13,10 +13,12 @@ if [ "$CurDbVersion" == "" ]; then
 	CurDbVersion=$MaxDbVersion
 fi
 
+PackageVersion=${PackageVersion:-0.0.1}
+
 cd "$(dirname $0)"
 
 AllLfMergeVersions=$(for ((i=$MinDbVersion; i<=$MaxDbVersion; i++)); do \
-		echo -n "lfmerge-$i,"; \
+		echo -n "lfmerge-$i (>= ${PackageVersion}),"; \
 	done)
 
 cpp -D__DatabaseVersion__="$CurDbVersion" -D__MaxDbVersion__="$MaxDbVersion" \

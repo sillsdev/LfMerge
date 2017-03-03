@@ -15,6 +15,7 @@ debian/changelog
 debian/control
 debian/rules
 _ReSharper.LfMerge
+gitversion.properties
 *.suo
 *.user
 *.pdb
