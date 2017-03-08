@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{FF82CEC0-353A-4E79-AB7E-6AFEF1F15EC2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -54,6 +54,45 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
+    <DatabaseVersion>7000068</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000068</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000068</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
+    <DatabaseVersion>7000069</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000069</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000069</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
+    <DatabaseVersion>7000070</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000070</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000070</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
@@ -68,20 +107,19 @@
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
-      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
+    <Reference Include="FixFwDataDll">
+      <HintPath>\usr\lib\lfmerge\7000070\FixFwDataDll.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
     <Reference Include="FixFwDataDll, Version=8.3.1.0, Culture=neutral">
       <HintPath>\usr\lib\lfmerge\7000069\FixFwDataDll.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
     <Reference Include="FixFwDataDll">
-      <Package>lfmerge-fdo-7000068</Package>
+      <HintPath>\usr\lib\lfmerge\7000068\FixFwDataDll.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

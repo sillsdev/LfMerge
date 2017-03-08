@@ -10,6 +10,7 @@
 *.ts   whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 *.htm* whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 *.tmx  whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
+GitVersion.yml whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 
 # Don't check (nor fix) whitespace for generated files
 *.csproj -whitespace

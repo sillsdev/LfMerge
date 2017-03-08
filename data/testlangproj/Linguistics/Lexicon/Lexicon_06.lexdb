@@ -261,11 +261,6 @@
 			<ownseq
 				class="LexEntryRef"
 				guid="e08eb40e-64c1-4a86-a0e0-c885fb0c8724">
-				<ComplexEntryTypes>
-					<refseq
-						guid="fec038ed-6a8c-4fa5-bc96-a4f515a98c50"
-						t="r" />
-				</ComplexEntryTypes>
 				<ComponentLexemes>
 					<refseq
 						guid="1a705846-a814-4289-8594-4b874faca6cc"

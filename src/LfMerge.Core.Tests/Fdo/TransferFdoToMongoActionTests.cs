@@ -1,12 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Autofac;
 using NUnit.Framework;
-using LfMerge.Core;
-using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
-using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Tests;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using SIL.FieldWorks.FDO;
@@ -49,7 +44,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_IsInitialClone_ShouldPopulateMongoInputSystems()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			lfProject.IsInitialClone = true;
 			Dictionary<string, LfInputSystemRecord> lfWsList = _conn.GetInputSystems(lfProject);
 			Assert.That(lfWsList.Count, Is.EqualTo(0));
@@ -83,7 +78,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_IsInitialClone_ShouldUpdateDates()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			lfProject.IsInitialClone = true;
 
 			// Exercise
@@ -106,7 +101,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_NoDataChanged_ShouldUpdateLexemes()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
@@ -126,7 +121,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_NoDataChanged_ShouldUpdatePictures()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			int originalNumPictures = receivedData.Count(e => ((e.Senses.Count > 0) && (e.Senses[0].Pictures.Count > 0)));
 			Assert.That(originalNumPictures, Is.EqualTo(0));
@@ -150,7 +145,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_NoDataChanged_ShouldUpdateCustomFieldConfig()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 
 			// Exercise
 			sutFdoToMongo.Run(lfProject);
@@ -168,7 +163,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithEmptyMongoGrammar_ShouldPopulateMongoGrammarFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			LfOptionList lfGrammar = _conn.GetLfOptionLists()
 				.FirstOrDefault(optionList => optionList.Code == MagicStrings.LfOptionListCodeForGrammaticalInfo);
 			Assert.That(lfGrammar, Is.Null);
@@ -188,7 +183,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithGuids_ShouldReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			_conn.UpdateMockOptionList(lfGrammar);
@@ -208,7 +203,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithNoGuids_ShouldStillReplaceItemsFromLfGrammarWithItemsFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			int initialGrammarItemCount = 10;
 			LfOptionList lfGrammar = CreateLfGrammarWith(DefaultGrammarItems(initialGrammarItemCount));
 			foreach (LfOptionListItem item in lfGrammar.Items)
@@ -232,7 +227,7 @@ namespace LfMerge.Core.Tests.Fdo
 		public void Action_WithPreviousMongoGrammarWithMatchingGuids_ShouldBeUpdatedFromFdoGrammar()
 		{
 			// Setup
-			var lfProject = LanguageForgeProject.Create(TestProjectCode);
+			var lfProject = _lfProj;
 			FdoCache cache = lfProject.FieldWorksProject.Cache;
 			int wsEn = cache.WritingSystemFactory.GetWsFromStr("en");
 			var converter = new ConvertFdoToMongoOptionList(null, wsEn,

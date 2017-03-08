@@ -13,7 +13,7 @@ using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Settings
 {
-	public class LfMergeSettings : IFdoDirectories
+	public class LfMergeSettings
 	{
 		public static string ConfigDir { get; set; }
 
@@ -29,6 +29,8 @@ namespace LfMerge.Core.Settings
 
 		public LfMergeSettings()
 		{
+			FdoDirectorySettings = new FdoDirectories();
+
 			// Save parsed config for easier persisting in SaveSettings()
 			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile);
 			Initialize(ParsedConfig);
@@ -60,6 +62,8 @@ namespace LfMerge.Core.Settings
 			SetAllMembers(baseDir, webworkDir, templatesDir, mongoHostname, mongoPortAsInt,
 				mongoDatabaseNamePrefix, mongoMainDatabaseName, verboseProgress, phpSourcePath);
 
+			LanguageDepotRepoUri = main["LanguageDepotRepoUri"]; // optional
+
 			// TODO: Should this CreateDirectories() call live somewhere else?
 			Queue.CreateQueueDirectories(this);
 		}
@@ -70,8 +74,8 @@ namespace LfMerge.Core.Settings
 			string mongoHostname, int mongoPort, string mongoDatabaseNamePrefix,
 			string mongoMainDatabaseName, string verboseProgress, string phpSourcePath)
 		{
-			ProjectsDirectory = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir);
-			TemplateDirectory = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir);
+			FdoDirectorySettings.SetProjectsDirectory(Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir));
+			FdoDirectorySettings.SetTemplateDirectory(Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir));
 			StateDirectory = Path.Combine(baseDir, "state");
 
 			CommitWhenDone = true;
@@ -98,6 +102,8 @@ namespace LfMerge.Core.Settings
 
 		public string PhpSourcePath { get; protected set; }
 
+		public string LanguageDepotRepoUri { get; protected set; }
+
 		#region Equality and GetHashCode
 
 		public override bool Equals(object obj)
@@ -107,15 +113,15 @@ namespace LfMerge.Core.Settings
 				return false;
 			bool ret =
 				other.CommitWhenDone == CommitWhenDone &&
-				other.DefaultProjectsDirectory == DefaultProjectsDirectory &&
+				other.FdoDirectorySettings.DefaultProjectsDirectory == FdoDirectorySettings.DefaultProjectsDirectory &&
 				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
 				other.MongoDbHostName == MongoDbHostName &&
 				other.MongoDbPort == MongoDbPort &&
 				other.MongoMainDatabaseName == MongoMainDatabaseName &&
-				other.ProjectsDirectory == ProjectsDirectory &&
+				other.FdoDirectorySettings.ProjectsDirectory == FdoDirectorySettings.ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
-				other.TemplateDirectory == TemplateDirectory &&
+				other.FdoDirectorySettings.TemplateDirectory == FdoDirectorySettings.TemplateDirectory &&
 				other.VerboseProgress == VerboseProgress &&
 				other.WebWorkDirectory == WebWorkDirectory;
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
@@ -128,15 +134,15 @@ namespace LfMerge.Core.Settings
 		public override int GetHashCode()
 		{
 			var hash = CommitWhenDone.GetHashCode() ^
-				DefaultProjectsDirectory.GetHashCode() ^
+				FdoDirectorySettings.DefaultProjectsDirectory.GetHashCode() ^
 				MongoDatabaseNamePrefix.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^
 				MongoDbHostName.GetHashCode() ^
 				MongoDbPort.GetHashCode() ^
 				MongoMainDatabaseName.GetHashCode() ^
-				ProjectsDirectory.GetHashCode() ^
+				FdoDirectorySettings.ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^
-				TemplateDirectory.GetHashCode() ^
+				FdoDirectorySettings.TemplateDirectory.GetHashCode() ^
 				VerboseProgress.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
@@ -150,17 +156,32 @@ namespace LfMerge.Core.Settings
 
 		#endregion
 
-		#region IFdoDirectories implementation
+		public FdoDirectories FdoDirectorySettings { get; private set; }
 
-		public string ProjectsDirectory { get; private set; }
+		public class FdoDirectories: IFdoDirectories
+		{
+			public void SetProjectsDirectory(string value)
+			{
+				ProjectsDirectory = value;
+			}
 
-		public string DefaultProjectsDirectory {
-			get { return ProjectsDirectory; }
+			public void SetTemplateDirectory(string value)
+			{
+				TemplateDirectory = value;
+			}
+
+			#region IFdoDirectories implementation
+
+			public string ProjectsDirectory { get; private set; }
+
+			public string DefaultProjectsDirectory {
+				get { return ProjectsDirectory; }
+			}
+
+			public string TemplateDirectory { get; private set; }
+
+			#endregion
 		}
-
-		public string TemplateDirectory { get; private set; }
-
-		#endregion
 
 		public string StateDirectory { get; private set; }
 
@@ -190,7 +211,7 @@ namespace LfMerge.Core.Settings
 			return QueueDirectories[(int)queue];
 		}
 
-		public string WebWorkDirectory { get { return ProjectsDirectory; } }
+		public string WebWorkDirectory { get { return FdoDirectorySettings.ProjectsDirectory; } }
 
 		/// <summary>
 		/// Gets the name of the state file. If necessary the state directory is also created.

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{AFD8D8A6-2D98-482F-B367-6C0268B61154}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LfMerge.QueueManager</RootNamespace>
@@ -33,6 +33,42 @@
     <DefineConstants>TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
+    <DatabaseVersion>7000068</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000068</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000068</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
+    <DatabaseVersion>7000069</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000069</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000069</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
+    <DatabaseVersion>7000070</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000070</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000070</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="CommandLine">
@@ -54,32 +90,19 @@
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
+    <Reference Include="FDO">
+      <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
     <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
       <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral">
-      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral">
-      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral">
-      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
     <Reference Include="FDO">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo-7000068</Package>
+      <HintPath>\usr\lib\lfmerge\7000068\FDO.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +111,7 @@
     <Compile Include="QueueManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

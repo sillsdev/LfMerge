@@ -1,14 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTarget="Test">
 	<PropertyGroup>
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
-		<BUILD_NUMBER Condition="'$(BUILD_NUMBER)'==''">1.2.3.4</BUILD_NUMBER>
-		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies). -->
-		<Version>0.1</Version>
 	</PropertyGroup>
 
-	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnitTeamCity"
@@ -40,44 +34,11 @@
 		</CreateProperty>
 	</Target>
 
-	<Target Name="VersionNumbers">
-		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
-		<Message Text="RootDir=$(RootDir)"/>
-
-		<Split Input="$(BUILD_NUMBER)" Delimiter="." OutputSubString="2">
-			<Output TaskParameter="ReturnValue" PropertyName="BuildCounter" />
-		</Split>
-
-		<Message Text="BuildCounter: $(BuildCounter)" Importance="high"/>
-
-		<CreateProperty Value="$(Version).$(BuildCounter).0">
-			<Output PropertyName="FileVersion" TaskParameter="Value"/>
-		</CreateProperty>
-
-		<Message Text="Version: $(FileVersion)" Importance="high"/>
-	</Target>
-
-	<ItemGroup>
-		<AssemblyInfoFiles Include="$(RootDir)/**/AssemblyInfo.cs"/>
-	</ItemGroup>
-
-	<Target Name="SetAssemblyVersion" DependsOnTargets="VersionNumbers">
-	  <StampAssemblies Version="$(Version).0.0" FileVersion="$(FileVersion)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
-	</Target>
-
-	<PropertyGroup>
-		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
-	</PropertyGroup>
-
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
-		<!-- SetAssemblyVersion has problems on TC with mono 4.0.
-		<CallTarget Targets="SetAssemblyVersion"/>
-		-->
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
 	</Target>
-
 
 	<ItemGroup>
 		<ExistingObjectFiles
@@ -120,6 +81,7 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
+		<FileUpdate File="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../" ReplacementText="fixutf8=$(RootDir)/"/>
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
@@ -139,6 +101,8 @@
 				Exclude="@(ExistingFiles -> '/usr/lib/lfmerge/$(DbModelVersion)/%(FileName)%(Extension)')" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FdoFiles)" DestinationFolder="$(RootDir)/output/$(Configuration)"
+			Condition="'$(OS)'=='Unix'"/>
+		<Exec Command='bash -c "ln -sf ../Mercurial ."' WorkingDirectory="$(RootDir)/output"
 			Condition="'$(OS)'=='Unix'"/>
 		<CallTarget Targets="TestOnly"/>
 	</Target>

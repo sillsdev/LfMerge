@@ -64,7 +64,7 @@ namespace LfMerge.Core
 		}
 
 		public static void StartLfMerge(string projectCode, ActionNames action,
-			string modelVersion, bool allowFreshClone)
+			string modelVersion, bool allowFreshClone, string configDir = null)
 		{
 			// Call the correct model version specific LfMerge executable
 			if (string.IsNullOrEmpty(modelVersion))
@@ -86,6 +86,8 @@ namespace LfMerge.Core
 				argsBldr.Append(" --clone");
 			if (FwProject.AllowDataMigration)
 				argsBldr.Append(" --migrate");
+			if (!string.IsNullOrEmpty(configDir))
+				argsBldr.AppendFormat(" --config \"{0}\"", configDir);
 			startInfo.Arguments = argsBldr.ToString();
 			startInfo.CreateNoWindow = true;
 			startInfo.ErrorDialog = false;

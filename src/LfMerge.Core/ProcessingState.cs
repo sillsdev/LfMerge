@@ -6,7 +6,6 @@ using Autofac;
 using LfMerge.Core.Settings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Runtime.Serialization;
 
 namespace LfMerge.Core
 {

@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
 using CommandLine;
 using CommandLine.Text;
 using LfMerge.Core.Actions;
@@ -27,6 +26,9 @@ namespace LfMerge
 
 		[Option("migrate", HelpText = "Allow data migration")]
 		public bool AllowDataMigration { get; set; }
+
+		[Option("config", HelpText = "Alternate location of the 'sendreceive.conf' configuration file")]
+		public string ConfigDir { get; set; }
 
 		[HelpOption('h', "help")]
 		public string GetUsage()

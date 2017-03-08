@@ -6,6 +6,7 @@ using System.IO;
 using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
+using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using Palaso.Code;
 using SIL.FieldWorks.FDO;
@@ -21,8 +22,11 @@ namespace LfMerge.Core.Actions
 	{
 		private ILfProject _currentProject;
 
-		public EnsureCloneAction(LfMergeSettings settings, ILogger logger): base(settings, logger)
+		private MongoProjectRecordFactory _projectRecordFactory;
+
+		public EnsureCloneAction(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory projectRecordFactory): base(settings, logger)
 		{
+			_projectRecordFactory = projectRecordFactory;
 		}
 
 		protected override ActionNames NextActionName
@@ -125,7 +129,8 @@ namespace LfMerge.Core.Actions
 
 				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project") ||
 					CloneResultedInError(project, cloneResult, "new repository with no commits") ||
-					CloneResultedInError(project, cloneResult, "clone has higher model"))
+					CloneResultedInError(project, cloneResult, "clone has higher model") ||
+					CloneResultedInError(project, cloneResult, "LfMergeBridge starting S/R handler from directory"))
 				{
 					return;
 				}
@@ -164,9 +169,18 @@ namespace LfMerge.Core.Actions
 					// verify clone path
 					GetActualClonePath(cloneLocation, line);
 
-					InitialTransferToMongoAfterClone(project);
-					Logger.Notice("Initial clone completed; setting state to CLONED");
-					project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
+					if (MongoProjectAlreadyExistsAndIsSRProject())
+					{
+						// If the local Mercurial repo was deleted but the Mongo database is still there,
+						// then there might be data in Mongo that we still need, in which case we should NOT
+						// skip the syncing step. So do nothing, so that we'll fall through to the SYNCING state.
+					}
+					else
+					{
+						InitialTransferToMongoAfterClone(project);
+						Logger.Notice("Initial clone completed; setting state to CLONED");
+						project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
+					}
 				}
 			}
 			catch (Exception e)
@@ -195,6 +209,12 @@ namespace LfMerge.Core.Actions
 		private static bool RepoAlreadyExists(string projectFolderPath)
 		{
 			return Directory.Exists(projectFolderPath);
+		}
+
+		private bool MongoProjectAlreadyExistsAndIsSRProject()
+		{
+			MongoProjectRecord record = _projectRecordFactory.Create(_currentProject);
+			return record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
 		}
 
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,

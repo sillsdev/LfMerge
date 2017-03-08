@@ -21,12 +21,21 @@ namespace LfMerge.Core.MongoConnector
 		public string ProjectName { get; set; }
 		public DateTime? LastSyncedDate { get; set; }
 		public LfProjectConfig Config { get; set; }
+		// public SendReceiveProjectRecord SendReceiveProject { get; set; }  // Not yet needed; uncomment if we do need it
+		public string SendReceiveProjectIdentifier { get; set; }
 
 		public MongoProjectRecord()
 		{
 			InputSystems = new Dictionary<string, LfInputSystemRecord>();
 		}
 	}
+
+	// public class SendReceiveProjectRecord
+	// {
+	// 	public string Name { get; set; }
+	// 	public string Repository { get; set; }
+	// 	public string Role { get; set; }
+	// }
 }
 
 /* Mongo project records have the following fields, but we don't need to map all of them:

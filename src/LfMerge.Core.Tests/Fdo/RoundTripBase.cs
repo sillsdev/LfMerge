@@ -1,18 +1,7 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Autofac;
-using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
-using LfMerge.Core.FieldWorks;
-using LfMerge.Core.LanguageForge.Config;
-using LfMerge.Core.LanguageForge.Model;
-using LfMerge.Core.Logging;
-using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Tests;
 using MongoDB.Bson;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-using NUnit.Framework;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
@@ -175,9 +164,8 @@ namespace LfMerge.Core.Tests.Fdo
 		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
-			var convertCustomField = new ConvertFdoToMongoCustomField(cache, new LfMerge.Core.Logging.NullLogger());
-			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
-			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters, lfCustomFieldList);
+			var convertCustomField = new ConvertFdoToMongoCustomField(cache, _servLoc, new LfMerge.Core.Logging.NullLogger());
+			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters);
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)

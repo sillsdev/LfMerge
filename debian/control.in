@@ -16,8 +16,8 @@ Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
 #if __DatabaseVersion__ == __MaxDbVersion__
 Package: lfmerge
 Architecture: any
-Depends: __allLfMergeVersions__
- lfmerge-__DatabaseVersion__ (>= ${binary:Version})
+Depends: lfmerge-fdo,
+ __allLfMergeVersions__
 Description: LanguageForge Send/Receive
  lfmerge is a tool that is used by the LanguageForge server
  to share data with language depot. Since this tool makes assumptions

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
 using Palaso.Progress;

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -46,7 +45,7 @@ namespace LfMerge.QueueManager
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						var projectPath = Path.Combine(settings.ProjectsDirectory,
+						var projectPath = Path.Combine(settings.FdoDirectorySettings.ProjectsDirectory,
 							projectCode, string.Format("{0}{1}", projectCode,
 								FdoFileHelper.ksFwDataXmlFileExtension));
 						var modelVersion = FwProject.GetModelVersion(projectPath);

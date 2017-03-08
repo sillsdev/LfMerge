@@ -46,8 +46,8 @@ namespace LfMerge.Core.Tests
 				registerLfProxyMock).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettings>();
 			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
-			Directory.CreateDirectory(Settings.ProjectsDirectory);
-			Directory.CreateDirectory(Settings.TemplateDirectory);
+			Directory.CreateDirectory(Settings.FdoDirectorySettings.ProjectsDirectory);
+			Directory.CreateDirectory(Settings.FdoDirectorySettings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
 			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
 		}
@@ -110,7 +110,7 @@ namespace LfMerge.Core.Tests
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
 
-			DirectoryFinder.ResetStaticVars();
+			DirectoryFinder.UnitTestHelper.ResetStaticVars();
 		}
 
 		public string LanguageForgeFolder
@@ -118,7 +118,7 @@ namespace LfMerge.Core.Tests
 			// get { return Path.Combine(_languageForgeServerFolder.Path, "webwork"); }
 			// Should get this from Settings object, but unfortunately we have to resolve this
 			// *before* the Settings object is available.
-			get { return LangForgeDirFinder.ProjectsDirectory; }
+			get { return LangForgeDirFinder.FdoDirectorySettings.ProjectsDirectory; }
 		}
 
 		public LfMergeSettings LangForgeDirFinder

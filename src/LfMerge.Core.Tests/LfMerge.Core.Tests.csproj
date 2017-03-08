@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000069</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
     <ProjectGuid>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core.Tests</RootNamespace>
@@ -30,6 +30,42 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
+    <DatabaseVersion>7000068</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000068</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000068</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
+    <DatabaseVersion>7000069</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000069</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000069</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
+    <DatabaseVersion>7000070</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000070</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_7000070</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -67,9 +103,6 @@
     <Reference Include="MongoDB.Bson">
       <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <Package>lfmerge-fdo</Package>
-    </Reference>
     <Reference Include="Palaso">
       <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
@@ -77,32 +110,19 @@
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
+    <Reference Include="FDO">
+      <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
     <Reference Include="FDO, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
     </Reference>
-    <Reference Include="BasicUtils, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\BasicUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="COMInterfaces, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\COMInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreImpl, Version=8.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>\usr\lib\lfmerge\7000069\CoreImpl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
     <Reference Include="FDO">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="BasicUtils">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="COMInterfaces">
-      <Package>lfmerge-fdo-7000068</Package>
-    </Reference>
-    <Reference Include="CoreImpl">
-      <Package>lfmerge-fdo-7000068</Package>
+      <HintPath>\usr\lib\lfmerge\7000068\FDO.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

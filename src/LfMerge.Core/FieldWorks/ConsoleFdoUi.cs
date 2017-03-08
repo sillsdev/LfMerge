@@ -72,7 +72,7 @@ namespace LfMerge.Core.FieldWorks
 
 		public bool OfferToRestore(string projectPath, string backupPath)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public void Exit()

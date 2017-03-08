@@ -1,21 +1,19 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
+using System.Collections.Generic;
 using Autofac;
 using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
-using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.IO;
 using Palaso.TestUtilities;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace LfMerge.Core.Tests.Fdo
 {
@@ -47,7 +45,7 @@ namespace LfMerge.Core.Tests.Fdo
 				languageForgeServerFolder: LanguageForgeFolder
 			);
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
-			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.DefaultProjectsDirectory);
+			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.FdoDirectorySettings.DefaultProjectsDirectory);
 			lfProj = LanguageForgeProject.Create(testProjectCode);
 		}
 
@@ -93,6 +91,7 @@ namespace LfMerge.Core.Tests.Fdo
 		protected MongoProjectRecordFactory _recordFactory;
 		protected LanguageForgeProject _lfProj;
 		protected FdoCache _cache;
+		protected FwServiceLocatorCache _servLoc;
 		protected int _wsEn;
 		protected Dictionary<string, ConvertFdoToMongoOptionList> _listConverters;
 		protected UndoableUnitOfWorkHelper _undoHelper;
@@ -113,6 +112,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			_lfProj = FdoTestFixture.lfProj;
 			_cache = _lfProj.FieldWorksProject.Cache;
+			_servLoc = new FwServiceLocatorCache(_cache.ServiceLocator);
 			_wsEn = _cache.WritingSystemFactory.GetWsFromStr("en");
 			_undoHelper = new UndoableUnitOfWorkHelper(_cache.ActionHandlerAccessor, "undo", "redo");
 			_undoHelper.RollBack = true;
@@ -131,7 +131,7 @@ namespace LfMerge.Core.Tests.Fdo
 				_conn
 			);
 
-			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _env.Logger);
+			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _servLoc, _env.Logger);
 			_listConverters = new Dictionary<string, ConvertFdoToMongoOptionList>();
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in convertCustomField.GetCustomFieldParentLists())
 			{
