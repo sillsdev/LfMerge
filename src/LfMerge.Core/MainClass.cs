@@ -63,7 +63,7 @@ namespace LfMerge.Core
 			return containerBuilder;
 		}
 
-		public static void StartLfMerge(string projectCode, ActionNames action,
+		public static int StartLfMerge(string projectCode, ActionNames action,
 			string modelVersion, bool allowFreshClone, string configDir = null)
 		{
 			// Call the correct model version specific LfMerge executable
@@ -98,6 +98,7 @@ namespace LfMerge.Core
 				using (var process = Process.Start(startInfo))
 				{
 					process.WaitForExit();
+					return process.ExitCode;
 				}
 			}
 			catch (Exception e)
@@ -106,6 +107,7 @@ namespace LfMerge.Core
 					"{0}-{1}: Unhandled exception trying to start '{2}' '{3}' in '{4}'\n{5}",
 					Assembly.GetEntryAssembly().GetName().Name, ModelVersion, startInfo.FileName,
 					startInfo.Arguments, startInfo.WorkingDirectory, e);
+				return 1; // TODO: Decide what error code to return for unhandled exceptions
 			}
 		}
 
