@@ -16,11 +16,12 @@ namespace LfMerge
 	public class Program
 	{
 		[STAThread]
-		public static void Main(string[] args)
+		public static int Main(string[] args)
 		{
+			int result = (int)ErrorCode.NoError;
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
-				return;
+				return (int)ErrorCode.InvalidOptions;
 
 			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
 				MainClass.ModelVersion, string.Join(" ", args));
@@ -34,7 +35,7 @@ namespace LfMerge
 			try
 			{
 				if (!MainClass.CheckSetup())
-					return;
+					return (int)ErrorCode.GeneralError;
 
 				MongoConnection.Initialize();
 
@@ -53,11 +54,12 @@ namespace LfMerge
 
 			if (!string.IsNullOrEmpty(differentModelVersion))
 			{
-				MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
+				result = MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
 					differentModelVersion, false, options.ConfigDir);
 			}
 
 			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);
+			return result;
 		}
 
 		private static string RunAction(string projectCode, ActionNames currentAction)
