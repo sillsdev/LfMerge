@@ -22,13 +22,15 @@ namespace LfMerge.Core.DataConverters
 		private FwServiceLocatorCache servLoc;
 		private IFwMetaDataCacheManaged fdoMetaData;
 		private ILogger logger;
+		private int wsEn;
 
-		public ConvertMongoToFdoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
+		public ConvertMongoToFdoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
 		{
 			this.cache = cache;
 			this.servLoc = serviceLocator;
 			this.fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
+			this.wsEn = wsEn;
 		}
 
 		public Guid ParseGuidOrDefault(string input)
@@ -203,7 +205,7 @@ namespace LfMerge.Core.DataConverters
 					int fieldWs = fdoMetaData.GetFieldWs(flid);
 					// Oddly, this can return 0 for some custom fields. TODO: Find out why: that seems like it would be an error.
 					if (fieldWs == 0)
-						fieldWs = cache.DefaultUserWs;
+						fieldWs = cache.DefaultUserWs; // TODO: Investigate, because this should probably be wsEn instead so that we can create correct keys.
 					ICmPossibilityList parentList = GetParentListForField(flid);
 					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
 
@@ -244,27 +246,73 @@ namespace LfMerge.Core.DataConverters
 
 					LfStringArrayField valueAsStringArray = BsonSerializer.Deserialize<LfStringArrayField>(value.AsBsonDocument);
 
-					// Step 1: Check if any of the fieldGuids is Guid.Empty, which would indicate a brand-new object that wasn't in FDO
-					List<string> fieldData = valueAsStringArray.Values;
-					while (fieldGuids.Count < valueAsStringArray.Values.Count)
-					{
-						fieldGuids.Add(Guid.Empty); // Ensure the Zip can run all the way through
-					}
-					IEnumerable<ICmPossibility> fieldObjs = fieldGuids.Zip<Guid, string, ICmPossibility>(fieldData, (thisGuid, thisData) =>
-						{
-							ICmPossibility newPoss;
-							if (thisGuid == default(Guid)) {
-								newPoss = ((ICmPossibilityList)parentList).FindOrCreatePossibility(thisData, fieldWs);
-								// TODO: If this is a new possibility, then we need to populate it with ALL the corresponding data from LF,
-								// which we don't necessarily have at this point. Need to make that a separate step in the Send/Receive.
-								return newPoss;
-							}
-							else {
-								newPoss = servLoc.GetInstance<ICmPossibilityRepository>().GetObject(thisGuid);
-								return newPoss;
-							}
-						});
+					// Step 1: Get ICmPossibility instances from the string keys that LF gave us
 
+					// First go through all the GUIDs we have and match them up to the keys. If they match up,
+					// then remove the keys from the list. Any remaining keys get looked up with FindOrCreatePossibility(), so now we
+					// have a complete set of GUIDs (or ICmPossibility objects, which works out to the same thing).
+
+					// TODO: This is all kind of ugly, and WAY too long for one screen. I could put it in its own function,
+					// but there's really no real gain from that, as it simply moves the logic even further away from where
+					// it needs to be. There's not really a *good* way to achieve simplicity with this code design, unfortunately.
+					// The only thing that would be close to simple would be to call some functions from the FdoToMongo option list
+					// converters, and that's pulling in code from the "wrong" direction, which has its own ugliness. Ugh.
+
+					HashSet<string> keysFromLF = new HashSet<string>(valueAsStringArray.Values);
+					var fieldObjs = new List<ICmPossibility>();
+					foreach (Guid guid in fieldGuids)
+					{
+						ICmPossibility poss;
+						string key = "";
+						if (guid != default(Guid)) {
+							poss = servLoc.GetInstance<ICmPossibilityRepository>().GetObject(guid);
+							if (poss == null)
+							{
+								// TODO: Decide what to do with possibilities deleted from FDO
+								key = "";
+							}
+							else
+							{
+								if (poss.Abbreviation == null)
+								{
+									key = "";
+								}
+								else
+								{
+									ITsString keyTss = poss.Abbreviation.get_String(wsEn);
+									key = keyTss == null ? "" : keyTss.Text ?? "";
+								}
+								fieldObjs.Add(poss);
+							}
+						}
+						keysFromLF.Remove(key);
+						// Ignoring return value (HashSet.Remove returns false if the key wasn't present), because false could mean one of two things:
+						// 1. The CmPossibility had its English abbreviation changed in FDO, but LF doesn't know this yet.
+						//    If this is the case, the LF key won't match, but the GUID will still match. So we might end up creating
+						//    duplicate entries below with the FindOrCreatePossibility. TODO: Need to verify that FDO->LF possibility lists
+						//    get updated correctly if renames happen! (... Or use the OptionList converters, that's what they were for.)
+						// 2. The CmPossibility was just created in LF and isn't in FDO yet. In which case we should have been using the
+						//    OptionList converters, which would hopefully have handled creating the ICmPossibility instane in FDO.
+						// Either way, we can't really use that fact later, since we can't be certain if the possibility was renamed or created.
+					}
+					// Any remaining keysFromLF strings did not have corresponding GUIDs in Mongo.
+					// This is most likely because they were added by LF, which doesn't write to the customFieldGuids field.
+					// So we assume they exist in FW, and just look them up.
+					foreach (string key in keysFromLF)
+					{
+						ICmPossibility poss = parentList.FindOrCreatePossibility(key, wsEn);
+						// TODO: If this is a new possibility, then we need to populate it with ALL the corresponding data from LF,
+						// which we don't necessarily have at this point. Need to make that a separate step in the Send/Receive: converting option lists first.
+						fieldObjs.Add(poss);
+					}
+					logger.Debug("Custom field {0} for CmObject {1}: BSON list was [{2}] and customFieldGuids was [{3}]. This was translated to keysFromLF = [{4}] and fieldObjs = [{5}]",
+						fieldName,
+						hvo,
+						String.Join(", ", valueAsStringArray.Values),
+						String.Join(", ", fieldGuids.Select(g => g.ToString())),
+						String.Join(", ", keysFromLF.AsEnumerable()),
+						String.Join(", ", fieldObjs.Select(poss => poss.AbbrAndName))
+					);
 					// Step 2: Remove any objects from the "old" list that weren't in the "new" list
 					// We have to look them up by HVO because that's the only public API available in FDO
 					// Following logic inspired by XmlImportData.CopyCustomFieldData in FieldWorks source
