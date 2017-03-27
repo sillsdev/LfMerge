@@ -182,6 +182,9 @@
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="LanguageForge\Model\LfAuthorInfo.cs" />
+    <Compile Include="LanguageForge\Model\LfComment.cs" />
+    <Compile Include="LanguageForge\Model\LfCommentRegarding.cs" />
+    <Compile Include="LanguageForge\Model\LfCommentReply.cs" />
     <Compile Include="LanguageForge\Model\LfExample.cs" />
     <Compile Include="LanguageForge\Model\LfFieldBase.cs" />
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />

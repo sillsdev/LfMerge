@@ -159,6 +159,41 @@ namespace LfMerge.Core.MongoConnector
 			return results;
 		}
 
+		public IEnumerable<LfComment> GetComments(ILfProject project)
+		{
+			return GetRecords<LfComment>(project, MagicStrings.LfCollectionNameForLexiconComments);
+		}
+
+		public UpdateOneModel<BsonDocument> PrepareUpdateCommentReplyGuidForUniqId(string uniqid, string guid)
+		{
+			// I'd like to write this in the C# type-safe format, but http://stackoverflow.com/q/28945108/ suggests that that's not possible
+			var filter = new BsonDocument("replies.id", uniqid);  // The field is called UniqId in C#, but just "id" in Mongo/BSON
+			var update = new BsonDocument("$set", new BsonDocument("replies.$.guid", guid));
+			return new UpdateOneModel<BsonDocument>(filter, update) { IsUpsert = false };
+		}
+
+		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
+		{
+			if (uniqIdToGuidMappings == null || uniqIdToGuidMappings.Count <= 0)
+			{
+				// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
+				// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
+				return;
+			}
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexiconComments);
+			var updates = new List<UpdateOneModel<BsonDocument>>(uniqIdToGuidMappings.Count);
+			foreach (KeyValuePair<string, string> kv in uniqIdToGuidMappings)
+			{
+				string uniqid = kv.Key;
+				string guid = kv.Value;
+				UpdateOneModel<BsonDocument> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
+				updates.Add(update);
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			var result = collection.BulkWrite(updates, options);
+		}
+
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			MongoProjectRecord projectRecord = GetProjectRecord(project);

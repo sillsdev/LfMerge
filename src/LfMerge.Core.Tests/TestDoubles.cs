@@ -290,6 +290,16 @@ namespace LfMerge.Core.Tests
 				return result;
 			return null;
 		}
+
+		public IEnumerable<LfComment> GetComments(ILfProject project)
+		{
+			yield break;
+		}
+
+		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
+		{
+			// No-op. TODO: Implement something that stores a simple comment-replies data structure so we can unit test.
+		}
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory
