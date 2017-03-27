@@ -305,6 +305,36 @@ namespace LfMerge.Core.Tests
 				return result;
 			return null;
 		}
+
+		public IEnumerable<LfComment> GetComments(ILfProject project)
+		{
+			yield break;
+		}
+
+		public Dictionary<MongoDB.Bson.ObjectId, Guid> GetGuidsByObjectIdForCollection(ILfProject project, string collectionName)
+		{
+			return new Dictionary<MongoDB.Bson.ObjectId, Guid>();
+		}
+
+		public void UpdateComments(ILfProject project, List<LfComment> comments)
+		{
+			;
+		}
+
+		public void UpdateReplies(ILfProject project, List<Tuple<string, List<LfCommentReply>>> repliesFromFWWithCommentGuids)
+		{
+			;
+		}
+
+		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings)
+		{
+			// No-op. TODO: Implement something that stores a simple comment-replies data structure so we can unit test.
+		}
+
+		public void SetCommentGuids(ILfProject project, IDictionary<string,Guid> commentIdToGuidMappings)
+		{
+			// No-op. TODO: Implement something that stores a simple comments dictionary so we can unit test.
+		}
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory

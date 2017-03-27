@@ -112,6 +112,15 @@ namespace LfMerge
 			}
 			catch (Exception e)
 			{
+				MainClass.Logger.Error("Got exception {0}", e.ToString());
+				if (projectCode == null)
+				{
+					MainClass.Logger.Error("Project code was null");
+				}
+				else
+				{
+					MainClass.Logger.Error("Project code was {0}", projectCode);
+				}
 				string errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
 					projectCode, e);
 				MainClass.Logger.Error(errorMsg);
