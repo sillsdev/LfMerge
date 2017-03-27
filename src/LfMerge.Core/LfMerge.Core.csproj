@@ -140,11 +140,13 @@
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
     <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
+    <Compile Include="DataConverters\ConvertFdoToMongoComments.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoCustomField.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoLexicon.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoPartsOfSpeech.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
+    <Compile Include="DataConverters\ConvertMongoToFdoComments.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoCustomField.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoLexicon.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoOptionList.cs" />

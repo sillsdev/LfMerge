@@ -50,7 +50,7 @@ namespace LfMerge.Core.Actions
 				return;
 			}
 
-			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection);
+			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection, Progress);
 			_lexiconConverter.RunConversion();
 
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);

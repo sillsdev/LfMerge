@@ -10,6 +10,7 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using MongoDB.Bson;
+using Palaso.Progress;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
@@ -21,6 +22,7 @@ namespace LfMerge.Core.DataConverters
 		private ILfProject LfProject { get; set; }
 		private FwProject FwProject { get; set; }
 		private FdoCache Cache { get; set; }
+		private IProgress Progress { get; set; }
 		private FwServiceLocatorCache ServiceLocator { get; set; }
 		private ILogger Logger { get; set; }
 		private IMongoConnection Connection { get; set; }
@@ -45,11 +47,12 @@ namespace LfMerge.Core.DataConverters
 
 		//private ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
-		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection)
+		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection, IProgress progress)
 		{
 			LfProject = lfProject;
 			Logger = logger;
 			Connection = connection;
+			Progress = progress;
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
@@ -92,6 +95,9 @@ namespace LfMerge.Core.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("FdoToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
+			Logger.Debug("Running \"fake\" FtMComments, should see comments show up below:");
+			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress); // TODO: Need a ProjectRecordFactory in here for the comments handling code.
+			commCvtr.DoSomethingAndGiveThisABetterName(); // TODO: Remove this and replace with real code
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
