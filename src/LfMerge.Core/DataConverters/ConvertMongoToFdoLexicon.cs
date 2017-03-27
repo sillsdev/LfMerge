@@ -11,6 +11,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
+using Palaso.Progress;
 using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
 using SIL.FieldWorks.FDO;
@@ -25,6 +26,7 @@ namespace LfMerge.Core.DataConverters
 		private ILfProject LfProject { get; set; }
 		private FwProject FwProject { get; set; }
 		private FdoCache Cache { get; set; }
+		private IProgress Progress { get; set; }
 		private FwServiceLocatorCache ServiceLocator { get; set; }
 		private ILogger Logger { get; set; }
 		private IMongoConnection Connection { get; set; }
@@ -54,13 +56,14 @@ namespace LfMerge.Core.DataConverters
 
 		private ICmPossibility _freeTranslationType; // Used in LfExampleToFdoExample(), but cached here
 
-		public ConvertMongoToFdoLexicon(LfMergeSettings settings, ILfProject lfproject, ILogger logger,
+		public ConvertMongoToFdoLexicon(LfMergeSettings settings, ILfProject lfproject, ILogger logger, IProgress progress,
 			IMongoConnection connection, MongoProjectRecord projectRecord, EntryCounts entryCounts)
 		{
 			EntryCounts = entryCounts;
 			Settings = settings;
 			LfProject = lfproject;
 			Logger = logger;
+			Progress = progress;
 			Connection = connection;
 			ProjectRecord = projectRecord;
 
@@ -125,6 +128,8 @@ namespace LfMerge.Core.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("MongoToFdo: Converting lexicon for project {0}", LfProject.ProjectCode);
+			Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
+			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			EntryCounts.Reset();
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
@@ -147,6 +152,9 @@ namespace LfMerge.Core.DataConverters
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
+			// Comment conversion gets run AFTER lexicon conversion, so that any comments on new entries are handled correctly in FW
+			var commCvtr = new ConvertMongoToFdoComments(Connection, LfProject, Logger, Progress);
+			commCvtr.RunConversion(entryObjectIdToGuidMappings);
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
 		}

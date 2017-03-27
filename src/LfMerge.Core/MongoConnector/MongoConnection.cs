@@ -167,6 +167,311 @@ namespace LfMerge.Core.MongoConnector
 			return results;
 		}
 
+		public Dictionary<Guid, ObjectId> GetObjectIdsByGuidForCollection(ILfProject project, string collectionName)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(collectionName);
+			var filter = Builders<BsonDocument>.Filter.Empty;
+			var projection = new BsonDocument("guid", 1);
+			projection.Add("_id", 1);
+			Dictionary<Guid, ObjectId> results =
+				lexicon
+				.Find(filter)
+				.Project(projection)
+				.ToEnumerable()
+				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString))
+				.ToDictionary(doc => Guid.Parse(doc.GetValue("guid").AsString),
+				              doc => doc["_id"].AsObjectId);
+			return results;
+		}
+
+		public Dictionary<ObjectId, Guid> GetGuidsByObjectIdForCollection(ILfProject project, string collectionName)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(collectionName);
+			var filter = Builders<BsonDocument>.Filter.Empty;
+			var projection = new BsonDocument("guid", 1);
+			projection.Add("_id", 1);
+			Dictionary<ObjectId, Guid> results =
+				lexicon
+				.Find(filter)
+				.Project(projection)
+				.ToEnumerable()
+				.Where(doc => doc.Contains("guid") && CanParseGuid(doc.GetValue("guid").AsString))
+				.ToDictionary(doc => doc["_id"].AsObjectId,
+							  doc => Guid.Parse(doc.GetValue("guid").AsString));
+			return results;
+		}
+
+		public IEnumerable<LfComment> GetComments(ILfProject project)
+		{
+			return GetRecords<LfComment>(project, MagicStrings.LfCollectionNameForLexiconComments);
+		}
+
+		public void UpdateComments(ILfProject project, List<LfComment> commentsFromFW)
+		{
+			// Design notes: We get comments with a Regarding.TargetGuid, which we need to turn into an EntryRef
+			Dictionary<Guid, ObjectId> mongoIdsForEntries = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			var commentUpdates = new List<UpdateOneModel<LfComment>>(commentsFromFW.Count);
+			var filterBuilder = Builders<LfComment>.Filter;
+			var updateBuilder = Builders<LfComment>.Update;
+
+			foreach (LfComment comment in commentsFromFW)
+			{
+				ObjectId mongoId;
+				FilterDefinition<LfComment> filter;
+				UpdateDefinition<LfComment> update;
+				Guid targetGuid = Guid.Empty;
+				DateTime utcNow = DateTime.UtcNow;
+				if (comment.Regarding != null
+					&& comment.Regarding.TargetGuid != null
+					&& Guid.TryParse(comment.Regarding.TargetGuid, out targetGuid)
+					&& mongoIdsForEntries.TryGetValue(targetGuid, out mongoId))
+				{
+					filter = filterBuilder.Eq(cmt => cmt.Guid, comment.Guid);
+					update = updateBuilder
+						.Set(c => c.AuthorNameAlternate, comment.AuthorNameAlternate)
+						.Set(c => c.Content, comment.Content)
+						.Set(c => c.EntryRef, mongoId)
+						.Set(c => c.Guid, comment.Guid)
+						// DateCreated and DateModified on the comment record track when that Mongo record was created.
+						// AuthorInfo's CreatedDate and ModifiedDate track the values from FDO. (See comments in ConvertFdoToMongoLexicon for more details.)
+						.SetOnInsert(c => c.DateCreated, utcNow)  // SetOnInsert because DateCreated should only be set once
+						.Set(c => c.DateModified, utcNow)  // TODO: Can we somehow make this change only if anything else changed? Can we get Mongo to do that for us?
+						.Set(c => c.AuthorInfo.CreatedDate, comment.DateCreated)
+						.Set(c => c.AuthorInfo.ModifiedDate, comment.DateModified)
+						// We do not set the user refs in AuthorInfo, nor do we change them
+						.Set(c => c.Regarding, comment.Regarding)
+						.Set(c => c.Replies, comment.Replies)
+						.Set(c => c.IsDeleted, comment.IsDeleted)
+						.Set(c => c.Status, comment.Status)
+						;
+					commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
+				}
+				// If we couldn't look up the MongoId for this comment.Regarding field, we skip the comment entirely
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			// Mongo doesn't like bulk updates with 0 items in them, and will throw an exception instead of sensibly doing nothing. So we have to protect it from itself.
+			if (commentUpdates.Count > 0)
+			{
+				var result = collection.BulkWrite(commentUpdates, options);
+			}
+		}
+
+		public void UpdateReplies(ILfProject project, List<Tuple<string, List<LfCommentReply>>> repliesFromFWWithCommentGuids)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			List<UpdateOneModel<LfComment>> replyUpdates = new List<UpdateOneModel<LfComment>>();
+			foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in repliesFromFWWithCommentGuids)
+			{
+				string commentGuidStr = replyWithCommentGuid.Item1;
+				List<LfCommentReply> replies = replyWithCommentGuid.Item2;
+				Guid commentGuid;
+				if (Guid.TryParse(commentGuidStr, out commentGuid))
+				{
+					replyUpdates.Add(PrepareReplyUpdateForOneComment(commentGuid, replies));
+				}
+			}
+			// Mongo doesn't like bulk updates with 0 items in them, and will throw an exception instead of sensibly doing nothing. So we have to protect it from itself.
+			if (replyUpdates.Count > 0)
+			{
+				var options = new BulkWriteOptions { IsOrdered = false };
+				var repliesResult = collection.BulkWrite(replyUpdates, options);   // TODO: Uncomment this once we get the Mongo query right.
+			}
+		}
+
+		public UpdateOneModel<LfComment> PrepareReplyUpdateForOneComment(Guid commentGuid, List<LfCommentReply> replies)
+		{
+			foreach (LfCommentReply reply in replies)
+			{
+				// The LfCommentReply objects we receive here are coming from FW with a blank UniqId. We need to set the UniqId field so the JS code can do the right thing.
+				DateTime utcNow = DateTime.UtcNow;  // We want a different timestamp for *each* reply
+				reply.UniqId = PseudoPhp.UniqueIdFromDateTime(utcNow);
+			}
+			FilterDefinition<LfComment> filter = Builders<LfComment>.Filter.Eq(comment => comment.Guid, commentGuid);
+			UpdateDefinition<LfComment> update = Builders<LfComment>.Update.PushEach(comment => comment.Replies, replies).Set(comment => comment.DateModified, DateTime.UtcNow);
+			return new UpdateOneModel<LfComment>(filter, update);
+		}
+
+/* No longer using this one. Replaced by UpdateReplies above.
+		public IEnumerable<UpdateOneModel<LfComment>> PrepareUpdateCommentReplies(LfComment commentDataFromFW, HashSet<Guid?> existingReplyGuids)
+		{
+			// NOTE: https://stackoverflow.com/q/26320673 suggests that this approach won't work: when there's no element match, it won't know where to insert the item.
+			// So I'm going to have to come up with a different approach.
+			if (false){
+			foreach (LfCommentReply reply in commentDataFromFW.Replies)
+			{
+				if (reply.Guid == null) continue;
+				var filter = Builders<LfComment>.Filter.ElemMatch(comment => comment.Replies, r => r.Guid == reply.Guid);
+				DateTime utcNow = DateTime.UtcNow;
+				var update = Builders<LfComment>.Update.SetOnInsert(comment => comment.Replies[-1].UniqId, PseudoPhp.NonUniqueIdFromDateTime(utcNow));
+				update.SetOnInsert(comment => comment.Replies[-1].Guid, reply.Guid);
+				update.SetOnInsert(comment => comment.Replies[-1].AuthorInfo.CreatedDate, reply.AuthorInfo.CreatedDate);
+				// We only set the modified date on insert, so that if LF changes it, we won't overwrite that.
+				update.SetOnInsert(comment => comment.Replies[-1].AuthorInfo.ModifiedDate, reply.AuthorInfo.ModifiedDate);
+				update.SetOnInsert(comment => comment.Replies[-1].Content, reply.Content);  // TODO: What happens if someone edits it in LF? Are we going to overwrite it? If so, then Set rather than SetOnInsert.
+				update.Set(comment => comment.Replies[-1].AuthorNameAlternate, reply.AuthorNameAlternate);
+				update.Set(comment => comment.Replies[-1].IsDeleted, reply.IsDeleted);
+				yield return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true };
+			}
+			}
+
+			Logger.Debug("Got existing reply guids: [{0}]", String.Join(", ", existingReplyGuids.Where(g => g != null).Select(g => g.ToString())));
+
+			foreach (LfCommentReply reply in commentDataFromFW.Replies)
+			{
+				if (reply.Guid == null) continue;
+				if (existingReplyGuids.Contains(reply.Guid))
+				{
+					// Build an update. TODO: Actually, what do we *do* with an updated LfCommentReply? Are we going to modify it at all?
+
+					// TOCHECK: What happens if we return nothing at all
+					// var filter = Builders<LfComment>.Filter.ElemMatch(comment => comment.Replies, r => r.Guid == reply.Guid);
+					// var update = Builders<LfComment>.Update.SetOnInsert(comment => comment.Replies[-1].UniqId, PseudoPhp.NonUniqueIdFromDateTime(utcNow));
+					// yield return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
+				}
+				else
+				{
+					DateTime utcNow = DateTime.UtcNow;  // Need a *different* DateTime for each reply, so we put this inside the loop, not ouside
+					var newReply = new LfCommentReply {
+						Guid = reply.Guid,
+						UniqId = PseudoPhp.NonUniqueIdFromDateTime(utcNow),
+						Content = reply.Content,
+						AuthorInfo = new LfAuthorInfo {
+							CreatedDate = utcNow,
+							ModifiedDate = utcNow,
+						},
+						AuthorNameAlternate = reply.AuthorNameAlternate,
+						IsDeleted = reply.IsDeleted,
+					};
+
+					var filter = Builders<LfComment>.Filter.Eq(comment => comment.Guid, commentDataFromFW.Guid);
+					var update = Builders<LfComment>.Update.Push(comment => comment.Replies, newReply);
+					yield return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
+				}
+			}
+		}
+ */
+		// public IEnumerable<UpdateOneModel<LfComment>> PrepareUpdateCommentReplies(LfComment comment)
+		// {
+		// 	// NOTE: https://stackoverflow.com/q/26320673 suggests that this approach won't work: when there's no element match, it won't know where to insert the item.
+		// 	// So I'm going to have to come up with a different approach.
+		// 	foreach (LfCommentReply reply in comment.Replies)
+		// 	{
+		// 		if (reply.Guid == null) continue;
+		// 		var filter = Builders<LfComment>.Filter.ElemMatch(cmt => cmt.Replies, r => r.Guid == reply.Guid);
+		// 		DateTime utcNow = DateTime.UtcNow;
+		// 		var update = Builders<LfComment>.Update.SetOnInsert(cmt => cmt.Replies[-1].UniqId, PseudoPhp.NonUniqueIdFromDateTime(utcNow));
+		// 		update.SetOnInsert(cmt => cmt.Replies[-1].Guid, reply.Guid);
+		// 		update.SetOnInsert(cmt => cmt.Replies[-1].AuthorInfo.CreatedDate, reply.AuthorInfo.CreatedDate);
+		// 		// We only set the modified date on insert, so that if LF changes it, we won't overwrite that.
+		// 		update.SetOnInsert(cmt => cmt.Replies[-1].AuthorInfo.ModifiedDate, reply.AuthorInfo.ModifiedDate);
+		// 		update.SetOnInsert(cmt => cmt.Replies[-1].Content, reply.Content);  // TODO: What happens if someone edits it in LF? Are we going to overwrite it? If so, then Set rather than SetOnInsert.
+		// 		update.Set(cmt => cmt.Replies[-1].AuthorNameAlternate, reply.AuthorNameAlternate);
+		// 		update.Set(cmt => cmt.Replies[-1].IsDeleted, reply.IsDeleted);
+		// 		yield return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true };
+		// 	}
+		// }
+
+		public UpdateOneModel<LfComment> PrepareUpdateCommentReplyGuidForUniqId(string uniqid, Guid guid)
+		{
+			// The "-1" index, according to https://stackoverflow.com/q/42396877/, is the positional index "$" in Mongo.
+			// I *really* wish this had been documented in the MongoDB documentation. ANYWHERE AT ALL. *Sigh*...
+			var filter = Builders<LfComment>.Filter.ElemMatch(comment => comment.Replies, r => r.UniqId == uniqid);
+			var update = Builders<LfComment>.Update.Set(comment => comment.Replies[-1].Guid, guid);
+			return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
+		}
+
+		public UpdateOneModel<LfComment> PrepareUpdateCommentGuidForObjectId(ObjectId objectId, Guid guid)
+		{
+			var filter = Builders<LfComment>.Filter.Eq(comment => comment.Id, objectId);
+			var update = Builders<LfComment>.Update.Set(comment => comment.Guid, guid);
+			return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
+		}
+
+		// public UpdateOneModel<BsonDocument> OldVersionOfPrepareUpdateCommentReplyGuidForUniqId(string uniqid, string guid)
+		// {
+		// 	// I'd like to write this in the C# type-safe format, but http://stackoverflow.com/q/28945108/ suggests that that's not possible
+		// 	// But WAIT! https://stackoverflow.com/q/42396877/ says to use the "special" index -1, e.g. replies[-1].guid. That's... wow, WHERE is that documented?
+		// 	var filter = new BsonDocument("replies.id", uniqid);  // The field is called UniqId in C#, but just "id" in Mongo/BSON
+		// 	var update = new BsonDocument("$set", new BsonDocument("replies.$.guid", guid));
+		// 	return new UpdateOneModel<BsonDocument>(filter, update) { IsUpsert = false };
+		// }
+
+		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings)
+		{
+			if (uniqIdToGuidMappings == null || uniqIdToGuidMappings.Count <= 0)
+			{
+				// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
+				// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
+				return;
+			}
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			var updates = new List<UpdateOneModel<LfComment>>(uniqIdToGuidMappings.Count);
+			foreach (KeyValuePair<string, Guid> kv in uniqIdToGuidMappings)
+			{
+				string uniqid = kv.Key;
+				Guid guid = kv.Value;
+				UpdateOneModel<LfComment> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
+				updates.Add(update);
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			var result = collection.BulkWrite(updates, options);
+		}
+
+		public void SetCommentGuids(ILfProject project, IDictionary<string,Guid> commentIdToGuidMappings)
+		{
+			if (commentIdToGuidMappings == null || commentIdToGuidMappings.Count <= 0)
+			{
+				// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
+				// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
+				return;
+			}
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			var updates = new List<UpdateOneModel<LfComment>>(commentIdToGuidMappings.Count);
+			foreach (KeyValuePair<string, Guid> kv in commentIdToGuidMappings)
+			{
+				string objectIdStr = kv.Key;
+				Guid guid = kv.Value;
+				ObjectId objectId;
+				if (String.IsNullOrEmpty(objectIdStr) || ! ObjectId.TryParse(objectIdStr, out objectId))
+				{
+					continue;
+				}
+				UpdateOneModel<LfComment> update = PrepareUpdateCommentGuidForObjectId(objectId, guid);
+				updates.Add(update);
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			var result = collection.BulkWrite(updates, options);
+		}
+
+		// public void OldVersionOfSetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
+		// {
+		// 	if (uniqIdToGuidMappings == null || uniqIdToGuidMappings.Count <= 0)
+		// 	{
+		// 		// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
+		// 		// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
+		// 		return;
+		// 	}
+		// 	IMongoDatabase db = GetProjectDatabase(project);
+		// 	IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexiconComments);
+		// 	var updates = new List<UpdateOneModel<BsonDocument>>(uniqIdToGuidMappings.Count);
+		// 	foreach (KeyValuePair<string, string> kv in uniqIdToGuidMappings)
+		// 	{
+		// 		string uniqid = kv.Key;
+		// 		string guid = kv.Value;
+		// 		UpdateOneModel<BsonDocument> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
+		// 		updates.Add(update);
+		// 	}
+		// 	var options = new BulkWriteOptions { IsOrdered = false };
+		// 	var result = collection.BulkWrite(updates, options);
+		// }
+
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			MongoProjectRecord projectRecord = GetProjectRecord(project);

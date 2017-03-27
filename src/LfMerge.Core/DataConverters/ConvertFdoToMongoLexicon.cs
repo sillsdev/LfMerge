@@ -10,6 +10,7 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using MongoDB.Bson;
+using Palaso.Progress;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
@@ -21,9 +22,12 @@ namespace LfMerge.Core.DataConverters
 		private ILfProject LfProject { get; set; }
 		private FwProject FwProject { get; set; }
 		private FdoCache Cache { get; set; }
+		private IProgress Progress { get; set; }
 		private FwServiceLocatorCache ServiceLocator { get; set; }
 		private ILogger Logger { get; set; }
 		private IMongoConnection Connection { get; set; }
+		private MongoProjectRecordFactory ProjectRecordFactory { get; set; }
+
 
 		private int _wsEn;
 
@@ -45,11 +49,13 @@ namespace LfMerge.Core.DataConverters
 
 		//private ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
-		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection)
+		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection, IProgress progress, MongoProjectRecordFactory projectRecordFactory)
 		{
 			LfProject = lfProject;
 			Logger = logger;
 			Connection = connection;
+			Progress = progress;
+			ProjectRecordFactory = projectRecordFactory;
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
@@ -133,6 +139,9 @@ namespace LfMerge.Core.DataConverters
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInFdo();
+			Logger.Debug("Running FtMComments, should see comments show up below:");
+			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress, ProjectRecordFactory);
+			commCvtr.RunConversion();
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()

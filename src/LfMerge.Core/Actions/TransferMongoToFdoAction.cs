@@ -6,6 +6,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
+using Palaso.Progress;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Actions
@@ -70,7 +71,7 @@ namespace LfMerge.Core.Actions
 				return;
 			}
 
-			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, _connection, _projectRecord, EntryCounts);
+			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, Progress, _connection, _projectRecord, EntryCounts);
 			converter.RunConversion();
 		}
 

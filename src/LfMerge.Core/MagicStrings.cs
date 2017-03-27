@@ -70,13 +70,20 @@ namespace LfMerge.Core
 
 		// Collections found in individual project DBs
 		public const string LfCollectionNameForLexicon = "lexicon";
+		public const string LfCollectionNameForLexiconComments = "lexiconComments";
 		public const string LfCollectionNameForOptionLists = "optionlists";
 
 		// Collections found in main DB
 		public const string LfCollectionNameForProjectRecords = "projects";
+
+		// Prefixes that LF wants for custom field names
 		public const string LfCustomFieldEntryPrefix = "customField_entry";
 		public const string LfCustomFieldSensesPrefix = "customField_senses";
 		public const string LfCustomFieldExamplePrefix = "customField_example";
+
+		// Field names to use in an LfCommentRegarding instance
+		public const string LfFieldNameForDefinition = "definition";
+		public const string LfFieldNameForExampleSentence = "definition";
 
 		// Fake language codes used in storing custom GenDate and int fields in Mongo
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
