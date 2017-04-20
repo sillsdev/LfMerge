@@ -32,6 +32,7 @@ namespace LfMerge
 			FwProject.AllowDataMigration = options.AllowDataMigration;
 
 			string differentModelVersion = null;
+			bool shouldTreatNextLfMergeCallAsInitialClone = false;
 			try
 			{
 				if (!MainClass.CheckSetup())
@@ -39,7 +40,9 @@ namespace LfMerge
 
 				MongoConnection.Initialize();
 
-				differentModelVersion = RunAction(options.ProjectCode, options.CurrentAction);
+				ChorusHelper.SetTreatAsInitialClone(options.TreatAsInitialClone);
+
+				differentModelVersion = RunAction(options.ProjectCode, options.CurrentAction, out shouldTreatNextLfMergeCallAsInitialClone);
 			}
 			catch (Exception e)
 			{
@@ -55,16 +58,17 @@ namespace LfMerge
 			if (!string.IsNullOrEmpty(differentModelVersion))
 			{
 				result = MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
-					differentModelVersion, false, options.ConfigDir);
+					differentModelVersion, false, shouldTreatNextLfMergeCallAsInitialClone, options.ConfigDir);
 			}
 
 			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);
 			return result;
 		}
 
-		private static string RunAction(string projectCode, ActionNames currentAction)
+		private static string RunAction(string projectCode, ActionNames currentAction, out bool shouldTreatNextLfMergeCallAsInitialClone)
 		{
 			LanguageForgeProject project = null;
+			shouldTreatNextLfMergeCallAsInitialClone = false;
 			var stopwatch = new Stopwatch();
 			try
 			{
@@ -94,6 +98,7 @@ namespace LfMerge
 				{
 					// The repo is for an older model version
 					var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+					shouldTreatNextLfMergeCallAsInitialClone = chorusHelper.TreatAsInitialClone;
 					return chorusHelper.ModelVersion;
 				}
 
@@ -106,6 +111,7 @@ namespace LfMerge
 					{
 						// The repo is for an older model version
 						var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
+						shouldTreatNextLfMergeCallAsInitialClone = chorusHelper.TreatAsInitialClone;
 						return chorusHelper.ModelVersion;
 					}
 				}

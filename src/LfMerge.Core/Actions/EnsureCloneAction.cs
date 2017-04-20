@@ -157,6 +157,7 @@ namespace LfMerge.Core.Actions
 					}
 					Logger.Info(line);
 					ChorusHelper.SetModelVersion(cloneModelVersion);
+					ChorusHelper.SetTreatAsInitialClone(true);
 				}
 				else
 				{
@@ -169,7 +170,7 @@ namespace LfMerge.Core.Actions
 					// verify clone path
 					GetActualClonePath(cloneLocation, line);
 
-					if (MongoProjectAlreadyExistsAndIsSRProject())
+					if (!ChorusHelper.ThisIsAnInitialClone && MongoProjectAlreadyExistsAndIsSRProject())
 					{
 						// If the local Mercurial repo was deleted but the Mongo database is still there,
 						// then there might be data in Mongo that we still need, in which case we should NOT
