@@ -24,9 +24,12 @@ namespace LfMerge.Core.Actions
 
 		private MongoProjectRecordFactory _projectRecordFactory;
 
-		public EnsureCloneAction(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory projectRecordFactory): base(settings, logger)
+		private IMongoConnection _connection;
+
+		public EnsureCloneAction(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection): base(settings, logger)
 		{
 			_projectRecordFactory = projectRecordFactory;
+			_connection = connection;
 		}
 
 		protected override ActionNames NextActionName
@@ -170,14 +173,19 @@ namespace LfMerge.Core.Actions
 					// verify clone path
 					GetActualClonePath(cloneLocation, line);
 
-					if (!ChorusHelper.ThisIsAnInitialClone && MongoProjectAlreadyExistsAndIsSRProject())
+					if (!ChorusHelper.ThisIsAnInitialClone && MongoProjectAlreadyExistsAndIsNonEmpty())
 					{
 						// If the local Mercurial repo was deleted but the Mongo database is still there,
 						// then there might be data in Mongo that we still need, in which case we should NOT
 						// skip the syncing step. So do nothing, so that we'll fall through to the SYNCING state.
+						Logger.Debug("This appears to NOT be an initial clone");
 					}
 					else
 					{
+						if (MongoProjectAlreadyExistsAndIsNonEmpty())
+							Logger.Debug("Even though the project exists and is non-empty, we're calling this an initial clone anyway because of the command-line flag");
+						else
+							Logger.Debug("This is an initial clone both because the flag was set AND because the project appears to be empty or non-existent");
 						InitialTransferToMongoAfterClone(project);
 						Logger.Notice("Initial clone completed; setting state to CLONED");
 						project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
@@ -212,10 +220,12 @@ namespace LfMerge.Core.Actions
 			return Directory.Exists(projectFolderPath);
 		}
 
-		private bool MongoProjectAlreadyExistsAndIsSRProject()
+		private bool MongoProjectAlreadyExistsAndIsNonEmpty()
 		{
 			MongoProjectRecord record = _projectRecordFactory.Create(_currentProject);
-			return record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
+			bool projectHasBeenSynced = record.LastSyncedDate != null && record.LastSyncedDate > MagicValues.UnixEpoch;
+			long projectEntryCount = _connection.EntryCount(_currentProject);
+			return record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier) && projectHasBeenSynced && projectEntryCount > 0;
 		}
 
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,

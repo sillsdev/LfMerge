@@ -131,6 +131,8 @@ namespace LfMerge.Core.Tests
 			_storedCustomFieldConfig.Clear();
 		}
 
+		public long EntryCount(ILfProject project) { return _storedLfLexEntries.LongCount(); }
+
 		public static TObj DeepCopy<TObj>(TObj orig)
 		{
 			// Take advantage of BSON serialization to clone any object
@@ -358,8 +360,8 @@ namespace LfMerge.Core.Tests
 		private readonly bool _projectExists;
 
 		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger,
-			MongoProjectRecordFactory projectRecordFactory, bool projectExists = true):
-			base(settings, logger, projectRecordFactory)
+			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection, bool projectExists = true):
+			base(settings, logger, projectRecordFactory, connection)
 		{
 			_projectExists = projectExists;
 		}

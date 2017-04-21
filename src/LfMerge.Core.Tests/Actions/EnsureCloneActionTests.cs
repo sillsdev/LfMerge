@@ -18,6 +18,7 @@ namespace LfMerge.Core.Tests.Actions
 		private TestEnvironment _env;
 		private string _projectCode;
 		private MongoProjectRecordFactoryDouble _mongoProjectRecordFactory;
+		private MongoConnectionDouble _mongoConnection;
 
 		[SetUp]
 		public void Setup()
@@ -29,6 +30,10 @@ namespace LfMerge.Core.Tests.Actions
 			// Making a stub file so Chorus model.TargetLocationIsUnused will be false
 			File.Create(Path.Combine(_projectDir, "stub"));
 			_mongoProjectRecordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
+			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			if (_mongoConnection == null)
+				throw new AssertionException("EnsureClone action tests need a mock MongoConnection that stores data in order to work.");
+
 		}
 
 		[TearDown]
@@ -49,7 +54,7 @@ namespace LfMerge.Core.Tests.Actions
 			var lfProject = LanguageForgeProject.Create(nonExistingProjectCode);
 
 			// Execute
-			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, false).Run(lfProject),
+			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection, false).Run(lfProject),
 				Throws.Exception.TypeOf(Type.GetType("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")));
 
 			// Verify
@@ -70,7 +75,7 @@ namespace LfMerge.Core.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory).Run(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection).Run(lfProject);
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
@@ -97,7 +102,7 @@ namespace LfMerge.Core.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory).Run(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection).Run(lfProject);
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED),
@@ -123,7 +128,7 @@ namespace LfMerge.Core.Tests.Actions
 			Console.WriteLine("{0}", me);
 
 			// Execute
-			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory).Run(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.False,
@@ -145,7 +150,7 @@ namespace LfMerge.Core.Tests.Actions
 				"Clone of project shouldn't exist");
 
 			// Execute
-			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory).Run(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
@@ -165,7 +170,7 @@ namespace LfMerge.Core.Tests.Actions
 				"Clone of project shouldn't exist yet");
 
 			// Execute
-			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory).Run(lfProject);
+			new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection).Run(lfProject);
 
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
