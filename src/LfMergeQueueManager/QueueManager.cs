@@ -51,7 +51,7 @@ namespace LfMerge.QueueManager
 						var modelVersion = FwProject.GetModelVersion(projectPath);
 						queue.DequeueProject(projectCode);
 						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
-							modelVersion, true, false);
+							modelVersion, true);
 
 						// TODO: If LfMerge fails, should we re-queue the project, or not?
 						if (retCode != 0)

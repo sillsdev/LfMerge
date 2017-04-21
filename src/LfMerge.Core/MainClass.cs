@@ -64,7 +64,7 @@ namespace LfMerge.Core
 		}
 
 		public static int StartLfMerge(string projectCode, ActionNames action,
-			string modelVersion, bool allowFreshClone, bool treatAsInitialClone, string configDir = null)
+			string modelVersion, bool allowFreshClone, string configDir = null)
 		{
 			// Call the correct model version specific LfMerge executable
 			if (string.IsNullOrEmpty(modelVersion))
@@ -84,8 +84,6 @@ namespace LfMerge.Core
 			argsBldr.AppendFormat(" -p {0} --action {1}", projectCode, action);
 			if (allowFreshClone)
 				argsBldr.Append(" --clone");
-			if (treatAsInitialClone)
-				argsBldr.Append(" --initial-clone");
 			if (FwProject.AllowDataMigration)
 				argsBldr.Append(" --migrate");
 			if (!string.IsNullOrEmpty(configDir))

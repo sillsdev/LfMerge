@@ -21,9 +21,6 @@ namespace LfMerge
 		[Option("clone", HelpText = "Clone the specified project if needed")]
 		public bool CloneProject { get; set; }
 
-		[Option("initial-clone", HelpText = "Treat this clone as an initial clone even if Mongo data is found")]
-		public bool TreatAsInitialClone { get; set; }
-
 		[Option("action", HelpText = "The action to perform")]
 		public ActionNames CurrentAction { get; set; }
 

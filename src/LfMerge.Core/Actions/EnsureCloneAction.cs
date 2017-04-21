@@ -160,7 +160,6 @@ namespace LfMerge.Core.Actions
 					}
 					Logger.Info(line);
 					ChorusHelper.SetModelVersion(cloneModelVersion);
-					ChorusHelper.SetTreatAsInitialClone(true);
 				}
 				else
 				{
@@ -173,19 +172,14 @@ namespace LfMerge.Core.Actions
 					// verify clone path
 					GetActualClonePath(cloneLocation, line);
 
-					if (!ChorusHelper.ThisIsAnInitialClone && MongoProjectHasUserDataOrHasBeenSynced())
+					if (MongoProjectHasUserDataOrHasBeenSynced())
 					{
 						// If the local Mercurial repo was deleted but the Mongo database is still there,
 						// then there might be data in Mongo that we still need, in which case we should NOT
 						// skip the syncing step. So do nothing, so that we'll fall through to the SYNCING state.
-						Logger.Debug("This appears to NOT be an initial clone");
 					}
 					else
 					{
-						if (MongoProjectHasUserDataOrHasBeenSynced())
-							Logger.Debug("Even though the project exists and is non-empty, we're calling this an initial clone anyway because of the command-line flag");
-						else
-							Logger.Debug("This is an initial clone both because the flag was set AND because the project appears to be empty or non-existent");
 						InitialTransferToMongoAfterClone(project);
 						Logger.Notice("Initial clone completed; setting state to CLONED");
 						project.State.SRState = ProcessingState.SendReceiveStates.CLONED;
@@ -223,9 +217,10 @@ namespace LfMerge.Core.Actions
 		private bool MongoProjectHasUserDataOrHasBeenSynced()
 		{
 			MongoProjectRecord record = _projectRecordFactory.Create(_currentProject);
-			bool projectHasBeenSynced = record.LastSyncedDate != null && record.LastSyncedDate > MagicValues.UnixEpoch;
+			bool projectIsSRProject = record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
+			bool projectHasBeenSynced = record != null && record.LastSyncedDate != null && record.LastSyncedDate > MagicValues.UnixEpoch;
 			long projectEntryCount = _connection.EntryCount(_currentProject);
-			return record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier) && (projectHasBeenSynced || projectEntryCount > 0);
+			return (projectIsSRProject && projectHasBeenSynced) || projectEntryCount > 0;
 		}
 
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,

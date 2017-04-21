@@ -24,27 +24,11 @@ namespace LfMerge.Core.Actions.Infrastructure
 		}
 
 		public string ModelVersion { get; private set; }
-		public bool TreatAsInitialClone { get; private set; }
 
 		public static void SetModelVersion(string modelVersion)
 		{
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 			chorusHelper.ModelVersion = modelVersion;
-		}
-
-		public static void SetTreatAsInitialClone(bool treatAsInitialClone)
-		{
-			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-			chorusHelper.TreatAsInitialClone = treatAsInitialClone;
-		}
-
-		public static bool ThisIsAnInitialClone
-		{
-			get
-			{
-				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-				return chorusHelper.TreatAsInitialClone;
-			}
 		}
 
 		public static bool RemoteDataIsForDifferentModelVersion
