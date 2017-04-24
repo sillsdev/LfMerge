@@ -30,7 +30,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Making a stub file so Chorus model.TargetLocationIsUnused will be false
 			File.Create(Path.Combine(_projectDir, "stub"));
 			_mongoProjectRecordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
-			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			_mongoConnection = _mongoProjectRecordFactory.Connection as MongoConnectionDouble;
 			if (_mongoConnection == null)
 				throw new AssertionException("EnsureClone action tests need a mock MongoConnection that stores data in order to work.");
 
@@ -47,7 +47,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// for this test we don't want the test double for InternetCloneSettingsModel
 			_env.Dispose();
-			_env = new TestEnvironment(false);
+			_env = new TestEnvironment(registerSettingsModelDouble: false);
 
 			// Setup
 			var nonExistingProjectCode = Path.GetRandomFileName().ToLowerInvariant();
@@ -175,6 +175,80 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(Directory.Exists(Path.Combine(projectDir, ".hg")), Is.True,
 				"Didn't clone project");
+		}
+
+		[Test]
+		public void EnsureClone_ProjectThatHasNeverBeenCloned_RunsInitialClone()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			var action = new EnsureCloneActionDoubleMockingInitialTransfer(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
+			Assert.That(action.InitialCloneWasRun, Is.False);
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(action.InitialCloneWasRun, Is.True);
+		}
+
+		[Test]
+		public void EnsureClone_ProjectThatHasAPreviouslyClonedDate_DoesNotRunInitialClone()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			_mongoConnection.SetLastSyncedDate(lfProject, DateTime.UtcNow);
+			var action = new EnsureCloneActionDoubleMockingInitialTransfer(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
+			Assert.That(action.InitialCloneWasRun, Is.False);
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(action.InitialCloneWasRun, Is.False);
+		}
+
+		[Test]
+		public void EnsureClone_ProjectThatHasAPreviouslyClonedDateButDoesNotHaveAnSRProjectCode_RunsInitialClone()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			_mongoConnection.SetLastSyncedDate(lfProject, DateTime.UtcNow);
+			var projectRecord = _mongoProjectRecordFactory.Create(lfProject);
+			projectRecord.SendReceiveProjectIdentifier = null;
+			var action = new EnsureCloneActionDoubleMockingInitialTransfer(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
+			Assert.That(action.InitialCloneWasRun, Is.False);
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(action.InitialCloneWasRun, Is.True);
+		}
+
+		[Test]
+		public void EnsureClone_ProjectThatHasPreviousUserData_DoesNotRunInitialClone()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			var data = new SampleData();
+			_mongoConnection.UpdateMockLfLexEntry(data.bsonTestData);
+			var action = new EnsureCloneActionDoubleMockingInitialTransfer(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
+			Assert.That(action.InitialCloneWasRun, Is.False);
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(action.InitialCloneWasRun, Is.False);
 		}
 	}
 }
