@@ -123,6 +123,9 @@ namespace LfMerge.Core.Tests
 		private Dictionary<string, LfConfigFieldBase> _storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
 		private Dictionary<string, DateTime?> _storedLastSyncDate = new Dictionary<string, DateTime?>();
 
+		// Used in mocking SetLastSyncDate
+		private MongoProjectRecordFactoryDouble _projectRecordFactory = null;
+
 		public void Reset()
 		{
 			_storedInputSystems.Clear();
@@ -130,6 +133,13 @@ namespace LfMerge.Core.Tests
 			_storedLfOptionLists.Clear();
 			_storedCustomFieldConfig.Clear();
 		}
+
+		public void RegisterProjectRecordFactory(MongoProjectRecordFactoryDouble projectRecordFactory)
+		{
+			_projectRecordFactory = projectRecordFactory;
+		}
+
+		public long LexEntryCount(ILfProject project) { return _storedLfLexEntries.LongCount(); }
 
 		public static TObj DeepCopy<TObj>(TObj orig)
 		{
@@ -278,8 +288,13 @@ namespace LfMerge.Core.Tests
 
 		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
 		{
-			// No-op
 			_storedLastSyncDate[project.ProjectCode] = newSyncedDate;
+			// Also update on the fake project record, since EnsureCloneAction looks at the project record to check its initial-clone logic
+			if (_projectRecordFactory != null)
+			{
+				MongoProjectRecord projectRecord = _projectRecordFactory.Create(project);
+				projectRecord.LastSyncedDate = newSyncedDate;
+			}
 			return true;
 		}
 
@@ -294,8 +309,16 @@ namespace LfMerge.Core.Tests
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory
 	{
+		// Memoize the project records for each project so that we're returning the same one each time, to better simulate the Mongo DB.
+		private Dictionary<string, MongoProjectRecord> _projectRecords;
 		public MongoProjectRecordFactoryDouble(IMongoConnection connection) : base(connection)
 		{
+			_projectRecords = new Dictionary<string, MongoProjectRecord>();
+			var testDouble = connection as MongoConnectionDouble;
+			if (testDouble != null)
+			{
+				testDouble.RegisterProjectRecordFactory(this);
+			}
 		}
 
 		public override MongoProjectRecord Create(ILfProject project)
@@ -303,31 +326,41 @@ namespace LfMerge.Core.Tests
 			var sampleConfig = BsonSerializer.Deserialize<LfProjectConfig>(SampleData.jsonConfigData);
 
 			// TODO: Could we use a Mock to do this instead?
-			return new MongoProjectRecord {
-				Id = new ObjectId(),
-				InputSystems = new Dictionary<string, LfInputSystemRecord>() {
-					{"en", new LfInputSystemRecord {
-							Abbreviation = "Eng",
-							Tag = "en",
-							LanguageName = "English",
-							IsRightToLeft = false } },
-					{"fr", new LfInputSystemRecord {
-							// this should probably be a three-letter abbreviation like Fre,
-							// but since our test data has the two letter abbreviation for this ws
-							// we have to stick with it so that we don't introduce an unwanted
-							// change.
-							Abbreviation = "fr",
-							Tag = "fr",
-							LanguageName = "French",
-							IsRightToLeft = false } },
-				},
-				InterfaceLanguageCode = "en",
-				LanguageCode = "fr",
-				ProjectCode = project.ProjectCode,
-				ProjectName = project.ProjectCode,
-				SendReceiveProjectIdentifier = null,
-				Config = sampleConfig
-			};
+			MongoProjectRecord record;
+			if (_projectRecords.TryGetValue(project.ProjectCode, out record))
+			{
+				return record;
+			}
+			else
+			{
+				record = new MongoProjectRecord {
+					Id = new ObjectId(),
+					InputSystems = new Dictionary<string, LfInputSystemRecord>() {
+						{"en", new LfInputSystemRecord {
+								Abbreviation = "Eng",
+								Tag = "en",
+								LanguageName = "English",
+								IsRightToLeft = false } },
+						{"fr", new LfInputSystemRecord {
+								// this should probably be a three-letter abbreviation like Fre,
+								// but since our test data has the two letter abbreviation for this ws
+								// we have to stick with it so that we don't introduce an unwanted
+								// change.
+								Abbreviation = "fr",
+								Tag = "fr",
+								LanguageName = "French",
+								IsRightToLeft = false } },
+					},
+					InterfaceLanguageCode = "en",
+					LanguageCode = "fr",
+					ProjectCode = project.ProjectCode,
+					ProjectName = project.ProjectCode,
+					SendReceiveProjectIdentifier = project.ProjectCode,
+					Config = sampleConfig
+				};
+				_projectRecords.Add(project.ProjectCode, record);
+				return record;
+			}
 		}
 	}
 
@@ -358,8 +391,8 @@ namespace LfMerge.Core.Tests
 		private readonly bool _projectExists;
 
 		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger,
-			MongoProjectRecordFactory projectRecordFactory, bool projectExists = true):
-			base(settings, logger, projectRecordFactory)
+			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection, bool projectExists = true):
+			base(settings, logger, projectRecordFactory, connection)
 		{
 			_projectExists = projectExists;
 		}
@@ -377,6 +410,24 @@ namespace LfMerge.Core.Tests
 				return true;
 			}
 			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
+		}
+	}
+
+	class EnsureCloneActionDoubleMockingInitialTransfer: EnsureCloneActionDouble
+	{
+		// This mock object will be used in the EnsureClone_RunsInitialClone series of tests
+		internal bool InitialCloneWasRun { get; set; }
+
+		public EnsureCloneActionDoubleMockingInitialTransfer(LfMergeSettings settings, ILogger logger,
+			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection, bool projectExists = true):
+			base(settings, logger, projectRecordFactory, connection, projectExists)
+		{
+			InitialCloneWasRun = false;
+		}
+
+		protected override void InitialTransferToMongoAfterClone(ILfProject project)
+		{
+			InitialCloneWasRun = true;
 		}
 	}
 }

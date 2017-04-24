@@ -24,9 +24,12 @@ namespace LfMerge.Core.Actions
 
 		private MongoProjectRecordFactory _projectRecordFactory;
 
-		public EnsureCloneAction(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory projectRecordFactory): base(settings, logger)
+		private IMongoConnection _connection;
+
+		public EnsureCloneAction(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection): base(settings, logger)
 		{
 			_projectRecordFactory = projectRecordFactory;
+			_connection = connection;
 		}
 
 		protected override ActionNames NextActionName
@@ -169,7 +172,7 @@ namespace LfMerge.Core.Actions
 					// verify clone path
 					GetActualClonePath(cloneLocation, line);
 
-					if (MongoProjectAlreadyExistsAndIsSRProject())
+					if (MongoProjectHasUserDataOrHasBeenSynced())
 					{
 						// If the local Mercurial repo was deleted but the Mongo database is still there,
 						// then there might be data in Mongo that we still need, in which case we should NOT
@@ -211,10 +214,13 @@ namespace LfMerge.Core.Actions
 			return Directory.Exists(projectFolderPath);
 		}
 
-		private bool MongoProjectAlreadyExistsAndIsSRProject()
+		private bool MongoProjectHasUserDataOrHasBeenSynced()
 		{
 			MongoProjectRecord record = _projectRecordFactory.Create(_currentProject);
-			return record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
+			bool projectIsSRProject = record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
+			bool projectHasBeenSynced = record != null && record.LastSyncedDate != null && record.LastSyncedDate > MagicValues.UnixEpoch;
+			long lexicalEntryCount = _connection.LexEntryCount(_currentProject);
+			return (projectIsSRProject && projectHasBeenSynced) || lexicalEntryCount > 0;
 		}
 
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,

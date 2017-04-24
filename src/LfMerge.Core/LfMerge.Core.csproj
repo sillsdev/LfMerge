@@ -127,6 +127,7 @@
     <Compile Include="LanguageDepotProject.cs" />
     <Compile Include="LanguageForgeProject.cs" />
     <Compile Include="MagicStrings.cs" />
+    <Compile Include="MagicValues.cs" />
     <Compile Include="ProcessingState.cs" />
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\ActionNames.cs" />
