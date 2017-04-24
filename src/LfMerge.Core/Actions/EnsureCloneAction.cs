@@ -219,8 +219,8 @@ namespace LfMerge.Core.Actions
 			MongoProjectRecord record = _projectRecordFactory.Create(_currentProject);
 			bool projectIsSRProject = record != null && ! string.IsNullOrEmpty(record.SendReceiveProjectIdentifier);
 			bool projectHasBeenSynced = record != null && record.LastSyncedDate != null && record.LastSyncedDate > MagicValues.UnixEpoch;
-			long projectEntryCount = _connection.EntryCount(_currentProject);
-			return (projectIsSRProject && projectHasBeenSynced) || projectEntryCount > 0;
+			long lexicalEntryCount = _connection.LexEntryCount(_currentProject);
+			return (projectIsSRProject && projectHasBeenSynced) || lexicalEntryCount > 0;
 		}
 
 		protected virtual bool CloneRepo(ILfProject project, string projectFolderPath,

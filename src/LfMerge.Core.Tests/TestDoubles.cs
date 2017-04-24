@@ -131,7 +131,7 @@ namespace LfMerge.Core.Tests
 			_storedCustomFieldConfig.Clear();
 		}
 
-		public long EntryCount(ILfProject project) { return _storedLfLexEntries.LongCount(); }
+		public long LexEntryCount(ILfProject project) { return _storedLfLexEntries.LongCount(); }
 
 		public static TObj DeepCopy<TObj>(TObj orig)
 		{
