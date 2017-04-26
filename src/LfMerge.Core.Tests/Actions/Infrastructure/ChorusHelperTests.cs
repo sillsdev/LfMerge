@@ -16,7 +16,7 @@ namespace LfMerge.Core.Tests.Actions.Infrastructure
 		[SetUp]
 		public void Setup()
 		{
-			_env = new TestEnvironment(false);
+			_env = new TestEnvironment(registerSettingsModelDouble: false);
 		}
 
 		[TearDown]

@@ -26,8 +26,8 @@ namespace LfMerge.Core.Tests.Actions
 	{
 		private class EnsureCloneActionWithoutMongo: EnsureCloneAction
 		{
-			public EnsureCloneActionWithoutMongo(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory factory)
-				: base(settings, logger, factory)
+			public EnsureCloneActionWithoutMongo(LfMergeSettings settings, ILogger logger, MongoProjectRecordFactory factory, IMongoConnection connection)
+				: base(settings, logger, factory, connection)
 			{
 			}
 
@@ -58,7 +58,10 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.CreateDirectory(LanguageDepotMock.ProjectFolderPath);
 			_lfProject = LanguageForgeProject.Create(TestLangProj);
 			_mongoProjectRecordFactory = MainClass.Container.Resolve<LfMerge.Core.MongoConnector.MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
-			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger, _mongoProjectRecordFactory);
+			// Even though the EnsureCloneActionWithoutMongo class has "WithoutMongo" in the name, the EnsureClone class which it inherits from
+			// needs an IMongoConnection argument in the constructor, so we have to create a MongoConnectionDouble that we're not going to use here.
+			IMongoConnection _mongoConnection = MainClass.Container.Resolve<IMongoConnection>();
+			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
 			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 

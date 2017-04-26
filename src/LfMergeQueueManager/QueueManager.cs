@@ -49,11 +49,15 @@ namespace LfMerge.QueueManager
 							projectCode, string.Format("{0}{1}", projectCode,
 								FdoFileHelper.ksFwDataXmlFileExtension));
 						var modelVersion = FwProject.GetModelVersion(projectPath);
-						MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
+						queue.DequeueProject(projectCode);
+						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
 							modelVersion, true);
 
-						// TODO: Verify actions complete before dequeuing
-						queue.DequeueProject(projectCode);
+						// TODO: If LfMerge fails, should we re-queue the project, or not?
+						if (retCode != 0)
+						{
+							// queue.EnqueueProject(projectCode);
+						}
 					}
 				}
 			}

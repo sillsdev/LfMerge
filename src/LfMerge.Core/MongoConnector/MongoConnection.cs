@@ -134,6 +134,14 @@ namespace LfMerge.Core.MongoConnector
 			return Guid.TryParse(guidStr, out ignored);
 		}
 
+		public long LexEntryCount(ILfProject project)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> lexicon = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+			FilterDefinition<LfLexEntry> allEntries = Builders<LfLexEntry>.Filter.Empty;
+			return lexicon.Count(allEntries);
+		}
+
 		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
 			IMongoDatabase db = GetProjectDatabase(project);
