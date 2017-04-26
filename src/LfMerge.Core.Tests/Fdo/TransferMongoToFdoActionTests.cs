@@ -3,12 +3,15 @@
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Model;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SIL.FieldWorks.Common.COMInterfaces;
 
 namespace LfMerge.Core.Tests.Fdo
 {
@@ -635,6 +638,127 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
 				Is.EqualTo("Language Forge S/R"));
 		}
+
+		// TODO: Move custom field tests to their own test class, and move these helper functions with them
+		public void AddCustomFieldToSense(LfSense sense, string fieldName, BsonValue fieldValue)
+		{
+			if (sense.CustomFields == null)
+			{
+				sense.CustomFields = new BsonDocument();
+			}
+			if (sense.CustomFieldGuids == null)
+			{
+				sense.CustomFieldGuids = new BsonDocument();
+			}
+			sense.CustomFields[fieldName] = fieldValue;
+			// Clear out the GUIDs: since LF doesn't add them, we want to test what happens if they're missing
+			sense.CustomFieldGuids[fieldName] = new BsonArray();
+		}
+
+		public void SetCustomMultiOptionList(LfSense sense, string fieldName, string[] keys)
+		{
+			BsonValue value = new BsonArray(keys);
+			AddCustomFieldToSense(sense, fieldName, new BsonDocument("values", value));
+		}
+
+		public IEnumerable<string> GetFdoAbbrevsForField(ILexSense fdoSense, int fieldId)
+		{
+			var foo = fdoSense.Guid;
+			FdoCache cache = _cache;
+			int size = cache.DomainDataByFlid.get_VecSize(fdoSense.Hvo, fieldId);
+			for (int i = 0; i < size; i++)
+			{
+				int itemHvo = cache.DomainDataByFlid.get_VecItem(fdoSense.Hvo, fieldId, i);
+				ICmObject obj = cache.ServiceLocator.GetObject(itemHvo);
+				// Note that we check for CmCustomItemTags.kClassId, *not* CmPossibilityTags.kClassId. This field has a custom list as its target.
+				Assert.That(obj.ClassID, Is.EqualTo(CmCustomItemTags.kClassId), "Custom Multi ListRef field in test data should point to CmCustomItem objects, not CmPossibility (or anything else)");
+				ICmPossibility poss = obj as ICmPossibility;
+				Assert.That(poss, Is.Not.Null);
+				Assert.That(poss.Abbreviation, Is.Not.Null);
+				ITsString enAbbr = poss.Abbreviation.get_String(_wsEn);
+				Assert.That(enAbbr, Is.Not.Null);
+				Assert.That(enAbbr.Text, Is.Not.Null);
+				yield return enAbbr.Text;
+			}
+		}
+
+		public void Run_CustomMultiListRefTest(int whichSense, params string[] desiredKeys)
+		{
+			// Setup
+			var lfProj = _lfProj;
+			sutFdoToMongo.Run(lfProj);
+
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfSense sense = entry.Senses[whichSense];
+			SetCustomMultiOptionList(sense, "customField_senses_Cust_Multi_ListRef", desiredKeys);
+			entry.AuthorInfo = new LfAuthorInfo();
+			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(entry);
+
+			// Exercise
+			sutMongoToFdo.Run(lfProj);
+
+			// Verify
+			FdoCache cache = _cache;
+
+			var fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.IsNotNull(fdoEntry);
+			Assert.That(cache.ServiceLocator.MetaDataCache.FieldExists(LexSenseTags.kClassName, "Cust Multi ListRef", false), "LexSense should have the Cust Multi ListRef field in our test data.");
+			int fieldId = cache.ServiceLocator.MetaDataCache.GetFieldId(LexSenseTags.kClassName, "Cust Multi ListRef", false);
+			ILexSense fdoSense = fdoEntry.SensesOS[whichSense];
+			IEnumerable<string> fdoAbbrevs = GetFdoAbbrevsForField(fdoSense, fieldId);
+			Assert.That(fdoAbbrevs, Is.EquivalentTo(desiredKeys));
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithTwoOriginalItemsSettingTheSameItems_ShouldRemainUnchanged()
+		{
+			Run_CustomMultiListRefTest(0, "fci", "sci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithTwoOriginalItemsSettingJustTheFirstItem_ShouldDeleteTheSecond()
+		{
+			Run_CustomMultiListRefTest(0, "fci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithTwoOriginalItemsSettingJustTheSecondItem_ShouldDeleteTheFirst()
+		{
+			Run_CustomMultiListRefTest(0, "sci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithTwoOriginalItemsSettingNoneOfThem_ShouldDeleteBoth()
+		{
+			Run_CustomMultiListRefTest(0);
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithZeroOriginalItemsSettingTwoItems_ShouldRemainUnchanged()
+		{
+			Run_CustomMultiListRefTest(1, "fci", "sci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithZeroOriginalItemsSettingJustOneItem_ShouldReturnThatOneItem()
+		{
+			Run_CustomMultiListRefTest(1, "fci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithZeroOriginalItemsSettingADifferentItem_ShouldAlsoReturnThatOneItem()
+		{
+			Run_CustomMultiListRefTest(1, "sci");
+		}
+
+		[Test]
+		public void CustomMultiListRef_WithZeroOriginalItemsSettingNoneOfThem_ShouldAddNone()
+		{
+			Run_CustomMultiListRefTest(1);
+		}
+
 
 		#if false  // We've changed how we handle OptionLists since these tests were written, and they are no longer valid
 		[Test]

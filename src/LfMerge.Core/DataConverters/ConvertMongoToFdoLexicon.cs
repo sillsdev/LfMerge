@@ -34,10 +34,7 @@ namespace LfMerge.Core.DataConverters
 		//private IEnumerable<ILgWritingSystem> _analysisWritingSystems;
 		//private IEnumerable<ILgWritingSystem> _vernacularWritingSystems;
 
-		#if false  // Only used in "update FDO from LF option lists" code, so commented out with
-		// the rest of that code to avoid compiler warnings
 		private int _wsEn;
-		#endif
 		private ConvertMongoToFdoCustomField _convertCustomField;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
@@ -84,10 +81,11 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
 			#if false
-			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode, ServiceLocator.LanguageProject.PartsOfSpeechOA);
 			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode, ServiceLocator.LanguageProject.SemanticDomainListOA);
 			ListConverters[AcademicDomainListCode] = PrepareOptionListConverter(AcademicDomainListCode, ServiceLocator.LanguageProject.LexDbOA.DomainTypesOA);
@@ -132,12 +130,10 @@ namespace LfMerge.Core.DataConverters
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				LfWsToFdoWs(ProjectRecord.InputSystems));
 
-			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 			// Set English ws handle again in case it changed
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
-			#endif
 
-			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, ServiceLocator, Logger);
+			_convertCustomField = new ConvertMongoToFdoCustomField(Cache, ServiceLocator, Logger, _wsEn);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
