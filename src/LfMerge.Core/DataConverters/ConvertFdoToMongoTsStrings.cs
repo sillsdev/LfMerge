@@ -109,7 +109,7 @@ namespace LfMerge.Core.DataConverters
 			string result = resultBuilder.ToString();
 			if (String.IsNullOrEmpty(result))
 				result = null; // We prefer nulls rather than empty strings
-			return result;
+			return result.Normalize(NormalizationForm.FormC);
 		}
 
 		public static List<string> ClassesFromTsTextProps(ITsTextProps props, int[] intPropsToSkip, int[] strPropsToSkip)

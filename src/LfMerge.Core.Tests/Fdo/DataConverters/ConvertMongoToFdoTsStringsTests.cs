@@ -40,6 +40,20 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 		}
 
+		// *****************
+		// Custom assertions
+		// *****************
+
+		public void AssertNormalized(string s, System.Text.NormalizationForm form)
+		{
+			Assert.That(s.Normalize(form), Is.EqualTo(s));
+		}
+
+		public void AssertNFC(string s)
+		{
+			AssertNormalized(s, System.Text.NormalizationForm.FormC);
+		}
+
 		// *************
 		//     Tests
 		// *************
@@ -1321,6 +1335,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1342,6 +1357,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1365,6 +1381,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1398,6 +1415,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 
@@ -1405,7 +1423,6 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			int runIdx2 = tss2.get_RunAt(2);
 			Guid actualGuid = TsStringUtils.GetGuidFromRun(tss2, runIdx2);
 			Assert.That(actualGuid, Is.EqualTo(origGuid));
-
 		}
 
 		[Test]
@@ -1432,6 +1449,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1451,6 +1469,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1470,6 +1489,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1489,6 +1509,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1508,6 +1529,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
 
 			// Compare
+			AssertNFC(text);
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
 			Assert.That(diff, Is.Null);
 		}
@@ -1529,6 +1551,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1554,6 +1577,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1581,6 +1605,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1613,6 +1638,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1636,6 +1662,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1659,6 +1686,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Compare
+			AssertNFC(text2);
 			Assert.That(text2, Is.EqualTo(text));
 			// Also check TsStrings for completion's sake
 			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
@@ -1679,6 +1707,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Verify
+			AssertNFC(text);
 			Assert.That(text, Is.EqualTo(containsAngleBracketsEscaped));
 		}
 
@@ -1696,6 +1725,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
 
 			// Verify
+			AssertNFC(text);
 			Assert.That(text, Is.EqualTo(containsHtmlEscaped));
 		}
 
