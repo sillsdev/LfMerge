@@ -128,7 +128,8 @@ namespace LfMerge.Core.Tests.Fdo
 			sutFdoToMongo = new TransferFdoToMongoAction(
 				_env.Settings,
 				_env.Logger,
-				_conn
+				_conn,
+				_recordFactory
 			);
 
 			var convertCustomField = new ConvertFdoToMongoCustomField(_cache, _servLoc, _env.Logger);

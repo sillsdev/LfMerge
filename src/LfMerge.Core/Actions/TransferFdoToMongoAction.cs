@@ -20,12 +20,14 @@ namespace LfMerge.Core.Actions
 		private FdoCache _cache;
 		private IFdoServiceLocator _servLoc;
 		private IMongoConnection _connection;
+		private MongoProjectRecordFactory _projectRecordFactory;
 
 		private ConvertFdoToMongoLexicon _lexiconConverter;
 
-		public TransferFdoToMongoAction(LfMergeSettings settings, ILogger logger, IMongoConnection conn) : base(settings, logger)
+		public TransferFdoToMongoAction(LfMergeSettings settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory projectRecordFactory) : base(settings, logger)
 		{
 			_connection = conn;
+			_projectRecordFactory = projectRecordFactory;
 		}
 
 		protected override void DoRun(ILfProject project)
@@ -50,7 +52,7 @@ namespace LfMerge.Core.Actions
 				return;
 			}
 
-			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection, Progress);
+			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection, Progress, _projectRecordFactory);
 			_lexiconConverter.RunConversion();
 
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);

@@ -21,12 +21,15 @@ namespace LfMerge.Core.MongoConnector
 		bool RemoveRecord(ILfProject project, Guid guid);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		IEnumerable<LfComment> GetComments(ILfProject project);
+		void UpdateComments(ILfProject project, List<LfComment> comments);  // Should be void, but string for now as a very quick-and-dirty test
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 		bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate);  // TODO: Decide if this is really where this method belongs
-		void SetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings); // TODO: Implement in TestDouble
+		void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings); // TODO: Implement in TestDouble
+		Dictionary <MongoDB.Bson.ObjectId, Guid> GetGuidsByObjectIdForCollection(ILfProject project, string collectionName);
+
 	}
 }
 

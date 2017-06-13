@@ -26,6 +26,8 @@ namespace LfMerge.Core.DataConverters
 		private FwServiceLocatorCache ServiceLocator { get; set; }
 		private ILogger Logger { get; set; }
 		private IMongoConnection Connection { get; set; }
+		private MongoProjectRecordFactory ProjectRecordFactory { get; set; }
+
 
 		private int _wsEn;
 
@@ -47,12 +49,13 @@ namespace LfMerge.Core.DataConverters
 
 		//private ConvertFdoToMongoOptionList _convertAnthroCodesOptionList;
 
-		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection, IProgress progress)
+		public ConvertFdoToMongoLexicon(ILfProject lfProject, ILogger logger, IMongoConnection connection, IProgress progress, MongoProjectRecordFactory projectRecordFactory)
 		{
 			LfProject = lfProject;
 			Logger = logger;
 			Connection = connection;
 			Progress = progress;
+			ProjectRecordFactory = projectRecordFactory;
 
 			FwProject = LfProject.FieldWorksProject;
 			Cache = FwProject.Cache;
@@ -95,9 +98,6 @@ namespace LfMerge.Core.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("FdoToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
-			Logger.Debug("Running \"fake\" FtMComments, should see comments show up below:");
-			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress); // TODO: Need a ProjectRecordFactory in here for the comments handling code.
-			commCvtr.DoSomethingAndGiveThisABetterName(); // TODO: Remove this and replace with real code
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
@@ -139,6 +139,9 @@ namespace LfMerge.Core.DataConverters
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInFdo();
+			Logger.Debug("Running FtMComments, should see comments show up below:");
+			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress, ProjectRecordFactory);
+			commCvtr.DoSomethingAndGiveThisABetterName(); // TODO: Remove this and replace with real code
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()

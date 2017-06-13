@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
@@ -25,13 +26,24 @@ namespace LfMerge.Core.DataConverters
 		{
 			_conn = conn;
 			_project = proj;
+			_servLoc = proj.FieldWorksProject.ServiceLocator;
 			_logger = logger;
 			_progress = progress;
 			_factory = factory;
 		}
 
-		public void DoSomethingAndGiveThisABetterName() // TODO: Give this a better name
+		public Dictionary<Guid?, MongoDB.Bson.ObjectId> CalculateGUIDToObjectIdMapping()
 		{
+			// TODO: Decide if this belongs here or in MongoConnection. Okay, no, it's decided. It belongs in MongoConnection, because then I can do a custom query that doesn't grab EVERYTHING.
+			IEnumerable<LfLexEntry> lfEntries = _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon);
+			// TODO: Wait a minute, we want the objectIds for the *comments*, not the entries!
+			return lfEntries.ToDictionary(entry => entry.Guid, entry => entry.Id);
+		}
+
+		public void DoSomethingAndGiveThisABetterName(/*Dictionary<Guid?, MongoDB.Bson.ObjectId> guidMapping*/) // TODO: Give this a better name
+		{
+			// NOTE: Must be called *AFTER* ConvertFdoToMongoLexicon, because otherwise entries newly created in FDO won't have their GUIDs known yet.
+			// TODO: Use the GUID-to-ObjectId mapping parameter. Or, wait, do we actually need that?
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
@@ -56,13 +68,19 @@ namespace LfMerge.Core.DataConverters
 							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
 						}
 					}
-					_logger.Debug("Comment regarding field {0} (containing {1}) of word {2} (meaning {3}) has content {4}",
+					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
 						comment.Regarding.FieldNameForDisplay,
 						comment.Regarding.FieldValue,
 						comment.Regarding.Word,
 						comment.Regarding.Meaning,
-						comment.Content);
+						comment.Content,
+						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
+						comment.AuthorNameAlternate ?? "<null>",
+						comment.Regarding.TargetGuid
+						);
 				}
+				_conn.UpdateComments(_project, comments);
+				_logger.Debug("Done with updating comments");
 			}
 			else
 			{
@@ -175,7 +193,7 @@ namespace LfMerge.Core.DataConverters
 					result.TargetGuid = entry.Guid.ToString();
 					result.Word = entry.ShortName;
 					result.Meaning = Definition(sense);
-					result.Field = MagicStrings.LfFieldNameForExampleSentence; // Even if it's really the gloss, we'll say it's the definition for LF display purposes
+					result.Field = MagicStrings.LfFieldNameForExampleSentence; // Even if it's really a subfield of the example, we'll say it's the example for LF display purposes
 					result.FieldNameForDisplay = FieldNameForDisplay(result.Field, fieldConfigs.exampleConfig);
 					result.FieldValue = ExampleValue(example);
 					break;

@@ -25,42 +25,61 @@ namespace LfMerge.Core.DataConverters
 			_progress = progress;
 			// TODO: Are there any other constructor parameters that we need?
 		}
-		public void DoSomethingAndGiveThisABetterName() // TODO: Give this a better name
+		public void DoSomethingAndGiveThisABetterName(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings) // TODO: Give this a better name
 		{
 			var jsonSettings = new JsonSerializerSettings
 			{
 				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
 			};
 			// JsonSerializer json = JsonSerializer.CreateDefault();
+			var fixedComments = new List<LfComment>();
+			var commentIds = new List<string>();
 			foreach (LfComment comment in _conn.GetComments(_project))
 			{
-				string commentJson = JsonConvert.SerializeObject(comment, jsonSettings);
-				_logger.Debug("Got some json: {0}", commentJson);
+				Guid guid;
+				if (comment.EntryRef != null && entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
+				{
+					comment.Regarding.TargetGuid = guid.ToString();
+				}
+				_logger.Debug("Serializing comment KVP with ID {0} and content \"{1}\"", comment.Id.ToString(), comment.Content);
+				commentIds.Add(comment.Id.ToString());
+				fixedComments.Add(comment);
 			}
-			string allCommentsJson = JsonConvert.SerializeObject(_conn.GetComments(_project), jsonSettings);
+			string commentIdsJson = JsonConvert.SerializeObject(commentIds, jsonSettings);
+			string allCommentsJson = JsonConvert.SerializeObject(fixedComments, jsonSettings);
+			_logger.Debug("The json for comment Ids would be: {0}", commentIdsJson);
 			_logger.Debug("The json for ALL comments would be: {0}", allCommentsJson);
 			_logger.Debug("About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
-			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
-			string guidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
-			Dictionary<string, string> uniqIdToGuidMappings = ParseGuidMappings(guidMappingsStr);
-			foreach (KeyValuePair<string,string> kv in uniqIdToGuidMappings)
+			CallLfMergeBridge(commentIdsJson, allCommentsJson, out bridgeOutput);
+			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
+			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
+			Dictionary<string, Guid> commentIdToGuidMappings = ParseGuidMappings(commentGuidMappingsStr);
+			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
+			foreach (KeyValuePair<string,Guid> kv in commentIdToGuidMappings)
+			{
+				_logger.Debug("Would map comment ID {0} to GUID {1}", kv.Key, kv.Value);
+			}
+			foreach (KeyValuePair<string,Guid> kv in uniqIdToGuidMappings)
 			{
 				_logger.Debug("Would map uniqid {0} to GUID {1}", kv.Key, kv.Value);
 			}
-			// _conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);  // Uncomment when we're ready to test (Tuesday morning)
+			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
 		}
 
-		public bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
+		public bool CallLfMergeBridge(string bridgeInput1, string bridgeInput2, out string bridgeOutput)
 		{
 			bridgeOutput = string.Empty;
-			using (var tmpFile = new Palaso.IO.TempFile(bridgeInput))
+			using (var tmpFile1 = new Palaso.IO.TempFile(bridgeInput1))
+			using (var tmpFile2 = new Palaso.IO.TempFile(bridgeInput2))
 			{
 				var options = new Dictionary<string, string>
 				{
 					{"-p", _project.FwDataPath},
-					{"-i", tmpFile.Path}
+					{"-i", tmpFile1.Path},
+					{"-j", tmpFile2.Path}
 				};
+				try {
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", _progress,
 					options, out bridgeOutput))
 				{
@@ -71,6 +90,13 @@ namespace LfMerge.Core.DataConverters
 				{
 					_logger.Debug("Good  output from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
 					return true;
+				}
+				}
+				catch (NullReferenceException)
+				{
+					_logger.Debug("Got an exception. Before rethrowing it, here is what LfMergeBridge sent:");
+					_logger.Debug("{0}", bridgeOutput);
+					throw;
 				}
 			}
 		}
@@ -96,16 +122,20 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public Dictionary<string, string> ParseGuidMappings(string input)
+		public Dictionary<string, Guid> ParseGuidMappings(string input)
 		{
 			string[] parts = input.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-			var result = new Dictionary<string, string>();
+			var result = new Dictionary<string, Guid>();
 			foreach (string part in parts)
 			{
 				string[] kv = part.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
 				if (kv.Length == 2)
 				{
-					result[kv[0]] = kv[1];
+					Guid parsed;
+					if (Guid.TryParse(kv[1], out parsed))
+					{
+						result[kv[0]] = parsed;
+					}
 				}
 			}
 			return result;

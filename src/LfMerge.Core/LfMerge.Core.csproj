@@ -127,6 +127,7 @@
     <Compile Include="LanguageDepotProject.cs" />
     <Compile Include="LanguageForgeProject.cs" />
     <Compile Include="MagicStrings.cs" />
+    <Compile Include="MagicValues.cs" />
     <Compile Include="ProcessingState.cs" />
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\ActionNames.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\MongoRegistrar.cs" />
+    <Compile Include="MongoConnector\PseudoPhp.cs" />
     <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\Queue.cs" />
     <Compile Include="Queues\QueueNames.cs" />

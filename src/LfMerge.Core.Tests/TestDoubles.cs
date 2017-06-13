@@ -296,7 +296,17 @@ namespace LfMerge.Core.Tests
 			yield break;
 		}
 
-		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
+		public Dictionary<MongoDB.Bson.ObjectId, Guid> GetGuidsByObjectIdForCollection(ILfProject project, string collectionName)
+		{
+			return new Dictionary<MongoDB.Bson.ObjectId, Guid>();
+		}
+
+		public void UpdateComments(ILfProject project, List<LfComment> comments)
+		{
+			;
+		}
+
+		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings)
 		{
 			// No-op. TODO: Implement something that stores a simple comment-replies data structure so we can unit test.
 		}
