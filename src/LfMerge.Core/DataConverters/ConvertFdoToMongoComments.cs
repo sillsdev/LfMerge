@@ -32,14 +32,6 @@ namespace LfMerge.Core.DataConverters
 			_factory = factory;
 		}
 
-		public Dictionary<Guid?, MongoDB.Bson.ObjectId> CalculateGUIDToObjectIdMapping()
-		{
-			// TODO: Decide if this belongs here or in MongoConnection. Okay, no, it's decided. It belongs in MongoConnection, because then I can do a custom query that doesn't grab EVERYTHING.
-			IEnumerable<LfLexEntry> lfEntries = _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon);
-			// TODO: Wait a minute, we want the objectIds for the *comments*, not the entries!
-			return lfEntries.ToDictionary(entry => entry.Guid, entry => entry.Id);
-		}
-
 		public void DoSomethingAndGiveThisABetterName(/*Dictionary<Guid?, MongoDB.Bson.ObjectId> guidMapping*/) // TODO: Give this a better name
 		{
 			// NOTE: Must be called *AFTER* ConvertFdoToMongoLexicon, because otherwise entries newly created in FDO won't have their GUIDs known yet.
@@ -51,23 +43,20 @@ namespace LfMerge.Core.DataConverters
 			{
 				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
 			};
+			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
+			string allCommentsJson = JsonConvert.SerializeObject(fixedComments, jsonSettings);
+			_logger.Debug("Doing Fdo->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
+			_logger.Debug("Doing Fdo->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
-			if (CallLfMergeBridge("", out bridgeOutput))
+			if (CallLfMergeBridge(allCommentsJson, out bridgeOutput))
 			{
-				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(bridgeOutput, jsonSettings);
+				string newCommentsStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
+				string newRepliesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
+				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr, jsonSettings);
+				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr, jsonSettings);
+
 				foreach (LfComment comment in comments)
 				{
-					// Regarding.Word is set from LfMergeBridge to the FLEx "label", but that's in a different format from what LF wants
-					if (comment.Regarding != null)
-					{
-						Guid guid;
-						if (Guid.TryParse(comment.Regarding.TargetGuid ?? "", out guid))
-						{
-							// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
-							// We want to handle these three cases differently -- see FromTargetGuid below.
-							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
-						}
-					}
 					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
 						comment.Regarding.FieldNameForDisplay,
 						comment.Regarding.FieldValue,
@@ -79,8 +68,46 @@ namespace LfMerge.Core.DataConverters
 						comment.Regarding.TargetGuid
 						);
 				}
-				_conn.UpdateComments(_project, comments);
-				_logger.Debug("Done with updating comments");
+
+				foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
+				{
+					string guid = replyWithCommentGuid.Item1;
+					List<LfCommentReply> repliesForThisComment = replyWithCommentGuid.Item2;
+					_logger.Debug("Comment with guid {0} got some new replies: {1}",
+						guid,
+						repliesForThisComment.Count <= 0 ? "" : " and replies [" + String.Join(", ", repliesForThisComment.Select(reply => "\"" + reply.Content + "\"")) + "]"
+						);
+				}
+
+
+				// TODO: Verify what's being logged, then uncomment the block below (and do something appropriate with the replies in Mongo)
+
+				// foreach (LfComment comment in comments)
+				// {
+				// 	// Regarding.Word is set from LfMergeBridge to the FLEx "label", but that's in a different format from what LF wants
+				// 	if (comment.Regarding != null)
+				// 	{
+				// 		Guid guid;
+				// 		if (Guid.TryParse(comment.Regarding.TargetGuid ?? "", out guid))
+				// 		{
+				// 			// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
+				// 			// We want to handle these three cases differently -- see FromTargetGuid below.
+				// 			comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+				// 		}
+				// 	}
+				// 	_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
+				// 		comment.Regarding.FieldNameForDisplay,
+				// 		comment.Regarding.FieldValue,
+				// 		comment.Regarding.Word,
+				// 		comment.Regarding.Meaning,
+				// 		comment.Content,
+				// 		comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
+				// 		comment.AuthorNameAlternate ?? "<null>",
+				// 		comment.Regarding.TargetGuid
+				// 		);
+				// }
+				// _conn.UpdateComments(_project, comments);
+				// _logger.Debug("Done with updating comments");
 			}
 			else
 			{
@@ -272,20 +299,24 @@ namespace LfMerge.Core.DataConverters
 		{
 			// Call into LF Bridge to do the work.
 			bridgeOutput = string.Empty;
-			var options = new Dictionary<string, string>
+			using (var tmpFile = new Palaso.IO.TempFile(bridgeInput))
 			{
-				{"-p", _project.FwDataPath},
-			};
-			if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
-				options, out bridgeOutput))
-			{
-				_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-				return false;
-			}
-			else
-			{
-				_logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-				return true;
+				var options = new Dictionary<string, string>
+				{
+					{"-p", _project.FwDataPath},
+					{"-i", tmpFile.Path},
+				};
+				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
+					options, out bridgeOutput))
+				{
+					_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+					return false;
+				}
+				else
+				{
+					_logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+					return true;
+				}
 			}
 		}
 	}
