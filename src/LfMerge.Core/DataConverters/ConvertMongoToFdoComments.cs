@@ -28,8 +28,7 @@ namespace LfMerge.Core.DataConverters
 		public void DoSomethingAndGiveThisABetterName(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings) // TODO: Give this a better name
 		{
 			// JsonSerializer json = JsonSerializer.CreateDefault();
-			var fixedComments = new List<LfComment>();
-			var commentIds = new List<string>();
+			var commentsWithIds = new List<KeyValuePair<string, LfComment>>();
 			foreach (LfComment comment in _conn.GetComments(_project))
 			{
 				Guid guid;
@@ -38,16 +37,13 @@ namespace LfMerge.Core.DataConverters
 					comment.Regarding.TargetGuid = guid.ToString();
 				}
 				_logger.Debug("Serializing comment KVP with ID {0} and content \"{1}\"", comment.Id.ToString(), comment.Content);
-				commentIds.Add(comment.Id.ToString());
-				fixedComments.Add(comment);
+				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
 			}
-			string commentIdsJson = JsonConvert.SerializeObject(commentIds);
-			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
+			string commentIdsJson = JsonConvert.SerializeObject(commentsWithIds);
 			_logger.Debug("The json for comment Ids would be: {0}", commentIdsJson);
-			_logger.Debug("The json for ALL comments would be: {0}", allCommentsJson);
 			_logger.Debug("About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
-			CallLfMergeBridge(commentIdsJson, allCommentsJson, out bridgeOutput);
+			CallLfMergeBridge(commentIdsJson, out bridgeOutput);
 			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
 			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
 			Dictionary<string, Guid> commentIdToGuidMappings = ParseGuidMappings(commentGuidMappingsStr);
@@ -63,17 +59,15 @@ namespace LfMerge.Core.DataConverters
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
 		}
 
-		public bool CallLfMergeBridge(string bridgeInput1, string bridgeInput2, out string bridgeOutput)
+		public bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
 		{
 			bridgeOutput = string.Empty;
-			using (var tmpFile1 = new Palaso.IO.TempFile(bridgeInput1))
-			using (var tmpFile2 = new Palaso.IO.TempFile(bridgeInput2))
+			using (var tmpFile = new Palaso.IO.TempFile(bridgeInput))
 			{
 				var options = new Dictionary<string, string>
 				{
 					{"-p", _project.FwDataPath},
-					{"-i", tmpFile1.Path},
-					{"-j", tmpFile2.Path}
+					{"-i", tmpFile.Path}
 				};
 				try {
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", _progress,

@@ -236,6 +236,7 @@ namespace LfMerge.Core.MongoConnector
 						.Set(c => c.AuthorInfo.ModifiedDate, comment.DateModified)
 						// We do not set the user refs in AuthorInfo, nor do we change them
 						.Set(c => c.Regarding, comment.Regarding)
+						.Set(c => c.Replies, comment.Replies)
 						.Set(c => c.IsDeleted, comment.IsDeleted)
 						.Set(c => c.Status, comment.Status)
 						;
