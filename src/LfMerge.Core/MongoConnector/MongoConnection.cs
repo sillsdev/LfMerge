@@ -204,17 +204,12 @@ namespace LfMerge.Core.MongoConnector
 		{
 			// Design notes: We get comments with a Regarding.TargetGuid, which we need to turn into an EntryRef
 			Dictionary<Guid, ObjectId> mongoIdsForEntries  = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
-			// Dictionary<Guid, ObjectId> mongoIdsForComments = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexiconComments); // TODO: Not needed, I think.
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
-			// Have to update comments first, then update replies as a separate step in Mongo
 			var commentUpdates = new List<UpdateOneModel<LfComment>>(commentsFromFW.Count);
-			var replyUpdates = new List<UpdateOneModel<LfComment>>();
 			var filterBuilder = Builders<LfComment>.Filter;
 			var updateBuilder = Builders<LfComment>.Update;
 
-			var existingCommentGuidsQuery = collection.Distinct<Guid?>("replies.guid", filterBuilder.Empty);  // TODO: How do I write this query in type-safe C#?
-			var existingCommentGuids = new HashSet<Guid?>(existingCommentGuidsQuery.ToEnumerable());
 			foreach (LfComment comment in commentsFromFW)
 			{
 				ObjectId mongoId;
@@ -245,22 +240,54 @@ namespace LfMerge.Core.MongoConnector
 						.Set(c => c.Status, comment.Status)
 						;
 					commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
-					replyUpdates.AddRange(PrepareUpdateCommentReplies(comment, existingCommentGuids));
-
-					// Replies take a separate update, though
-					var replyFilter = new BsonDocument("guid", comment.Guid);
 				}
 				// If we couldn't look up the MongoId for this comment.Regarding field, we skip the comment entirely
 			}
 			var options = new BulkWriteOptions { IsOrdered = false };
-			var result = collection.BulkWrite(commentUpdates, options);
+			// Mongo doesn't like bulk updates with 0 items in them, and will throw an exception instead of sensibly doing nothing. So we have to protect it from itself.
+			if (commentUpdates.Count > 0)
+			{
+				var result = collection.BulkWrite(commentUpdates, options);
+			}
+		}
+
+		public void UpdateReplies(ILfProject project, List<Tuple<string, List<LfCommentReply>>> repliesFromFWWithCommentGuids)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			List<UpdateOneModel<LfComment>> replyUpdates = new List<UpdateOneModel<LfComment>>();
+			foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in repliesFromFWWithCommentGuids)
+			{
+				string commentGuidStr = replyWithCommentGuid.Item1;
+				List<LfCommentReply> replies = replyWithCommentGuid.Item2;
+				Guid commentGuid;
+				if (Guid.TryParse(commentGuidStr, out commentGuid))
+				{
+					replyUpdates.Add(PrepareReplyUpdateForOneComment(commentGuid, replies));
+				}
+			}
 			// Mongo doesn't like bulk updates with 0 items in them, and will throw an exception instead of sensibly doing nothing. So we have to protect it from itself.
 			if (replyUpdates.Count > 0)
 			{
+				var options = new BulkWriteOptions { IsOrdered = false };
 				var repliesResult = collection.BulkWrite(replyUpdates, options);   // TODO: Uncomment this once we get the Mongo query right.
 			}
 		}
 
+		public UpdateOneModel<LfComment> PrepareReplyUpdateForOneComment(Guid commentGuid, List<LfCommentReply> replies)
+		{
+			foreach (LfCommentReply reply in replies)
+			{
+				// The LfCommentReply objects we receive here are coming from FW with a blank UniqId. We need to set the UniqId field so the JS code can do the right thing.
+				DateTime utcNow = DateTime.UtcNow;  // We want a different timestamp for *each* reply
+				reply.UniqId = PseudoPhp.UniqueIdFromDateTime(utcNow);
+			}
+			FilterDefinition<LfComment> filter = Builders<LfComment>.Filter.Eq(comment => comment.Guid, commentGuid);
+			UpdateDefinition<LfComment> update = Builders<LfComment>.Update.PushEach(comment => comment.Replies, replies);
+			return new UpdateOneModel<LfComment>(filter, update);
+		}
+
+/* No longer using this one. Replaced by UpdateReplies above.
 		public IEnumerable<UpdateOneModel<LfComment>> PrepareUpdateCommentReplies(LfComment commentDataFromFW, HashSet<Guid?> existingReplyGuids)
 		{
 			// NOTE: https://stackoverflow.com/q/26320673 suggests that this approach won't work: when there's no element match, it won't know where to insert the item.
@@ -318,7 +345,7 @@ namespace LfMerge.Core.MongoConnector
 				}
 			}
 		}
-
+ */
 		// public IEnumerable<UpdateOneModel<LfComment>> PrepareUpdateCommentReplies(LfComment comment)
 		// {
 		// 	// NOTE: https://stackoverflow.com/q/26320673 suggests that this approach won't work: when there's no element match, it won't know where to insert the item.

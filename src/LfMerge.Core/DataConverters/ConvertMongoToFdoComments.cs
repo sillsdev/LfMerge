@@ -27,10 +27,6 @@ namespace LfMerge.Core.DataConverters
 		}
 		public void DoSomethingAndGiveThisABetterName(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings) // TODO: Give this a better name
 		{
-			var jsonSettings = new JsonSerializerSettings
-			{
-				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
-			};
 			// JsonSerializer json = JsonSerializer.CreateDefault();
 			var fixedComments = new List<LfComment>();
 			var commentIds = new List<string>();
@@ -45,8 +41,8 @@ namespace LfMerge.Core.DataConverters
 				commentIds.Add(comment.Id.ToString());
 				fixedComments.Add(comment);
 			}
-			string commentIdsJson = JsonConvert.SerializeObject(commentIds, jsonSettings);
-			string allCommentsJson = JsonConvert.SerializeObject(fixedComments, jsonSettings);
+			string commentIdsJson = JsonConvert.SerializeObject(commentIds);
+			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
 			_logger.Debug("The json for comment Ids would be: {0}", commentIdsJson);
 			_logger.Debug("The json for ALL comments would be: {0}", allCommentsJson);
 			_logger.Debug("About to call LfMergeBridge with that JSON...");

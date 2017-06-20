@@ -39,12 +39,8 @@ namespace LfMerge.Core.DataConverters
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
-			var jsonSettings = new JsonSerializerSettings
-			{
-				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
-			};
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
-			string allCommentsJson = JsonConvert.SerializeObject(fixedComments, jsonSettings);
+			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
 			_logger.Debug("Doing Fdo->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
 			_logger.Debug("Doing Fdo->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
@@ -52,8 +48,8 @@ namespace LfMerge.Core.DataConverters
 			{
 				string newCommentsStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
 				string newRepliesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
-				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr, jsonSettings);
-				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr, jsonSettings);
+				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr);
+				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
 
 				foreach (LfComment comment in comments)
 				{
@@ -69,45 +65,50 @@ namespace LfMerge.Core.DataConverters
 						);
 				}
 
-				foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
-				{
-					string guid = replyWithCommentGuid.Item1;
-					List<LfCommentReply> repliesForThisComment = replyWithCommentGuid.Item2;
-					_logger.Debug("Comment with guid {0} got some new replies: {1}",
-						guid,
-						repliesForThisComment.Count <= 0 ? "" : " and replies [" + String.Join(", ", repliesForThisComment.Select(reply => "\"" + reply.Content + "\"")) + "]"
-						);
-				}
-
-
-				// TODO: Verify what's being logged, then uncomment the block below (and do something appropriate with the replies in Mongo)
-
-				// foreach (LfComment comment in comments)
+				// foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
 				// {
-				// 	// Regarding.Word is set from LfMergeBridge to the FLEx "label", but that's in a different format from what LF wants
-				// 	if (comment.Regarding != null)
-				// 	{
-				// 		Guid guid;
-				// 		if (Guid.TryParse(comment.Regarding.TargetGuid ?? "", out guid))
-				// 		{
-				// 			// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
-				// 			// We want to handle these three cases differently -- see FromTargetGuid below.
-				// 			comment.Regarding = FromTargetGuid(guid, fieldConfigs);
-				// 		}
-				// 	}
-				// 	_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
-				// 		comment.Regarding.FieldNameForDisplay,
-				// 		comment.Regarding.FieldValue,
-				// 		comment.Regarding.Word,
-				// 		comment.Regarding.Meaning,
-				// 		comment.Content,
-				// 		comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
-				// 		comment.AuthorNameAlternate ?? "<null>",
-				// 		comment.Regarding.TargetGuid
+				// 	string guid = replyWithCommentGuid.Item1;
+				// 	List<LfCommentReply> repliesForThisComment = replyWithCommentGuid.Item2;
+				// 	_logger.Debug("Comment with guid {0} got some new replies: {1}",
+				// 		guid,
+				// 		repliesForThisComment.Count <= 0 ? "" : "[" + String.Join(", ", repliesForThisComment.Select(reply => "\"" + reply.Content + "\"")) + "]"
 				// 		);
 				// }
-				// _conn.UpdateComments(_project, comments);
-				// _logger.Debug("Done with updating comments");
+
+				// foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
+				// {
+				// 	DateTime utcNow = DateTime.UtcNow;  // Inside the loop because we want a different value each time
+				// 	foreach (LfCommentReply reply in replyWithCommentGuid.Item2)
+				// 	{}
+				// }
+
+				foreach (LfComment comment in comments)
+				{
+					// Regarding.Word is set from LfMergeBridge to the FLEx "label", but that's in a different format from what LF wants
+					if (comment.Regarding != null)
+					{
+						Guid guid;
+						if (Guid.TryParse(comment.Regarding.TargetGuid ?? "", out guid))
+						{
+							// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
+							// We want to handle these three cases differently -- see FromTargetGuid below.
+							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+						}
+					}
+					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
+						comment.Regarding.FieldNameForDisplay,
+						comment.Regarding.FieldValue,
+						comment.Regarding.Word,
+						comment.Regarding.Meaning,
+						comment.Content,
+						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
+						comment.AuthorNameAlternate ?? "<null>",
+						comment.Regarding.TargetGuid
+						);
+				}
+				_conn.UpdateComments(_project, comments);
+				_conn.UpdateReplies(_project, replies);
+				_logger.Debug("Done with updating comments");
 			}
 			else
 			{
