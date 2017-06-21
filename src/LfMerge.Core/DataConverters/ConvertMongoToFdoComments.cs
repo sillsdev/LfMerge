@@ -39,23 +39,14 @@ namespace LfMerge.Core.DataConverters
 				_logger.Debug("Serializing comment KVP with ID {0} and content \"{1}\"", comment.Id.ToString(), comment.Content);
 				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
 			}
-			string commentIdsJson = JsonConvert.SerializeObject(commentsWithIds);
-			_logger.Debug("The json for comment Ids would be: {0}", commentIdsJson);
-			_logger.Debug("About to call LfMergeBridge with that JSON...");
+			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds);
 			string bridgeOutput;
-			CallLfMergeBridge(commentIdsJson, out bridgeOutput);
+			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
 			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
 			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
 			Dictionary<string, Guid> commentIdToGuidMappings = ParseGuidMappings(commentGuidMappingsStr);
 			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
-			foreach (KeyValuePair<string,Guid> kv in commentIdToGuidMappings)
-			{
-				_logger.Debug("Would map comment ID {0} to GUID {1}", kv.Key, kv.Value);
-			}
-			foreach (KeyValuePair<string,Guid> kv in uniqIdToGuidMappings)
-			{
-				_logger.Debug("Would map uniqid {0} to GUID {1}", kv.Key, kv.Value);
-			}
+			_conn.SetCommentGuids(_project, commentIdToGuidMappings);
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
 		}
 
@@ -67,7 +58,7 @@ namespace LfMerge.Core.DataConverters
 				var options = new Dictionary<string, string>
 				{
 					{"-p", _project.FwDataPath},
-					{"-i", tmpFile.Path}
+					{"serializedCommentsFromLfMerge", tmpFile.Path}
 				};
 				try {
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", _progress,

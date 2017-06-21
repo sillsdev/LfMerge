@@ -305,7 +305,7 @@ namespace LfMerge.Core.DataConverters
 				var options = new Dictionary<string, string>
 				{
 					{"-p", _project.FwDataPath},
-					{"-i", tmpFile.Path},
+					{"serializedCommentsFromLfMerge", tmpFile.Path},
 				};
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
 					options, out bridgeOutput))

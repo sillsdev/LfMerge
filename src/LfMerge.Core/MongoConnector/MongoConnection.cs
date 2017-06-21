@@ -203,7 +203,7 @@ namespace LfMerge.Core.MongoConnector
 		public void UpdateComments(ILfProject project, List<LfComment> commentsFromFW)
 		{
 			// Design notes: We get comments with a Regarding.TargetGuid, which we need to turn into an EntryRef
-			Dictionary<Guid, ObjectId> mongoIdsForEntries  = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
+			Dictionary<Guid, ObjectId> mongoIdsForEntries = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
 			IMongoDatabase db = GetProjectDatabase(project);
 			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
 			var commentUpdates = new List<UpdateOneModel<LfComment>>(commentsFromFW.Count);
@@ -284,7 +284,7 @@ namespace LfMerge.Core.MongoConnector
 				reply.UniqId = PseudoPhp.UniqueIdFromDateTime(utcNow);
 			}
 			FilterDefinition<LfComment> filter = Builders<LfComment>.Filter.Eq(comment => comment.Guid, commentGuid);
-			UpdateDefinition<LfComment> update = Builders<LfComment>.Update.PushEach(comment => comment.Replies, replies);
+			UpdateDefinition<LfComment> update = Builders<LfComment>.Update.PushEach(comment => comment.Replies, replies).Set(comment => comment.DateModified, DateTime.UtcNow);
 			return new UpdateOneModel<LfComment>(filter, update);
 		}
 
@@ -377,6 +377,13 @@ namespace LfMerge.Core.MongoConnector
 			return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
 		}
 
+		public UpdateOneModel<LfComment> PrepareUpdateCommentGuidForObjectId(ObjectId objectId, Guid guid)
+		{
+			var filter = Builders<LfComment>.Filter.Eq(comment => comment.Id, objectId);
+			var update = Builders<LfComment>.Update.Set(comment => comment.Guid, guid);
+			return new UpdateOneModel<LfComment>(filter, update) { IsUpsert = false };
+		}
+
 		// public UpdateOneModel<BsonDocument> OldVersionOfPrepareUpdateCommentReplyGuidForUniqId(string uniqid, string guid)
 		// {
 		// 	// I'd like to write this in the C# type-safe format, but http://stackoverflow.com/q/28945108/ suggests that that's not possible
@@ -402,6 +409,33 @@ namespace LfMerge.Core.MongoConnector
 				string uniqid = kv.Key;
 				Guid guid = kv.Value;
 				UpdateOneModel<LfComment> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
+				updates.Add(update);
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			var result = collection.BulkWrite(updates, options);
+		}
+
+		public void SetCommentGuids(ILfProject project, IDictionary<string,Guid> commentIdToGuidMappings)
+		{
+			if (commentIdToGuidMappings == null || commentIdToGuidMappings.Count <= 0)
+			{
+				// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
+				// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
+				return;
+			}
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			var updates = new List<UpdateOneModel<LfComment>>(commentIdToGuidMappings.Count);
+			foreach (KeyValuePair<string, Guid> kv in commentIdToGuidMappings)
+			{
+				string objectIdStr = kv.Key;
+				Guid guid = kv.Value;
+				ObjectId objectId;
+				if (String.IsNullOrEmpty(objectIdStr) || ! ObjectId.TryParse(objectIdStr, out objectId))
+				{
+					continue;
+				}
+				UpdateOneModel<LfComment> update = PrepareUpdateCommentGuidForObjectId(objectId, guid);
 				updates.Add(update);
 			}
 			var options = new BulkWriteOptions { IsOrdered = false };

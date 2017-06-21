@@ -315,6 +315,11 @@ namespace LfMerge.Core.Tests
 		{
 			// No-op. TODO: Implement something that stores a simple comment-replies data structure so we can unit test.
 		}
+
+		public void SetCommentGuids(ILfProject project, IDictionary<string,Guid> commentIdToGuidMappings)
+		{
+			// No-op. TODO: Implement something that stores a simple comments dictionary so we can unit test.
+		}
 	}
 
 	public class MongoProjectRecordFactoryDouble: MongoProjectRecordFactory

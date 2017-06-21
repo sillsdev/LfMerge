@@ -28,7 +28,8 @@ namespace LfMerge.Core.MongoConnector
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 		bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate);  // TODO: Decide if this is really where this method belongs
-		void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings); // TODO: Implement in TestDouble
+		void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings);
+		void SetCommentGuids(ILfProject project, IDictionary<string,Guid> commentIdToGuidMappings);
 		Dictionary <MongoDB.Bson.ObjectId, Guid> GetGuidsByObjectIdForCollection(ILfProject project, string collectionName);
 
 	}
