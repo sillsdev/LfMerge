@@ -32,10 +32,8 @@ namespace LfMerge.Core.DataConverters
 			_factory = factory;
 		}
 
-		public void DoSomethingAndGiveThisABetterName(/*Dictionary<Guid?, MongoDB.Bson.ObjectId> guidMapping*/) // TODO: Give this a better name
+		public void RunConversion()
 		{
-			// NOTE: Must be called *AFTER* ConvertFdoToMongoLexicon, because otherwise entries newly created in FDO won't have their GUIDs known yet.
-			// TODO: Use the GUID-to-ObjectId mapping parameter. Or, wait, do we actually need that?
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
@@ -53,38 +51,7 @@ namespace LfMerge.Core.DataConverters
 
 				foreach (LfComment comment in comments)
 				{
-					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
-						comment.Regarding.FieldNameForDisplay,
-						comment.Regarding.FieldValue,
-						comment.Regarding.Word,
-						comment.Regarding.Meaning,
-						comment.Content,
-						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
-						comment.AuthorNameAlternate ?? "<null>",
-						comment.Regarding.TargetGuid
-						);
-				}
-
-				// foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
-				// {
-				// 	string guid = replyWithCommentGuid.Item1;
-				// 	List<LfCommentReply> repliesForThisComment = replyWithCommentGuid.Item2;
-				// 	_logger.Debug("Comment with guid {0} got some new replies: {1}",
-				// 		guid,
-				// 		repliesForThisComment.Count <= 0 ? "" : "[" + String.Join(", ", repliesForThisComment.Select(reply => "\"" + reply.Content + "\"")) + "]"
-				// 		);
-				// }
-
-				// foreach (Tuple<string, List<LfCommentReply>> replyWithCommentGuid in replies)
-				// {
-				// 	DateTime utcNow = DateTime.UtcNow;  // Inside the loop because we want a different value each time
-				// 	foreach (LfCommentReply reply in replyWithCommentGuid.Item2)
-				// 	{}
-				// }
-
-				foreach (LfComment comment in comments)
-				{
-					// Regarding.Word is set from LfMergeBridge to the FLEx "label", but that's in a different format from what LF wants
+					// LfMergeBridge only sets the Guid in comment.Regarding, and leaves it to the LfMerge side to set the rest of the fields meaningfully
 					if (comment.Regarding != null)
 					{
 						Guid guid;
@@ -95,7 +62,7 @@ namespace LfMerge.Core.DataConverters
 							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
 						}
 					}
-					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5}",
+					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8}",
 						comment.Regarding.FieldNameForDisplay,
 						comment.Regarding.FieldValue,
 						comment.Regarding.Word,
@@ -103,12 +70,12 @@ namespace LfMerge.Core.DataConverters
 						comment.Content,
 						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
 						comment.AuthorNameAlternate ?? "<null>",
-						comment.Regarding.TargetGuid
+						comment.Regarding.TargetGuid,
+						comment.Status
 						);
 				}
 				_conn.UpdateComments(_project, comments);
 				_conn.UpdateReplies(_project, replies);
-				_logger.Debug("Done with updating comments");
 			}
 			else
 			{

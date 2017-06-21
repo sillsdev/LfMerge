@@ -141,7 +141,7 @@ namespace LfMerge.Core.DataConverters
 			RemoveMongoEntriesDeletedInFdo();
 			Logger.Debug("Running FtMComments, should see comments show up below:");
 			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress, ProjectRecordFactory);
-			commCvtr.DoSomethingAndGiveThisABetterName(); // TODO: Remove this and replace with real code
+			commCvtr.RunConversion();
 		}
 
 		private void RemoveMongoEntriesDeletedInFdo()

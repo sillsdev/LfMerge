@@ -130,8 +130,6 @@ namespace LfMerge.Core.DataConverters
 			Logger.Notice("MongoToFdo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
-			var commCvtr = new ConvertMongoToFdoComments(Connection, LfProject, Logger, Progress);
-			commCvtr.DoSomethingAndGiveThisABetterName(entryObjectIdToGuidMappings); // TODO: Remove this and replace with real code
 			EntryCounts.Reset();
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
@@ -154,6 +152,9 @@ namespace LfMerge.Core.DataConverters
 					foreach (LfLexEntry lfEntry in lexicon)
 						LfLexEntryToFdoLexEntry(lfEntry);
 				});
+			// Comment conversion gets run AFTER lexicon conversion, so that any comments on new entries are handled correctly in FW
+			var commCvtr = new ConvertMongoToFdoComments(Connection, LfProject, Logger, Progress);
+			commCvtr.RunConversion(entryObjectIdToGuidMappings);
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
 		}

@@ -23,25 +23,24 @@ namespace LfMerge.Core.DataConverters
 			_project = proj;
 			_logger = logger;
 			_progress = progress;
-			// TODO: Are there any other constructor parameters that we need?
 		}
-		public void DoSomethingAndGiveThisABetterName(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings) // TODO: Give this a better name
+		public void RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
 		{
-			// JsonSerializer json = JsonSerializer.CreateDefault();
 			var commentsWithIds = new List<KeyValuePair<string, LfComment>>();
 			foreach (LfComment comment in _conn.GetComments(_project))
 			{
 				Guid guid;
+				// LfMergeBridge wants lex entry GUIDs (passed along in comment.Regarding.TargetGuid), not Mongo ObjectIds like comment.EntryRef contains.
 				if (comment.EntryRef != null && entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
 				{
 					comment.Regarding.TargetGuid = guid.ToString();
 				}
-				_logger.Debug("Serializing comment KVP with ID {0} and content \"{1}\"", comment.Id.ToString(), comment.Content);
 				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
 			}
 			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds);
 			string bridgeOutput;
 			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
+			// LfMergeBridge returns two lists of IDs (comment IDs or reply IDs) that need to have their GUIDs updated in Mongo.
 			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
 			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
 			Dictionary<string, Guid> commentIdToGuidMappings = ParseGuidMappings(commentGuidMappingsStr);
@@ -89,10 +88,6 @@ namespace LfMerge.Core.DataConverters
 				return string.Empty;
 			}
 			string result = LfMergeBridgeServices.GetLineContaining(lfMergeBridgeOutput, prefix);
-			// NOTE: This could fail if the prefix is present twice and we actually wanted the second line, so this isn't the best solution.
-			// The right solution is to move this function to LfBridgeServices so we can use GetLinesFromLfBridge, and keep looping.
-			// But this is good enough for testing.
-			// TODO: Do it right.
 			if (result.StartsWith(prefix))
 			{
 				return result.Substring(prefix.Length);
