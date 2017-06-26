@@ -9,6 +9,7 @@ Vcs-Browser: https://github.com/sillsdev/LfMerge
 Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  wget,
  mercurial,
+ python-dev,
  pkg-config,
  mono-sil,
  libicu-dev,
