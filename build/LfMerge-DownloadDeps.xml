@@ -9,7 +9,7 @@
 
 	<Target Name="DownloadDependenciesTarget">
 		<Dependencies DependencyFile="LfMerge.dep" UseDependencyFile="true" KeepJobsFile="$(KeepJobsFile)"
-			WorkingDir="$(RootDir)" />
+			WorkingDir="$(RootDir)" RunAsync="false" />
 		<Exec Command="chmod +x $(RootDir)/Mercurial/hg"
 			Condition="'$(OS)'!='Windows_NT'" />
 	</Target>
