@@ -3,6 +3,7 @@
 using CommandLine;
 using CommandLine.Text;
 using LfMerge.Core.Actions;
+using System.IO;
 
 namespace LfMerge
 {
@@ -42,7 +43,8 @@ namespace LfMerge
 		public static Options ParseCommandLineArgs(string[] args)
 		{
 			var options = new Options();
-			if (Parser.Default.ParseArguments(args, options))
+			var parser = ParserInstance ?? Parser.Default;
+			if (parser.ParseArguments(args, options))
 			{
 				Current = options;
 				return options;
@@ -50,5 +52,11 @@ namespace LfMerge
 			// CommandLineParser automagically handles displaying help
 			return null;
 		}
+
+		/// <summary>
+		/// Gets or sets the parser.
+		/// </summary>
+		/// <remarks>Used in tests. If not set the default parser is used.</remarks>
+		public static Parser ParserInstance { get; set; }
 	}
 }
