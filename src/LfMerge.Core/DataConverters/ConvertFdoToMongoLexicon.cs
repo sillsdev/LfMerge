@@ -557,7 +557,7 @@ namespace LfMerge.Core.DataConverters
 		{
 			// Remove "Pictures" directory from internal path name
 			// If the incoming internal path doesn't begin with "Pictures", then preserve the full external path.
-			return Regex.Replace(fdoInternalFilename, @"^Pictures[/\\]", "");
+			return Regex.Replace(fdoInternalFilename.Normalize(System.Text.NormalizationForm.FormC), @"^Pictures[/\\]", "");
 		}
 
 		/// <summary>

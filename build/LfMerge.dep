@@ -4,7 +4,7 @@
 
 [[TC]]
 Type=TeamCity
-Url=http://build.palaso.org
+Url=https://build.palaso.org
 
 [TC::ChorusTrusty64lfmergeCont]
 Name=chorus-trusty64-lfmerge Continuous
