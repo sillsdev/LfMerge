@@ -11,7 +11,7 @@ namespace LfMerge.Core.LanguageForge.Model
 {
 	public class LfMultiText : Dictionary<string, LfStringField> // Note: NOT derived from LfFieldBase
 	{
-		public bool IsEmpty { get { return Count <= 0; } }
+		public bool IsEmpty { get { return (Count <= 0) || (this.All(kv => kv.Value == null || kv.Value.IsEmpty)); } }
 
 		public static LfMultiText FromFdoMultiString(IMultiAccessorBase other, ILgWritingSystemFactory wsManager)
 		{
