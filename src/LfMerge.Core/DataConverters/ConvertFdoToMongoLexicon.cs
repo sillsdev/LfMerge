@@ -271,7 +271,14 @@ namespace LfMerge.Core.DataConverters
 				// fdoEtymology.LiftResidue not mapped
 			}
 			lfEntry.Guid = fdoEntry.Guid;
-			lfEntry.LiftId = fdoEntry.LIFTid;
+			if (fdoEntry.LIFTid == null)
+			{
+				lfEntry.LiftId = null;
+			}
+			else
+			{
+				lfEntry.LiftId = fdoEntry.LIFTid.Normalize(System.Text.NormalizationForm.FormC);  // Because LIFT files on disk are NFC and we need to make sure LiftIDs match those on disk
+			}
 			lfEntry.LiteralMeaning = ToMultiText(fdoEntry.LiteralMeaning);
 			if (fdoEntry.PrimaryMorphType != null) {
 				lfEntry.MorphologyType = fdoEntry.PrimaryMorphType.NameHierarchyString;
@@ -375,7 +382,14 @@ namespace LfMerge.Core.DataConverters
 
 			lfSense.GeneralNote = ToMultiText(fdoSense.GeneralNote);
 			lfSense.GrammarNote = ToMultiText(fdoSense.GrammarNote);
-			lfSense.LiftId = fdoSense.LIFTid;
+			if (fdoSense.LIFTid == null)
+			{
+				lfSense.LiftId = null;
+			}
+			else
+			{
+				lfSense.LiftId = fdoSense.LIFTid.Normalize(System.Text.NormalizationForm.FormC);  // Because LIFT files on disk are NFC and we need to make sure LiftIDs match those on disk
+			}
 			if (fdoSense.MorphoSyntaxAnalysisRA != null)
 			{
 				IPartOfSpeech secondaryPos = null; // Only used in derivational affixes
