@@ -6,32 +6,32 @@
 Type=TeamCity
 Url=https://build.palaso.org
 
-[TC::ChorusTrusty64lfmergeCont]
-Name=chorus-trusty64-lfmerge Continuous
+[TC::ChorusLinux64lfmergeCont]
+Name=chorus-linux64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=MercurialExtensions/**/*.py=>MercurialExtensions
 
 
-[TC::ChorusTrusty64lfmergeCont]
-Name=chorus-trusty64-lfmerge Continuous
+[TC::ChorusLinux64lfmergeCont]
+Name=chorus-linux64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux32
 Path=Mercurial-i686.zip!**=>.
 
 
-[TC::ChorusTrusty64lfmergeCont]
-Name=chorus-trusty64-lfmerge Continuous
+[TC::ChorusLinux64lfmergeCont]
+Name=chorus-linux64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::PalasoTrusty64lfmergeContinuous]
-Name=palaso-trusty64-lfmerge Continuous
+[TC::PalasoLinux64lfmergeContinuous]
+Name=palaso-linux64-lfmerge Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -70,8 +70,8 @@ L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 
 
-[TC::FLExBridgeLfmergeTrusty64Continuous]
-Name=FLEx Bridge-lfmerge-Trusty64-Continuous
+[TC::FLExBridgeLfmergeLinux64Continuous]
+Name=FLEx Bridge-lfmerge-Linux64-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
