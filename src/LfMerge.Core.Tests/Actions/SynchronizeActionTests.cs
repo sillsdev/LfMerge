@@ -76,7 +76,7 @@ namespace LfMerge.Core.Tests.Actions
 			if (_recordFactory == null)
 				throw new AssertionException("Sync tests need a mock MongoProjectRecordFactory in order to work.");
 
-			_transferFdoToMongo = new TransferFdoToMongoAction(_env.Settings, _env.Logger, _mongoConnection);
+			_transferFdoToMongo = new TransferFdoToMongoAction(_env.Settings, _env.Logger, _mongoConnection, _recordFactory);
 		}
 
 		[TearDown]

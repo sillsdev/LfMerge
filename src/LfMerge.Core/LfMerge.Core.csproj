@@ -141,11 +141,13 @@
     <Compile Include="Actions\TransferMongoToFdoAction.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
     <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
+    <Compile Include="DataConverters\ConvertFdoToMongoComments.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoCustomField.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoLexicon.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoPartsOfSpeech.cs" />
     <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
+    <Compile Include="DataConverters\ConvertMongoToFdoComments.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoCustomField.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoLexicon.cs" />
     <Compile Include="DataConverters\ConvertMongoToFdoOptionList.cs" />
@@ -183,6 +185,9 @@
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="LanguageForge\Model\LfAuthorInfo.cs" />
+    <Compile Include="LanguageForge\Model\LfComment.cs" />
+    <Compile Include="LanguageForge\Model\LfCommentRegarding.cs" />
+    <Compile Include="LanguageForge\Model\LfCommentReply.cs" />
     <Compile Include="LanguageForge\Model\LfExample.cs" />
     <Compile Include="LanguageForge\Model\LfFieldBase.cs" />
     <Compile Include="LanguageForge\Model\LfInputSystemRecord.cs" />
@@ -209,6 +214,7 @@
     <Compile Include="MongoConnector\MongoProjectRecord.cs" />
     <Compile Include="MongoConnector\MongoProjectRecordFactory.cs" />
     <Compile Include="MongoConnector\MongoRegistrar.cs" />
+    <Compile Include="MongoConnector\PseudoPhp.cs" />
     <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\Queue.cs" />
     <Compile Include="Queues\QueueNames.cs" />
