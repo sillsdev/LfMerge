@@ -857,6 +857,7 @@ namespace LfMerge.Core.DataConverters
 					return;  // There was never a pronunciation; we're fine
 				else
 					fdoEntry.PronunciationsOS.First().Delete();
+					return;
 			}
 			if (fdoPronunciation == null)
 			{
