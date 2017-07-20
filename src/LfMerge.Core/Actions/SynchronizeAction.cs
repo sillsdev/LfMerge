@@ -171,7 +171,13 @@ namespace LfMerge.Core.Actions
 					Logger.Notice(line);
 				}
 
-				GetAction(ActionNames.TransferFdoToMongo).Run(project);
+				IAction transferFdoToMongoAction = GetAction(ActionNames.TransferFdoToMongo);
+				if (transferFdoToMongoAction == null)
+				{
+					Logger.Error("Failed to run TransferFdoToMongo action: GetAction returned null");
+					return;
+				}
+				transferFdoToMongoAction.Run(project);
 			}
 		}
 

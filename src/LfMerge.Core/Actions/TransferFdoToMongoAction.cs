@@ -31,18 +31,26 @@ namespace LfMerge.Core.Actions
 		protected override void DoRun(ILfProject project)
 		{
 			// TODO: These checks might be overkill; consider removing some of them
+			if (project == null)
+			{
+				Logger.Error("Project was null in TransferFdoToMongoAction.DoRun");
+				return;
+			}
+			Logger.Debug("TransferFdoToMongoAction: locating FieldWorks project");
 			FwProject fwProject = project.FieldWorksProject;
 			if (fwProject == null)
 			{
 				Logger.Error("Can't find FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
+			Logger.Debug("TransferFdoToMongoAction: locating FieldWorks project cache");
 			_cache = fwProject.Cache;
 			if (_cache == null)
 			{
 				Logger.Error("Can't find cache for FieldWorks project {0}", project.ProjectCode);
 				return;
 			}
+			Logger.Debug("TransferFdoToMongoAction: connecting to FieldWorks service locator");
 			_servLoc = _cache.ServiceLocator;
 			if (_servLoc == null)
 			{
@@ -50,9 +58,12 @@ namespace LfMerge.Core.Actions
 				return;
 			}
 
+			Logger.Debug("TransferFdoToMongoAction: setting up lexicon converter");
 			_lexiconConverter = new ConvertFdoToMongoLexicon(project, Logger, _connection);
+			Logger.Debug("TransferFdoToMongoAction: about to run lexicon conversion");
 			_lexiconConverter.RunConversion();
 
+			Logger.Debug("TransferFdoToMongoAction: successful transfer; setting last-synced date");
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);
 		}
 
