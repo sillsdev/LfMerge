@@ -58,11 +58,14 @@ namespace LfMerge.Core.FieldWorks
 			if (fDisposing && !IsDisposed)
 			{
 				// dispose managed and unmanaged objects
+
+				ServiceLocator = null;
+
+				// Dispose cache last
 				if (Cache != null)
 					Cache.Dispose();
+				Cache = null;
 			}
-			ServiceLocator = null;
-			Cache = null;
 			IsDisposed = true;
 		}
 

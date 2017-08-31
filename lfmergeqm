@@ -1,6 +1,38 @@
 #!/bin/sh
 # LfMerge Queue Manager
 
+PIDFILE=/tmp/run/lfmerge.pid
+HANG_THRESHHOLD_SECONDS=300
+
+if [ -f "$PIDFILE" ]
+then
+  # When was the last run of the queue manager? Can't trust the PID file's timestamp (it writes local time as UTC), so get it from journalctl
+  PID_QM=$(grep -o '"PID":[[:digit:]]*' "$PIDFILE" | grep -o '[[:digit:]]*')
+  TIMESTAMP_QM_MICROSECONDS=$(journalctl _PID=$PID_QM -t LfMergeQueueManager -o json | head -n 1 | grep -o '"__REALTIME_TIMESTAMP" : "[[:digit:]]*"' | grep -o '[[:digit:]]*')
+  TIMESTAMP_QM_SECONDS=$(echo $TIMESTAMP_QM_MICROSECONDS | rev | cut -c7- | rev)
+
+  # Now find the first run of LfMerge after that queue manager, and check if that run has hung
+  PID_LFM=$(journalctl --since="@$TIMESTAMP_QM_SECONDS" -t LfMerge -o json | head -n 1 | grep -o '"_PID" : "[[:digit:]]*"' | grep -o '[[:digit:]]*')
+  LAST_TIMESTAMP_LFM_MICROSECONDS=$(journalctl _PID=$PID_LFM -t LfMerge -o json | tail -n 1 | grep -o '"__REALTIME_TIMESTAMP" : "[[:digit:]]*"' | grep -o '[[:digit:]]*')
+  LAST_TIMESTAMP_LFM_SECONDS=$(echo $LAST_TIMESTAMP_LFM_MICROSECONDS | rev | cut -c7- | rev)
+  LAST_MSG_LFM=$(journalctl _PID=$PID_LFM -t LfMerge -o cat | tail -n 1)
+
+  # In real code, remove the -v because we want to only trigger if this actually *IS* the last message
+  echo "$LAST_MSG_LFM" | grep "^About to dispose FW project" > /dev/null
+  if [ $? = 0 ]
+  then
+    # Looks like a hung LfMerge, but make sure we're past the threshhold
+    NOW_SECONDS=$(date +%s)
+    if (( LAST_TIMESTAMP_LFM_SECONDS + HANG_THRESHHOLD_SECONDS < NOW_SECONDS ))
+    then
+      # Past the threshhold; kill the old processes (both LfMerge and the queue manager)
+      kill $PID_LFM $PID_QM 2>/dev/null
+      sleep 1
+      rm -f "$PIDFILE"
+    fi
+  fi
+fi
+
 DBVERSION=$(basename $(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1))
 LIB=/usr/lib/lfmerge/$DBVERSION
 SHARE=/usr/share/lfmerge/$DBVERSION
