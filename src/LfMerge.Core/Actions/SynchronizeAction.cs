@@ -60,9 +60,6 @@ namespace LfMerge.Core.Actions
 			{
 				var transferAction = GetAction(ActionNames.TransferMongoToFdo);
 				transferAction.Run(project);
-				Logger.Debug("About to dispose FW project {0}", project.ProjectCode);
-				LanguageForgeProject.DisposeFwProject(project);
-				Logger.Debug("Successfully disposed FW project {0}", project.ProjectCode);
 
 				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
 				// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
@@ -73,6 +70,11 @@ namespace LfMerge.Core.Actions
 					entriesModified = transferMongoToFdoAction.EntryCounts.Modified;
 					entriesDeleted  = transferMongoToFdoAction.EntryCounts.Deleted;
 				}
+
+				Logger.Debug("About to dispose FW project {0}", project.ProjectCode);
+				LanguageForgeProject.DisposeFwProject(project);
+				Logger.Debug("Successfully disposed FW project {0}", project.ProjectCode);
+
 				Logger.Notice("Syncing");
 				string commitMessage = LfMergeBridgeServices.FormatCommitMessageForLfMerge(entriesAdded, entriesModified, entriesDeleted);
 				if (commitMessage == null)  // Shouldn't happen, but be careful anyway
@@ -171,7 +173,13 @@ namespace LfMerge.Core.Actions
 					Logger.Notice(line);
 				}
 
-				GetAction(ActionNames.TransferFdoToMongo).Run(project);
+				IAction transferFdoToMongoAction = GetAction(ActionNames.TransferFdoToMongo);
+				if (transferFdoToMongoAction == null)
+				{
+					Logger.Error("Failed to run TransferFdoToMongo action: GetAction returned null");
+					return;
+				}
+				transferFdoToMongoAction.Run(project);
 			}
 		}
 
