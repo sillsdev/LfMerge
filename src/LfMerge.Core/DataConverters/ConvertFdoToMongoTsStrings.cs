@@ -17,7 +17,12 @@ namespace LfMerge.Core.DataConverters
 			// encoded, for example). So we have to write our own. Thankfully, it isn't hard at all.
 			if (decoded == null)
 				return null;
-			return decoded.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+			return decoded
+				// Also strip out any <br/> or <br /> tags that might have gotten into
+				// the data due to https://github.com/sillsdev/web-languageforge/issues/136
+				.Replace("<br />", "").Replace("<br/>", "")
+				// And only now should we preserve any remaining <, > and & characters.
+				.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
 		}
 
 		public static string HexEncode(string decoded)

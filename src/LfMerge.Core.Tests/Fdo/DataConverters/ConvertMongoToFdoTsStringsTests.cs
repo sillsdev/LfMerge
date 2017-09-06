@@ -30,6 +30,10 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 
 		private string containsAngleBrackets = "strings with <angle brackets> need to be HTML-escaped";
 		private string containsAngleBracketsEscaped = "strings with &lt;angle brackets&gt; need to be HTML-escaped";
+		private string containsBrTags = "strings with <br/> or <br /> should have them stripped";
+		private string containsBrTagsEscaped = "strings with &lt;br/&gt; or &lt;br /&gt; should have them stripped";
+		private string containsBrTagsStripped = "strings with  or  should have them stripped";
+		private string containsBrTagsEscapedStripped = "strings with  or  should have them stripped";
 		private string containsHtml = "especially if they would be <script type=\"text/javascript\">alert('security holes');</script>...";
 		private string containsHtmlEscaped = "especially if they would be &lt;script type=\"text/javascript\"&gt;alert('security holes');&lt;/script&gt;...";
 
@@ -141,6 +145,20 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		{
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsHtml), Is.EqualTo(0));
 			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsHtmlEscaped), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanDetectSpans_ContainsBrTags()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsBrTags), Is.EqualTo(0));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsBrTagsEscaped), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanDetectSpans_ContainsBrTagsStripped()
+		{
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsBrTagsStripped), Is.EqualTo(0));
+			Assert.That(ConvertMongoToFdoTsStrings.SpanCount(containsBrTagsEscapedStripped), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -267,6 +285,24 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void CanExtractTextInsideSpans_ContainsBrTags()
+		{
+			string[] textInContainsBrTags = ConvertMongoToFdoTsStrings.GetSpanTexts(containsBrTags).ToArray();
+			string[] textInContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.GetSpanTexts(containsBrTagsEscaped).ToArray();
+			Assert.That(textInContainsBrTags.Length, Is.EqualTo(0));
+			Assert.That(textInContainsBrTagsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractTextInsideSpans_ContainsBrTagsStripped()
+		{
+			string[] textInContainsBrTagsStripped = ConvertMongoToFdoTsStrings.GetSpanTexts(containsBrTagsStripped).ToArray();
+			string[] textInContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.GetSpanTexts(containsBrTagsEscapedStripped).ToArray();
+			Assert.That(textInContainsBrTagsStripped.Length, Is.EqualTo(0));
+			Assert.That(textInContainsBrTagsEscapedStripped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
 		public void CanClassifySpansByLanguage_ZeroSpans()
 		{
 			string[] langsInZeroSpans = ConvertMongoToFdoTsStrings.GetSpanLanguages(zeroSpans).ToArray();
@@ -374,6 +410,24 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string[] langsInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsHtmlEscaped).ToArray();
 			Assert.That(langsInContainsHtml.Length, Is.EqualTo(0));
 			Assert.That(langsInContainsHtmlEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_ContainsBrTags()
+		{
+			string[] langsInContainsBrTags = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsBrTags).ToArray();
+			string[] langsInContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsBrTagsEscaped).ToArray();
+			Assert.That(langsInContainsBrTags.Length, Is.EqualTo(0));
+			Assert.That(langsInContainsBrTagsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanClassifySpansByLanguage_ContainsBrTagsStripped()
+		{
+			string[] langsInContainsBrTagsStripped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsBrTagsStripped).ToArray();
+			string[] langsInContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.GetSpanLanguages(containsBrTagsEscapedStripped).ToArray();
+			Assert.That(langsInContainsBrTagsStripped.Length, Is.EqualTo(0));
+			Assert.That(langsInContainsBrTagsEscapedStripped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -486,6 +540,24 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Guid[] guidsInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsHtmlEscaped).ToArray();
 			Assert.That(guidsInContainsHtml.Length, Is.EqualTo(0));
 			Assert.That(guidsInContainsHtmlEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_ContainsBrTags()
+		{
+			Guid[] guidsInContainsBrTags = ConvertMongoToFdoTsStrings.GetSpanGuids(containsBrTags).ToArray();
+			Guid[] guidsInContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsBrTagsEscaped).ToArray();
+			Assert.That(guidsInContainsBrTags.Length, Is.EqualTo(0));
+			Assert.That(guidsInContainsBrTagsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractGuidsFromSpans_ContainsBrTagsStripped()
+		{
+			Guid[] guidsInContainsBrTagsStripped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsBrTagsStripped).ToArray();
+			Guid[] guidsInContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.GetSpanGuids(containsBrTagsEscapedStripped).ToArray();
+			Assert.That(guidsInContainsBrTagsStripped.Length, Is.EqualTo(0));
+			Assert.That(guidsInContainsBrTagsEscapedStripped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -604,6 +676,24 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			string[] stylesInContainsHtmlEscaped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsHtmlEscaped).ToArray();
 			Assert.That(stylesInContainsHtml.Length, Is.EqualTo(0));
 			Assert.That(stylesInContainsHtmlEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_ContainsBrTags()
+		{
+			string[] stylesInContainsBrTags = ConvertMongoToFdoTsStrings.GetSpanStyles(containsBrTags).ToArray();
+			string[] stylesInContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsBrTagsEscaped).ToArray();
+			Assert.That(stylesInContainsBrTags.Length, Is.EqualTo(0));
+			Assert.That(stylesInContainsBrTagsEscaped.Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CanExtractStylesFromSpans_ContainsBrTagsStripped()
+		{
+			string[] stylesInContainsBrTagsStripped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsBrTagsStripped).ToArray();
+			string[] stylesInContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.GetSpanStyles(containsBrTagsEscapedStripped).ToArray();
+			Assert.That(stylesInContainsBrTagsStripped.Length, Is.EqualTo(0));
+			Assert.That(stylesInContainsBrTagsEscapedStripped.Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -957,6 +1047,40 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Assert.That(runsInContainsHtmlEscaped[0].Lang,      Is.Null);
 			Assert.That(runsInContainsHtmlEscaped[0].Guid,      Is.Null);
 			Assert.That(runsInContainsHtmlEscaped[0].StyleName, Is.Null);
+		}
+
+		[Test]
+		public void CanExtractRunsFromSpans_ContainsBrTags()
+		{
+			Run[] runsInContainsBrTags = ConvertMongoToFdoTsStrings.GetSpanRuns(containsBrTags).ToArray();
+			Assert.That(runsInContainsBrTags.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsBrTags[0].Content,   Is.EqualTo(containsBrTags));
+			Assert.That(runsInContainsBrTags[0].Lang,      Is.Null);
+			Assert.That(runsInContainsBrTags[0].Guid,      Is.Null);
+			Assert.That(runsInContainsBrTags[0].StyleName, Is.Null);
+			Run[] runsInContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.GetSpanRuns(containsBrTagsEscaped).ToArray();
+			Assert.That(runsInContainsBrTagsEscaped.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsBrTagsEscaped[0].Content,   Is.EqualTo(containsBrTags));
+			Assert.That(runsInContainsBrTagsEscaped[0].Lang,      Is.Null);
+			Assert.That(runsInContainsBrTagsEscaped[0].Guid,      Is.Null);
+			Assert.That(runsInContainsBrTagsEscaped[0].StyleName, Is.Null);
+		}
+
+		[Test]
+		public void CanExtractRunsFromSpans_ContainsBrTagsStripped()
+		{
+			Run[] runsInContainsBrTagsStripped = ConvertMongoToFdoTsStrings.GetSpanRuns(containsBrTagsStripped).ToArray();
+			Assert.That(runsInContainsBrTagsStripped.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsBrTagsStripped[0].Content,   Is.EqualTo(containsBrTagsStripped));
+			Assert.That(runsInContainsBrTagsStripped[0].Lang,      Is.Null);
+			Assert.That(runsInContainsBrTagsStripped[0].Guid,      Is.Null);
+			Assert.That(runsInContainsBrTagsStripped[0].StyleName, Is.Null);
+			Run[] runsInContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.GetSpanRuns(containsBrTagsEscapedStripped).ToArray();
+			Assert.That(runsInContainsBrTagsEscapedStripped.Length, Is.EqualTo(1));
+			Assert.That(runsInContainsBrTagsEscapedStripped[0].Content,   Is.EqualTo(containsBrTagsEscapedStripped));
+			Assert.That(runsInContainsBrTagsEscapedStripped[0].Lang,      Is.Null);
+			Assert.That(runsInContainsBrTagsEscapedStripped[0].Guid,      Is.Null);
+			Assert.That(runsInContainsBrTagsEscapedStripped[0].StyleName, Is.Null);
 		}
 
 		[Test]
@@ -1321,6 +1445,44 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 		}
 
 		[Test]
+		public void CanCreateTsStringsFromSpans_ContainsBrTags()
+		{
+			ITsString tsStrFromContainsBrTags = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsBrTags, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsBrTags, Is.Not.Null);
+			Assert.That(tsStrFromContainsBrTags.Text, Is.EqualTo(containsBrTags));
+			Assert.That(tsStrFromContainsBrTags.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsBrTags.get_RunText(0), Is.EqualTo(containsBrTags));
+			Assert.That(GetStyle(tsStrFromContainsBrTags, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsBrTags, 0), Is.EqualTo(_wsEn));
+			ITsString tsStrFromContainsBrTagsEscaped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsBrTagsEscaped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsBrTagsEscaped, Is.Not.Null);
+			Assert.That(tsStrFromContainsBrTagsEscaped.Text, Is.EqualTo(containsBrTags));
+			Assert.That(tsStrFromContainsBrTagsEscaped.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsBrTagsEscaped.get_RunText(0), Is.EqualTo(containsBrTags));
+			Assert.That(GetStyle(tsStrFromContainsBrTagsEscaped, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsBrTagsEscaped, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
+		public void CanCreateTsStringsFromSpans_ContainsBrTagsStripped()
+		{
+			ITsString tsStrFromContainsBrTagsStripped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsBrTagsStripped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsBrTagsStripped, Is.Not.Null);
+			Assert.That(tsStrFromContainsBrTagsStripped.Text, Is.EqualTo(containsBrTagsStripped));
+			Assert.That(tsStrFromContainsBrTagsStripped.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsBrTagsStripped.get_RunText(0), Is.EqualTo(containsBrTagsStripped));
+			Assert.That(GetStyle(tsStrFromContainsBrTagsStripped, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsBrTagsStripped, 0), Is.EqualTo(_wsEn));
+			ITsString tsStrFromContainsBrTagsEscapedStripped = ConvertMongoToFdoTsStrings.SpanStrToTsString(containsBrTagsEscapedStripped, _wsEn, _cache.WritingSystemFactory);
+			Assert.That(tsStrFromContainsBrTagsEscapedStripped, Is.Not.Null);
+			Assert.That(tsStrFromContainsBrTagsEscapedStripped.Text, Is.EqualTo(containsBrTagsStripped));
+			Assert.That(tsStrFromContainsBrTagsEscapedStripped.RunCount, Is.EqualTo(1));
+			Assert.That(tsStrFromContainsBrTagsEscapedStripped.get_RunText(0), Is.EqualTo(containsBrTagsStripped));
+			Assert.That(GetStyle(tsStrFromContainsBrTagsEscapedStripped, 0), Is.Null);
+			Assert.That(GetWs(tsStrFromContainsBrTagsEscapedStripped, 0), Is.EqualTo(_wsEn));
+		}
+
+		[Test]
 		public void TsStringCanRoundTripFdoToMongoToFdo_SingleRunString()
 		{
 			// Setup
@@ -1482,6 +1644,48 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
 			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
 			builder.Append(containsHtml);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			AssertNFC(text);
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsBrTags()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsBrTags);
+			ITsString tss = builder.GetString();
+
+			// Round-trip
+			string text = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+
+			// Compare
+			AssertNFC(text);
+			Assert.That(text, Is.EqualTo(containsBrTagsStripped));
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Not.Null);
+			Assert.That(diff.CchDeleteFromOld - diff.CchInsert, Is.EqualTo(11));
+		}
+
+		[Test]
+		public void TsStringCanRoundTripFdoToMongoToFdo_ContainsBrTagsEscaped()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsBrTagsEscaped);
 			ITsString tss = builder.GetString();
 
 			// Round-trip
@@ -1680,6 +1884,54 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			ITsString tss = builder.GetString();
 
 			string text = containsHtmlEscaped;
+
+			// Round-trip
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+
+			// Compare
+			AssertNFC(text2);
+			Assert.That(text2, Is.EqualTo(text));
+			// Also check TsStrings for completion's sake
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null);
+		}
+
+		[Test]
+		public void TsStringsCanRoundTripMongoToFdoToMongo_ContainsBrTags()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsBrTags);
+			ITsString tss = builder.GetString();
+
+			string text = containsBrTagsEscaped;
+
+			// Round-trip
+			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
+			string text2 = ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsf);
+
+			// Compare
+			AssertNFC(text2);
+			Assert.That(text2, Is.EqualTo(containsBrTagsEscapedStripped));
+			// Also check TsStrings for completion's sake
+			TsStringDiffInfo diff = TsStringUtils.GetDiffsInTsStrings(tss, tss2);
+			Assert.That(diff, Is.Null); // TODO: This should *not* be null, actually. So this test should initially fail.
+		}
+
+		[Test]
+		public void TsStringsCanRoundTripMongoToFdoToMongo_ContainsBrTagsStripped()
+		{
+			// Setup
+			ILgWritingSystemFactory wsf = _cache.WritingSystemFactory;
+			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, _wsEn);
+			builder.Append(containsBrTagsStripped);
+			ITsString tss = builder.GetString();
+
+			string text = containsBrTagsEscapedStripped;
 
 			// Round-trip
 			ITsString tss2 = ConvertMongoToFdoTsStrings.SpanStrToTsString(text, _wsEn, wsf);
