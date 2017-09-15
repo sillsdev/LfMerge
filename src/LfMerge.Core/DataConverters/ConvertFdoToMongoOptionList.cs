@@ -47,7 +47,7 @@ namespace LfMerge.Core.DataConverters
 
 		public virtual LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
 		{
-			bool origLfOptionListModified = false;
+			bool optionListDiffersFromOriginal = false;
 			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
 				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
 				.ToDictionary(poss => poss.Guid);
@@ -58,15 +58,15 @@ namespace LfMerge.Core.DataConverters
 				if (_lfOptionListItemByGuid.TryGetValue(poss.Guid, out correspondingItem))
 				{
 					bool thisItemWasModified = SetOptionListItemFromCmPossibility(correspondingItem, poss);
-					origLfOptionListModified |= thisItemWasModified;
-					// Two-step process because we don't want || to short-circuit calling SetOptionListItemFromCmPossibility().
+					optionListDiffersFromOriginal |= thisItemWasModified;
+					// Two-step process because we don't want |= to short-circuit calling SetOptionListItemFromCmPossibility().
 					// QUESTION for code reviewers: would that intent have been clear if I had written the following line instead?
-					// origLfOptionListModified = SetOptionListItemFromCmPossibility(correspondingItem, poss) || origLfOptionListModified;
+					// optionListDiffersFromOriginal = SetOptionListItemFromCmPossibility(correspondingItem, poss) || optionListDiffersFromOriginal;
 				}
 				else
 				{
 					correspondingItem = CmPossibilityToOptionListItem(poss);
-					origLfOptionListModified = true;
+					optionListDiffersFromOriginal = true;
 				}
 				_lfOptionListItemByGuid[poss.Guid] = correspondingItem;
 				_lfOptionListItemByStrKey[correspondingItem.Key] = correspondingItem;
@@ -79,7 +79,13 @@ namespace LfMerge.Core.DataConverters
 				.Where(item => fdoOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
 				.ToList();
 
-			if (origLfOptionListModified)
+			if (lfNewOptionList.Items.Count != _lfOptionList.Items.Count)
+			{
+				// Deleted at least one item because it had disappeared from FDO
+				optionListDiffersFromOriginal = true;
+			}
+
+			if (optionListDiffersFromOriginal)
 			{
 				lfNewOptionList.DateModified = DateTime.Now;  // TODO: Investigate why this was changed from UtcNow
 			}
