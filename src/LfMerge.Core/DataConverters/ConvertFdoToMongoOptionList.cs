@@ -47,6 +47,7 @@ namespace LfMerge.Core.DataConverters
 
 		public virtual LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
 		{
+			bool origLfOptionListModified = false;
 			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
 				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
 				.ToDictionary(poss => poss.Guid);
@@ -56,11 +57,16 @@ namespace LfMerge.Core.DataConverters
 				LfOptionListItem correspondingItem;
 				if (_lfOptionListItemByGuid.TryGetValue(poss.Guid, out correspondingItem))
 				{
-					SetOptionListItemFromCmPossibility(correspondingItem, poss);
+					bool thisItemWasModified = SetOptionListItemFromCmPossibility(correspondingItem, poss);
+					origLfOptionListModified |= thisItemWasModified;
+					// Two-step process because we don't want || to short-circuit calling SetOptionListItemFromCmPossibility().
+					// QUESTION for code reviewers: would that intent have been clear if I had written the following line instead?
+					// origLfOptionListModified = SetOptionListItemFromCmPossibility(correspondingItem, poss) || origLfOptionListModified;
 				}
 				else
 				{
 					correspondingItem = CmPossibilityToOptionListItem(poss);
+					origLfOptionListModified = true;
 				}
 				_lfOptionListItemByGuid[poss.Guid] = correspondingItem;
 				_lfOptionListItemByStrKey[correspondingItem.Key] = correspondingItem;
@@ -72,6 +78,11 @@ namespace LfMerge.Core.DataConverters
 			lfNewOptionList.Items = _lfOptionListItemByGuid.Values
 				.Where(item => fdoOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
 				.ToList();
+
+			if (origLfOptionListModified)
+			{
+				lfNewOptionList.DateModified = DateTime.Now;  // TODO: Investigate why this was changed from UtcNow
+			}
 
 			return lfNewOptionList;
 		}
@@ -119,7 +130,7 @@ namespace LfMerge.Core.DataConverters
 		protected LfOptionListItem CmPossibilityToOptionListItem(ICmPossibility pos)
 		{
 			var item = new LfOptionListItem();
-			SetOptionListItemFromCmPossibility(item, pos, true);
+			SetOptionListItemFromCmPossibility(item, pos, true);  // Ignore the bool result since this will always modify the item
 			return item;
 		}
 
@@ -142,7 +153,7 @@ namespace LfMerge.Core.DataConverters
 		{
 			var result = new LfOptionList();
 			result.Items = new List<LfOptionListItem>();
-			result.DateCreated = result.DateModified = DateTime.Now;
+			result.DateCreated = result.DateModified = DateTime.Now;  // TODO: Investigate why this was changed from UtcNow
 			result.Code = listCode;
 			result.Name = FdoOptionListName(listCode);
 			result.CanDelete = false;
@@ -160,7 +171,7 @@ namespace LfMerge.Core.DataConverters
 			newList.CanDelete = original.CanDelete;
 			newList.Code = original.Code;
 			newList.DateCreated = original.DateCreated;
-			newList.DateModified = DateTime.Now;
+			newList.DateModified = original.DateModified;
 			newList.DefaultItemKey = original.DefaultItemKey;
 			newList.Name = original.Name;
 			// lfNewOptionList.Items is set to an empty list by its constructor; no need to set it here.
@@ -181,14 +192,37 @@ namespace LfMerge.Core.DataConverters
 			return currentTry;
 		}
 
-		protected void SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
+		// Returns true if the item passed in has been modified at all, false otherwise
+		protected bool SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
 		{
-			//const char ORC = '\xfffc';
-			item.Abbreviation = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.BestAnalysisVernacularAlternative, _wsf);
+			bool modified = false;
+			string abbreviation = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.BestAnalysisVernacularAlternative, _wsf);
+			if (item.Abbreviation != abbreviation)
+			{
+				modified = true;
+			}
+			item.Abbreviation = abbreviation;
 			if (setKey)
-				item.Key = FindAppropriateKey(ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsForKeys), _wsf));
-			item.Value = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Name.BestAnalysisVernacularAlternative, _wsf);
+			{
+				string key = FindAppropriateKey(ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsForKeys), _wsf));
+				if (item.Key != key)
+				{
+					modified = true;
+				}
+				item.Key = key;
+			}
+			string value = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Name.BestAnalysisVernacularAlternative, _wsf);
+			if (item.Value != value)
+			{
+				modified = true;
+			}
+			item.Value = value;
+			if (item.Guid != poss.Guid)
+			{
+				modified = true;
+			}
 			item.Guid = poss.Guid;
+			return modified;
 		}
 
 	}
