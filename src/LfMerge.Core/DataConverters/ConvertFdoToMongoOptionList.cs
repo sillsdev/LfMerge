@@ -57,11 +57,9 @@ namespace LfMerge.Core.DataConverters
 				LfOptionListItem correspondingItem;
 				if (_lfOptionListItemByGuid.TryGetValue(poss.Guid, out correspondingItem))
 				{
-					bool thisItemWasModified = SetOptionListItemFromCmPossibility(correspondingItem, poss);
-					optionListDiffersFromOriginal |= thisItemWasModified;
-					// Two-step process because we don't want |= to short-circuit calling SetOptionListItemFromCmPossibility().
-					// QUESTION for code reviewers: would that intent have been clear if I had written the following line instead?
-					// optionListDiffersFromOriginal = SetOptionListItemFromCmPossibility(correspondingItem, poss) || optionListDiffersFromOriginal;
+					// One-way latch: once optionListDiffersFromOriginal becomes true, it should remain true.
+					// Do NOT reorder this || expression. We want the function call *first* so that it will never be short-circuited away.
+					optionListDiffersFromOriginal = SetOptionListItemFromCmPossibility(correspondingItem, poss) || optionListDiffersFromOriginal;
 				}
 				else
 				{
