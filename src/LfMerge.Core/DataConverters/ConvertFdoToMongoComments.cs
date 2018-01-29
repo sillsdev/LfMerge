@@ -46,8 +46,10 @@ namespace LfMerge.Core.DataConverters
 			{
 				string newCommentsStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
 				string newRepliesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
+				string newStatusChangesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New status changes on comments already in LF: ");
 				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr);
 				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
+				List<KeyValuePair<string, string>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(newStatusChangesStr);
 
 				foreach (LfComment comment in comments)
 				{
@@ -76,6 +78,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				_conn.UpdateComments(_project, comments);
 				_conn.UpdateReplies(_project, replies);
+				_conn.UpdateCommentStatuses(_project, statusChanges);
 			}
 			else
 			{
@@ -147,6 +150,7 @@ namespace LfMerge.Core.DataConverters
 		public LfCommentRegarding FromTargetGuid(Guid guidOfUnknownFdoObject, FieldLists fieldConfigs)
 		{
 			var result = new LfCommentRegarding(); // Worst case, we'll return this empty object rather than null
+			if (! _servLoc.ObjectRepository.IsValidObjectId(guidOfUnknownFdoObject)) return result;
 			ICmObject fdoObject = _servLoc.ObjectRepository.GetObject(guidOfUnknownFdoObject);
 			if (fdoObject == null) return result;
 			result.TargetGuid = fdoObject.Guid.ToString();

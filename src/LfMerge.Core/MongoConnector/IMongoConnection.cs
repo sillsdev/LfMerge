@@ -22,8 +22,9 @@ namespace LfMerge.Core.MongoConnector
 		bool RemoveRecord(ILfProject project, Guid guid);
 		Dictionary<string, LfInputSystemRecord>GetInputSystems(ILfProject project);
 		IEnumerable<LfComment> GetComments(ILfProject project);
-		void UpdateComments(ILfProject project, List<LfComment> comments);  // Should be void, but string for now as a very quick-and-dirty test
+		void UpdateComments(ILfProject project, List<LfComment> comments);
 		void UpdateReplies(ILfProject project, List<Tuple<string, List<LfCommentReply>>> repliesFromFWWithCommentGuids);
+		void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, string>> statusChanges);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);
 		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);

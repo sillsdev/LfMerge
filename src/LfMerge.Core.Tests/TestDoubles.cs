@@ -326,6 +326,11 @@ namespace LfMerge.Core.Tests
 			;
 		}
 
+		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, string>> statusChanges)
+		{
+			;
+		}
+
 		public void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings)
 		{
 			// No-op. TODO: Implement something that stores a simple comment-replies data structure so we can unit test.

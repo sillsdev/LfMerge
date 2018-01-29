@@ -283,6 +283,37 @@ namespace LfMerge.Core.MongoConnector
 			}
 		}
 
+		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, string>> statusChanges)
+		{
+			Dictionary<Guid, ObjectId> mongoIdsForEntries = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfComment> collection = db.GetCollection<LfComment>(MagicStrings.LfCollectionNameForLexiconComments);
+			var commentUpdates = new List<UpdateOneModel<LfComment>>(statusChanges.Count);
+			var filterBuilder = Builders<LfComment>.Filter;
+			var updateBuilder = Builders<LfComment>.Update;
+
+			foreach (KeyValuePair<string, string> kv in statusChanges)
+			{
+				Guid commentGuid = Guid.Parse(kv.Key);
+				string newStatus = kv.Value;
+				ObjectId mongoId;
+				FilterDefinition<LfComment> filter;
+				UpdateDefinition<LfComment> update;
+				Guid targetGuid = Guid.Empty;
+				DateTime utcNow = DateTime.UtcNow;
+
+				filter = filterBuilder.Eq(cmt => cmt.Guid, commentGuid);
+				update = updateBuilder.Set(cmt => cmt.Status, newStatus);
+				commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
+			}
+			var options = new BulkWriteOptions { IsOrdered = false };
+			// Mongo doesn't like bulk updates with 0 items in them, and will throw an exception instead of sensibly doing nothing. So we have to protect it from itself.
+			if (commentUpdates.Count > 0)
+			{
+				var result = collection.BulkWrite(commentUpdates, options);
+			}
+		}
+
 		public UpdateOneModel<LfComment> PrepareReplyUpdateForOneComment(Guid commentGuid, List<LfCommentReply> replies)
 		{
 			foreach (LfCommentReply reply in replies)
