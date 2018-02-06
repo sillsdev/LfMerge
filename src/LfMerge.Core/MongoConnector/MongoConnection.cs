@@ -247,6 +247,7 @@ namespace LfMerge.Core.MongoConnector
 						.Set(c => c.Replies, comment.Replies)
 						.Set(c => c.IsDeleted, comment.IsDeleted)
 						.Set(c => c.Status, comment.Status)
+						.Set(c => c.StatusGuid, comment.StatusGuid)
 						;
 					commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
 				}
@@ -283,7 +284,7 @@ namespace LfMerge.Core.MongoConnector
 			}
 		}
 
-		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, string>> statusChanges)
+		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, Tuple<string, string>>> statusChanges)
 		{
 			Dictionary<Guid, ObjectId> mongoIdsForEntries = GetObjectIdsByGuidForCollection(project, MagicStrings.LfCollectionNameForLexicon);
 			IMongoDatabase db = GetProjectDatabase(project);
@@ -292,18 +293,18 @@ namespace LfMerge.Core.MongoConnector
 			var filterBuilder = Builders<LfComment>.Filter;
 			var updateBuilder = Builders<LfComment>.Update;
 
-			foreach (KeyValuePair<string, string> kv in statusChanges)
+			foreach (KeyValuePair<string, Tuple<string, string>> kv in statusChanges)
 			{
 				Guid commentGuid = Guid.Parse(kv.Key);
-				string newStatus = kv.Value;
-				ObjectId mongoId;
+				var newStatus = kv.Value.Item1;
+				var newStatusGuid = Guid.Parse(kv.Value.Item2);
 				FilterDefinition<LfComment> filter;
 				UpdateDefinition<LfComment> update;
-				Guid targetGuid = Guid.Empty;
-				DateTime utcNow = DateTime.UtcNow;
 
 				filter = filterBuilder.Eq(cmt => cmt.Guid, commentGuid);
-				update = updateBuilder.Set(cmt => cmt.Status, newStatus);
+				update = updateBuilder
+					.Set(c => c.Status, newStatus)
+					.Set(c => c.StatusGuid, newStatusGuid);
 				commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
 			}
 			var options = new BulkWriteOptions { IsOrdered = false };

@@ -19,6 +19,8 @@ namespace LfMerge.Core.LanguageForge.Model
 		public DateTime DateModified { get; set; }
 		public string Content { get; set; }
 		public string Status { get; set; }
+		[BsonRepresentation(BsonType.String)]
+		public Guid? StatusGuid { get; set; }
 		public bool IsDeleted { get; set; }
 		public List<LfCommentReply> Replies { get; set; }
 		public ObjectId EntryRef { get; set; }
@@ -29,6 +31,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public bool ShouldSerializeDateModified() { return true; }
 		public bool ShouldSerializeContent() { return ( ! String.IsNullOrEmpty(Content)); }
 		public bool ShouldSerializeAuthorNameAlternate() { return ( ! String.IsNullOrEmpty(AuthorNameAlternate)); }
+		public bool ShouldSerializeStatusGuid() { return (StatusGuid != null && StatusGuid.Value != System.Guid.Empty); }
 		public bool ShouldSerializeReplies() { return (Replies != null && Replies.Count > 0); }
 
 		public LfComment() {
