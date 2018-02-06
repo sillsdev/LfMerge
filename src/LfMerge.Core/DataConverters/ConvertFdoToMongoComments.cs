@@ -49,7 +49,7 @@ namespace LfMerge.Core.DataConverters
 				string newStatusChangesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New status changes on comments already in LF: ");
 				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr);
 				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
-				List<KeyValuePair<string, string>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(newStatusChangesStr);
+				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
 
 				foreach (LfComment comment in comments)
 				{
@@ -64,7 +64,7 @@ namespace LfMerge.Core.DataConverters
 							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
 						}
 					}
-					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8}",
+					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8} (GUID {9})",
 						comment.Regarding.FieldNameForDisplay,
 						comment.Regarding.FieldValue,
 						comment.Regarding.Word,
@@ -73,7 +73,8 @@ namespace LfMerge.Core.DataConverters
 						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
 						comment.AuthorNameAlternate ?? "<null>",
 						comment.Regarding.TargetGuid,
-						comment.Status
+						comment.Status,
+						comment.StatusGuid
 						);
 				}
 				_conn.UpdateComments(_project, comments);
