@@ -326,7 +326,7 @@ namespace LfMerge.Core.Tests
 			;
 		}
 
-		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, string>> statusChanges)
+		public void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, Tuple<string, string>>> statusChanges)
 		{
 			;
 		}
