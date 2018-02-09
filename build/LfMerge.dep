@@ -1,6 +1,7 @@
 # This file lists dependencies
 # It can be edited with the BuildDependencyManager application.
 # See https://github.com/ermshiperete/BuildDependency for more information.
+# Edited with version 0.4.1 (c04e8a3)
 
 [[TC]]
 Type=TeamCity
@@ -30,8 +31,8 @@ Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::PalasoLinux64lfmergeContinuous]
-Name=palaso-linux64-lfmerge Continuous
+[TC::PalasoLinux64v26Cont]
+Name=palaso-linux64-libpalaso-2.6 Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -53,8 +54,8 @@ Path=MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 
-[TC::PalasoWin32lfmergeContinuous]
-Name=palaso-win32-lfmerge Continuous
+[TC::PalasoWin32v26nostrongCont]
+Name=palaso-win32-libpalaso-2.6-nostrongname Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
