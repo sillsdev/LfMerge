@@ -1,12 +1,16 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using MongoDB.Bson;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using LfMerge.Core.Logging;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
-	public class LfFieldBase
+	public class LfFieldBase: ISupportInitialize
 	{
 		// Used in subclasses to help reduce size of MongoDB JSON serializations
 		protected bool _ShouldSerializeLfMultiText(LfMultiText value)
@@ -32,6 +36,27 @@ namespace LfMerge.Core.LanguageForge.Model
 		protected bool _ShouldSerializeBsonDocument(BsonDocument value)
 		{
 			return value != null && value.ElementCount > 0;
+		}
+
+		// Will receive all additional fields from Mongo that we don't know about
+		[BsonExtraElements]
+		public IDictionary<string, object> ExtraElements { get; set; }
+
+		void ISupportInitialize.BeginInit()
+		{
+			// nothing to do at beginning
+		}
+
+		void ISupportInitialize.EndInit()
+		{
+			if (ExtraElements == null || ExtraElements.Count <= 0)
+				return;
+
+			var bldr = new StringBuilder();
+			bldr.AppendFormat("Read {0} unknown elements from Mongo for type {1}: ",
+				ExtraElements.Count, GetType().Name);
+			bldr.Append(string.Join(", ", ExtraElements.Keys));
+			MainClass.Logger.Log(LogSeverity.Warning, bldr.ToString());
 		}
 	}
 }
