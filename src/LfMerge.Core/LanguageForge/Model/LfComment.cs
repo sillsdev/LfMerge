@@ -25,6 +25,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public List<LfCommentReply> Replies { get; set; }
 		public ObjectId EntryRef { get; set; }
 		public int Score { get; set; }
+		public string ContextGuid { get; set; } // not really a GUID
 
 		public bool ShouldSerializeGuid() { return (Guid != null && Guid.Value != System.Guid.Empty); }
 		public bool ShouldSerializeDateCreated() { return true; }

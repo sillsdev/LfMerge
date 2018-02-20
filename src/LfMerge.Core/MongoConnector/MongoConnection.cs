@@ -248,6 +248,7 @@ namespace LfMerge.Core.MongoConnector
 						.Set(c => c.IsDeleted, comment.IsDeleted)
 						.Set(c => c.Status, comment.Status)
 						.Set(c => c.StatusGuid, comment.StatusGuid)
+						.Set(c => c.ContextGuid, comment.ContextGuid)
 						;
 					commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
 				}
