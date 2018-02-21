@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,13 +10,14 @@
     <RootNamespace>LfMerge.Core</RootNamespace>
     <AssemblyName>LfMerge.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefinePlatformConstants Condition="'$(OS)'!='Windows_NT'">LINUX</DefinePlatformConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -30,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>FW8_COMPAT;DBVERSION_$(DatabaseVersion)</DefineConstants>
+    <DefineConstants>FW8_COMPAT;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
@@ -39,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000068</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000068</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000068;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -51,7 +53,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000069</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000069</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000069;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -63,7 +65,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000070</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000070</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000070;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

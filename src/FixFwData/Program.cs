@@ -12,7 +12,7 @@ using Palaso.Reporting;
 using SIL.FieldWorks.FixData;
 using SIL.Utils;
 
-#if __MonoCS__
+#if LINUX
 using Palaso.PlatformUtilities;
 using SIL.Linux.Logging;
 #endif
@@ -35,7 +35,7 @@ namespace FixFwData
 			return errorsOccurred ? 1 : 0;
 		}
 
-#if __MonoCS__
+#if LINUX
 		private static SyslogLogger logger = null;
 #endif
 		private static bool errorsOccurred = false;
@@ -43,7 +43,7 @@ namespace FixFwData
 
 		private static void logError(string description, bool errorFixed)
 		{
-#if __MonoCS__
+#if LINUX
 			if (logger == null)
 				Console.WriteLine(description);
 			else
@@ -65,13 +65,13 @@ namespace FixFwData
 		{
 			ErrorReport.EmailAddress = "flex_errors@sil.org";
 			ErrorReport.AddStandardProperties();
-#if __MonoCS__
+#if LINUX
 			if (Platform.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
 				ExceptionHandler.Init(new SyslogExceptionHandler("FixFwData"));
 			else
 #endif
 				ExceptionHandler.Init();
-#if __MonoCS__
+#if LINUX
 			if (Platform.IsUnix)
 				logger = new SyslogLogger("FixFwData");
 #endif
@@ -97,7 +97,7 @@ namespace FixFwData
 				get { return null; }
 				set
 				{
-#if __MonoCS__
+#if LINUX
 					if (logger == null)
 						Console.Out.WriteLine(value);
 					else
