@@ -9,13 +9,14 @@
     <RootNamespace>LfMerge</RootNamespace>
     <AssemblyName>LfMerge</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefinePlatformConstants Condition="'$(OS)'!='Windows_NT'">LINUX</DefinePlatformConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -25,12 +26,11 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>FW8_COMPAT</DefineConstants>
+    <DefineConstants>TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000068</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -52,7 +52,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000069</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -64,7 +64,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000070</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
