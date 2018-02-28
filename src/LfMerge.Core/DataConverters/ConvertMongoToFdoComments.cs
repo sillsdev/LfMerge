@@ -49,7 +49,7 @@ namespace LfMerge.Core.DataConverters
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
 		}
 
-		public bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
+		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
 		{
 			bridgeOutput = string.Empty;
 			using (var tmpFile = new Palaso.IO.TempFile(bridgeInput))

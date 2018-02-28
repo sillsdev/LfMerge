@@ -268,7 +268,7 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
+		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
 		{
 			// Call into LF Bridge to do the work.
 			bridgeOutput = string.Empty;
