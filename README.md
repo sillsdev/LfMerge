@@ -1,4 +1,5 @@
 # LfMerge
+
 Send/Receive for languageforge.org
 
 ## Preqrequisites
@@ -24,3 +25,14 @@ Alternatively you can build and run the tests on the command line:
 ### Building on Windows
 
 LfMerge is intended to be run on Linux and the development happens on Linux. For testing/debugging purposes it might be useful to build on Windows. Be prepared that building on Windows might currently not work or that the tests don't work out of the box.
+
+## Logfiles
+
+LfMerge and LfMergeQueueManager log some output. On a Xenial system this can be seen by running:
+
+	journalctl -t LfMerge -t LfMergeQueueManager -e
+
+If you want to redirect the output to a file and still see the colors, you can use:
+
+	script -qfc "journalctl -t LfMerge --no-pager" /dev/null > lfmerge.log.txt
+	less -R lfmerge.log.txt
