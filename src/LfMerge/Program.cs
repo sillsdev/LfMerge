@@ -1,27 +1,33 @@
-﻿// Copyright (c) 2011-2016 SIL International
+﻿// Copyright (c) 2011-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Autofac;
+using Bugsnag.Clients;
 using LfMerge.Core;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.FieldWorks;
+using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 
 namespace LfMerge
 {
-	public class Program
+	public static class Program
 	{
 		[STAThread]
 		public static int Main(string[] args)
 		{
+			ExceptionLogging.Initialize("17a42e4a67dd2e42d4aa40d8bf2d23ee", Assembly.GetExecutingAssembly().GetName().Name);
 			int result = (int)ErrorCode.NoError;
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return (int)ErrorCode.InvalidOptions;
+
+			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 
 			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
 				MainClass.ModelVersion, string.Join(" ", args));
