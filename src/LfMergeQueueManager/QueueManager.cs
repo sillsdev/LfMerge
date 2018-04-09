@@ -3,9 +3,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Autofac;
 using LfMerge.Core;
 using LfMerge.Core.FieldWorks;
+using LfMerge.Core.Logging;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
 using Palaso.IO.FileLock;
@@ -18,6 +20,7 @@ namespace LfMerge.QueueManager
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			ExceptionLogging.Initialize("17a42e4a67dd2e42d4aa40d8bf2d23ee", Assembly.GetExecutingAssembly().GetName().Name);
 			var options = QueueManagerOptions.ParseCommandLineArgs(args);
 			if (options == null)
 				return;
@@ -47,7 +50,7 @@ namespace LfMerge.QueueManager
 					{
 						var projectPath = Path.Combine(settings.FdoDirectorySettings.ProjectsDirectory,
 							projectCode, string.Format("{0}{1}", projectCode,
-								FdoFileHelper.ksFwDataXmlFileExtension));
+							FdoFileHelper.ksFwDataXmlFileExtension));
 						var modelVersion = FwProject.GetModelVersion(projectPath);
 						queue.DequeueProject(projectCode);
 						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
