@@ -1,0 +1,18 @@
+#!/bin/bash
+# This file is a workaround for using the current nuget.exe (which works with nuget packages that
+# specify dependencies for multiple frameworks, but requires a newer mono version) and having to
+# still use mono 3.x for building and running the project.
+
+if [ -f /opt/mono5-sil/bin/mono ]; then
+	export MONO_PREFIX=/opt/mono5-sil
+elif [ -f /opt/mono4-sil/bin/mono ]; then
+	export MONO_PREFIX=/opt/mono4-sil
+else
+	echo "Need mono4-sil or mono5-sil installed to be able to restore the packages"
+	exit 1
+fi
+
+cd $(dirname $0)/..
+. environ
+cd -
+mono --debug nuget.exe $@
