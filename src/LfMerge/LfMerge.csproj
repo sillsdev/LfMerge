@@ -71,8 +71,9 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BugsnagMono, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\BugsnagMonoImproved.1.4.0.0\lib\Net45\BugsnagMono.dll</HintPath>
+    <Reference Include="Bugsnag, Version=2.0.2.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\Bugsnag.2.0.2\lib\net45\Bugsnag.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="CommandLine">
@@ -93,6 +94,8 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="INIFileParser">
       <HintPath>..\..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>

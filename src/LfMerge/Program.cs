@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Bugsnag.Clients;
 using LfMerge.Core;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;

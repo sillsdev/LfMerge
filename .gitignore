@@ -1,4 +1,4 @@
-build/NuGet.exe
+build/nuget.exe
 packages/
 bin/
 obj/
