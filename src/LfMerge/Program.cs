@@ -103,7 +103,8 @@ namespace LfMerge
 				}
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
-				    project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
+					project.State.SRState != ProcessingState.SendReceiveStates.ERROR &&
+					project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
 				{
 					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
 
@@ -126,11 +127,11 @@ namespace LfMerge
 				{
 					MainClass.Logger.Error("Project code was {0}", projectCode);
 				}
-				string errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
+				var errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
 					projectCode, e);
 				MainClass.Logger.Error(errorMsg);
 				if (project != null)
-					project.State.PutOnHold(errorMsg);
+					project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD, ProcessingState.ErrorCodes.UnhandledException, errorMsg);
 			}
 			finally
 			{
@@ -138,6 +139,7 @@ namespace LfMerge
 				if (project != null && project.State != null)
 					project.State.PreviousRunTotalMilliseconds = stopwatch.ElapsedMilliseconds;
 				if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+					project.State.SRState != ProcessingState.SendReceiveStates.ERROR &&
 					!ChorusHelper.RemoteDataIsForDifferentModelVersion)
 				{
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;

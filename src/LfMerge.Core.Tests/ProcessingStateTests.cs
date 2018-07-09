@@ -167,6 +167,87 @@ namespace LfMerge.Core.Tests
 			// Verify
 			Assert.That(newTicks, Is.GreaterThan(oldTicks));
 		}
+
+		[Test]
+		public void PutOnHold_NoArgs()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE
+			};
+
+			// Exercise
+			sut.PutOnHold("Hello World!");
+
+			// Verify
+			Assert.That(sut.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(sut.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.Unspecified));
+			Assert.That(sut.ErrorMessage, Is.EqualTo("Hello World!"));
+		}
+
+		[Test]
+		public void PutOnHold_Args()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE
+			};
+
+			// Exercise
+			sut.PutOnHold("{0} {1}{2}", "Hello", "World", "!");
+
+			// Verify
+			Assert.That(sut.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(sut.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.Unspecified));
+			Assert.That(sut.ErrorMessage, Is.EqualTo("Hello World!"));
+		}
+
+		[Test]
+		public void SetErrorState_MissingMessage()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE
+			};
+
+			// Exercise/Verify
+			Assert.That(() => sut.SetErrorState(ProcessingState.SendReceiveStates.ERROR, ProcessingState.ErrorCodes.EmptyProject, null),
+				Throws.Exception.TypeOf<ArgumentNullException>());
+		}
+
+		[Test]
+		public void SetErrorState_Enum()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE
+			};
+
+			// Exercise
+			sut.SetErrorState(ProcessingState.SendReceiveStates.ERROR, ProcessingState.ErrorCodes.EmptyProject, "{0} {1}{2}", "Hello", "World", "!");
+
+			// Verify
+			Assert.That(sut.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
+			Assert.That(sut.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.EmptyProject));
+			Assert.That(sut.ErrorMessage, Is.EqualTo("Hello World!"));
+		}
+
+		[Test]
+		public void SetErrorState_Int()
+		{
+			// Setup
+			var sut = new ProcessingState("proja", _env.Settings) {
+				SRState = ProcessingState.SendReceiveStates.IDLE
+			};
+
+			// Exercise
+			sut.SetErrorState(ProcessingState.SendReceiveStates.ERROR, (int)ProcessingState.ErrorCodes.EmptyProject, "{0} {1}{2}", "Hello", "World", "!");
+
+			// Verify
+			Assert.That(sut.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
+			Assert.That(sut.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.EmptyProject));
+			Assert.That(sut.ErrorMessage, Is.EqualTo("Hello World!"));
+		}
 	}
 }
 
