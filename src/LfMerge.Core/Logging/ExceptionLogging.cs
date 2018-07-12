@@ -178,13 +178,19 @@ namespace LfMerge.Core.Logging
 
 			if (string.IsNullOrEmpty(Configuration.ReleaseStage))
 			{
-				var isDevelopment = Debugger.IsAttached;
-#if DEBUG
-				isDevelopment = true;
-#endif
-				if (isDevelopment)
+				var gitBranch = MainClass.GetVersionInfo("BranchName");
+
+				if (gitBranch.EndsWith("/live", StringComparison.InvariantCulture))
+					configuration.ReleaseStage = "live";
+				else if (gitBranch.EndsWith("/qa", StringComparison.InvariantCulture))
+					configuration.ReleaseStage = "qa";
+				else if (gitBranch.StartsWith("origin/", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "development";
+				else
+					configuration.ReleaseStage = "local";
 			}
+			configuration.NotifyReleaseStages = new[] { "live", "qa", "development" };
+
 
 			var metadata = new List<KeyValuePair<string, object>>();
 			if (configuration.GlobalMetadata != null)
