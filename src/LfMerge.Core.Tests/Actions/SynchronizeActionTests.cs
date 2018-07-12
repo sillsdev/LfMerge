@@ -64,7 +64,7 @@ namespace LfMerge.Core.Tests.Actions
 			_testCreatedEntryGuid = Guid.Parse(testCreatedEntryGuidStr);
 			_testDeletedEntryGuid = Guid.Parse(testDeletedEntryGuidStr);
 
-			_languageDepotFolder = new TemporaryFolder("SyncTestLD");
+			_languageDepotFolder = new TemporaryFolder("SyncTestLD" + Path.GetRandomFileName());
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
 			LanguageDepotMock.ProjectFolderPath = Path.Combine(_lDSettings.WebWorkDirectory, testProjectCode);
