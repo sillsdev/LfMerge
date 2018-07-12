@@ -93,7 +93,11 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a non-FLEx hg repo (in this case an empty repo)
-			MercurialTestHelper.InitializeHgRepo(LanguageDepotMock.ProjectFolderPath);
+			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
+			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
+			File.WriteAllText(Path.Combine(lDProjectFolderPath, "some.file"),
+				"just a test file");
+			MercurialTestHelper.HgCommit(lDProjectFolderPath, "Initial commit");
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);
@@ -161,11 +165,7 @@ namespace LfMerge.Core.Tests.Actions
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(),
-				// LfMergeBridge contains code to deal with a repo without commits, but that code
-				// never executes because the check if we have a FLEx repo hits first.
-				//.With.Message.ContainsSubstring("new repository with no commits"));
-				Is.StringContaining("clone is not a FLEx project"));
+			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("new repository with no commits"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 			Assert.That(ModelVersion, Is.Null);
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
