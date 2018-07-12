@@ -12,7 +12,10 @@ else
 	exit 1
 fi
 
+# We don't want/need the FDO assemblies in the path. But if we try to add them the build might
+# fail if `lfmerge-fdo` package isn't installed. Therefore we set RUNMODE to skip that step.
 cd $(dirname $0)/..
-. environ
+RUNMODE="PACKAGEBUILD" . environ
 cd -
+
 mono --debug nuget.exe $@
