@@ -34,7 +34,7 @@ namespace LfMerge.Core
 
 			var project = list.FirstOrDefault();
 			if (project == null)
-				throw new ArgumentException("Can't find project code", "lfProjectCode");
+				throw new ArgumentException("Can't find project code in mongo database", "lfProjectCode");
 
 			BsonValue value, srProjectValue;
 			if (project.TryGetValue("sendReceiveProjectIdentifier", out value))
