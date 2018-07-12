@@ -29,8 +29,8 @@ namespace LfMerge
 
 			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 
-			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
-				MainClass.ModelVersion, string.Join(" ", args));
+			MainClass.Logger.Notice("LfMerge {2} (database {0}) starting with args: {1}",
+				MainClass.ModelVersion, string.Join(" ", args), MainClass.GetVersionInfo("SemVer"));
 
 			if (!string.IsNullOrEmpty(options.ConfigDir))
 				LfMergeSettings.ConfigDir = options.ConfigDir;

@@ -201,11 +201,7 @@ namespace LfMerge.Core.Logging
 				if (string.IsNullOrEmpty(Configuration.AppVersion))
 					configuration.AppVersion = entryAssembly.GetName().Version.ToString();
 
-				var informationalVersion = entryAssembly
-					.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), true)
-					.FirstOrDefault() as AssemblyInformationalVersionAttribute;
-				if (informationalVersion != null)
-					app.Add("infoVersion", informationalVersion.InformationalVersion);
+				app.Add("infoVersion", MainClass.GetVersionInfo("InformationalVersion"));
 			}
 
 			var device = FindMetadata("Device", metadata);

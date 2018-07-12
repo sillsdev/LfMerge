@@ -149,6 +149,22 @@ namespace LfMerge.Core
 			return true;
 		}
 
+		/// <summary>
+		/// Get the value from a field of the generated GitVersionInformation object
+		/// </summary>
+		public static string GetVersionInfo(string variableName)
+		{
+			var assembly = Assembly.GetEntryAssembly();
+			if (assembly == null)
+				return string.Empty;
+			var assemblyName = assembly.GetName().Name;
+			var gitVersionInformationType = assembly.GetType(assemblyName + ".GitVersionInformation");
+			if (gitVersionInformationType == null)
+				return string.Empty;
+			var versionField = gitVersionInformationType.GetField(variableName);
+			return versionField == null ? string.Empty : (string)versionField.GetValue(null);
+		}
+
 	}
 }
 
