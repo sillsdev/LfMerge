@@ -12,6 +12,7 @@ using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
+using Bugsnag;
 
 namespace LfMerge
 {
@@ -119,6 +120,7 @@ namespace LfMerge
 			catch (Exception e)
 			{
 				MainClass.Logger.Error("Got exception {0}", e.ToString());
+				ExceptionLogging.Client.Notify(e);
 				if (projectCode == null)
 				{
 					MainClass.Logger.Error("Project code was null");
