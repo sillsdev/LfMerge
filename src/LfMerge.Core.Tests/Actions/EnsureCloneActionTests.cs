@@ -58,7 +58,7 @@ namespace LfMerge.Core.Tests.Actions
 				Throws.Exception.TypeOf(Type.GetType("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")));
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 		}
 
 		[Test]

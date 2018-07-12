@@ -194,7 +194,7 @@ namespace LfMerge.Core.Actions
 				if (e.GetType().Name == "ArgumentOutOfRangeException" &&
 					e.Message == "Cannot update to any branch.")
 				{
-					project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD,
+					project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
 						ProcessingState.ErrorCodes.UnhandledException,
 						"Error during initial clone of {0}: {1}", project.ProjectCode, e);
 					throw;
@@ -202,7 +202,7 @@ namespace LfMerge.Core.Actions
 				if (e.GetType().Name == "RepositoryAuthorizationException")
 				{
 					Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
-					project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD,
+					project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
 						ProcessingState.ErrorCodes.Unauthorized,
 						"Error during initial clone of {0}: authorization exception from remote repository",
 						project.ProjectCode);
