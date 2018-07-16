@@ -31,6 +31,12 @@ namespace LfMerge
 		[Option("config", HelpText = "Alternate location of the 'sendreceive.conf' configuration file")]
 		public string ConfigDir { get; set; }
 
+		[Option("user", HelpText = "LanguageDepot username (for debugging purposes only)", DefaultValue = "x")]
+		public string User { get; set; }
+
+		[Option("password", HelpText = "LanguageDepot password (for debugging purposes only)", DefaultValue = "x")]
+		public string Password { get; set; }
+
 		[HelpOption('h', "help")]
 		public string GetUsage()
 		{

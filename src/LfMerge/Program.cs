@@ -27,6 +27,11 @@ namespace LfMerge
 			if (options == null)
 				return (int)ErrorCode.InvalidOptions;
 
+			// Username and Password will usually be "x" because it's dealt with on Language Forge site.
+			// However, when debugging LfMerge we want to be able to set it to a real name
+			ChorusHelper.Username = options.User;
+			ChorusHelper.Password = options.Password;
+
 			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 
 			MainClass.Logger.Notice("LfMerge {2} (database {0}) starting with args: {1}",
