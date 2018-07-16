@@ -37,6 +37,12 @@ namespace LfMerge
 			MainClass.Logger.Notice("LfMerge {2} (database {0}) starting with args: {1}",
 				MainClass.ModelVersion, string.Join(" ", args), MainClass.GetVersionInfo("SemVer"));
 
+			if (string.IsNullOrEmpty(options.ProjectCode))
+			{
+				MainClass.Logger.Error("Command line doesn't contain project code - exiting.");
+				return -1;
+			}
+
 			if (!string.IsNullOrEmpty(options.ConfigDir))
 				LfMergeSettings.ConfigDir = options.ConfigDir;
 

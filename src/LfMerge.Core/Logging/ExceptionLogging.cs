@@ -238,6 +238,8 @@ namespace LfMerge.Core.Logging
 
 		private string RemoveFileNamePrefix(string fileName)
 		{
+			if (fileName == null)
+				return fileName;
 			var ret = fileName.StartsWith(_solutionPath)
 				? fileName.Substring(_solutionPath.Length)
 				: fileName;
