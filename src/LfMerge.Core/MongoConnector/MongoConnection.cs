@@ -38,7 +38,7 @@ namespace LfMerge.Core.MongoConnector
 		public ILogger Logger { get { return _logger; } }
 		public LfMergeSettings Settings { get { return _settings; } }
 
-		// List of LF fields which will use vernacular or pronunciation input systems. Heirarchy is config.entry.fields...
+		// List of LF fields which will use vernacular or pronunciation input systems. Hierarchy is config.entry.fields...
 		// We intentionally aren't setting custom example WS here, since it's a custom field with a custom name
 		private readonly List<string> _vernacularWsFieldsList = new List<string> {
 			"citationForm", "lexeme", "etymology", "senses.fields.examples.fields.sentence"
@@ -744,7 +744,8 @@ namespace LfMerge.Core.MongoConnector
 			}
 		}
 
-		private UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc) {
+		private static UpdateDefinition<TDocument> BuildUpdate<TDocument>(TDocument doc, bool ignoreDirty)
+		{
 			var builder = Builders<TDocument>.Update;
 			var updates = new List<UpdateDefinition<TDocument>>();
 			foreach (PropertyInfo prop in typeof(TDocument).GetProperties())
@@ -756,6 +757,12 @@ namespace LfMerge.Core.MongoConnector
 				if (prop.Name == "DateCreated" && prop.PropertyType == typeof(DateTime) && (DateTime)prop.GetValue(doc) == default(DateTime))
 				{
 					// Refuse to reset DateCreated in Mongo to 0001-01-01, since that's NEVER correct
+					continue;
+				}
+				if (ignoreDirty && prop.Name == "DirtySR")
+				{
+					// We don't want to set DirtySR because we'll set it later. If we set it here
+					// as well we get an exception with Mongo 3.6.
 					continue;
 				}
 				if (prop.GetValue(doc) == null)
@@ -850,7 +857,7 @@ namespace LfMerge.Core.MongoConnector
 		{
 			var filterBuilder = Builders<LfLexEntry>.Filter;
 			FilterDefinition<LfLexEntry> filter = filterBuilder.Eq(entry => entry.Guid, data.Guid);
-			UpdateDefinition<LfLexEntry> coreUpdate = BuildUpdate(data);
+			UpdateDefinition<LfLexEntry> coreUpdate = BuildUpdate(data, true);
 			var doNotUpsert = new FindOneAndUpdateOptions<LfLexEntry> {
 				IsUpsert = false,
 				ReturnDocument = ReturnDocument.Before
@@ -875,32 +882,30 @@ namespace LfMerge.Core.MongoConnector
 				// make sure that gets applied for both inserts and updates. So we'll do an upsert even though
 				// we *know* there's no previous data
 				updateResult = coll.FindOneAndUpdate(filter, coreUpdate, upsert);
-				return (updateResult != null);
+				return updateResult != null;
 			}
-			else
+
+			var updateBuilder = Builders<LfLexEntry>.Update;
+			var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
+			var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
+			var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
+			// Future version will use Max to decrement DirtySR.  MongoDB will need to be version 2.6+.
+			// which may not be currently installed. Decrementing DirtySR isn't needed for LfMerge v1.1
+			// var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
+			var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Set(item => item.DirtySR, 0));
+			// Precisely one of the next two calls can succeed.
+			try
 			{
-				var updateBuilder = Builders<LfLexEntry>.Update;
-				var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
-				var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
-				var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
-				// Future version will use Max to decrement DirtySR.  MongoDB will need to be version 2.6+.
-				// which may not be currently installed. Decrementing DirtySR isn't needed for LfMerge v1.1
-				// var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Max(item => item.DirtySR, 0));
-				var noDecrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Set(item => item.DirtySR, 0));
-				// Precisely one of the next two calls can succeed.
-				try
-				{
-					updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
-					if (updateResult != null)
-						return true;
-				}
-				catch (MongoCommandException e)
-				{
-					Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
-				}
-				updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
-				return (updateResult != null);
+				updateResult = coll.FindOneAndUpdate(zeroOrLessFilter, noDecrementUpdate, doNotUpsert);
+				if (updateResult != null)
+					return true;
 			}
+			catch (MongoCommandException e)
+			{
+				Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
+			}
+			updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
+			return updateResult != null;
 		}
 
 		public bool UpdateRecord(ILfProject project, LfOptionList data, string listCode)
@@ -919,7 +924,7 @@ namespace LfMerge.Core.MongoConnector
 				mongoDb = GetProjectDatabase(project);
 			else
 				mongoDb = GetMainDatabase();
-			UpdateDefinition<TDocument> update = BuildUpdate(data);
+			UpdateDefinition<TDocument> update = BuildUpdate(data, false);
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
 			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
 				IsUpsert = true
