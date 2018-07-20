@@ -465,6 +465,25 @@ namespace LfMerge.Core.Tests
 			InitialCloneWasRun = true;
 		}
 	}
+
+	class EnsureCloneActionDoubleMockErrorCondition : EnsureCloneAction
+	{
+		private string _cloneResult;
+
+		public EnsureCloneActionDoubleMockErrorCondition(LfMergeSettings settings, ILogger logger,
+			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection,
+			string cloneResult):
+			base(settings, logger, projectRecordFactory, connection)
+		{
+			_cloneResult = cloneResult;
+		}
+
+		protected override bool CloneRepo(ILfProject project, string projectFolderPath, out string cloneResult)
+		{
+			cloneResult = _cloneResult;
+			return true;
+		}
+	}
 }
 
 // We can't directly use Chorus, so we redefine the exception we need here

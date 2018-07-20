@@ -58,7 +58,7 @@ namespace LfMerge.Core.Tests.Actions
 				Throws.Exception.TypeOf(Type.GetType("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")));
 
 			// Verify
-			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 		}
 
 		[Test]
@@ -250,5 +250,46 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(action.InitialCloneWasRun, Is.False);
 		}
+
+		[Test]
+		public void EnsureClone_CloneEmptyRepo_SetsRecoverableError()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			var action = new EnsureCloneActionDoubleMockErrorCondition(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection,
+				"Clone failure: new repository with no commits. Clone deleted.");
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
+			Assert.That(lfProject.State.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.EmptyProject));
+			Assert.That(lfProject.State.ErrorMessage,
+				Is.EqualTo(string.Format("Recoverable error during initial clone of {0}: Clone failure: new repository with no commits. Clone deleted.", _projectCode)));
+		}
+
+		[Test]
+		public void EnsureClone_NotFlexProject_SetsRecoverableError()
+		{
+			// Setup
+			var projectDir = Path.Combine(_env.Settings.WebWorkDirectory, _projectCode);
+			Directory.CreateDirectory(projectDir);
+			var lfProject = LanguageForgeProject.Create(_projectCode);
+			var action = new EnsureCloneActionDoubleMockErrorCondition(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection,
+				"Clone failure: clone is not a FLEx project: Clone deleted.");
+
+			// Execute
+			action.Run(lfProject);
+
+			// Verify
+			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
+			Assert.That(lfProject.State.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.NoFlexProject));
+			Assert.That(lfProject.State.ErrorMessage,
+				Is.EqualTo(string.Format("Recoverable error during initial clone of {0}: Clone failure: clone is not a FLEx project: Clone deleted.", _projectCode)));
+		}
+
 	}
 }

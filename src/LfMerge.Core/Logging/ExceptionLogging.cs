@@ -178,13 +178,19 @@ namespace LfMerge.Core.Logging
 
 			if (string.IsNullOrEmpty(Configuration.ReleaseStage))
 			{
-				var isDevelopment = Debugger.IsAttached;
-#if DEBUG
-				isDevelopment = true;
-#endif
-				if (isDevelopment)
+				var gitBranch = MainClass.GetVersionInfo("BranchName");
+
+				if (gitBranch.EndsWith("/live", StringComparison.InvariantCulture))
+					configuration.ReleaseStage = "live";
+				else if (gitBranch.EndsWith("/qa", StringComparison.InvariantCulture))
+					configuration.ReleaseStage = "qa";
+				else if (gitBranch.StartsWith("origin/", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "development";
+				else
+					configuration.ReleaseStage = "local";
 			}
+			configuration.NotifyReleaseStages = new[] { "live", "qa", "development" };
+
 
 			var metadata = new List<KeyValuePair<string, object>>();
 			if (configuration.GlobalMetadata != null)
@@ -201,11 +207,7 @@ namespace LfMerge.Core.Logging
 				if (string.IsNullOrEmpty(Configuration.AppVersion))
 					configuration.AppVersion = entryAssembly.GetName().Version.ToString();
 
-				var informationalVersion = entryAssembly
-					.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), true)
-					.FirstOrDefault() as AssemblyInformationalVersionAttribute;
-				if (informationalVersion != null)
-					app.Add("infoVersion", informationalVersion.InformationalVersion);
+				app.Add("infoVersion", MainClass.GetVersionInfo("InformationalVersion"));
 			}
 
 			var device = FindMetadata("Device", metadata);
@@ -236,6 +238,8 @@ namespace LfMerge.Core.Logging
 
 		private string RemoveFileNamePrefix(string fileName)
 		{
+			if (fileName == null)
+				return fileName;
 			var ret = fileName.StartsWith(_solutionPath)
 				? fileName.Substring(_solutionPath.Length)
 				: fileName;

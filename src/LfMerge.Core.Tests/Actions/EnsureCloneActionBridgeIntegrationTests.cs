@@ -50,7 +50,7 @@ namespace LfMerge.Core.Tests.Actions
 		public void Setup()
 		{
 			_env = new TestEnvironment();
-			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name);
+			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name + Path.GetRandomFileName());
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
 			LanguageDepotMock.ProjectFolderPath =
@@ -60,7 +60,7 @@ namespace LfMerge.Core.Tests.Actions
 			_mongoProjectRecordFactory = MainClass.Container.Resolve<LfMerge.Core.MongoConnector.MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
 			// Even though the EnsureCloneActionWithoutMongo class has "WithoutMongo" in the name, the EnsureClone class which it inherits from
 			// needs an IMongoConnection argument in the constructor, so we have to create a MongoConnectionDouble that we're not going to use here.
-			IMongoConnection _mongoConnection = MainClass.Container.Resolve<IMongoConnection>();
+			var _mongoConnection = MainClass.Container.Resolve<IMongoConnection>();
 			_EnsureCloneAction = new EnsureCloneActionWithoutMongo(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection);
 			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
@@ -104,7 +104,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone is not a FLEx project"));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.Null);
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
@@ -166,7 +166,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("new repository with no commits"));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.Null);
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}

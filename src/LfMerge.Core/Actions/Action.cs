@@ -129,12 +129,16 @@ namespace LfMerge.Core.Actions
 				// perform an initial clone next time this project is run
 				if (project.IsInitialClone)
 					project.State.SRState = ProcessingState.SendReceiveStates.CLONING;
-				else if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD)
+				else if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+					project.State.SRState != ProcessingState.SendReceiveStates.ERROR)
 				{
 					Logger.Error("Got exception. State going to IDLE");
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
 				}
-				Logger.Error("LfMerge exiting due to exception in Action.{0}", Name);
+				Logger.Error("LfMerge exiting due to {1} exception in Action.{0} ({2})", Name,
+					e.GetType(), e.Message);
+				if (ExceptionLogging.Client != null) // can be null when running unit tests
+					ExceptionLogging.Client.Notify(e, Bugsnag.Payload.HandledState.ForHandledException());
 				throw;
 			}
 

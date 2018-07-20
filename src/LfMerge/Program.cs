@@ -12,6 +12,7 @@ using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
+using Bugsnag;
 
 namespace LfMerge
 {
@@ -26,10 +27,21 @@ namespace LfMerge
 			if (options == null)
 				return (int)ErrorCode.InvalidOptions;
 
+			// Username and Password will usually be "x" because it's dealt with on Language Forge site.
+			// However, when debugging LfMerge we want to be able to set it to a real name
+			ChorusHelper.Username = options.User;
+			ChorusHelper.Password = options.Password;
+
 			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 
-			MainClass.Logger.Notice("LfMerge (database {0}) starting with args: {1}",
-				MainClass.ModelVersion, string.Join(" ", args));
+			MainClass.Logger.Notice("LfMerge {2} (database {0}) starting with args: {1}",
+				MainClass.ModelVersion, string.Join(" ", args), MainClass.GetVersionInfo("SemVer"));
+
+			if (string.IsNullOrEmpty(options.ProjectCode))
+			{
+				MainClass.Logger.Error("Command line doesn't contain project code - exiting.");
+				return -1;
+			}
 
 			if (!string.IsNullOrEmpty(options.ConfigDir))
 				LfMergeSettings.ConfigDir = options.ConfigDir;
@@ -103,7 +115,8 @@ namespace LfMerge
 				}
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
-				    project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
+					project.State.SRState != ProcessingState.SendReceiveStates.ERROR &&
+					project.State.SRState != ProcessingState.SendReceiveStates.CLONED)
 				{
 					LfMerge.Core.Actions.Action.GetAction(currentAction).Run(project);
 
@@ -118,6 +131,7 @@ namespace LfMerge
 			catch (Exception e)
 			{
 				MainClass.Logger.Error("Got exception {0}", e.ToString());
+				ExceptionLogging.Client.Notify(e);
 				if (projectCode == null)
 				{
 					MainClass.Logger.Error("Project code was null");
@@ -126,11 +140,11 @@ namespace LfMerge
 				{
 					MainClass.Logger.Error("Project code was {0}", projectCode);
 				}
-				string errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
+				var errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
 					projectCode, e);
 				MainClass.Logger.Error(errorMsg);
 				if (project != null)
-					project.State.PutOnHold(errorMsg);
+					project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD, ProcessingState.ErrorCodes.UnhandledException, errorMsg);
 			}
 			finally
 			{
@@ -138,6 +152,7 @@ namespace LfMerge
 				if (project != null && project.State != null)
 					project.State.PreviousRunTotalMilliseconds = stopwatch.ElapsedMilliseconds;
 				if (project != null && project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
+					project.State.SRState != ProcessingState.SendReceiveStates.ERROR &&
 					!ChorusHelper.RemoteDataIsForDifferentModelVersion)
 				{
 					project.State.SRState = ProcessingState.SendReceiveStates.IDLE;
