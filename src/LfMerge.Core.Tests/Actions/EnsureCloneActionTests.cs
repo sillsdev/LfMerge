@@ -43,7 +43,7 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
-		public void EnsureClone_NonExistingProject_SetsStateOnHold()
+		public void EnsureClone_NonExistingProject_SetsStateOnError()
 		{
 			// for this test we don't want the test double for InternetCloneSettingsModel
 			_env.Dispose();
@@ -54,11 +54,31 @@ namespace LfMerge.Core.Tests.Actions
 			var lfProject = LanguageForgeProject.Create(nonExistingProjectCode);
 
 			// Execute
-			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger, _mongoProjectRecordFactory, _mongoConnection, false).Run(lfProject),
-				Throws.Exception.TypeOf(Type.GetType("Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException")));
+			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger,
+				_mongoProjectRecordFactory, _mongoConnection, false).Run(lfProject),
+				Throws.Nothing);
 
 			// Verify
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
+		}
+
+		[Test]
+		public void EnsureClone_OtherException_SetsStateOnHold()
+		{
+			// for this test we don't want the test double for InternetCloneSettingsModel
+			_env.Dispose();
+			_env = new TestEnvironment(registerSettingsModelDouble: false);
+
+			// Setup
+			var nonExistingProjectCode = Path.GetRandomFileName().ToLowerInvariant();
+			var lfProject = LanguageForgeProject.Create(nonExistingProjectCode);
+
+			// Execute/Verify
+			Assert.That( () => new EnsureCloneActionDouble(_env.Settings, _env.Logger,
+				_mongoProjectRecordFactory, _mongoConnection, false, false).Run(lfProject),
+				Throws.Exception);
+
+			// In the real app the exception gets caught and the status set in Program.cs
 		}
 
 		[Test]

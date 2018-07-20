@@ -191,23 +191,27 @@ namespace LfMerge.Core.Actions
 			}
 			catch (Exception e)
 			{
-				if (e.GetType().Name == "ArgumentOutOfRangeException" &&
-					e.Message == "Cannot update to any branch.")
+				switch (e.GetType().Name)
 				{
-					project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
-						ProcessingState.ErrorCodes.UnhandledException,
-						"Error during initial clone of {0}: {1}", project.ProjectCode, e);
-					throw;
+					case "ArgumentOutOfRangeException":
+						if (e.Message == "Cannot update to any branch.")
+						{
+							project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
+								ProcessingState.ErrorCodes.UnspecifiedBranchError,
+								"Error during initial clone of {0}: {1}", project.ProjectCode, e);
+							return;
+						}
+
+						break;
+					case "RepositoryAuthorizationException":
+						Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
+						project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
+							ProcessingState.ErrorCodes.Unauthorized,
+							"Error during initial clone of {0}: authorization exception from remote repository",
+							project.ProjectCode);
+						return;
 				}
-				if (e.GetType().Name == "RepositoryAuthorizationException")
-				{
-					Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
-					project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
-						ProcessingState.ErrorCodes.Unauthorized,
-						"Error during initial clone of {0}: authorization exception from remote repository",
-						project.ProjectCode);
-					throw;
-				}
+
 				Logger.Error("Got {0} exception trying to clone {1}: {2}", e.GetType(),
 					project.ProjectCode, e.Message);
 				throw;
@@ -246,4 +250,3 @@ namespace LfMerge.Core.Actions
 		}
 	}
 }
-

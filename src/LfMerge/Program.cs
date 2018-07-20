@@ -136,15 +136,20 @@ namespace LfMerge
 				{
 					MainClass.Logger.Error("Project code was null");
 				}
-				else
+
+				if (project.State.SRState != ProcessingState.SendReceiveStates.ERROR)
 				{
-					MainClass.Logger.Error("Project code was {0}", projectCode);
+					MainClass.Logger.Error(string.Format(
+						"Putting project '{0}' on hold due to unhandled exception: \n{1}",
+						projectCode, e));
+					if (project != null)
+					{
+						project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD,
+							ProcessingState.ErrorCodes.UnhandledException, string.Format(
+								"Putting project '{0}' on hold due to unhandled exception: \n{1}",
+								projectCode, e));
+					}
 				}
-				var errorMsg = string.Format("Putting project {0} on hold due to unhandled exception: \n{1}",
-					projectCode, e);
-				MainClass.Logger.Error(errorMsg);
-				if (project != null)
-					project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD, ProcessingState.ErrorCodes.UnhandledException, errorMsg);
 			}
 			finally
 			{

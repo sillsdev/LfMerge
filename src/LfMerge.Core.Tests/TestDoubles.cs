@@ -424,12 +424,15 @@ namespace LfMerge.Core.Tests
 	class EnsureCloneActionDouble: EnsureCloneAction
 	{
 		private readonly bool _projectExists;
+		private readonly bool _throwAuthorizationException;
 
 		public EnsureCloneActionDouble(LfMergeSettings settings, ILogger logger,
-			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection, bool projectExists = true):
+			MongoProjectRecordFactory projectRecordFactory, IMongoConnection connection,
+			bool projectExists = true, bool throwAuthorizationException = true):
 			base(settings, logger, projectRecordFactory, connection)
 		{
 			_projectExists = projectExists;
+			_throwAuthorizationException = throwAuthorizationException;
 		}
 
 		protected override bool CloneRepo(ILfProject project, string projectFolderPath,
@@ -444,7 +447,10 @@ namespace LfMerge.Core.Tests
 					projectFolderPath);
 				return true;
 			}
-			throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
+			if (_throwAuthorizationException)
+				throw new Chorus.VcsDrivers.Mercurial.RepositoryAuthorizationException();
+
+			throw new Exception("Just some arbitrary exception");
 		}
 	}
 
