@@ -886,6 +886,7 @@ namespace LfMerge.Core.MongoConnector
 			}
 
 			var updateBuilder = Builders<LfLexEntry>.Update;
+			/* Commented out to check if DirtySR was the problem. - 2018-07 RM
 			var oneOrMoreFilter = filterBuilder.And(filter, filterBuilder.Gt(entry => entry.DirtySR, 0));
 			var zeroOrLessFilter = filterBuilder.And(filter, filterBuilder.Lte(entry => entry.DirtySR, 0));
 			var decrementUpdate = updateBuilder.Combine(coreUpdate, updateBuilder.Inc(item => item.DirtySR, -1));
@@ -905,6 +906,9 @@ namespace LfMerge.Core.MongoConnector
 				Logger.Error("{0}: Possibly need to upgrade MongoDB to 2.6+", e);
 			}
 			updateResult = coll.FindOneAndUpdate(oneOrMoreFilter, decrementUpdate, doNotUpsert);
+			return updateResult != null;
+			*/
+			updateResult = coll.FindOneAndUpdate(filter, coreUpdate, upsert);
 			return updateResult != null;
 		}
 
