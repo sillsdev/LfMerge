@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Bugsnag.Payload;
 using IniParser.Model;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
@@ -18,6 +19,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Moq;
+using Exception = System.Exception;
 
 namespace LfMerge.Core.Tests
 {
@@ -83,7 +85,7 @@ namespace LfMerge.Core.Tests
 			ConfigDir = Path.GetRandomFileName();
 		}
 
-		public LfMergeSettingsDouble(string replacementBaseDir) : base()
+		public LfMergeSettingsDouble(string replacementBaseDir)
 		{
 			var replacementConfig = new IniData(ParsedConfig);
 			replacementConfig.Global["BaseDir"] = replacementBaseDir;
@@ -488,6 +490,32 @@ namespace LfMerge.Core.Tests
 		{
 			cloneResult = _cloneResult;
 			return true;
+		}
+	}
+
+	class ExceptionLoggingDouble : ExceptionLogging
+	{
+		private List<Report> _exceptions = new List<Report>();
+
+		private ExceptionLoggingDouble() : base("unit-test", "foo", ".")
+		{
+		}
+
+		protected override void OnBeforeNotify(Report report)
+		{
+			_exceptions.Add(report);
+		}
+
+		public List<Report> Exceptions
+		{
+			get { return _exceptions; }
+		}
+
+		public static ExceptionLoggingDouble Initialize()
+		{
+			var exceptionLoggingDouble = new ExceptionLoggingDouble();
+			Client = exceptionLoggingDouble;
+			return exceptionLoggingDouble;
 		}
 	}
 }

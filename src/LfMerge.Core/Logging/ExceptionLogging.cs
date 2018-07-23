@@ -23,7 +23,7 @@ namespace LfMerge.Core.Logging
 	{
 		private readonly string _solutionPath;
 
-		private ExceptionLogging(string apiKey, string executable, string callerFilePath)
+		protected ExceptionLogging(string apiKey, string executable, string callerFilePath)
 			: base(apiKey)
 		{
 			_solutionPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(callerFilePath), "../.."));
@@ -246,7 +246,7 @@ namespace LfMerge.Core.Logging
 			return ret.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 		}
 
-		private void OnBeforeNotify(Report report)
+		protected virtual void OnBeforeNotify(Report report)
 		{
 			var exception = report.Event.Exceptions[0].OriginalException;
 			var stackTrace = new StackTrace(exception, true);
@@ -271,6 +271,6 @@ namespace LfMerge.Core.Logging
 			Client = new ExceptionLogging(apiKey, executable, filename);
 		}
 
-		public static ExceptionLogging Client { get; private set; }
+		public static ExceptionLogging Client { get; protected set; }
 	}
 }
