@@ -127,7 +127,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("no such branch"));
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining(
 				"clone model version '7000060' less than minimal supported model version '7000068'."));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.Null);
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
@@ -187,7 +187,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone has higher model"));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.Null);
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}

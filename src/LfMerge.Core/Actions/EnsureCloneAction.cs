@@ -96,7 +96,7 @@ namespace LfMerge.Core.Actions
 			var clonePath = GetActualClonePath(cloneLocation, line);
 			if (Directory.Exists(clonePath))
 				Directory.Delete(clonePath, true);
-			CloneResultedInError(project, cloneResult, "no such branch", false, errorCode);
+			CloneResultedInError(project, cloneResult, "no such branch", true, errorCode);
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace LfMerge.Core.Actions
 
 				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project", true, ProcessingState.ErrorCodes.NoFlexProject) ||
 					CloneResultedInError(project, cloneResult, "new repository with no commits", true, ProcessingState.ErrorCodes.EmptyProject) ||
-					CloneResultedInError(project, cloneResult, "clone has higher model", false, ProcessingState.ErrorCodes.ProjectTooNew) ||
+					CloneResultedInError(project, cloneResult, "clone has higher model", true, ProcessingState.ErrorCodes.ProjectTooNew) ||
 					CloneResultedInError(project, cloneResult, "LfMergeBridge starting S/R handler from directory", false, ProcessingState.ErrorCodes.Unspecified))
 				{
 					return;
