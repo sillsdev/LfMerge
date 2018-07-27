@@ -8,7 +8,7 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
-using Palaso.Code;
+using SIL.Code;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Actions

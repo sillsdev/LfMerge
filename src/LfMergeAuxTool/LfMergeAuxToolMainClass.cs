@@ -7,7 +7,7 @@ using System.Reflection;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
 
 namespace LfMergeAuxTool

@@ -27,14 +27,14 @@ then
 fi
 
 
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.dll* lib/
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.dll* output/${BUILD_CONFIG}/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.{dll*,pdb} lib/ ||
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibFLExBridge-ChorusPlugin.{dll*,pdb} output/${BUILD_CONFIG}/
 
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.dll* lib/
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.dll* output/${BUILD_CONFIG}/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.{dll*,pdb} lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibTriboroughBridge-ChorusPlugin.{dll*,pdb} output/${BUILD_CONFIG}/
 
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.dll* lib/
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.dll* output/${BUILD_CONFIG}/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.{dll*,pdb} lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LfMergeBridge.{dll*,pdb} output/${BUILD_CONFIG}/
 
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibChorus.dll* lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/LibChorus.dll* output/${BUILD_CONFIG}/
@@ -47,8 +47,8 @@ cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/ChorusMerge.exe* output/${BUILD_CONFIG}/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/chorusmerge lib/
 cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/chorusmerge output/${BUILD_CONFIG}/
 
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* lib/
-cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/Palaso*.dll* output/${BUILD_CONFIG}/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/SIL*.dll* lib/
+cp ${FB_DIR}/output/${BUILD_CONFIG}Mono/SIL*.dll* output/${BUILD_CONFIG}/
 
 echo Files copied.
 

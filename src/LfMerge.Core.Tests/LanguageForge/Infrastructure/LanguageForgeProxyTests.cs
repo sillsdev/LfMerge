@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using LfMerge.Core.LanguageForge.Infrastructure;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 namespace LfMerge.Core.Tests.LanguageForge.Infrastructure
 {

@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Bugsnag;
 using Bugsnag.Payload;
-using Palaso.PlatformUtilities;
+using SIL.PlatformUtilities;
 using StackTrace = System.Diagnostics.StackTrace;
 
 namespace LfMerge.Core.Logging

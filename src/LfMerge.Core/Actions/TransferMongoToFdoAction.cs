@@ -6,7 +6,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Actions

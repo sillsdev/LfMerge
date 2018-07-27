@@ -10,7 +10,7 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using NUnit.Framework;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Infrastructure;

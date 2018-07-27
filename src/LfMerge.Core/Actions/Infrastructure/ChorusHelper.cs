@@ -2,7 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using Autofac;
-using Palaso.Network;
+using SIL.Network;
 using SIL.FieldWorks.FDO;
 using LfMerge.Core.Settings;
 

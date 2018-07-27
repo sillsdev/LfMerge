@@ -1,52 +1,59 @@
 # This file lists dependencies
 # It can be edited with the BuildDependencyManager application.
 # See https://github.com/ermshiperete/BuildDependency for more information.
-# Edited with version 0.4.1 (c04e8a3)
+# Edited with version 0.4.3+1 (65b6824)
 
 [[TC]]
 Type=TeamCity
 Url=https://build.palaso.org
 
-[TC::ChorusLinux64lfmergeCont]
-Name=chorus-linux64-lfmerge Continuous
+[TC::Chorus_Linux64masterContinuous]
+Name=chorus-linux64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=MercurialExtensions/**/*.py=>MercurialExtensions
 
 
-[TC::ChorusLinux64lfmergeCont]
-Name=chorus-linux64-lfmerge Continuous
+[TC::Chorus_Linux64masterContinuous]
+Name=chorus-linux64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux32
 Path=Mercurial-i686.zip!**=>.
 
 
-[TC::ChorusLinux64lfmergeCont]
-Name=chorus-linux64-lfmerge Continuous
+[TC::Chorus_Linux64masterContinuous]
+Name=chorus-linux64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux64
 Path=Mercurial-x86_64.zip!**=>.
 
 
-[TC::PalasoLinux64v26Cont]
-Name=palaso-linux64-libpalaso-2.6 Continuous
+[TC::Libpalaso_PalasoLinux64masterContinuous]
+Name=palaso-linux64-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
-Path=Palaso.dll*=>lib/
-Palaso.Lift.dll*=>lib/
-Palaso.TestUtilities.dll*=>lib/
+Path=SIL.Core.dll=>lib/
+SIL.Core.pdb=>lib/
+SIL.Lift.dll=>lib/
+SIL.Lift.pdb=>lib/
+SIL.TestUtilities.dll=>lib/
+SIL.TestUtilities.pdb=>lib/
 L10NSharp.dll*=>lib/
+L10NSharp.pdb=>lib/
 Ionic.Zip.dll*=>lib/
+Ionic.Zip.pdb=>lib/
 Spart.dll*=>lib/
+Spart.pdb=>lib/
 SIL.Linux.Logging.dll*=>lib/
+SIL.Linux.Logging.pdb=>lib/
 
 
-[TC::ChorusWin32LfmergeCont]
-Name=chorus-win32-lfmerge Continuous
+[TC::Chorus_Win32masterContinuous]
+Name=chorus-win32-master Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
@@ -54,25 +61,23 @@ Path=MercurialExtensions/**/*.py=>MercurialExtensions/
 Mercurial.zip!**=>.
 
 
-[TC::PalasoWin32v26nostrongCont]
-Name=palaso-win32-libpalaso-2.6-nostrongname Continuous
+[TC::Libpalaso_PalasoWin32masterNostrongnameContinuous]
+Name=palaso-win32-master-nostrongname Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
-Path=SIL.dll=>lib/
-SIL.pdb=>lib/
-Palaso.dll=>lib/
-Palaso.pdb=>lib/
-Palaso.Lift.dll=>lib/
-Palaso.Lift.pdb=>lib/
-Palaso.TestUtilities.dll=>lib/
-Palaso.TestUtilities.pdb=>lib/
+Path=SIL.Core.dll=>lib/
+SIL.Core.pdb=>lib/
+SIL.Lift.dll=>lib/
+SIL.Lift.pdb=>lib/
+SIL.TestUtilities.dll=>lib/
+SIL.TestUtilities.pdb=>lib/
 L10NSharp.dll=>lib/
 L10NSharp.pdb=>lib/
 
 
-[TC::FLExBridgeLfmergeLinux64Continuous]
-Name=FLEx Bridge-lfmerge-Linux64-Continuous
+[TC::FLExBridgeDevelopLinux64Continuous]
+Name=FLEx Bridge-develop-Linux64-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -84,8 +89,8 @@ ChorusMerge.exe* => lib/
 LibChorus.dll* => lib/
 
 
-[TC::FLExBridgeLfmergeWin32Continuous]
-Name=FLEx Bridge-lfmerge-Win32-Continuous
+[TC::FLExBridge_FLExBridgeDevelopWin32Continuous]
+Name=FLEx Bridge-develop-Win32-Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Windows
@@ -100,3 +105,35 @@ LibChorus.dll => lib/
 LibChorus.pdb => lib/
 
 
+[TC::Liblcm_LiblcmLinux64masterContinuous]
+Name=liblcm-linux64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Linux
+Path=+:LCM.zip!**=>lib/
+-:LCM.zip!*.Tests.dll*
+-:LCM.zip!*.Tests.pdb
+-:LCM.zip!SIL.LCModel.Build.Tasks.dll*
+-:LCM.zip!SIL.LCModel.Build.Tasks.pdb
+
+[TC::Liblcm_LiblcmWin32masterContinuous]
+Name=liblcm-win64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Win32
+Path=+:LCM.zip!**=>lib/
+-:LCM.zip!*.Tests.dll*
+-:LCM.zip!*.Tests.pdb
+-:LCM.zip!SIL.LCModel.Build.Tasks.dll*
+-:LCM.zip!SIL.LCModel.Build.Tasks.pdb
+
+[TC::Liblcm_LiblcmWin64masterContinuous]
+Name=liblcm-win64-master Continuous
+RevisionName=lastSuccessful
+RevisionValue=latest.lastSuccessful
+Condition=Win64
+Path=+:LCM.zip!**=>lib/
+-:LCM.zip!*.Tests.dll*
+-:LCM.zip!*.Tests.pdb
+-:LCM.zip!SIL.LCModel.Build.Tasks.dll*
+-:LCM.zip!SIL.LCModel.Build.Tasks.pdb
