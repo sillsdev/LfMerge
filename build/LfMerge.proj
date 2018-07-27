@@ -3,7 +3,7 @@
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 	</PropertyGroup>
 
-	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll" Condition="Exists('$(RootDir)/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll')" />
 	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnitTeamCity"
 		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
@@ -81,7 +81,9 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
-		<FileUpdate File="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../" ReplacementText="fixutf8=$(RootDir)/"/>
+		<Message Text="RootDir=$(RootDir)"/>
+		<FileUpdate Files="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../"
+			ReplacementText="fixutf8=$(RootDir)/" ContinueOnError="WarnAndContinue"/>
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
