@@ -4,7 +4,7 @@ using System;
 using Autofac;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
 using LfMerge.Core.Queues;
 using System.Collections.Generic;

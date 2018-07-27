@@ -4,7 +4,7 @@ using System.IO;
 using IniParser.Model;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using NUnit.Framework;
 
 namespace LfMerge.Core.Tests

@@ -12,8 +12,8 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
-using Palaso.IO;
-using Palaso.TestUtilities;
+using SIL.IO;
+using SIL.TestUtilities;
 using SIL.CoreImpl;
 
 namespace LfMerge.Core.Tests
@@ -139,7 +139,7 @@ namespace LfMerge.Core.Tests
 		public static void CopyFwProjectTo(string projectCode, string destDir)
 		{
 			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
-			DirectoryUtilities.CopyDirectory(Path.Combine(dataDir, projectCode), destDir);
+			DirectoryHelper.Copy(Path.Combine(dataDir, projectCode), destDir);
 
 			// Adjust hgrc file
 			var hgrc = Path.Combine(destDir, projectCode, ".hg/hgrc");

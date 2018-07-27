@@ -7,7 +7,7 @@ using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests.Actions

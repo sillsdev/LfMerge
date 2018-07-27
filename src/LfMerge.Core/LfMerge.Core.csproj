@@ -89,6 +89,9 @@
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SIL.Core, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2">
+      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
@@ -104,9 +107,6 @@
     </Reference>
     <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Palaso">
-      <HintPath>..\..\lib\Palaso.dll</HintPath>
     </Reference>
     <Reference Include="LfMergeBridge">
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>

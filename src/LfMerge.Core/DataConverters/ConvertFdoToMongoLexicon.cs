@@ -10,7 +10,7 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using MongoDB.Bson;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.CoreImpl;
 using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;

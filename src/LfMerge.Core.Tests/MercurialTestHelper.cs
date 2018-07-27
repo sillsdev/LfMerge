@@ -3,9 +3,9 @@
 using System.IO;
 using IniParser.Parser;
 using NUnit.Framework;
-using Palaso.CommandLineProcessing;
-using Palaso.PlatformUtilities;
-using Palaso.Progress;
+using SIL.CommandLineProcessing;
+using SIL.PlatformUtilities;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests
@@ -43,6 +43,7 @@ namespace LfMerge.Core.Tests
 
 			// Adjust hgrc file
 			var parser = new IniDataParser();
+			parser.Configuration.CommentString = "#";
 			var iniData = parser.Parse(File.ReadAllText(hgrc));
 
 			iniData["extensions"].AddKey("fixutf8", Path.Combine(TestEnvironment.FindGitRepoRoot(),

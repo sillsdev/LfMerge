@@ -9,7 +9,7 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using Newtonsoft.Json;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.DataConverters
@@ -272,7 +272,7 @@ namespace LfMerge.Core.DataConverters
 		{
 			// Call into LF Bridge to do the work.
 			bridgeOutput = string.Empty;
-			using (var tmpFile = new Palaso.IO.TempFile(bridgeInput))
+			using (var tmpFile = new SIL.IO.TempFile(bridgeInput))
 			{
 				var options = new Dictionary<string, string>
 				{

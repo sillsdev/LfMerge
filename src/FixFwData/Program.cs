@@ -8,12 +8,15 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Palaso.Reporting;
+using System.Reflection;
+using System.Reflection.Emit;
+using LfMerge.Core.Logging;
+//using SIL.Reporting;
 using SIL.FieldWorks.FixData;
 using SIL.Utils;
-
+using SyslogLogger = SIL.Linux.Logging.SyslogLogger;
 #if LINUX
-using Palaso.PlatformUtilities;
+using SIL.PlatformUtilities;
 using SIL.Linux.Logging;
 #endif
 
@@ -63,14 +66,7 @@ namespace FixFwData
 
 		private static void SetUpErrorHandling()
 		{
-			ErrorReport.EmailAddress = "flex_errors@sil.org";
-			ErrorReport.AddStandardProperties();
-#if LINUX
-			if (Platform.IsUnix && Environment.GetEnvironmentVariable("DISPLAY") == null)
-				ExceptionHandler.Init(new SyslogExceptionHandler("FixFwData"));
-			else
-#endif
-				ExceptionHandler.Init();
+			ExceptionLogging.Initialize("17a42e4a67dd2e42d4aa40d8bf2d23ee", Assembly.GetExecutingAssembly().GetName().Name);
 #if LINUX
 			if (Platform.IsUnix)
 				logger = new SyslogLogger("FixFwData");

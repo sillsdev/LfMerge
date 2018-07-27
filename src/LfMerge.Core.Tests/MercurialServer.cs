@@ -3,8 +3,8 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using Palaso.CommandLineProcessing;
-using Palaso.Progress;
+using SIL.CommandLineProcessing;
+using SIL.Progress;
 
 namespace LfMerge.Core.Tests
 {

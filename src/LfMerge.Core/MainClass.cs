@@ -16,10 +16,10 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.IO;
-using Palaso.PlatformUtilities;
-using Palaso.Progress;
+using SIL.PlatformUtilities;
+using SIL.Progress;
 using SIL.FieldWorks.FDO;
+using SIL.IO;
 
 namespace LfMerge.Core
 {
@@ -113,7 +113,7 @@ namespace LfMerge.Core
 
 		private static string GetModelSpecificDirectory(string modelVersion)
 		{
-			var dir = FileLocator.DirectoryOfTheApplicationExecutable;
+			var dir = FileLocationUtilities.DirectoryOfTheApplicationExecutable;
 			if (modelVersion == ModelVersion)
 				return dir;
 

@@ -11,7 +11,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
 using LfMerge.Core.Tools;
-using Palaso.IO.FileLock;
+using SIL.IO.FileLock;
 using SIL.FieldWorks.FDO;
 
 namespace LfMerge.QueueManager

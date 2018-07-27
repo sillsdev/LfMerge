@@ -91,8 +91,8 @@
     <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
       <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso">
-      <HintPath>..\..\lib\Palaso.dll</HintPath>
+    <Reference Include="SIL.Core">
+      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="LfMergeBridge">
       <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>

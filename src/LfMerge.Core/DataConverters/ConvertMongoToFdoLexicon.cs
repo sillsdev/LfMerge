@@ -11,7 +11,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using Palaso.Progress;
+using SIL.Progress;
 using SIL.CoreImpl; // For TsStringUtils, IWritingSystemManager
 using SIL.FieldWorks.Common.COMInterfaces; // For ITsString
 using SIL.FieldWorks.FDO;

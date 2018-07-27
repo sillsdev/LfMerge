@@ -6,7 +6,7 @@ using System.Threading;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using NUnit.Framework;
 
 namespace LfMerge.Core.Tests.Queues
