@@ -729,25 +729,31 @@ namespace LfMerge.Core.DataConverters
 		// generalize that pattern.
 		private void SetFdoListFromLfList<TLfChild, TFdoParent, TFdoChild>(
 			TFdoParent fdoParent,
-			IList<TFdoChild> fdoChildList,
+			IFdoOwningSequence<TFdoChild> fdoChildList,
 			IList<TLfChild> lfChildList,
 			Action<TLfChild, TFdoParent> convertAction
 		)
 			where TFdoParent : ICmObject
-			where TFdoChild : ICmObject
+			where TFdoChild : class, ICmObject
 			where TLfChild : IHasNullableGuid
 		{
 			var guidsFoundInLf = new HashSet<Guid>();
+			var guidOrderFromLf = new List<Guid>();
 			var objectsToDeleteFromFdo = new HashSet<TFdoChild>();
+			var fdoChildObjectsByGuid = new Dictionary<Guid, TFdoChild>();
 			foreach (TLfChild lfChild in lfChildList)
 			{
 				convertAction(lfChild, fdoParent);
-				if (lfChild.Guid != null)
+				Logger.Debug("After running convert action, LfChild's GUID was {0}", (lfChild.Guid == null ? "(null)" : lfChild.Guid.Value.ToString()));
+				if (lfChild.Guid != null) {
 					guidsFoundInLf.Add(lfChild.Guid.Value);
+					guidOrderFromLf.Add(lfChild.Guid.Value);
+				}
 			}
 			// Any FDO objects that DON'T have a corresponding Guid in LF should now be deleted
 			foreach (TFdoChild fdoChild in fdoChildList)
 			{
+				fdoChildObjectsByGuid.Add(fdoChild.Guid, fdoChild);
 				if (!guidsFoundInLf.Contains(fdoChild.Guid))
 					// Don't delete them yet, as that could change the list we're iterating over
 					objectsToDeleteFromFdo.Add(fdoChild);
@@ -755,6 +761,22 @@ namespace LfMerge.Core.DataConverters
 			// Now it's safe to delete them
 			foreach (TFdoChild fdoChildToDelete in objectsToDeleteFromFdo)
 				fdoChildToDelete.Delete();
+
+			// Now rearrange the FDO list to match the order of the LF list
+			Logger.Debug("About to rearrange order for list {0}", fdoParent.Guid);
+			int i = 0;
+			foreach (Guid guid in guidOrderFromLf) {
+				TFdoChild item;
+				if (fdoChildObjectsByGuid.TryGetValue(guid, out item)) {
+					// Note that we can't use MoveTo() since FdoOwningSequence explicitly doesn't handle
+					// the case where the object is moving from the same list. But its Insert() implementation
+					// handles that case, and actually does a *move* rather than inserting the item twice.
+
+					Logger.Debug("Inserting {0} at index {1} in list {2}", item.Guid, i, fdoParent.Guid);
+					fdoChildList.Insert(i, item);
+				}
+				i++;
+			}
 		}
 
 		private Guid GuidFromLiftId(string liftId)
