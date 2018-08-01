@@ -128,7 +128,7 @@ namespace LfMerge.Core.DataConverters
 		public void RunConversion()
 		{
 			Logger.Notice("MongoToFdo: Converting lexicon for project {0}", LfProject.ProjectCode);
-			Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
+			// Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			EntryCounts.Reset();
 			// Update writing systems from project config input systems.  Won't commit till the end

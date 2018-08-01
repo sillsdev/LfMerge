@@ -305,14 +305,14 @@ namespace LfMerge.Core.DataConverters
 						// which we don't necessarily have at this point. Need to make that a separate step in the Send/Receive: converting option lists first.
 						fieldObjs.Add(poss);
 					}
-					logger.Debug("Custom field {0} for CmObject {1}: BSON list was [{2}] and customFieldGuids was [{3}]. This was translated to keysFromLF = [{4}] and fieldObjs = [{5}]",
-						fieldName,
-						hvo,
-						String.Join(", ", valueAsStringArray.Values),
-						String.Join(", ", fieldGuids.Select(g => g.ToString())),
-						String.Join(", ", keysFromLF.AsEnumerable()),
-						String.Join(", ", fieldObjs.Select(poss => poss.AbbrAndName))
-					);
+					// logger.Debug("Custom field {0} for CmObject {1}: BSON list was [{2}] and customFieldGuids was [{3}]. This was translated to keysFromLF = [{4}] and fieldObjs = [{5}]",
+					// 	fieldName,
+					// 	hvo,
+					// 	String.Join(", ", valueAsStringArray.Values),
+					// 	String.Join(", ", fieldGuids.Select(g => g.ToString())),
+					// 	String.Join(", ", keysFromLF.AsEnumerable()),
+					// 	String.Join(", ", fieldObjs.Select(poss => poss.AbbrAndName))
+					// );
 					// Step 2: Remove any objects from the "old" list that weren't in the "new" list
 					// We have to look them up by HVO because that's the only public API available in FDO
 					// Following logic inspired by XmlImportData.CopyCustomFieldData in FieldWorks source
