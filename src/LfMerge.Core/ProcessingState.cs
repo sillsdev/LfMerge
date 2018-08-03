@@ -40,6 +40,30 @@ namespace LfMerge.Core
 			/// A project in this state is skipped from processing due to previous failed merge
 			/// </summary>
 			HOLD,
+
+			/// <summary>
+			/// A recoverable error occured
+			/// </summary>
+			ERROR
+		}
+
+		/// <summary>
+		/// Error codes.
+		/// </summary>
+		public enum ErrorCodes
+		{
+			NoError = 0,
+			Unspecified = 1,
+
+			EmptyProject = 10,
+			NoFlexProject = 11,
+
+			UnhandledException = 20,
+			Unauthorized       = 30,
+
+			UnspecifiedBranchError = 50,
+			ProjectTooOld = 51, // Project < 7000068
+			ProjectTooNew = 52
 		}
 
 		private LfMergeSettings Settings { get; set; }
@@ -81,8 +105,21 @@ namespace LfMerge.Core
 				// Fallback. ALWAYS provide an error message when you call this function, otherwise
 				// the user will see this VERY uninformative error message. Don't let that happen.
 				errorMessage = "Project going on hold due to unspecified error";
+			SetErrorState(SendReceiveStates.HOLD, ErrorCodes.Unspecified, errorMessage, args);
+		}
+
+		public void SetErrorState(SendReceiveStates state, ErrorCodes errorCode, string errorMessage, params object[] args)
+		{
+			SetErrorState(state, (int)errorCode, errorMessage, args);
+		}
+
+		public void SetErrorState(SendReceiveStates state, int errorCode, string errorMessage, params object[] args)
+		{
+			if (errorMessage == null)
+				throw new ArgumentNullException("errorMessage");
 			_errorMessage = string.Format(errorMessage, args); // Avoid setting this one via property so that we don't update state file yet
-			SRState = SendReceiveStates.HOLD; // But set this one via property so that state file is updated, just once.
+			_errorCode = errorCode;
+			SRState = state; // But set this one via property so that state file is updated, just once.
 		}
 
 		protected virtual void SetProperty<T>(ref T property, T value)

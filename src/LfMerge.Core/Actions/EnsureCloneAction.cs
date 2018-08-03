@@ -49,17 +49,20 @@ namespace LfMerge.Core.Actions
 				_currentProject.State.SRState = ProcessingState.SendReceiveStates.CLONING;
 		}
 
-		private bool CloneResultedInError(ILfProject project,
-			string cloneResult, string errorString)
+		private bool CloneResultedInError(ILfProject project, string cloneResult,
+			string errorString, bool isRecoverableError, ProcessingState.ErrorCodes errorCode)
 		{
 			var line = LfMergeBridgeServices.GetLineContaining(cloneResult, errorString);
-			if (!string.IsNullOrEmpty(line))
-			{
-				Logger.Error("Error during initial clone of {0}: {1}", project.ProjectCode, line);
-				project.State.PutOnHold("Error during initial clone of {0}: {1}", project.ProjectCode, line);
-				return true;
-			}
-			return false;
+			if (string.IsNullOrEmpty(line))
+				return false;
+
+			var errorType = isRecoverableError ? "Recoverable error" : "Error";
+			Logger.Error("{2} during initial clone of {0}: {1}", project.ProjectCode, line,
+				errorType);
+			project.State.SetErrorState(isRecoverableError ? ProcessingState.SendReceiveStates.ERROR :
+				ProcessingState.SendReceiveStates.HOLD, errorCode,
+				"{2} during initial clone of {0}: {1}", project.ProjectCode, line, errorType);
+			return true;
 		}
 
 		protected virtual void InitialTransferToMongoAfterClone(ILfProject project)
@@ -88,12 +91,12 @@ namespace LfMerge.Core.Actions
 		}
 
 		private void ReportNoSuchBranchFailure(ILfProject project, string cloneLocation,
-			string cloneResult, string line)
+			string cloneResult, string line, ProcessingState.ErrorCodes errorCode)
 		{
 			var clonePath = GetActualClonePath(cloneLocation, line);
 			if (Directory.Exists(clonePath))
 				Directory.Delete(clonePath, true);
-			CloneResultedInError(project, cloneResult, "no such branch");
+			CloneResultedInError(project, cloneResult, "no such branch", true, errorCode);
 		}
 
 		/// <summary>
@@ -130,10 +133,10 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project") ||
-					CloneResultedInError(project, cloneResult, "new repository with no commits") ||
-					CloneResultedInError(project, cloneResult, "clone has higher model") ||
-					CloneResultedInError(project, cloneResult, "LfMergeBridge starting S/R handler from directory"))
+				if (CloneResultedInError(project, cloneResult, "clone is not a FLEx project", true, ProcessingState.ErrorCodes.NoFlexProject) ||
+					CloneResultedInError(project, cloneResult, "new repository with no commits", true, ProcessingState.ErrorCodes.EmptyProject) ||
+					CloneResultedInError(project, cloneResult, "clone has higher model", true, ProcessingState.ErrorCodes.ProjectTooNew) ||
+					CloneResultedInError(project, cloneResult, "LfMergeBridge starting S/R handler from directory", false, ProcessingState.ErrorCodes.Unspecified))
 				{
 					return;
 				}
@@ -145,14 +148,14 @@ namespace LfMerge.Core.Actions
 					var index = line.IndexOf(modelString, StringComparison.Ordinal);
 					if (index < 0)
 					{
-						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line);
+						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line, ProcessingState.ErrorCodes.UnspecifiedBranchError);
 						return;
 					}
 
 					var cloneModelVersion = line.Substring(index + modelString.Length, 7);
 					if (int.Parse(cloneModelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
 					{
-						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line);
+						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line, ProcessingState.ErrorCodes.ProjectTooOld);
 						Logger.Error("Error during initial clone of '{0}': " +
 							"clone model version '{1}' less than minimal supported model version '{2}'.",
 							project.ProjectCode, cloneModelVersion, MagicStrings.MinimalModelVersion);
@@ -188,21 +191,27 @@ namespace LfMerge.Core.Actions
 			}
 			catch (Exception e)
 			{
-				if (e.GetType().Name == "ArgumentOutOfRangeException" &&
-					e.Message == "Cannot update to any branch.")
+				switch (e.GetType().Name)
 				{
-					project.State.PutOnHold("Error during initial clone of {0}: {1}",
-						project.ProjectCode, e);
-					throw;
+					case "ArgumentOutOfRangeException":
+						if (e.Message == "Cannot update to any branch.")
+						{
+							project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
+								ProcessingState.ErrorCodes.UnspecifiedBranchError,
+								"Error during initial clone of {0}: {1}", project.ProjectCode, e);
+							return;
+						}
+
+						break;
+					case "RepositoryAuthorizationException":
+						Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
+						project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
+							ProcessingState.ErrorCodes.Unauthorized,
+							"Error during initial clone of {0}: authorization exception from remote repository",
+							project.ProjectCode);
+						return;
 				}
-				if (e.GetType().Name == "RepositoryAuthorizationException")
-				{
-					Logger.Error("Initial clone of {0}: authorization exception", project.ProjectCode);
-					project.State.PutOnHold(
-						"Error during initial clone of {0}: authorization exception from remote repository",
-						project.ProjectCode);
-					throw;
-				}
+
 				Logger.Error("Got {0} exception trying to clone {1}: {2}", e.GetType(),
 					project.ProjectCode, e.Message);
 				throw;
@@ -241,4 +250,3 @@ namespace LfMerge.Core.Actions
 		}
 	}
 }
-

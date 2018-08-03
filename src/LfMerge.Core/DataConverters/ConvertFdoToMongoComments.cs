@@ -39,8 +39,8 @@ namespace LfMerge.Core.DataConverters
 
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
 			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
-			_logger.Debug("Doing Fdo->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
-			_logger.Debug("Doing Fdo->Mongo direction. About to call LfMergeBridge with that JSON...");
+			// _logger.Debug("Doing Fdo->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
+			// _logger.Debug("Doing Fdo->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
 			if (CallLfMergeBridge(allCommentsJson, out bridgeOutput))
 			{
@@ -64,18 +64,18 @@ namespace LfMerge.Core.DataConverters
 							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
 						}
 					}
-					_logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8} (GUID {9})",
-						comment.Regarding.FieldNameForDisplay,
-						comment.Regarding.FieldValue,
-						comment.Regarding.Word,
-						comment.Regarding.Meaning,
-						comment.Content,
-						comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
-						comment.AuthorNameAlternate ?? "<null>",
-						comment.Regarding.TargetGuid,
-						comment.Status,
-						comment.StatusGuid
-						);
+					// _logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8} (GUID {9})",
+					// 	comment.Regarding.FieldNameForDisplay,
+					// 	comment.Regarding.FieldValue,
+					// 	comment.Regarding.Word,
+					// 	comment.Regarding.Meaning,
+					// 	comment.Content,
+					// 	comment.Replies.Count <= 0 ? "" : " and replies [" + String.Join(", ", comment.Replies.Select(reply => "\"" + reply.Content + "\"")) + "]",
+					// 	comment.AuthorNameAlternate ?? "<null>",
+					// 	comment.Regarding.TargetGuid,
+					// 	comment.Status,
+					// 	comment.StatusGuid
+					// 	);
 				}
 				_conn.UpdateComments(_project, comments);
 				_conn.UpdateReplies(_project, replies);
@@ -287,7 +287,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				else
 				{
-					_logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+					// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
 					return true;
 				}
 			}

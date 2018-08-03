@@ -1,5 +1,4 @@
 mode: Mainline
-next-version: 1.0
 branches:
   live:
     tag:
@@ -7,11 +6,26 @@ branches:
     is-mainline: true
   qa:
     mode: ContinuousDeployment
+    track-merge-target: true
     tag: beta
     regex: (origin/)?qa
   master:
     mode: ContinuousDeployment
+    track-merge-target: true
     tag: alpha
     regex: (origin/)?master
+  pull-request:
+    mode: ContinuousDeployment
+    track-merge-target: true
+    tag: PR
+    regex: (origin/)?PR
+    #The following two lines require a newer version of GitVersion
+    #tag-name-pattern: '[/-](?<number>\d+)[-/]'
+    #source-branches: [ 'master', 'qa', 'live' ]
+  local-dev:
+    mode: ContinuousDeployment
+    track-merge-target: true
+    tag: dev
+    regex: (origin/)?.*
 ignore:
   sha: []

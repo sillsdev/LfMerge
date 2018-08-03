@@ -56,7 +56,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			MagicStrings.SetMinimalModelVersion(FdoCache.ModelVersion);
 			_env = new TestEnvironment();
-			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name);
+			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name + Path.GetRandomFileName());
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
 			Directory.CreateDirectory(_lDSettings.WebWorkDirectory);
 			LanguageDepotMock.ProjectFolderPath =

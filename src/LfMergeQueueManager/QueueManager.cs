@@ -10,6 +10,7 @@ using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
+using LfMerge.Core.Tools;
 using Palaso.IO.FileLock;
 using SIL.FieldWorks.FDO;
 
@@ -40,6 +41,9 @@ namespace LfMerge.QueueManager
 
 				if (!CheckSetup(settings))
 					return;
+
+				// Cleanup any hang projects
+				new Janitor(settings, MainClass.Logger).CleanupAndRescheduleJobs();
 
 				for (var queue = Queue.FirstQueueWithWork;
 					queue != null;

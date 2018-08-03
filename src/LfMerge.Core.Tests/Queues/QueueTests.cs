@@ -48,10 +48,10 @@ namespace LfMerge.Core.Tests.Queues
 		}
 
 		[Test]
-		[ExpectedException( "System.ArgumentException" )]
 		public void Ctor_CantCreateQueueForNone()
 		{
-			new Queue(_env.Settings, QueueNames.None);
+			Assert.That(() => new Queue(_env.Settings, QueueNames.None),
+				Throws.ArgumentException);
 		}
 
 		[Test]
