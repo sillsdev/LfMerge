@@ -293,6 +293,7 @@ namespace LfMerge.Core.MongoConnector
 			var commentUpdates = new List<UpdateOneModel<LfComment>>(statusChanges.Count);
 			var filterBuilder = Builders<LfComment>.Filter;
 			var updateBuilder = Builders<LfComment>.Update;
+			DateTime utcNow = DateTime.UtcNow;
 
 			foreach (KeyValuePair<string, Tuple<string, string>> kv in statusChanges)
 			{
@@ -304,6 +305,7 @@ namespace LfMerge.Core.MongoConnector
 
 				filter = filterBuilder.Eq(cmt => cmt.Guid, commentGuid);
 				update = updateBuilder
+					.Set(c => c.DateModified, utcNow)  // So that IndexedDB picks up this change in status
 					.Set(c => c.Status, newStatus)
 					.Set(c => c.StatusGuid, newStatusGuid);
 				commentUpdates.Add(new UpdateOneModel<LfComment>(filter, update) { IsUpsert = true });
