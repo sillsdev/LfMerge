@@ -68,7 +68,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				else
 				{
-					_logger.Debug("Good  output from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
+					// _logger.Debug("Good  output from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
 					return true;
 				}
 				}

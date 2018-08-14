@@ -139,7 +139,7 @@ namespace LfMerge.Core.DataConverters
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInFdo();
-			Logger.Debug("Running FtMComments, should see comments show up below:");
+			// Logger.Debug("Running FtMComments, should see comments show up below:");
 			var commCvtr = new ConvertFdoToMongoComments(Connection, LfProject, Logger, Progress, ProjectRecordFactory);
 			commCvtr.RunConversion();
 		}
