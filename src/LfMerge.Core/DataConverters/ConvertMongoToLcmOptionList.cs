@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -6,14 +6,14 @@ using System.Linq;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.DataConverters
 {
-	// Currently, LF does not allow editing option lists on projects that send/receive to FDO.
+	// Currently, LF does not allow editing option lists on projects that send/receive to Lcm.
 	// If that ever changes, there's a bunch of commented-out (or #if false ... #endif'd) code below
 	// that contains the start of an approach to handling that situation.
-	public class ConvertMongoToFdoOptionList
+	public class ConvertMongoToLcmOptionList
 	{
 		protected IRepository<ICmPossibility> _possRepo;
 		protected LfOptionList _lfOptionList;
@@ -27,9 +27,9 @@ namespace LfMerge.Core.DataConverters
 		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
 
 		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
-		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
+		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
 		#endif
-		public ConvertMongoToFdoOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, CanonicalOptionListSource canonicalSource = null)
+		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, CanonicalOptionListSource canonicalSource = null)
 		{
 			_possRepo = possRepo;
 			_logger = logger;
@@ -132,7 +132,7 @@ namespace LfMerge.Core.DataConverters
 				if (_possRepo.TryGetObject(item.Guid.Value, out result))
 					return result;
 			}
-			#if false  // Once we are populating FDO from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
+			#if false  // Once we are populating Lcm from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
 			return FromAbbrevAndName(item.Abbreviation, item.Value);
 			#endif
 			return null;
@@ -152,7 +152,7 @@ namespace LfMerge.Core.DataConverters
 						return result;
 				}
 			}
-			#if false  // Once we are populating FDO from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
+			#if false  // Once we are populating Lcm from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
 			return FromAbbrevAndName(item.Abbrevs[_wsForKeys], item.Names[_wsForKeys]);
 			#endif
 			return null;
@@ -160,17 +160,17 @@ namespace LfMerge.Core.DataConverters
 
 		// This function is generic because some lists, like ILexSense.AnthroCodesRC, are lists of interfaces *derived*
 		// from ICmPossibility (e.g., ICmAnthroItem). This results in type errors at compile time: parameter
-		// types like IFdoReferenceCollection<ICmPossibility> don't match IFdoReferenceCollection<ICmAnthroCode>.
+		// types like ILcmReferenceCollection<ICmPossibility> don't match ILcmReferenceCollection<ICmAnthroCode>.
 		// Generics solve the problem, and can be automatically inferred by the compiler to boot.
-		public void SetPossibilitiesCollection<T>(IFdoReferenceCollection<T> dest, IEnumerable<T> newItems)
+		public void SetPossibilitiesCollection<T>(ILcmReferenceCollection<T> dest, IEnumerable<T> newItems)
 			where T: class, ICmPossibility
 		{
 			// If we know of NO valid possibility keys, don't make any changes. That's because knowing of NO valid possibility keys
 			// is FAR more likely to happen because of a bug than because we really removed an entire possibility list, and if there's
-			// a bug, we shouldn't drop all the FDO data for this possibility list.
+			// a bug, we shouldn't drop all the Lcm data for this possibility list.
 			if (PossibilitiesByKey.Count == 0 && _canonicalSource == null)
 				return;
-			// We have to calculate the update (which items to remove and which to add) here; IFdoReferenceCollection won't do it for us.
+			// We have to calculate the update (which items to remove and which to add) here; ILcmReferenceCollection won't do it for us.
 			List<T> itemsToAdd = newItems.ToList();
 			HashSet<Guid> guidsToAdd = new HashSet<Guid>(itemsToAdd.Select(poss => poss.Guid));
 			List<T> itemsToRemove = new List<T>();
@@ -183,14 +183,14 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Assumption: "source" contains valid keys. CAUTION: No error checking is done to ensure that this is true.
-		public void UpdatePossibilitiesFromStringArray<T>(IFdoReferenceCollection<T> dest, LfStringArrayField source)
+		public void UpdatePossibilitiesFromStringArray<T>(ILcmReferenceCollection<T> dest, LfStringArrayField source)
 			where T: class, ICmPossibility
 		{
 			SetPossibilitiesCollection(dest, FromStringArrayField<T>(source));
 		}
 
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
-		#if false  // Once we are populating FDO from LF OptionLists, the entire block of functions below will be useful. Until then, they're commented out.
+		#if false  // Once we are populating Lcm from LF OptionLists, the entire block of functions below will be useful. Until then, they're commented out.
 		public ICmPossibility FromAbbrevAndName(string abbrev, string name, string userWs)
 		{
 		ICmPossibility poss = _parentList.FindPossibilityByName(_parentList.PossibilitiesOS, abbrev, _wsForKeys);
@@ -201,9 +201,9 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Should be called from within an UndoableUnitOfWorkHelper
-		// Replacement for the old UpdateFdoGrammarFromLfGrammar() method in ConvertMongoToFdoLexicon
+		// Replacement for the old UpdateLcmGrammarFromLfGrammar() method in ConvertMongoToLcmLexicon
 		// Writing system should be the user interface language from LF. If not supplied, will default to English.
-		public void UpdateFdoOptionListFromLf(string lfUserInterfaceWs = null)
+		public void UpdateLcmOptionListFromLf(string lfUserInterfaceWs = null)
 		{
 			foreach (LfOptionListItem item in _lfOptionList.Items)
 			{
@@ -217,7 +217,7 @@ namespace LfMerge.Core.DataConverters
 		/// one if nothing remotely matching could be found.
 		///
 		/// NOTE: This is currently commented out (via #if false...#endif block) because we currently don't want to update
-		/// FDO from the values of LF option lists. Once that changes, this code can be uncommented.
+		/// Lcm from the values of LF option lists. Once that changes, this code can be uncommented.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		/// <param name="wsForOptionListItems">Ws for option list items.</param>
@@ -229,10 +229,10 @@ namespace LfMerge.Core.DataConverters
 			{
 				if (_possRepo.TryGetObject(item.Guid.Value, out poss))
 				{
-					// Currently we do NOT want to change the name, abbreviation, etc. in FDO for already-existing possibility items.
+					// Currently we do NOT want to change the name, abbreviation, etc. in Lcm for already-existing possibility items.
 					// Once we do, uncomment the next line:
 					//PopulateCmPossibilityFromOptionListItem(poss, item, wsForOptionListItems);
-					// For now, however, just return without touching the FDO CmPossibility object
+					// For now, however, just return without touching the Lcm CmPossibility object
 					return;
 				}
 				else

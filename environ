@@ -1,16 +1,15 @@
-#!/bin/sh
 # Environment settings for running programs with the SIL version of mono
 # Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono-sil/bin/mono --debug LfMerge.exe
-# These settings assume that the packaged SIL Mono is installed in /opt/mono-sil.
+#    /opt/mono5-sil/bin/mono --debug LfMerge.exe
+# These settings assume that the packaged SIL Mono is installed in /opt/mono5-sil.
 # Note that this file is intended to be "sourced", not "executed".
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
+DEFAULT_MONO_PREFIX=/opt/mono5-sil
 [ -z "$BUILD" ] && BUILD=Debug
-[ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono-sil
+[ -z "$MONO_PREFIX" ] && MONO_PREFIX=${DEFAULT_MONO_PREFIX}
 
-MONO_RUNTIME=v4.0.30319
 MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
@@ -40,10 +39,10 @@ fi
 if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
 then
 	# Add packaged mono items to paths
-	PATH="/opt/mono-sil/bin:${PATH}"
-	LD_LIBRARY_PATH="/opt/mono-sil/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="/opt/mono-sil/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="/opt/mono-sil:/usr"
+	PATH="${DEFAULT_MONO_PREFIX}/bin:${PATH}"
+	LD_LIBRARY_PATH="${DEFAULT_MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
+	PKG_CONFIG_PATH="${DEFAULT_MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+	MONO_GAC_PREFIX="${DEFAULT_MONO_PREFIX}:/usr"
 else
 	# Add locally-built mono items to paths
 	# We also add the default values for PKG_CONFIG_PATH - MonoDevelop resets the PKG_CONFIG_PATH
@@ -56,12 +55,6 @@ else
 fi
 
 ################################################################################################
-
-if [ "$RUNMODE" != "PACKAGEBUILD" -a "$RUNMODE" != "NUGET" ]
-then
-	# add path to FDO assemblies
-	MONO_PATH="$(pkg-config --variable=assemblies_dir lfmerge-fdo):$MONO_PATH"
-fi
 
 LD_LIBRARY_PATH="${DBVERSIONPATH}:${LD_LIBRARY_PATH}"
 
@@ -76,7 +69,7 @@ export \
 	PATH LD_LIBRARY_PATH PKG_CONFIG_PATH LD_PRELOAD \
 	COMPONENTS_MAP_PATH ICU_DATA \
 	MONO_PATH \
-	MONO_RUNTIME MONO_PREFIX MONO_GAC_PREFIX \
+	MONO_PREFIX MONO_GAC_PREFIX \
 	MONO_TRACE_LISTENER \
 	MONO_DEBUG MONO_ENV_OPTIONS \
 	FW_ROOTCODE

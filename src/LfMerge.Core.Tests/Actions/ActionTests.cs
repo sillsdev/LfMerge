@@ -64,10 +64,10 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(actions, Is.EquivalentTo(expectedActionNames));
 		}
 
-		[TestCase(ActionNames.TransferMongoToFdo, ProcessingState.SendReceiveStates.SYNCING)]
+		[TestCase(ActionNames.TransferMongoToLcm, ProcessingState.SendReceiveStates.SYNCING)]
 		[TestCase(ActionNames.Commit, ProcessingState.SendReceiveStates.SYNCING)]
 		[TestCase(ActionNames.Edit, ProcessingState.SendReceiveStates.SYNCING)]
-		[TestCase(ActionNames.TransferFdoToMongo, ProcessingState.SendReceiveStates.SYNCING)]
+		[TestCase(ActionNames.TransferLcmToMongo, ProcessingState.SendReceiveStates.SYNCING)]
 		public void State(ActionNames actionName, ProcessingState.SendReceiveStates expectedState)
 		{
 			// Setup
@@ -82,11 +82,11 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(lfProj.State.SRState, Is.EqualTo(expectedState));
 		}
 
-		[TestCase(ActionNames.TransferMongoToFdo)]
+		[TestCase(ActionNames.TransferMongoToLcm)]
 		[TestCase(ActionNames.Commit)]
 		[TestCase(ActionNames.Synchronize)]
 		[TestCase(ActionNames.Edit)]
-		[TestCase(ActionNames.TransferFdoToMongo)]
+		[TestCase(ActionNames.TransferLcmToMongo)]
 		public void State_SkipsHoldState(ActionNames actionName)
 		{
 			// Setup
@@ -113,12 +113,12 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[TestCase(ActionNames.None, ActionNames.EnsureClone)]
-		[TestCase(ActionNames.EnsureClone, ActionNames.TransferMongoToFdo)]
-		[TestCase(ActionNames.TransferMongoToFdo, ActionNames.Commit)]
+		[TestCase(ActionNames.EnsureClone, ActionNames.TransferMongoToLcm)]
+		[TestCase(ActionNames.TransferMongoToLcm, ActionNames.Commit)]
 		[TestCase(ActionNames.Commit, ActionNames.Synchronize)]
 		[TestCase(ActionNames.Synchronize, ActionNames.Edit)]
-		[TestCase(ActionNames.Edit, ActionNames.TransferFdoToMongo)]
-		[TestCase(ActionNames.TransferFdoToMongo, ActionNames.None)]
+		[TestCase(ActionNames.Edit, ActionNames.TransferLcmToMongo)]
+		[TestCase(ActionNames.TransferLcmToMongo, ActionNames.None)]
 		public void EnumerateActionsStartingWith(ActionNames currentAction, ActionNames expectedAction)
 		{
 			var enumerator = Action.EnumerateActionsStartingWith(currentAction).GetEnumerator();

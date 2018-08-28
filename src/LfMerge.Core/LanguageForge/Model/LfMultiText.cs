@@ -1,11 +1,12 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.Common.COMInterfaces;
 using MongoDB.Bson;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.Text;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
@@ -13,14 +14,14 @@ namespace LfMerge.Core.LanguageForge.Model
 	{
 		public bool IsEmpty { get { return (Count <= 0) || (this.All(kv => kv.Value == null || kv.Value.IsEmpty)); } }
 
-		public static LfMultiText FromFdoMultiString(IMultiAccessorBase other, ILgWritingSystemFactory wsManager)
+		public static LfMultiText FromLcmMultiString(IMultiAccessorBase other, ILgWritingSystemFactory wsManager)
 		{
 			LfMultiText newInstance = new LfMultiText();
 			foreach (int wsid in other.AvailableWritingSystemIds)
 			{
 				string wsstr = wsManager.GetStrFromWs(wsid);
 				ITsString value = other.get_String(wsid);
-				string text = LfMerge.Core.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
+				string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
 				LfStringField field = LfStringField.FromString(text);
 				if (field != null)
 					newInstance.Add(wsstr, field);
@@ -41,7 +42,7 @@ namespace LfMerge.Core.LanguageForge.Model
 			if (value == null || value.Text == null) return null;
 			int wsId = value.get_WritingSystem(0);
 			string wsStr = wsManager.GetStrFromWs(wsId);
-			string text = LfMerge.Core.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(value, wsManager);
+			string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
 			LfStringField field = LfStringField.FromString(text);
 			if (field == null)
 				return null;
@@ -59,7 +60,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				string wsStr = wsManager.GetStrFromWs(wsId);
 				if (!string.IsNullOrEmpty(wsStr))
 				{
-					string valueStr = LfMerge.Core.DataConverters.ConvertFdoToMongoTsStrings.TextFromTsString(tss, wsManager);
+					string valueStr = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(tss, wsManager);
 					LfStringField field = LfStringField.FromString(valueStr);
 					if (field != null)
 						mt.Add(wsStr, field);
@@ -111,7 +112,7 @@ namespace LfMerge.Core.LanguageForge.Model
 			return (result == null) ? null : result.Value;
 		}
 
-		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(FdoCache cache)
+		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(LcmCache cache)
 		{
 			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
 			if (kv.Key == null) return new KeyValuePair<int, string>();
@@ -128,7 +129,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				new KeyValuePair<string, string>(result.Key, result.Value.Value);
 		}
 
-		public void WriteToFdoMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
+		public void WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
 		{
 			if (dest == null)
 				return;
@@ -138,7 +139,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				int wsId = wsManager.GetWsFromStr(kv.Key);
 				if (wsId == 0) continue; // Skip any unidentified writing systems
 				string value = kv.Value.Value;
-				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToFdoTsStrings.SpanStrToTsString(value, wsId, wsManager);
+				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(value, wsId, wsManager);
 				dest.set_String(wsId, tss);
 				destWsIdsToClear.Remove(wsId);
 			}

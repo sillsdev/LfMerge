@@ -1,10 +1,10 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using Autofac;
 using SIL.Network;
-using SIL.FieldWorks.FDO;
 using LfMerge.Core.Settings;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Actions.Infrastructure
 {
@@ -30,9 +30,9 @@ namespace LfMerge.Core.Actions.Infrastructure
 			return uriBldr.Uri.ToString();
 		}
 
-		public string ModelVersion { get; private set; }
+		public int ModelVersion { get; private set; }
 
-		public static void SetModelVersion(string modelVersion)
+		public static void SetModelVersion(int modelVersion)
 		{
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 			chorusHelper.ModelVersion = modelVersion;
@@ -43,8 +43,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 			get
 			{
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-				return !string.IsNullOrEmpty(chorusHelper.ModelVersion) &&
-					chorusHelper.ModelVersion != FdoCache.ModelVersion;
+				return chorusHelper.ModelVersion != LcmCache.ModelVersion;
 			}
 		}
 

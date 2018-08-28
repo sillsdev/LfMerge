@@ -1,18 +1,20 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using LfMerge.Core.DataConverters;
-using MongoDB.Bson;
-using SIL.CoreImpl;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Infrastructure;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.Core.DataConverters;
+using MongoDB.Bson;
+using SIL.LCModel;
+using SIL.LCModel.Core.Cellar;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.Text;
+using SIL.LCModel.Infrastructure;
 
-namespace LfMerge.Core.Tests.Fdo
+namespace LfMerge.Core.Tests.Lcm
 {
-	public class RoundTripBase : FdoTestBase
+	public class RoundTripBase : LcmTestBase
 	{
 		protected IDictionary<string, Tuple<string, string>> GetMongoDifferences(
 			BsonDocument itemBeforeTest,
@@ -110,7 +112,7 @@ namespace LfMerge.Core.Tests.Fdo
 				return "[" + String.Join(",", value as int[]) + "]";
 			var tsString = value as ITsString;
 			if (tsString != null)
-				return ConvertFdoToMongoTsStrings.TextFromTsString(tsString, _cache.WritingSystemFactory);
+				return ConvertLcmToMongoTsStrings.TextFromTsString(tsString, _cache.WritingSystemFactory);
 			var multi = value as IMultiAccessorBase;
 			if (multi != null)
 			{
@@ -127,7 +129,7 @@ namespace LfMerge.Core.Tests.Fdo
 				{
 					sb.Append(ws);
 					sb.Append(": ");
-					sb.Append(ConvertFdoToMongoTsStrings.TextFromTsString(multi.get_String(ws), _cache.WritingSystemFactory));
+					sb.Append(ConvertLcmToMongoTsStrings.TextFromTsString(multi.get_String(ws), _cache.WritingSystemFactory));
 					sb.Append(", ");
 				}
 				sb.Append("}");
@@ -140,9 +142,9 @@ namespace LfMerge.Core.Tests.Fdo
 		/// Get the field values as a dict, keyed by field ID, for any CmObject.
 		/// </summary>
 		/// <returns>A dictionary with integer field ID mapped to values.</returns>
-		/// <param name="cache">FDO cache the object lives in.</param>
+		/// <param name="cache">LCM cache the object lives in.</param>
 		/// <param name="obj">Object whose fields we're getting.</param>
-		protected IDictionary<int, object> GetFieldValues(FdoCache cache, ICmObject obj)
+		protected IDictionary<int, object> GetFieldValues(LcmCache cache, ICmObject obj)
 		{
 			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
 			ISilDataAccess data = cache.DomainDataByFlid;
@@ -161,21 +163,21 @@ namespace LfMerge.Core.Tests.Fdo
 			return fieldValues;
 		}
 
-		protected BsonDocument GetCustomFieldValues(FdoCache cache, ICmObject obj, string objectType = "entry")
+		protected BsonDocument GetCustomFieldValues(LcmCache cache, ICmObject obj, string objectType = "entry")
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
-			var convertCustomField = new ConvertFdoToMongoCustomField(cache, _servLoc, new LfMerge.Core.Logging.NullLogger());
+			var convertCustomField = new ConvertLcmToMongoCustomField(cache, _servLoc, new LfMerge.Core.Logging.NullLogger());
 			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters);
 		}
 
-		protected IDictionary<string, object> GetFieldValuesByName(FdoCache cache, ICmObject obj)
+		protected IDictionary<string, object> GetFieldValuesByName(LcmCache cache, ICmObject obj)
 		{
 			IFwMetaDataCacheManaged mdc = cache.ServiceLocator.MetaDataCache;
 			return GetFieldValues(cache, obj).ToDictionary(kv => mdc.GetFieldName(kv.Key), kv => kv.Value);
 		}
 
-		protected IDictionary<string, Tuple<string, string>> GetFdoDifferences(
-			FdoCache cache,
+		protected IDictionary<string, Tuple<string, string>> GetLcmDifferences(
+			LcmCache cache,
 			IDictionary<int, object> fieldValuesBeforeTest,
 			IDictionary<int, object> fieldValuesAfterTest
 		)
@@ -184,7 +186,7 @@ namespace LfMerge.Core.Tests.Fdo
 			var fieldNamesThatShouldBeDifferent = new string[] {
 			};
 			var fieldNamesToSkip = new string[] {
-				// These are ComObject or SIL.FieldWorks.FDO.DomainImpl.VirtualStringAccessor instances, which we can't compare
+				// These are ComObject or SIL.FieldWorks.LCM.DomainImpl.VirtualStringAccessor instances, which we can't compare
 				//				"FullReferenceName",
 				//				"HeadWord",
 				//				"HeadWordRef",
@@ -236,8 +238,8 @@ namespace LfMerge.Core.Tests.Fdo
 					if (diffInfo != null)
 					{
 						differencesByName[fieldName] = new Tuple<string, string>(
-							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringBeforeTest, _cache.WritingSystemFactory),
-							ConvertFdoToMongoTsStrings.TextFromTsString(tsStringAfterTest, _cache.WritingSystemFactory)
+							ConvertLcmToMongoTsStrings.TextFromTsString(tsStringBeforeTest, _cache.WritingSystemFactory),
+							ConvertLcmToMongoTsStrings.TextFromTsString(tsStringAfterTest, _cache.WritingSystemFactory)
 						);
 					}
 					continue;
@@ -259,8 +261,8 @@ namespace LfMerge.Core.Tests.Fdo
 					}
 					foreach (int wsId in wsIds)
 					{
-						string beforeStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrBeforeTest.get_String(wsId), _cache.WritingSystemFactory);
-						string afterStr = ConvertFdoToMongoTsStrings.TextFromTsString(multiStrAfterTest.get_String(wsId), _cache.WritingSystemFactory);
+						string beforeStr = ConvertLcmToMongoTsStrings.TextFromTsString(multiStrBeforeTest.get_String(wsId), _cache.WritingSystemFactory);
+						string afterStr = ConvertLcmToMongoTsStrings.TextFromTsString(multiStrAfterTest.get_String(wsId), _cache.WritingSystemFactory);
 						if (beforeStr != afterStr)
 						{
 							string wsStr = cache.WritingSystemFactory.GetStrFromWs(wsId);

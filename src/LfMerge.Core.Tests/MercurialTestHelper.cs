@@ -1,12 +1,12 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.IO;
 using IniParser.Parser;
 using NUnit.Framework;
 using SIL.CommandLineProcessing;
+using SIL.LCModel;
 using SIL.PlatformUtilities;
 using SIL.Progress;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests
 {
@@ -63,15 +63,15 @@ namespace LfMerge.Core.Tests
 			RunHgCommand(repoPath, string.Format("commit -A -u dummyUser -m \"{0}\"", message));
 		}
 
-		public static void HgCreateBranch(string repoPath, string branchName)
+		public static void HgCreateBranch(string repoPath, int branchName)
 		{
 			RunHgCommand(repoPath, string.Format("branch -f \"{0}\"", branchName));
 		}
 
-		public static void CreateFlexRepo(string lDProjectFolderPath, string modelVersion = null)
+		public static void CreateFlexRepo(string lDProjectFolderPath, int modelVersion = 0)
 		{
-			if (string.IsNullOrEmpty(modelVersion))
-				modelVersion = FdoCache.ModelVersion;
+			if (modelVersion <= 0)
+				modelVersion = LcmCache.ModelVersion;
 			File.WriteAllText(Path.Combine(lDProjectFolderPath, "FLExProject.CustomProperties"),
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<AdditionalFields/>");
 			File.WriteAllText(Path.Combine(lDProjectFolderPath, "FLExProject.ModelVersion"),

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2016 SIL International
+﻿// Copyright (c) 2011-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -13,8 +13,11 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
 using SIL.IO;
+using SIL.LCModel.Utils;
 using SIL.TestUtilities;
-using SIL.CoreImpl;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using ReflectionHelper = SIL.Reflection.ReflectionHelper;
 
 namespace LfMerge.Core.Tests
 {
@@ -46,10 +49,20 @@ namespace LfMerge.Core.Tests
 				registerLfProxyMock).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettings>();
 			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
-			Directory.CreateDirectory(Settings.FdoDirectorySettings.ProjectsDirectory);
-			Directory.CreateDirectory(Settings.FdoDirectorySettings.TemplateDirectory);
+			Directory.CreateDirectory(Settings.LcmDirectorySettings.ProjectsDirectory);
+			Directory.CreateDirectory(Settings.LcmDirectorySettings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
 			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
+			var globalWritingSystemRepo = Path.Combine(_languageForgeServerFolder.Path, "GlobalWritingSystems");
+			ReflectionHelper.SetField(typeof(GlobalWritingSystemRepository),
+				"_defaultBasePath", globalWritingSystemRepo);
+			var nonExistingPath = Path.Combine(_languageForgeServerFolder.Path, "NonExisting");
+			ReflectionHelper.SetProperty(typeof(GlobalWritingSystemRepositoryMigrator),
+				"LdmlPathVersion0", nonExistingPath);
+			ReflectionHelper.SetProperty(typeof(GlobalWritingSystemRepositoryMigrator),
+				"LdmlPathLinuxVersion2", nonExistingPath);
+			GlobalWritingSystemRepository.CreateGlobalWritingSystemRepositoryDirectory(globalWritingSystemRepo);
+			GlobalWritingSystemRepository.Initialize();
 		}
 
 		private string TestName
@@ -109,8 +122,9 @@ namespace LfMerge.Core.Tests
 				LanguageForgeProjectAccessor.Reset();
 			_languageForgeServerFolder.Dispose();
 			Settings = null;
+			SingletonsContainer.Release();
 
-			DirectoryFinder.UnitTestHelper.ResetStaticVars();
+			Environment.SetEnvironmentVariable("FW_CommonAppData", null);
 		}
 
 		public string LanguageForgeFolder
@@ -118,7 +132,7 @@ namespace LfMerge.Core.Tests
 			// get { return Path.Combine(_languageForgeServerFolder.Path, "webwork"); }
 			// Should get this from Settings object, but unfortunately we have to resolve this
 			// *before* the Settings object is available.
-			get { return LangForgeDirFinder.FdoDirectorySettings.ProjectsDirectory; }
+			get { return LangForgeDirFinder.LcmDirectorySettings.ProjectsDirectory; }
 		}
 
 		public LfMergeSettings LangForgeDirFinder
@@ -139,7 +153,7 @@ namespace LfMerge.Core.Tests
 		public static void CopyFwProjectTo(string projectCode, string destDir)
 		{
 			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
-			DirectoryHelper.Copy(Path.Combine(dataDir, projectCode), destDir);
+			DirectoryHelper.Copy(Path.Combine(dataDir, projectCode), Path.Combine(destDir, projectCode));
 
 			// Adjust hgrc file
 			var hgrc = Path.Combine(destDir, projectCode, ".hg/hgrc");
@@ -211,79 +225,6 @@ namespace LfMerge.Core.Tests
 				f.Write(bytes, 0, bytes.Length);
 			}
 		}
-
-//		public string WriteFile(string fileName, string xmlForEntries, string directory)
-//		{
-//			string content;
-//			using (var writer = File.CreateText(Path.Combine(directory, fileName)))
-//			{
-//				content = string.Format("<?xml version=\"1.0\" encoding=\"utf-8\"?> " +
-//					"<lift version =\"{0}\" producer=\"WeSay.1Pt0Alpha\" " +
-//					"xmlns:flex=\"http://fieldworks.sil.org\">{1}" +
-//					"</lift>", Validator.LiftVersion, xmlForEntries);
-//				writer.Write(content);
-//			}
-//
-//			new FileInfo(Path.Combine(directory, fileName)).LastWriteTime = DateTime.Now.AddSeconds(1);
-//
-//			return content;
-//		}
-//
-//		public void CreateLiftInputFile(IList<string> data, string fileName, string directory)
-//		{
-//			// NOTE: if the parameter differentTimeStamps is true we wait a second before
-//			// creating the next file. This allows the files to have different timestamps.
-//			// Originally the code used 100ms instead of 1s, but the resolution of file
-//			// timestamps in the Mono implementation is 1s. However, if is possible in the
-//			// real app that two files get created within a few milliseconds and we rely on
-//			// the file timestamp to do the sorting of files, then we have a real problem.
-//
-//			var path = Path.Combine(directory, fileName);
-//			if (File.Exists(path))
-//				File.Delete(path);
-//			using (var wrtr = File.CreateText(path))
-//			{
-//				for (var i = 0; i < data.Count; ++i)
-//					wrtr.WriteLine(data[i]);
-//				wrtr.Close();
-//			}
-//		}
-//
-//		public void CreateLiftUpdateFile(IList<string> data, string fileName,
-//			string directory)
-//		{
-//			string path = Path.Combine(directory, fileName);
-//			if (File.Exists(path))
-//				File.Delete(path);
-//			var bldr = new StringBuilder();
-//			for (var i = 0; i < data.Count; ++i)
-//				bldr.AppendLine(data[i]);
-//
-//			WriteFile(fileName, bldr.ToString(), directory);
-//		}
-
-//		public void VerifyEntryInnerText(XmlDocument xmlDoc, string xPath, string innerText)
-//		{
-//			var selectedEntries = VerifyEntryExists(xmlDoc, xPath);
-//			Assert.That(selectedEntries[0].InnerText, Is.EqualTo(innerText), "Text for entry is wrong");
-//		}
-//
-//		public XmlNodeList VerifyEntryExists(XmlDocument xmlDoc, string xPath)
-//		{
-//			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
-//			Assert.IsNotNull(selectedEntries);
-//			Assert.AreEqual(1, selectedEntries.Count,
-//				String.Format("An entry with the following criteria should exist:{0}", xPath));
-//			return selectedEntries;
-//		}
-//
-//		public void VerifyEntryDoesNotExist(XmlDocument xmlDoc, string xPath)
-//		{
-//			XmlNodeList selectedEntries = xmlDoc.SelectNodes(xPath);
-//			Assert.IsNotNull(selectedEntries);
-//			Assert.AreEqual(0, selectedEntries.Count,
-//				String.Format("An entry with the following criteria should not exist:{0}", xPath));
-//		}
 	}
 }
 

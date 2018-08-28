@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Diagnostics;
@@ -18,8 +18,8 @@ using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.PlatformUtilities;
 using SIL.Progress;
-using SIL.FieldWorks.FDO;
 using SIL.IO;
+using SIL.LCModel;
 
 namespace LfMerge.Core
 {
@@ -117,8 +117,8 @@ namespace LfMerge.Core
 			if (modelVersion == ModelVersion)
 				return dir;
 
-			if (dir.IndexOf(FdoCache.ModelVersion, StringComparison.Ordinal) >= 0)
-				return dir.Replace(FdoCache.ModelVersion, modelVersion);
+			if (dir.IndexOf(ModelVersion, StringComparison.Ordinal) >= 0)
+				return dir.Replace(ModelVersion, modelVersion);
 
 			// fall back: append model version. This at least prevents an infinite loop
 			return Path.Combine(dir, modelVersion);
@@ -127,8 +127,8 @@ namespace LfMerge.Core
 		public static string ModelVersion
 		{
 			// We're exposing the model version as property so that LfMerge doesn't need a
-			// reference to FDO. This simplifies dealing with multiple model versions.
-			get { return FdoCache.ModelVersion; }
+			// reference to LCM. This simplifies dealing with multiple model versions.
+			get { return LcmCache.ModelVersion.ToString(); }
 		}
 
 		public static bool CheckSetup()

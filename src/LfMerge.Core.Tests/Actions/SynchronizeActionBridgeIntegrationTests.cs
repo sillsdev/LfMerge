@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -7,8 +7,8 @@ using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
+using SIL.LCModel;
 using SIL.TestUtilities;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests.Actions
 {
@@ -42,7 +42,7 @@ namespace LfMerge.Core.Tests.Actions
 			return repoDir;
 		}
 
-		private static string ModelVersion
+		private static int ModelVersion
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace LfMerge.Core.Tests.Actions
 		[SetUp]
 		public void Setup()
 		{
-			MagicStrings.SetMinimalModelVersion(FdoCache.ModelVersion);
+			MagicStrings.SetMinimalModelVersion(LcmCache.ModelVersion);
 			_env = new TestEnvironment();
 			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name + Path.GetRandomFileName());
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
@@ -125,7 +125,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Create a empty hg repo
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
 			LanguageDepotMock.Server.Start();
 
@@ -143,7 +143,7 @@ namespace LfMerge.Core.Tests.Actions
 		{
 			// Setup
 			// Create a hg repo that doesn't contain a branch for the current model version
-			const string modelVersion = "7000067";
+			const int modelVersion = 7000067;
 			MagicStrings.SetMinimalModelVersion(modelVersion);
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
@@ -166,11 +166,11 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
 			// Simulate a user with a newer FLEx version doing a S/R
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7100000");
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7100000);
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "Commit with newer FLEx version");
 			LanguageDepotMock.Server.Start();
 
@@ -199,7 +199,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			string errors = _env.Logger.GetErrors();
-			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: Invalid data ---> System.Text.DecoderFallbackException"));
+			Assert.That(errors, Is.StringContaining("System.Xml.XmlException"));
 			// Stack trace should also have been logged
 			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
@@ -223,7 +223,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			string errors = _env.Logger.GetErrors();
-			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: Document element did not appear."));
+			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: '.', hexadecimal value 0x00, is an invalid character."));
 			// Stack trace should also have been logged
 			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));

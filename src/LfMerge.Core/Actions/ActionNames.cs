@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 namespace LfMerge.Core.Actions
@@ -7,11 +7,11 @@ namespace LfMerge.Core.Actions
 	{
 		None,
 		EnsureClone,
-		TransferMongoToFdo,
+		TransferMongoToLcm,
 		Commit,
 		Synchronize,
 		Edit,
-		TransferFdoToMongo
+		TransferLcmToMongo
 	}
 }
 

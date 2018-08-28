@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -8,27 +8,28 @@ using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using SIL.CoreImpl;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Application;
-using SIL.FieldWorks.FDO.Infrastructure;
+using SIL.LCModel;
+using SIL.LCModel.Application;
+using SIL.LCModel.Core.Cellar;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.Text;
+using SIL.LCModel.Infrastructure;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertMongoToFdoCustomField
+	public class ConvertMongoToLcmCustomField
 	{
-		private FdoCache cache;
+		private LcmCache cache;
 		private FwServiceLocatorCache servLoc;
-		private IFwMetaDataCacheManaged fdoMetaData;
+		private IFwMetaDataCacheManaged lcmMetaData;
 		private ILogger logger;
 		private int wsEn;
 
-		public ConvertMongoToFdoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
+		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
 		{
 			this.cache = cache;
 			this.servLoc = serviceLocator;
-			this.fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			this.lcmMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 			this.wsEn = wsEn;
 		}
@@ -41,14 +42,14 @@ namespace LfMerge.Core.DataConverters
 
 		public ICmPossibilityList GetParentListForField(int flid)
 		{
-			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+			Guid parentListGuid = lcmMetaData.GetFieldListRoot(flid);
 			if (parentListGuid == Guid.Empty)
 			{
-				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
-				logger.Warning("No possibility list found for custom field {0} (field ID {1}); it will not be present in FDO", fieldName ?? "(name not found)", flid);
+				string fieldName = lcmMetaData.GetFieldNameOrNull(flid);
+				logger.Warning("No possibility list found for custom field {0} (field ID {1}); it will not be present in LCM", fieldName ?? "(name not found)", flid);
 				return null;
 				// TODO: If this happens, we're probably importing a newly-created possibility list, so we should
-				// probably create it in FDO using ConvertMongoToFdoOptionList. Implementation needed.
+				// probably create it in LCM using ConvertMongoToLcmOptionList. Implementation needed.
 			}
 			return servLoc.GetInstance<ICmPossibilityListRepository>().GetObject(parentListGuid);
 		}
@@ -57,7 +58,7 @@ namespace LfMerge.Core.DataConverters
 		/// Set custom field data for one field (specified by owner HVO and field ID).
 		/// </summary>
 		/// <returns><c>true</c>, if custom field data was set, <c>false</c> otherwise (e.g., if value hadn't changed,
-		/// or value was null, or field type was one not implemented in FDO, such as CellarPropertyType.Float).</returns>
+		/// or value was null, or field type was one not implemented in LCM, such as CellarPropertyType.Float).</returns>
 		/// <param name="hvo">HVO of object whose field we're setting.</param>
 		/// <param name="flid">Field ID of custom field to set.</param>
 		/// <param name="value">Field's new value (as returned by GetCustomFieldData).</param>
@@ -81,13 +82,13 @@ namespace LfMerge.Core.DataConverters
 					fieldGuids.Add(ParseGuidOrDefault(guidOrGuids.AsString));
 			}
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
-			CellarPropertyType fieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-			string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+			CellarPropertyType fieldType = (CellarPropertyType)lcmMetaData.GetFieldType(flid);
+			string fieldName = lcmMetaData.GetFieldNameOrNull(flid);
 //			logger.Debug("Custom field named {0} has type {1}", fieldName, fieldType.ToString());
 			if (fieldName == null)
 				return false;
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in LCM are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -134,29 +135,29 @@ namespace LfMerge.Core.DataConverters
 
 			case CellarPropertyType.OwningAtomic:
 				{
-					// Custom field is a MultiparagraphText, which is an IStText object in FDO
+					// Custom field is a MultiparagraphText, which is an IStText object in LCM
 					IStTextRepository textRepo = servLoc.GetInstance<IStTextRepository>();
 					Guid fieldGuid = fieldGuids.FirstOrDefault();
 					IStText text;
 					if (!textRepo.TryGetObject(fieldGuid, out text))
 					{
 						int currentFieldContentsHvo = data.get_ObjectProp(hvo, flid);
-						if (currentFieldContentsHvo != FdoCache.kNullHvo)
+						if (currentFieldContentsHvo != LcmCache.kNullHvo)
 							text = (IStText)cache.GetAtomicPropObject(currentFieldContentsHvo);
 						else
 						{
-							// NOTE: I don't like the "magic" -2 number below, but FDO doesn't seem to have an enum for this. 2015-11 RM
+							// NOTE: I don't like the "magic" -2 number below, but LCM doesn't seem to have an enum for this. 2015-11 RM
 							int newStTextHvo = data.MakeNewObject(cache.GetDestinationClass(flid), hvo, flid, -2);
 							text = (IStText)cache.GetAtomicPropObject(newStTextHvo);
 						}
 					}
 					// Shortcut: if text contents haven't changed, we don't want to change anything at all
-					BsonValue currentFdoTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
-						servLoc.WritingSystemManager, fdoMetaData, cache.DefaultUserWs);
-					if ((currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null) &&
+					BsonValue currentLcmTextContents = ConvertUtilities.GetCustomStTextValues(text, flid,
+						servLoc.WritingSystemManager, lcmMetaData, cache.DefaultUserWs);
+					if ((currentLcmTextContents == BsonNull.Value || currentLcmTextContents == null) &&
 						(value == BsonNull.Value || value == null))
 						return false;
-					if (currentFdoTextContents != null && currentFdoTextContents.Equals(value))
+					if (currentLcmTextContents != null && currentLcmTextContents.Equals(value))
 					{
 						// No changes needed.
 						return false;
@@ -165,14 +166,14 @@ namespace LfMerge.Core.DataConverters
 					// inside the doc, so we'll need to construct a new doc for the StTextValues.
 					BsonDocument doc = value.AsBsonDocument;
 					LfMultiParagraph multiPara = BsonSerializer.Deserialize<LfMultiParagraph>(doc);
-					// Now we have another way to check for "old value and new value were the same": if the FDO multiparagraph was empty,
+					// Now we have another way to check for "old value and new value were the same": if the LCM multiparagraph was empty,
 					// GetCustomStTextValues will have returned null -- so if this multiPara has no paragraphs, that's also an unchanged situation
 					if ((multiPara.Paragraphs == null || multiPara.Paragraphs.Count <= 0) &&
-					    (currentFdoTextContents == BsonNull.Value || currentFdoTextContents == null))
+					    (currentLcmTextContents == BsonNull.Value || currentLcmTextContents == null))
 						return false;
 					int wsId;
 					if (multiPara.InputSystem == null)
-						wsId = fdoMetaData.GetFieldWs(flid);
+						wsId = lcmMetaData.GetFieldWs(flid);
 					else
 						wsId = servLoc.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
@@ -202,7 +203,7 @@ namespace LfMerge.Core.DataConverters
 					string nameHierarchy = valueAsLfStringField.Value;
 					if (nameHierarchy == null)
 						return false;
-					int fieldWs = fdoMetaData.GetFieldWs(flid);
+					int fieldWs = lcmMetaData.GetFieldWs(flid);
 					// Oddly, this can return 0 for some custom fields. TODO: Find out why: that seems like it would be an error.
 					if (fieldWs == 0)
 						fieldWs = cache.DefaultUserWs; // TODO: Investigate, because this should probably be wsEn instead so that we can create correct keys.
@@ -224,8 +225,8 @@ namespace LfMerge.Core.DataConverters
 				{
 					if (value == null || value == BsonNull.Value)
 					{
-						// Can't write null to a collection or sequence in FDO; it's forbidden. So data.SetObjProp(hvo, flid, FdoCache.kNullHvo) will not work.
-						// Instead, we delete all items from the existing collection or sequence, and thus store an empty coll/seq in FDO.
+						// Can't write null to a collection or sequence in LCM; it's forbidden. So data.SetObjProp(hvo, flid, LcmCache.kNullHvo) will not work.
+						// Instead, we delete all items from the existing collection or sequence, and thus store an empty coll/seq in LCM.
 						int oldSize = data.get_VecSize(hvo, flid);
 						if (oldSize == 0)
 						{
@@ -238,7 +239,7 @@ namespace LfMerge.Core.DataConverters
 							return true;
 						}
 					}
-					int fieldWs = fdoMetaData.GetFieldWs(flid);
+					int fieldWs = lcmMetaData.GetFieldWs(flid);
 					// TODO: Investigate why this is sometimes coming back as 0 instead of as a real writing system ID
 					if (fieldWs == 0)
 						fieldWs = cache.DefaultUserWs;
@@ -255,7 +256,7 @@ namespace LfMerge.Core.DataConverters
 					// TODO: This is all kind of ugly, and WAY too long for one screen. I could put it in its own function,
 					// but there's really no real gain from that, as it simply moves the logic even further away from where
 					// it needs to be. There's not really a *good* way to achieve simplicity with this code design, unfortunately.
-					// The only thing that would be close to simple would be to call some functions from the FdoToMongo option list
+					// The only thing that would be close to simple would be to call some functions from the LcmToMongo option list
 					// converters, and that's pulling in code from the "wrong" direction, which has its own ugliness. Ugh.
 
 					HashSet<string> keysFromLF = new HashSet<string>(valueAsStringArray.Values);
@@ -268,7 +269,7 @@ namespace LfMerge.Core.DataConverters
 							poss = servLoc.GetInstance<ICmPossibilityRepository>().GetObject(guid);
 							if (poss == null)
 							{
-								// TODO: Decide what to do with possibilities deleted from FDO
+								// TODO: Decide what to do with possibilities deleted from LCM
 								key = "";
 							}
 							else
@@ -287,12 +288,12 @@ namespace LfMerge.Core.DataConverters
 						}
 						keysFromLF.Remove(key);
 						// Ignoring return value (HashSet.Remove returns false if the key wasn't present), because false could mean one of two things:
-						// 1. The CmPossibility had its English abbreviation changed in FDO, but LF doesn't know this yet.
+						// 1. The CmPossibility had its English abbreviation changed in LCM, but LF doesn't know this yet.
 						//    If this is the case, the LF key won't match, but the GUID will still match. So we might end up creating
-						//    duplicate entries below with the FindOrCreatePossibility. TODO: Need to verify that FDO->LF possibility lists
+						//    duplicate entries below with the FindOrCreatePossibility. TODO: Need to verify that LCM->LF possibility lists
 						//    get updated correctly if renames happen! (... Or use the OptionList converters, that's what they were for.)
-						// 2. The CmPossibility was just created in LF and isn't in FDO yet. In which case we should have been using the
-						//    OptionList converters, which would hopefully have handled creating the ICmPossibility instane in FDO.
+						// 2. The CmPossibility was just created in LF and isn't in LCM yet. In which case we should have been using the
+						//    OptionList converters, which would hopefully have handled creating the ICmPossibility instane in LCM.
 						// Either way, we can't really use that fact later, since we can't be certain if the possibility was renamed or created.
 					}
 					// Any remaining keysFromLF strings did not have corresponding GUIDs in Mongo.
@@ -314,7 +315,7 @@ namespace LfMerge.Core.DataConverters
 					// 	String.Join(", ", fieldObjs.Select(poss => poss.AbbrAndName))
 					// );
 					// Step 2: Remove any objects from the "old" list that weren't in the "new" list
-					// We have to look them up by HVO because that's the only public API available in FDO
+					// We have to look them up by HVO because that's the only public API available in LCM
 					// Following logic inspired by XmlImportData.CopyCustomFieldData in FieldWorks source
 					int[] oldHvosArray = data.VecProp(hvo, flid);
 					int[] newHvosArray = fieldObjs.Select(poss => poss.Hvo).ToArray();
@@ -351,7 +352,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
-					int wsIdForField = fdoMetaData.GetFieldWs(flid);
+					int wsIdForField = lcmMetaData.GetFieldWs(flid);
 					string wsStrForField = servLoc.WritingSystemFactory.GetStrFromWs(wsIdForField);
 					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
 					string foundWs = kv.Key ?? string.Empty;
@@ -360,7 +361,7 @@ namespace LfMerge.Core.DataConverters
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);
-					ITsString newValue = ConvertMongoToFdoTsStrings.SpanStrToTsString(foundData, foundWsId, servLoc.WritingSystemFactory);
+					ITsString newValue = ConvertMongoToLcmTsStrings.SpanStrToTsString(foundData, foundWsId, servLoc.WritingSystemFactory);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
 						return false;
 					else
@@ -381,13 +382,13 @@ namespace LfMerge.Core.DataConverters
 			if (customFieldValues == null) return;
 
 			IEnumerable<int> customFieldIds =
-				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
+				lcmMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
 				.Where(flid => cache.GetIsCustomField(flid));
 
 			var remainingFieldNames = new HashSet<string>(customFieldValues.Select(elem => elem.Name));
 			foreach (int flid in customFieldIds)
 			{
-				string fieldName = fdoMetaData.GetFieldNameOrNull(flid);
+				string fieldName = lcmMetaData.GetFieldNameOrNull(flid);
 				if (fieldName == null)
 					return;
 				fieldName = ConvertUtilities.NormalizedFieldName(fieldName, objectType);
@@ -404,12 +405,12 @@ namespace LfMerge.Core.DataConverters
 			}
 			foreach (string fieldName in remainingFieldNames)
 			{
-				// TODO: These are NEW CUSTOM FIELDS! Will need to create them in FDO, then do:
+				// TODO: These are NEW CUSTOM FIELDS! Will need to create them in LCM, then do:
 				// BsonValue fieldValue = customFieldValues.GetValue(fieldName, BsonNull.Value);
 				// BsonValue fieldGuidOrGuids = customFieldGuids.GetValue(fieldName, BsonNull.Value);
 				// SetCustomFieldData(cmObj.Hvo, flid, fieldValue, fieldGuidOrGuids);
 				// Above lines commented out until we can create new custom fields correctly. 2015-11 RM
-				logger.Warning("Custom field {0} from LF skipped, because we're not yet creating new custom fields in FDO", fieldName);
+				logger.Warning("Custom field {0} from LF skipped, because we're not yet creating new custom fields in LCM", fieldName);
 			}
 		}
 	}

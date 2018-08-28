@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000072</DatabaseVersion>
     <ProjectGuid>{3152A333-A741-4EE7-A791-DFE0E4C5E2AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core.Tests</RootNamespace>
@@ -68,18 +68,61 @@
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000072|AnyCPU' ">
+    <DatabaseVersion>7000072</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000072</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bugsnag, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\packages\Bugsnag.2.2.0\lib\net45\Bugsnag.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="icu.net, Version=2.5.1.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
+      <HintPath>..\..\packages\icu.net.2.5.1\lib\net451\icu.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
       <HintPath>..\..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\..\lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Core.Tests, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\SIL.LCModel.Core.Tests.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Utils, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\SIL.LCModel.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Lexicon">
+      <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.WritingSystems">
+      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
@@ -117,6 +160,18 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000072'">
+    <Reference Include="SIL.LCModel">
+      <HintPath>..\..\lib\SIL.LCModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Core">
+      <HintPath>..\..\lib\SIL.LCModel.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
     <Reference Include="FDO">
@@ -145,13 +200,12 @@
     <Compile Include="TestEnvironmentAttribute.cs" />
     <Compile Include="SampleData.cs" />
     <Compile Include="Settings\LfMergeSettingsTests.cs" />
-    <Compile Include="GlobalTestFixture.cs" />
-    <Compile Include="Fdo\FdoTestBase.cs" />
-    <Compile Include="Fdo\RoundTripBase.cs" />
-    <Compile Include="Fdo\RoundTripTests.cs" />
-    <Compile Include="Fdo\TransferMongoToFdoActionTests.cs" />
-    <Compile Include="Fdo\TransferFdoToMongoActionTests.cs" />
-    <Compile Include="Fdo\DataConverters\ConvertFdoToMongoCustomFieldTests.cs" />
+    <Compile Include="Lcm\LcmTestBase.cs" />
+    <Compile Include="Lcm\RoundTripBase.cs" />
+    <Compile Include="Lcm\RoundTripTests.cs" />
+    <Compile Include="Lcm\TransferMongoToLcmActionTests.cs" />
+    <Compile Include="Lcm\TransferLcmToMongoActionTests.cs" />
+    <Compile Include="Lcm\DataConverters\ConvertLcmToMongoCustomFieldTests.cs" />
     <Compile Include="LanguageDepotMock.cs" />
     <Compile Include="Actions\SynchronizeActionTests.cs" />
     <Compile Include="Actions\EnsureCloneActionTests.cs" />
@@ -162,7 +216,7 @@
     <Compile Include="Actions\EnsureCloneActionBridgeIntegrationTests.cs" />
     <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
     <Compile Include="MercurialServer.cs" />
-    <Compile Include="Fdo\DataConverters\ConvertMongoToFdoTsStringsTests.cs" />
+    <Compile Include="Lcm\DataConverters\ConvertMongoToLcmTsStringsTests.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelperTests.cs" />
     <Compile Include="Tools\JanitorTests.cs" />
   </ItemGroup>
@@ -177,6 +231,10 @@
     <Folder Include="Actions\Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FixFwData\FixFwData.csproj">
+      <Project>{ff82cec0-353a-4e79-ab7e-6afef1f15ec2}</Project>
+      <Name>FixFwData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj">
       <Project>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</Project>
       <Name>LfMerge.Core</Name>

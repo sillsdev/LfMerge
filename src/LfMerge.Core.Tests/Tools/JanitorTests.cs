@@ -1,7 +1,6 @@
 // // Copyright (c) 2018 SIL International
 // // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
-using LfMerge.Core.Logging;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Tools;
 using NUnit.Framework;

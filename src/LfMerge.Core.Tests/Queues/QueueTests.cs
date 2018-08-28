@@ -1,12 +1,11 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using System;
+
 using System.IO;
 using System.Threading;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
-using SIL.TestUtilities;
 using NUnit.Framework;
 
 namespace LfMerge.Core.Tests.Queues
@@ -265,11 +264,11 @@ namespace LfMerge.Core.Tests.Queues
 		}
 
 		[TestCase(ActionNames.None, QueueNames.None)]
-		[TestCase(ActionNames.TransferMongoToFdo, QueueNames.Synchronize)]
+		[TestCase(ActionNames.TransferMongoToLcm, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Commit, QueueNames.None)]
 		[TestCase(ActionNames.Synchronize, QueueNames.Synchronize)]
 		[TestCase(ActionNames.Edit, QueueNames.None)]
-		[TestCase(ActionNames.TransferFdoToMongo, QueueNames.None)]
+		[TestCase(ActionNames.TransferLcmToMongo, QueueNames.None)]
 		public void GetQueueFromAction(ActionNames action, QueueNames expectedQueue)
 		{
 			Assert.That(Queue.GetQueueForAction(action), Is.EqualTo(expectedQueue));

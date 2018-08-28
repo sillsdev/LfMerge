@@ -1,15 +1,15 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.CoreImpl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.Text;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertFdoToMongoTsStrings
+	public class ConvertLcmToMongoTsStrings
 	{
 		public static string HtmlEncode(string decoded)
 		{

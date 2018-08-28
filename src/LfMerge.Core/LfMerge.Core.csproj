@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000072</DatabaseVersion>
     <ProjectGuid>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LfMerge.Core</RootNamespace>
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -28,12 +28,11 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>FW8_COMPAT;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
@@ -72,25 +71,58 @@
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000072|AnyCPU' ">
+    <DatabaseVersion>7000072</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000072</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bugsnag, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\packages\Bugsnag.2.2.0\lib\net45\Bugsnag.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="icu.net, Version=2.3.3.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
-      <HintPath>..\..\packages\icu.net.2.3.3\lib\net40\icu.net.dll</HintPath>
+    <Reference Include="icu.net, Version=2.5.1.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
+      <HintPath>..\..\packages\icu.net.2.5.1\lib\net451\icu.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
       <HintPath>..\..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\..\lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SIL.Core, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2">
+    <Reference Include="SIL.Core">
       <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Lexicon">
+      <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.WritingSystems">
+      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Autofac">
@@ -113,7 +145,22 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000072'">
+    <Reference Include="SIL.LCModel">
+      <HintPath>..\..\lib\SIL.LCModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Core">
+      <HintPath>..\..\lib\SIL.LCModel.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Utils">
+      <HintPath>..\..\lib\SIL.LCModel.Utils.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
     <Reference Include="FDO">
@@ -150,22 +197,22 @@
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="Actions\SynchronizeAction.cs" />
-    <Compile Include="Actions\TransferFdoToMongoAction.cs" />
-    <Compile Include="Actions\TransferMongoToFdoAction.cs" />
+    <Compile Include="Actions\TransferLcmToMongoAction.cs" />
+    <Compile Include="Actions\TransferMongoToLcmAction.cs" />
     <Compile Include="Actions\Infrastructure\ChorusHelper.cs" />
     <Compile Include="Actions\Infrastructure\LfMergeBridgeServices.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoComments.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoCustomField.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoLexicon.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoOptionList.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoPartsOfSpeech.cs" />
-    <Compile Include="DataConverters\ConvertFdoToMongoTsStrings.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoComments.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoCustomField.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoLexicon.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoOptionList.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoPartsOfSpeech.cs" />
-    <Compile Include="DataConverters\ConvertMongoToFdoTsStrings.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoComments.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoCustomField.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoLexicon.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoOptionList.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoPartsOfSpeech.cs" />
+    <Compile Include="DataConverters\ConvertLcmToMongoTsStrings.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmComments.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmCustomField.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmLexicon.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmOptionList.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmPartsOfSpeech.cs" />
+    <Compile Include="DataConverters\ConvertMongoToLcmTsStrings.cs" />
     <Compile Include="DataConverters\ConvertUtilities.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalItem.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalOptionListSource.cs" />
@@ -173,7 +220,7 @@
     <Compile Include="DataConverters\CanonicalSources\CanonicalPartOfSpeechSource.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainItem.cs" />
     <Compile Include="DataConverters\CanonicalSources\CanonicalSemanticDomainSource.cs" />
-    <Compile Include="FieldWorks\ConsoleFdoUi.cs" />
+    <Compile Include="FieldWorks\ConsoleLcmUi.cs" />
     <Compile Include="FieldWorks\FwProject.cs" />
     <Compile Include="FieldWorks\PartOfSpeechMasterList.cs" />
     <Compile Include="FieldWorks\ProjectIdentifier.cs" />

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.Logging;
@@ -6,15 +6,14 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using SIL.Progress;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Actions
 {
-	public class TransferMongoToFdoAction: Action
+	public class TransferMongoToLcmAction: Action
 	{
-		private FdoCache _cache;
-		private IFdoServiceLocator _servLoc;
+		private LcmCache _cache;
+		private ILcmServiceLocator _servLoc;
 		private IMongoConnection _connection;
 		private MongoProjectRecordFactory _projectRecordFactory;
 		private ILfProject _lfProject;
@@ -24,7 +23,7 @@ namespace LfMerge.Core.Actions
 
 		public EntryCounts EntryCounts { get; set; }
 
-		public TransferMongoToFdoAction(LfMergeSettings settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory, EntryCounts entryCounts) : base(settings, logger)
+		public TransferMongoToLcmAction(LfMergeSettings settings, ILogger logger, IMongoConnection conn, MongoProjectRecordFactory factory, EntryCounts entryCounts) : base(settings, logger)
 		{
 			EntryCounts = entryCounts;
 			_connection = conn;
@@ -60,7 +59,7 @@ namespace LfMerge.Core.Actions
 			_cache = project.FieldWorksProject.Cache;
 			if (_cache == null)
 			{
-				Logger.Error("Failed to find the FDO cache!");
+				Logger.Error("Failed to find the LCM cache!");
 				return;
 			}
 
@@ -71,7 +70,7 @@ namespace LfMerge.Core.Actions
 				return;
 			}
 
-			var converter = new ConvertMongoToFdoLexicon(Settings, project, Logger, Progress, _connection, _projectRecord, EntryCounts);
+			var converter = new ConvertMongoToLcmLexicon(Settings, project, Logger, Progress, _connection, _projectRecord, EntryCounts);
 			converter.RunConversion();
 		}
 

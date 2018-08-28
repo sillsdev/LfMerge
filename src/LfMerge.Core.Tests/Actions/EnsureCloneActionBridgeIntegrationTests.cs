@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.IO;
 using Autofac;
@@ -8,8 +8,8 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
+using SIL.LCModel;
 using SIL.TestUtilities;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests.Actions
 {
@@ -79,7 +79,7 @@ namespace LfMerge.Core.Tests.Actions
 			}
 		}
 
-		private static string ModelVersion
+		private static int ModelVersion
 		{
 			get
 			{
@@ -105,7 +105,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone is not a FLEx project"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
-			Assert.That(ModelVersion, Is.Null);
+			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
 
@@ -116,9 +116,9 @@ namespace LfMerge.Core.Tests.Actions
 			// Create a hg repo that doesn't contain a branch for the current model version
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7000060"); // simulate a too old version
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7000060); // simulate a too old version
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-			MagicStrings.SetMinimalModelVersion("7000068");
+			MagicStrings.SetMinimalModelVersion(7000068);
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);
@@ -128,7 +128,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining(
 				"clone model version '7000060' less than minimal supported model version '7000068'."));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
-			Assert.That(ModelVersion, Is.Null);
+			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
 
@@ -139,16 +139,16 @@ namespace LfMerge.Core.Tests.Actions
 			// Create a hg repo that doesn't contain a branch for the current model version
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7000065"); // simulate a too old version
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7000065); // simulate a too old version
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-			MagicStrings.SetMinimalModelVersion("7000065");
+			MagicStrings.SetMinimalModelVersion(7000065);
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONING));
-			Assert.That(ModelVersion, Is.EqualTo("7000065"));
+			Assert.That(ModelVersion, Is.EqualTo(7000065));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
 
@@ -159,7 +159,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Create a hg repo that doesn't contain a branch for the current model version
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 
 			// Execute
 			_EnsureCloneAction.Run(_lfProject);
@@ -167,7 +167,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("new repository with no commits"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
-			Assert.That(ModelVersion, Is.Null);
+			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
 
@@ -177,9 +177,9 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, "7100000");
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7100000);
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "on branch");
 
 			// Execute
@@ -188,7 +188,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone has higher model"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
-			Assert.That(ModelVersion, Is.Null);
+			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
 		}
 
@@ -198,7 +198,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
 
 			// Execute
@@ -207,7 +207,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
-			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
+			Assert.That(ModelVersion, Is.EqualTo(LcmCache.ModelVersion));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
 
@@ -218,7 +218,7 @@ namespace LfMerge.Core.Tests.Actions
 			var lDProjectFolderPath = LanguageDepotMock.ProjectFolderPath;
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, FdoCache.ModelVersion);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "on branch");
 
 			// Execute
@@ -229,7 +229,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
 			Assert.That(MercurialTestHelper.GetUsernameFromHgrc(_lfProject.ProjectDir),
 				Is.EqualTo("Language Forge"));
-			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
+			Assert.That(ModelVersion, Is.EqualTo(LcmCache.ModelVersion));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
 
@@ -249,7 +249,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			Assert.That(_env.Logger.GetErrors(), Is.Empty);
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.CLONED));
-			Assert.That(ModelVersion, Is.EqualTo(FdoCache.ModelVersion));
+			Assert.That(ModelVersion, Is.EqualTo(LcmCache.ModelVersion));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.True);
 		}
 	}

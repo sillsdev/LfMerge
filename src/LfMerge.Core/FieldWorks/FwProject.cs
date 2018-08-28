@@ -1,13 +1,12 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
 using System.Threading;
 using System.Xml;
 using LfMerge.Core.Settings;
-using SIL.CoreImpl;
-using SIL.FieldWorks.FDO;
-using SIL.Utils;
+using SIL.LCModel;
+using SIL.LCModel.Utils;
 
 namespace LfMerge.Core.FieldWorks
 {
@@ -17,14 +16,14 @@ namespace LfMerge.Core.FieldWorks
 	public class FwProject: IDisposable
 	{
 		private readonly IThreadedProgress _progress = new ThreadedProgress();
-		private readonly IFdoUI _fdoUi;
+		private readonly ILcmUI _lcmUi;
 		private readonly ProjectIdentifier _project;
 
 		public FwProject(LfMergeSettings settings, string database)
 		{
-			_project = new ProjectIdentifier(settings.FdoDirectorySettings, database);
-			_fdoUi = new ConsoleFdoUi(_progress.SynchronizeInvoke);
-			Cache = TryGetFdoCache();
+			_project = new ProjectIdentifier(settings.LcmDirectorySettings, database);
+			_lcmUi = new ConsoleLcmUi(_progress.SynchronizeInvoke);
+			Cache = TryGetLcmCache();
 			if (Cache != null)
 			{
 				ServiceLocator = new FwServiceLocatorCache(Cache.ServiceLocator);
@@ -73,49 +72,49 @@ namespace LfMerge.Core.FieldWorks
 
 		public static bool AllowDataMigration { get; set; }
 
-		public FdoCache Cache { get; private set; }
+		public LcmCache Cache { get; private set; }
 
 		public FwServiceLocatorCache ServiceLocator { get; private set; }
 
-		private FdoCache TryGetFdoCache()
+		private LcmCache TryGetLcmCache()
 		{
-			FdoCache fdoCache = null;
+			LcmCache lcmCache = null;
 			var path = _project.Path;
 			if (!File.Exists(path))
 			{
 				return null;
 			}
 
-			var settings = new FdoSettings {DisableDataMigration = !AllowDataMigration};
+			var settings = new LcmSettings {DisableDataMigration = !AllowDataMigration};
 
 			try
 			{
-				fdoCache = FdoCache.CreateCacheFromExistingData(
-					_project, Thread.CurrentThread.CurrentUICulture.Name, _fdoUi,
-					_project.FdoDirectories, settings, _progress);
+				lcmCache = LcmCache.CreateCacheFromExistingData(
+					_project, Thread.CurrentThread.CurrentUICulture.Name, _lcmUi,
+					_project.LcmDirectories, settings, _progress);
 			}
-			catch (FdoDataMigrationForbiddenException)
+			catch (LcmDataMigrationForbiddenException)
 			{
-				MainClass.Logger.Error("FDO: Incompatible version (can't migrate data)");
+				MainClass.Logger.Error("LCM: Incompatible version (can't migrate data)");
 				return null;
 			}
-			catch (FdoNewerVersionException)
+			catch (LcmNewerVersionException)
 			{
-				MainClass.Logger.Error("FDO: Incompatible version (version number newer than expected)");
+				MainClass.Logger.Error("LCM: Incompatible version (version number newer than expected)");
 				return null;
 			}
-			catch (FdoFileLockedException)
+			catch (LcmFileLockedException)
 			{
-				MainClass.Logger.Error("FDO: Access denied");
+				MainClass.Logger.Error("LCM: Access denied");
 				return null;
 			}
-			catch (StartupException)
+			catch (LcmInitializationException e)
 			{
-				MainClass.Logger.Error("FDO: Unknown error");
+				MainClass.Logger.Error("LCM: Unknown error: {0}", e.Message);
 				return null;
 			}
 
-			return fdoCache;
+			return lcmCache;
 		}
 
 		public static string GetModelVersion(string project)

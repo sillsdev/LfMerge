@@ -1,25 +1,24 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using Autofac;
-using LfMerge.Core.DataConverters;
-using LfMerge.Core.LanguageForge.Model;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using NUnit.Framework;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Infrastructure;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.Core.DataConverters;
+using LfMerge.Core.LanguageForge.Model;
+using MongoDB.Bson;
+using NUnit.Framework;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Infrastructure;
 
-namespace LfMerge.Core.Tests.Fdo
+namespace LfMerge.Core.Tests.Lcm
 {
 	[TestFixture, Explicit, Category("LongRunning")]
 	public class RoundTripTests : RoundTripBase
 	{
 		[Test]
-		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepOriginalValuesInEntries()
+		public void RoundTrip_LcmToMongoToLcmToMongo_ShouldKeepOriginalValuesInEntries()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -32,40 +31,40 @@ namespace LfMerge.Core.Tests.Fdo
 			BsonDocument customFieldValues = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
-			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			// We no longer populate the semantic domain optionlist in Lcm->Mongo, so we need to populate it here
 			var data = new SampleData();
 			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
 			// Save original Mongo data
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			LfLexEntry originalLfEntry = originalData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 			Assert.That(originalLfEntry, Is.Not.Null);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
 
 			// Verify
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
-			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			IDictionary<string, Tuple<string, string>> differencesByName = GetLcmDifferences(cache, fieldValues, fieldValuesAfterTest);
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName, Is.Empty);
 			Assert.That(customFieldValues, Is.EqualTo(customFieldValuesAfterTest));
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -76,7 +75,7 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInSenses()
+		public void RoundTrip_LcmToMongoToLcm_ShouldKeepOriginalValuesInSenses()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -90,20 +89,20 @@ namespace LfMerge.Core.Tests.Fdo
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
-			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			// We no longer populate the semantic domain optionlist in Lcm->Mongo, so we need to populate it here
 			var data = new SampleData();
 			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
-			sutMongoToFdo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
 
 			// Verify
 			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
-			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
-			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+			var differencesByName1 = GetLcmDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetLcmDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
 			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
@@ -114,7 +113,7 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdo_ShouldKeepOriginalValuesInExampleSentences()
+		public void RoundTrip_LcmToMongoToLcm_ShouldKeepOriginalValuesInExampleSentences()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -132,15 +131,15 @@ namespace LfMerge.Core.Tests.Fdo
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
-			sutMongoToFdo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
 
 			// Verify
 			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
-			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
-			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+			var differencesByName1 = GetLcmDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetLcmDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
 			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
@@ -151,7 +150,7 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInEntries()
+		public void RoundTrip_LcmToMongoToLcmToMongo_ShouldKeepModifiedValuesInEntries()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -169,10 +168,10 @@ namespace LfMerge.Core.Tests.Fdo
 			IDictionary<int, object> fieldValues = GetFieldValues(cache, entry);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
-					entry.CitationForm.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+					entry.CitationForm.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToLcm");
 				});
 
 			// Save original mongo data
@@ -186,25 +185,25 @@ namespace LfMerge.Core.Tests.Fdo
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 
-			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			// We no longer populate the semantic domain optionlist in Lcm->Mongo, so we need to populate it here
 			var data = new SampleData();
 			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			string changedLexemeDuringUpdate = "This value should be overwritten by FdoToMongo";
+			SutMongoToLcm.Run(lfProject);
+			string changedLexemeDuringUpdate = "This value should be overwritten by LcmToMongo";
 			originalLfEntry.Lexeme[vernacularWS].Value = changedLexemeDuringUpdate;
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
-			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToLcm"));
 			Assert.That(entry.CitationForm.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value with <angle> brackets & ampersands for this test"));
 
 			BsonDocument customFieldValuesAfterTest = GetCustomFieldValues(cache, entry, "entry");
 			IDictionary<int, object> fieldValuesAfterTest = GetFieldValues(cache, entry);
-			IDictionary<string, Tuple<string, string>> differencesByName = GetFdoDifferences(cache, fieldValues, fieldValuesAfterTest);
+			IDictionary<string, Tuple<string, string>> differencesByName = GetLcmDifferences(cache, fieldValues, fieldValuesAfterTest);
 			if (differencesByName.ContainsKey("DateModified"))
 				differencesByName.Remove("DateModified");
 			PrintDifferences(differencesByName);
@@ -214,7 +213,7 @@ namespace LfMerge.Core.Tests.Fdo
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -231,7 +230,7 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInSenses()
+		public void RoundTrip_LcmToMongoToLcmToMongo_ShouldKeepModifiedValuesInSenses()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -250,16 +249,16 @@ namespace LfMerge.Core.Tests.Fdo
 			BsonDocument[] customFieldValues = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValues = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
 
-			// We no longer populate the semantic domain optionlist in Fdo->Mongo, so we need to populate it here
+			// We no longer populate the semantic domain optionlist in Lcm->Mongo, so we need to populate it here
 			var data = new SampleData();
 			_conn.UpdateMockOptionList(data.bsonSemDomData);
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
-					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
-					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+					senses[0].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToLcm");
+					senses[1].AnthroNote.SetAnalysisDefaultWritingSystem("This value should be overwritten by MongoToLcm");
 				});
 
 			// Save original mongo data
@@ -277,23 +276,23 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			string changedDefinitionDuringUpdate = "This value should be overwritten by FdoToMongo";
+			SutMongoToLcm.Run(lfProject);
+			string changedDefinitionDuringUpdate = "This value should be overwritten by LcmToMongo";
 			originalEntry.Senses[0].Definition["en"].Value = changedDefinitionDuringUpdate;
 			originalEntry.Senses[1].Definition["en"].Value = changedDefinitionDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Verify
-			Assert.That(senses[0].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
-			Assert.That(senses[1].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(senses[0].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToLcm"));
+			Assert.That(senses[1].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToLcm"));
 			Assert.That(senses[0].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
 			Assert.That(senses[1].AnthroNote.AnalysisDefaultWritingSystem.Text, Is.EqualTo("Second value for this test"));
 
 			BsonDocument[] customFieldValuesAfterTest = senses.Select(sense => GetCustomFieldValues(cache, sense, "senses")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = senses.Select(sense => GetFieldValues(cache, sense)).ToArray();
-			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
-			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+			var differencesByName1 = GetLcmDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetLcmDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
 			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
@@ -303,13 +302,13 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -339,7 +338,7 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_FdoToMongoToFdoToMongo_ShouldKeepModifiedValuesInExample()
+		public void RoundTrip_LcmToMongoToLcmToMongo_ShouldKeepModifiedValuesInExample()
 		{
 			// Setup
 			var lfProject = _lfProj;
@@ -362,15 +361,15 @@ namespace LfMerge.Core.Tests.Fdo
 			IDictionary<int, object>[] fieldValues = examples.Select(example => GetFieldValues(cache, example)).ToArray();
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			entry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
 			senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
 			examples = senseWithExamples.ExamplesOS.ToArray();
 			Assert.That(examples.Length, Is.EqualTo(2));
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", cache.ActionHandlerAccessor, () =>
 				{
-					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
-					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToFdo");
+					examples[0].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToLcm");
+					examples[1].Example.SetVernacularDefaultWritingSystem("This value should be overwritten by MongoToLcm");
 				});
 
 			// Save original mongo data
@@ -389,8 +388,8 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			string changedTranslationDuringUpdate = "This value should be overwritten by FdoToMongo";
+			SutMongoToLcm.Run(lfProject);
+			string changedTranslationDuringUpdate = "This value should be overwritten by LcmToMongo";
 			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedTranslationDuringUpdate;
 			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedTranslationDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -401,17 +400,17 @@ namespace LfMerge.Core.Tests.Fdo
 			senseWithExamples = Enumerable.First(entry.SensesOS, sense => sense.ExamplesOS.Count > 0);
 			examples = senseWithExamples.ExamplesOS.ToArray();
 			Assert.That(examples.Length, Is.EqualTo(2));
-			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
-			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToFdo"));
+			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToLcm"));
+			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.Not.EqualTo("This value should be overwritten by MongoToLcm"));
 			Assert.That(examples[0].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("New value for this test"));
 			Assert.That(examples[1].Example.VernacularDefaultWritingSystem.Text, Is.EqualTo("Second value with < and & for this test"));
-			string spanText = ConvertFdoToMongoTsStrings.TextFromTsString(examples[1].Example.VernacularDefaultWritingSystem, cache.WritingSystemFactory);
+			string spanText = ConvertLcmToMongoTsStrings.TextFromTsString(examples[1].Example.VernacularDefaultWritingSystem, cache.WritingSystemFactory);
 			Assert.That(spanText, Is.EqualTo("Second value with &lt; and &amp; for this test"));
 
 			BsonDocument[] customFieldValuesAfterTest = examples.Select(example => GetCustomFieldValues(cache, example, "examples")).ToArray();
 			IDictionary<int, object>[] fieldValuesAfterTest = examples.Select(example => GetFieldValues(cache, example)).ToArray();
-			var differencesByName1 = GetFdoDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
-			var differencesByName2 = GetFdoDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
+			var differencesByName1 = GetLcmDifferences(cache, fieldValues[0], fieldValuesAfterTest[0]);
+			var differencesByName2 = GetLcmDifferences(cache, fieldValues[1], fieldValuesAfterTest[1]);
 
 			PrintDifferences(differencesByName1);
 			Assert.That(differencesByName1, Is.Empty);
@@ -421,13 +420,13 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(customFieldValues[1], Is.EqualTo(customFieldValuesAfterTest[1]));
 
 			// Exercise
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntry = receivedData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(lfEntry, Is.Not.Null);
@@ -461,13 +460,13 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewEntry()
+		public void RoundTrip_MongoToLcmToMongo_ShouldAddAndDeleteNewEntry()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
-			Assert.That(entryRepo.Count, Is.EqualTo(FdoTestBase.OriginalNumOfFdoEntries));
+			Assert.That(entryRepo.Count, Is.EqualTo(LcmTestBase.OriginalNumOfLcmEntries));
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
@@ -483,18 +482,18 @@ namespace LfMerge.Core.Tests.Fdo
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries+1));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries+1));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries+1));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries+1));
 
 			LfLexEntry entry = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
@@ -502,7 +501,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(newEntry.ToBsonDocument(), entry.ToBsonDocument());
-			// FDO-to-Mongo direction populates LiftID even if it was null in original,
+			// LCM-to-Mongo direction populates LiftID even if it was null in original,
 			// so don't consider that difference to be an error for this test.
 			differencesByName.Remove("liftId");
 			PrintDifferences(differencesByName);
@@ -513,36 +512,36 @@ namespace LfMerge.Core.Tests.Fdo
 			newEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(newEntry);
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries+1));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			var dataAfterRoundTrip = _conn.GetLfLexEntries();
-			Assert.That(dataAfterRoundTrip.Count(), Is.EqualTo(OriginalNumOfFdoEntries+1));
+			Assert.That(dataAfterRoundTrip.Count(), Is.EqualTo(OriginalNumOfLcmEntries+1));
 			entry = dataAfterRoundTrip.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.IsDeleted, Is.EqualTo(true));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewSense()
+		public void RoundTrip_MongoToLcmToMongo_ShouldAddAndDeleteNewSense()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			ILexSenseRepository senseRepo = _servLoc.GetInstance<ILexSenseRepository>();
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			int originalNumOfFdoSenses = senseRepo.Count;
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			int originalNumOfLcmSenses = senseRepo.Count;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			ILexSense[] senses = fdoEntry.SensesOS.ToArray();
+			var lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			ILexSense[] senses = lcmEntry.SensesOS.ToArray();
 			Assert.That(senses.Length, Is.EqualTo(2));
 
 			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
@@ -564,22 +563,22 @@ namespace LfMerge.Core.Tests.Fdo
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfFdoSenses + 1));
-			fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(3));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfLcmSenses + 1));
+			lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.Count, Is.EqualTo(3));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(lfEntryAfterTest, Is.Not.Null);
@@ -587,10 +586,10 @@ namespace LfMerge.Core.Tests.Fdo
 
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(lfEntry.Senses.Last().ToBsonDocument(), lfEntryAfterTest.Senses.Last().ToBsonDocument());
-			// FDO-to-Mongo direction populates LiftID even if it was null in original,
+			// LCM-to-Mongo direction populates LiftID even if it was null in original,
 			// so don't consider that difference to be an error for this test.
-			differencesByName.Remove("liftId"); // Automatically set by FDO
-			differencesByName.Remove("guid"); // Automatically set by FDO
+			differencesByName.Remove("liftId"); // Automatically set by LCM
+			differencesByName.Remove("guid"); // Automatically set by LCM
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
@@ -602,36 +601,36 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(lfEntry.Senses.Count(), Is.EqualTo(2));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfFdoSenses));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(senseRepo.Count, Is.EqualTo(originalNumOfLcmSenses));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewExample()
+		public void RoundTrip_MongoToLcmToMongo_ShouldAddAndDeleteNewExample()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			ILexExampleSentenceRepository exampleRepo = _servLoc.GetInstance<ILexExampleSentenceRepository>();
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			int originalNumOfFdoExamples = exampleRepo.Count;
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			int originalNumOfLcmExamples = exampleRepo.Count;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			ILexSense fdoSense = fdoEntry.SensesOS.First();
-			Assert.That(fdoSense, Is.Not.Null);
-			Assert.That(fdoSense.ExamplesOS.Count, Is.EqualTo(2));
+			var lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			ILexSense lcmSense = lcmEntry.SensesOS.First();
+			Assert.That(lcmSense, Is.Not.Null);
+			Assert.That(lcmSense.ExamplesOS.Count, Is.EqualTo(2));
 
 			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
 			string newSentence = "new sentence with <span lang=\"grc\">Ελλη<ν&amp;ικά</span> in it for this test";
@@ -654,22 +653,22 @@ namespace LfMerge.Core.Tests.Fdo
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfFdoExamples + 1));
-			fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.First().ExamplesOS.Count, Is.EqualTo(3));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfLcmExamples + 1));
+			lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.First().ExamplesOS.Count, Is.EqualTo(3));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(lfEntryAfterTest, Is.Not.Null);
@@ -682,9 +681,9 @@ namespace LfMerge.Core.Tests.Fdo
 					lfSense         .Examples.Last().ToBsonDocument(),
 					lfSenseAfterTest.Examples.Last().ToBsonDocument()
 				);
-			// FDO-to-Mongo direction populates a few fields even if they were null in original,
+			// LCM-to-Mongo direction populates a few fields even if they were null in original,
 			// so don't consider that difference to be an error for this test.
-			differencesByName.Remove("translationGuid"); // Automatically set by FDO
+			differencesByName.Remove("translationGuid"); // Automatically set by LCM
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
@@ -696,36 +695,36 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			fdoEntry = entryRepo.GetObject(entryGuid);
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfFdoExamples));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			lcmEntry = entryRepo.GetObject(entryGuid);
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(exampleRepo.Count, Is.EqualTo(originalNumOfLcmExamples));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldAddAndDeleteNewPicture()
+		public void RoundTrip_MongoToLcmToMongo_ShouldAddAndDeleteNewPicture()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 			ILangProject langProj = lfProject.FieldWorksProject.Cache.LanguageProject;
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
 			ICmPictureRepository pictureRepo = _servLoc.GetInstance<ICmPictureRepository>();
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			int originalNumOfFdoPictures = pictureRepo.Count;
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			int originalNumOfLcmPictures = pictureRepo.Count;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var fdoEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
-			Assert.That(fdoEntry, Is.Not.Null);
-			ILexSense fdoSense = fdoEntry.SensesOS.First();
-			Assert.That(fdoSense, Is.Not.Null);
-			Assert.That(fdoSense.PicturesOS.Count, Is.EqualTo(1));
+			var lcmEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
+			Assert.That(lcmEntry, Is.Not.Null);
+			ILexSense lcmSense = lcmEntry.SensesOS.First();
+			Assert.That(lcmSense, Is.Not.Null);
+			Assert.That(lcmSense.PicturesOS.Count, Is.EqualTo(1));
 
 			string vernacularWS = langProj.DefaultVernacularWritingSystem.Id;
 			string newCaption = "new caption for this test";
@@ -748,22 +747,22 @@ namespace LfMerge.Core.Tests.Fdo
 			IEnumerable<LfLexEntry> originalData = _conn.GetLfLexEntries();
 			Assert.That(originalData, Is.Not.Null);
 			Assert.That(originalData, Is.Not.Empty);
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfFdoPictures + 1));
-			fdoEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.First().PicturesOS.Count, Is.EqualTo(2));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfLcmPictures + 1));
+			lcmEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.First().PicturesOS.Count, Is.EqualTo(2));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			IEnumerable<LfLexEntry> receivedData = _conn.GetLfLexEntries();
 			Assert.That(receivedData, Is.Not.Null);
 			Assert.That(receivedData, Is.Not.Empty);
-			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(receivedData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 
 			LfLexEntry lfEntryAfterTest = receivedData.FirstOrDefault(e => e.Guid.ToString() == newEntryGuidStr);
 			Assert.That(lfEntryAfterTest, Is.Not.Null);
@@ -776,9 +775,9 @@ namespace LfMerge.Core.Tests.Fdo
 					lfSense         .Examples.Last().ToBsonDocument(),
 					lfSenseAfterTest.Examples.Last().ToBsonDocument()
 				);
-			// FDO-to-Mongo direction populates a few fields even if they were null in original,
+			// LCM-to-Mongo direction populates a few fields even if they were null in original,
 			// so don't consider that difference to be an error for this test.
-			//differencesByName.Remove("translationGuid"); // Automatically set by FDO
+			//differencesByName.Remove("translationGuid"); // Automatically set by LCM
 			PrintDifferences(differencesByName);
 			Assert.That(differencesByName.Count(), Is.EqualTo(0));
 
@@ -791,39 +790,39 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(lfEntry.Senses.First().Pictures.Count, Is.EqualTo(1));
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			fdoEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
-			Assert.That(fdoEntry, Is.Not.Null);
-			Assert.That(fdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfFdoPictures));
-			sutFdoToMongo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			lcmEntry = entryRepo.GetObject(entryGuid) as ILexEntry;
+			Assert.That(lcmEntry, Is.Not.Null);
+			Assert.That(lcmEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(pictureRepo.Count, Is.EqualTo(originalNumOfLcmPictures));
+			SutLcmToMongo.Run(lfProject);
 
 			// Verify
 			originalData = _conn.GetLfLexEntries();
-			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfFdoEntries));
+			Assert.That(originalData.Count(), Is.EqualTo(OriginalNumOfLcmEntries));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToAddAndModifyParagraphsInCustomMultiParaField()
+		public void RoundTrip_MongoToLcmToMongo_ShouldBeAbleToAddAndModifyParagraphsInCustomMultiParaField()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
-			FdoCache cache = _cache;
+			LcmCache cache = _cache;
 			IFwMetaDataCacheManaged mdc = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			ISilDataAccess data = cache.DomainDataByFlid;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
-			Assert.That(fdoEntry, Is.Not.Null, "Cannot test custom MultiPara field since the entry with GUID {0} was not found in the test data", TestEntryGuidStr);
+			var lcmEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(lcmEntry, Is.Not.Null, "Cannot test custom MultiPara field since the entry with GUID {0} was not found in the test data", TestEntryGuidStr);
 			int flidMultiPara = mdc.GetFieldIds().Where(flid => mdc.GetFieldName(flid) == "Cust MultiPara").FirstOrDefault();
 			Assert.That(flidMultiPara, Is.Not.EqualTo(0));
-			int hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			int hvoMultiPara = data.get_ObjectProp(lcmEntry.Hvo, flidMultiPara);
 			ICmObject referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
-			IStText fdoMultiPara = null;
+			IStText lcmMultiPara = null;
 			if (referencedObject is IStText)
-				fdoMultiPara = (IStText)referencedObject;
+				lcmMultiPara = (IStText)referencedObject;
 			else
 				Assert.Fail("Got something from the MultiPara field that wasn't an IStText. Test is unable to continue.");
 
@@ -831,7 +830,7 @@ namespace LfMerge.Core.Tests.Fdo
 			// 1) Can we add paragraphs?
 			// 2) Can we change existing paragraphs?
 			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
-			// BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			// BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			BsonDocument customFieldsBson = lfEntry.CustomFields;
 			Assert.That(customFieldsBson.Contains("customField_entry_Cust_MultiPara"), Is.True,
 				"Couldn't find custom MultiPara field. Expected customField_entry_Cust_MultiPara as a field name, but found: " +
@@ -859,12 +858,12 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(lfEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
 
 			// Verify
 			// First via BSON ...
-			fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
-			BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			lcmEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			customFieldsBson = customFieldValues["customFields"].AsBsonDocument;
 			multiParaBson = customFieldsBson["customField_entry_Cust_MultiPara"].AsBsonDocument;
 			paras = multiParaBson["paragraphs"].AsBsonArray;
@@ -875,56 +874,56 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(paras[2].AsBsonDocument["content"].AsString, Is.Not.EqualTo(secondParaText));
 			Assert.That(paras[2].AsBsonDocument["content"].AsString, Is.EqualTo(changedParaText));
 
-			// ... then via FDO directly
-			hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			// ... then via LCM directly
+			hvoMultiPara = data.get_ObjectProp(lcmEntry.Hvo, flidMultiPara);
 			referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
-			fdoMultiPara = null;
+			lcmMultiPara = null;
 			if (referencedObject is IStText)
-				fdoMultiPara = (IStText)referencedObject;
+				lcmMultiPara = (IStText)referencedObject;
 			else
 				Assert.Fail("After test, got something from the MultiPara field that wasn't an IStText. That's a test failure since it really shouldn't happen.");
-			Assert.That(fdoMultiPara.ParagraphsOS.Count, Is.EqualTo(3));
-			Assert.That(fdoMultiPara.ParagraphsOS[2].IsFinalParaInText, Is.True);
-			Assert.That(fdoMultiPara.ParagraphsOS[0] is IStTxtPara, Is.True);
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(firstParaText));
-			Assert.That(fdoMultiPara.ParagraphsOS[1] is IStTxtPara, Is.True);
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.Not.EqualTo(secondParaText));
-			string escapedParaText = ConvertMongoToFdoTsStrings.HtmlDecode(addedParaText);
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[1]).Contents.Text, Is.EqualTo(escapedParaText));
-			Assert.That(fdoMultiPara.ParagraphsOS[2] is IStTxtPara, Is.True);
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.Not.EqualTo(secondParaText));
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents.Text, Is.EqualTo(changedMinusTag));
-			string thirdParagraphWithSpans = ConvertFdoToMongoTsStrings.TextFromTsString(((IStTxtPara)fdoMultiPara.ParagraphsOS[2]).Contents, cache.WritingSystemFactory);
+			Assert.That(lcmMultiPara.ParagraphsOS.Count, Is.EqualTo(3));
+			Assert.That(lcmMultiPara.ParagraphsOS[2].IsFinalParaInText, Is.True);
+			Assert.That(lcmMultiPara.ParagraphsOS[0] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(firstParaText));
+			Assert.That(lcmMultiPara.ParagraphsOS[1] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[1]).Contents.Text, Is.Not.EqualTo(secondParaText));
+			string escapedParaText = ConvertMongoToLcmTsStrings.HtmlDecode(addedParaText);
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[1]).Contents.Text, Is.EqualTo(escapedParaText));
+			Assert.That(lcmMultiPara.ParagraphsOS[2] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[2]).Contents.Text, Is.Not.EqualTo(secondParaText));
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[2]).Contents.Text, Is.EqualTo(changedMinusTag));
+			string thirdParagraphWithSpans = ConvertLcmToMongoTsStrings.TextFromTsString(((IStTxtPara)lcmMultiPara.ParagraphsOS[2]).Contents, cache.WritingSystemFactory);
 			Assert.That(thirdParagraphWithSpans, Is.EqualTo(changedParaText));
 		}
 
 		[Test]
-		public void RoundTrip_MongoToFdoToMongo_ShouldBeAbleToDeleteParagraphsInCustomMultiParaField()
+		public void RoundTrip_MongoToLcmToMongo_ShouldBeAbleToDeleteParagraphsInCustomMultiParaField()
 		{
 			// Create
 			var lfProject = _lfProj;
-			sutFdoToMongo.Run(lfProject);
+			SutLcmToMongo.Run(lfProject);
 
-			FdoCache cache = lfProject.FieldWorksProject.Cache;
+			LcmCache cache = lfProject.FieldWorksProject.Cache;
 			IFwMetaDataCacheManaged mdc = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			ISilDataAccess data = cache.DomainDataByFlid;
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			var fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
-			Assert.That(fdoEntry, Is.Not.Null, "Cannot test custom MultiPara field since the entry with GUID {0} was not found in the test data", TestEntryGuidStr);
+			var lcmEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.That(lcmEntry, Is.Not.Null, "Cannot test custom MultiPara field since the entry with GUID {0} was not found in the test data", TestEntryGuidStr);
 			int flidMultiPara = mdc.GetFieldIds().Where(flid => mdc.GetFieldName(flid) == "Cust MultiPara").FirstOrDefault();
 			Assert.That(flidMultiPara, Is.Not.EqualTo(0));
-			int hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			int hvoMultiPara = data.get_ObjectProp(lcmEntry.Hvo, flidMultiPara);
 			ICmObject referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
-			IStText fdoMultiPara = null;
+			IStText lcmMultiPara = null;
 			if (referencedObject is IStText)
-				fdoMultiPara = (IStText)referencedObject;
+				lcmMultiPara = (IStText)referencedObject;
 			else
 				Assert.Fail("Got something from the MultiPara field that wasn't an IStText. Test is unable to continue.");
 
 			// Here we check just one thing:
 			// 1) Can we delete paragraphs?
 			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
-			// BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			// BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			BsonDocument customFieldsBson = lfEntry.CustomFields;
 			Assert.That(customFieldsBson.Contains("customField_entry_Cust_MultiPara"), Is.True,
 				"Couldn't find custom MultiPara field. Expected customField_entry_Cust_MultiPara as a field name, but found: " +
@@ -947,12 +946,12 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(lfEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProject);
+			SutMongoToLcm.Run(lfProject);
 
 			// Verify
 			// First via BSON ...
-			fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
-			BsonDocument customFieldValues = GetCustomFieldValues(cache, fdoEntry, "entry");
+			lcmEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			customFieldsBson = customFieldValues["customFields"].AsBsonDocument;
 			multiParaBson = customFieldsBson["customField_entry_Cust_MultiPara"].AsBsonDocument;
 			paras = multiParaBson["paragraphs"].AsBsonArray;
@@ -960,19 +959,19 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(paras[0].AsBsonDocument["content"].AsString, Is.Not.EqualTo(firstParaText));
 			Assert.That(paras[0].AsBsonDocument["content"].AsString, Is.EqualTo(secondParaText));
 
-			// ... then via FDO directly
-			hvoMultiPara = data.get_ObjectProp(fdoEntry.Hvo, flidMultiPara);
+			// ... then via LCM directly
+			hvoMultiPara = data.get_ObjectProp(lcmEntry.Hvo, flidMultiPara);
 			referencedObject = cache.GetAtomicPropObject(hvoMultiPara);
-			fdoMultiPara = null;
+			lcmMultiPara = null;
 			if (referencedObject is IStText)
-				fdoMultiPara = (IStText)referencedObject;
+				lcmMultiPara = (IStText)referencedObject;
 			else
 				Assert.Fail("After test, got something from the MultiPara field that wasn't an IStText. That's a test failure since it really shouldn't happen.");
-			Assert.That(fdoMultiPara.ParagraphsOS.Count, Is.EqualTo(1));
-			Assert.That(fdoMultiPara.ParagraphsOS[0].IsFinalParaInText, Is.True);
-			Assert.That(fdoMultiPara.ParagraphsOS[0] is IStTxtPara, Is.True);
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[0]).Contents.Text, Is.Not.EqualTo(firstParaText));
-			Assert.That(((IStTxtPara)fdoMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(secondParaText));
+			Assert.That(lcmMultiPara.ParagraphsOS.Count, Is.EqualTo(1));
+			Assert.That(lcmMultiPara.ParagraphsOS[0].IsFinalParaInText, Is.True);
+			Assert.That(lcmMultiPara.ParagraphsOS[0] is IStTxtPara, Is.True);
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[0]).Contents.Text, Is.Not.EqualTo(firstParaText));
+			Assert.That(((IStTxtPara)lcmMultiPara.ParagraphsOS[0]).Contents.Text, Is.EqualTo(secondParaText));
 		}
 	}
 }

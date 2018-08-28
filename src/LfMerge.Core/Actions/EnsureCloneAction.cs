@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using SIL.Code;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Actions
 {
@@ -69,7 +69,7 @@ namespace LfMerge.Core.Actions
 		{
 			Logger.Notice("Initial transfer to mongo after clone");
 			project.IsInitialClone = true;
-			Actions.Action.GetAction(ActionNames.TransferFdoToMongo).Run(project);
+			Actions.Action.GetAction(ActionNames.TransferLcmToMongo).Run(project);
 			project.IsInitialClone = false;
 		}
 
@@ -152,8 +152,8 @@ namespace LfMerge.Core.Actions
 						return;
 					}
 
-					var cloneModelVersion = line.Substring(index + modelString.Length, 7);
-					if (int.Parse(cloneModelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
+					var cloneModelVersion = int.Parse(line.Substring(index + modelString.Length, 7));
+					if (cloneModelVersion < MagicStrings.MinimalModelVersion)
 					{
 						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line, ProcessingState.ErrorCodes.ProjectTooOld);
 						Logger.Error("Error during initial clone of '{0}': " +
@@ -166,7 +166,7 @@ namespace LfMerge.Core.Actions
 				}
 				else
 				{
-					ChorusHelper.SetModelVersion(FdoCache.ModelVersion);
+					ChorusHelper.SetModelVersion(LcmCache.ModelVersion);
 					line = LfMergeBridgeServices.GetLineContaining(cloneResult,
 						"new clone created on branch");
 					Require.That(!string.IsNullOrEmpty(line),
@@ -239,7 +239,7 @@ namespace LfMerge.Core.Actions
 			var options = new Dictionary<string, string> {
 				{ "fullPathToProject", projectFolderPath },
 				{ "languageDepotRepoName", project.LanguageDepotProject.Identifier },
-				{ "fdoDataModelVersion", FdoCache.ModelVersion },
+				{ "fdoDataModelVersion", LcmCache.ModelVersion.ToString() },
 				{ "languageDepotRepoUri", chorusHelper.GetSyncUri(project) },
 				{ "user", "Language Forge" },
 				{ "deleteRepoIfNoSuchBranch", "false" },

@@ -1,21 +1,21 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.ComponentModel;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.FieldWorks
 {
-	class ConsoleFdoUi: IFdoUI
+	class ConsoleLcmUi: ILcmUI
 	{
 		private ISynchronizeInvoke _synchronizeInvoke;
 
-		public ConsoleFdoUi(ISynchronizeInvoke synchronizeInvoke)
+		public ConsoleLcmUi(ISynchronizeInvoke synchronizeInvoke)
 		{
 			_synchronizeInvoke = synchronizeInvoke;
 		}
 
-		#region IFdoUI implementation
+		#region ILcmUI implementation
 
 		public void DisplayCircularRefBreakerReport(string msg, string caption)
 		{
@@ -24,7 +24,7 @@ namespace LfMerge.Core.FieldWorks
 
 		public bool ConflictingSave()
 		{
-			MainClass.Logger.Error("ConsoleFdoUI.ConflictingSave...");
+			MainClass.Logger.Error("ConsoleLcmUI.ConflictingSave...");
 			// Revert to saved state
 			return true;
 		}

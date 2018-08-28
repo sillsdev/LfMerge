@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -12,7 +12,8 @@ using LfMerge.Core.Queues;
 using LfMerge.Core.Settings;
 using LfMerge.Core.Tools;
 using SIL.IO.FileLock;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
+using SIL.WritingSystems;
 
 namespace LfMerge.QueueManager
 {
@@ -27,6 +28,9 @@ namespace LfMerge.QueueManager
 				return;
 
 			MainClass.Logger.Notice("LfMergeQueueManager starting with args: {0}", string.Join(" ", args));
+
+			// initialize the SLDR
+			Sldr.Initialize();
 
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
@@ -52,9 +56,9 @@ namespace LfMerge.QueueManager
 					var clonedQueue = queue.QueuedProjects.ToList();
 					foreach (var projectCode in clonedQueue)
 					{
-						var projectPath = Path.Combine(settings.FdoDirectorySettings.ProjectsDirectory,
+						var projectPath = Path.Combine(settings.LcmDirectorySettings.ProjectsDirectory,
 							projectCode, string.Format("{0}{1}", projectCode,
-							FdoFileHelper.ksFwDataXmlFileExtension));
+							LcmFileHelper.ksFwDataXmlFileExtension));
 						var modelVersion = FwProject.GetModelVersion(projectPath);
 						queue.DequeueProject(projectCode);
 						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
@@ -77,6 +81,9 @@ namespace LfMerge.QueueManager
 			{
 				if (fileLock != null)
 					fileLock.ReleaseLock();
+
+				if (Sldr.IsInitialized)
+					Sldr.Cleanup();
 
 				MainClass.Container.Dispose();
 			}

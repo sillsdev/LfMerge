@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
-using SIL.CoreImpl;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Infrastructure;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.WritingSystems;
+using SIL.LCModel.Infrastructure;
 
 namespace LfMerge.Core.FieldWorks
 {
@@ -16,16 +16,16 @@ namespace LfMerge.Core.FieldWorks
 	/// </summary>
 	public class FwServiceLocatorCache
 	{
-		private IFdoServiceLocator fdoServLoc;
-		private IDictionary<Type, object> cache;
+		private readonly ILcmServiceLocator lcmServLoc;
+		private readonly IDictionary<Type, object> cache;
 
-		public FwServiceLocatorCache(IFdoServiceLocator fwServLoc)
+		public FwServiceLocatorCache(ILcmServiceLocator fwServLoc)
 		{
-			this.fdoServLoc = fwServLoc;
+			this.lcmServLoc = fwServLoc;
 			this.cache = new Dictionary<Type, object>();
 		}
 
-		public FwServiceLocatorCache(FdoCache cache) : this(cache.ServiceLocator) { }
+		public FwServiceLocatorCache(LcmCache cache) : this(cache.ServiceLocator) { }
 
 		public T GetInstance<T>() where T : class
 		{
@@ -37,7 +37,7 @@ namespace LfMerge.Core.FieldWorks
 			}
 			else
 			{
-				T singleton = fdoServLoc.GetInstance<T>();
+				T singleton = lcmServLoc.GetInstance<T>();
 				cache.Add(TType, singleton);
 				return singleton;
 			}
@@ -47,7 +47,7 @@ namespace LfMerge.Core.FieldWorks
 
 		public IFwMetaDataCacheManaged MetaDataCache { get { return GetInstance<IFwMetaDataCacheManaged>(); } }
 
-		public IWritingSystemManager WritingSystemManager { get { return GetInstance<IWritingSystemManager>(); } }
+		public WritingSystemManager WritingSystemManager { get { return GetInstance<WritingSystemManager>(); } }
 
 		public ILgWritingSystemFactory WritingSystemFactory { get { return GetInstance<ILgWritingSystemFactory>(); } }
 

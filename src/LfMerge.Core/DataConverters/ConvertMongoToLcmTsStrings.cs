@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -6,8 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
-using SIL.FieldWorks.Common.COMInterfaces;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.Text;
 
 namespace LfMerge.Core.DataConverters
 {
@@ -34,7 +34,7 @@ namespace LfMerge.Core.DataConverters
 		public Guid? Guid;
 	}
 
-	public class ConvertMongoToFdoTsStrings
+	public class ConvertMongoToLcmTsStrings
 	{
 		private static Regex spanRegex = new Regex("(<span[^>]*>.*?</span>)");
 		private static Regex spanContentsRegex = new Regex(@"<span\s+(?<langAttr1>lang=""(?<langText1>[^""]+)"")?\s*(?<classAttr>class=""(?<classText>[^""]+)"")?\s*(?<langAttr2>lang=""(?<langText2>[^""]+)"")?\s*>(?<spanText>.*?)</span\s*>");
@@ -43,7 +43,7 @@ namespace LfMerge.Core.DataConverters
 		private static Regex intPropRegex = new Regex(@"propi_(?<propNum>\d+)_(?<propName>[^_]+)_(?<propValue>-?\d+)_(?<propVariation>\d+)");
 		private static Regex strPropRegex = new Regex(@"props_(?<propNum>\d+)_(?<propName>[^_]+)_(?<propValue>.+)");
 
-		public ConvertMongoToFdoTsStrings()
+		public ConvertMongoToLcmTsStrings()
 		{
 		}
 
@@ -78,11 +78,11 @@ namespace LfMerge.Core.DataConverters
 			// How to build up an ITsString via an ITsIncStrBldr -
 			// 1. Use SetIntPropValues or SetStrPropValues to set a property "to be applied to any subsequent append operations".
 			// 2. THEN use Append(string s) to add a string, which will "pick up" the properties set in step 1.
-			// See ScrFootnoteFactory.CreateRunFromStringRep() in FdoFactoryAdditions.cs for a good example.
+			// See ScrFootnoteFactory.CreateRunFromStringRep() in LcmFactoryAdditions.cs for a good example.
 			if (source == null)
 				return null;
 			List<Run> runs = GetSpanRuns(source);
-			ITsIncStrBldr builder = TsIncStrBldrClass.Create();
+			var builder = TsStringUtils.MakeIncStrBldr();
 			// Will become: ITsIncStrBldr builder = TsStringUtils.MakeIncStrBldr();  // Add "using SIL.CoreImpl;" when this line is uncommented.
 			foreach (Run run in runs)
 			{

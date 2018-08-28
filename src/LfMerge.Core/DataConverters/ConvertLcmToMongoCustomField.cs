@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -10,27 +10,28 @@ using LfMerge.Core.LanguageForge.Infrastructure;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using MongoDB.Bson;
-using SIL.CoreImpl;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.FDO.Application;
-using SIL.FieldWorks.FDO.DomainServices;
-using SIL.FieldWorks.FDO.Infrastructure;
+using SIL.LCModel;
+using SIL.LCModel.Application;
+using SIL.LCModel.Core.Cellar;
+using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.WritingSystems;
+using SIL.LCModel.DomainServices;
+using SIL.LCModel.Infrastructure;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertFdoToMongoCustomField
+	public class ConvertLcmToMongoCustomField
 	{
-		private FdoCache cache;
+		private LcmCache cache;
 		private FwServiceLocatorCache servLoc;
-		private IFwMetaDataCacheManaged fdoMetaData;
+		private IFwMetaDataCacheManaged LcmMetaData;
 		private ILogger logger;
 
 		private int _wsEn;
 
 		/// <summary>
-		/// Mapping of FDO CellarProperty type enumeration to LF custom field type.
-		/// Refer to FDO SIL.CoreImpl.CellarPropertyType.
+		/// Mapping of Lcm CellarProperty type enumeration to LF custom field type.
+		/// Refer to Lcm SIL.CoreImpl.CellarPropertyType.
 		/// </summary>
 		private static readonly Dictionary<CellarPropertyType, string> CellarPropertyTypeToLfCustomFieldType = new Dictionary<CellarPropertyType, string>
 		{
@@ -49,11 +50,11 @@ namespace LfMerge.Core.DataConverters
 		private Dictionary<Guid, string> GuidToListCode;
 		private Dictionary<string, string> _fieldNameToFieldType;
 
-		public ConvertFdoToMongoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
+		public ConvertLcmToMongoCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
 		{
 			this.cache = cache;
 			this.servLoc = serviceLocator;
-			this.fdoMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
+			this.LcmMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 			_wsEn = servLoc.WritingSystemFactory.GetWsFromStr("en");
 
@@ -94,7 +95,7 @@ namespace LfMerge.Core.DataConverters
 
 		/// <summary>
 		/// Returns a dictionary of custom fields at the LexEntry, LexSense, and LexExampleSentence levels
-		/// From FDO to LF.  If the dictionary doesn't exist, create one.
+		/// From Lcm to LF.  If the dictionary doesn't exist, create one.
 		/// </summary>
 		/// <returns>Dictionary of custom fields where the keys are the parent listCode</returns>
 		public Dictionary<string, ICmPossibilityList> GetCustomFieldParentLists()
@@ -104,20 +105,20 @@ namespace LfMerge.Core.DataConverters
 
 			// The three classes that are allowed to have custom fields in them are LexEntry, LexSense, and LexExampleSentence
 			List<int> customFieldIds = new List<int>(
-				fdoMetaData.GetFields(LexEntryTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
-				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+				LcmMetaData.GetFields(LexEntryTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && LcmMetaData.GetFieldListRoot(flid) != Guid.Empty));
 			customFieldIds.AddRange(
-				fdoMetaData.GetFields(LexSenseTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
-				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+				LcmMetaData.GetFields(LexSenseTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && LcmMetaData.GetFieldListRoot(flid) != Guid.Empty));
 			customFieldIds.AddRange(
-				fdoMetaData.GetFields(LexExampleSentenceTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
-				.Where(flid => cache.GetIsCustomField(flid) && fdoMetaData.GetFieldListRoot(flid) != Guid.Empty));
+				LcmMetaData.GetFields(LexExampleSentenceTags.kClassId, false, (int)CellarPropertyTypeFilter.AllReference)
+				.Where(flid => cache.GetIsCustomField(flid) && LcmMetaData.GetFieldListRoot(flid) != Guid.Empty));
 
 			var listRepo = servLoc.GetInstance<ICmPossibilityListRepository>();
 
 			foreach (int flid in customFieldIds)
 			{
-				Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+				Guid parentListGuid = LcmMetaData.GetFieldListRoot(flid);
 				string listCode = GetParentListCode(flid);
 				lfCustomFieldLists[listCode] = listRepo.GetObject(parentListGuid);
 			}
@@ -147,19 +148,19 @@ namespace LfMerge.Core.DataConverters
 		)
 		{
 			IEnumerable<int> customFieldIds =
-				fdoMetaData.GetFields(classId, false, (int)CellarPropertyTypeFilter.All)
+				LcmMetaData.GetFields(classId, false, (int)CellarPropertyTypeFilter.All)
 				.Where(flid => cache.GetIsCustomField(flid));
 			foreach (int flid in customFieldIds)
 			{
-				string label = fdoMetaData.GetFieldNameOrNull(flid);
+				string label = LcmMetaData.GetFieldNameOrNull(flid);
 				if (label == null)
 					continue;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, fieldSourceType);
-				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();  // TODO: Comment this one OUT. Bad design.
-				lfCustomFieldTypes[lfCustomFieldName] = fdoFieldType.ToString();
+				CellarPropertyType LcmFieldType = (CellarPropertyType)LcmMetaData.GetFieldType(flid);
+				_fieldNameToFieldType[lfCustomFieldName] = LcmFieldType.ToString();  // TODO: Comment this one OUT. Bad design.
+				lfCustomFieldTypes[lfCustomFieldName] = LcmFieldType.ToString();
 				string lfCustomFieldType;
-				if (CellarPropertyTypeToLfCustomFieldType.TryGetValue(fdoFieldType, out lfCustomFieldType))
+				if (CellarPropertyTypeToLfCustomFieldType.TryGetValue(LcmFieldType, out lfCustomFieldType))
 				{
 					// Get custom field configuration info
 					LfConfigFieldBase fieldConfig = null;
@@ -177,7 +178,7 @@ namespace LfMerge.Core.DataConverters
 					else
 					{
 						// Single line or MultiText fields need writing systems
-						int fieldWs = fdoMetaData.GetFieldWs(flid);
+						int fieldWs = LcmMetaData.GetFieldWs(flid);
 						// That's a "magic" ws, which we need to expand into a (list of) real writing system(s).
 #if FW8_COMPAT
 						var wsesForThisField = new List<IWritingSystem>();
@@ -197,9 +198,9 @@ namespace LfMerge.Core.DataConverters
 							break;
 						}
 #if FW8_COMPAT
-						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.Id);
+						IEnumerable<string> inputSystems = wsesForThisField.Select(LcmWs => LcmWs.Id);
 #else
-						IEnumerable<string> inputSystems = wsesForThisField.Select(fdoWs => fdoWs.LanguageTag);
+						IEnumerable<string> inputSystems = wsesForThisField.Select(LcmWs => LcmWs.LanguageTag);
 #endif
 						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
 						// is a single-line custom field, trim the WSes down to just the first one
@@ -240,14 +241,14 @@ namespace LfMerge.Core.DataConverters
 		/// </returns>
 		/// <param name="cmObj">Cm object.</param>
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
-		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
+		/// <param name="listConverters">Dictionary of ConvertLcmToMongoOptionList instances, keyed by list code</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
-			IDictionary<string, ConvertFdoToMongoOptionList> listConverters)
+			IDictionary<string, ConvertLcmToMongoOptionList> listConverters)
 		{
 			if (cmObj == null) return null;
 
 			List<int> customFieldIds = new List<int>(
-				fdoMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
+				LcmMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
 				.Where(flid => cache.GetIsCustomField(flid)));
 
 			var customFieldData = new BsonDocument();
@@ -255,7 +256,7 @@ namespace LfMerge.Core.DataConverters
 
 			foreach (int flid in customFieldIds)
 			{
-				string label = fdoMetaData.GetFieldNameOrNull(flid);
+				string label = LcmMetaData.GetFieldNameOrNull(flid);
 				if (label == null)
 					return null;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, objectType);
@@ -286,12 +287,12 @@ namespace LfMerge.Core.DataConverters
 		/// Get the list code of the parent
 		/// </summary>
 		/// <returns>The list code as used in LF (e.g., "sense-type" or "grammatical-info").
-		/// For custom lists from FDO, returns the user-given list name or abbreviation.</returns>
+		/// For custom lists from Lcm, returns the user-given list name or abbreviation.</returns>
 		/// <param name="flid">Flid.</param>
 		private string GetParentListCode(int flid)
 		{
 			string result = string.Empty;
-			Guid parentListGuid = fdoMetaData.GetFieldListRoot(flid);
+			Guid parentListGuid = LcmMetaData.GetFieldListRoot(flid);
 			if (parentListGuid != Guid.Empty)
 			{
 				if (GuidToListCode.TryGetValue(parentListGuid, out result))
@@ -301,14 +302,14 @@ namespace LfMerge.Core.DataConverters
 				if (servLoc.GetInstance<ICmPossibilityListRepository>().TryGetObject(parentListGuid, out parentList))
 				{
 					if (parentList.Name != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
+						result = ConvertLcmToMongoTsStrings.TextFromTsString(parentList.Name.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
 						return result;
 					}
 					if (parentList.Abbreviation != null)
-						result = ConvertFdoToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
+						result = ConvertLcmToMongoTsStrings.TextFromTsString(parentList.Abbreviation.BestAnalysisVernacularAlternative, servLoc.WritingSystemFactory);
 					if (!String.IsNullOrEmpty(result) && result != MagicStrings.UnknownString)
 					{
 						GuidToListCode[parentListGuid] = result;
@@ -339,18 +340,18 @@ namespace LfMerge.Core.DataConverters
 		/// or a list of GUIDs that happens to contain only one entry.
 		/// If there is no "guid" key, that field has no need for a GUID. (E.g., a number).
 		/// </param>
-		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
+		/// <param name="listConverters">Dictionary of ConvertLcmToMongoOptionList instances, keyed by list code</param>
 		private BsonDocument GetCustomFieldData(int hvo, int flid, string fieldSourceType,
-			IDictionary<string, ConvertFdoToMongoOptionList> listConverters)
+			IDictionary<string, ConvertLcmToMongoOptionList> listConverters)
 		{
 			BsonValue fieldValue = null;
 			BsonValue fieldGuid = null; // Might be a single value, might be a list (as a BsonArray)
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
-			CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
+			CellarPropertyType LcmFieldType = (CellarPropertyType)LcmMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
-			// Valid field types in FDO are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
-			switch (fdoFieldType)
+			// Valid field types in Lcm are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			switch (LcmFieldType)
 			{
 			case CellarPropertyType.GenDate:
 				GenDate genDate = data.get_GenDateProp(hvo, flid);
@@ -376,7 +377,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.ReferenceAtomic:
 				int ownedHvo = data.get_ObjectProp(hvo, flid);
 				fieldValue = GetCustomReferencedObject(ownedHvo, flid, listConverters, ref dataGuids);
-				if (fieldValue != null && fdoFieldType == CellarPropertyType.ReferenceAtomic)
+				if (fieldValue != null && LcmFieldType == CellarPropertyType.ReferenceAtomic)
 				{
 					// Single CmPossiblity reference - LF expects format like { "value": "key of possibility" }
 					fieldValue = new BsonDocument("value", fieldValue);
@@ -413,7 +414,7 @@ namespace LfMerge.Core.DataConverters
 			default:
 				fieldValue = null;
 				if (logger != null)
-					logger.Warning("FDO CellarPropertyType.{0} not recognized for LF custom field", fdoFieldType.ToString());
+					logger.Warning("Lcm CellarPropertyType.{0} not recognized for LF custom field", LcmFieldType.ToString());
 				break;
 			}
 
@@ -488,10 +489,10 @@ namespace LfMerge.Core.DataConverters
 		/// <returns>The custom referenced object's data converted to a BsonValue.</returns>
 		/// <param name="hvo">Hvo of referenced object.</param>
 		/// <param name="flid">Flid of referring field (required to get correct writing system for an StText).</param>
-		/// <param name="listConverters">Dictionary of ConvertFdoToMongoOptionList instances, keyed by list code</param>
+		/// <param name="listConverters">Dictionary of ConvertLcmToMongoOptionList instances, keyed by list code</param>
 		/// <param name="referencedObjectGuids">List to which referenced object's GUID will be added.</param>
 		private BsonValue GetCustomReferencedObject(int hvo, int flid,
-			IDictionary<string, ConvertFdoToMongoOptionList> listConverters,
+			IDictionary<string, ConvertLcmToMongoOptionList> listConverters,
 			ref List<Guid> referencedObjectGuids)
 		{
 			ISilDataAccessManaged data = (ISilDataAccessManaged)cache.DomainDataByFlid;
@@ -509,7 +510,7 @@ namespace LfMerge.Core.DataConverters
 			referencedObjectGuids.Add(referencedObject.Guid);
 			if (referencedObject is IStText)
 				return ConvertUtilities.GetCustomStTextValues((IStText)referencedObject, flid,
-					servLoc.WritingSystemManager, fdoMetaData, cache.DefaultUserWs);
+					servLoc.WritingSystemManager, LcmMetaData, cache.DefaultUserWs);
 			else if (referencedObject is ICmPossibility)
 			{
 				//return GetCustomListValues((ICmPossibility)referencedObject, flid);

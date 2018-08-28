@@ -1,25 +1,25 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.FieldWorks
 {
 	class ProjectIdentifier: IProjectIdentifier
 	{
-		public ProjectIdentifier(IFdoDirectories fdoDirs, string database)
+		public ProjectIdentifier(ILcmDirectories LcmDirs, string database)
 		{
-			FdoDirectories = fdoDirs;
-			Path = GetPathToDatabase(fdoDirs, database);
+			LcmDirectories = LcmDirs;
+			Path = GetPathToDatabase(LcmDirs, database);
 		}
 
-		private static string GetPathToDatabase(IFdoDirectories fdoDirs, string database)
+		private static string GetPathToDatabase(ILcmDirectories LcmDirs, string database)
 		{
-			return System.IO.Path.Combine(fdoDirs.ProjectsDirectory, database,
-				database + FdoFileHelper.ksFwDataXmlFileExtension);
+			return System.IO.Path.Combine(LcmDirs.ProjectsDirectory, database,
+				database + LcmFileHelper.ksFwDataXmlFileExtension);
 		}
 
-		public IFdoDirectories FdoDirectories { get; private set; }
+		public ILcmDirectories LcmDirectories { get; private set; }
 
 		#region IProjectIdentifier implementation
 
@@ -60,7 +60,7 @@ namespace LfMerge.Core.FieldWorks
 			get { return System.IO.Path.GetFileNameWithoutExtension(Path); }
 		}
 
-		public FDOBackendProviderType Type { get { return FDOBackendProviderType.kXML; } }
+		public BackendProviderType Type { get { return BackendProviderType.kXML; } }
 
 		public string UiName
 		{

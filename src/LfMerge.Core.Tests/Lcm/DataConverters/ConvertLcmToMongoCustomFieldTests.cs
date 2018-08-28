@@ -1,22 +1,23 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+
 using System;
 using System.Collections.Generic;
 using LfMerge.Core.DataConverters;
 using MongoDB.Bson;
 using NUnit.Framework;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
-namespace LfMerge.Core.Tests.Fdo.DataConverters
+namespace LfMerge.Core.Tests.Lcm.DataConverters
 {
-	public class ConvertFdoToMongoCustomFieldTests : FdoTestBase
+	public class ConvertLcmToMongoCustomFieldTests : LcmTestBase
 	{
 		[Test]
 		public void GetCustomFieldForThisCmObject_ShouldGetSingleLineAll()
 		{
 			// Setup
 			var lfProject = _lfProj;
-			var converter = new ConvertFdoToMongoCustomField(_cache, _servLoc,
+			var converter = new ConvertLcmToMongoCustomField(_cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid) as ILexEntry;
@@ -38,7 +39,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			// Setup
 			var lfProject = _lfProj;
 			var cache = _cache;
-			var converter = new ConvertFdoToMongoCustomField(cache, _servLoc,
+			var converter = new ConvertLcmToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
@@ -64,7 +65,7 @@ namespace LfMerge.Core.Tests.Fdo.DataConverters
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
 			Assert.That(entry, Is.Not.Null);
-			ConvertFdoToMongoCustomField converter = new ConvertFdoToMongoCustomField(cache, _servLoc,
+			ConvertLcmToMongoCustomField converter = new ConvertLcmToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 
 			// Exercise

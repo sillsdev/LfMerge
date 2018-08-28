@@ -1,10 +1,10 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using Autofac;
 using NUnit.Framework;
-using SIL.FieldWorks.FDO;
 using LfMerge.Core.Actions.Infrastructure;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Tests.Actions.Infrastructure
 {
@@ -56,22 +56,22 @@ namespace LfMerge.Core.Tests.Actions.Infrastructure
 		[Test]
 		public void SetModelVersion()
 		{
-			ChorusHelper.SetModelVersion("123456");
+			ChorusHelper.SetModelVersion(123456);
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-			Assert.That(chorusHelper.ModelVersion, Is.EqualTo("123456"));
+			Assert.That(chorusHelper.ModelVersion, Is.EqualTo(123456));
 		}
 
 		[Test]
 		public void RemoteDataIsForDifferentModelVersion_SameVersion()
 		{
-			ChorusHelper.SetModelVersion(FdoCache.ModelVersion);
+			ChorusHelper.SetModelVersion(LcmCache.ModelVersion);
 			Assert.That(ChorusHelper.RemoteDataIsForDifferentModelVersion, Is.False);
 		}
 
 		[Test]
 		public void RemoteDataIsForDifferentModelVersion_DifferentVersion()
 		{
-			ChorusHelper.SetModelVersion("7000060");
+			ChorusHelper.SetModelVersion(7000060);
 			Assert.That(ChorusHelper.RemoteDataIsForDifferentModelVersion, Is.True);
 		}
 	}

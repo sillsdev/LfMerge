@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core
 {
@@ -77,7 +77,7 @@ namespace LfMerge.Core
 			get
 			{
 				return Path.Combine(ProjectDir, string.Format("{0}{1}", ProjectCode,
-					FdoFileHelper.ksFwDataXmlFileExtension));
+					LcmFileHelper.ksFwDataXmlFileExtension));
 			}
 		}
 

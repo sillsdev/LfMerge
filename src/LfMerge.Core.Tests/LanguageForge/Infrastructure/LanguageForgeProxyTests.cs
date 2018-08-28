@@ -14,14 +14,14 @@ namespace LfMerge.Core.Tests.LanguageForge.Infrastructure
 	public class LanguageForgeProxyTests
 	{
 		private const string testProjectCode = "testlangproj";
-		private const int originalNumOfFdoEntries = 63;
+		private const int originalNumOfLcmEntries = 63;
 		private TemporaryFolder LanguageForgeFolder;
 		private TestEnvironment _env;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			LanguageForgeFolder = new TemporaryFolder("FdoTestFixture");
+			LanguageForgeFolder = new TemporaryFolder("LcmTestFixture");
 			_env = new TestEnvironment(
 				resetLfProjectsDuringCleanup: false,
 				languageForgeServerFolder: LanguageForgeFolder,

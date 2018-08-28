@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>TRACE;$(DefinePlatformConstants)</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
@@ -67,6 +67,18 @@
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000070</OutputPath>
     <DefineConstants>DEBUG;TRACE;FW8_COMPAT;$(DefinePlatformConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000072|AnyCPU' ">
+    <DatabaseVersion>7000072</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000072</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

@@ -1,17 +1,17 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using LfMerge.Core.Logging;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertMongoToFdoPartsOfSpeech
+	public class ConvertMongoToLcmPartsOfSpeech
 	{
 		// This class used to contain code for parsing the canonical part-of-speech data from GOLDEtic.xml and creating
-		// new IPartOfSpeech objects from the canonical data if they were in Mongo but not in FDO. Most of that code has
+		// new IPartOfSpeech objects from the canonical data if they were in Mongo but not in LCM. Most of that code has
 		// been moved to the classes in the CanonicalSources namespace, and the "create new IPartOfSpeech" objects has
-		// been moved to ConvertMongoToFdoOptionList (and made more generic). The only thing left in this class is the
+		// been moved to ConvertMongoToLcmOptionList (and made more generic). The only thing left in this class is the
 		// static SetPartOfSpeech function, which deals with the complexities of MSAs.
 
 		public static void SetPartOfSpeech(IMoMorphSynAnalysis msa, IPartOfSpeech pos, IPartOfSpeech secondaryPos = null, ILogger logger = null)
@@ -48,7 +48,7 @@ namespace LfMerge.Core.DataConverters
 				((IMoUnclassifiedAffixMsa)msa).PartOfSpeechRA = pos;
 				break;
 			default:
-				// We'll only reach here if new MSA types are added to FDO and we forget to update the switch statement above
+				// We'll only reach here if new MSA types are added to LCM and we forget to update the switch statement above
 				if (logger != null)
 					logger.Debug("Got MSA of unknown type {0}", msa.GetType().Name);
 				return;
