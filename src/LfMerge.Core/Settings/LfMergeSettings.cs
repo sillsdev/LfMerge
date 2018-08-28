@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using IniParser.Model;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
 using LfMerge.Core.Queues;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Settings
 {
@@ -29,7 +29,7 @@ namespace LfMerge.Core.Settings
 
 		public LfMergeSettings()
 		{
-			FdoDirectorySettings = new FdoDirectories();
+			LcmDirectorySettings = new LcmDirectories();
 
 			// Save parsed config for easier persisting in SaveSettings()
 			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile);
@@ -74,12 +74,12 @@ namespace LfMerge.Core.Settings
 			string mongoHostname, int mongoPort, string mongoDatabaseNamePrefix,
 			string mongoMainDatabaseName, string verboseProgress, string phpSourcePath)
 		{
-			FdoDirectorySettings.SetProjectsDirectory(Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir));
-			FdoDirectorySettings.SetTemplateDirectory(Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir));
+			LcmDirectorySettings.SetProjectsDirectory(Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(baseDir, webworkDir));
+			LcmDirectorySettings.SetTemplateDirectory(Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(baseDir, templatesDir));
 			StateDirectory = Path.Combine(baseDir, "state");
 
 			CommitWhenDone = true;
-			VerboseProgress = LfMerge.Core.LanguageForge.Model.ParseBoolean.FromString(verboseProgress);
+			VerboseProgress = LanguageForge.Model.ParseBoolean.FromString(verboseProgress);
 
 			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
 			QueueDirectories = new string[queueCount];
@@ -113,15 +113,15 @@ namespace LfMerge.Core.Settings
 				return false;
 			bool ret =
 				other.CommitWhenDone == CommitWhenDone &&
-				other.FdoDirectorySettings.DefaultProjectsDirectory == FdoDirectorySettings.DefaultProjectsDirectory &&
+				other.LcmDirectorySettings.DefaultProjectsDirectory == LcmDirectorySettings.DefaultProjectsDirectory &&
 				other.MongoDatabaseNamePrefix == MongoDatabaseNamePrefix &&
 				other.MongoDbHostNameAndPort == MongoDbHostNameAndPort &&
 				other.MongoDbHostName == MongoDbHostName &&
 				other.MongoDbPort == MongoDbPort &&
 				other.MongoMainDatabaseName == MongoMainDatabaseName &&
-				other.FdoDirectorySettings.ProjectsDirectory == FdoDirectorySettings.ProjectsDirectory &&
+				other.LcmDirectorySettings.ProjectsDirectory == LcmDirectorySettings.ProjectsDirectory &&
 				other.StateDirectory == StateDirectory &&
-				other.FdoDirectorySettings.TemplateDirectory == FdoDirectorySettings.TemplateDirectory &&
+				other.LcmDirectorySettings.TemplateDirectory == LcmDirectorySettings.TemplateDirectory &&
 				other.VerboseProgress == VerboseProgress &&
 				other.WebWorkDirectory == WebWorkDirectory;
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
@@ -134,15 +134,15 @@ namespace LfMerge.Core.Settings
 		public override int GetHashCode()
 		{
 			var hash = CommitWhenDone.GetHashCode() ^
-				FdoDirectorySettings.DefaultProjectsDirectory.GetHashCode() ^
+				LcmDirectorySettings.DefaultProjectsDirectory.GetHashCode() ^
 				MongoDatabaseNamePrefix.GetHashCode() ^
 				MongoDbHostNameAndPort.GetHashCode() ^
 				MongoDbHostName.GetHashCode() ^
 				MongoDbPort.GetHashCode() ^
 				MongoMainDatabaseName.GetHashCode() ^
-				FdoDirectorySettings.ProjectsDirectory.GetHashCode() ^
+				LcmDirectorySettings.ProjectsDirectory.GetHashCode() ^
 				StateDirectory.GetHashCode() ^
-				FdoDirectorySettings.TemplateDirectory.GetHashCode() ^
+				LcmDirectorySettings.TemplateDirectory.GetHashCode() ^
 				VerboseProgress.GetHashCode() ^
 				WebWorkDirectory.GetHashCode();
 			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
@@ -156,9 +156,9 @@ namespace LfMerge.Core.Settings
 
 		#endregion
 
-		public FdoDirectories FdoDirectorySettings { get; private set; }
+		public LcmDirectories LcmDirectorySettings { get; private set; }
 
-		public class FdoDirectories: IFdoDirectories
+		public class LcmDirectories: ILcmDirectories
 		{
 			public void SetProjectsDirectory(string value)
 			{
@@ -170,7 +170,7 @@ namespace LfMerge.Core.Settings
 				TemplateDirectory = value;
 			}
 
-			#region IFdoDirectories implementation
+			#region ILcmDirectories implementation
 
 			public string ProjectsDirectory { get; private set; }
 
@@ -211,7 +211,7 @@ namespace LfMerge.Core.Settings
 			return QueueDirectories[(int)queue];
 		}
 
-		public string WebWorkDirectory { get { return FdoDirectorySettings.ProjectsDirectory; } }
+		public string WebWorkDirectory { get { return LcmDirectorySettings.ProjectsDirectory; } }
 
 		/// <summary>
 		/// Gets the name of the state file. If necessary the state directory is also created.

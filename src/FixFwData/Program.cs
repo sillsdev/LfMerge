@@ -9,15 +9,13 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Reflection.Emit;
 using LfMerge.Core.Logging;
+using SIL.LCModel.FixData;
+using SIL.LCModel.Utils;
 //using SIL.Reporting;
-using SIL.FieldWorks.FixData;
-using SIL.Utils;
 using SyslogLogger = SIL.Linux.Logging.SyslogLogger;
 #if LINUX
 using SIL.PlatformUtilities;
-using SIL.Linux.Logging;
 #endif
 
 namespace FixFwData

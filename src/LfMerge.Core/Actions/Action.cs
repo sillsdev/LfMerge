@@ -1,13 +1,13 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using Autofac;
 using LfMerge.Core.Logging;
-using LfMerge.Core.Settings;
-using SIL.Progress;
-using SIL.FieldWorks.FDO;
 using LfMerge.Core.Queues;
-using System.Collections.Generic;
+using LfMerge.Core.Settings;
+using SIL.LCModel;
+using SIL.Progress;
 
 namespace LfMerge.Core.Actions
 {
@@ -17,7 +17,7 @@ namespace LfMerge.Core.Actions
 		protected ILogger Logger { get; set; }
 		protected IProgress Progress { get; set; }
 
-		private  FdoCache Cache { get; set; }
+		private LcmCache Cache { get; set; }
 
 		#region Action handling
 		public static IAction GetAction(ActionNames actionName)
@@ -35,8 +35,8 @@ namespace LfMerge.Core.Actions
 			containerBuilder.RegisterType<CommitAction>().Keyed<IAction>(ActionNames.Commit).SingleInstance();
 			containerBuilder.RegisterType<EditAction>().Keyed<IAction>(ActionNames.Edit).SingleInstance();
 			containerBuilder.RegisterType<SynchronizeAction>().Keyed<IAction>(ActionNames.Synchronize).SingleInstance();
-			containerBuilder.RegisterType<TransferMongoToFdoAction>().Keyed<IAction>(ActionNames.TransferMongoToFdo).SingleInstance();
-			containerBuilder.RegisterType<TransferFdoToMongoAction>().Keyed<IAction>(ActionNames.TransferFdoToMongo).SingleInstance();
+			containerBuilder.RegisterType<TransferMongoToLcmAction>().Keyed<IAction>(ActionNames.TransferMongoToLcm).SingleInstance();
+			containerBuilder.RegisterType<TransferLcmToMongoAction>().Keyed<IAction>(ActionNames.TransferLcmToMongo).SingleInstance();
 		}
 
 		#endregion
@@ -81,7 +81,7 @@ namespace LfMerge.Core.Actions
 			do
 			{
 				action++;
-				if (action > ActionNames.TransferFdoToMongo)
+				if (action > ActionNames.TransferLcmToMongo)
 					action = 0;
 				yield return action;
 			} while (action != currentAction);

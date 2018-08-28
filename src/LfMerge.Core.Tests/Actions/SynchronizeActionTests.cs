@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -11,8 +11,8 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
+using SIL.LCModel;
 using SIL.TestUtilities;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.Tests.Actions
 {
@@ -31,7 +31,7 @@ namespace LfMerge.Core.Tests.Actions
 		*/
 		private const string testProjectCode = "testlangproj";
 		private const string modifiedTestProjectCode = "testlangproj-modified";
-		private const int originalNumOfFdoEntries = 63;
+		private const int originalNumOfLcmEntries = 63;
 		private const int deletedEntries = 1;
 		private const string testEntryGuidStr = "1a705846-a814-4289-8594-4b874faca6cc";
 		private const string testCreatedEntryGuidStr = "ba8076a9-6552-46b2-a14a-14c01191453b";
@@ -48,7 +48,7 @@ namespace LfMerge.Core.Tests.Actions
 		private Guid _testEntryGuid;
 		private Guid _testCreatedEntryGuid;
 		private Guid _testDeletedEntryGuid;
-		private TransferFdoToMongoAction _transferFdoToMongo;
+		private TransferLcmToMongoAction _transferLcmToMongo;
 
 		[SetUp]
 		public void Setup()
@@ -76,7 +76,7 @@ namespace LfMerge.Core.Tests.Actions
 			if (_recordFactory == null)
 				throw new AssertionException("Sync tests need a mock MongoProjectRecordFactory in order to work.");
 
-			_transferFdoToMongo = new TransferFdoToMongoAction(_env.Settings, _env.Logger, _mongoConnection, _recordFactory);
+			_transferLcmToMongo = new TransferLcmToMongoAction(_env.Settings, _env.Logger, _mongoConnection, _recordFactory);
 		}
 
 		[TearDown]
@@ -98,7 +98,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Setup
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -108,23 +108,23 @@ namespace LfMerge.Core.Tests.Actions
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfLcmEntries));
 
 			LfLexEntry lfEntry = receivedMongoData.First(e => e.Guid == _testEntryGuid);
 			Assert.That(lfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo("English gloss"));
 		}
 
-		private string GetGlossFromFdo(Guid testEntryGuid, int expectedSensesCount)
+		private string GetGlossFromLcm(Guid testEntryGuid, int expectedSensesCount)
 		{
 			var cache = _lfProject.FieldWorksProject.Cache;
-			var lfFdoEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
-			Assert.That(lfFdoEntry, Is.Not.Null);
-			Assert.That(lfFdoEntry.SensesOS.Count, Is.EqualTo(expectedSensesCount));
-			return lfFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text;
+			var lfLcmEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
+			Assert.That(lfLcmEntry, Is.Not.Null);
+			Assert.That(lfLcmEntry.SensesOS.Count, Is.EqualTo(expectedSensesCount));
+			return lfLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text;
 		}
 
 		private string GetGlossFromMongoDb(Guid testEntryGuid,
-			int expectedLfLexEntriesCount = originalNumOfFdoEntries,
+			int expectedLfLexEntriesCount = originalNumOfLcmEntries,
 			int expectedDeletedEntries = deletedEntries)
 		{
 			// _mongoConnection.GetLfLexEntries() returns an enumerator, so we shouldn't
@@ -148,7 +148,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Delete(_lfProject.ProjectDir, true);
 			var ensureClone = new EnsureCloneAction(_env.Settings, _env.Logger, _recordFactory, _mongoConnection);
 			ensureClone.Run(_lfProject);
-			return GetGlossFromFdo(testEntryGuid, expectedSensesCount);
+			return GetGlossFromLcm(testEntryGuid, expectedSensesCount);
 		}
 
 		[Test, Explicit("Superceeded by later tests")]
@@ -158,7 +158,7 @@ namespace LfMerge.Core.Tests.Actions
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
@@ -168,17 +168,17 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry, Is.Not.Null);
-			Assert.That(lDFdoEntry.SensesOS.Count, Is.EqualTo(2));
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry, Is.Not.Null);
+			Assert.That(lDLcmEntry.SensesOS.Count, Is.EqualTo(2));
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			Assert.That(GetGlossFromFdo(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
+			Assert.That(GetGlossFromLcm(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid, expectedDeletedEntries: 0),
 				Is.EqualTo(lfChangedGloss));
 			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
@@ -192,7 +192,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
@@ -206,15 +206,15 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(ldChangedGloss));
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			Assert.That(GetGlossFromFdo(_testEntryGuid, 2), Is.EqualTo(ldChangedGloss));
+			Assert.That(GetGlossFromLcm(_testEntryGuid, 2), Is.EqualTo(ldChangedGloss));
 			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(ldChangedGloss));
 
 			IEnumerable<LfLexEntry> receivedMongoData = _mongoConnection.GetLfLexEntries();
@@ -235,7 +235,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
@@ -251,9 +251,9 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
-			DateTime originalLdDateModified = lDFdoEntry.DateModified;
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDLcmEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -268,7 +268,7 @@ namespace LfMerge.Core.Tests.Actions
 			// LF had the same data previously; however it's a merge conflict so DateModified
 			// got updated
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLfDateModified));
-			// But the FDO modified date (AuthorInfo.ModifiedDate in LF) should be updated.
+			// But the LCM modified date (AuthorInfo.ModifiedDate in LF) should be updated.
 			Assert.That(updatedLfAuthorInfoModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
 			Assert.That(updatedLfDateModified, Is.GreaterThan(originalLdDateModified));
 			Assert.That(_mongoConnection.GetLastSyncedDate(_lfProject), Is.GreaterThanOrEqualTo(timeBeforeRun));
@@ -281,7 +281,7 @@ namespace LfMerge.Core.Tests.Actions
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
@@ -299,9 +299,9 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
-			DateTime originalLdDateModified = lDFdoEntry.DateModified;
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(unchangedGloss));
+			DateTime originalLdDateModified = lDLcmEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -313,7 +313,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(receivedMongoData, Is.Not.Null);
 			Assert.That(receivedMongoData, Is.Not.Empty);
 			// Deleting entries in LF should *not* remove them, just set the isDeleted flag
-			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfLcmEntries));
 			var entry = receivedMongoData.FirstOrDefault(e => e.Guid ==_testEntryGuid);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.IsDeleted, Is.EqualTo(true));
@@ -335,7 +335,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
@@ -350,14 +350,14 @@ namespace LfMerge.Core.Tests.Actions
 			lfEntry.AuthorInfo.ModifiedDate = modificationTimestamp;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 			IEnumerable<LfLexEntry> updatedMongoData = _mongoConnection.GetLfLexEntries();
-			Assert.That(updatedMongoData.Count(), Is.EqualTo(originalNumOfFdoEntries));
+			Assert.That(updatedMongoData.Count(), Is.EqualTo(originalNumOfLcmEntries));
 			Assert.That(updatedMongoData.First(e => e.Guid == _testEntryGuid).IsDeleted, Is.True);
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
-			DateTime originalLdDateModified = lDFdoEntry.DateModified;
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDLcmEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -384,7 +384,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			var lfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
 			var originalLfDateModified = lfEntry.DateModified;
@@ -397,8 +397,8 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -425,7 +425,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testDeletedEntryGuid);
@@ -442,9 +442,9 @@ namespace LfMerge.Core.Tests.Actions
 			var lDcache = _lDProject.FieldWorksProject.Cache;
 			Assert.That(()=> lDcache.ServiceLocator.GetObject(_testDeletedEntryGuid),
 				Throws.InstanceOf<KeyNotFoundException>());
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
-			DateTime originalLdDateModified = lDFdoEntry.DateModified;
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			DateTime originalLdDateModified = lDLcmEntry.DateModified;
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -452,9 +452,9 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify modified LF entry wins
-			Assert.That(GetGlossFromMongoDb(_testDeletedEntryGuid, originalNumOfFdoEntries + 1, 0),
+			Assert.That(GetGlossFromMongoDb(_testDeletedEntryGuid, originalNumOfLcmEntries + 1, 0),
 				Is.EqualTo(lfCreatedGloss));
-			Assert.That(GetGlossFromMongoDb(_testEntryGuid, originalNumOfFdoEntries + 1, 0),
+			Assert.That(GetGlossFromMongoDb(_testEntryGuid, originalNumOfLcmEntries + 1, 0),
 				Is.EqualTo(fwChangedGloss));
 			Assert.That(GetGlossFromLanguageDepot(_testDeletedEntryGuid, 1), Is.EqualTo(lfCreatedGloss));
 			LfLexEntry updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
@@ -472,7 +472,7 @@ namespace LfMerge.Core.Tests.Actions
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			var lfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
 			var originalLfDateModified = lfEntry.DateModified;
@@ -486,8 +486,8 @@ namespace LfMerge.Core.Tests.Actions
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
 			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDFdoEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDFdoEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
@@ -500,29 +500,29 @@ namespace LfMerge.Core.Tests.Actions
 			// LF and LD changed the same entry but different fields, so we want to see the
 			// DateModified change so that LF will re-process the entry.
 			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(originalLfDateModified));
-			// The FDO modified date (AuthorInfo.ModifiedDate in LF) should be updated.
+			// The LCM modified date (AuthorInfo.ModifiedDate in LF) should be updated.
 			Assert.That(updatedLfEntry.AuthorInfo.ModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
 
 			Assert.That(_mongoConnection.GetLastSyncedDate(_lfProject), Is.GreaterThanOrEqualTo(timeBeforeRun));
 		}
 
 		[Test]
-		public void TransferMongoToFdoAction_NoChangedData_DateModifiedUnchanged()
+		public void TransferMongoToLcmAction_NoChangedData_DateModifiedUnchanged()
 		{
 			// Setup
 			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
 			_lfProject.IsInitialClone = true;
-			_transferFdoToMongo.Run(_lfProject);
+			_transferLcmToMongo.Run(_lfProject);
 
 			// Exercise
-			var transferMongoToFdo = new TransferMongoToFdoAction(_env.Settings, _env.Logger,
+			var transferMongoToLcm = new TransferMongoToLcmAction(_env.Settings, _env.Logger,
 				_mongoConnection, _recordFactory, _counts);
-			transferMongoToFdo.Run(_lfProject);
+			transferMongoToLcm.Run(_lfProject);
 
 			// Verify
 			var lfcache = _lfProject.FieldWorksProject.Cache;
-			var lfFdoEntry = lfcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lfFdoEntry.DateModified.ToUniversalTime(),
+			var lfLcmEntry = lfcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			Assert.That(lfLcmEntry.DateModified.ToUniversalTime(),
 				Is.EqualTo(DateTime.Parse("2016-02-25 03:51:29.404")));
 		}
 

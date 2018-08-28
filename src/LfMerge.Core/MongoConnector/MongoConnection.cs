@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System;
@@ -148,7 +148,7 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
-			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare FDO DateModified to previous FDO DateModified.
+			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare LCM DateModified to previous LCM DateModified.
 			filter.Add("authorInfo.modifiedDate", new BsonDocument("$ne", BsonNull.Value));
 			var projection = new BsonDocument();
 			projection.Add("guid", 1);
@@ -237,7 +237,7 @@ namespace LfMerge.Core.MongoConnector
 						.Set(c => c.EntryRef, mongoId)
 						.Set(c => c.Guid, comment.Guid)
 						// DateCreated and DateModified on the comment record track when that Mongo record was created.
-						// AuthorInfo's CreatedDate and ModifiedDate track the values from FDO. (See comments in ConvertFdoToMongoLexicon for more details.)
+						// AuthorInfo's CreatedDate and ModifiedDate track the values from LCM. (See comments in ConvertLcmToMongoLexicon for more details.)
 						.SetOnInsert(c => c.DateCreated, utcNow)  // SetOnInsert because DateCreated should only be set once
 						.Set(c => c.DateModified, utcNow)  // TODO: Can we somehow make this change only if anything else changed? Can we get Mongo to do that for us?
 						.Set(c => c.AuthorInfo.CreatedDate, comment.DateCreated)
@@ -672,7 +672,7 @@ namespace LfMerge.Core.MongoConnector
 			List<string> senseCustomFieldOrder = new List<string>();
 			List<string> exampleCustomFieldOrder = new List<string>();
 
-			// Clean out previous fields and fieldOrders that no longer exist (removed from FDO)
+			// Clean out previous fields and fieldOrders that no longer exist (removed from LCM)
 			foreach (string customFieldNameToRemove in GetCustomFieldConfig(project).Keys.Except(lfCustomFieldList.Keys.ToList()))
 			{
 				if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))

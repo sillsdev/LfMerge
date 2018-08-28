@@ -13,6 +13,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
 using Bugsnag;
+using SIL.WritingSystems;
 
 namespace LfMerge
 {
@@ -26,6 +27,9 @@ namespace LfMerge
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return (int)ErrorCode.InvalidOptions;
+
+			// initialize the SLDR
+			Sldr.Initialize();
 
 			// Username and Password will usually be "x" because it's dealt with on Language Forge site.
 			// However, when debugging LfMerge we want to be able to set it to a real name
@@ -65,6 +69,9 @@ namespace LfMerge
 			}
 			finally
 			{
+				if (Sldr.IsInitialized)
+					Sldr.Cleanup();
+
 				MainClass.Container.Dispose();
 				Cleanup();
 			}
@@ -111,7 +118,7 @@ namespace LfMerge
 				{
 					// The repo is for an older model version
 					var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-					return chorusHelper.ModelVersion;
+					return chorusHelper.ModelVersion.ToString();
 				}
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.HOLD &&
@@ -124,7 +131,7 @@ namespace LfMerge
 					{
 						// The repo is for an older model version
 						var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-						return chorusHelper.ModelVersion;
+						return chorusHelper.ModelVersion.ToString();
 					}
 				}
 			}

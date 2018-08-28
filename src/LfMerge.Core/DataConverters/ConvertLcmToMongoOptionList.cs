@@ -1,16 +1,16 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SIL.FieldWorks.FDO;
-using SIL.FieldWorks.Common.COMInterfaces;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertFdoToMongoOptionList
+	public class ConvertLcmToMongoOptionList
 	{
 		protected int _wsForKeys;
 		protected LfOptionList _lfOptionList;
@@ -21,13 +21,13 @@ namespace LfMerge.Core.DataConverters
 		protected ILgWritingSystemFactory _wsf;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LfMerge.DataConverters.ConvertFdoToMongoOptionList"/> class.
+		/// Initializes a new instance of the <see cref="ConvertLcmToMongoOptionList"/> class.
 		/// </summary>
 		/// <param name="lfOptionList">Lf option list.</param>
 		/// <param name="wsForKeys">Ws for keys.</param>
 		/// <param name="listCode">List code.</param>
 		/// <param name="logger">Logger.</param>
-		public ConvertFdoToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger, ILgWritingSystemFactory wsf)
+		public ConvertLcmToMongoOptionList(LfOptionList lfOptionList, int wsForKeys, string listCode, ILogger logger, ILgWritingSystemFactory wsf)
 		{
 			_logger = logger;
 			_wsf = wsf;
@@ -38,21 +38,22 @@ namespace LfMerge.Core.DataConverters
 			UpdateOptionListItemDictionaries(_lfOptionList);
 		}
 
-		public static string FdoOptionListName(string listCode) {
-			if (MagicStrings.FdoOptionlistNames.ContainsKey(listCode)) {
-				return MagicStrings.FdoOptionlistNames[listCode];
-			}
+		public static string LcmOptionListName(string listCode)
+		{
+			if (MagicStrings.LcmOptionlistNames.ContainsKey(listCode))
+				return MagicStrings.LcmOptionlistNames[listCode];
+
 			return listCode;
 		}
 
-		public virtual LfOptionList PrepareOptionListUpdate(ICmPossibilityList fdoOptionList)
+		public virtual LfOptionList PrepareOptionListUpdate(ICmPossibilityList lcmOptionList)
 		{
 			bool optionListDiffersFromOriginal = false;
-			Dictionary<Guid, ICmPossibility> fdoOptionListByGuid = fdoOptionList.ReallyReallyAllPossibilities
+			Dictionary<Guid, ICmPossibility> lcmOptionListByGuid = lcmOptionList.ReallyReallyAllPossibilities
 				// .Where(poss => poss.Guid != null) // Not needed as ICmPossibility GUIDs are not nullable
 				.ToDictionary(poss => poss.Guid);
 
-			foreach (ICmPossibility poss in fdoOptionListByGuid.Values)
+			foreach (ICmPossibility poss in lcmOptionListByGuid.Values)
 			{
 				LfOptionListItem correspondingItem;
 				if (_lfOptionListItemByGuid.TryGetValue(poss.Guid, out correspondingItem))
@@ -71,15 +72,15 @@ namespace LfMerge.Core.DataConverters
 			}
 
 			var lfNewOptionList = CloneOptionListWithEmptyItems(_lfOptionList);
-			// We filter by "Does FDO have an option list item with corresponding GUID?" because if it doesn't,
-			// then that option list item was probably deleted in FDO, so we should delete it here.
+			// We filter by "Does LCM have an option list item with corresponding GUID?" because if it doesn't,
+			// then that option list item was probably deleted in LCM, so we should delete it here.
 			lfNewOptionList.Items = _lfOptionListItemByGuid.Values
-				.Where(item => fdoOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
+				.Where(item => lcmOptionListByGuid.ContainsKey(item.Guid.GetValueOrDefault()))
 				.ToList();
 
 			if (lfNewOptionList.Items.Count != _lfOptionList.Items.Count)
 			{
-				// Deleted at least one item because it had disappeared from FDO
+				// Deleted at least one item because it had disappeared from LCM
 				optionListDiffersFromOriginal = true;
 			}
 
@@ -91,44 +92,44 @@ namespace LfMerge.Core.DataConverters
 			return lfNewOptionList;
 		}
 
-		public string LfItemKeyString(ICmPossibility fdoOptionListItem, int ws)
+		public string LfItemKeyString(ICmPossibility lcmOptionListItem, int ws)
 		{
 			string result;
-			if (fdoOptionListItem == null)
+			if (lcmOptionListItem == null)
 				return null;
 
 			if (_lfOptionList != null)
 			{
-				if (_lfOptionListItemKeyByGuid.TryGetValue(fdoOptionListItem.Guid, out result))
+				if (_lfOptionListItemKeyByGuid.TryGetValue(lcmOptionListItem.Guid, out result))
 					return result;
 
 				// We shouldn't get here, because the option list SHOULD be pre-populated.
 				_logger.Error("Got an option list item without a corresponding LF option list item. " +
 					"In option list name '{0}', list code '{1}': " +
-					"FDO option list item '{2}' had GUID {3} but no LF option list item was found",
+					"LCM option list item '{2}' had GUID {3} but no LF option list item was found",
 					_lfOptionList.Name, _lfOptionList.Code,
-					fdoOptionListItem.AbbrAndName, fdoOptionListItem.Guid
+					lcmOptionListItem.AbbrAndName, lcmOptionListItem.Guid
 				);
 				return null;
 			}
 
-			if (fdoOptionListItem.Abbreviation == null || fdoOptionListItem.Abbreviation.get_String(ws) == null)
+			if (lcmOptionListItem.Abbreviation == null || lcmOptionListItem.Abbreviation.get_String(ws) == null)
 			{
 				// Last-ditch effort
 				char ORC = '\ufffc';
-				return fdoOptionListItem.AbbrevHierarchyString.Split(ORC).LastOrDefault();
+				return lcmOptionListItem.AbbrevHierarchyString.Split(ORC).LastOrDefault();
 			}
 			else
 			{
-				return ConvertFdoToMongoTsStrings.TextFromTsString(fdoOptionListItem.Abbreviation.get_String(ws), _wsf);
+				return ConvertLcmToMongoTsStrings.TextFromTsString(lcmOptionListItem.Abbreviation.get_String(ws), _wsf);
 			}
 		}
 
 		// For multi-option lists; use like "LfStringArrayField.FromStrings(_converter.LfItemKeyStrings(PossibilityList), _wsEn)".
-		public IEnumerable<string> LfItemKeyStrings(IEnumerable<ICmPossibility> fdoOptionListItems, int ws)
+		public IEnumerable<string> LfItemKeyStrings(IEnumerable<ICmPossibility> lcmOptionListItems, int ws)
 		{
-			foreach (ICmPossibility fdoOptionListItem in fdoOptionListItems)
-				yield return LfItemKeyString(fdoOptionListItem, ws);
+			foreach (ICmPossibility lcmOptionListItem in lcmOptionListItems)
+				yield return LfItemKeyString(lcmOptionListItem, ws);
 		}
 
 		protected LfOptionListItem CmPossibilityToOptionListItem(ICmPossibility pos)
@@ -159,7 +160,7 @@ namespace LfMerge.Core.DataConverters
 			result.Items = new List<LfOptionListItem>();
 			result.DateCreated = result.DateModified = DateTime.Now;  // TODO: Investigate why this was changed from UtcNow
 			result.Code = listCode;
-			result.Name = FdoOptionListName(listCode);
+			result.Name = LcmOptionListName(listCode);
 			result.CanDelete = false;
 			result.DefaultItemKey = null;
 			return result;
@@ -200,7 +201,7 @@ namespace LfMerge.Core.DataConverters
 		protected bool SetOptionListItemFromCmPossibility(LfOptionListItem item, ICmPossibility poss, bool setKey = false)
 		{
 			bool modified = false;
-			string abbreviation = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.BestAnalysisVernacularAlternative, _wsf);
+			string abbreviation = ConvertLcmToMongoTsStrings.TextFromTsString(poss.Abbreviation.BestAnalysisVernacularAlternative, _wsf);
 			if (item.Abbreviation != abbreviation)
 			{
 				modified = true;
@@ -208,14 +209,14 @@ namespace LfMerge.Core.DataConverters
 			item.Abbreviation = abbreviation;
 			if (setKey)
 			{
-				string key = FindAppropriateKey(ConvertFdoToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsForKeys), _wsf));
+				string key = FindAppropriateKey(ConvertLcmToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsForKeys), _wsf));
 				if (item.Key != key)
 				{
 					modified = true;
 				}
 				item.Key = key;
 			}
-			string value = ConvertFdoToMongoTsStrings.TextFromTsString(poss.Name.BestAnalysisVernacularAlternative, _wsf);
+			string value = ConvertLcmToMongoTsStrings.TextFromTsString(poss.Name.BestAnalysisVernacularAlternative, _wsf);
 			if (item.Value != value)
 			{
 				modified = true;

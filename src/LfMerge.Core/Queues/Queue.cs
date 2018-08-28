@@ -41,13 +41,13 @@ namespace LfMerge.Core.Queues
 		{
 			switch (action)
 			{
-			case ActionNames.TransferMongoToFdo:
+			case ActionNames.TransferMongoToLcm:
 			case ActionNames.Synchronize:
 				return QueueNames.Synchronize;
 			case ActionNames.Commit:
 			case ActionNames.None:
 			case ActionNames.Edit:
-			case ActionNames.TransferFdoToMongo:
+			case ActionNames.TransferLcmToMongo:
 				break;
 			}
 			return QueueNames.None;

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -9,12 +9,12 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using Newtonsoft.Json;
+using SIL.LCModel;
 using SIL.Progress;
-using SIL.FieldWorks.FDO;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertFdoToMongoComments
+	public class ConvertLcmToMongoComments
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
@@ -22,7 +22,7 @@ namespace LfMerge.Core.DataConverters
 		private IProgress _progress;
 		private FwServiceLocatorCache _servLoc;
 		private MongoProjectRecordFactory _factory;
-		public ConvertFdoToMongoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
+		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
 		{
 			_conn = conn;
 			_project = proj;
@@ -39,14 +39,14 @@ namespace LfMerge.Core.DataConverters
 
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
 			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
-			// _logger.Debug("Doing Fdo->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
-			// _logger.Debug("Doing Fdo->Mongo direction. About to call LfMergeBridge with that JSON...");
+			// _logger.Debug("Doing Lcm->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
+			// _logger.Debug("Doing Lcm->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
 			if (CallLfMergeBridge(allCommentsJson, out bridgeOutput))
 			{
-				string newCommentsStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
-				string newRepliesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
-				string newStatusChangesStr = ConvertMongoToFdoComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New status changes on comments already in LF: ");
+				string newCommentsStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
+				string newRepliesStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
+				string newStatusChangesStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New status changes on comments already in LF: ");
 				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr);
 				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
 				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
@@ -148,18 +148,18 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public LfCommentRegarding FromTargetGuid(Guid guidOfUnknownFdoObject, FieldLists fieldConfigs)
+		public LfCommentRegarding FromTargetGuid(Guid guidOfUnknownLcmObject, FieldLists fieldConfigs)
 		{
 			var result = new LfCommentRegarding(); // Worst case, we'll return this empty object rather than null
-			if (! _servLoc.ObjectRepository.IsValidObjectId(guidOfUnknownFdoObject)) return result;
-			ICmObject fdoObject = _servLoc.ObjectRepository.GetObject(guidOfUnknownFdoObject);
-			if (fdoObject == null) return result;
-			result.TargetGuid = fdoObject.Guid.ToString();
-			switch (fdoObject.ClassID)
+			if (! _servLoc.ObjectRepository.IsValidObjectId(guidOfUnknownLcmObject)) return result;
+			ICmObject lcmObject = _servLoc.ObjectRepository.GetObject(guidOfUnknownLcmObject);
+			if (lcmObject == null) return result;
+			result.TargetGuid = lcmObject.Guid.ToString();
+			switch (lcmObject.ClassID)
 			{
 				case LexEntryTags.kClassId:
 				{
-					var entry = fdoObject as ILexEntry;
+					var entry = lcmObject as ILexEntry;
 					if (entry != null) // Paranoia; should never happen, but check anyway
 					{
 						result.Word = entry.ShortName;
@@ -169,7 +169,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				case LexSenseTags.kClassId:
 				{
-					var sense = fdoObject as ILexSense;
+					var sense = lcmObject as ILexSense;
 					if (sense == null || sense.Entry == null) // Paranoia; should never happen, but check anyway
 						return result;
 					ILexEntry entry = sense.Entry;
@@ -183,7 +183,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				case LexExampleSentenceTags.kClassId:
 				{
-					var example = fdoObject as ILexExampleSentence;
+					var example = lcmObject as ILexExampleSentence;
 					if (example == null || example.Owner == null) // Paranoia; should never happen, but check anyway
 						return result;
 					var sense = example.Owner as ILexSense; // Example sentences are always owned by senses
@@ -201,11 +201,11 @@ namespace LfMerge.Core.DataConverters
 				default:
 				{
 					// Last-ditch effort: climb the owner chain and maybe we'll hit a LexEntry
-					while (fdoObject.Owner != null && fdoObject.ClassID != LexEntryTags.kClassId)
-						fdoObject = fdoObject.Owner;
-					if (fdoObject != null && fdoObject.ClassID == LexEntryTags.kClassId)
+					while (lcmObject.Owner != null && lcmObject.ClassID != LexEntryTags.kClassId)
+						lcmObject = lcmObject.Owner;
+					if (lcmObject != null && lcmObject.ClassID == LexEntryTags.kClassId)
 					{
-						var entry = fdoObject as ILexEntry;
+						var entry = lcmObject as ILexEntry;
 						if (entry != null)
 						{
 							result.Word = entry.ShortName;
@@ -219,28 +219,28 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
-		public ILexEntry OwningEntry(Guid guidOfUnknownFdoObject)
+		public ILexEntry OwningEntry(Guid guidOfUnknownLcmObject)
 		{
 			Guid result = Guid.Empty;
-			var fdoObject = _servLoc.ObjectRepository.GetObject(guidOfUnknownFdoObject);
-			if (fdoObject == null)
+			var lcmObject = _servLoc.ObjectRepository.GetObject(guidOfUnknownLcmObject);
+			if (lcmObject == null)
 				return null;
-			switch (fdoObject.ClassID)
+			switch (lcmObject.ClassID)
 			{
 				case LexEntryTags.kClassId:
 				{
-					return fdoObject as ILexEntry;
+					return lcmObject as ILexEntry;
 				}
 				case LexSenseTags.kClassId:
 				{
-					var sense = fdoObject as ILexSense;
+					var sense = lcmObject as ILexSense;
 					if (sense == null || sense.Entry == null)
 						return null;
 					return sense.Entry;
 				}
 				case LexExampleSentenceTags.kClassId:
 				{
-					var example = fdoObject as ILexExampleSentence;
+					var example = lcmObject as ILexExampleSentence;
 					if (example == null || example.Owner == null)
 						return null;
 					var sense = example.Owner as ILexSense;
@@ -250,17 +250,17 @@ namespace LfMerge.Core.DataConverters
 				}
 				case CmPictureTags.kClassId:
 				{
-					var picture = fdoObject as ICmPicture;
+					var picture = lcmObject as ICmPicture;
 					return picture.Owner as ILexEntry;
 				}
 				default:
 				{
 					// Last-ditch effort: climb the owner chain and maybe we'll hit a LexEntry
-					while (fdoObject.Owner != null && fdoObject.ClassID != LexEntryTags.kClassId)
-						fdoObject = fdoObject.Owner;
-					if (fdoObject != null && fdoObject.ClassID == LexEntryTags.kClassId)
+					while (lcmObject.Owner != null && lcmObject.ClassID != LexEntryTags.kClassId)
+						lcmObject = lcmObject.Owner;
+					if (lcmObject != null && lcmObject.ClassID == LexEntryTags.kClassId)
 					{
-						return fdoObject as ILexEntry;
+						return lcmObject as ILexEntry;
 					}
 					// But if we didn't, then just give up
 					return null;

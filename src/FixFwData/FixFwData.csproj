@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000070</DatabaseVersion>
+    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000072</DatabaseVersion>
     <ProjectGuid>{FF82CEC0-353A-4E79-AB7E-6AFEF1F15EC2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -72,7 +72,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000069</OutputPath>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_7000069;$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -84,7 +84,19 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\7000070</OutputPath>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_7000070;$(DefinePlatformConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000072|AnyCPU' ">
+    <DatabaseVersion>7000072</DatabaseVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\7000072</OutputPath>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);$(DefinePlatformConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -97,6 +109,18 @@
     </Reference>
     <Reference Include="SIL.Core">
       <HintPath>..\..\lib\SIL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.FixData">
+      <HintPath>..\..\lib\SIL.LCModel.FixData.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.LCModel.Utils">
+      <HintPath>..\..\lib\SIL.LCModel.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Lexicon">
+      <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

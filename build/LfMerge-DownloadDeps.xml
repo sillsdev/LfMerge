@@ -5,7 +5,7 @@
 		<KeepJobsFile Condition="'$(KeepJobsFile)'==''">true</KeepJobsFile>
 	</PropertyGroup>
 
-	<Import Project="$(SolutionDir)/packages/BuildDependencyTasks.*/tools/BuildDependencyTasks.targets"/>
+	<Import Project="$(SolutionDir)/packages/BuildDependencyTasks/tools/BuildDependencyTasks.targets"/>
 
 	<Target Name="DownloadDependenciesTarget">
 		<Dependencies DependencyFile="LfMerge.dep" UseDependencyFile="true" KeepJobsFile="$(KeepJobsFile)"

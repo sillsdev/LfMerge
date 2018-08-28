@@ -1,10 +1,10 @@
-// Copyright (c) 2016 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using SIL.FieldWorks.Common.COMInterfaces;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
 
 namespace LfMerge.Core.DataConverters.CanonicalSources
 {

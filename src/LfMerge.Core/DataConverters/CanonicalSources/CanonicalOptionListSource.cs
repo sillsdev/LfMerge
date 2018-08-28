@@ -29,7 +29,7 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 		{
 			// TODO: Consider whether to make singletons, for the sake of not having to re-parse the resources.
 			// However, I suspect that it won't be necessary, as CanonicalOptionListSource instances get attached
-			// to ConvertMongoToFdoOptionList instances, and those instances stick around for one entire Lexicon conversion.
+			// to ConvertMongoToLcmOptionList instances, and those instances stick around for one entire Lexicon conversion.
 			// It appears to take 200ms to process semantic domains, and 30ms to process grammatical info. So it might
 			// not be worth the extra complexity of singletons -- or it might. That remains to be decided.
 			if (listCode == MagicStrings.LfOptionListCodeForGrammaticalInfo)

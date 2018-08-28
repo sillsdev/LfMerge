@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
 using SIL.Code;
-using SIL.FieldWorks.FDO;
+using SIL.LCModel;
 
 namespace LfMerge.Core.Actions
 {
@@ -58,17 +58,17 @@ namespace LfMerge.Core.Actions
 		{
 			using (MainClass.Container.BeginLifetimeScope())
 			{
-				var transferAction = GetAction(ActionNames.TransferMongoToFdo);
+				var transferAction = GetAction(ActionNames.TransferMongoToLcm);
 				transferAction.Run(project);
 
 				int entriesAdded = 0, entriesModified = 0, entriesDeleted = 0;
-				// Need to (safely) cast to TransferMongoToFdoAction to get the entry counts
-				var transferMongoToFdoAction = transferAction as TransferMongoToFdoAction;
-				if (transferMongoToFdoAction != null)
+				// Need to (safely) cast to TransferMongoToLcmAction to get the entry counts
+				var transferMongoToLcmAction = transferAction as TransferMongoToLcmAction;
+				if (transferMongoToLcmAction != null)
 				{
-					entriesAdded    = transferMongoToFdoAction.EntryCounts.Added;
-					entriesModified = transferMongoToFdoAction.EntryCounts.Modified;
-					entriesDeleted  = transferMongoToFdoAction.EntryCounts.Deleted;
+					entriesAdded    = transferMongoToLcmAction.EntryCounts.Added;
+					entriesModified = transferMongoToLcmAction.EntryCounts.Modified;
+					entriesDeleted  = transferMongoToLcmAction.EntryCounts.Deleted;
 				}
 
 				Logger.Debug("About to dispose FW project {0}", project.ProjectCode);
@@ -88,7 +88,7 @@ namespace LfMerge.Core.Actions
 				{
 					{"fullPathToProject", project.ProjectDir},
 					{"fwdataFilename", project.FwDataPath},
-					{"fdoDataModelVersion", FdoCache.ModelVersion },
+					{"fdoDataModelVersion", LcmCache.ModelVersion.ToString() },
 					{"languageDepotRepoName", "Language Depot"},
 					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)},
 					{"commitMessage", commitMessage}
@@ -107,8 +107,8 @@ namespace LfMerge.Core.Actions
 					var index = line.IndexOf(cannotCommitCurrentBranch, StringComparison.Ordinal);
 					Require.That(index >= 0);
 
-					var modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length, 7);
-					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
+					var modelVersion = int.Parse(line.Substring(index + cannotCommitCurrentBranch.Length, 7));
+					if (modelVersion < MagicStrings.MinimalModelVersion)
 					{
 						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,
 							ProcessingState.SendReceiveStates.HOLD);
@@ -128,7 +128,7 @@ namespace LfMerge.Core.Actions
 					var index = line.IndexOf(pulledHigherModel, StringComparison.Ordinal);
 					Require.That(index >= 0);
 
-					var modelVersion = line.Substring(index + pulledHigherModel.Length, 7);
+					var modelVersion = int.Parse(line.Substring(index + pulledHigherModel.Length, 7));
 					ChorusHelper.SetModelVersion(modelVersion);
 
 					// The .hg branch has a higher model version than the .fwdata file. We allow
@@ -173,13 +173,13 @@ namespace LfMerge.Core.Actions
 					Logger.Notice(line);
 				}
 
-				IAction transferFdoToMongoAction = GetAction(ActionNames.TransferFdoToMongo);
-				if (transferFdoToMongoAction == null)
+				IAction transferLcmToMongoAction = GetAction(ActionNames.TransferLcmToMongo);
+				if (transferLcmToMongoAction == null)
 				{
-					Logger.Error("Failed to run TransferFdoToMongo action: GetAction returned null");
+					Logger.Error("Failed to run TransferLcmToMongo action: GetAction returned null");
 					return;
 				}
-				transferFdoToMongoAction.Run(project);
+				transferLcmToMongoAction.Run(project);
 			}
 		}
 

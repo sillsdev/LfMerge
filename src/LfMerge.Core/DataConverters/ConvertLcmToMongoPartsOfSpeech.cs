@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
-using SIL.FieldWorks.FDO;
+
+using SIL.LCModel;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertFdoToMongoPartsOfSpeech
+	public class ConvertLcmToMongoPartsOfSpeech
 	{
 		public static int[] KnownMsaClassIds = {
 			MoDerivAffMsaTags.kClassId,
@@ -19,7 +20,7 @@ namespace LfMerge.Core.DataConverters
 			switch (msa.ClassID)
 			{
 			case MoDerivAffMsaTags.kClassId:
-				// FDO considers the "From" PoS to be the main one, and "To" to be the secondary one
+				// LCM considers the "From" PoS to be the main one, and "To" to be the secondary one
 				secondaryPos = ((IMoDerivAffMsa)msa).ToPartOfSpeechRA;
 				return ((IMoDerivAffMsa)msa).FromPartOfSpeechRA;
 			case MoDerivStepMsaTags.kClassId:

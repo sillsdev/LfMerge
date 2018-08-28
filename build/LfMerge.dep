@@ -38,6 +38,12 @@ RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=SIL.Core.dll=>lib/
 SIL.Core.pdb=>lib/
+SIL.Core.Desktop.dll=>lib/
+SIL.Core.Desktop.pdb=>lib/
+SIL.Lexicon.dll=>lib/
+SIL.Lexicon.pdb=>lib/
+SIL.WritingSystems.dll=>lib/
+SIL.WritingSystems.pdb=>lib/
 SIL.Lift.dll=>lib/
 SIL.Lift.pdb=>lib/
 SIL.TestUtilities.dll=>lib/
@@ -68,6 +74,12 @@ RevisionValue=latest.lastSuccessful
 Condition=Windows
 Path=SIL.Core.dll=>lib/
 SIL.Core.pdb=>lib/
+SIL.Core.Desktop.dll=>lib/
+SIL.Core.Desktop.pdb=>lib/
+SIL.Lexicon.dll=>lib/
+SIL.Lexicon.pdb=>lib/
+SIL.WritingSystems.dll=>lib/
+SIL.WritingSystems.pdb=>lib/
 SIL.Lift.dll=>lib/
 SIL.Lift.pdb=>lib/
 SIL.TestUtilities.dll=>lib/
@@ -105,8 +117,8 @@ LibChorus.dll => lib/
 LibChorus.pdb => lib/
 
 
-[TC::Liblcm_LiblcmLinux64masterContinuous]
-Name=liblcm-linux64-master Continuous
+[TC::lcm_linux64_develop_Mono5_continuous]
+Name=liblcm-linux64-develop-mono5 Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Linux
@@ -116,8 +128,8 @@ Path=+:LCM.zip!**=>lib/
 -:LCM.zip!SIL.LCModel.Build.Tasks.dll*
 -:LCM.zip!SIL.LCModel.Build.Tasks.pdb
 
-[TC::Liblcm_LiblcmWin32masterContinuous]
-Name=liblcm-win64-master Continuous
+[TC::lcm_win32_develop_continuous]
+Name=liblcm-win32-develop Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Win32
@@ -127,8 +139,8 @@ Path=+:LCM.zip!**=>lib/
 -:LCM.zip!SIL.LCModel.Build.Tasks.dll*
 -:LCM.zip!SIL.LCModel.Build.Tasks.pdb
 
-[TC::Liblcm_LiblcmWin64masterContinuous]
-Name=liblcm-win64-master Continuous
+[TC::lcm_win64_develop_continuous]
+Name=liblcm-win64-develop Continuous
 RevisionName=lastSuccessful
 RevisionValue=latest.lastSuccessful
 Condition=Win64

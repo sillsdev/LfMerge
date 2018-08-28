@@ -1,21 +1,20 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Model;
 using MongoDB.Bson;
-using MongoDB.Driver;
 using NUnit.Framework;
-using SIL.FieldWorks.FDO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SIL.FieldWorks.Common.COMInterfaces;
+using SIL.LCModel;
+using SIL.LCModel.Core.KernelInterfaces;
 
-namespace LfMerge.Core.Tests.Fdo
+namespace LfMerge.Core.Tests.Lcm
 {
-	public class TransferMongoToFdoActionTests : FdoTestBase
+	public class TransferMongoToLcmActionTests : LcmTestBase
 	{
 		[Test]
 		public void Action_Should_UpdateDefinitions()
@@ -30,10 +29,10 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;
 			string expectedShortName = data.bsonTestData["citationForm"].AsBsonDocument.GetElement(0).Value["value"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
@@ -59,13 +58,13 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(newMongoPictureCount, Is.EqualTo(2));
 			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
-			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
-			FdoCache cache = _cache;
+			// Initial LCM project has 63 entries, 3 internal pictures, and 1 externally linked picture
+			LcmCache cache = _cache;
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
-			int originalNumOfFdoPictures = entryRepo.AllInstances().
+			int originalNumOfLcmPictures = entryRepo.AllInstances().
 				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(originalNumOfLcmPictures, Is.EqualTo(3+1));
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
 			var entryBefore = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
@@ -73,18 +72,18 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(entryBefore.SensesOS.First().PicturesOS.Count, Is.EqualTo(1));
 
 			// Exercise adding 1 picture with 2 captions. Note that the picture that was previously attached
-			// to this FDO entry will end up being deleted, because it does not have a corresponding picture in LF.
+			// to this LCM entry will end up being deleted, because it does not have a corresponding picture in LF.
 			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify "Added" picture is now the only picture on the sense (because the "old" picture was deleted),
 			// and that it has 2 captions with the expected values.
 			entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
-			int numOfFdoPictures = entryRepo.AllInstances().
+			int numOfLcmPictures = entryRepo.AllInstances().
 				Count(e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(numOfFdoPictures, Is.EqualTo(originalNumOfFdoPictures));
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(numOfLcmPictures, Is.EqualTo(originalNumOfLcmPictures));
 
 			var entry = cache.ServiceLocator.GetObject(expectedGuid) as ILexEntry;
 			Assert.IsNotNull(entry);
@@ -96,7 +95,7 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(entry.SensesOS[0].PicturesOS[1].PictureFileRA.InternalPath.ToString(),
 				Is.EqualTo(expectedExternalFileName));
 
-			LfMultiText expectedNewCaption = ConvertFdoToMongoLexicon.
+			LfMultiText expectedNewCaption = ConvertLcmToMongoLexicon.
 				ToMultiText(entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
@@ -107,12 +106,12 @@ namespace LfMerge.Core.Tests.Fdo
 
 			var testSubEntry = cache.ServiceLocator.GetObject(Guid.Parse(TestSubEntryGuidStr)) as ILexEntry;
 			Assert.That(testSubEntry, Is.Not.Null);
-			Assert.That(testSubEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath.ToString(),
-				Is.EqualTo("Pictures\\TestImage.tif"));
+			Assert.That(testSubEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath,
+				Is.EqualTo(string.Format("Pictures{0}TestImage.tif", Path.DirectorySeparatorChar)));
 			var kenEntry = cache.ServiceLocator.GetObject(Guid.Parse(KenEntryGuidStr)) as ILexEntry;
 			Assert.That(kenEntry, Is.Not.Null);
-			Assert.That(kenEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath.ToString(),
-				Is.EqualTo("F:\\src\\xForge\\web-languageforge\\test\\php\\common\\TestImage.jpg"));
+			Assert.That(kenEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath,
+				Is.EqualTo(string.Format("F:{0}src{0}xForge{0}web-languageforge{0}test{0}php{0}common{0}TestImage.jpg", Path.DirectorySeparatorChar)));
 		}
 
 		[Test]
@@ -126,13 +125,13 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(newMongoPictureCount, Is.EqualTo(2));
 			Assert.That(newMongoCaptionCount, Is.EqualTo(2));
 
-			// Initial FDO project has 63 entries, 3 internal pictures, and 1 externally linked picture
-			FdoCache cache = _cache;
+			// Initial LCM project has 63 entries, 3 internal pictures, and 1 externally linked picture
+			LcmCache cache = _cache;
 			ILexEntryRepository entryRepo = _servLoc.GetInstance<ILexEntryRepository>();
-			int originalNumOfFdoPictures = entryRepo.AllInstances().Count(
+			int originalNumOfLcmPictures = entryRepo.AllInstances().Count(
 				e => (e.SensesOS.Count > 0) && (e.SensesOS[0].PicturesOS.Count > 0));
-			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfFdoEntries));
-			Assert.That(originalNumOfFdoPictures, Is.EqualTo(3+1));
+			Assert.That(entryRepo.Count, Is.EqualTo(OriginalNumOfLcmEntries));
+			Assert.That(originalNumOfLcmPictures, Is.EqualTo(3+1));
 			string expectedGuidStrBefore = data.bsonTestData["guid"].AsString;
 			Guid expectedGuidBefore = Guid.Parse(expectedGuidStrBefore);
 			var entryBefore = entryRepo.GetObject(expectedGuidBefore);
@@ -142,10 +141,10 @@ namespace LfMerge.Core.Tests.Fdo
 			// Exercise running Action twice
 			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(data.bsonTestData);
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			string expectedGuidStr = data.bsonTestData["guid"].AsString;
 			Guid expectedGuid = Guid.Parse(expectedGuidStr);
@@ -158,16 +157,16 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_WithEmptyMongoGrammar_ShouldPreserveFdoGrammarEntries()
+		public void Action_WithEmptyMongoGrammar_ShouldPreserveLcmGrammarEntries()
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -183,10 +182,10 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -205,7 +204,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
@@ -215,7 +214,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(newEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(1));
@@ -231,11 +230,11 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
@@ -244,7 +243,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -260,7 +259,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
@@ -268,7 +267,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -287,7 +286,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
@@ -306,7 +305,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(newEntry2);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(2));
@@ -322,11 +321,11 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
@@ -343,7 +342,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(kenEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -359,7 +358,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
@@ -371,7 +370,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -390,7 +389,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
@@ -400,7 +399,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(newEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(1));
@@ -411,7 +410,7 @@ namespace LfMerge.Core.Tests.Fdo
 				Is.EqualTo("Language Forge: 1 entry added"));
 
 			// Exercise again
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify zero on second run
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -427,11 +426,11 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
@@ -440,7 +439,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -451,7 +450,7 @@ namespace LfMerge.Core.Tests.Fdo
 				Is.EqualTo("Language Forge: 1 entry modified"));
 
 			// Exercise again
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify zero on second run
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -467,7 +466,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
@@ -475,7 +474,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -486,7 +485,7 @@ namespace LfMerge.Core.Tests.Fdo
 				Is.EqualTo("Language Forge: 1 entry deleted"));
 
 			// Exercise again
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify zero on second run
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -505,7 +504,7 @@ namespace LfMerge.Core.Tests.Fdo
 
 			LfLexEntry newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
 			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
@@ -515,7 +514,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(newEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(1));
@@ -536,7 +535,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(newEntry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(1));
@@ -554,11 +553,11 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
 			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
@@ -567,7 +566,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -585,7 +584,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise second run
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify second run
 			Assert.That(_counts.Modified, Is.EqualTo(1));
@@ -603,7 +602,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
@@ -611,7 +610,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			Assert.That(_counts.Added,    Is.EqualTo(0));
@@ -626,7 +625,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise second run
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify second run
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
@@ -661,14 +660,14 @@ namespace LfMerge.Core.Tests.Fdo
 			AddCustomFieldToSense(sense, fieldName, new BsonDocument("values", value));
 		}
 
-		public IEnumerable<string> GetFdoAbbrevsForField(ILexSense fdoSense, int fieldId)
+		public IEnumerable<string> GetLcmAbbrevsForField(ILexSense lcmSense, int fieldId)
 		{
-			var foo = fdoSense.Guid;
-			FdoCache cache = _cache;
-			int size = cache.DomainDataByFlid.get_VecSize(fdoSense.Hvo, fieldId);
+			var foo = lcmSense.Guid;
+			LcmCache cache = _cache;
+			int size = cache.DomainDataByFlid.get_VecSize(lcmSense.Hvo, fieldId);
 			for (int i = 0; i < size; i++)
 			{
-				int itemHvo = cache.DomainDataByFlid.get_VecItem(fdoSense.Hvo, fieldId, i);
+				int itemHvo = cache.DomainDataByFlid.get_VecItem(lcmSense.Hvo, fieldId, i);
 				ICmObject obj = cache.ServiceLocator.GetObject(itemHvo);
 				// Note that we check for CmCustomItemTags.kClassId, *not* CmPossibilityTags.kClassId. This field has a custom list as its target.
 				Assert.That(obj.ClassID, Is.EqualTo(CmCustomItemTags.kClassId), "Custom Multi ListRef field in test data should point to CmCustomItem objects, not CmPossibility (or anything else)");
@@ -686,7 +685,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			sutFdoToMongo.Run(lfProj);
+			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
 			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
@@ -697,18 +696,18 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockLfLexEntry(entry);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
-			FdoCache cache = _cache;
+			LcmCache cache = _cache;
 
-			var fdoEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
-			Assert.IsNotNull(fdoEntry);
+			var lcmEntry = cache.ServiceLocator.GetObject(entryGuid) as ILexEntry;
+			Assert.IsNotNull(lcmEntry);
 			Assert.That(cache.ServiceLocator.MetaDataCache.FieldExists(LexSenseTags.kClassName, "Cust Multi ListRef", false), "LexSense should have the Cust Multi ListRef field in our test data.");
 			int fieldId = cache.ServiceLocator.MetaDataCache.GetFieldId(LexSenseTags.kClassName, "Cust Multi ListRef", false);
-			ILexSense fdoSense = fdoEntry.SensesOS[whichSense];
-			IEnumerable<string> fdoAbbrevs = GetFdoAbbrevsForField(fdoSense, fieldId);
-			Assert.That(fdoAbbrevs, Is.EquivalentTo(desiredKeys));
+			ILexSense lcmSense = lcmEntry.SensesOS[whichSense];
+			IEnumerable<string> lcmAbbrevs = GetLcmAbbrevsForField(lcmSense, fieldId);
+			Assert.That(lcmAbbrevs, Is.EquivalentTo(desiredKeys));
 		}
 
 		[Test]
@@ -762,11 +761,11 @@ namespace LfMerge.Core.Tests.Fdo
 
 		#if false  // We've changed how we handle OptionLists since these tests were written, and they are no longer valid
 		[Test]
-		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInFdoGrammar()
+		public void Action_WithOneItemInMongoGrammar_ShouldUpdateThatOneItemInLcmGrammar()
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
 			var data = new SampleData();
@@ -780,7 +779,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -791,15 +790,15 @@ namespace LfMerge.Core.Tests.Fdo
 			Assert.That(secondPosAfterTest, Is.SameAs(secondPosBeforeTest));
 			Assert.That(secondPosAfterTest.Name.BestAnalysisVernacularAlternative.Text, Is.EqualTo("v"));
 			Assert.That(secondPosAfterTest.Abbreviation.BestAnalysisVernacularAlternative.Text, Is.EqualTo("a"));
-			// LF key shouldn't be copied to FDO, so don't test that one
+			// LF key shouldn't be copied to LCM, so don't test that one
 		}
 
 		[Test]
-		public void Action_WithOneItemInMongoGrammarThatHasNoGuidAndIsNotWellKnown_ShouldAddOneNewItemInFdoGrammar()
+		public void Action_WithOneItemInMongoGrammarThatHasNoGuidAndIsNotWellKnown_ShouldAddOneNewItemInLcmGrammar()
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			IPartOfSpeech secondPosBeforeTest = cache.LangProject.AllPartsOfSpeech.Skip(1).FirstOrDefault();
 			var data = new SampleData();
@@ -812,7 +811,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -840,11 +839,11 @@ namespace LfMerge.Core.Tests.Fdo
 
 
 		[Test]
-		public void Action_WithOneWellKnownItemAndCorrectGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
+		public void Action_WithOneWellKnownItemAndCorrectGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInLcm()
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
 			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
@@ -857,7 +856,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			string expectedName = PartOfSpeechMasterList.FlatPosNames[expectedGuid];
@@ -873,11 +872,11 @@ namespace LfMerge.Core.Tests.Fdo
 		}
 
 		[Test]
-		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInFdo()
+		public void Action_WithOneWellKnownItemButNoGuidInMongoGrammar_ShouldGetCorrectWellKnownGuidInLcm()
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
 			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector"
@@ -888,7 +887,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			string expectedGuid = PartOfSpeechMasterList.FlatPosGuidsFromAbbrevs["subordconn"];
@@ -910,7 +909,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
@@ -922,7 +921,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -934,7 +933,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			int grammarCountBeforeTest = cache.LangProject.AllPartsOfSpeech.Count;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
@@ -946,7 +945,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			int grammarCountAfterTest = cache.LangProject.AllPartsOfSpeech.Count;
@@ -958,7 +957,7 @@ namespace LfMerge.Core.Tests.Fdo
 		{
 			// Setup
 			var lfProj = _lfProj;
-			FdoCache cache = lfProj.FieldWorksProject.Cache;
+			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			var data = new SampleData();
 			BsonDocument grammarEntry = new BsonDocument();
 			grammarEntry.Add("key", "subordconn"); // Standard abbreviation for "subordinating connector", whose parent is "connector"
@@ -969,7 +968,7 @@ namespace LfMerge.Core.Tests.Fdo
 			_conn.UpdateMockOptionList(data.bsonOptionListData);
 
 			// Exercise
-			sutMongoToFdo.Run(lfProj);
+			SutMongoToLcm.Run(lfProj);
 
 			// Verify
 			char ORC = '\ufffc';

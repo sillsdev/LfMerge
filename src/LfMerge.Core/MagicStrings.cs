@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.Collections.Generic;
 
@@ -8,10 +8,10 @@ namespace LfMerge.Core
 	{
 		static MagicStrings()
 		{
-			MinimalModelVersion = "7000068";
+			MinimalModelVersion = 7000068;
 		}
 
-		public static Dictionary<string, string> FdoOptionlistNames = new Dictionary<string, string>()
+		public static Dictionary<string, string> LcmOptionlistNames = new Dictionary<string, string>()
 		{
 			// Option lists that are currently used in LF (as of 2016-03-01)
 			{ LfOptionListCodeForGrammaticalInfo, "Part of Speech" },
@@ -96,10 +96,10 @@ namespace LfMerge.Core
 		public const string UnknownString = "***";
 
 		// Minimal supported model version (static property to support testing)
-		public static string MinimalModelVersion { get; private set; }
+		public static int MinimalModelVersion { get; private set; }
 
 		// Allow to set minimal model version during unit testing
-		public static void SetMinimalModelVersion(string minimalModelVersion)
+		public static void SetMinimalModelVersion(int minimalModelVersion)
 		{
 			MinimalModelVersion = minimalModelVersion;
 		}

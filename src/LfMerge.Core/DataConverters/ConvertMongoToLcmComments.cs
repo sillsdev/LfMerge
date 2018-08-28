@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -13,14 +13,14 @@ using SIL.Progress;
 
 namespace LfMerge.Core.DataConverters
 {
-	public class ConvertMongoToFdoComments
+	public class ConvertMongoToLcmComments
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
 		private ILogger _logger;
 		private IProgress _progress;
 
-		public ConvertMongoToFdoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress)
+		public ConvertMongoToLcmComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress)
 		{
 			_conn = conn;
 			_project = proj;
@@ -51,7 +51,7 @@ namespace LfMerge.Core.DataConverters
 							: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
 						comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
 							field, ws, value);
-					}
+				}
 				}
 
 				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
