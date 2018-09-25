@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using Bugsnag.Payload;
 using IniParser.Model;
 using LfMerge.Core.Actions;
@@ -220,13 +221,17 @@ namespace LfMerge.Core.Tests
 			LfLexEntry result;
 			if (_storedLfLexEntries.TryGetValue(key, out result))
 				return result;
-			else
-				return null;
+			return null;
 		}
 
 		public IEnumerable<LfOptionList> GetLfOptionLists()
 		{
 			return new List<LfOptionList>(_storedLfOptionLists.Values.Select(entry => DeepCopy(entry)));
+		}
+
+		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter)
+		{
+			return GetRecords<TDocument>(project, collectionName).Where(filter.Compile());
 		}
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)

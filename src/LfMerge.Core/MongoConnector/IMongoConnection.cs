@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using MongoDB.Driver;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
@@ -13,6 +14,7 @@ namespace LfMerge.Core.MongoConnector
 	{
 		IMongoDatabase GetProjectDatabase(ILfProject project);
 		IMongoDatabase GetMainDatabase();
+		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter);
 		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName);
 		LfOptionList GetLfOptionListByCode(ILfProject project, string listCode);
 		long LexEntryCount(ILfProject project);

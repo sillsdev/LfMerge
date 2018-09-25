@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
@@ -31,10 +32,16 @@ namespace LfMerge.Core.DataConverters
 			{
 				Guid guid;
 				// LfMergeBridge wants lex entry GUIDs (passed along in comment.Regarding.TargetGuid), not Mongo ObjectIds like comment.EntryRef contains.
-				if (comment.EntryRef != null && entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
+				if (comment.EntryRef != null &&
+					entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
 				{
 					comment.Regarding.TargetGuid = guid.ToString();
+
+					// LF-186
+					if (string.IsNullOrEmpty(comment.Regarding.Word))
+						comment.Regarding.Word = GetLexEntry(guid).Lexeme.FirstNonEmptyString();
 				}
+
 				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
 			}
 			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds);
@@ -47,6 +54,11 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
 			_conn.SetCommentGuids(_project, commentIdToGuidMappings);
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
+		}
+
+		private LfLexEntry GetLexEntry(Guid guidOfEntry)
+		{
+			return _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon, entry => entry.Guid == guidOfEntry).First();
 		}
 
 		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
