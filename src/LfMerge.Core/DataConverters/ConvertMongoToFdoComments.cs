@@ -7,6 +7,7 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Model;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using Palaso.Progress;
 
@@ -18,6 +19,7 @@ namespace LfMerge.Core.DataConverters
 		private ILfProject _project;
 		private ILogger _logger;
 		private IProgress _progress;
+
 		public ConvertMongoToFdoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress)
 		{
 			_conn = conn;
@@ -25,10 +27,11 @@ namespace LfMerge.Core.DataConverters
 			_logger = logger;
 			_progress = progress;
 		}
+
 		public void RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
 		{
 			var commentsWithIds = new List<KeyValuePair<string, LfComment>>();
-			foreach (LfComment comment in _conn.GetComments(_project))
+			foreach (var comment in _conn.GetComments(_project))
 			{
 				Guid guid;
 				// LfMergeBridge wants lex entry GUIDs (passed along in comment.Regarding.TargetGuid), not Mongo ObjectIds like comment.EntryRef contains.
@@ -39,7 +42,16 @@ namespace LfMerge.Core.DataConverters
 
 					// LF-186
 					if (string.IsNullOrEmpty(comment.Regarding.Word))
-						comment.Regarding.Word = GetLexEntry(guid).Lexeme.FirstNonEmptyString();
+					{
+						var lexeme = GetLexEntry(comment.EntryRef).Lexeme.FirstNonEmptyString();
+						var field = comment.Regarding.FieldNameForDisplay;
+						var ws = comment.Regarding.InputSystemAbbreviation;
+						var value = string.IsNullOrEmpty(comment.Regarding.FieldValue)
+							? ""
+							: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
+						comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
+							field, ws, value);
+					}
 				}
 
 				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
@@ -56,9 +68,9 @@ namespace LfMerge.Core.DataConverters
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
 		}
 
-		private LfLexEntry GetLexEntry(Guid guidOfEntry)
+		private LfLexEntry GetLexEntry(ObjectId idOfEntry)
 		{
-			return _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon, entry => entry.Guid == guidOfEntry).First();
+			return _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon, entry => entry.Id == idOfEntry).First();
 		}
 
 		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
