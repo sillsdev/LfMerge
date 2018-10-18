@@ -104,9 +104,7 @@ override_dh_shlibdeps:
 
 # Include mono-sil in cli dirs searched
 override_dh_clideps:
-	mkdir -p debian/tmp/usr && ln -s $(MONO_PREFIX)/* debian/tmp/usr/ && \
-	PATH=$(MONO_PREFIX)/bin:/opt/mono5-sil/bin:$(PATH) \
-	dh_clideps internal-mono -l$(MONO_PREFIX)/lib \
+	dh_clideps -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
 		--exclude-moduleref=icuuc65.dll --exclude-moduleref=icuin65.dll \
 		--exclude-moduleref=icuuc64.dll --exclude-moduleref=icuin64.dll \
