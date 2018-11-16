@@ -1,103 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ldml>
 	<identity>
-		<version
-			number="" />
-		<generation
-			date="2016-09-20T10:03:05" />
-		<language
-			type="fr" />
+		<version number="" />
+		<generation date="2018-11-16T10:52:33Z" />
+		<language type="fr" />
+		<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+			<sil:identity windowsLCID="9" />
+		</special>
 	</identity>
-	<collations>
-		<collation>
-			<base>
-				<alias
-					source="" />
-			</base>
-			<special
-				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-				<palaso:sortRulesType
-					value="OtherLanguage" />
-			</special>
-		</collation>
-	</collations>
-	<special
-		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-		<palaso:abbreviation
-			value="fr" />
-		<palaso:defaultFontFamily
-			value="Charis SIL" />
-		<palaso:defaultFontSize
-			value="12" />
-		<palaso:languageName
-			value="French" />
-		<palaso:spellCheckingId
-			value="fr" />
-		<palaso:version
-			value="2" />
-	</special>
-	<special
-		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
-		<palaso2:knownKeyboards>
-			<palaso2:keyboard
-				layout="United States-International"
-				locale="fr-FR"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="US"
-				locale="en-AU"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="German"
-				locale="de-DE"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Canadian Multilingual Standard"
-				locale="fr-CA"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Spanish"
-				locale="es-ES"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="US"
-				locale="en-US"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Tamazight"
-				locale="hu-HU"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Tchad QWERTY MSKLC"
-				locale="tr-TR"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="IPA Unicode 6.2 (ver 1.4 US) MSK"
-				locale="is-IS"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Tchad pour AZERTY"
-				locale="sq-AL"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Clavier du Burkina QWERTY"
-				locale="en-US"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="English"
-				locale="en-US"
-				os="Unix" />
-		</palaso2:knownKeyboards>
-		<palaso2:version
-			value="2" />
-	</special>
-	<special
-		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
-		<fw:graphiteEnabled
-			value="False" />
-		<fw:validChars
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;ValidCharacters&gt;   &lt;WordForming&gt;‌￼‍￼'￼-￼་￼༌￼⁰￼¹￼²￼³￼⁴￼⁵￼⁶￼⁷￼⁸￼⁹￼ꞌ￼Ꞌ&lt;/WordForming&gt;   &lt;Numeric /&gt;   &lt;Other /&gt; &lt;/ValidCharacters&gt;" />
-		<fw:windowsLCID
-			value="9" />
+	<characters>
+		<exemplarCharacters>['\-\u00B2\u00B3\u00B9\u0F0B\u0F0C\u200C\u200D\u2070\u2074-\u2079\uA78B\uA78C]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[]</exemplarCharacters>
+	</characters>
+	<layout>
+		<orientation>
+			<characterOrder>left-to-right</characterOrder>
+		</orientation>
+	</layout>
+	<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+		<sil:external-resources>
+			<sil:font name="Charis SIL" types="default" />
+		</sil:external-resources>
 	</special>
 </ldml>

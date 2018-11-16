@@ -200,5 +200,12 @@
 			TimeStamp="2017-01-24T16:59:35Z">
 			<Id>zh-CN</Id>
 		</Delete>
+		<Change
+			Producer="LfMergeAuxTool"
+			ProducerVersion="Version 1.0.6893 (apparent build date: 15-Nov-2018)"
+			TimeStamp="2018-11-16T10:34:54Z">
+			<From>qaa-Zxxx-x-kal-AUDIO</From>
+			<To>qaa-Zxxx-x-kal-audio</To>
+		</Change>
 	</Changes>
 </WritingSystemChangeLog>

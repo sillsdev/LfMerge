@@ -1,5 +1,6 @@
 data/Linguistics/Discourse/Charting.discourse.i
 data/Linguistics/Lexicon/Lexicon_01.lexdb.i
+data/WritingSystemStore/fr.ldml.i
 data/Linguistics/Lexicon/Lexicon_09.lexdb.i
 data/Other/Books/01.bookannotations.i
 data/Other/Books/14.bookannotations.i
@@ -42,6 +43,7 @@ data/Other/Books/57.bookannotations.i
 data/Linguistics/Inventory/WordformInventory_05.inventory.i
 data/Linguistics/Reversals/en/en-PartsOfSpeech.list.i
 data/Other/Books/34.bookannotations.i
+data/ConfigurationSettings/Dictionary/ProjectDictionaryOverrides.css.i
 data/Linguistics/Lexicon/VariantEntryTypes.list.i
 data/Other/76fb50ca-f858-469c-b1de-a73a863e9b10.list.i
 data/Linguistics/MorphologyAndSyntax/ProdRestrict.list.i
@@ -51,7 +53,7 @@ data/Linguistics/Lexicon/Languages.list.i
 data/Other/NoteCategories.list.i
 data/WritingSystemStore/de.ldml.i
 data/Linguistics/Reversals/en/en.reversal.i
-data/Anthropology/Education.list.i
+data/General/VirtualOrdering.orderings.i
 data/Other/Books/42.bookannotations.i
 data/Other/Books/59.book.i
 data/WritingSystemStore/hbo.ldml.i
@@ -68,7 +70,7 @@ data/Linguistics/Reversals/qaa-x-fwt/qaa-x-fwt.reversal.i
 data/Linguistics/TextCorpus/Text_bcabf849-473c-4902-957b-8de378248b7f.textincorpus.i
 data/Other/Books/15.bookannotations.i
 data/Linguistics/Reversals/qaa-x-sta/qaa-x-sta-PartsOfSpeech.list.i
-data/General/VirtualOrdering.orderings.i
+data/Anthropology/Education.list.i
 data/WritingSystemStore/dv.ldml.i
 data/Linguistics/Inventory/WordformInventory_08.inventory.i
 data/Other/Books/50.bookannotations.i
@@ -152,7 +154,7 @@ data/Other/Books/57.book.i
 data/Other/Books/40.bookannotations.i
 data/Linguistics/Lexicon/References.list.i
 data/Linguistics/Lexicon/Lexicon_06.lexdb.i
-data/WritingSystemStore/fr.ldml.i
+data/WritingSystemStore/qaa-Zxxx-x-kal-audio.ldml.i
 data/Other/Books/25.bookannotations.i
 data/Linguistics/MorphologyAndSyntax/PartsOfSpeech.list.i
 data/Other/Books/49.bookannotations.i
@@ -175,6 +177,7 @@ data/Other/Books/47.bookannotations.i
 data/WritingSystemStore/qaa-Zxxx-x-kal-AUDIO.ldml.i
 data/Other/Books/61.bookannotations.i
 data/WritingSystemStore/en.ldml.i
+data/ConfigurationSettings/ReversalIndex/ProjectReversalOverrides.css.i
 data/Linguistics/Inventory/WordformInventory_06.inventory.i
 data/Linguistics/Lexicon/Lexicon_03.lexdb.i
 data/Linguistics/Lexicon/PublicationTypes.list.i

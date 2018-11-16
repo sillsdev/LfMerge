@@ -1,67 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ldml>
 	<identity>
-		<version
-			number="" />
-		<generation
-			date="2016-09-05T09:05:26" />
-		<language
-			type="zh" />
-		<territory
-			type="CN" />
+		<version number="" />
+		<generation date="2018-11-16T10:52:34Z" />
+		<language type="zh" />
+		<territory type="CN" />
 	</identity>
-	<collations>
-		<collation>
-			<base>
-				<alias
-					source="zh-CN" />
-			</base>
-			<special
-				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-				<palaso:sortRulesType
-					value="OtherLanguage" />
-			</special>
-		</collation>
-	</collations>
-	<special
-		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-		<palaso:abbreviation
-			value="Chn" />
-		<palaso:defaultFontFamily
-			value="SimSun" />
-		<palaso:languageName
-			value="Mandarin Chinese" />
-		<palaso:spellCheckingId
-			value="zh_CN" />
-		<palaso:version
-			value="2" />
-	</special>
-	<special
-		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
-		<palaso2:knownKeyboards>
-			<palaso2:keyboard
-				layout="US"
-				locale="en-US"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="Microsoft Pinyin"
-				locale="zh-CN"
-				os="Win32NT" />
-			<palaso2:keyboard
-				layout="English"
-				locale="en-US"
-				os="Unix" />
-		</palaso2:knownKeyboards>
-		<palaso2:version
-			value="2" />
-	</special>
-	<special
-		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
-		<fw:graphiteEnabled
-			value="False" />
-		<fw:regionName
-			value="China" />
-		<fw:validChars
-			value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt; &lt;ValidCharacters&gt;   &lt;WordForming&gt;‌￼‍￼'￼-￼་￼༌￼⁰￼¹￼²￼³￼⁴￼⁵￼⁶￼⁷￼⁸￼⁹￼ꞌ￼Ꞌ&lt;/WordForming&gt;   &lt;Numeric /&gt;   &lt;Other /&gt; &lt;/ValidCharacters&gt;" />
+	<characters>
+		<exemplarCharacters>['\-\u00B2\u00B3\u00B9\u0F0B\u0F0C\u200C\u200D\u2070\u2074-\u2079\uA78B\uA78C]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[]</exemplarCharacters>
+	</characters>
+	<layout>
+		<orientation>
+			<characterOrder>left-to-right</characterOrder>
+		</orientation>
+	</layout>
+	<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+		<sil:external-resources>
+			<sil:font name="SimSun" types="default" />
+		</sil:external-resources>
 	</special>
 </ldml>

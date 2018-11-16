@@ -24,6 +24,11 @@
 			<AUni
 				ws="en">bungalo</AUni>
 		</ReversalForm>
+		<Senses>
+			<refseq
+				guid="eea9c29f-244f-4891-81db-c8274cd61f0c"
+				t="r" />
+		</Senses>
 	</ReversalIndexEntry>
 	<ReversalIndexEntry
 		guid="2d11054c-7a9d-4c0f-a08e-713ff5dfe429">
@@ -31,5 +36,13 @@
 			<AUni
 				ws="en">house</AUni>
 		</ReversalForm>
+		<Senses>
+			<refseq
+				guid="3421c175-e7d1-47ea-93ec-7d88bd41cf2e"
+				t="r" />
+			<refseq
+				guid="eea9c29f-244f-4891-81db-c8274cd61f0c"
+				t="r" />
+		</Senses>
 	</ReversalIndexEntry>
 </Reversal>

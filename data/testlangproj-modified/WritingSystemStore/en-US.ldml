@@ -1,59 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ldml>
 	<identity>
-		<version
-			number="" />
-		<generation
-			date="2016-10-28T13:51:30" />
-		<language
-			type="en" />
-		<territory
-			type="US" />
+		<version number="" />
+		<generation date="2018-11-16T10:52:33Z" />
+		<language type="en" />
+		<territory type="US" />
 	</identity>
-	<collations>
-		<collation>
-			<base>
-				<alias
-					source="en-US" />
-			</base>
-			<special
-				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-				<palaso:sortRulesType
-					value="OtherLanguage" />
-			</special>
-		</collation>
-	</collations>
-	<special
-		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-		<palaso:abbreviation
-			value="Eng" />
-		<palaso:defaultFontFamily
-			value="Charis SIL" />
-		<palaso:languageName
-			value="English" />
-		<palaso:version
-			value="2" />
-	</special>
-	<special
-		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
-		<palaso2:knownKeyboards>
-			<palaso2:keyboard
-				layout="English"
-				locale="en-US"
-				os="Unix" />
-			<palaso2:keyboard
-				layout="US"
-				locale="en-US"
-				os="Win32NT" />
-		</palaso2:knownKeyboards>
-		<palaso2:version
-			value="2" />
-	</special>
-	<special
-		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
-		<fw:graphiteEnabled
-			value="False" />
-		<fw:regionName
-			value="United States" />
+	<layout>
+		<orientation>
+			<characterOrder>left-to-right</characterOrder>
+		</orientation>
+	</layout>
+	<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+		<sil:external-resources>
+			<sil:font name="Charis SIL" types="default" />
+		</sil:external-resources>
 	</special>
 </ldml>

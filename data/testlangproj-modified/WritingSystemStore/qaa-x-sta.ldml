@@ -1,49 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ldml>
 	<identity>
-		<version
-			number="" />
-		<generation
-			date="2016-05-05T07:22:31" />
-		<language
-			type="qaa" />
-		<variant
-			type="x-sta" />
+		<version number="" />
+		<generation date="2018-11-16T10:52:34Z" />
+		<language type="qaa" />
+		<variant type="x-sta" />
+		<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+			<sil:identity windowsLCID="1033" />
+		</special>
 	</identity>
-	<collations />
-	<special
-		xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
-		<palaso:abbreviation
-			value="Sta" />
-		<palaso:defaultFontFamily
-			value="Doulos SIL" />
-		<palaso:defaultKeyboard
-			value="Stacking Diacritics Demo" />
-		<palaso:languageName
-			value="Stacked Diacritics" />
-		<palaso:spellCheckingId
-			value="xsta" />
-		<palaso:version
-			value="2" />
-	</special>
-	<special
-		xmlns:palaso2="urn://palaso.org/ldmlExtensions/v2">
-		<palaso2:knownKeyboards>
-			<palaso2:keyboard
-				layout="us"
-				locale="en-US"
-				os="Unix" />
-		</palaso2:knownKeyboards>
-		<palaso2:version
-			value="2" />
-	</special>
-	<special
-		xmlns:fw="urn://fieldworks.sil.org/ldmlExtensions/v1">
-		<fw:defaultFontFeatures
-			value="100=1" />
-		<fw:graphiteEnabled
-			value="True" />
-		<fw:windowsLCID
-			value="1033" />
+	<layout>
+		<orientation>
+			<characterOrder>left-to-right</characterOrder>
+		</orientation>
+	</layout>
+	<collations>
+		<defaultCollation>standard</defaultCollation>
+		<collation type="standard" />
+	</collations>
+	<special xmlns:sil="urn://www.sil.org/ldml/0.1">
+		<sil:external-resources>
+			<sil:font name="Doulos SIL" types="default" features="100=1" />
+		</sil:external-resources>
 	</special>
 </ldml>

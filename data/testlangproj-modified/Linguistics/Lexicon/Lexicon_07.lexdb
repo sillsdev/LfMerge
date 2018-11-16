@@ -509,14 +509,6 @@
 							ws="fr">These are French restrictions.</Run>
 					</AStr>
 				</Restrictions>
-				<ReversalEntries>
-					<refcol
-						guid="18a596cb-ebaa-472a-81b3-66fd6b807513"
-						t="r" />
-					<refcol
-						guid="2d11054c-7a9d-4c0f-a08e-713ff5dfe429"
-						t="r" />
-				</ReversalEntries>
 				<ScientificName>
 					<Str>
 						<Run

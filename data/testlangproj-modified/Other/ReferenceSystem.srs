@@ -30,18 +30,7 @@
 					<AUni
 						ws="pt">Génesis</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -70,18 +59,7 @@
 					<AUni
 						ws="pt">Éxodo</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -110,18 +88,7 @@
 					<AUni
 						ws="pt">Levítico</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -150,18 +117,7 @@
 					<AUni
 						ws="pt">Números</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -190,18 +146,7 @@
 					<AUni
 						ws="pt">Deuteronômio</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -230,18 +175,7 @@
 					<AUni
 						ws="pt">Josué</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -270,18 +204,7 @@
 					<AUni
 						ws="pt">Juízes</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -310,18 +233,7 @@
 					<AUni
 						ws="pt">Rute</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -355,12 +267,6 @@
 						ws="de">I Samuel</AUni>
 					<AUni
 						ws="en">I Samuel</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -395,12 +301,6 @@
 						ws="de">II Samuel</AUni>
 					<AUni
 						ws="en">II Samuel</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -435,12 +335,6 @@
 						ws="de">I Könige</AUni>
 					<AUni
 						ws="en">I Kings</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -475,12 +369,6 @@
 						ws="de">II Könige</AUni>
 					<AUni
 						ws="en">II Kings</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -515,12 +403,6 @@
 						ws="de">I Chronik</AUni>
 					<AUni
 						ws="en">I Chronicles</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -555,12 +437,6 @@
 						ws="de">II Chronik</AUni>
 					<AUni
 						ws="en">II Chronicles</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -590,18 +466,7 @@
 					<AUni
 						ws="pt">Esdras</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -630,18 +495,7 @@
 					<AUni
 						ws="pt">Neemias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -670,18 +524,7 @@
 					<AUni
 						ws="pt">Ester</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -713,14 +556,6 @@
 				<BookNameAlt>
 					<AUni
 						ws="de">Job</AUni>
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -750,18 +585,7 @@
 					<AUni
 						ws="pt">Salmos</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -793,14 +617,6 @@
 				<BookNameAlt>
 					<AUni
 						ws="de">Sprüche Salomos</AUni>
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -834,13 +650,7 @@
 					<AUni
 						ws="de">Ecclesiastes</AUni>
 					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
 						ws="fr">Quohéleth</AUni>
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -875,12 +685,6 @@
 						ws="de">Hohelied Salomos</AUni>
 					<AUni
 						ws="en">Song of Songs</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -910,18 +714,7 @@
 					<AUni
 						ws="pt">Isaías</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -950,18 +743,7 @@
 					<AUni
 						ws="pt">Jeremias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -991,14 +773,6 @@
 						ws="pt">Lamentações</AUni>
 				</BookName>
 				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
 					<AUni
 						ws="pt">Lamentações de Jeremias</AUni>
 				</BookNameAlt>
@@ -1030,18 +804,7 @@
 					<AUni
 						ws="pt">Ezequiel</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1070,18 +833,7 @@
 					<AUni
 						ws="pt">Daniel</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1110,18 +862,7 @@
 					<AUni
 						ws="pt">Oséias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1150,18 +891,7 @@
 					<AUni
 						ws="pt">Joel</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1190,18 +920,7 @@
 					<AUni
 						ws="pt">Amós</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1230,18 +949,7 @@
 					<AUni
 						ws="pt">Obadias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1270,18 +978,7 @@
 					<AUni
 						ws="pt">Jonas</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1310,18 +1007,7 @@
 					<AUni
 						ws="pt">Miquéias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1352,15 +1038,7 @@
 				</BookName>
 				<BookNameAlt>
 					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
 						ws="fr">Nahum</AUni>
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -1392,15 +1070,7 @@
 				</BookName>
 				<BookNameAlt>
 					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
 						ws="fr">Habaquq</AUni>
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -1430,18 +1100,7 @@
 					<AUni
 						ws="pt">Sofonias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1470,18 +1129,7 @@
 					<AUni
 						ws="pt">Ageu</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1510,18 +1158,7 @@
 					<AUni
 						ws="pt">Zacarias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1550,18 +1187,7 @@
 					<AUni
 						ws="pt">Malaquias</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1590,18 +1216,7 @@
 					<AUni
 						ws="pt">Mateus</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1630,18 +1245,7 @@
 					<AUni
 						ws="pt">Marcos</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1670,18 +1274,7 @@
 					<AUni
 						ws="pt">Lucas</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1710,18 +1303,7 @@
 					<AUni
 						ws="pt">João</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1750,18 +1332,7 @@
 					<AUni
 						ws="pt">Atos</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1790,18 +1361,7 @@
 					<AUni
 						ws="pt">Romanos</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1835,12 +1395,6 @@
 						ws="de">I Korinther</AUni>
 					<AUni
 						ws="en">I Corinthians</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -1875,12 +1429,6 @@
 						ws="de">II Korinther</AUni>
 					<AUni
 						ws="en">II Corinthians</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -1910,18 +1458,7 @@
 					<AUni
 						ws="pt">Gálatas</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1950,18 +1487,7 @@
 					<AUni
 						ws="pt">Efésios</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -1990,18 +1516,7 @@
 					<AUni
 						ws="pt">Filipenses</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2030,18 +1545,7 @@
 					<AUni
 						ws="pt">Colossenses</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2075,12 +1579,6 @@
 						ws="de">I Thessalonicher</AUni>
 					<AUni
 						ws="en">I Thessalonians</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2115,12 +1613,6 @@
 						ws="de">II Thessalonicher</AUni>
 					<AUni
 						ws="en">II Thessalonians</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2155,12 +1647,6 @@
 						ws="de">I Timotheus</AUni>
 					<AUni
 						ws="en">I Timothy</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2195,12 +1681,6 @@
 						ws="de">II Timotheus</AUni>
 					<AUni
 						ws="en">II Timothy</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2230,18 +1710,7 @@
 					<AUni
 						ws="pt">Tito</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2270,18 +1739,7 @@
 					<AUni
 						ws="pt">Filemom</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2310,18 +1768,7 @@
 					<AUni
 						ws="pt">Hebreus</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2350,18 +1797,7 @@
 					<AUni
 						ws="pt">Tiago</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2395,12 +1831,6 @@
 						ws="de">I Petrus</AUni>
 					<AUni
 						ws="en">I Peter</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2435,12 +1865,6 @@
 						ws="de">II Petrus</AUni>
 					<AUni
 						ws="en">II Peter</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2475,12 +1899,6 @@
 						ws="de">I Johannes</AUni>
 					<AUni
 						ws="en">I John</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2515,12 +1933,6 @@
 						ws="de">II Johannes</AUni>
 					<AUni
 						ws="en">II John</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2555,12 +1967,6 @@
 						ws="de">III Johannes</AUni>
 					<AUni
 						ws="en">III John</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 			<ownseq
@@ -2590,18 +1996,7 @@
 					<AUni
 						ws="pt">Judas</AUni>
 				</BookName>
-				<BookNameAlt>
-					<AUni
-						ws="de" />
-					<AUni
-						ws="en" />
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
-				</BookNameAlt>
+				<BookNameAlt />
 			</ownseq>
 			<ownseq
 				class="ScrBookRef"
@@ -2632,15 +2027,7 @@
 				</BookName>
 				<BookNameAlt>
 					<AUni
-						ws="de" />
-					<AUni
 						ws="en">Apocalypse</AUni>
-					<AUni
-						ws="es" />
-					<AUni
-						ws="fr" />
-					<AUni
-						ws="pt" />
 				</BookNameAlt>
 			</ownseq>
 		</Books>
