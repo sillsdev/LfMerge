@@ -194,11 +194,6 @@
 							val="0" />
 					</ownseq>
 				</Pictures>
-				<ReversalEntries>
-					<refcol
-						guid="2d11054c-7a9d-4c0f-a08e-713ff5dfe429"
-						t="r" />
-				</ReversalEntries>
 			</ownseq>
 		</Senses>
 	</LexEntry>
