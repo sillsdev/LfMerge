@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -16,10 +17,11 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Queues;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
-using SIL.PlatformUtilities;
-using SIL.Progress;
 using SIL.IO;
 using SIL.LCModel;
+using SIL.PlatformUtilities;
+using SIL.Progress;
+using Action = LfMerge.Core.Actions.Action;
 
 namespace LfMerge.Core
 {
@@ -58,7 +60,7 @@ namespace LfMerge.Core
 			containerBuilder.RegisterType<EntryCounts>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
 			containerBuilder.RegisterType<LanguageForgeProxy>().As<ILanguageForgeProxy>();
-			Actions.Action.Register(containerBuilder);
+			Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
 		}
@@ -66,11 +68,21 @@ namespace LfMerge.Core
 		public static int StartLfMerge(string projectCode, ActionNames action,
 			string modelVersion, bool allowFreshClone, string configDir = null)
 		{
+			if (!IsSupportedModelVersion(modelVersion))
+			{
+				var project = LanguageForgeProject.Create(projectCode);
+				var message = $"Project '{projectCode}' has unsupported model version '{modelVersion}'.";
+				Logger.Error(message);
+				project.State.SetErrorState(ProcessingState.SendReceiveStates.ERROR,
+					ProcessingState.ErrorCodes.UnsupportedModelVersion, message);
+				return 2;
+			}
+
 			// Call the correct model version specific LfMerge executable
 			if (string.IsNullOrEmpty(modelVersion))
 				modelVersion = ModelVersion;
 
-			MainClass.Logger.Notice("Starting LfMerge for model version '{0}'", modelVersion);
+			Logger.Notice("Starting LfMerge for model version '{0}'", modelVersion);
 			var startInfo = new ProcessStartInfo();
 			var argsBldr = new StringBuilder();
 			if (Platform.IsMono)
@@ -103,7 +115,7 @@ namespace LfMerge.Core
 			}
 			catch (Exception e)
 			{
-				MainClass.Logger.Error(
+				Logger.Error(
 					"{0}-{1}: Unhandled exception trying to start '{2}' '{3}' in '{4}'\n{5}",
 					Assembly.GetEntryAssembly().GetName().Name, ModelVersion, startInfo.FileName,
 					startInfo.Arguments, startInfo.WorkingDirectory, e);
@@ -133,7 +145,7 @@ namespace LfMerge.Core
 
 		public static bool CheckSetup()
 		{
-			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			var settings = Container.Resolve<LfMergeSettings>();
 			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
 			string[] folderPaths = { Path.Combine(homeFolder, ".local"),
 				Path.GetDirectoryName(settings.WebWorkDirectory) };
@@ -141,7 +153,7 @@ namespace LfMerge.Core
 			{
 				if (!Directory.Exists(folderPath))
 				{
-					MainClass.Logger.Notice("Folder '{0}' doesn't exist", folderPath);
+					Logger.Notice("Folder '{0}' doesn't exist", folderPath);
 					return false;
 				}
 			}
@@ -165,6 +177,20 @@ namespace LfMerge.Core
 			return versionField == null ? string.Empty : (string)versionField.GetValue(null);
 		}
 
+		/// <summary>
+		/// Returns <c>true</c> if <paramref name="modelVersion"/> is supported
+		/// </summary>
+		public static bool IsSupportedModelVersion(string modelVersion)
+		{
+			if (!int.TryParse(modelVersion, out var modelVersionNumber))
+			{
+				throw new ArgumentException($"Can't parse {modelVersion} as version model number",
+					nameof(modelVersion));
+			}
+
+			return !MagicStrings.UnsupportedModelVersions.Contains(modelVersion) &&
+				modelVersionNumber >= MagicStrings.MinimalModelVersion;
+		}
 	}
 }
 

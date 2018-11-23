@@ -63,7 +63,8 @@ namespace LfMerge.Core
 
 			UnspecifiedBranchError = 50,
 			ProjectTooOld = 51, // Project < 7000068
-			ProjectTooNew = 52
+			ProjectTooNew = 52,
+			UnsupportedModelVersion = 53
 		}
 
 		private LfMergeSettings Settings { get; set; }

@@ -57,8 +57,7 @@ namespace LfMerge.QueueManager
 					foreach (var projectCode in clonedQueue)
 					{
 						var projectPath = Path.Combine(settings.LcmDirectorySettings.ProjectsDirectory,
-							projectCode, string.Format("{0}{1}", projectCode,
-							LcmFileHelper.ksFwDataXmlFileExtension));
+							projectCode, $"{projectCode}{LcmFileHelper.ksFwDataXmlFileExtension}");
 						var modelVersion = FwProject.GetModelVersion(projectPath);
 						queue.DequeueProject(projectCode);
 						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
