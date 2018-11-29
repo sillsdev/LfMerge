@@ -3,7 +3,7 @@ Upstream-Name: lfmerge
 Source: https://github.com/sillsdev/LfMerge.git
 
 Files: *
-Copyright: 2016 SIL International
+Copyright: 2016-2018 SIL International
 License: MIT
 
 Files: /usr/lib/lfmerge/*/Autofac.dll

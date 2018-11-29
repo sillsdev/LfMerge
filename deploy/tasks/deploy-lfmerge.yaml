@@ -15,8 +15,7 @@
   become: yes
   apt: update_cache=yes name={{item}} state=installed
   with_items:
-    - lfmerge-fdo
-    - mono-sil
+    - mono5-sil
 
 - name: deploy LfMerge
   become: yes
