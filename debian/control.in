@@ -16,15 +16,12 @@ Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  pkg-config,
  mono5-sil,
  mono5-sil-msbuild,
- libicu-dev,
- lfmerge-fdo,
- lfmerge-fdo-__DatabaseVersion__
+ libicu-dev
 
 #if __DatabaseVersion__ == __MaxDbVersion__
 Package: lfmerge
 Architecture: any
-Depends: lfmerge-fdo,
- __allLfMergeVersions__
+Depends: lfmerge-fw8, __allLfMergeVersions__
 Description: LanguageForge Send/Receive
  lfmerge is a tool that is used by the LanguageForge server
  to share data with language depot. Since this tool makes assumptions
@@ -39,8 +36,7 @@ Package: lfmerge-__DatabaseVersion__
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  pkg-config,
- mono-sil,
- lfmerge-fdo-__DatabaseVersion__
+ mono5-sil
 Description: LanguageForge Send/Receive for model version __DatabaseVersion__
  lfmerge is a tool that is used by the LanguageForge server
  to share data with language depot. Since this tool makes assumptions
