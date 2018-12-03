@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
  lfmerge-fdo-__DatabaseVersion__
 
 #if __DatabaseVersion__ == __MaxDbVersion__
-Package: lfmerge
+Package: lfmerge-fw8
 Architecture: any
 Depends: lfmerge-fdo,
  __allLfMergeVersions__
@@ -32,7 +32,8 @@ Description: LanguageForge Send/Receive
  outside of languageforge development and should probably not be
  installed.
  .
- This metapackage installs the database dependent versions of lfmerge.
+ This metapackage installs the database dependent versions of lfmerge
+ compatible with FieldWorks 8.
 #endif
 
 Package: lfmerge-__DatabaseVersion__
