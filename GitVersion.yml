@@ -2,30 +2,22 @@ mode: Mainline
 branches:
   live:
     tag:
-    regex: (origin/)?live
+    regex: (origin/)?(fieldworks8-)?live
     is-mainline: true
   qa:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: beta
-    regex: (origin/)?qa
+    regex: (origin/)?(fieldworks8-)?qa
   master:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: alpha
-    regex: (origin/)?master
+    regex: (origin/)?(fieldworks8-)?master
   pull-request:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: PR
-    regex: (origin/)?PR
-    #The following two lines require a newer version of GitVersion
-    #tag-name-pattern: '[/-](?<number>\d+)[-/]'
-    #source-branches: [ 'master', 'qa', 'live' ]
-  local-dev:
-    mode: ContinuousDeployment
-    track-merge-target: true
-    tag: dev
-    regex: (origin/)?.*
+    regex: (origin/)?(PR|pr)
 ignore:
   sha: []

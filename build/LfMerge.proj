@@ -40,6 +40,8 @@
 		<Message Text="Build Complete"/>
 	</Target>
 
+	<Target Name="RestoreBuildTasks" DependsOnTargets="RestorePackages"/>
+
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
