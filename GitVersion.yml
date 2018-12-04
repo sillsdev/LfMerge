@@ -1,4 +1,5 @@
 mode: Mainline
+continuous-delivery-fallback-tag: dev
 branches:
   live:
     tag:
@@ -25,12 +26,6 @@ branches:
     tag: PR
     regex: (origin/)?PR
     tag-number-pattern: '[/-](?<number>\d+)[-/]'
-    source-branches: [ 'master', 'qa', 'live' ]
-  local-dev:
-    mode: ContinuousDeployment
-    track-merge-target: true
-    tag: dev
-    regex: (origin/)?.*
     source-branches: [ 'master', 'qa', 'live' ]
 ignore:
   sha: []
