@@ -1,10 +1,23 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTarget="Test">
 	<PropertyGroup>
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<Solution>LfMerge.sln</Solution>
+		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
+		<ApplicationName>LfMerge</ApplicationName>
+		<ApplicationNameLC>lfmerge</ApplicationNameLC>
+		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
+		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
+		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
+		<RestartBuild Condition="!Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') Or !Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') Or !Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll')">true</RestartBuild>
+		<RestartBuild Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') And Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') And Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll')">false</RestartBuild>
 	</PropertyGroup>
 
-	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll" Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll')" />
-	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate"
+		AssemblyFile="$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll"
+		Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll')" />
+	<UsingTask TaskName="NUnit"
+		AssemblyFile="$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll"
+		Condition="Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll')" />
 	<UsingTask TaskName="NUnitTeamCity"
 		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'=='Windows_NT'"/>
@@ -14,32 +27,29 @@
 
 	<Import Project="NuGet.targets"/>
 
-	<PropertyGroup>
-		<Solution>LfMerge.sln</Solution>
-		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
-		<ApplicationName>LfMerge</ApplicationName>
-		<ApplicationNameLC>lfmerge</ApplicationNameLC>
-		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
-		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
-		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
-		<RestartBuild Condition="!Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll')">true</RestartBuild>
-		<RestartBuild Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll')">false</RestartBuild>
-	</PropertyGroup>
-
 	<Target Name="Build">
-		<CallTarget Targets="Clean"/>
 		<CallTarget Targets="RestoreBuildTasks" />
-		<CallTarget Targets="Compile" Condition="!$(RestartBuild)" />
-		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Compile"
-			Properties="Configuration=$(Configuration)" Condition="$(RestartBuild)" />
+		<CallTarget Targets="BuildInternal" Condition="!$(RestartBuild)" />
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildInternal"
+			Properties="Configuration=$(Configuration);RootDir=$(RootDir)"
+			Condition="$(RestartBuild)" />
+	</Target>
+
+	<Target Name="BuildInternal">
+		<Message Text="RestartBuild=$(RestartBuild); $(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll" />
+		<Message Text="Exists($(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll)" Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll')"/>
+		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
 	</Target>
 
 	<Target Name="RestoreBuildTasks" DependsOnTargets="CheckPrerequisites">
+		<Message Text="RestartBuild=$(RestartBuild)" />
 		<Exec Command='$(NuGetCommand) install GitVersion.CommandLine -excludeVersion -version 4.0.0 -solutionDirectory "$(RootDir)"' />
-		<Exec Command='$(NuGetCommand) install BuildDependencyTasks -excludeVersion -version 0.4.2 -solutionDirectory "$(RootDir)"' />
+		<Exec Command='$(NuGetCommand) install BuildDependencyTasks -excludeVersion -version 0.4.3 -solutionDirectory "$(RootDir)"' />
 		<Exec Command='$(NuGetCommand) install NUnit.Runners.Net4 -version 2.6.4 -solutionDirectory "$(RootDir)"' />
 		<Exec Command='$(NuGetCommand) install MSBuildTasks -excludeVersion -version 1.5.0.235 -solutionDirectory "$(RootDir)"' />
+		<Exec Command='$(NuGetCommand) install SIL.BuildTasks -excludeVersion -version 2.2.0 -solutionDirectory "$(RootDir)"' />
 	</Target>
 
 	<ItemGroup>
@@ -64,11 +74,10 @@
 		<AllBuildDependencyTasksDirs Include="@(AllBuildDependencyTasksFiles->'%(RootDir)%(Directory)')"/>
 	</ItemGroup>
 
+	<Import Project="LfMerge-DownloadDeps.xml" />
+
 	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages">
-		<MSBuild
-			Projects="LfMerge-DownloadDeps.xml"
-			Targets="DownloadDependenciesTarget"
-			Properties="Configuration=$(Configuration);RootDir=$(RootDir);SolutionDir=$(SolutionDir)" />
+		<CallTarget Targets="DownloadDependenciesTarget" />
 	</Target>
 
 	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages">
