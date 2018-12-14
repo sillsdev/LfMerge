@@ -40,6 +40,10 @@
 		<Message Text="Build Complete"/>
 	</Target>
 
+	<Target Name="RestoreBuildTasks">
+		<!-- Dummy target called by Jenkins. No need to do anything here in this branch -->
+	</Target>
+
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
