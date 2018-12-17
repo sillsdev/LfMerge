@@ -4,6 +4,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
 export MONO_PREFIX=/opt/mono5-sil
