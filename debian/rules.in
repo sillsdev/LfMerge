@@ -73,9 +73,10 @@ override_dh_auto_install:
 	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
 	# wrong line endings, so we re-create the entire file
 	echo "$$MERCURIAL_INI" > $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
-	# Remove files that are also in lfmerge-fdo and unit test related files
+	# Remove unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
-		rm -f *.Tests.dll* *.TestApp.exe* SIL.TestUtilities.dll* nunit.framework.dll *Moq.dll
+		rm -f *.Tests.dll* *.Tests.pdb* *.TestApp.exe* SIL.TestUtilities.dll* \
+			SIL.TestUtilities.pdb* nunit.framework.dll *Moq.dll
 	# Install environ file
 	install -d $(DBDESTDIR)/$(SHARE)
 	install -m 644 environ $(DBDESTDIR)/$(SHARE)
