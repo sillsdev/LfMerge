@@ -70,8 +70,8 @@ override_dh_auto_install:
 	install -m 644 Mercurial/mercurial/hgweb/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
 	install -m 644 Mercurial/mercurial/httpclient/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
 	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
-	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
-	# wrong line endings, so we re-create the entire file
+	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
+	# has wrong line endings, so we re-create the entire file
 	echo "$$MERCURIAL_INI" > $(DBDESTDIR)/$(LIB)/Mercurial/mercurial.ini
 	# Remove unit test related files
 	cd $(DBDESTDIR)/$(LIB) && \
