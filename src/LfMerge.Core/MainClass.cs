@@ -68,6 +68,12 @@ namespace LfMerge.Core
 		public static int StartLfMerge(string projectCode, ActionNames action,
 			string modelVersion, bool allowFreshClone, string configDir = null)
 		{
+			if (string.IsNullOrEmpty(modelVersion))
+			{
+				// This can happen if we haven't cloned the project yet
+				modelVersion = ModelVersion;
+			}
+
 			if (!IsSupportedModelVersion(modelVersion))
 			{
 				var project = LanguageForgeProject.Create(projectCode);
