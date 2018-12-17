@@ -5,8 +5,9 @@
 #export DH_VERBOSE=1
 
 export XDG_CONFIG_HOME=$(HOME)/.config
-export BUILD = Release
+export BUILD=Release
 export MONO_PREFIX=/opt/mono5-sil
+export MSBUILD=msbuild
 
 # Model version dependent DESTDIR
 DBDESTDIR		= debian/lfmerge-__DatabaseVersion__
@@ -31,13 +32,13 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	. ./environ && \
-		xbuild /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /t:CompileOnly build/LfMerge.proj
+		$(MSBUILD) /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /t:CompileOnly build/LfMerge.proj
 
 override_dh_auto_test:
 
 override_dh_auto_clean:
 	. ./environ && \
-		xbuild /p:Configuration=$(BUILD) /t:Clean build/LfMerge.proj
+		$(MSBUILD) /p:Configuration=$(BUILD) /t:Clean build/LfMerge.proj
 	dh_clean
 
 override_dh_auto_install:
