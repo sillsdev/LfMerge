@@ -124,7 +124,11 @@ override_dh_clideps:
 		--exclude-moduleref=icu.net --exclude-moduleref=libdl.so \
 		--exclude-moduleref=libhunspell --exclude-moduleref=Autofac \
 		--exclude-moduleref=CommandLine --exclude-moduleref=NDesk.DBus \
-		--exclude-moduleref=INIFileParser --exclude-moduleref=Newtonsoft.Json
+		--exclude-moduleref=INIFileParser --exclude-moduleref=Newtonsoft.Json \
+		--exclude-moduleref=Autofac --exclude-moduleref=MAPI32.DLL \
+		--exclude-moduleref=__Internal --exclude-moduleref=SIL.Core \
+		--exclude-moduleref=SIL.Core.Desktop --exclude-moduleref=SIL.LCModel.Core \
+		--exclude-moduleref=Microsoft.DotNet.PlatformAbstractions
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
