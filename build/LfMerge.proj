@@ -76,7 +76,7 @@
 
 	<Import Project="LfMerge-DownloadDeps.xml" />
 
-	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages">
+	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages;RestoreBuildTasks">
 		<CallTarget Targets="DownloadDependenciesTarget" />
 	</Target>
 
