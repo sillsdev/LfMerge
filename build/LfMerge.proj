@@ -80,7 +80,7 @@
 		<CallTarget Targets="DownloadDependenciesTarget" />
 	</Target>
 
-	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages">
+	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages;RestoreBuildTasks">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
 	</Target>
