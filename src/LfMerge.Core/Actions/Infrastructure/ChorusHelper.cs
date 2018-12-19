@@ -43,7 +43,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 			get
 			{
 				var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
-				return chorusHelper.ModelVersion != LcmCache.ModelVersion;
+				return chorusHelper.ModelVersion > 0 && chorusHelper.ModelVersion != LcmCache.ModelVersion;
 			}
 		}
 
