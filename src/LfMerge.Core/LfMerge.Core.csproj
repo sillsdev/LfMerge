@@ -115,9 +115,6 @@
     <Reference Include="SIL.Core">
       <HintPath>..\..\lib\SIL.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Core.Desktop">
-      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="SIL.Lexicon">
       <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
     </Reference>

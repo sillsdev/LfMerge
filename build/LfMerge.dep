@@ -38,8 +38,6 @@ RevisionValue=latest.lastSuccessful
 Condition=Linux
 Path=SIL.Core.dll=>lib/
 SIL.Core.pdb=>lib/
-SIL.Core.Desktop.dll=>lib/
-SIL.Core.Desktop.pdb=>lib/
 SIL.Lexicon.dll=>lib/
 SIL.Lexicon.pdb=>lib/
 SIL.WritingSystems.dll=>lib/
@@ -74,8 +72,6 @@ RevisionValue=latest.lastSuccessful
 Condition=Windows
 Path=SIL.Core.dll=>lib/
 SIL.Core.pdb=>lib/
-SIL.Core.Desktop.dll=>lib/
-SIL.Core.Desktop.pdb=>lib/
 SIL.Lexicon.dll=>lib/
 SIL.Lexicon.pdb=>lib/
 SIL.WritingSystems.dll=>lib/
