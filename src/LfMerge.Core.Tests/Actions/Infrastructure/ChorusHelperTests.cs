@@ -41,7 +41,7 @@ namespace LfMerge.Core.Tests.Actions.Infrastructure
 			var proj = LanguageForgeProject.Create("test");
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 			Assert.That(chorusHelper.GetSyncUri(proj),
-				Is.EqualTo("https://x:x@hg-public.languagedepot.org/test"));
+				Is.EqualTo("http://x:x@hg-public.languagedepot.org/test"));
 		}
 
 		[Test]
@@ -50,7 +50,7 @@ namespace LfMerge.Core.Tests.Actions.Infrastructure
 			var proj = LanguageForgeProject.Create("test project");
 			var chorusHelper = MainClass.Container.Resolve<ChorusHelper>();
 			Assert.That(chorusHelper.GetSyncUri(proj),
-				Is.EqualTo("https://x:x@hg-public.languagedepot.org/test+project"));
+				Is.EqualTo("http://x:x@hg-public.languagedepot.org/test+project"));
 		}
 
 		[Test]
