@@ -109,6 +109,9 @@
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.LCModel.Core.Tests, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\lib\SIL.LCModel.Core.Tests.dll</HintPath>
     </Reference>

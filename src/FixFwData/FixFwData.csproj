@@ -110,6 +110,9 @@
     <Reference Include="SIL.Core">
       <HintPath>..\..\lib\SIL.Core.dll</HintPath>
     </Reference>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.LCModel.FixData">
       <HintPath>..\..\lib\SIL.LCModel.FixData.dll</HintPath>
     </Reference>
