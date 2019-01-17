@@ -121,6 +121,9 @@
     <Reference Include="SIL.Lexicon">
       <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
     </Reference>
+    <Reference Include="SIL.Lift, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\SIL.Lift.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.WritingSystems">
       <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
     </Reference>
