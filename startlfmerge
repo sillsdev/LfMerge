@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Start LfMerge
 # This script will reside in /usr/lib/lfmerge/<dbversion>/
 
