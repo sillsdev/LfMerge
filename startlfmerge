@@ -13,6 +13,7 @@ fi
 
 LIB=/usr/lib/lfmerge/$DBVERSION
 SHARE=/usr/share/lfmerge/$DBVERSION
+DBVERSIONPATH=$LIB
 
 cd "$SHARE"
 RUNMODE=INSTALLED
