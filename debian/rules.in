@@ -79,10 +79,11 @@ override_dh_auto_install:
 	install -m 644 environ $(DBDESTDIR)/$(SHARE)
 	install -d $(DBDESTDIR)/$(SHARE)/Mercurial/doc
 	install -m 644 Mercurial/doc/*.* $(DBDESTDIR)/$(SHARE)/Mercurial/doc
-	# Install wrapper script
+	# Install wrapper scripts
 	install -d $(COMMONDESTDIR)/usr/bin
 	install -m 755 lfmerge $(COMMONDESTDIR)/usr/bin
 	install -m 755 lfmergeqm $(COMMONDESTDIR)/usr/bin
+	install -m 755 startlfmerge $(DBDESTDIR)/$(LIB)
 	# Install conf file
 	install -d $(COMMONDESTDIR)/etc/languageforge/conf
 	install -m 644 debian/sendreceive.conf $(COMMONDESTDIR)/etc/languageforge/conf
