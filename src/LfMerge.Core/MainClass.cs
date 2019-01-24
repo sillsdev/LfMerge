@@ -91,13 +91,8 @@ namespace LfMerge.Core
 			Logger.Notice("Starting LfMerge for model version '{0}'", modelVersion);
 			var startInfo = new ProcessStartInfo();
 			var argsBldr = new StringBuilder();
-			if (Platform.IsMono)
-			{
-				startInfo.FileName = "mono";
-				argsBldr.Append("--debug LfMerge.exe");
-			}
-			else
-				startInfo.FileName = "LfMerge.exe";
+			var startInfoWorkingDirectory = GetModelSpecificDirectory(modelVersion);
+			startInfo.FileName = Path.Combine(startInfoWorkingDirectory, "startlfmerge");
 
 			argsBldr.AppendFormat(" -p {0} --action {1}", projectCode, action);
 			if (allowFreshClone)
@@ -110,7 +105,7 @@ namespace LfMerge.Core
 			startInfo.CreateNoWindow = true;
 			startInfo.ErrorDialog = false;
 			startInfo.UseShellExecute = false;
-			startInfo.WorkingDirectory = GetModelSpecificDirectory(modelVersion);
+			startInfo.WorkingDirectory = startInfoWorkingDirectory;
 			try
 			{
 				using (var process = Process.Start(startInfo))
