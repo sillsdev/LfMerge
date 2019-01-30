@@ -8,8 +8,10 @@
 		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
 		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
 		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
-		<RestartBuild Condition="!Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') Or !Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') Or !Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll')">true</RestartBuild>
-		<RestartBuild Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') And Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') And Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll')">false</RestartBuild>
+		<NUnitVersion>2.6.4</NUnitVersion>
+		<NUnitRunnerPackage>$(RootDir)/packages/NUnit.Runners.Net4.$(NUnitVersion)</NUnitRunnerPackage>
+		<RestartBuild Condition="!Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') Or !Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') Or !Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll') Or !Exists('$(NUnitRunnerPackage)')">true</RestartBuild>
+		<RestartBuild Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') And Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') And Exists('$(RootDir)/packages/BuildDependencyTasks/BuildDependencyTasks.dll') And Exists('$(NUnitRunnerPackage)')">false</RestartBuild>
 	</PropertyGroup>
 
 	<UsingTask TaskName="FileUpdate"
@@ -18,12 +20,6 @@
 	<UsingTask TaskName="NUnit"
 		AssemblyFile="$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll"
 		Condition="Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll')" />
-	<UsingTask TaskName="NUnitTeamCity"
-		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
-		Condition=" '$(teamcity_version)' != '' And '$(OS)'=='Windows_NT'"/>
-	<UsingTask TaskName="NUnitTeamCity"
-		AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll"
-		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
 
 	<Import Project="NuGet.targets"/>
 
@@ -108,10 +104,6 @@
 	</Target>
 
 	<Target Name="TestOnly">
-		<PropertyGroup>
-			<NUnitVersion>2.6.4</NUnitVersion>
-			<NUnitRunnerPackage>$(RootDir)/packages/NUnit.Runners.Net4.$(NUnitVersion)</NUnitRunnerPackage>
-		</PropertyGroup>
 		<ItemGroup>
 			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
 				Exclude="$(RootDir)/output/$(Configuration)/SIL.LCModel*.Tests.dll"/>
