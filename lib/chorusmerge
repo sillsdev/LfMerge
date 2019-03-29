@@ -1,2 +1,20 @@
 #!/bin/sh
-exec mono `dirname $0`/ChorusMerge.exe "$@"
+unset MONO_PREFIX
+unset MONO_ENVIRON
+
+DBVERSION=$(basename $(dirname $(readlink -f $0)))
+
+if [[ $DBVERSION != 70* ]]; then
+	DBVERSION=$(basename $(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1))
+fi
+
+LIB=/usr/lib/lfmerge/$DBVERSION
+SHARE=/usr/share/lfmerge/$DBVERSION
+DBVERSIONPATH=$LIB
+
+cd "$SHARE"
+RUNMODE=INSTALLED
+. ./environ
+cd "$LIB"
+
+exec mono --debug "$LIB"/ChorusMerge.exe "$@"
