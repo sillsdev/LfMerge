@@ -40,17 +40,21 @@ namespace LfMerge.Core.DataConverters
 				{
 					comment.Regarding.TargetGuid = guid.ToString();
 
-					// LF-186
+					// LF-186/LF-264
 					if (string.IsNullOrEmpty(comment.Regarding.Word))
 					{
-						var lexeme = GetLexEntry(comment.EntryRef).Lexeme.FirstNonEmptyString();
-						var field = comment.Regarding.FieldNameForDisplay;
-						var ws = comment.Regarding.InputSystemAbbreviation;
-						var value = string.IsNullOrEmpty(comment.Regarding.FieldValue)
-							? ""
-							: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
-						comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
-							field, ws, value);
+						var entry = GetLexEntry(comment.EntryRef);
+						var lexeme = entry != null ? (entry.Lexeme != null ? entry.Lexeme.FirstNonEmptyString() : null) : null;
+						if (!string.IsNullOrEmpty(lexeme))
+						{
+							var field = comment.Regarding.FieldNameForDisplay;
+							var ws = comment.Regarding.InputSystemAbbreviation;
+							var value = string.IsNullOrEmpty(comment.Regarding.FieldValue)
+								? ""
+								: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
+							comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
+								field, ws, value);
+						}
 					}
 				}
 
