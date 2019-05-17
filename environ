@@ -15,7 +15,8 @@ MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
 if [ "$RUNMODE" != "NUGET" ]; then
-	[ -z "$DBVERSIONPATH" ] && DBVERSIONPATH=$(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1)
+	[ -z "$DBVERSIONPATH" ] && DBVERSIONPATH=/usr/lib/lfmerge/7000070
+
 	COMPONENTS_MAP_PATH=$DBVERSIONPATH
 fi
 ICU_DATA=/usr/share/fieldworks/Icu54
