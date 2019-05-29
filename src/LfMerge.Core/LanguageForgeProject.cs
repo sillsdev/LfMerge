@@ -118,12 +118,9 @@ namespace LfMerge.Core
 		{
 			get
 			{
-				// temporary change back to use http while we still get invalid certificate from LD
-				//var uri = "https://hg-public.languagedepot.org";
-				var uri = "http://hg-public.languagedepot.org";
+				string uri = "https://hg-public.languagedepot.org";
 				if (LanguageDepotProject.Repository != null && LanguageDepotProject.Repository.Contains("private"))
-					//uri = "https://hg-private.languagedepot.org";
-					uri = "http://hg-private.languagedepot.org";
+					uri = "https://hg-private.languagedepot.org";
 				return uri;
 			}
 		}
