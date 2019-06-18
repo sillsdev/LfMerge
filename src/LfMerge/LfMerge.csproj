@@ -148,6 +148,8 @@
       <FilesToCopy Include="@(FilesInOutput->'../../lib/%(Filename)%(Extension).mdb')" Condition="Exists('../../lib/%(Filename)%(Extension).mdb')" />
       <FilesToCopy Include="../../lib/ChorusMerge.exe*" />
       <FilesToCopy Include="../../lib/LibChorus.dll*" />
+      <FilesToCopy Include="../../lib/L10NSharp.dll*" />
+      <FilesToCopy Include="../../environ" />
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
