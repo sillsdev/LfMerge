@@ -131,7 +131,7 @@ override_dh_clideps:
 		--exclude-moduleref=MAPI32.DLL --exclude-moduleref=__Internal \
 		--exclude-moduleref=Microsoft.DotNet.PlatformAbstractions \
 		--exclude-moduleref=libhunspell.so --exclude-moduleref=libhunspell-1.3.so.0 \
-		--exclude-moduleref=libhunspell-1.6.so.0
+		--exclude-moduleref=libhunspell-1.6.so.0 --exclude-moduleref=LibGit2Sharp
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
