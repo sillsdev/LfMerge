@@ -106,33 +106,9 @@ override_dh_makeclilibs:
 override_dh_shlibdeps:
 	dh_shlibdeps -l$(MONO_PREFIX)/lib
 
+# Don't calculate .NET dependencies - we include everything we need so there are
+# no dependencies on other packages with managed assemblies
 override_dh_clideps:
-	dh_clideps \
-		--exclude-moduleref=security.dll \
-		--exclude-moduleref=icuuc65.dll --exclude-moduleref=icuin65.dll \
-		--exclude-moduleref=icuuc64.dll --exclude-moduleref=icuin64.dll \
-		--exclude-moduleref=icuuc63.dll --exclude-moduleref=icuin63.dll \
-		--exclude-moduleref=icuuc62.dll --exclude-moduleref=icuin62.dll \
-		--exclude-moduleref=icuuc61.dll --exclude-moduleref=icuin61.dll \
-		--exclude-moduleref=icuuc60.dll --exclude-moduleref=icuin60.dll \
-		--exclude-moduleref=icuuc59.dll --exclude-moduleref=icuin59.dll \
-		--exclude-moduleref=icuuc58.dll --exclude-moduleref=icuin58.dll \
-		--exclude-moduleref=icuuc57.dll --exclude-moduleref=icuin57.dll \
-		--exclude-moduleref=icuuc56.dll --exclude-moduleref=icuin56.dll \
-		--exclude-moduleref=icuuc55.dll --exclude-moduleref=icuin55.dll \
-		--exclude-moduleref=icuuc54.dll --exclude-moduleref=icuin54.dll \
-		--exclude-moduleref=icuuc52.dll --exclude-moduleref=icuin52.dll \
-		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll \
-		--exclude-moduleref=libicuuc.so --exclude-moduleref=libicui18n.so \
-		--exclude-moduleref=icu.net --exclude-moduleref=libdl.so \
-		--exclude-moduleref=ntdll --exclude-moduleref=Autofac \
-		--exclude-moduleref=CommandLine --exclude-moduleref=NDesk.DBus \
-		--exclude-moduleref=INIFileParser --exclude-moduleref=Newtonsoft.Json \
-		--exclude-moduleref=MAPI32.DLL --exclude-moduleref=__Internal \
-		--exclude-moduleref=Microsoft.DotNet.PlatformAbstractions \
-		--exclude-moduleref=libhunspell.so --exclude-moduleref=libhunspell-1.3.so.0 \
-		--exclude-moduleref=libhunspell-1.6.so.0 \
-		--exclude-moduleref=LibGit2Sharp --exclude-moduleref=libgit2-572e4d8.so
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
