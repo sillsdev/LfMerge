@@ -55,19 +55,9 @@ namespace LfMerge.Core.Tests
 			Directory.CreateDirectory(Settings.LcmDirectorySettings.TemplateDirectory);
 			Directory.CreateDirectory(Settings.StateDirectory);
 			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			var globalWritingSystemRepo = Path.Combine(_languageForgeServerFolder.Path, "GlobalWritingSystems");
-			ReflectionHelper.SetField(typeof(GlobalWritingSystemRepository),
-				"_defaultBasePath", globalWritingSystemRepo);
-			var nonExistingPath = Path.Combine(_languageForgeServerFolder.Path, "NonExisting");
-			ReflectionHelper.SetProperty(typeof(GlobalWritingSystemRepositoryMigrator),
-				"LdmlPathVersion0", nonExistingPath);
-			ReflectionHelper.SetProperty(typeof(GlobalWritingSystemRepositoryMigrator),
-				"LdmlPathLinuxVersion2", nonExistingPath);
-			GlobalWritingSystemRepository.CreateGlobalWritingSystemRepositoryDirectory(globalWritingSystemRepo);
 			// only call SingletonsContainer.Release() at the end if we actually create the
 			// singleton
 			_releaseSingletons = !SingletonsContainer.Contains<CoreGlobalWritingSystemRepository>();
-			SingletonsContainer.Get<CoreGlobalWritingSystemRepository>();
 		}
 
 		private string TestName

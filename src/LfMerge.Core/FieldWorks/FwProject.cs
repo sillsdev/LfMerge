@@ -23,7 +23,8 @@ namespace LfMerge.Core.FieldWorks
 		public FwProject(LfMergeSettings settings, string database)
 		{
 			// We don't want to use a global writing system store, so we insert a null singleton
-			SingletonsContainer.Add(typeof(CoreGlobalWritingSystemRepository).FullName, null);
+			if (!SingletonsContainer.Contains<CoreGlobalWritingSystemRepository>())
+				SingletonsContainer.Add(typeof(CoreGlobalWritingSystemRepository).FullName, null);
 
 			_project = new ProjectIdentifier(settings.LcmDirectorySettings, database);
 			_lcmUi = new ConsoleLcmUi(_progress.SynchronizeInvoke);
