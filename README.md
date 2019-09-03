@@ -2,6 +2,12 @@
 
 Send/Receive for languageforge.org
 
+## Special Thanks To
+
+For error reporting:
+
+[![Bugsnag logo](readme_images/bugsnag-logo.png "Bugsnag")](https://bugsnag.com/blog/bugsnag-loves-open-source)
+
 ## Preqrequisites
 
 You'll have to install some package dependencies. These are listed in [`build/dependencies.config`](https://github.com/sillsdev/LfMerge/blob/master/build/dependencies.config).
