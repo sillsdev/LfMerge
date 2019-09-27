@@ -230,6 +230,7 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
+		[Ignore("Temporarily disabled - needs updated test data")]
 		public void Success_NoNewChangesFromOthersAndUs()
 		{
 			// Setup
@@ -252,6 +253,7 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
+		[Ignore("Temporarily disabled - needs updated test data")]
 		public void Success_ChangesFromOthersNoChangesFromUs()
 		{
 			// Setup
@@ -274,6 +276,7 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
+		[Ignore("Temporarily disabled - needs updated test data")]
 		public void Success_ChangesFromUsNoChangesFromOthers()
 		{
 			// Setup
