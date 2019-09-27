@@ -91,8 +91,8 @@
       <HintPath>..\..\packages\Bugsnag.2.2.0\lib\net45\Bugsnag.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="icu.net, Version=2.5.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
-      <HintPath>..\..\packages\icu.net.2.5.4\lib\net451\icu.net.dll</HintPath>
+    <Reference Include="icu.net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
+      <HintPath>..\..\packages\icu.net.2.6.0\lib\net451\icu.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
