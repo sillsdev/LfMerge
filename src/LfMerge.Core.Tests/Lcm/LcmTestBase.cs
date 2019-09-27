@@ -63,7 +63,7 @@ namespace LfMerge.Core.Tests.Lcm
 			{
 				action();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				// This can happen if the objects already got disposed somewhere else.
 				// It doesn't really matter since we're in the process of doing cleanup anyways.
