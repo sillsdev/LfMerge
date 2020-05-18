@@ -1,0 +1,6 @@
+Autofac
+CommandLineParser
+ini-parser
+MongoDB.Bson
+MongoDB.Driver
+MongoDB.Driver.Core

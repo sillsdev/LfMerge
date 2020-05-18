@@ -72,16 +72,16 @@
 
 	<Import Project="LfMerge-DownloadDeps.xml" />
 
-	<Target Name="DownloadDependencies" DependsOnTargets="RestorePackages;RestoreBuildTasks">
+	<Target Name="DownloadDependencies" DependsOnTargets="RestoreBuildTasks">
 		<CallTarget Targets="DownloadDependenciesTarget" />
 	</Target>
 
-	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestorePackages;RestoreBuildTasks">
+	<Target Name="PrepareSource" DependsOnTargets="DownloadDependencies;RestoreBuildTasks">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="DownloadDependencies;RestorePackages">
+	<Target Name="Compile" DependsOnTargets="DownloadDependencies">
 		<Message Text="RootDir=$(RootDir)"/>
 		<FileUpdate Files="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../"
 			ReplacementText="fixutf8=$(RootDir)/" ContinueOnError="WarnAndContinue"/>
