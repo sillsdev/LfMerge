@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\GitVersionTask\build\GitVersionTask.props" Condition="Exists('..\..\packages\GitVersionTask\build\GitVersionTask.props')" Label="Paket" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -221,7 +222,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2' Or $(TargetFrameworkVersion) == 'v4.8')">
       <ItemGroup>
         <Reference Include="GitTools.Core">
-          <HintPath>..\..\packages\GitTools.Core-alt\lib\net461\GitTools.Core.dll</HintPath>
+          <HintPath>..\..\packages\GitTools.Core\lib\net45\GitTools.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1706,4 +1707,5 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\..\packages\GitVersionTask\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask\build\GitVersionTask.targets')" Label="Paket" />
 </Project>

@@ -1,7 +1,7 @@
 Autofac
 Bugsnag
-GitTools.Core-alt
-GitVersionTask.alt
+GitTools.Core
+GitVersionTask
 icu.net
 ini-parser
 JetBrains.Annotations
