@@ -1,4 +1,5 @@
 source https://www.nuget.org/api/v2
+source https://api.nuget.org/v3/index.json
 
 nuget NuGet.CommandLine
 nuget Autofac 3.5.2 prerelease restriction: >= net45
@@ -26,3 +27,29 @@ nuget System.Runtime.Serialization.Primitives 4.3.0 prerelease restriction: >= n
 nuget System.ValueTuple 4.5.0 prerelease restriction: >= net462
 nuget UtilPack.NuGet.MSBuild 2.8.0 prerelease restriction: >= net462
 nuget YamlDotNet 5.2.1 prerelease restriction: >= net462
+
+nuget GitVersion.CommandLine 4.0.0
+nuget BuildDependencyTasks 0.4.3
+nuget NUnit.Runners.Net4 2.6.4
+nuget MSBuildTasks 1.5.0.235
+nuget SIL.BuildTasks 2.2.0
+
+// [ FAKE GROUP ]
+group Build
+  source https://api.nuget.org/v3/index.json
+
+  framework: netstandard2.0
+  storage: none
+
+  nuget Fake.Core.Target
+  nuget Fake.Core.Process
+  nuget Fake.DotNet.Cli
+  nuget Fake.Core.ReleaseNotes
+  nuget Fake.DotNet.AssemblyInfoFile
+  nuget Fake.DotNet.Paket
+  nuget Fake.Tools.Git
+  nuget Fake.Core.Environment
+  nuget Fake.Core.UserInput
+  nuget Fake.IO.FileSystem
+  nuget Fake.DotNet.MsBuild
+  nuget Fake.Api.GitHub
