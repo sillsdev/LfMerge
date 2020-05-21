@@ -2,7 +2,6 @@ Autofac
 Bugsnag
 CommandLineParser
 GitTools.Core
-GitVersionTask
 ini-parser
 JetBrains.Annotations
 LibGit2Sharp

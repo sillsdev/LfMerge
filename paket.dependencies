@@ -7,7 +7,6 @@ nuget Autofac.Extras.Moq 4.0.0 prerelease restriction: >= net45
 nuget Bugsnag 2.2.0 prerelease
 nuget CommandLineParser 1.9.71 prerelease restriction: >= net45
 nuget GitTools.Core restriction: >= net462
-nuget GitVersionTask restriction: >= net462
 nuget icu.net 2.6.0 prerelease restriction: >= net462
 nuget ini-parser 2.5.2 prerelease restriction: >= net462
 nuget JetBrains.Annotations 10.4.0 prerelease restriction: >= net462
@@ -53,3 +52,4 @@ group Build
   nuget Fake.IO.FileSystem
   nuget Fake.DotNet.MsBuild
   nuget Fake.Api.GitHub
+  nuget System.Text.Json
