@@ -158,7 +158,7 @@ Target.create "Build" (fun _ ->
 )
 
 Target.create "Test" (fun _ ->
-    exec "dotnet"  @"run --project ./src/LfMerge.Tests/LfMerge.Tests.csproj" "."
+    exec "mono" "packages/NUnit.Runners.Net4/tools/nunit-console.exe /home/rmunn/code/LfMerge/output/Release/LfMerge.Tests.dll /home/rmunn/code/LfMerge/output/Release/LfMerge.Core.Tests.dll" "."
 )
 
 // --------------------------------------------------------------------------------------

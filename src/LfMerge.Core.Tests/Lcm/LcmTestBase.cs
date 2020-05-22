@@ -44,6 +44,10 @@ namespace LfMerge.Core.Tests.Lcm
 				resetLfProjectsDuringCleanup: false,
 				languageForgeServerFolder: LanguageForgeFolder
 			);
+			if (! SIL.WritingSystems.Sldr.IsInitialized)
+			{
+				SIL.WritingSystems.Sldr.Initialize();
+			}
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
 			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.LcmDirectorySettings.DefaultProjectsDirectory);
 			lfProj = LanguageForgeProject.Create(testProjectCode);

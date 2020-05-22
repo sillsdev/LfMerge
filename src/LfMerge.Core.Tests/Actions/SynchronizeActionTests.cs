@@ -53,6 +53,10 @@ namespace LfMerge.Core.Tests.Actions
 		[SetUp]
 		public void Setup()
 		{
+			if (! SIL.WritingSystems.Sldr.IsInitialized)
+			{
+				SIL.WritingSystems.Sldr.Initialize();
+			}
 			_env = new TestEnvironment();
 			_env.Settings.CommitWhenDone = true;
 			_counts = MainClass.Container.Resolve<EntryCounts>();
