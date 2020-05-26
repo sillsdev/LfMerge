@@ -90,8 +90,8 @@ L10NSharp.pdb=>lib/
 
 [TC::FLExBridgeDevelopLinux64Continuous]
 Name=FLEx Bridge-develop-Linux64-Continuous
-RevisionName=lastSuccessful
-RevisionValue=latest.lastSuccessful
+RevisionName=lastPinned
+RevisionValue=latest.lastPinned
 Condition=Linux
 Path=LibFLExBridge-ChorusPlugin.*=>lib/
 LibTriboroughBridge-ChorusPlugin.*=>lib/
