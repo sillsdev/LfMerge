@@ -230,7 +230,7 @@ namespace LfMerge.Core.Tests.Actions
 		[Test]
 		public void SynchronizeAction_LFDataChangedLDDataChanged_LFWins()
 		{
-			//Setup
+			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
@@ -379,7 +379,7 @@ namespace LfMerge.Core.Tests.Actions
 		[Test]
 		public void SynchronizeAction_LFDataDeletedLDDataChanged_LDWins()
 		{
-			//Setup
+			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
@@ -467,7 +467,7 @@ namespace LfMerge.Core.Tests.Actions
 		[Test]
 		public void SynchronizeAction_LFDataChangedLDOtherDataChanged_ModifiedDateUpdated()
 		{
-			//Setup
+			// Setup
 			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
 			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
 
@@ -504,6 +504,83 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(updatedLfEntry.AuthorInfo.ModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
 
 			Assert.That(_mongoConnection.GetLastSyncedDate(_lfProject), Is.GreaterThanOrEqualTo(timeBeforeRun));
+		}
+
+		[Test]
+		public void SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync()
+		{
+			// Setup
+			// Buggy code path needs us to change the field writing system to a "magic" ws (it's 0 in the original data/testlangproj project)
+			var lcmMetaData = _lfProject.FieldWorksProject.Cache.MetaDataCacheAccessor as SIL.LCModel.Infrastructure.IFwMetaDataCacheManaged;
+			int listRef_flid = lcmMetaData.GetFieldIds().FirstOrDefault(flid => lcmMetaData.GetFieldLabel(flid) == "Cust Single ListRef");
+			Assert.AreNotEqual(0, listRef_flid, "Cust Single ListRef field not found in test data");
+			string fieldLabel = lcmMetaData.GetFieldLabel(listRef_flid);
+			string fieldHelp = lcmMetaData.GetFieldHelp(listRef_flid);
+			int wsid = SIL.LCModel.DomainServices.WritingSystemServices.kwsAnal;
+			lcmMetaData.UpdateCustomField(listRef_flid, fieldHelp, wsid, fieldLabel);
+
+			TestEnvironment.CopyFwProjectTo(testProjectCode, _lDSettings.WebWorkDirectory);
+
+			_lfProject.IsInitialClone = true;
+			_transferLcmToMongo.Run(_lfProject);
+
+			// To look at Mongo optionlist before test runs, uncomment this block
+			// var x = _mongoConnection.GetLfOptionLists().FirstOrDefault(l => l.Code == "domain-type");
+			// if (x != null) {
+			// 	foreach (LfOptionListItem item in x.Items) {
+			// 		Console.WriteLine($"{item.Guid} ({item.Key}) => {item.Value}");
+			// 	}
+			// }
+
+			// Buggy code path requires that there not be a GUID in the Mongo data
+			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
+			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
+			lfEntry.CustomFieldGuids.Remove("customField_entry_Cust_Single_ListRef");
+
+			DateTime originalLfDateModified = lfEntry.DateModified;
+			DateTime originalLfAuthorInfoModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
+
+			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
+			var lDcache = _lDProject.FieldWorksProject.Cache;
+			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+			var data = (SIL.LCModel.Application.ISilDataAccessManaged)lDcache.DomainDataByFlid;
+			int ownedHvo = data.get_ObjectProp(lDLcmEntry.Hvo, listRef_flid);
+			if (ownedHvo == 0 || !data.get_IsValidObject(ownedHvo))
+			{
+				throw new Exception("Custom field value in test data was invalid during setup");
+			}
+			ICmObject referencedObject = lDcache.GetAtomicPropObject(ownedHvo);
+			if (referencedObject == null)
+			{
+				throw new Exception("Custom field in test data referenced invalid CmObject during setup");
+			}
+			DateTime originalLdDateModified = lDLcmEntry.DateModified;
+
+			// Exercise
+			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
+			var timeBeforeRun = DateTime.UtcNow;
+			sutSynchronize.Run(_lfProject);
+
+			// Verify
+			LfLexEntry updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
+			var updatedLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
+
+			ownedHvo = data.get_ObjectProp(updatedLcmEntry.Hvo, listRef_flid);
+			if (ownedHvo == 0 || !data.get_IsValidObject(ownedHvo))
+			{
+				throw new Exception("Custom field value in test data was invalid after running sync");
+			}
+			referencedObject = lDcache.GetAtomicPropObject(ownedHvo);
+			if (referencedObject == null)
+			{
+				throw new Exception("Custom field in test data referenced invalid CmObject after running sync");
+			}
+			var poss = referencedObject as ICmPossibility;
+			// TODO: Write another test to check on the abbrev hierarchy, because we may have a bug here (LfMerge not doing correct optionlist keys for hierarchical items)
+			// Console.WriteLine($"Abbrev hierarchy: {poss.AbbrevHierarchyString}");
+			Assert.IsNotNull(poss, "Custom field value in test data did not reference a CmPossibility object after running sync");
 		}
 
 		[Test]
