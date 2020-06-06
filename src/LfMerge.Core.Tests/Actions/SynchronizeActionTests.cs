@@ -547,15 +547,10 @@ namespace LfMerge.Core.Tests.Actions
 			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 			var data = (SIL.LCModel.Application.ISilDataAccessManaged)lDcache.DomainDataByFlid;
 			int ownedHvo = data.get_ObjectProp(lDLcmEntry.Hvo, listRef_flid);
-			if (ownedHvo == 0 || !data.get_IsValidObject(ownedHvo))
-			{
-				throw new Exception("Custom field value in test data was invalid during setup");
-			}
+			Assert.AreNotEqual(0, ownedHvo, "Custom field value in test data was invalid during setup");
+			Assert.IsTrue(data.get_IsValidObject(ownedHvo), "Custom field value in test data was invalid during setup");
 			ICmObject referencedObject = lDcache.GetAtomicPropObject(ownedHvo);
-			if (referencedObject == null)
-			{
-				throw new Exception("Custom field in test data referenced invalid CmObject during setup");
-			}
+			Assert.IsNotNull(referencedObject, "Custom field in test data referenced invalid CmObject during setup");
 			DateTime originalLdDateModified = lDLcmEntry.DateModified;
 
 			// Exercise
@@ -568,15 +563,10 @@ namespace LfMerge.Core.Tests.Actions
 			var updatedLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
 
 			ownedHvo = data.get_ObjectProp(updatedLcmEntry.Hvo, listRef_flid);
-			if (ownedHvo == 0 || !data.get_IsValidObject(ownedHvo))
-			{
-				throw new Exception("Custom field value in test data was invalid after running sync");
-			}
+			Assert.AreNotEqual(0, ownedHvo, "Custom field value in test data was invalid after running sync");
+			Assert.IsTrue(data.get_IsValidObject(ownedHvo), "Custom field value in test data was invalid after running sync");
 			referencedObject = lDcache.GetAtomicPropObject(ownedHvo);
-			if (referencedObject == null)
-			{
-				throw new Exception("Custom field in test data referenced invalid CmObject after running sync");
-			}
+			Assert.IsNotNull(referencedObject, "Custom field in test data referenced invalid CmObject after running sync");
 			var poss = referencedObject as ICmPossibility;
 			// TODO: Write another test to check on the abbrev hierarchy, because we may have a bug here (LfMerge not doing correct optionlist keys for hierarchical items)
 			// Console.WriteLine($"Abbrev hierarchy: {poss.AbbrevHierarchyString}");
