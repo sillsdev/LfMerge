@@ -119,6 +119,7 @@ namespace LfMerge.Core.Tests.Actions
 			var cache = _lfProject.FieldWorksProject.Cache;
 			var lfLcmEntry = cache.ServiceLocator.GetObject(testEntryGuid) as ILexEntry;
 			Assert.That(lfLcmEntry, Is.Not.Null);
+			Assert.That(lfLcmEntry.SensesOS, Is.Not.Null);
 			Assert.That(lfLcmEntry.SensesOS.Count, Is.EqualTo(expectedSensesCount));
 			return lfLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text;
 		}
