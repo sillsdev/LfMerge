@@ -1,5 +1,6 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+using System;
 using System.IO;
 using Autofac;
 using LfMerge.Core.Actions;
@@ -7,8 +8,10 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Settings;
+using Microsoft.DotNet.PlatformAbstractions;
 using NUnit.Framework;
 using SIL.LCModel;
+using SIL.PlatformUtilities;
 using SIL.TestUtilities;
 
 namespace LfMerge.Core.Tests.Actions
@@ -49,6 +52,15 @@ namespace LfMerge.Core.Tests.Actions
 		[SetUp]
 		public void Setup()
 		{
+			if (SIL.PlatformUtilities.Platform.IsWindows)
+			{
+				const string tempPath = @"C:\Tmp";
+				Environment.SetEnvironmentVariable("TMP", tempPath);
+				Environment.SetEnvironmentVariable("TEMP", tempPath);
+
+				Directory.CreateDirectory(tempPath);
+			}
+
 			_env = new TestEnvironment();
 			_languageDepotFolder = new TemporaryFolder(TestContext.CurrentContext.Test.Name + Path.GetRandomFileName());
 			_lDSettings = new LfMergeSettingsDouble(_languageDepotFolder.Path);
@@ -103,7 +115,7 @@ namespace LfMerge.Core.Tests.Actions
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone is not a FLEx project"));
+			Assert.That(_env.Logger.GetErrors(), Does.Contain("clone is not a FLEx project"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
@@ -124,8 +136,8 @@ namespace LfMerge.Core.Tests.Actions
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("no such branch"));
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining(
+			Assert.That(_env.Logger.GetErrors(), Does.Contain("no such branch"));
+			Assert.That(_env.Logger.GetErrors(), Does.Contain(
 				"clone model version '7000060' less than minimal supported model version '7000068'."));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.EqualTo(0));
@@ -165,7 +177,7 @@ namespace LfMerge.Core.Tests.Actions
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("new repository with no commits"));
+			Assert.That(_env.Logger.GetErrors(), Does.Contain("new repository with no commits"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);
@@ -186,7 +198,7 @@ namespace LfMerge.Core.Tests.Actions
 			_EnsureCloneAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetErrors(), Is.StringContaining("clone has higher model"));
+			Assert.That(_env.Logger.GetErrors(), Does.Contain("clone has higher model"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(ModelVersion, Is.EqualTo(0));
 			Assert.That(Directory.Exists(_lfProject.ProjectDir), Is.False);

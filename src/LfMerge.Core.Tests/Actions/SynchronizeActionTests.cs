@@ -16,7 +16,9 @@ using SIL.TestUtilities;
 
 namespace LfMerge.Core.Tests.Actions
 {
-	[TestFixture, Category("LongRunning"), Category("IntegrationTests")]
+	[TestFixture]
+	[Category("LongRunning")]
+	[Category("IntegrationTests")]
 	public class SynchronizeActionTests
 	{
 		/* testlangproj is the original LD repo
@@ -83,11 +85,10 @@ namespace LfMerge.Core.Tests.Actions
 		public void Teardown()
 		{
 			if (_lfProject != null)
-			LanguageForgeProject.DisposeFwProject(_lfProject);
+				LanguageForgeProject.DisposeFwProject(_lfProject);
 			if (_lDProject != null)
-			LanguageDepotMock.DisposeFwProject(_lDProject);
-			if (_languageDepotFolder != null)
-			_languageDepotFolder.Dispose();
+				LanguageDepotMock.DisposeFwProject(_lDProject);
+			_languageDepotFolder?.Dispose();
 			_env.Dispose();
 			_mongoConnection.Reset();
 		}

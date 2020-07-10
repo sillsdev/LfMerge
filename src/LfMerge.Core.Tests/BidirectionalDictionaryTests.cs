@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -25,21 +25,21 @@ namespace LfMerge.Core.Tests
 		public void AddDoubleDuplicate_WillFail()
 		{
 			var exception = Assert.Throws<ArgumentException>(() => Dict.Add("one", 1));
-			Assert.That(exception.Message, Is.StringMatching("An item with the same (key|value) has already been added"));
+			Assert.That(exception.Message, Does.Match("An item with the same (key|value) has already been added"));
 		}
 
 		[Test]
 		public void AddSingleDuplicate_InFirstPosition_WillFail()
 		{
 			var exception = Assert.Throws<ArgumentException>(() => Dict.Add("one", 4));
-			Assert.That(exception.Message, Is.StringMatching("An item with the same key has already been added"));
+			Assert.That(exception.Message, Does.Match("An item with the same key has already been added"));
 		}
 
 		[Test]
 		public void AddSingleDuplicate_InSecondPosition_WillFail()
 		{
 			var exception = Assert.Throws<ArgumentException>(() => Dict.Add("four", 1));
-			Assert.That(exception.Message, Is.StringMatching("An item with the same value has already been added"));
+			Assert.That(exception.Message, Does.Match("An item with the same value has already been added"));
 		}
 
 		[Test]

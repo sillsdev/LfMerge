@@ -41,17 +41,17 @@
 			Properties="Configuration=NOT_IMPORTANT;DownloadNuGetExe=$(DownloadNuGetExe)" />
 	</Target>
 
+	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+		<Exec
+			Command='$(NuGetCommand) restore -NonInteractive "$(SolutionPath)"'/>
+	</Target>
+
 	<Target Name="_DownloadNuGet" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')">
 		<DownloadNuGet OutputFilename="$(NuGetExePath)"
 			Condition="'$(OS)' == 'Windows_NT'" />
 		<Exec Command="wget $(NuGetDownload) || curl -O -L $(NuGetDownload)"
 			WorkingDirectory="$(NuGetToolsPath)"
 			Condition="'$(OS)' != 'Windows_NT'" />
-	</Target>
-
-	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
-		<Exec
-			Command='$(NuGetCommand) restore -NonInteractive "$(SolutionPath)"'/>
 	</Target>
 
 	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
@@ -73,8 +73,12 @@
 					OutputFilename = Path.GetFullPath(OutputFilename);
 
 					Log.LogMessage("Downloading latest version of nuget.exe...");
+
+					ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+					Log.LogMessage("Enabled Protocols: " + ServicePointManager.SecurityProtocol);
+
 					WebClient webClient = new WebClient();
-					webClient.DownloadFile("https://dist.nuget.org/win-x86-commandline/latest/nuget.exe", OutputFilename);
+					webClient.DownloadFile("$(NuGetDownload)", OutputFilename);
 
 					return true;
 				}

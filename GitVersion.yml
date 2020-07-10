@@ -18,7 +18,7 @@ branches:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: alpha
-    regex: (origin/)?(fieldworks8-)?master
+    regex: (origin/)?(fieldworks8-)?(master|feature/nuget)
     is-source-branch-for: [ 'qa' ]
   pull-request:
     mode: ContinuousDeployment

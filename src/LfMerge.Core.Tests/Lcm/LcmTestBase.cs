@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace LfMerge.Core.Tests.Lcm
 			return new TestEnvironment();
 		}
 
-		[SetUp]
+		[OneTimeSetUp]
 		public void SetUpForLcmTests()
 		{
 			LanguageForgeFolder = new TemporaryFolder("LcmTestFixture");
@@ -49,7 +49,7 @@ namespace LfMerge.Core.Tests.Lcm
 			lfProj = LanguageForgeProject.Create(testProjectCode);
 		}
 
-		[TearDown]
+		[OneTimeTearDown]
 		public void TearDownForLcmTests()
 		{
 			IgnoreException(LanguageForgeProjectAccessor.Reset); // This disposes of lfProj

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace LfMerge.Core.Tests
 	{
 		private TestEnvironment _env;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			_env = new TestEnvironment();
@@ -26,7 +26,7 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			_env.Dispose();

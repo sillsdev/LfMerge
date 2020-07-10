@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2016 SIL International
+// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using CommandLine;
@@ -9,7 +9,7 @@ namespace LfMerge.Tests
 	[TestFixture]
 	public class OptionsTests
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetUp()
 		{
 			Options.ParserInstance = new Parser(with => with.HelpWriter = null);

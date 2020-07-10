@@ -14,13 +14,13 @@ namespace LfMerge.Core
 	{
 		private TestEnvironment _env;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			_env = new TestEnvironment(registerProcessingStateDouble: false);
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			_env.Dispose();

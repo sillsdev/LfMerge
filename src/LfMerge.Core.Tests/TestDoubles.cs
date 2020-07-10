@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System;
@@ -93,7 +93,7 @@ namespace LfMerge.Core.Tests
 			Initialize(replacementConfig);
 			CommitWhenDone = false;
 			VerboseProgress = true;
-			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data/php/src");
+			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data", "php", "src");
 		}
 
 		public override IniData ParseFiles(string defaultConfig, string globalConfigFilename)
@@ -532,13 +532,5 @@ namespace LfMerge.Core.Tests
 			Client = exceptionLoggingDouble;
 			return exceptionLoggingDouble;
 		}
-	}
-}
-
-// We can't directly use Chorus, so we redefine the exception we need here
-namespace Chorus.VcsDrivers.Mercurial
-{
-	class RepositoryAuthorizationException: Exception
-	{
 	}
 }

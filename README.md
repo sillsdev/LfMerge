@@ -20,12 +20,7 @@ For successfully running the unit tests you'll have to clone the
 
 ## Building
 
-After cloning the repo you'll have to download some dependencies. This is easiest done by using the
-`DownloadDependencies` build target. From a command/terminal window, run:
-
-	msbuild /t:DownloadDependencies build/LfMerge.proj
-
-Afterwards you can load and compile `LfMerge.sln` in Visual Studio or MonoDevelop/Rider.
+You can load and compile `LfMerge.sln` in Visual Studio or MonoDevelop/Rider.
 
 Alternatively you can build and run the tests on the command line:
 

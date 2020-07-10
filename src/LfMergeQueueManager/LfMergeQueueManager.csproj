@@ -1,194 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.props" Condition="Exists('..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.props')" />
-  <Import Project="..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props" Condition="Exists('..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props')" />
-  <Import Project="..\..\packages\UtilPack.NuGet.MSBuild.2.8.0\build\UtilPack.NuGet.MSBuild.props" Condition="Exists('..\..\packages\UtilPack.NuGet.MSBuild.2.8.0\build\UtilPack.NuGet.MSBuild.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DatabaseVersion Condition=" '$(DatabaseVersion)' == ''">7000072</DatabaseVersion>
-    <ProjectGuid>{AFD8D8A6-2D98-482F-B367-6C0268B61154}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net462</TargetFrameworks>
     <RootNamespace>LfMerge.QueueManager</RootNamespace>
-    <AssemblyName>LfMergeQueueManager</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <Configurations>Debug;Release</Configurations>
+    <Description>LfMergeQueueManager</Description>
+    <Company>SIL International</Company>
+    <Authors>SIL International</Authors>
+    <Product>LfMerge</Product>
+    <Copyright>Copyright © 2010-2020 SIL International</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sillsdev/LfMerge</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <OutputPath>../../output/$(Configuration)</OutputPath>
+    <PackageOutputPath>../../output</PackageOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../LfMerge.snk</AssemblyOriginatorKeyFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <AppendToReleaseNotesProperty><![CDATA[
+See full changelog at https://github.com/sillsdev/LfMerge/blob/feature/nuget/CHANGELOG.md]]>
+    </AppendToReleaseNotesProperty>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+    <IsPackable>false</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DefineConstants>TRACE;DEBUG;DBVERSION_7000072</DefineConstants>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\output\Release</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DBVERSION_$(DatabaseVersion)</DefineConstants>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000068|AnyCPU' ">
-    <DatabaseVersion>7000068</DatabaseVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\Debug\7000068</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000068</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000069|AnyCPU' ">
-    <DatabaseVersion>7000069</DatabaseVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\Debug\7000069</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000069</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000070|AnyCPU' ">
-    <DatabaseVersion>7000070</DatabaseVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\Debug\7000070</OutputPath>
-    <DefineConstants>DEBUG;TRACE;FW8_COMPAT;DBVERSION_7000070</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug7000072|AnyCPU' ">
-    <DatabaseVersion>7000072</DatabaseVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\Debug\7000072</OutputPath>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_7000072</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Bugsnag, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\Bugsnag.2.2.0\lib\net45\Bugsnag.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="GitTools.Core, Version=1.3.1.2, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\GitTools.Core-alt.1.3.1.2\lib\net461\GitTools.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
-      <HintPath>..\..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325">
-      <HintPath>..\..\packages\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="LibGit2Sharp, Version=0.26.0.0, Culture=neutral, PublicKeyToken=7cbde695407f0333">
-      <HintPath>..\..\packages\LibGit2Sharp.0.26.0\lib\net46\LibGit2Sharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop">
-      <HintPath>..\..\lib\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.LCModel">
-      <HintPath>..\..\lib\SIL.LCModel.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lexicon">
-      <HintPath>..\..\lib\SIL.Lexicon.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems">
-      <HintPath>..\..\lib\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="CommandLine">
-      <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Linux.Logging" Condition="'$(OS)'!='Windows_NT'">
-      <HintPath>..\..\lib\SIL.Linux.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core">
-      <HintPath>..\..\lib\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="LfMergeBridge">
-      <HintPath>..\..\lib\LfMergeBridge.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac">
-      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="YamlDotNet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\YamlDotNet.5.2.1\lib\net45\YamlDotNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="CommandLineParser" Version="1.9.71" />
+    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000070'">
-    <Reference Include="FDO">
-      <HintPath>\usr\lib\lfmerge\7000070\FDO.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000069'">
-    <Reference Include="FDO, Version=8.3.1.0, Culture=neutral">
-      <HintPath>\usr\lib\lfmerge\7000069\FDO.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(DatabaseVersion)' == '7000068'">
-    <Reference Include="FDO">
-      <HintPath>\usr\lib\lfmerge\7000068\FDO.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="QueueManagerOptions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueueManager.cs" />
+    <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj">
-      <Project>{DED60A67-66FC-44DD-8AD5-67E470D74A53}</Project>
-      <Name>LfMerge.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\UtilPack.NuGet.MSBuild.2.8.0\build\UtilPack.NuGet.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\UtilPack.NuGet.MSBuild.2.8.0\build\UtilPack.NuGet.MSBuild.props'))" />
-    <Error Condition="!Exists('..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props'))" />
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.props'))" />
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.5.3.4\build\GitVersionTask.targets')" />
 </Project>

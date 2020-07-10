@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2011-2018 SIL International
+// Copyright (c) 2011-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using Chorus.Utilities;
 using IniParser.Parser;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.LanguageForge.Infrastructure;
@@ -176,7 +177,7 @@ namespace LfMerge.Core.Tests
 		public static string FindGitRepoRoot(string startDir = null)
 		{
 			if (String.IsNullOrEmpty(startDir))
-				startDir = Directory.GetCurrentDirectory();
+				startDir = ExecutionEnvironment.DirectoryOfExecutingAssembly;
 			while (!Directory.Exists(Path.Combine(startDir, ".git")))
 			{
 				var di = new DirectoryInfo(startDir);

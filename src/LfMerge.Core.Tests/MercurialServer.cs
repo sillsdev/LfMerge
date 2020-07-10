@@ -1,9 +1,10 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using SIL.CommandLineProcessing;
+using SIL.PlatformUtilities;
 using SIL.Progress;
 
 namespace LfMerge.Core.Tests
@@ -28,9 +29,13 @@ namespace LfMerge.Core.Tests
 				string.Format("hg {0}\nStdOut: {1}\nStdErr: {2}", args,
 					result.StandardOutput, result.StandardError));
 			var regex = new Regex("^listening at ([^ ]+)");
-			Assert.That(regex.IsMatch(result.StandardOutput), Is.True);
-			var match = regex.Match(result.StandardOutput);
-			Url = match.Groups[1].Captures[0].Value;
+			if (Platform.IsLinux)
+			{
+				Assert.That(regex.IsMatch(result.StandardOutput), Is.True);
+				var match = regex.Match(result.StandardOutput);
+				Url = match.Groups[1].Captures[0].Value;
+			}
+
 			IsStarted = true;
 		}
 
@@ -40,8 +45,17 @@ namespace LfMerge.Core.Tests
 				return;
 
 			var pid = File.ReadAllText(_pidFile);
-			CommandLineRunner.Run("kill", "-9 " + pid, Directory.GetCurrentDirectory(),
-				120, new NullProgress());
+			if (Platform.IsLinux)
+			{
+				CommandLineRunner.Run("kill", "-9 " + pid, Directory.GetCurrentDirectory(),
+					120, new NullProgress());
+			}
+			else
+			{
+				CommandLineRunner.Run("taskkill", "/F /PID" + pid, Directory.GetCurrentDirectory(),
+					120, new NullProgress());
+			}
+
 			File.Delete(_pidFile);
 			IsStarted = false;
 		}

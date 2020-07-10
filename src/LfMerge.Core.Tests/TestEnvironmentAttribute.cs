@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace LfMerge.Core.Tests
 {
@@ -18,12 +19,12 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		public override void BeforeTest(TestDetails testDetails)
+		public override void BeforeTest(ITest testDetails)
 		{
 			_env = new TestEnvironment();
 		}
 
-		public override void AfterTest(TestDetails testDetails)
+		public override void AfterTest(ITest testDetails)
 		{
 			_env.Dispose();
 		}
