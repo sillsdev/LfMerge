@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2016 SIL International
+// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.Collections.Generic;
 using Autofac;
@@ -13,7 +13,7 @@ namespace LfMerge.Core.Tests.Actions
 	{
 		private TestEnvironment _env;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			// Force setting of Options.Current

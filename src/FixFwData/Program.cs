@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2013 SIL International
+// Copyright (c) 2011-2013 SIL International
 // This software is licensed under the LGPL, version 2.1 or later
 // (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
@@ -14,9 +14,7 @@ using SIL.LCModel.FixData;
 using SIL.LCModel.Utils;
 //using SIL.Reporting;
 using SyslogLogger = SIL.Linux.Logging.SyslogLogger;
-#if LINUX
 using SIL.PlatformUtilities;
-#endif
 
 namespace FixFwData
 {
@@ -36,22 +34,17 @@ namespace FixFwData
 			return errorsOccurred ? 1 : 0;
 		}
 
-#if LINUX
 		private static SyslogLogger logger = null;
-#endif
 		private static bool errorsOccurred = false;
 		private static int errorCount = 0;
 
 		private static void logError(string description, bool errorFixed)
 		{
-#if LINUX
 			if (logger == null)
 				Console.WriteLine(description);
 			else
 				logger.Error(description);
-#else
-			Console.WriteLine(description);
-#endif
+
 			errorsOccurred = true;
 			if (errorFixed)
 				++errorCount;
@@ -65,10 +58,8 @@ namespace FixFwData
 		private static void SetUpErrorHandling()
 		{
 			ExceptionLogging.Initialize("17a42e4a67dd2e42d4aa40d8bf2d23ee", Assembly.GetExecutingAssembly().GetName().Name);
-#if LINUX
 			if (Platform.IsUnix)
 				logger = new SyslogLogger("FixFwData");
-#endif
 		}
 
 		private sealed class LoggingProgress : IProgress, IDisposable
@@ -91,14 +82,10 @@ namespace FixFwData
 				get { return null; }
 				set
 				{
-#if LINUX
 					if (logger == null)
 						Console.Out.WriteLine(value);
 					else
 						logger.Info(value);
-#else
-					Console.Out.WriteLine(value);
-#endif
 				}
 			}
 

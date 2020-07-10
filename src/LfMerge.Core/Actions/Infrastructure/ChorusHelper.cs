@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using Autofac;
 using SIL.Network;
 using LfMerge.Core.Settings;
 using SIL.LCModel;
+using System.Web;
 
 namespace LfMerge.Core.Actions.Infrastructure
 {
@@ -25,7 +26,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 			var uriBldr = new UriBuilder(project.LanguageDepotProjectUri) {
 				UserName = Username,
 				Password = Password,
-				Path = HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Identifier)
+				Path = HttpUtility.UrlEncode(project.LanguageDepotProject.Identifier)
 			};
 			return uriBldr.Uri.ToString();
 		}

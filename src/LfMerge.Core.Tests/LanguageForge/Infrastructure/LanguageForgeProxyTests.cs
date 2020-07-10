@@ -18,7 +18,7 @@ namespace LfMerge.Core.Tests.LanguageForge.Infrastructure
 		private TemporaryFolder LanguageForgeFolder;
 		private TestEnvironment _env;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetUp()
 		{
 			LanguageForgeFolder = new TemporaryFolder("LcmTestFixture");
@@ -29,7 +29,7 @@ namespace LfMerge.Core.Tests.LanguageForge.Infrastructure
 			);
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			try

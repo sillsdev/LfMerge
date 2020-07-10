@@ -4,6 +4,7 @@ bin/
 obj/
 output/
 .idea/
+.vs/
 MercurialExtensions/
 Mercurial/
 Downloads/

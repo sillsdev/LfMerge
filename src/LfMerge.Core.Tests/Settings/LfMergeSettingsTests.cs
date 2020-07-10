@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011-2016 SIL International
+// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System.IO;
 using IniParser.Model;
@@ -71,7 +71,7 @@ namespace LfMerge.Core.Tests
 				var stateFile = sut.GetStateFileName("ProjA");
 
 				// Verify
-				Assert.That(stateFile, Is.EqualTo(Path.Combine(temp.Path, "state/ProjA.state")));
+				Assert.That(stateFile, Is.EqualTo(Path.Combine(temp.Path, "state", "ProjA.state")));
 				Assert.That(Directory.Exists(Path.GetDirectoryName(stateFile)), Is.True,
 					"State directory didn't get created");
 			}

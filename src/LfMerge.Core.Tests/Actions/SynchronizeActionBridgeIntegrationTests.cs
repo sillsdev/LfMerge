@@ -1,11 +1,13 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.IO;
 using Autofac;
+using Chorus.Utilities;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Settings;
+using Microsoft.DotNet.PlatformAbstractions;
 using NUnit.Framework;
 using SIL.LCModel;
 using SIL.TestUtilities;
@@ -20,6 +22,7 @@ namespace LfMerge.Core.Tests.Actions
 	/// that we get test failures if the interface changes.
 	/// </summary>
 	[TestFixture]
+	[Platform(Exclude = "Win")]
 	[Category("IntegrationTests")]
 	public class SynchronizeActionBridgeIntegrationTests
 	{
@@ -65,6 +68,7 @@ namespace LfMerge.Core.Tests.Actions
 			_lfProject = LanguageForgeProject.Create(TestLangProj);
 			_synchronizeAction = new SynchronizeAction(_env.Settings, _env.Logger);
 			_workDir = Directory.GetCurrentDirectory();
+			Directory.SetCurrentDirectory(ExecutionEnvironment.DirectoryOfExecutingAssembly);
 			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 
@@ -114,7 +118,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(),
-				Is.StringContaining("Cannot create a repository at this point in LF development."));
+				Does.Contain("Cannot create a repository at this point in LF development."));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 		}
 
@@ -134,7 +138,7 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(_env.Logger.GetErrors(),
-				Is.StringContaining("Cannot do first commit."));
+				Does.Contain("Cannot do first commit."));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 		}
 
@@ -178,7 +182,7 @@ namespace LfMerge.Core.Tests.Actions
 			_synchronizeAction.Run(_lfProject);
 
 			// Verify
-			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Allow data migration for project"));
+			Assert.That(_env.Logger.GetMessages(), Does.Contain("Allow data migration for project"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -199,9 +203,9 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			string errors = _env.Logger.GetErrors();
-			Assert.That(errors, Is.StringContaining("System.Xml.XmlException"));
+			Assert.That(errors, Does.Contain("System.Xml.XmlException"));
 			// Stack trace should also have been logged
-			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -223,9 +227,9 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			string errors = _env.Logger.GetErrors();
-			Assert.That(errors, Is.StringContaining("System.Xml.XmlException: '.', hexadecimal value 0x00, is an invalid character."));
+			Assert.That(errors, Does.Contain("System.Xml.XmlException: '.', hexadecimal value 0x00, is an invalid character."));
 			// Stack trace should also have been logged
-			Assert.That(errors, Is.StringContaining("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -248,7 +252,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(MercurialTestHelper.GetRevisionOfWorkingSet(_lfProject.ProjectDir),
 				Is.EqualTo(oldHashOfLd));
 			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
-			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("No changes from others"));
+			Assert.That(_env.Logger.GetMessages(), Does.Contain("No changes from others"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -271,7 +275,7 @@ namespace LfMerge.Core.Tests.Actions
 				"Our repo doesn't have the changes from LanguageDepot");
 			Assert.That(MercurialTestHelper.GetRevisionOfTip(ldDirectory), Is.EqualTo(oldHashOfLd));
 			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
-			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Received changes from others"));
+			Assert.That(_env.Logger.GetMessages(), Does.Contain("Received changes from others"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -295,7 +299,7 @@ namespace LfMerge.Core.Tests.Actions
 				Path.Combine(_lDSettings.WebWorkDirectory, TestLangProj)),
 				Is.EqualTo(oldHashOfUs), "LanguageDepot doesn't have our changes");
 			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
-			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("No changes from others"));
+			Assert.That(_env.Logger.GetMessages(), Does.Contain("No changes from others"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 	}
