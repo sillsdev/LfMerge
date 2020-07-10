@@ -1,0 +1,15 @@
+Autofac
+Autofac.Extras.Moq
+Bugsnag
+CommandLineParser
+icu.net
+ini-parser
+Microsoft.DotNet.PlatformAbstractions
+Microsoft.Extensions.DependencyModel
+MongoDB.Bson
+MongoDB.Driver
+MongoDB.Driver.Core
+Moq
+Newtonsoft.Json
+NUnit
+System.ValueTuple

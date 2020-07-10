@@ -1,6 +1,8 @@
 * text=auto whitespace=space-before-tab,indent-with-non-tab,trailing-space,tabwidth=4
 
 *.cs    diff=csharp
+*.fs    diff=fsharp
+*.fsx   diff=fsharp
 *.cpp   diff=cpp
 *.h     diff=cpp
 *.idh   diff=cpp
@@ -11,6 +13,8 @@
 *.ts   whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 *.htm* whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 *.tmx  whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
+*.fs   whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=4
+*.fsx  whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=4
 GitVersion.yml whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabwidth=2
 
 # Don't check (nor fix) whitespace for generated files

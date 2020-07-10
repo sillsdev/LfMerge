@@ -1,0 +1,14 @@
+Autofac
+Bugsnag
+CommandLineParser
+GitTools.Core
+ini-parser
+JetBrains.Annotations
+LibGit2Sharp
+LibGit2Sharp.NativeBinaries
+Microsoft.CSharp
+Newtonsoft.Json
+System.Dynamic.Runtime
+System.Runtime.Serialization.Primitives
+UtilPack.NuGet.MSBuild
+YamlDotNet
