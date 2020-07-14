@@ -170,7 +170,7 @@ namespace LfMerge.Core.Tests.Actions
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
 			MercurialTestHelper.CloneRepo(lDProjectFolderPath, _lfProject.ProjectDir);
 			// Simulate a user with a newer FLEx version doing a S/R
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7100000);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7600000);
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "Commit with newer FLEx version");
 			LanguageDepotMock.Server.Start();
 

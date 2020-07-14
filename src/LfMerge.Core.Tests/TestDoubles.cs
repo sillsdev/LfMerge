@@ -95,6 +95,16 @@ namespace LfMerge.Core.Tests
 			VerboseProgress = true;
 			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data/php/src");
 		}
+
+		public override IniData ParseFiles(string defaultConfig, string globalConfigFilename)
+		{
+			// Hide the console warning about "no global configuration file found" because we're doing that on purpose
+			var savedStdout = Console.Out;
+			Console.SetOut(TextWriter.Null);
+			IniData result = base.ParseFiles(defaultConfig, globalConfigFilename);
+			Console.SetOut(savedStdout);
+			return result;
+		}
 	}
 
 	public class MongoConnectionDouble: IMongoConnection
