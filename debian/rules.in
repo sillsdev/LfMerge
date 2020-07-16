@@ -34,13 +34,13 @@ override_dh_auto_configure:
 override_dh_auto_build:
 	. ./environ && \
 		which $(MSBUILD) && \
-		$(MSBUILD) /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /t:CompileOnly build/LfMerge.proj
+		$(MSBUILD) /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /p:DisableGitVersionTask=true /t:CompileOnly build/LfMerge.proj
 
 override_dh_auto_test:
 
 override_dh_auto_clean:
 	. ./environ && \
-		$(MSBUILD) /p:Configuration=$(BUILD) /t:Clean build/LfMerge.proj
+		$(MSBUILD) /p:Configuration=$(BUILD) /p:DisableGitVersionTask=true /t:Clean build/LfMerge.proj
 	dh_clean
 
 override_dh_auto_install:
