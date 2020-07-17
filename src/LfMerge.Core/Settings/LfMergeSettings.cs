@@ -32,7 +32,7 @@ namespace LfMerge.Core.Settings
 			LcmDirectorySettings = new LcmDirectories();
 
 			// Save parsed config for easier persisting in SaveSettings()
-			ParsedConfig = ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile);
+			ParsedConfig = this.ParseFiles(DefaultLfMergeSettings.DefaultIniText, ConfigFile);
 			Initialize(ParsedConfig);
 		}
 
@@ -268,7 +268,7 @@ namespace LfMerge.Core.Settings
 			fileParser.WriteFile(fileName, ParsedConfig, utf8);
 		}
 
-		public static IniData ParseFiles(string defaultConfig, string globalConfigFilename)
+		public virtual IniData ParseFiles(string defaultConfig, string globalConfigFilename)
 		{
 			var utf8 = new UTF8Encoding(false);
 			var parserConfig = CreateIniParserConfiguration();

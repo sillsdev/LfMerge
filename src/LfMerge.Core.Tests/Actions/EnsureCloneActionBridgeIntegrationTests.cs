@@ -179,7 +179,7 @@ namespace LfMerge.Core.Tests.Actions
 			MercurialTestHelper.InitializeHgRepo(lDProjectFolderPath);
 			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, LcmCache.ModelVersion);
 			MercurialTestHelper.CreateFlexRepo(lDProjectFolderPath);
-			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7100000);
+			MercurialTestHelper.HgCreateBranch(lDProjectFolderPath, 7600000);
 			MercurialTestHelper.HgCommit(lDProjectFolderPath, "on branch");
 
 			// Execute
