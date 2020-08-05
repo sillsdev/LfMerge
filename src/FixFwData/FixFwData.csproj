@@ -36,7 +36,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/feature/nuget/CHA
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="SIL.LCModel.FixData" Version="10.1.0-beta0324" />
+    <PackageReference Include="SIL.LCModel.FixData" Version="10.1.0-beta0374" />
     <PackageReference Include="SIL.ReleaseTasks" Version="[2.3.1,)" PrivateAssets="All" />
   </ItemGroup>
 

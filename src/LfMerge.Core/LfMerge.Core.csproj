@@ -32,14 +32,12 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/feature/nuget/CHA
     <PackageReference Include="GitVersionTask" Version="5.3.7">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="icu.net" Version="2.6.0" />
     <PackageReference Include="INIFileParserDotNetCore.Signed" Version="2.5.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MongoDB.Driver.signed" Version="2.2.4" />
     <PackageReference Include="SIL.Bugsnag.Signed" Version="2.2.1" />
     <PackageReference Include="SIL.ChorusPlugin.LfMergeBridge" Version="3.2.0-beta0272" />
-    <PackageReference Include="SIL.Core.Desktop" Version="8.0.0-beta0153" />
-    <PackageReference Include="SIL.LCModel" Version="10.1.0-beta0325" />
+    <PackageReference Include="SIL.LCModel" Version="10.1.0-beta0374" />
     <PackageReference Include="SIL.Linux.Logging" Version="8.0.0-beta0153" />
     <PackageReference Include="SIL.ReleaseTasks" Version="[2.3.1,)" PrivateAssets="All" />
   </ItemGroup>
