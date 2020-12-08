@@ -18,4 +18,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Consume nuget packages
+- Consume dependencies as NuGet packages
