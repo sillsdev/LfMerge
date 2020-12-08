@@ -15,8 +15,7 @@ This is easiest done by running
 
     build/install-deps
 
-For successfully running the unit tests you'll have to clone the
-[web-languageforge](https://github.com/sillsdev/web-languageforge) repo into `data/php`.
+For successfully running the unit tests you'll have to clone the [web-languageforge](https://github.com/sillsdev/web-languageforge) repo into `data/php`.
 
 ## Building
 
