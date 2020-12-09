@@ -112,7 +112,7 @@
 			WorkingDirectory="$(RootDir)/output/$(Configuration)/net462/"
 			Force32Bit="$(useNUnit-x86)"
 			Verbose="true"
-			UseNUnit3Xml="false"
+			UseNUnit3Xml="true"
 			OutputXmlFile="$(TestOutputXmlFile)"
 			TeamCity="$(TeamCity)"/>
 	</Target>
