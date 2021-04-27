@@ -146,15 +146,15 @@ namespace LfMerge
 
 				if (project.State.SRState != ProcessingState.SendReceiveStates.ERROR)
 				{
-					MainClass.Logger.Error(string.Format(
+					MainClass.Logger.Error(
 						"Putting project '{0}' on hold due to unhandled exception: \n{1}",
-						projectCode, e));
+						projectCode, e);
 					if (project != null)
 					{
 						project.State.SetErrorState(ProcessingState.SendReceiveStates.HOLD,
-							ProcessingState.ErrorCodes.UnhandledException, string.Format(
+							ProcessingState.ErrorCodes.UnhandledException,
 								"Putting project '{0}' on hold due to unhandled exception: \n{1}",
-								projectCode, e));
+								projectCode, e);
 					}
 				}
 			}
