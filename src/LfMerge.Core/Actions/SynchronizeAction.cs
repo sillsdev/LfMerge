@@ -93,11 +93,21 @@ namespace LfMerge.Core.Actions
 					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)},
 					{"commitMessage", commitMessage}
 				};
-				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
-					options, out syncResult))
-				{
-					Logger.Error(syncResult);
-					return;
+
+				try {
+					if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
+						options, out syncResult))
+					{
+						Logger.Error(syncResult);
+						return;
+					}
+				} catch (System.FormatException e) {
+					if (e.StackTrace.Contains("System.Int32.Parse")) {
+						ChorusHelper.SetModelVersion(MagicStrings.MinimalModelVersionForNewBranchFormat.ToString());
+						return;
+					} else {
+						throw;
+					}
 				}
 
 				const string cannotCommitCurrentBranch = "Cannot commit to current branch '";

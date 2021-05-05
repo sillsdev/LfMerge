@@ -98,6 +98,8 @@ namespace LfMerge.Core
 		// Minimal supported model version (static property to support testing)
 		public static string MinimalModelVersion { get; private set; }
 
+		public const int MinimalModelVersionForNewBranchFormat = 7000072;
+
 		// Allow to set minimal model version during unit testing
 		public static void SetMinimalModelVersion(string minimalModelVersion)
 		{
