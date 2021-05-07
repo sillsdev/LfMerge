@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net462</TargetFrameworks><GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>LfMergeAuxTool</RootNamespace>
     <Configurations>Debug;Release</Configurations>
     <Description>LfMergeAuxTool</Description>
