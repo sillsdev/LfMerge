@@ -48,7 +48,8 @@ RUN ln -sf ../Mercurial output/
 
 RUN apt-get update && apt-get install -y mercurial
 
-RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 output/Release/net462/*Tests*
+WORKDIR /build/LfMerge/output/Release/net462
+RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 LfMerge.Core.Tests.dll
 
 # NOTE: Remnants of previous attempt can be seen below. Will delete them once this is working. 2021-05 RM
 
