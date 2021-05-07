@@ -5,16 +5,16 @@ branches:
     tag:
     regex: (origin/)?(fieldworks8-)?live
     is-mainline: true
-    is-source-branch-for: [ 'master' ]
-    source-branches: [ 'master', 'qa' ]
+    is-source-branch-for: [ 'main' ]
+    source-branches: [ 'main', 'qa' ]
   qa:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: beta
     regex: (origin/)?(fieldworks8-)?qa
-    is-source-branch-for: [ 'master', 'live' ]
-    source-branches: [ 'master' ]
-  master:
+    is-source-branch-for: [ 'main', 'live' ]
+    source-branches: [ 'main' ]
+  main:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: alpha
@@ -26,6 +26,6 @@ branches:
     tag: PR
     regex: (origin/)?PR
     tag-number-pattern: '[/-](?<number>\d+)[-/]'
-    source-branches: [ 'master', 'qa', 'live' ]
+    source-branches: [ 'main', 'qa', 'live' ]
 ignore:
   sha: []
