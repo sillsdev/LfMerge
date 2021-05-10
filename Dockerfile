@@ -20,8 +20,7 @@ RUN apt-key add sil-packages-key.gpg
 RUN apt-key add sil-packages-testing-key.gpg
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
-RUN apt-get update && apt-get install -y mono4-sil mono5-sil
-RUN apt-get update && apt-get install -y cpp libgit2-dev
+RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mercurial
 
 COPY .git .git/
 RUN git checkout docker-build
@@ -45,8 +44,6 @@ RUN mkdir -p /usr/lib/lfmerge/7000072
 COPY docker/compile-lfmerge.sh .
 RUN ./compile-lfmerge.sh
 RUN ln -sf ../Mercurial output/
-
-RUN apt-get update && apt-get install -y mercurial
 
 WORKDIR /build/LfMerge/output/Release/net462
 RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 LfMerge.Core.Tests.dll
