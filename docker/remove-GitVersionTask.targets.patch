@@ -1,0 +1,39 @@
+diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
+index 1226f23..e29ba3d 100644
+--- a/src/LfMerge.Core/LfMerge.Core.csproj
++++ b/src/LfMerge.Core/LfMerge.Core.csproj
+@@ -237,7 +237,7 @@
+     <Compile Include="Tools\ProjectInUncleanStateException.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
++
+   <ItemGroup>
+     <None Include="packages.config" />
+     <None Include="..\..\lib\chorusmerge">
+diff --git a/src/LfMerge/LfMerge.csproj b/src/LfMerge/LfMerge.csproj
+index 05e14ec..3c94ce4 100644
+--- a/src/LfMerge/LfMerge.csproj
++++ b/src/LfMerge/LfMerge.csproj
+@@ -118,7 +118,7 @@
+     <Compile Include="Options.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
++
+   <ItemGroup>
+     <None Include="packages.config" />
+   </ItemGroup>
+diff --git a/src/LfMergeQueueManager/LfMergeQueueManager.csproj b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
+index 45512ef..bcf9181 100644
+--- a/src/LfMergeQueueManager/LfMergeQueueManager.csproj
++++ b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
+@@ -122,7 +122,7 @@
+     <Compile Include="QueueManager.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
++
+   <ItemGroup>
+     <None Include="packages.config" />
+   </ItemGroup>
