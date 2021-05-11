@@ -1,39 +1,159 @@
+diff --git a/.nuget/packages.config b/.nuget/packages.config
+index aedc84e..3e2682e 100644
+--- a/.nuget/packages.config
++++ b/.nuget/packages.config
+@@ -2,5 +2,4 @@
+ <packages>
+   <package id="BuildDependencyTasks" version="0.2.10.0" />
+   <package id="NUnit.Runners.Net4" version="2.6.4" />
+-  <package id="GitVersion.CommandLine" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/GitVersion.yml b/GitVersion.yml
+index d9b74f9..d1f8d98 100644
+--- a/GitVersion.yml
++++ b/GitVersion.yml
+@@ -1,23 +1,31 @@
+ mode: Mainline
++continuous-delivery-fallback-tag: dev
+ branches:
+   live:
+     tag:
+     regex: (origin/)?(fieldworks8-)?live
+     is-mainline: true
++    is-source-branch-for: [ 'main' ]
++    source-branches: [ 'main', 'qa' ]
+   qa:
+     mode: ContinuousDeployment
+     track-merge-target: true
+     tag: beta
+     regex: (origin/)?(fieldworks8-)?qa
+-  master:
++    is-source-branch-for: [ 'main', 'live' ]
++    source-branches: [ 'main' ]
++  main:
+     mode: ContinuousDeployment
+     track-merge-target: true
+     tag: alpha
+     regex: (origin/)?(fieldworks8-)?master
++    is-source-branch-for: [ 'qa' ]
+   pull-request:
+     mode: ContinuousDeployment
+     track-merge-target: true
+     tag: PR
+     regex: (origin/)?(PR|pr)
++    tag-number-pattern: '[/-](?<number>\d+)[-/]'
++    source-branches: [ 'main', 'qa', 'live' ]
+ ignore:
+   sha: []
+diff --git a/build/LfMerge.dep b/build/LfMerge.dep
+index 0112d3a..de6320e 100644
+--- a/build/LfMerge.dep
++++ b/build/LfMerge.dep
+@@ -70,33 +70,3 @@ Palaso.TestUtilities.pdb=>lib/
+ L10NSharp.dll=>lib/
+ L10NSharp.pdb=>lib/
+ 
+-
+-[TC::FLExBridgeLfmergeLinux64Continuous]
+-Name=FLEx Bridge-lfmerge-Linux64-Continuous
+-RevisionName=lastSuccessful
+-RevisionValue=latest.lastSuccessful
+-Condition=Linux
+-Path=LibFLExBridge-ChorusPlugin.*=>lib/
+-LibTriboroughBridge-ChorusPlugin.*=>lib/
+-LfMergeBridge.*=>lib/
+-Chorus.exe* => lib/
+-ChorusMerge.exe* => lib/
+-LibChorus.dll* => lib/
+-
+-
+-[TC::FLExBridgeLfmergeWin32Continuous]
+-Name=FLEx Bridge-lfmerge-Win32-Continuous
+-RevisionName=lastSuccessful
+-RevisionValue=latest.lastSuccessful
+-Condition=Windows
+-Path=LibFLExBridge-ChorusPlugin.*=>lib/
+-LibTriboroughBridge-ChorusPlugin.*=>lib/
+-LfMergeBridge.*=>lib/
+-Chorus.exe => lib/
+-Chorus.pdb => lib/
+-ChorusMerge.exe => lib/
+-ChorusMerge.pdb => lib/
+-LibChorus.dll => lib/
+-LibChorus.pdb => lib/
+-
+-
 diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
-index 1226f23..e29ba3d 100644
+index 1226f23..3c9f202 100644
 --- a/src/LfMerge.Core/LfMerge.Core.csproj
 +++ b/src/LfMerge.Core/LfMerge.Core.csproj
-@@ -237,7 +237,7 @@
+@@ -237,7 +237,6 @@
      <Compile Include="Tools\ProjectInUncleanStateException.cs" />
    </ItemGroup>
    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 -  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
-+
    <ItemGroup>
      <None Include="packages.config" />
      <None Include="..\..\lib\chorusmerge">
+diff --git a/src/LfMerge.Core/packages.config b/src/LfMerge.Core/packages.config
+index a54895b..bab97fa 100644
+--- a/src/LfMerge.Core/packages.config
++++ b/src/LfMerge.Core/packages.config
+@@ -2,7 +2,6 @@
+ <packages>
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="icu.net" version="2.3.3" targetFramework="net45" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
 diff --git a/src/LfMerge/LfMerge.csproj b/src/LfMerge/LfMerge.csproj
-index 05e14ec..3c94ce4 100644
+index 05e14ec..42301dd 100644
 --- a/src/LfMerge/LfMerge.csproj
 +++ b/src/LfMerge/LfMerge.csproj
-@@ -118,7 +118,7 @@
+@@ -118,7 +118,6 @@
      <Compile Include="Options.cs" />
    </ItemGroup>
    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 -  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
-+
    <ItemGroup>
      <None Include="packages.config" />
    </ItemGroup>
+diff --git a/src/LfMerge/packages.config b/src/LfMerge/packages.config
+index 3fb681f..e914a3f 100644
+--- a/src/LfMerge/packages.config
++++ b/src/LfMerge/packages.config
+@@ -3,7 +3,6 @@
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
+   <package id="MongoDB.Driver" version="2.2.1" targetFramework="net45" />
 diff --git a/src/LfMergeQueueManager/LfMergeQueueManager.csproj b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-index 45512ef..bcf9181 100644
+index 45512ef..7d9ef34 100644
 --- a/src/LfMergeQueueManager/LfMergeQueueManager.csproj
 +++ b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-@@ -122,7 +122,7 @@
+@@ -122,7 +122,6 @@
      <Compile Include="QueueManager.cs" />
    </ItemGroup>
    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 -  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
-+
    <ItemGroup>
      <None Include="packages.config" />
    </ItemGroup>
+diff --git a/src/LfMergeQueueManager/packages.config b/src/LfMergeQueueManager/packages.config
+index e9c08dc..1e71d01 100644
+--- a/src/LfMergeQueueManager/packages.config
++++ b/src/LfMergeQueueManager/packages.config
+@@ -3,7 +3,6 @@
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="Newtonsoft.Json" version="8.0.2" targetFramework="net45" />
+ </packages>
+\ No newline at end of file
