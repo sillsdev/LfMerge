@@ -54,6 +54,10 @@ ADD docker/fw8-flexbridge.tar.xz lib/
 COPY docker/remove-GitVersionTask.targets.patch .
 RUN git apply remove-GitVersionTask.targets.patch
 
+COPY .config/dotnet-tools.json .config/dotnet-tools.json
+COPY docker/gitversion-for-master-build.sh .
+RUN ./gitversion-for-master-build.sh
+
 COPY docker/download-dependencies-fw8-build.sh ./
 RUN ./download-dependencies-fw8-build.sh
 
@@ -65,21 +69,25 @@ COPY --from=lf-build /var/www/html ./data/php/src
 # Mercurial repo expected to be in ./Mercurial
 COPY --from=mercurial-build /build/hg/mercurial ./Mercurial/mercurial
 
-COPY .config/dotnet-tools.json .config/dotnet-tools.json
-RUN dotnet tool restore
-RUN dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
+# RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
+# RUN debian/PrepareSource 7000070
 
-RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
-RUN debian/PrepareSource 7000072
+RUN mkdir -p /usr/lib/lfmerge/7000070
 
-RUN mkdir -p /usr/lib/lfmerge/7000072
-
-COPY docker/compile-lfmerge.sh .
-RUN ./compile-lfmerge.sh
+COPY docker/compile-lfmerge-fw8.sh .
+RUN ./compile-lfmerge-fw8.sh
 RUN ln -sf ../Mercurial output/
 
+RUN apt-get install -y debhelper devscripts
+RUN mkdir -p /root/packages/lfmerge/lfmerge-7000068 /root/packages/lfmerge/lfmerge-7000069 /root/packages/lfmerge/lfmerge-7000070
+# Our packaging shell scripts expect to live under /root/ci-builder-scripts/bash
+COPY [ "docker/common.sh", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
+COPY docker/build-debpackages-fw8.sh .
+RUN ./build-debpackages-fw8.sh
+
 WORKDIR /build/LfMerge/output/Release/net462
-RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 LfMerge.Core.Tests.dll
+RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 *Test*.dll
+#RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 #*Test*.dll
 
 # NOTE: Remnants of previous attempt can be seen below. Will delete them once this is working. 2021-05 RM
 

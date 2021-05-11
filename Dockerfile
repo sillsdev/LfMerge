@@ -20,7 +20,7 @@ RUN apt-key add sil-packages-key.gpg
 RUN apt-key add sil-packages-testing-key.gpg
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
-RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mercurial
+RUN apt-get update && apt-get install -y mono4-sil mono5-sil mono5-sil-msbuild cpp libgit2-dev mercurial
 
 COPY .git .git/
 RUN git checkout docker-build
@@ -35,18 +35,31 @@ COPY --from=lf-build /var/www/html ./data/php/src
 # Mercurial repo expected to be in ./Mercurial
 COPY --from=mercurial-build /build/hg/mercurial ./Mercurial/mercurial
 
-RUN dotnet tool restore
-RUN dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
+COPY docker/gitversion-for-master-build.sh .
+RUN ./gitversion-for-master-build.sh
+
 RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
 RUN debian/PrepareSource 7000072
 
 RUN mkdir -p /usr/lib/lfmerge/7000072
 COPY docker/compile-lfmerge.sh .
 RUN ./compile-lfmerge.sh
-RUN ln -sf ../Mercurial output/
 
-WORKDIR /build/LfMerge/output/Release/net462
-RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 LfMerge.Core.Tests.dll
+RUN mkdir -p /root/packages/lfmerge/lfmerge-7000072
+RUN apt-get install -y debhelper devscripts
+# Our packaging shell scripts expect to live under /root/ci-builder-scripts/bash
+COPY [ "docker/common.sh", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
+COPY docker/build-debpackages-master.sh .
+RUN ./build-debpackages-master.sh
+
+
+# Some variables that can be set prior to calling the build-package script:
+# DISTRIBUTIONS=${DISTRIBUTIONS:-xenial bionic focal stretch buster}
+# ARCHES=${ARCHES:-amd64 i386}
+# UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}
+# DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}
+# PACKAGING_ROOT="$HOME/packages"
+# debkeyid=1234567890deadbeef
 
 # NOTE: Remnants of previous attempt can be seen below. Will delete them once this is working. 2021-05 RM
 
