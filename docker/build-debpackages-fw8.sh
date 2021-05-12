@@ -6,6 +6,11 @@ DistributionsToPackage="bionic"
 
 DEBSIGNKEY=BB89B185D63A1DD5
 
+PackageVersion=0.1.0
+
+# Needed in setup.sh from Debian packaging scripts. TODO: Investigate why this environment variable is being removed, and at what point
+export USER=root
+
 TRACE()
 {
 	echo "$@"
@@ -18,7 +23,7 @@ mkdir -p finalresults
 rm -f finalresults/*
 rm -f lfmerge-*
 
-export MONO_PREFIX=/opt/mono4-sil
+export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
 cd -
@@ -29,7 +34,7 @@ for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 
 	echo -e "\033[0;34mPrepare source\033[0m"
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
-	TRACE xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
+	TRACE /opt/mono5-sil/bin/msbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	TRACE debian/PrepareSource $curDbVersion
 

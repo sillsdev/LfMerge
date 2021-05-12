@@ -6,6 +6,11 @@ DistributionsToPackage="bionic"
 
 DEBSIGNKEY=BB89B185D63A1DD5
 
+PackageVersion=0.1.0
+
+# Needed in setup.sh from Debian packaging scripts. TODO: Investigate why this environment variable is being removed, and at what point
+export USER=root
+
 TRACE()
 {
 	echo "$@"

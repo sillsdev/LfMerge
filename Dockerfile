@@ -20,7 +20,7 @@ RUN apt-key add sil-packages-key.gpg
 RUN apt-key add sil-packages-testing-key.gpg
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
-RUN apt-get update && apt-get install -y mono4-sil mono5-sil mono5-sil-msbuild cpp libgit2-dev mercurial
+RUN apt-get update && apt-get install -y sudo mono5-sil mono5-sil-msbuild cpp libgit2-dev mercurial debhelper devscripts cli-common-dev
 
 COPY .git .git/
 RUN git checkout docker-build
@@ -45,10 +45,9 @@ RUN mkdir -p /usr/lib/lfmerge/7000072
 COPY docker/compile-lfmerge.sh .
 RUN ./compile-lfmerge.sh
 
-RUN mkdir -p /root/packages/lfmerge/lfmerge-7000072
-RUN apt-get install -y debhelper devscripts
+RUN mkdir -p /root/packages/lfmerge/lfmerge-7000072 /root/.gnupg
 # Our packaging shell scripts expect to live under /root/ci-builder-scripts/bash
-COPY [ "docker/common.sh", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
+COPY [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
 COPY docker/build-debpackages-master.sh .
 RUN ./build-debpackages-master.sh
 

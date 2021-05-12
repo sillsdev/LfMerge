@@ -22,7 +22,7 @@ RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
 RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mercurial
 # Dependencies from Debian "control" file
-RUN apt-get install -y mono5-sil-msbuild debhelper cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
+RUN apt-get install -y mono5-sil-msbuild sudo debhelper cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 FROM tmp-lfmerge-builder:lfmerge-builder-base AS lfmerge-build
 WORKDIR /build/LfMerge
@@ -37,7 +37,7 @@ RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
 RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mercurial
 # Dependencies from Debian "control" file
-RUN apt-get install -y mono5-sil-msbuild debhelper cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
+RUN apt-get install -y mono5-sil-msbuild debhelper devscripts cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 
 ENV MONO_PREFIX=/opt/mono5-sil
@@ -78,10 +78,9 @@ COPY docker/compile-lfmerge-fw8.sh .
 RUN ./compile-lfmerge-fw8.sh
 RUN ln -sf ../Mercurial output/
 
-RUN apt-get install -y debhelper devscripts
-RUN mkdir -p /root/packages/lfmerge/lfmerge-7000068 /root/packages/lfmerge/lfmerge-7000069 /root/packages/lfmerge/lfmerge-7000070
+RUN mkdir -p /root/packages/lfmerge/lfmerge-7000068 /root/packages/lfmerge/lfmerge-7000069 /root/packages/lfmerge/lfmerge-7000070 /root/.gnupg
 # Our packaging shell scripts expect to live under /root/ci-builder-scripts/bash
-COPY [ "docker/common.sh", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
+COPY [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
 COPY docker/build-debpackages-fw8.sh .
 RUN ./build-debpackages-fw8.sh
 
