@@ -1,14 +1,14 @@
 #!/bin/sh
 # Environment settings for running programs with the SIL version of mono
 # Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono-sil/bin/mono --debug LfMerge.exe
-# These settings assume that the packaged SIL Mono is installed in /opt/mono-sil.
+#    /opt/mono5-sil/bin/mono --debug LfMerge.exe
+# These settings assume that the packaged SIL Mono is installed in /opt/mono5-sil.
 # Note that this file is intended to be "sourced", not "executed".
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
 [ -z "$BUILD" ] && BUILD=Debug
-[ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono-sil
+[ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono5-sil
 
 MONO_RUNTIME=v4.0.30319
 MONO_DEBUG=explicit-null-checks
@@ -41,10 +41,10 @@ fi
 if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
 then
 	# Add packaged mono items to paths
-	PATH="/opt/mono-sil/bin:${PATH}"
-	LD_LIBRARY_PATH="/opt/mono-sil/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="/opt/mono-sil/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="/opt/mono-sil:/usr"
+	PATH="/opt/mono5-sil/bin:${PATH}"
+	LD_LIBRARY_PATH="/opt/mono5-sil/lib:${LD_LIBRARY_PATH}"
+	PKG_CONFIG_PATH="/opt/mono5-sil/lib/pkgconfig:${PKG_CONFIG_PATH}"
+	MONO_GAC_PREFIX="/opt/mono5-sil:/usr"
 else
 	# Add locally-built mono items to paths
 	# We also add the default values for PKG_CONFIG_PATH - MonoDevelop resets the PKG_CONFIG_PATH
