@@ -94,18 +94,24 @@ namespace LfMerge.Core.Actions
 					{"commitMessage", commitMessage}
 				};
 
-				try {
+				try
+				{
 					if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
 						options, out syncResult))
 					{
 						Logger.Error(syncResult);
 						return;
 					}
-				} catch (System.FormatException e) {
-					if (e.StackTrace.Contains("System.Int32.Parse")) {
+				}
+				catch (System.FormatException e)
+				{
+					if (e.StackTrace.Contains("System.Int32.Parse"))
+					{
 						ChorusHelper.SetModelVersion(MagicStrings.MinimalModelVersionForNewBranchFormat.ToString());
 						return;
-					} else {
+					}
+					else
+					{
 						throw;
 					}
 				}
