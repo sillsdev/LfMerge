@@ -17,7 +17,7 @@ TRACE()
 	"$@"
 }
 
-cd /build/LfMerge
+cd /build/lfmerge
 
 mkdir -p finalresults
 rm -f finalresults/*
@@ -30,7 +30,7 @@ cd -
 
 for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 	echo -e "\033[0;34mBuilding package for database version ${curDbVersion}\033[0m"
-	cd /build/LfMerge
+	cd /build/lfmerge
 
 	echo -e "\033[0;34mPrepare source\033[0m"
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
@@ -42,13 +42,13 @@ for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 	TRACE $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 		--arches "amd64" --main-package-name "lfmerge" \
 		--supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY \
-		--build-in-place --package-version "$PackageVersion" --preserve-changelog
+		--package-version "$PackageVersion" --preserve-changelog
 
-	echo -e "\033[0;34mBuild binary package\033[0m"
-	TRACE $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
-		--arches "amd64" --main-package-name "lfmerge" \
-		--build-in-place --supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY --no-upload
+	# echo -e "\033[0;34mBuild binary package\033[0m"
+	# TRACE $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
+	# 	--arches "amd64" --main-package-name "lfmerge" \
+	# 	--build-in-place --supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY --no-upload
 
-	cd -
-	mv results/* finalresults/
+	# cd -
+	# mv results/* finalresults/
 done

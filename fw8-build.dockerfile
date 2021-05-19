@@ -10,7 +10,7 @@ FROM sillsdev/web-languageforge:app-latest AS lf-build
 # No changes needed, LF app result in /var/www/html
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS lfmerge-builder
-WORKDIR /build/LfMerge
+WORKDIR /build/lfmerge
 
 RUN apt-get update && apt-get install -y gnupg
 
@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mer
 RUN apt-get install -y mono5-sil-msbuild sudo debhelper cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 FROM tmp-lfmerge-builder:lfmerge-builder-base AS lfmerge-build
-WORKDIR /build/LfMerge
+WORKDIR /build/lfmerge
 
 RUN apt-get update && apt-get install -y gnupg
 
@@ -39,11 +39,19 @@ RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mer
 # Dependencies from Debian "control" file
 RUN apt-get install -y mono5-sil-msbuild debhelper devscripts cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
+# Build as a non-root user
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y --no-install-recommends adduser; \
+    adduser builder --disabled-password --gecos ""; \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
+	chown -R builder:users /build
+
+USER builder
 
 ENV MONO_PREFIX=/opt/mono5-sil
 
-COPY .git .git/
-RUN git checkout fieldworks8-master
+COPY --chown=builder:users .git .git/
+RUN git checkout bugfix/send-receive-branch-format-change-fw8
 RUN git clean -dxf --exclude=packages/
 RUN git reset --hard
 
@@ -51,41 +59,41 @@ RUN git reset --hard
 ADD docker/fw8-flexbridge.tar.xz lib/
 
 # Remove GitVersionTask which doesn't work well on modern Debian and replace with dotnet-based GitVersion
-COPY docker/remove-GitVersionTask.targets.patch .
-RUN git apply remove-GitVersionTask.targets.patch
+COPY --chown=builder:users docker/remove-GitVersionTask-fw8.targets.patch .
+RUN git apply remove-GitVersionTask-fw8.targets.patch
 
-COPY .config/dotnet-tools.json .config/dotnet-tools.json
-COPY docker/gitversion-for-master-build.sh .
-RUN ./gitversion-for-master-build.sh
+COPY --chown=builder:users .config/dotnet-tools.json .config/dotnet-tools.json
+COPY --chown=builder:users docker/gitversion-for-fw8-build.sh .
+RUN ./gitversion-for-fw8-build.sh
 
-COPY docker/download-dependencies-fw8-build.sh ./
+COPY --chown=builder:users docker/download-dependencies-fw8-build.sh ./
 RUN ./download-dependencies-fw8-build.sh
 
-# COPY Mercurial Mercurial
-# COPY MercurialExtensions MercurialExtensions
+# COPY --chown=builder:users Mercurial Mercurial
+# COPY --chown=builder:users MercurialExtensions MercurialExtensions
 
 # LanguageForge repo expected to be in ./data/php/src
-COPY --from=lf-build /var/www/html ./data/php/src
+COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
 # Mercurial repo expected to be in ./Mercurial
-COPY --from=mercurial-build /build/hg/mercurial ./Mercurial/mercurial
+COPY --chown=builder:users --from=mercurial-build /build/hg/mercurial ./Mercurial/mercurial
 
 # RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
 # RUN debian/PrepareSource 7000070
 
 RUN mkdir -p /usr/lib/lfmerge/7000070
 
-COPY docker/compile-lfmerge-fw8.sh .
+COPY --chown=builder:users docker/compile-lfmerge-fw8.sh .
 RUN ./compile-lfmerge-fw8.sh
 RUN ln -sf ../Mercurial output/
 
-RUN mkdir -p /root/packages/lfmerge/lfmerge-7000068 /root/packages/lfmerge/lfmerge-7000069 /root/packages/lfmerge/lfmerge-7000070 /root/.gnupg
-# Our packaging shell scripts expect to live under /root/ci-builder-scripts/bash
-COPY [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/root/ci-builder-scripts/bash/" ]
-COPY docker/build-debpackages-fw8.sh .
-RUN ./build-debpackages-fw8.sh
+RUN mkdir -p /home/builder/packages/lfmerge/lfmerge-7000068 /home/builder/packages/lfmerge/lfmerge-7000069 /home/builder/packages/lfmerge/lfmerge-7000070 /home/builder/.gnupg /home/builder/ci-builder-scripts/bash
+# Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
+COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
+COPY --chown=builder:users docker/build-debpackages-fw8.sh .
+CMD [ "/build/lfmerge/build-debpackages-fw8.sh" ]
 
-WORKDIR /build/LfMerge/output/Release/net462
-RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 *Test*.dll
+# WORKDIR /build/lfmerge/output/Release/net462
+# RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 *Test*.dll
 #RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 #*Test*.dll
 
 # NOTE: Remnants of previous attempt can be seen below. Will delete them once this is working. 2021-05 RM

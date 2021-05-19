@@ -1,5 +1,8 @@
 #!/bin/bash -e
-cd /build/LfMerge
+cd /build/lfmerge
+
+pwd
+ls -l
 
 export MONO_PREFIX=/opt/mono4-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
