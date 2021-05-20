@@ -44,20 +44,6 @@ index 200ff14..f895153 100644
  	</Target>
 
  	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
-diff --git a/debian/rules.in b/debian/rules.in
-index c578eb1..54b7211 100755
---- a/debian/rules.in
-+++ b/debian/rules.in
-@@ -63,7 +63,8 @@ override_dh_auto_install:
- 	install -m 644 Mercurial/hgext/highlight/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/highlight
- 	install -m 644 Mercurial/hgext/largefiles/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/largefiles
- 	install -m 644 Mercurial/hgext/zeroconf/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
--	install -m 644 Mercurial/mercurial/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial
-+	install -m 644 Mercurial/mercurial/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial || true
-+# Avoids "omitting directory Mercurial/mercurial/default.d" causing build failure. We're fine with omitting things, please don't fail the build for that reason
- 	install -m 644 Mercurial/mercurial/hgweb/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
- 	install -m 644 Mercurial/mercurial/httpclient/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
- 	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
 diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
 index 1226f23..3c9f202 100644
 --- a/src/LfMerge.Core/LfMerge.Core.csproj

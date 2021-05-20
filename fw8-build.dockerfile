@@ -1,11 +1,3 @@
-FROM python:2 AS mercurial-build
-
-WORKDIR /build
-RUN hg clone -r 3.3 https://www.mercurial-scm.org/repo/hg/
-WORKDIR /build/hg
-RUN make local
-# Result in /build/hg/mercurial
-
 FROM sillsdev/web-languageforge:app-latest AS lf-build
 # No changes needed, LF app result in /var/www/html
 
@@ -76,8 +68,6 @@ RUN ./download-dependencies-fw8-build.sh
 
 # LanguageForge repo expected to be in ./data/php/src
 COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
-# Mercurial repo expected to be in ./Mercurial
-COPY --chown=builder:users --from=mercurial-build /build/hg/mercurial ./Mercurial/mercurial
 
 # RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
 # RUN debian/PrepareSource 7000070
