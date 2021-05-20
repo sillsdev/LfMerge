@@ -67,7 +67,7 @@ RUN ./download-dependencies-fw8-build.sh
 # COPY --chown=builder:users MercurialExtensions MercurialExtensions
 
 # LanguageForge repo expected to be in ./data/php/src
-COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
+# COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
 
 # RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
 # RUN debian/PrepareSource 7000070
