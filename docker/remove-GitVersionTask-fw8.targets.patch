@@ -1,0 +1,133 @@
+diff --git a/.nuget/packages.config b/.nuget/packages.config
+index aedc84e..3e2682e 100644
+--- a/.nuget/packages.config
++++ b/.nuget/packages.config
+@@ -2,5 +2,4 @@
+ <packages>
+   <package id="BuildDependencyTasks" version="0.2.10.0" />
+   <package id="NUnit.Runners.Net4" version="2.6.4" />
+-  <package id="GitVersion.CommandLine" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/build/NuGet.targets b/build/NuGet.targets
+index 200ff14..f895153 100644
+--- a/build/NuGet.targets
++++ b/build/NuGet.targets
+@@ -13,12 +13,6 @@
+ 		<DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">true</DownloadNuGetExe>
+ 	</PropertyGroup>
+
+-	<ItemGroup Condition=" '$(PackageSources)' == '' ">
+-		<!-- Package sources used to restore packages. -->
+-		<!-- The official NuGet package source (https://nuget.org/api/v2/) will be excluded if package sources are specified and it does not appear in the list -->
+-		<PackageSource Include="https://nuget.org/api/v2/" />
+-		<PackageSource Include="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
+-	</ItemGroup>
+
+ 	<PropertyGroup>
+ 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
+@@ -26,7 +20,7 @@
+ 		<!-- NuGet command -->
+ 		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/nuget.exe</NuGetExePath>
+
+-		<PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
++		<!-- <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources> -->
+
+ 		<NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
+ 		<NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">$(NuGetToolsPath)/nuget</NuGetCommand>
+@@ -56,7 +50,7 @@
+ 	</Target>
+
+ 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+-		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive -Source "$(PackageSources)" "$(SolutionPath)"'/>
++		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive "$(SolutionPath)"'/>
+ 	</Target>
+
+ 	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
+diff --git a/debian/rules.in b/debian/rules.in
+index c578eb1..54b7211 100755
+--- a/debian/rules.in
++++ b/debian/rules.in
+@@ -63,7 +63,8 @@ override_dh_auto_install:
+ 	install -m 644 Mercurial/hgext/highlight/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/highlight
+ 	install -m 644 Mercurial/hgext/largefiles/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/largefiles
+ 	install -m 644 Mercurial/hgext/zeroconf/*.* $(DBDESTDIR)/$(LIB)/Mercurial/hgext/zeroconf
+-	install -m 644 Mercurial/mercurial/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial
++	install -m 644 Mercurial/mercurial/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial || true
++# Avoids "omitting directory Mercurial/mercurial/default.d" causing build failure. We're fine with omitting things, please don't fail the build for that reason
+ 	install -m 644 Mercurial/mercurial/hgweb/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/hgweb
+ 	install -m 644 Mercurial/mercurial/httpclient/*.* $(DBDESTDIR)/$(LIB)/Mercurial/mercurial/httpclient
+ 	install -m 644 MercurialExtensions/fixutf8/*.* $(DBDESTDIR)/$(LIB)/MercurialExtensions/fixutf8
+diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
+index 1226f23..3c9f202 100644
+--- a/src/LfMerge.Core/LfMerge.Core.csproj
++++ b/src/LfMerge.Core/LfMerge.Core.csproj
+@@ -237,7 +237,6 @@
+     <Compile Include="Tools\ProjectInUncleanStateException.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+   <ItemGroup>
+     <None Include="packages.config" />
+     <None Include="..\..\lib\chorusmerge">
+diff --git a/src/LfMerge.Core/packages.config b/src/LfMerge.Core/packages.config
+index a54895b..bab97fa 100644
+--- a/src/LfMerge.Core/packages.config
++++ b/src/LfMerge.Core/packages.config
+@@ -2,7 +2,6 @@
+ <packages>
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="icu.net" version="2.3.3" targetFramework="net45" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
+diff --git a/src/LfMerge/LfMerge.csproj b/src/LfMerge/LfMerge.csproj
+index 05e14ec..42301dd 100644
+--- a/src/LfMerge/LfMerge.csproj
++++ b/src/LfMerge/LfMerge.csproj
+@@ -118,7 +118,6 @@
+     <Compile Include="Options.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+   <ItemGroup>
+     <None Include="packages.config" />
+   </ItemGroup>
+diff --git a/src/LfMerge/packages.config b/src/LfMerge/packages.config
+index 3fb681f..e914a3f 100644
+--- a/src/LfMerge/packages.config
++++ b/src/LfMerge/packages.config
+@@ -3,7 +3,6 @@
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
+   <package id="MongoDB.Driver" version="2.2.1" targetFramework="net45" />
+diff --git a/src/LfMergeQueueManager/LfMergeQueueManager.csproj b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
+index 45512ef..7d9ef34 100644
+--- a/src/LfMergeQueueManager/LfMergeQueueManager.csproj
++++ b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
+@@ -122,7 +122,6 @@
+     <Compile Include="QueueManager.cs" />
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+   <ItemGroup>
+     <None Include="packages.config" />
+   </ItemGroup>
+diff --git a/src/LfMergeQueueManager/packages.config b/src/LfMergeQueueManager/packages.config
+index e9c08dc..1e71d01 100644
+--- a/src/LfMergeQueueManager/packages.config
++++ b/src/LfMergeQueueManager/packages.config
+@@ -3,7 +3,6 @@
+   <package id="Autofac" version="3.5.2" targetFramework="net45" />
+   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
+   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
+-  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
+   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
+   <package id="Newtonsoft.Json" version="8.0.2" targetFramework="net45" />
+ </packages>
+\ No newline at end of file

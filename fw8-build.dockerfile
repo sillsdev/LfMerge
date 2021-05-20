@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y mono4-sil mono5-sil cpp libgit2-dev mer
 RUN apt-get install -y mono5-sil-msbuild sudo debhelper cli-common-dev iputils-ping wget mercurial python-dev php-dev php-pear pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 FROM tmp-lfmerge-builder:lfmerge-builder-base AS lfmerge-build
+ARG DbVersion=7000068
 WORKDIR /build/lfmerge
 
 RUN apt-get update && apt-get install -y gnupg
@@ -47,7 +48,8 @@ RUN apt-get install -y --no-install-recommends adduser; \
 	chown -R builder:users /build
 
 USER builder
-
+RUN mkdir -p /home/builder/.gnupg /home/builder/ci-builder-scripts/bash /home/builder/packages/lfmerge
+WORKDIR /home/builder/packages/lfmerge
 ENV MONO_PREFIX=/opt/mono5-sil
 
 COPY --chown=builder:users .git .git/
@@ -86,11 +88,12 @@ COPY --chown=builder:users docker/compile-lfmerge-fw8.sh .
 RUN ./compile-lfmerge-fw8.sh
 RUN ln -sf ../Mercurial output/
 
-RUN mkdir -p /home/builder/packages/lfmerge/lfmerge-7000068 /home/builder/packages/lfmerge/lfmerge-7000069 /home/builder/packages/lfmerge/lfmerge-7000070 /home/builder/.gnupg /home/builder/ci-builder-scripts/bash
 # Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
 COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
 COPY --chown=builder:users docker/build-debpackages-fw8.sh .
-CMD [ "/build/lfmerge/build-debpackages-fw8.sh" ]
+# CMD [ "/build/lfmerge/build-debpackages-fw8.sh" ]
+RUN ./build-debpackages-fw8.sh
+CMD [ "/bin/bash" ]
 
 # WORKDIR /build/lfmerge/output/Release/net462
 # RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 *Test*.dll

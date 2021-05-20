@@ -148,4 +148,4 @@ if [ -z "$build_in_place" ]; then
 else
 	cd ..
 fi
-sha256sum ${source_package_name}_*.{dsc,build,changes,tar.?z}
+pwd; sha256sum ${source_package_name}_*.{dsc,build,changes,tar.?z} || true

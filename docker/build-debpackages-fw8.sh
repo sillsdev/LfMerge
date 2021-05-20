@@ -17,7 +17,8 @@ TRACE()
 	"$@"
 }
 
-cd /build/lfmerge
+curDbVersion=${DbVersion}
+cd ${HOME}/packages/lfmerge
 
 mkdir -p finalresults
 rm -f finalresults/*
@@ -28,9 +29,8 @@ RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
 cd -
 
-for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
+# for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 	echo -e "\033[0;34mBuilding package for database version ${curDbVersion}\033[0m"
-	cd /build/lfmerge
 
 	echo -e "\033[0;34mPrepare source\033[0m"
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
@@ -40,7 +40,7 @@ for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 
 	echo -e "\033[0;34mBuild source package\033[0m"
 	TRACE $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
-		--arches "amd64" --main-package-name "lfmerge" \
+		--arches "amd64" --main-package-name "lfmerge" --source-code-subdir "." \
 		--supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY \
 		--package-version "$PackageVersion" --preserve-changelog
 
@@ -51,4 +51,8 @@ for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 
 	# cd -
 	# mv results/* finalresults/
-done
+	pwd
+	ls -l ..
+	mv ../lfmerge-${curDbVersion}* finalresults/
+# done
+ls -lR finalresults
