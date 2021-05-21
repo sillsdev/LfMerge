@@ -2,7 +2,7 @@
 
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-xbuild /t:RestoreBuildTasks build/LfMerge.proj
+msbuild /t:RestoreBuildTasks build/LfMerge.proj
 mkdir -p output/Release
 
 dotnet tool restore

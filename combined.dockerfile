@@ -7,6 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS lfmerge-builder-base
 WORKDIR /build/lfmerge
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 RUN apt-get update && apt-get install -y gnupg
 
 COPY docker/sil-packages-key.gpg .
@@ -62,19 +63,21 @@ RUN ./download-dependencies-combined.sh
 COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
 
 # RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
-# RUN debian/PrepareSource 7000070
+# RUN debian/PrepareSource ${DbVersion}
 
-RUN mkdir -p /usr/lib/lfmerge/7000070
+RUN mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 COPY --chown=builder:users docker/compile-lfmerge-combined.sh .
 RUN ./compile-lfmerge-combined.sh
-RUN ln -sf ../Mercurial output/
+# To enable unit tests (takes 20 min), uncomment the two lines below
+# COPY --chown=builder:users docker/test-lfmerge-combined.sh .
+# RUN ./test-lfmerge-combined.sh
 
 # Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
 COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
-COPY --chown=builder:users docker/build-debpackages-fw8.sh .
-# CMD [ "/build/lfmerge/build-debpackages-fw8.sh" ]
-RUN ./build-debpackages-fw8.sh
+COPY --chown=builder:users docker/build-debpackages-combined.sh .
+# CMD [ "/build/lfmerge/build-debpackages-combined.sh" ]
+RUN ./build-debpackages-combined.sh
 CMD [ "/bin/bash" ]
 
 # WORKDIR /build/lfmerge/output/Release/net462
