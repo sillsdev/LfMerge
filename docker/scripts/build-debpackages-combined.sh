@@ -16,7 +16,8 @@ TRACE()
 	"$@"
 }
 
-curDbVersion=${DbVersion}
+curDbVersion=$1
+
 cd ${HOME}/packages/lfmerge
 
 mkdir -p finalresults

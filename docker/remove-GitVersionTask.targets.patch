@@ -1,157 +1,96 @@
-diff --git a/.nuget/packages.config b/.nuget/packages.config
-index aedc84e..3e2682e 100644
---- a/.nuget/packages.config
-+++ b/.nuget/packages.config
-@@ -2,5 +2,4 @@
- <packages>
-   <package id="BuildDependencyTasks" version="0.2.10.0" />
-   <package id="NUnit.Runners.Net4" version="2.6.4" />
--  <package id="GitVersion.CommandLine" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
- </packages>
-\ No newline at end of file
-diff --git a/build/LfMerge.dep b/build/LfMerge.dep
-index 0112d3a..de6320e 100644
---- a/build/LfMerge.dep
-+++ b/build/LfMerge.dep
-@@ -70,33 +70,3 @@ Palaso.TestUtilities.pdb=>lib/
- L10NSharp.dll=>lib/
- L10NSharp.pdb=>lib/
+diff --git a/LfMerge.TestApp/LfMerge.TestApp.csproj b/LfMerge.TestApp/LfMerge.TestApp.csproj
+index 82b9119..a36e89d 100644
+--- a/LfMerge.TestApp/LfMerge.TestApp.csproj
++++ b/LfMerge.TestApp/LfMerge.TestApp.csproj
+@@ -31,7 +31,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+   </PropertyGroup>
  
--
--[TC::FLExBridgeLfmergeLinux64Continuous]
--Name=FLEx Bridge-lfmerge-Linux64-Continuous
--RevisionName=lastSuccessful
--RevisionValue=latest.lastSuccessful
--Condition=Linux
--Path=LibFLExBridge-ChorusPlugin.*=>lib/
--LibTriboroughBridge-ChorusPlugin.*=>lib/
--LfMergeBridge.*=>lib/
--Chorus.exe* => lib/
--ChorusMerge.exe* => lib/
--LibChorus.dll* => lib/
--
--
--[TC::FLExBridgeLfmergeWin32Continuous]
--Name=FLEx Bridge-lfmerge-Win32-Continuous
--RevisionName=lastSuccessful
--RevisionValue=latest.lastSuccessful
--Condition=Windows
--Path=LibFLExBridge-ChorusPlugin.*=>lib/
--LibTriboroughBridge-ChorusPlugin.*=>lib/
--LfMergeBridge.*=>lib/
--Chorus.exe => lib/
--Chorus.pdb => lib/
--ChorusMerge.exe => lib/
--ChorusMerge.pdb => lib/
--LibChorus.dll => lib/
--LibChorus.pdb => lib/
--
--
-diff --git a/build/NuGet.targets b/build/NuGet.targets
-index 200ff14..f895153 100644
---- a/build/NuGet.targets
-+++ b/build/NuGet.targets
-@@ -13,12 +13,6 @@
- 		<DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">true</DownloadNuGetExe>
- 	</PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
+   </ItemGroup>
+diff --git a/src/FixFwData/FixFwData.csproj b/src/FixFwData/FixFwData.csproj
+index f6d01d4..08e29ac 100644
+--- a/src/FixFwData/FixFwData.csproj
++++ b/src/FixFwData/FixFwData.csproj
+@@ -33,7 +33,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+   </PropertyGroup>
  
--	<ItemGroup Condition=" '$(PackageSources)' == '' ">
--		<!-- Package sources used to restore packages. -->
--		<!-- The official NuGet package source (https://nuget.org/api/v2/) will be excluded if package sources are specified and it does not appear in the list -->
--		<PackageSource Include="https://nuget.org/api/v2/" />
--		<PackageSource Include="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
--	</ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="SIL.LCModel.FixData" Version="10.1.0-beta0382" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
+diff --git a/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj b/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
+index 27d332e..9950950 100644
+--- a/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
++++ b/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
+@@ -29,7 +29,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+   </PropertyGroup>
  
- 	<PropertyGroup>
- 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
-@@ -26,7 +20,7 @@
- 		<!-- NuGet command -->
- 		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/nuget.exe</NuGetExePath>
- 
--		<PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
-+		<!-- <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources> -->
- 
- 		<NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
- 		<NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">$(NuGetToolsPath)/nuget</NuGetCommand>
-@@ -56,7 +50,7 @@
- 	</Target>
- 
- 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
--		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive -Source "$(PackageSources)" "$(SolutionPath)"'/>
-+		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive "$(SolutionPath)"'/>
- 	</Target>
- 
- 	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
+   <ItemGroup>
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="Moq" Version="4.2.1510.2205" />
+     <PackageReference Include="NUnit" Version="3.12.0" />
 diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
-index 1226f23..3c9f202 100644
+index 28f8c38..598ae54 100644
 --- a/src/LfMerge.Core/LfMerge.Core.csproj
 +++ b/src/LfMerge.Core/LfMerge.Core.csproj
-@@ -237,7 +237,6 @@
-     <Compile Include="Tools\ProjectInUncleanStateException.cs" />
-   </ItemGroup>
-   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
--  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+ 
    <ItemGroup>
-     <None Include="packages.config" />
-     <None Include="..\..\lib\chorusmerge">
-diff --git a/src/LfMerge.Core/packages.config b/src/LfMerge.Core/packages.config
-index a54895b..bab97fa 100644
---- a/src/LfMerge.Core/packages.config
-+++ b/src/LfMerge.Core/packages.config
-@@ -2,7 +2,6 @@
- <packages>
-   <package id="Autofac" version="3.5.2" targetFramework="net45" />
-   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
--  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
-   <package id="icu.net" version="2.3.3" targetFramework="net45" />
-   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
-   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
+     <PackageReference Include="Autofac" Version="3.5.2" />
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="icu.net" Version="2.6.0" />
+     <PackageReference Include="INIFileParserDotNetCore.Signed" Version="2.5.2" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+diff --git a/src/LfMerge.Tests/LfMerge.Tests.csproj b/src/LfMerge.Tests/LfMerge.Tests.csproj
+index 1dce57d..489cce4 100644
+--- a/src/LfMerge.Tests/LfMerge.Tests.csproj
++++ b/src/LfMerge.Tests/LfMerge.Tests.csproj
+@@ -30,7 +30,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="NUnit" Version="3.12.0" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
 diff --git a/src/LfMerge/LfMerge.csproj b/src/LfMerge/LfMerge.csproj
-index 05e14ec..42301dd 100644
+index 4058b15..97c7bf4 100644
 --- a/src/LfMerge/LfMerge.csproj
 +++ b/src/LfMerge/LfMerge.csproj
-@@ -118,7 +118,6 @@
-     <Compile Include="Options.cs" />
-   </ItemGroup>
-   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
--  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+@@ -38,7 +38,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+ 
    <ItemGroup>
-     <None Include="packages.config" />
+     <PackageReference Include="CommandLineParser" Version="1.9.71" />
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
    </ItemGroup>
-diff --git a/src/LfMerge/packages.config b/src/LfMerge/packages.config
-index 3fb681f..e914a3f 100644
---- a/src/LfMerge/packages.config
-+++ b/src/LfMerge/packages.config
-@@ -3,7 +3,6 @@
-   <package id="Autofac" version="3.5.2" targetFramework="net45" />
-   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
-   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
--  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
-   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
-   <package id="MongoDB.Bson" version="2.2.1" targetFramework="net45" />
-   <package id="MongoDB.Driver" version="2.2.1" targetFramework="net45" />
+diff --git a/src/LfMergeAuxTool/LfMergeAuxTool.csproj b/src/LfMergeAuxTool/LfMergeAuxTool.csproj
+index d884182..eeec513 100644
+--- a/src/LfMergeAuxTool/LfMergeAuxTool.csproj
++++ b/src/LfMergeAuxTool/LfMergeAuxTool.csproj
+@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+ 
+   <ItemGroup>
+     <PackageReference Include="CommandLineParser" Version="1.9.71" />
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
+   </ItemGroup>
 diff --git a/src/LfMergeQueueManager/LfMergeQueueManager.csproj b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-index 45512ef..7d9ef34 100644
+index 7954992..0228ad7 100644
 --- a/src/LfMergeQueueManager/LfMergeQueueManager.csproj
 +++ b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-@@ -122,7 +122,6 @@
-     <Compile Include="QueueManager.cs" />
-   </ItemGroup>
-   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
--  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
+@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
+ 
    <ItemGroup>
-     <None Include="packages.config" />
+     <PackageReference Include="CommandLineParser" Version="1.9.71" />
+-    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
    </ItemGroup>
-diff --git a/src/LfMergeQueueManager/packages.config b/src/LfMergeQueueManager/packages.config
-index e9c08dc..1e71d01 100644
---- a/src/LfMergeQueueManager/packages.config
-+++ b/src/LfMergeQueueManager/packages.config
-@@ -3,7 +3,6 @@
-   <package id="Autofac" version="3.5.2" targetFramework="net45" />
-   <package id="Bugsnag" version="2.2.0" targetFramework="net45" />
-   <package id="CommandLineParser" version="1.9.71" targetFramework="net45" />
--  <package id="GitVersionTask" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
-   <package id="ini-parser" version="2.2.4" targetFramework="net45" />
-   <package id="Newtonsoft.Json" version="8.0.2" targetFramework="net45" />
- </packages>
-\ No newline at end of file

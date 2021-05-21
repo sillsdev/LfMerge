@@ -30,9 +30,24 @@ RUN mkdir -p /home/builder/.gnupg /home/builder/ci-builder-scripts/bash /home/bu
 
 # Any setup unique to the various builds goes in one of these four images
 FROM lfmerge-builder-base AS lfmerge-build-7000068
+ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
+ENV DbVersion=7000068
+
 FROM lfmerge-builder-base AS lfmerge-build-7000069
+ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
+ENV DbVersion=7000069
+
 FROM lfmerge-builder-base AS lfmerge-build-7000070
+ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
+ENV DbVersion=7000070
+
 FROM lfmerge-builder-base AS lfmerge-build-7000072
+ENV GitBranch="master"
+ENV GitPatch="remove-GitVersionTask.targets.patch"
+ENV DbVersion=7000072
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
@@ -42,7 +57,7 @@ WORKDIR /home/builder/packages/lfmerge
 ENV MONO_PREFIX=/opt/mono5-sil
 
 COPY --chown=builder:users .git .git/
-RUN git checkout bugfix/send-receive-branch-format-change-fw8
+RUN git checkout "${GitBranch}"
 RUN git clean -dxf --exclude=packages/
 RUN git reset --hard
 
@@ -59,9 +74,10 @@ COPY --chown=builder:users [ "docker/common.sh", "docker/make-source", "/home/bu
 COPY --chown=builder:users --from=lf-build /var/www/html /var/www/html
 
 # Remove GitVersionTask which doesn't work well on modern Debian and replace with dotnet-based GitVersion
-COPY --chown=builder:users docker/remove-GitVersionTask-fw8.targets.patch .
-RUN git apply remove-GitVersionTask-fw8.targets.patch
+COPY --chown=builder:users "docker/${GitPatch}" .
+RUN echo ${GitPatch}; git apply "${GitPatch}"
+RUN echo In build, DB version is ${DbVersion}
 
 # RUN --mount=type=tmpfs,target=/tmp ./build-and-test.sh ${DbVersion}
 
-CMD [ "./build-and-test.sh", "${DbVersion}" ]
+CMD ./build-and-test.sh ${DbVersion}

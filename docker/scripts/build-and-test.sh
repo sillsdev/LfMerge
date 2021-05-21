@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DbVersion="${1-7000072}"
-
+export DbVersion="${1-7000072}"
+echo "Building for ${DbVersion}"
 mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 ./gitversion-combined.sh ${DbVersion}
