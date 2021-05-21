@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
 FROM sillsdev/web-languageforge:app-latest AS lf-build
@@ -71,7 +72,7 @@ COPY --chown=builder:users docker/compile-lfmerge-combined.sh .
 RUN ./compile-lfmerge-combined.sh
 # To enable unit tests (takes 20 min), uncomment the two lines below
 # COPY --chown=builder:users docker/test-lfmerge-combined.sh .
-# RUN ./test-lfmerge-combined.sh
+# RUN --mount=type=tmpfs,target=/tmp ./test-lfmerge-combined.sh
 
 # Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
 COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
