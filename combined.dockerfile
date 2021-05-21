@@ -49,71 +49,19 @@ RUN git reset --hard
 # Instead of downloading FLExBridge DLLs which have vanished from TeamCity, store them in the Docker image
 ADD docker/fw8-flexbridge.tar.xz lib/
 
+COPY --chown=builder:users docker/scripts .
+COPY --chown=builder:users .config/dotnet-tools.json .config/dotnet-tools.json
+# Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
+# COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
+COPY --chown=builder:users [ "docker/common.sh", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
+
+# LanguageForge repo expected to be in (will be copied into ./data/php/src before running unit tests)
+COPY --chown=builder:users --from=lf-build /var/www/html /var/www/html
+
 # Remove GitVersionTask which doesn't work well on modern Debian and replace with dotnet-based GitVersion
 COPY --chown=builder:users docker/remove-GitVersionTask-fw8.targets.patch .
 RUN git apply remove-GitVersionTask-fw8.targets.patch
 
-COPY --chown=builder:users .config/dotnet-tools.json .config/dotnet-tools.json
-COPY --chown=builder:users docker/gitversion-combined.sh .
-RUN ./gitversion-combined.sh
+# RUN --mount=type=tmpfs,target=/tmp ./build-and-test.sh ${DbVersion}
 
-COPY --chown=builder:users docker/download-dependencies-combined.sh ./
-RUN ./download-dependencies-combined.sh
-
-# LanguageForge repo expected to be in ./data/php/src for unit tests
-COPY --chown=builder:users --from=lf-build /var/www/html ./data/php/src
-
-# RUN dotnet build /t:PrepareSource /v:detailed build/LfMerge.proj
-# RUN debian/PrepareSource ${DbVersion}
-
-RUN mkdir -p /usr/lib/lfmerge/${DbVersion}
-
-COPY --chown=builder:users docker/compile-lfmerge-combined.sh .
-RUN ./compile-lfmerge-combined.sh
-# To enable unit tests (takes 20 min), uncomment the two lines below
-# COPY --chown=builder:users docker/test-lfmerge-combined.sh .
-# RUN --mount=type=tmpfs,target=/tmp ./test-lfmerge-combined.sh
-
-# Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
-COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
-COPY --chown=builder:users docker/build-debpackages-combined.sh .
-# CMD [ "/build/lfmerge/build-debpackages-combined.sh" ]
-RUN ./build-debpackages-combined.sh
-CMD [ "/bin/bash" ]
-
-# WORKDIR /build/lfmerge/output/Release/net462
-# RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 *Test*.dll
-#RUN PATH="${PATH}:/opt/mono5-sil/bin" dotnet test -f net462 #*Test*.dll
-
-# NOTE: Remnants of previous attempt can be seen below. Will delete them once this is working. 2021-05 RM
-
-# FROM alpine AS git
-# RUN apk --update add git mercurial && \
-#     rm -rf /var/lib/apt/lists/* && \
-#     rm /var/cache/apk/*
-# WORKDIR /git
-# RUN git clone --depth=1 https://github.com/sillsdev/chorus/
-# RUN git clone --depth=1 https://github.com/sillsdev/libpalaso/
-# RUN git clone --depth=1 https://github.com/sillsdev/FieldWorks/
-# RUN git clone --depth=1 https://github.com/sillsdev/web-languageforge/
-# RUN git clone --depth=1 https://github.com/sillsdev/LfMerge/
-# # RUN hg clone -r 3.3 https://www.mercurial-scm.org/repo/hg/
-# ADD https://www.mercurial-scm.org/repo/hg/archive/3.3.tar.gz .
-
-# FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
-# # Debian 10 (Buster)
-
-# WORKDIR /git/LfMerge
-# COPY ./*.sh .
-
-# COPY --from=git /git /git
-
-# RUN ./set-build-number.sh
-# RUN ./compile-mercurial.sh
-# # Install composer and initialize LF php code
-# RUN ./composer-for-lf.sh
-# RUN ./download-lfmerge-dependencies.sh
-
-# # if (branchName.split('-').first() == "fieldworks8") {
-# # Only needed for Mono 3.x
-# RUN ./compile-lfmerge.sh
+CMD [ "./build-and-test.sh", "${DbVersion}" ]
