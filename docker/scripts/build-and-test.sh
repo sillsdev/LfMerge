@@ -2,7 +2,7 @@
 
 export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
-mkdir -p /usr/lib/lfmerge/${DbVersion}
+sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 ./gitversion-combined.sh ${DbVersion}
 ./download-dependencies-combined.sh ${DbVersion}

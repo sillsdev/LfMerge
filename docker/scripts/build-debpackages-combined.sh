@@ -33,6 +33,9 @@ cd -
 	echo -e "\033[0;34mBuilding package for database version ${curDbVersion}\033[0m"
 
 	echo -e "\033[0;34mPrepare source\033[0m"
+	git clean -dxf --exclude=packages/ --exclude=lib/
+	git reset --hard
+
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
 	TRACE /opt/mono5-sil/bin/msbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
@@ -53,6 +56,7 @@ cd -
 	# mv results/* finalresults/
 	pwd
 	ls -l ..
+	mkdir -p finalresults/
 	mv ../lfmerge-${curDbVersion}* finalresults/
 # done
 ls -lR finalresults
