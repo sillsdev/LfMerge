@@ -34,18 +34,21 @@ ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000068
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
+ENV RUN_UNIT_TESTS=1
 
 FROM lfmerge-builder-base AS lfmerge-build-7000069
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000069
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000069
+ENV RUN_UNIT_TESTS=1
 
 FROM lfmerge-builder-base AS lfmerge-build-7000070
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000070
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000070
+ENV RUN_UNIT_TESTS=1
 
 FROM lfmerge-builder-base AS lfmerge-build-7000072
 ENV GitBranch="docker-build"
@@ -53,6 +56,7 @@ ENV GitPatch="remove-GitVersionTask.targets.patch"
 ENV DbVersion=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
 ENV NUGET_PACKAGES=/storage/nuget
+ENV RUN_UNIT_TESTS=1
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
