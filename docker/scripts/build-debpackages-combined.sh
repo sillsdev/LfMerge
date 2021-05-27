@@ -36,6 +36,15 @@ cd -
 	git clean -dxf --exclude=packages/ --exclude=lib/
 	git reset --hard
 
+	cat > NuGet.Config <<EOF
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="TeamCity" value="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
+  </packageSources>
+</configuration>
+EOF
+
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
 	TRACE /opt/mono5-sil/bin/msbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 

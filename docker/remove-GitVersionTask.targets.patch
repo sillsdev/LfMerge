@@ -1,96 +1,13 @@
-diff --git a/LfMerge.TestApp/LfMerge.TestApp.csproj b/LfMerge.TestApp/LfMerge.TestApp.csproj
-index 82b9119..a36e89d 100644
---- a/LfMerge.TestApp/LfMerge.TestApp.csproj
-+++ b/LfMerge.TestApp/LfMerge.TestApp.csproj
-@@ -31,7 +31,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
-   </PropertyGroup>
- 
-   <ItemGroup>
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-   </ItemGroup>
-diff --git a/src/FixFwData/FixFwData.csproj b/src/FixFwData/FixFwData.csproj
-index f6d01d4..08e29ac 100644
---- a/src/FixFwData/FixFwData.csproj
-+++ b/src/FixFwData/FixFwData.csproj
-@@ -33,7 +33,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
-   </PropertyGroup>
- 
-   <ItemGroup>
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="SIL.LCModel.FixData" Version="10.1.0-beta0382" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-diff --git a/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj b/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
-index 27d332e..9950950 100644
---- a/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
-+++ b/src/LfMerge.Core.Tests/LfMerge.Core.Tests.csproj
-@@ -29,7 +29,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
-   </PropertyGroup>
- 
-   <ItemGroup>
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="Moq" Version="4.2.1510.2205" />
-     <PackageReference Include="NUnit" Version="3.12.0" />
-diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
-index 28f8c38..598ae54 100644
---- a/src/LfMerge.Core/LfMerge.Core.csproj
-+++ b/src/LfMerge.Core/LfMerge.Core.csproj
-@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
- 
-   <ItemGroup>
-     <PackageReference Include="Autofac" Version="3.5.2" />
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="icu.net" Version="2.6.0" />
-     <PackageReference Include="INIFileParserDotNetCore.Signed" Version="2.5.2" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-diff --git a/src/LfMerge.Tests/LfMerge.Tests.csproj b/src/LfMerge.Tests/LfMerge.Tests.csproj
-index 1dce57d..489cce4 100644
---- a/src/LfMerge.Tests/LfMerge.Tests.csproj
-+++ b/src/LfMerge.Tests/LfMerge.Tests.csproj
-@@ -30,7 +30,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
-   </PropertyGroup>
- 
-   <ItemGroup>
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="NUnit" Version="3.12.0" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-diff --git a/src/LfMerge/LfMerge.csproj b/src/LfMerge/LfMerge.csproj
-index 4058b15..97c7bf4 100644
---- a/src/LfMerge/LfMerge.csproj
-+++ b/src/LfMerge/LfMerge.csproj
-@@ -38,7 +38,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
- 
-   <ItemGroup>
-     <PackageReference Include="CommandLineParser" Version="1.9.71" />
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-   </ItemGroup>
-diff --git a/src/LfMergeAuxTool/LfMergeAuxTool.csproj b/src/LfMergeAuxTool/LfMergeAuxTool.csproj
-index d884182..eeec513 100644
---- a/src/LfMergeAuxTool/LfMergeAuxTool.csproj
-+++ b/src/LfMergeAuxTool/LfMergeAuxTool.csproj
-@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
- 
-   <ItemGroup>
-     <PackageReference Include="CommandLineParser" Version="1.9.71" />
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-   </ItemGroup>
-diff --git a/src/LfMergeQueueManager/LfMergeQueueManager.csproj b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-index 7954992..0228ad7 100644
---- a/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-+++ b/src/LfMergeQueueManager/LfMergeQueueManager.csproj
-@@ -32,7 +32,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
- 
-   <ItemGroup>
-     <PackageReference Include="CommandLineParser" Version="1.9.71" />
--    <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-     <PackageReference Include="SIL.ReleaseTasks" Version="2.3.4" PrivateAssets="All" />
-   </ItemGroup>
+diff --git a/debian/rules.in b/debian/rules.in
+index ab4c183..4821a8e 100755
+--- a/debian/rules.in
++++ b/debian/rules.in
+@@ -19,7 +19,7 @@ LIB				= usr/lib/lfmerge/__DatabaseVersion__
+ SHARE			= usr/share/lfmerge/__DatabaseVersion__
+
+ export DBVERSIONPATH=/usr/lib/lfmerge/__DatabaseVersion__
+-
++echo DBVERSIONPATH = $DBVERSIONPATH
+ define MERCURIAL_INI
+ [extensions]
+ eol=

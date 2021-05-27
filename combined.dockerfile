@@ -33,21 +33,26 @@ FROM lfmerge-builder-base AS lfmerge-build-7000068
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000068
+ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
 
 FROM lfmerge-builder-base AS lfmerge-build-7000069
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000069
+ENV DBVERSIONPATH=/usr/lib/lfmerge/7000069
 
 FROM lfmerge-builder-base AS lfmerge-build-7000070
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000070
+ENV DBVERSIONPATH=/usr/lib/lfmerge/7000070
 
 FROM lfmerge-builder-base AS lfmerge-build-7000072
-ENV GitBranch="master"
+ENV GitBranch="docker-build"
 ENV GitPatch="remove-GitVersionTask.targets.patch"
 ENV DbVersion=7000072
+ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
+ENV NUGET_PACKAGES=/storage/nuget
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
@@ -63,6 +68,9 @@ RUN git reset --hard
 
 # Instead of downloading FLExBridge DLLs which have vanished from TeamCity, store them in the Docker image
 ADD docker/fw8-flexbridge.tar.xz lib/
+
+# TODO: Consider running a package restore here so that it's cached in the build image instead of having to run in the container each time
+# E.g., call download-dependencies-combined.sh at this point
 
 COPY --chown=builder:users docker/scripts .
 COPY --chown=builder:users .config/dotnet-tools.json .config/dotnet-tools.json

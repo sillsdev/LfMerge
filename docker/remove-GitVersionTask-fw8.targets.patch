@@ -9,41 +9,6 @@ index aedc84e..3e2682e 100644
 -  <package id="GitVersion.CommandLine" version="4.0.0-beta0009" targetFramework="net45" developmentDependency="true" />
  </packages>
 \ No newline at end of file
-diff --git a/build/NuGet.targets b/build/NuGet.targets
-index 200ff14..f895153 100644
---- a/build/NuGet.targets
-+++ b/build/NuGet.targets
-@@ -13,12 +13,6 @@
- 		<DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">true</DownloadNuGetExe>
- 	</PropertyGroup>
-
--	<ItemGroup Condition=" '$(PackageSources)' == '' ">
--		<!-- Package sources used to restore packages. -->
--		<!-- The official NuGet package source (https://nuget.org/api/v2/) will be excluded if package sources are specified and it does not appear in the list -->
--		<PackageSource Include="https://nuget.org/api/v2/" />
--		<PackageSource Include="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
--	</ItemGroup>
-
- 	<PropertyGroup>
- 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
-@@ -26,7 +20,7 @@
- 		<!-- NuGet command -->
- 		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/nuget.exe</NuGetExePath>
-
--		<PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
-+		<!-- <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources> -->
-
- 		<NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
- 		<NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">$(NuGetToolsPath)/nuget</NuGetCommand>
-@@ -56,7 +50,7 @@
- 	</Target>
-
- 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
--		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive -Source "$(PackageSources)" "$(SolutionPath)"'/>
-+		<Exec Command='$(NuGetCommand) restore -MSBuildVersion 14 -NonInteractive "$(SolutionPath)"'/>
- 	</Target>
-
- 	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory"
 diff --git a/src/LfMerge.Core/LfMerge.Core.csproj b/src/LfMerge.Core/LfMerge.Core.csproj
 index 1226f23..3c9f202 100644
 --- a/src/LfMerge.Core/LfMerge.Core.csproj
