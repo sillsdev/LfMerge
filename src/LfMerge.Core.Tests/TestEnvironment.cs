@@ -221,6 +221,16 @@ namespace LfMerge.Core.Tests
 				f.Write(bytes, 0, bytes.Length);
 			}
 		}
+
+		public static void WriteTextFile(string fileName, string content, bool append = false, Encoding encoding = null)
+		{
+			if (encoding == null) {
+				encoding = new UTF8Encoding(false);
+			}
+			using (var writer = new StreamWriter(fileName, append, encoding)) {
+				writer.Write(content);
+			}
+		}
 	}
 }
 
