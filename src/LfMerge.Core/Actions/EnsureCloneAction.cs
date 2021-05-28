@@ -153,6 +153,10 @@ namespace LfMerge.Core.Actions
 					}
 
 					var cloneModelVersion = int.Parse(line.Substring(index + modelString.Length, 7));
+					if (cloneModelVersion > MagicStrings.MaximalModelVersion) {
+						// Chorus changed model versions to 75#####.xxxxxxx where xxxxxxx is the old-style model version
+						cloneModelVersion = int.Parse(line.Substring(index + modelString.Length + 8, 7));
+					}
 					if (cloneModelVersion < MagicStrings.MinimalModelVersion)
 					{
 						ReportNoSuchBranchFailure(project, cloneLocation, cloneResult, line, ProcessingState.ErrorCodes.ProjectTooOld);
