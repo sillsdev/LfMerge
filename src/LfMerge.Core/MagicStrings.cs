@@ -105,6 +105,8 @@ namespace LfMerge.Core
 		{
 			MinimalModelVersion = minimalModelVersion;
 		}
+
+		public const int MaximalModelVersion = 7499999;
 	}
 }
 
