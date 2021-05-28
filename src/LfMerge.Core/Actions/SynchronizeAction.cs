@@ -124,6 +124,10 @@ namespace LfMerge.Core.Actions
 					Require.That(index >= 0);
 
 					var modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length, 7);
+					if (int.Parse(modelVersion) > int.Parse(MagicStrings.MaximalModelVersion)) {
+						// Chorus changed model versions to 75#####.xxxxxxx where xxxxxxx is the old-style model version
+						modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length + 8, 7);
+					}
 					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
 					{
 						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,

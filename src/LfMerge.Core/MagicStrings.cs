@@ -105,6 +105,9 @@ namespace LfMerge.Core
 		{
 			MinimalModelVersion = minimalModelVersion;
 		}
+
+		// Maximal supported model version (7500000 and above are for a different Chorus version)
+		public const string MaximalModelVersion = "7499999";
 	}
 }
 
