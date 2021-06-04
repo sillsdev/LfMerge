@@ -93,11 +93,27 @@ namespace LfMerge.Core.Actions
 					{"languageDepotRepoUri", chorusHelper.GetSyncUri(project)},
 					{"commitMessage", commitMessage}
 				};
-				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
-					options, out syncResult))
+
+				try
 				{
-					Logger.Error(syncResult);
-					return;
+					if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Send_Receive", Progress,
+						options, out syncResult))
+					{
+						Logger.Error(syncResult);
+						return;
+					}
+				}
+				catch (System.FormatException e)
+				{
+					if (e.StackTrace.Contains("System.Int32.Parse"))
+					{
+						ChorusHelper.SetModelVersion(MagicStrings.MinimalModelVersionForNewBranchFormat.ToString());
+						return;
+					}
+					else
+					{
+						throw;
+					}
 				}
 
 				const string cannotCommitCurrentBranch = "Cannot commit to current branch '";
@@ -108,6 +124,10 @@ namespace LfMerge.Core.Actions
 					Require.That(index >= 0);
 
 					var modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length, 7);
+					if (int.Parse(modelVersion) > int.Parse(MagicStrings.MaximalModelVersion)) {
+						// Chorus changed model versions to 75#####.xxxxxxx where xxxxxxx is the old-style model version
+						modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length + 8, 7);
+					}
 					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
 					{
 						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,

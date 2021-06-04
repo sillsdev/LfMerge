@@ -229,6 +229,73 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
+		public void Success_NewBranchFormat_LfMerge68()
+		{
+			// Setup
+			var ldDirectory = CopyModifiedProjectAsTestLangProj(_lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			TestEnvironment.WriteTextFile(Path.Combine(_env.Settings.WebWorkDirectory, TestLangProj, "FLExProject.ModelVersion"), "{\"modelversion\": 7000068}");
+			LanguageDepotMock.Server.Start();
+			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
+
+			// Execute
+			_synchronizeAction.Run(_lfProject);
+
+			// Verify
+			Assert.That(MercurialTestHelper.GetRevisionOfWorkingSet(_lfProject.ProjectDir),
+				Is.EqualTo(MercurialTestHelper.GetRevisionOfTip(ldDirectory)),
+				"Our repo doesn't have the changes from LanguageDepot");
+			Assert.That(MercurialTestHelper.GetRevisionOfTip(ldDirectory), Is.EqualTo(oldHashOfLd));
+			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
+			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Received changes from others"));
+		}
+
+		public void Success_NewBranchFormat_LfMerge69()
+		{
+			// Setup
+			var ldDirectory = CopyModifiedProjectAsTestLangProj(_lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			TestEnvironment.WriteTextFile(Path.Combine(_env.Settings.WebWorkDirectory, TestLangProj, "FLExProject.ModelVersion"), "{\"modelversion\": 7000069}");
+			LanguageDepotMock.Server.Start();
+			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
+
+			// Execute
+			_synchronizeAction.Run(_lfProject);
+
+			// Verify
+			// Stack trace should also have been logged
+			Assert.That(MercurialTestHelper.GetRevisionOfWorkingSet(_lfProject.ProjectDir),
+				Is.EqualTo(MercurialTestHelper.GetRevisionOfTip(ldDirectory)),
+				"Our repo doesn't have the changes from LanguageDepot");
+			Assert.That(MercurialTestHelper.GetRevisionOfTip(ldDirectory), Is.EqualTo(oldHashOfLd));
+			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
+			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Received changes from others"));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+		}
+
+		[Test]
+		public void Success_NewBranchFormat_LfMerge70()
+		{
+			// Setup
+			var ldDirectory = CopyModifiedProjectAsTestLangProj(_lDSettings.WebWorkDirectory);
+			TestEnvironment.CopyFwProjectTo(TestLangProj, _env.Settings.WebWorkDirectory);
+			TestEnvironment.WriteTextFile(Path.Combine(_env.Settings.WebWorkDirectory, TestLangProj, "FLExProject.ModelVersion"), "{\"modelversion\": 7000070}");
+			LanguageDepotMock.Server.Start();
+			var oldHashOfLd = MercurialTestHelper.GetRevisionOfTip(ldDirectory);
+
+			// Execute
+			_synchronizeAction.Run(_lfProject);
+
+			// Verify
+			Assert.That(MercurialTestHelper.GetRevisionOfWorkingSet(_lfProject.ProjectDir),
+				Is.EqualTo(MercurialTestHelper.GetRevisionOfTip(ldDirectory)),
+				"Our repo doesn't have the changes from LanguageDepot");
+			Assert.That(MercurialTestHelper.GetRevisionOfTip(ldDirectory), Is.EqualTo(oldHashOfLd));
+			Assert.That(_env.Logger.GetErrors(), Is.Null.Or.Empty);
+			Assert.That(_env.Logger.GetMessages(), Is.StringContaining("Received changes from others"));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+		}
+
 		[Test]
 		public void Success_NoNewChangesFromOthersAndUs()
 		{
