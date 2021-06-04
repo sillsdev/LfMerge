@@ -100,11 +100,15 @@ namespace LfMerge.Core
 
 		public static string[] UnsupportedModelVersions { get; } = { "7000071" };
 
+		public const int MinimalModelVersionForNewBranchFormat = 7000072;
+
 		// Allow to set minimal model version during unit testing
 		public static void SetMinimalModelVersion(int minimalModelVersion)
 		{
 			MinimalModelVersion = minimalModelVersion;
 		}
+
+		public const int MaximalModelVersion = 7499999;
 	}
 }
 
