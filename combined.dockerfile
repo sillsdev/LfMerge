@@ -25,9 +25,6 @@ RUN useradd -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m 
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
 	chown -R builder:users /build
 
-USER builder
-RUN mkdir -p /home/builder/.gnupg /home/builder/ci-builder-scripts/bash /home/builder/packages
-
 # Any setup unique to the various builds goes in one of these four images
 FROM lfmerge-builder-base AS lfmerge-build-7000068
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
