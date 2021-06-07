@@ -43,7 +43,7 @@
 
 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
 		<Exec
-			Command='dotnet restore "$(SolutionPath)"'/>
+			Command='$(NuGetCommand) restore -NonInteractive "$(SolutionPath)" -OutputDirectory packages'/>
 	</Target>
 
 	<Target Name="_DownloadNuGet" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')">
