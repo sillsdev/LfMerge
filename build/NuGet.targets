@@ -5,6 +5,7 @@
 
 		<!-- Enable the restore command to run before builds -->
 		<RestorePackages Condition="  '$(RestorePackages)' == '' ">true</RestorePackages>
+		<RestorePackagesPath Condition=" '$(RestorePackagesPath)' == ''">packages</RestorePackagesPath>
 
 		<!-- Determines if package restore consent is required to restore packages -->
 		<RequireRestoreConsent Condition=" '$(RequireRestoreConsent)' != 'false' ">false</RequireRestoreConsent>
@@ -43,7 +44,7 @@
 
 	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
 		<Exec
-			Command='$(NuGetCommand) restore -NonInteractive "$(SolutionPath)" -OutputDirectory packages'/>
+			Command='$(NuGetCommand) restore -NonInteractive -OutputDirectory "$(RestorePackagesPath)" "$(SolutionPath)"'/>
 	</Target>
 
 	<Target Name="_DownloadNuGet" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')">
