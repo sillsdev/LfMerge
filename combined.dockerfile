@@ -18,7 +18,7 @@ RUN apt-key add sil-packages-testing-key.gpg
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
 RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
 # Dependencies from Debian "control" file
-RUN apt-get update && apt-get install -y sudo debhelper devscripts cli-common-dev cpp python-dev pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
+RUN apt-get update && apt-get install -y sudo debhelper devscripts cli-common-dev iputils-ping cpp python-dev pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 # # Build as a non-root user
 RUN useradd -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m -s /bin/bash builder ; \
