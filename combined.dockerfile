@@ -32,6 +32,8 @@ ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000068
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
 ENV RUN_UNIT_TESTS=1
+# To run specific unit tests, set TEST_SPEC env var, e.g.:
+# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionBridgeIntegrationTests.Success_ChangesFromUsNoChangesFromOthers
 
 FROM lfmerge-builder-base AS lfmerge-build-7000069
 ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"

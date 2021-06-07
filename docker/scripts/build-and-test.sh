@@ -9,7 +9,7 @@ sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 ./compile-lfmerge-combined.sh ${DbVersion}
 
-if [ -n "$RUN_UNIT_TESTS" ]; then
+if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
     rm -rf ./data/php
     mkdir -p ./data/php
     cp -a /var/www/html ./data/php/src
