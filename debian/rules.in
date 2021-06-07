@@ -83,8 +83,6 @@ override_dh_auto_install:
 	# Install environ file
 	install -d $(DBDESTDIR)/$(SHARE)
 	install -m 644 environ $(DBDESTDIR)/$(SHARE)
-	install -d $(DBDESTDIR)/$(SHARE)/Mercurial/doc
-	install -m 644 Mercurial/doc/*.* $(DBDESTDIR)/$(SHARE)/Mercurial/doc
 	# Install wrapper scripts
 	install -d $(COMMONDESTDIR)/usr/bin
 	install -m 755 lfmerge $(COMMONDESTDIR)/usr/bin
