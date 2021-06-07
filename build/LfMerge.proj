@@ -76,9 +76,9 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="RestorePackages">
-		<Message Text="RootDir=$(RootDir)"/>
+		<!-- <Message Text="RootDir=$(RootDir)"/>
 		<FileUpdate Files="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../"
-			ReplacementText="fixutf8=$(RootDir)/" ContinueOnError="WarnAndContinue"/>
+			ReplacementText="fixutf8=$(RootDir)/" ContinueOnError="WarnAndContinue"/> -->
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
