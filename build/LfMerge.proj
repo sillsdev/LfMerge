@@ -3,6 +3,7 @@
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 		<Solution>LfMerge.sln</Solution>
 		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
+		<RestorePackagesPath>$(RootDir)/packages</RestorePackagesPath>
 		<ApplicationName>LfMerge</ApplicationName>
 		<ApplicationNameLC>lfmerge</ApplicationNameLC>
 		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
