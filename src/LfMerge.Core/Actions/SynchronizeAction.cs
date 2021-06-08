@@ -107,7 +107,15 @@ namespace LfMerge.Core.Actions
 				{
 					if (e.StackTrace.Contains("System.Int32.Parse"))
 					{
-						ChorusHelper.SetModelVersion(MagicStrings.MinimalModelVersionForNewBranchFormat.ToString());
+						var modelVersion = MagicStrings.MinimalModelVersionForNewBranchFormat.ToString();
+						ChorusHelper.SetModelVersion(modelVersion);
+#if FW8_COMPAT
+						// The .hg branch has a higher model version than the .fwdata file. We allow
+						// data migrations and try again.
+						Logger.Notice("Allow data migration for project '{0}' to migrate to model version '{1}'",
+							project.ProjectCode, modelVersion);
+						FwProject.AllowDataMigration = true;
+#endif
 						return;
 					}
 					else
@@ -127,6 +135,13 @@ namespace LfMerge.Core.Actions
 					if (int.Parse(modelVersion) > int.Parse(MagicStrings.MaximalModelVersion)) {
 						// Chorus changed model versions to 75#####.xxxxxxx where xxxxxxx is the old-style model version
 						modelVersion = line.Substring(index + cannotCommitCurrentBranch.Length + 8, 7);
+#if FW8_COMPAT
+						// The .hg branch has a higher model version than the .fwdata file. We allow
+						// data migrations and try again.
+						Logger.Notice("Allow data migration for project '{0}' to migrate to model version '{1}'",
+							project.ProjectCode, modelVersion);
+						FwProject.AllowDataMigration = true;
+#endif
 					}
 					if (int.Parse(modelVersion) < int.Parse(MagicStrings.MinimalModelVersion))
 					{
