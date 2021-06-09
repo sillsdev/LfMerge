@@ -13,6 +13,7 @@ using SIL.FieldWorks.Common.COMInterfaces;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Application;
 using SIL.FieldWorks.FDO.Infrastructure;
+using SIL.FieldWorks.FDO.DomainServices;
 
 namespace LfMerge.Core.DataConverters
 {
@@ -206,6 +207,12 @@ namespace LfMerge.Core.DataConverters
 					// Oddly, this can return 0 for some custom fields. TODO: Find out why: that seems like it would be an error.
 					if (fieldWs == 0)
 						fieldWs = cache.DefaultUserWs; // TODO: Investigate, because this should probably be wsEn instead so that we can create correct keys.
+					if (fieldWs < 0)
+					{
+						// FindOrCreatePossibility has a bug where it doesn't handle "magic" writing systems (e.g., -1 for default analysis, etc) and
+						// throws an exception instead. So we need to get a real ws here.
+						fieldWs = WritingSystemServices.ActualWs(cache, fieldWs, hvo, flid);
+					}
 					ICmPossibilityList parentList = GetParentListForField(flid);
 					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
 
