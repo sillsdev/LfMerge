@@ -27,35 +27,42 @@ RUN useradd -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m 
 
 # Any setup unique to the various builds goes in one of these four images
 FROM lfmerge-builder-base AS lfmerge-build-7000068
-ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitBranch="fieldworks8-master"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000068
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
-ENV RUN_UNIT_TESTS=1
+ENV RUN_UNIT_TESTS=0
+ENV NUNIT_VERSION_MAJOR=2
 # To run specific unit tests, set TEST_SPEC env var, e.g.:
-# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionBridgeIntegrationTests.Success_ChangesFromUsNoChangesFromOthers
+# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000069
-ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitBranch="fieldworks8-master"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000069
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000069
-ENV RUN_UNIT_TESTS=1
+ENV RUN_UNIT_TESTS=0
+ENV NUNIT_VERSION_MAJOR=2
+# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000070
-ENV GitBranch="bugfix/send-receive-branch-format-change-fw8"
+ENV GitBranch="fieldworks8-master"
 ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000070
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000070
-ENV RUN_UNIT_TESTS=1
+ENV RUN_UNIT_TESTS=0
+ENV NUNIT_VERSION_MAJOR=2
+# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000072
-ENV GitBranch="docker-build"
+ENV GitBranch="master"
 ENV GitPatch="remove-GitVersionTask.targets.patch"
 ENV DbVersion=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
 ENV NUGET_PACKAGES=/storage/nuget
-ENV RUN_UNIT_TESTS=1
+ENV RUN_UNIT_TESTS=0
+ENV NUNIT_VERSION_MAJOR=3
+# ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
