@@ -7,7 +7,6 @@ Homepage: https://languageforge.org/
 Vcs-Git: git://github.com/sillsdev/LfMerge.git
 Vcs-Browser: https://github.com/sillsdev/LfMerge
 Build-Depends: debhelper (>= 9.0.0), cli-common-dev (>= 0.8),
- iputils-ping,
  wget,
  mercurial,
  python-dev,
@@ -39,6 +38,7 @@ Description: LanguageForge Send/Receive
 Package: lfmerge-__DatabaseVersion__
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
+ iputils-ping,
  pkg-config,
  mono-sil,
  lfmerge-fdo-__DatabaseVersion__
