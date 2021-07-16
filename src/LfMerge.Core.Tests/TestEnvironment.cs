@@ -170,7 +170,7 @@ namespace LfMerge.Core.Tests
 		{
 			if (string.IsNullOrEmpty(startDir))
 				startDir = ExecutionEnvironment.DirectoryOfExecutingAssembly;
-			while (!Directory.Exists(Path.Combine(startDir, ".git")))
+			while (!Directory.Exists(Path.Combine(startDir, ".git")) && !File.Exists(Path.Combine(startDir, ".git")))
 			{
 				var di = new DirectoryInfo(startDir);
 				if (di.Parent == null) // We've reached the root directory
