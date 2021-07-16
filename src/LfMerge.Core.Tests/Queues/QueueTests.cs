@@ -24,10 +24,7 @@ namespace LfMerge.Core.Tests.Queues
 			{
 			}
 
-			protected override string[] RawQueuedProjects
-			{
-				get { return ProjectsForTesting; }
-			}
+			protected override string[] RawQueuedProjects => ProjectsForTesting;
 
 			public string[] ProjectsForTesting { get; set; }
 		}

@@ -21,9 +21,9 @@ namespace LfMerge.Core.Tests
 			bsonProjectRecordData = BsonSerializer.Deserialize<BsonDocument>(jsonProjectRecordData);
 			bsonOptionListData = BsonSerializer.Deserialize<BsonDocument>(jsonOptionListData);
 			// Semantic domain data is found in $GITROOT/data/semantic-domains/semdom.json
-			string gitRoot = TestEnvironment.FindGitRepoRoot();
-			string semDomFilename = Path.Combine(gitRoot, "data", "semantic-domains", "semdom.json");
-			string jsonSemDomData = File.ReadAllText(semDomFilename);
+			var gitRoot = TestEnvironment.FindGitRepoRoot();
+			var semDomFilename = Path.Combine(gitRoot, "data", "semantic-domains", "semdom.json");
+			var jsonSemDomData = File.ReadAllText(semDomFilename);
 			bsonSemDomData = BsonSerializer.Deserialize<BsonDocument>(jsonSemDomData);
 		}
 

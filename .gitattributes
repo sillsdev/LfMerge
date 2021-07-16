@@ -19,6 +19,7 @@ GitVersion.yml whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabw
 *.Designer.cs -whitespace
 *.vdproj -whitespace
 *.config -whitespace
+*.json -whitespace
 *.settings -whitespace
 *.ReSharper -whitespace
 *.vcxproj -whitespace
@@ -26,6 +27,7 @@ GitVersion.yml whitespace=-indent-with-non-tab,tab-in-indent,trailing-space,tabw
 *.patch -whitespace
 *.svg -whitespace
 *.xml -whitespace
+*.yml -whitespace
 *.bmml -whitespace
 *.DotSettings -whitespace
 *.mdpolicy -whitespace

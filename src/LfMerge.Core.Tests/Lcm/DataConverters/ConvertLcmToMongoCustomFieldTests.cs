@@ -19,12 +19,12 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var lfProject = _lfProj;
 			var converter = new ConvertLcmToMongoCustomField(_cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
-			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			var entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid) as ILexEntry;
 			Assert.That(entry, Is.Not.Null);
 
 			// Exercise
-			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
 
 			// Verify English and french values
 			Assert.That(customDataDocument[0]["customField_entry_Cust_Single_Line_All"].AsBsonDocument.GetElement(0).Value["value"].ToString(),
@@ -41,13 +41,13 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var cache = _cache;
 			var converter = new ConvertLcmToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
-			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			var entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
 			Assert.That(entry, Is.Not.Null);
 
 			// Exercise
-			ILexSense[] senses = entry.SensesOS.ToArray();
-			BsonDocument customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters);
+			var senses = entry.SensesOS.ToArray();
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters);
 
 			// Verify.  (Note, in the fwdata file, the custom item labels are in reverse order)
 			Assert.That(customDataDocument[0].AsBsonDocument["customField_senses_Cust_Multi_ListRef"]["values"][1].ToString(),
@@ -62,10 +62,10 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			// Setup
 			var lfProject = _lfProj;
 			var cache = _cache;
-			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			var entryGuid = Guid.Parse(TestEntryGuidStr);
 			var entry = _servLoc.GetInstance<ILexEntryRepository>().GetObject(entryGuid);
 			Assert.That(entry, Is.Not.Null);
-			ConvertLcmToMongoCustomField converter = new ConvertLcmToMongoCustomField(cache, _servLoc,
+			var converter = new ConvertLcmToMongoCustomField(cache, _servLoc,
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 
 			// Exercise

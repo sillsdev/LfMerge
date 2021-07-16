@@ -127,9 +127,9 @@ namespace LfMerge.Core.Tests
 			sut.SRState = ProcessingState.SendReceiveStates.SYNCING;
 
 			// Have to calculate the expected value AFTER setting the state
-			var expectedJson = string.Format(@"{{
-  ""SRState"": ""{0}"",
-  ""LastStateChangeTicks"": {1},
+			var expectedJson = $@"{{
+  ""SRState"": ""{ProcessingState.SendReceiveStates.SYNCING}"",
+  ""LastStateChangeTicks"": {sut.LastStateChangeTicks},
   ""StartTimestamp"": 0,
   ""PercentComplete"": 50,
   ""ElapsedTimeSeconds"": 10,
@@ -142,7 +142,7 @@ namespace LfMerge.Core.Tests
   ""ErrorCode"": 0,
   ""PreviousRunTotalMilliseconds"": 0,
   ""ProjectCode"": ""proja""
-}}", ProcessingState.SendReceiveStates.SYNCING, sut.LastStateChangeTicks);
+}}";
 
 			// Verify
 			Directory.CreateDirectory(_env.Settings.StateDirectory);

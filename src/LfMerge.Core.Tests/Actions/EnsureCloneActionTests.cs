@@ -288,7 +288,8 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(lfProject.State.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.EmptyProject));
 			Assert.That(lfProject.State.ErrorMessage,
-				Is.EqualTo(string.Format("Recoverable error during initial clone of {0}: Clone failure: new repository with no commits. Clone deleted.", _projectCode)));
+				Is.EqualTo(
+					$"Recoverable error during initial clone of {_projectCode}: Clone failure: new repository with no commits. Clone deleted."));
 		}
 
 		[Test]
@@ -308,7 +309,8 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.ERROR));
 			Assert.That(lfProject.State.ErrorCode, Is.EqualTo((int)ProcessingState.ErrorCodes.NoFlexProject));
 			Assert.That(lfProject.State.ErrorMessage,
-				Is.EqualTo(string.Format("Recoverable error during initial clone of {0}: Clone failure: clone is not a FLEx project: Clone deleted.", _projectCode)));
+				Is.EqualTo(
+					$"Recoverable error during initial clone of {_projectCode}: Clone failure: clone is not a FLEx project: Clone deleted."));
 		}
 
 	}

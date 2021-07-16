@@ -107,7 +107,7 @@ namespace LfMerge.Core.Tests.Lcm
 			var testSubEntry = cache.ServiceLocator.GetObject(Guid.Parse(TestSubEntryGuidStr)) as ILexEntry;
 			Assert.That(testSubEntry, Is.Not.Null);
 			Assert.That(testSubEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath,
-				Is.EqualTo(string.Format("Pictures{0}TestImage.tif", Path.DirectorySeparatorChar)));
+				Is.EqualTo($"Pictures{Path.DirectorySeparatorChar}TestImage.tif"));
 			var kenEntry = cache.ServiceLocator.GetObject(Guid.Parse(KenEntryGuidStr)) as ILexEntry;
 			Assert.That(kenEntry, Is.Not.Null);
 			Assert.That(kenEntry.SensesOS[0].PicturesOS[0].PictureFileRA.InternalPath,
