@@ -11,13 +11,7 @@ namespace LfMerge.Core.Tests
 	{
 		private TestEnvironment _env;
 
-		public override ActionTargets Targets
-		{
-			get
-			{
-				return ActionTargets.Test;
-			}
-		}
+		public override ActionTargets Targets => ActionTargets.Test;
 
 		public override void BeforeTest(ITest testDetails)
 		{

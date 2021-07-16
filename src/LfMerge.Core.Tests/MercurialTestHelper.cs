@@ -12,21 +12,15 @@ namespace LfMerge.Core.Tests
 {
 	public static class MercurialTestHelper
 	{
-		public static string HgCommand
-		{
-			get
-			{
-				return Path.Combine(TestEnvironment.FindGitRepoRoot(), "Mercurial",
-					Platform.IsWindows ? "hg.exe" : "hg");
-			}
-		}
+		public static string HgCommand =>
+			Path.Combine(TestEnvironment.FindGitRepoRoot(), "Mercurial",
+				Platform.IsWindows ? "hg.exe" : "hg");
 
 		private static string RunHgCommand(string repoPath, string args)
 		{
 			var result = CommandLineRunner.Run(HgCommand, args, repoPath, 120, new NullProgress());
 			Assert.That(result.ExitCode, Is.EqualTo(0),
-				string.Format("hg {0} failed.\nStdOut: {1}\nStdErr: {2}",
-					args, result.StandardOutput, result.StandardError));
+				$"hg {args} failed.\nStdOut: {result.StandardOutput}\nStdErr: {result.StandardError}");
 			return result.StandardOutput;
 		}
 
@@ -37,13 +31,14 @@ namespace LfMerge.Core.Tests
 
 			// We have to copy the ini file, otherwise Mercurial won't accept branches that
 			// consists only of digits.
-			string hgini = Path.Combine(TestEnvironment.FindGitRepoRoot(), "Mercurial", "mercurial.ini");
+			var hgini = Path.Combine(TestEnvironment.FindGitRepoRoot(), "Mercurial", "mercurial.ini");
 			var hgrc = Path.Combine(projectFolderPath, ".hg", "hgrc");
 			File.Copy(hgini, hgrc);
 
 			// Adjust hgrc file
-			var parser = new IniDataParser();
-			parser.Configuration.CommentString = "#";
+			var parser = new IniDataParser {
+				Configuration = { CommentString = "#" }
+			};
 			var iniData = parser.Parse(File.ReadAllText(hgrc));
 
 			iniData["extensions"].AddKey("fixutf8", Path.Combine(TestEnvironment.FindGitRepoRoot(),
@@ -55,17 +50,17 @@ namespace LfMerge.Core.Tests
 
 		public static void HgAddFile(string repoPath, string file)
 		{
-			RunHgCommand(repoPath, string.Format("add {0}", file));
+			RunHgCommand(repoPath, $"add {file}");
 		}
 
 		public static void HgCommit(string repoPath, string message)
 		{
-			RunHgCommand(repoPath, string.Format("commit -A -u dummyUser -m \"{0}\"", message));
+			RunHgCommand(repoPath, $"commit -A -u dummyUser -m \"{message}\"");
 		}
 
 		public static void HgCreateBranch(string repoPath, int branchName)
 		{
-			RunHgCommand(repoPath, string.Format("branch -f \"{0}\"", branchName));
+			RunHgCommand(repoPath, $"branch -f \"{branchName}\"");
 		}
 
 		public static void CreateFlexRepo(string lDProjectFolderPath, int modelVersion = 0)
@@ -75,7 +70,7 @@ namespace LfMerge.Core.Tests
 			File.WriteAllText(Path.Combine(lDProjectFolderPath, "FLExProject.CustomProperties"),
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<AdditionalFields/>");
 			File.WriteAllText(Path.Combine(lDProjectFolderPath, "FLExProject.ModelVersion"),
-				string.Format("{{\"modelversion\": {0}}}", modelVersion));
+				$"{{\"modelversion\": {modelVersion}}}");
 
 			HgCommit(lDProjectFolderPath, "Initial commit");
 		}
@@ -83,12 +78,12 @@ namespace LfMerge.Core.Tests
 		public static void CloneRepo(string sourceRepo, string destinationRepo)
 		{
 			Directory.CreateDirectory(destinationRepo);
-			RunHgCommand(destinationRepo, string.Format("clone {0} .", sourceRepo));
+			RunHgCommand(destinationRepo, $"clone {sourceRepo} .");
 		}
 
 		public static void ChangeBranch(string repoPath, string newBranch)
 		{
-			RunHgCommand(repoPath, string.Format("update {0}", newBranch));
+			RunHgCommand(repoPath, $"update {newBranch}");
 		}
 
 		public static string GetRevisionOfWorkingSet(string repoPath)

@@ -15,10 +15,11 @@ namespace LfMerge.Core.Tests
 		public void Setup()
 		{
 			// Don't put these in constructor; constructor is only run once for all tests
-			Dict = new BidirectionalDictionary<string, int>();
-			Dict.Add("one", 1);
-			Dict.Add("two", 2);
-			Dict.Add("three", 3);
+			Dict = new BidirectionalDictionary<string, int> {
+				{ "one", 1 },
+				{ "two", 2 },
+				{ "three", 3 }
+			};
 		}
 
 		[Test]
@@ -56,7 +57,7 @@ namespace LfMerge.Core.Tests
 			Assert.That(found, Is.False);
 			Assert.That(fourInt, Is.EqualTo(default(int)));
 		}
-			
+
 		[Test]
 		public void AddSingleDuplicate_InFirstPosition_WillNotChangeDict()
 		{
@@ -66,8 +67,8 @@ namespace LfMerge.Core.Tests
 			int oneInt = Dict.GetByFirst("one");
 			Assert.That(oneStr, Is.EqualTo("one"));
 			Assert.That(oneInt, Is.EqualTo(1));
-			int fourInt = -9999;
-			bool found = Dict.TryGetValueByFirst("four", out fourInt);
+			var fourInt = -9999;
+			var found = Dict.TryGetValueByFirst("four", out fourInt);
 			Assert.That(found, Is.False);
 			Assert.That(fourInt, Is.EqualTo(default(int)));
 		}
@@ -81,8 +82,8 @@ namespace LfMerge.Core.Tests
 			int oneInt = Dict.GetByFirst("one");
 			Assert.That(oneStr, Is.EqualTo("one"));
 			Assert.That(oneInt, Is.EqualTo(1));
-			string fourStr = "**INVALID**";
-			bool found = Dict.TryGetValueBySecond(4, out fourStr);
+			var fourStr = "**INVALID**";
+			var found = Dict.TryGetValueBySecond(4, out fourStr);
 			Assert.That(found, Is.False);
 			Assert.That(fourStr, Is.EqualTo(default(string)));
 		}
@@ -90,7 +91,7 @@ namespace LfMerge.Core.Tests
 		[Test]
 		public void RemoveKeyValuePair_OfExistingItem_Succeeds()
 		{
-			bool success = ((ICollection<KeyValuePair<string, int>>)Dict).Remove(new KeyValuePair<string, int>("two", 2));
+			var success = ((ICollection<KeyValuePair<string, int>>)Dict).Remove(new KeyValuePair<string, int>("two", 2));
 			Assert.That(success, Is.True);
 		}
 
@@ -106,7 +107,7 @@ namespace LfMerge.Core.Tests
 		[Test]
 		public void RemoveKeyValuePair_OfNonexistentItem_Fails()
 		{
-			bool success = ((ICollection<KeyValuePair<string, int>>)Dict).Remove(new KeyValuePair<string, int>("zwei", 2));
+			var success = ((ICollection<KeyValuePair<string, int>>)Dict).Remove(new KeyValuePair<string, int>("zwei", 2));
 			Assert.That(success, Is.False);
 		}
 
@@ -129,7 +130,7 @@ namespace LfMerge.Core.Tests
 		[Test]
 		public void Keys_ReturnsAllThreeKeys()
 		{
-			List<string> keys = new List<string>(Dict.Keys);
+			var keys = new List<string>(Dict.Keys);
 			keys.Sort(StringComparer.InvariantCulture);
 			Assert.That(keys, Is.EquivalentTo(new string[] { "one", "three", "two" }));
 		}
@@ -138,7 +139,7 @@ namespace LfMerge.Core.Tests
 		public void Keys_AfterDeletionByFirst_ReturnsTwoKeys()
 		{
 			Dict.RemoveByFirst("two");
-			List<string> keys = new List<string>(Dict.Keys);
+			var keys = new List<string>(Dict.Keys);
 			keys.Sort(StringComparer.InvariantCulture);
 			Assert.That(keys, Is.EquivalentTo(new string[] { "one", "three" }));
 		}
@@ -147,7 +148,7 @@ namespace LfMerge.Core.Tests
 		public void Keys_AfterDeletionBySecond_ReturnsTwoKeys()
 		{
 			Dict.RemoveBySecond(2);
-			List<string> keys = new List<string>(Dict.Keys);
+			var keys = new List<string>(Dict.Keys);
 			keys.Sort(StringComparer.InvariantCulture);
 			Assert.That(keys, Is.EquivalentTo(new string[] { "one", "three" }));
 		}
@@ -156,7 +157,7 @@ namespace LfMerge.Core.Tests
 		public void Keys_AfterInsertion_ReturnsFourKeys()
 		{
 			Dict.Add("four", 4);
-			List<string> keys = new List<string>(Dict.Keys);
+			var keys = new List<string>(Dict.Keys);
 			keys.Sort(StringComparer.InvariantCulture);
 			Assert.That(keys, Is.EquivalentTo(new string[] { "four", "one", "three", "two" }));
 		}
@@ -164,7 +165,7 @@ namespace LfMerge.Core.Tests
 		[Test]
 		public void Values_ReturnsAllThreeValues()
 		{
-			List<int> values = new List<int>(Dict.Values);
+			var values = new List<int>(Dict.Values);
 			values.Sort();
 			Assert.That(values, Is.EquivalentTo(new int[] { 1, 2, 3 }));
 		}
@@ -173,7 +174,7 @@ namespace LfMerge.Core.Tests
 		public void Values_AfterDeletionByFirst_ReturnsTwoValues()
 		{
 			Dict.RemoveByFirst("two");
-			List<int> keys = new List<int>(Dict.Values);
+			var keys = new List<int>(Dict.Values);
 			keys.Sort();
 			Assert.That(keys, Is.EquivalentTo(new int[] { 1, 3 }));
 		}
@@ -182,7 +183,7 @@ namespace LfMerge.Core.Tests
 		public void Values_AfterDeletionBySecond_ReturnsTwoValues()
 		{
 			Dict.RemoveBySecond(2);
-			List<int> keys = new List<int>(Dict.Values);
+			var keys = new List<int>(Dict.Values);
 			keys.Sort();
 			Assert.That(keys, Is.EquivalentTo(new int[] { 1, 3 }));
 		}
@@ -191,7 +192,7 @@ namespace LfMerge.Core.Tests
 		public void Values_AfterInsertion_ReturnsFourValues()
 		{
 			Dict.Add("four", 4);
-			List<int> keys = new List<int>(Dict.Values);
+			var keys = new List<int>(Dict.Values);
 			keys.Sort();
 			Assert.That(keys, Is.EquivalentTo(new int[] { 1, 2, 3, 4 }));
 		}
