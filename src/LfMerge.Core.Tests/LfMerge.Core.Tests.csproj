@@ -39,6 +39,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FixFwData\FixFwData.csproj" />
     <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj" />
   </ItemGroup>
 </Project>
