@@ -9,7 +9,6 @@
 		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
 		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
 		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
-		<NUnitVersion>2.6.4</NUnitVersion>
 		<RestartBuild Condition="!Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') Or !Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') Or !Exists('$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console.exe')">true</RestartBuild>
 		<RestartBuild Condition="Exists('$(RootDir)/packages/MSBuildTasks/tools/MSBuild.Community.Tasks.dll') And Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll') And Exists('$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console.exe')">false</RestartBuild>
 		<TestOutputXmlFile Condition="'$(teamcity_version)' == ''">$(RootDir)/output/$(Configuration)/TestResults.xml</TestOutputXmlFile>
