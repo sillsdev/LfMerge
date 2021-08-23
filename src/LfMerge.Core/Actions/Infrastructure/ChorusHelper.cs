@@ -13,7 +13,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 		static ChorusHelper()
 		{
 			Username = "x";
-			Password = "x";
+			Password = System.Environment.GetEnvironmentVariable("LD_TRUST_TOKEN") ?? "x";
 		}
 
 		public virtual string GetSyncUri(ILfProject project)
@@ -27,10 +27,6 @@ namespace LfMerge.Core.Actions.Infrastructure
 				Password = Password,
 				Path = HttpUtilityFromMono.UrlEncode(project.LanguageDepotProject.Identifier)
 			};
-			var trustToken = System.Environment.GetEnvironmentVariable("LD_TRUST_TOKEN");
-			if (!string.IsNullOrEmpty(trustToken)) {
-				uriBldr.Query = $"trust_token={trustToken}";
-			}
 			return uriBldr.Uri.ToString();
 		}
 
