@@ -6,7 +6,7 @@
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
-DEFAULT_MONO_PREFIX=/usr
+DEFAULT_MONO_PREFIX=/opt/mono5-sil
 [ -z "$BUILD" ] && BUILD=Debug
 [ -z "$MONO_PREFIX" ] && MONO_PREFIX=${DEFAULT_MONO_PREFIX}
 
