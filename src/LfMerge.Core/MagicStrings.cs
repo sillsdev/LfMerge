@@ -11,6 +11,11 @@ namespace LfMerge.Core
 			MinimalModelVersion = 7000068;
 		}
 
+		// Environment variables used by LfMerge
+		public const string EnvVar_LoggingDest = "LFMERGE_LOGGING_DEST";
+		public const string EnvVar_LoggingDestination = "LFMERGE_LOGGING_DESTINATION";
+		public const string EnvVar_LoggingStderrTreshhold = "LFMERGE_LOGGING_STDERR_THRESHHOLD";
+
 		public static Dictionary<string, string> LcmOptionlistNames = new Dictionary<string, string>()
 		{
 			// Option lists that are currently used in LF (as of 2016-03-01)
