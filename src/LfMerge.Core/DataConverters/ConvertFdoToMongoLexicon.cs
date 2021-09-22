@@ -613,9 +613,9 @@ namespace LfMerge.Core.DataConverters
 				};
 
 				#if FW8_COMPAT
-				lfWsList.Add(fdoWs.Id, lfWs);
+				lfWsList[fdoWs.Id] = lfWs;
 				#else
-				lfWsList.Add(fdoWs.LanguageTag, lfWs);
+				lfWsList[fdoWs.LanguageTag] = lfWs;
 				#endif
 			}
 			return lfWsList;
