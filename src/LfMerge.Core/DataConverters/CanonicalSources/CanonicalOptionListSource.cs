@@ -36,6 +36,8 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 				return new CanonicalPartOfSpeechSource();
 			else if (listCode == MagicStrings.LfOptionListCodeForSemanticDomains)
 				return new CanonicalSemanticDomainSource();
+			else if (listCode == MagicStrings.LfOptionListCodeForLfTags)
+				return new CanonicalLfTagSource();
 			else
 				return null;
 		}

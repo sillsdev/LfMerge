@@ -16,6 +16,7 @@ namespace LfMerge.Core
 			// Option lists that are currently used in LF (as of 2016-03-01)
 			{ LfOptionListCodeForGrammaticalInfo, "Part of Speech" },
 			{ LfOptionListCodeForSemanticDomains, "Semantic Domain" },
+			{ LfOptionListCodeForLfTags, "LF Tags" },
 			{ LfOptionListCodeForAcademicDomainTypes, "Academic Domains" },
 			{ LfOptionListCodeForEnvironments, "Environments" },
 			{ LfOptionListCodeForLocations, "Location" },
@@ -44,6 +45,7 @@ namespace LfMerge.Core
 		// Option lists that are currently used in LF (as of 2016-03-01)
 		public const string LfOptionListCodeForGrammaticalInfo = "grammatical-info";
 		public const string LfOptionListCodeForSemanticDomains = "semantic-domain-ddp4";
+		public const string LfOptionListCodeForLfTags = "lf-entry-tags";
 		public const string LfOptionListCodeForAcademicDomainTypes = "domain-type";
 		public const string LfOptionListCodeForEnvironments = "environments";
 		public const string LfOptionListCodeForLocations = "location";
