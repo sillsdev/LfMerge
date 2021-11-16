@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LfTagList>
-  <item type="category" id="star" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="star" guid="6dd9aa6b-de10-459e-b563-f50e8a7b9da0">
     <abbrev ws="en">★</abbrev>
     <abbrev ws="es">★</abbrev>
     <abbrev ws="fr">★</abbrev>
@@ -26,7 +26,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="red" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="red" guid="75c8515d-3f21-4141-99d0-ac8ecca06e1b">
     <abbrev ws="en">red</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">rouge</abbrev>
@@ -52,7 +52,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="yellow" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="yellow" guid="acf6a418-fb50-4144-a1c7-44d1415f8743">
     <abbrev ws="en">yellow</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">jaune</abbrev>
@@ -78,7 +78,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="green" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="green" guid="7e440bb3-e3e8-4066-b740-20584cab8598">
     <abbrev ws="en">green</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">vert</abbrev>
@@ -104,7 +104,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="blue" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="blue" guid="660b6299-8eab-41f6-a1f6-b2b5b0f5a9b3">
     <abbrev ws="en">blue</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">bleu</abbrev>
@@ -130,7 +130,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="purple" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="purple" guid="b7b36374-a833-4376-984d-51ca9c08ec73">
     <abbrev ws="en">purple</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">violet</abbrev>
@@ -156,7 +156,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="brown" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="brown" guid="5c01207f-7b89-4a0e-ab3f-8980344c46ab">
     <abbrev ws="en">brown</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">marron</abbrev>
@@ -182,7 +182,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="lightgray" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="lightgray" guid="be6ec356-37c1-40a4-8adf-605c93bf2022">
     <abbrev ws="en">lt. gray</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">gris cl.</abbrev>
@@ -208,7 +208,7 @@
     <def ws="ru"/>
     <def ws="id"/>
   </item>
-  <item type="category" id="darkgray" guid="11111111-2222-3333-4444-5678cdef1234">
+  <item type="category" id="darkgray" guid="47fdcf50-7594-4318-a83d-b4df294903c2">
     <abbrev ws="en">dk. gray</abbrev>
     <abbrev ws="es"/>
     <abbrev ws="fr">gris f.</abbrev>
