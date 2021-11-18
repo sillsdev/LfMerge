@@ -51,6 +51,7 @@ namespace LfMerge.Core.DataConverters
 		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
 		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
 		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+		private const string LfTagsListCode = MagicStrings.LfOptionListCodeForLfTags;
 
 		private IDictionary<string, ConvertMongoToLcmOptionList> ListConverters;
 
@@ -83,6 +84,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
+			ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
 
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 
@@ -112,7 +114,36 @@ namespace LfMerge.Core.DataConverters
 		{
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
 			return new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
-				optionListToConvert, Logger, CanonicalOptionListSource.Create(listCode));
+				optionListToConvert, Logger, null, 0, CanonicalOptionListSource.Create(listCode));
+		}
+
+		private ConvertMongoToLcmOptionList PrepareOptionListConverterFromCanonicalSource(string listCode)
+		{
+			// lf-tags custom field needs special handling
+			// 1. Check if parent list for LF Tags already exists in LCM
+			// 2. Create it if it doesn't, using canonical source data
+
+			CanonicalLfTagSource canonicalSource = (CanonicalLfTagSource)CanonicalOptionListSource.Create(listCode);
+			// TODO: That's hard-coded for LfTags list. Handle it way better in the future by making it able to handle other lists.
+			// I.e., move the method up into the parent, and skip it for lists that we shouldn't necessarily create (semantic domains, grammatical categories)
+			ICmPossibilityList possList = canonicalSource?.EnsureLcmPossibilityListExists(
+				ServiceLocator,
+				new System.Guid(MagicStrings.LcmCustomFieldGuidForLfTags),
+				MagicStrings.LcmCustomFieldNameForLfTags,
+				_wsEn
+			);
+
+			// 3. Check if custom field already exists in LCM
+			// 4. Create it if it doesn't, using parent list that is now guaranteed to exist
+
+			// TODO: Implement using some of the following methods:
+			// int AddCustomField(string className, string fieldName, CellarPropertyType fieldType, int destinationClass, string fieldHelp, int fieldWs, Guid fieldListRoot);
+			// bool FieldExists(int classId, string fieldName, bool includeBaseClasses);
+			// bool FieldExists(string className, string fieldName, bool includeBaseClasses);
+			// bool FieldExists(int flid);
+
+			return new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
+				null, Logger, possList, _wsEn, CanonicalOptionListSource.Create(listCode));
 		}
 
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the function
@@ -569,6 +600,10 @@ namespace LfMerge.Core.DataConverters
 
 			// lfEntry.Senses -> LcmEntry.SensesOS
 			SetLcmListFromLfList(LcmEntry, LcmEntry.SensesOS, lfEntry.Senses, LfSenseToLcmSense);
+
+			// TODO: Handle lf-tags custom field with something like the following
+			// ListConverters[AnthroCodeListCode].UpdatePossibilitiesFromStringArray(LcmSense.AnthroCodesRC,
+			// 	lfSense.AnthropologyCategories);
 
 			_convertCustomField.SetCustomFieldsForThisCmObject(LcmEntry, "entry", lfEntry.CustomFields,
 				lfEntry.CustomFieldGuids);

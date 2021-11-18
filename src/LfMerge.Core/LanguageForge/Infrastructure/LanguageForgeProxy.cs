@@ -27,6 +27,20 @@ namespace LfMerge.Core.LanguageForge.Infrastructure
 			return RunClass(className, methodName, parameters, isTest);
 		}
 
+		public string UpdateCustomFieldViewsNonProxied(string projectCode, List<CustomFieldSpec> customFieldSpecs) {
+			return UpdateCustomFieldViewsNonProxied(projectCode, customFieldSpecs, false);
+		}
+
+		public string UpdateCustomFieldViewsNonProxied(string projectCode, List<CustomFieldSpec> customFieldSpecs, bool isTest)
+		{
+			const string className = "Api\\Model\\Languageforge\\Lexicon\\Command\\LexProjectCommands";
+			const string methodName = "updateCustomFieldViews";
+			var parameters = new List<Object>();
+			parameters.Add(projectCode);
+			parameters.Add(customFieldSpecs);
+			return RunClass(className, methodName, parameters, isTest);
+		}
+
 		public string ListUsers()
 		{
 			const string className = "Api\\Model\\Command\\UserCommands";

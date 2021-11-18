@@ -26,10 +26,7 @@ namespace LfMerge.Core.DataConverters
 
 		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
 
-		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
 		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
-		#endif
-		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, CanonicalOptionListSource canonicalSource = null)
 		{
 			_possRepo = possRepo;
 			_logger = logger;
@@ -77,7 +74,6 @@ namespace LfMerge.Core.DataConverters
 			return null;
 		}
 
-		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 		public ICmPossibility CreateFromCanonicalItem(CanonicalItem item)
 		{
 			if (item.Parent != null)
@@ -91,7 +87,15 @@ namespace LfMerge.Core.DataConverters
 			PossibilitiesByKey[item.Key] = poss;
 			return poss;
 		}
-		#endif
+
+		public ICmPossibility FindOrCreateFromCanonicalItem(CanonicalItem item)
+		{
+			ICmPossibility poss = LookupByCanonicalItem(item);
+			if (poss == null) {
+				poss = CreateFromCanonicalItem(item);
+			}
+			return poss;
+		}
 
 		public ICmPossibility FromStringField(LfStringField keyField)
 		{

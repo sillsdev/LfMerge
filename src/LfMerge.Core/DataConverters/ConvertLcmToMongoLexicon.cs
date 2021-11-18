@@ -43,6 +43,7 @@ namespace LfMerge.Core.DataConverters
 		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
 		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
 		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+		private const string LfTagsListCode = MagicStrings.LfOptionListCodeForLfTags;
 
 		private IDictionary<string, ConvertLcmToMongoOptionList> ListConverters;
 
@@ -83,6 +84,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[SenseTypeListCode] = ConvertOptionListFromLcm(LfProject, SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromLcm(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromLcm(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
+			// ListConverters[LfTagsListCode] = ConvertOptionListFromLcm(LfProject, StatusListCode, null);  // Don't do this after all. This one needs special handling.
 
 			_convertCustomField = new ConvertLcmToMongoCustomField(Cache, ServiceLocator, logger);
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in _convertCustomField.GetCustomFieldParentLists())
