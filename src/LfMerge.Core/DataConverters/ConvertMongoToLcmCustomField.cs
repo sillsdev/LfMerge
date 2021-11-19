@@ -356,13 +356,14 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public void SetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType, BsonDocument customFieldValues, BsonDocument customFieldGuids)
+		public void SetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType, BsonDocument customFieldValues, BsonDocument customFieldGuids, params int[] customFieldIdsToSkip)
 		{
 			if (customFieldValues == null) return;
 
 			IEnumerable<int> customFieldIds =
 				lcmMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
-				.Where(flid => cache.GetIsCustomField(flid));
+				.Where(flid => cache.GetIsCustomField(flid))
+				.Where(flid => !customFieldIdsToSkip.Contains(flid));
 
 			var remainingFieldNames = new HashSet<string>(customFieldValues.Select(elem => elem.Name));
 			foreach (int flid in customFieldIds)

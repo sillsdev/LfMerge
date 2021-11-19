@@ -12,6 +12,7 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.LCModel;
+using SIL.LCModel.Application;
 using SIL.LCModel.Core.KernelInterfaces;
 using SIL.LCModel.Core.WritingSystems;
 using SIL.LCModel.DomainServices;
@@ -38,6 +39,7 @@ namespace LfMerge.Core.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToLcmCustomField _convertCustomField;
+		private int _lfTagsFieldId;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
@@ -87,7 +89,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 			ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
-			int lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
+			_lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
@@ -610,8 +612,10 @@ namespace LfMerge.Core.DataConverters
 			// ListConverters[AnthroCodeListCode].UpdatePossibilitiesFromStringArray(LcmSense.AnthroCodesRC,
 			// 	lfSense.AnthropologyCategories);
 
+			SetLcmCustomFieldFromLfStringArrayField(LcmEntry, _lfTagsFieldId, lfEntry.Tags);
+
 			_convertCustomField.SetCustomFieldsForThisCmObject(LcmEntry, "entry", lfEntry.CustomFields,
-				lfEntry.CustomFieldGuids);
+				lfEntry.CustomFieldGuids, _lfTagsFieldId);
 
 			// If we got this far, we either created or modified this entry
 			if (createdEntry)
@@ -821,6 +825,16 @@ namespace LfMerge.Core.DataConverters
 				}
 				i++;
 			}
+		}
+
+		private void SetLcmCustomFieldFromLfStringArrayField(ILexEntry lcmEntry, int flid, LfStringArrayField keys)
+		{
+			if (keys == null || keys.Values == null) return;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)Cache.DomainDataByFlid;
+			int[] oldHvos = data.VecProp(lcmEntry.Hvo, flid);
+			var possibilities = ListConverters[LfTagsListCode].FromStringArrayField<ICmPossibility>(keys);
+			int[] newHvos = possibilities.Select(poss => poss.Hvo).ToArray();
+			ConvertUtilities.ReplaceHvosInCustomField(lcmEntry.Hvo, flid, data, oldHvos, newHvos);
 		}
 
 		private Guid GuidFromLiftId(string liftId)
