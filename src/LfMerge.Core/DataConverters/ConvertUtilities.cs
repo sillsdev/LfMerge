@@ -6,6 +6,7 @@ using System.Linq;
 using LfMerge.Core.LanguageForge.Model;
 using MongoDB.Bson;
 using SIL.LCModel;
+using SIL.LCModel.Application;
 using SIL.LCModel.Core.KernelInterfaces;
 using SIL.LCModel.Core.WritingSystems;
 
@@ -37,6 +38,41 @@ namespace LfMerge.Core.DataConverters
 			lfPara.StyleName = lcmPara.StyleName;
 			lfPara.Content = ConvertLcmToMongoTsStrings.TextFromTsString(lcmPara.Contents, wsf);
 			return lfPara;
+		}
+
+		public static bool ReplaceHvosInCustomField(int hvo, int flid, ISilDataAccessManaged data, int[] oldArray, int[] newArray)
+		{
+			// Shortcut check
+			if (oldArray.SequenceEqual(newArray))
+			{
+				// Nothing to do, so return now so that we don't cause unnecessary changes and commits in Mercurial
+				return false;
+			}
+			// HashSets for O(1) lookup. Might be overkill, but better safe than sorry
+			var newHvos = new HashSet<int>(newArray);
+			var combinedHvos = new HashSet<int>();
+
+			// Step 1: Remove any objects from the "old" list that weren't in the "new" list
+			// Loop backwards so deleting items won't mess up indices of subsequent deletions
+			for (int idx = oldArray.Length - 1; idx >= 0; idx--)
+			{
+				int oldHvo = oldArray[idx];
+				if (newHvos.Contains(oldHvo))
+					combinedHvos.Add(oldHvo);
+				else
+					data.Replace(hvo, flid, idx, idx + 1, null, 0); // Important to pass *both* null *and* 0 here to remove items
+			}
+
+			// Step 2: Add any objects from the "new" list that weren't in the "old" list
+			foreach (int newHvo in newArray)
+			{
+				if (combinedHvos.Contains(newHvo))
+					continue;
+				// This item was added in the new list
+				data.Replace(hvo, flid, combinedHvos.Count, combinedHvos.Count, new int[] { newHvo }, 1);
+				combinedHvos.Add(newHvo);
+			}
+			return true;
 		}
 
 		/// <summary>

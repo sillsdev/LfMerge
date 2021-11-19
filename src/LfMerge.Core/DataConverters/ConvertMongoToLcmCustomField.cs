@@ -321,39 +321,11 @@ namespace LfMerge.Core.DataConverters
 					// 	String.Join(", ", keysFromLF.AsEnumerable()),
 					// 	String.Join(", ", fieldObjs.Select(poss => poss.AbbrAndName))
 					// );
-					// Step 2: Remove any objects from the "old" list that weren't in the "new" list
-					// We have to look them up by HVO because that's the only public API available in LCM
-					// Following logic inspired by XmlImportData.CopyCustomFieldData in FieldWorks source
+
+					// We have to replace objects by HVO because that's the only public API available in LCM
 					int[] oldHvosArray = data.VecProp(hvo, flid);
 					int[] newHvosArray = fieldObjs.Select(poss => poss.Hvo).ToArray();
-					// Shortcut check
-					if (oldHvosArray.SequenceEqual(newHvosArray))
-					{
-						// Nothing to do, so return now so that we don't cause unnecessary changes and commits in Mercurial
-						return false;
-					}
-					HashSet<int> newHvos = new HashSet<int>(newHvosArray);
-					HashSet<int> combinedHvos = new HashSet<int>();
-					// Loop backwards so deleting items won't mess up indices of subsequent deletions
-					for (int idx = oldHvosArray.Length - 1; idx >= 0; idx--)
-					{
-						int oldHvo = oldHvosArray[idx];
-						if (newHvos.Contains(oldHvo))
-							combinedHvos.Add(oldHvo);
-						else
-							data.Replace(hvo, flid, idx, idx + 1, null, 0); // Important to pass *both* null *and* 0 here to remove items
-					}
-
-					// Step 3: Add any objects from the "new" list that weren't in the "old" list
-					foreach (int newHvo in newHvosArray)
-					{
-						if (combinedHvos.Contains(newHvo))
-							continue;
-						// This item was added in the new list
-						data.Replace(hvo, flid, combinedHvos.Count, combinedHvos.Count, new int[] { newHvo }, 1);
-						combinedHvos.Add(newHvo);
-					}
-					return true;
+					return ConvertUtilities.ReplaceHvosInCustomField(hvo, flid, data, oldHvosArray, newHvosArray);
 				}
 
 			case CellarPropertyType.String:
