@@ -244,7 +244,7 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="listConverters">Dictionary of ConvertLcmToMongoOptionList instances, keyed by list code</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
 			IDictionary<string, ConvertLcmToMongoOptionList> listConverters,
-			string[] fieldNamesToSkip)
+			params string[] fieldNamesToSkip)
 		{
 			if (cmObj == null) return null;
 

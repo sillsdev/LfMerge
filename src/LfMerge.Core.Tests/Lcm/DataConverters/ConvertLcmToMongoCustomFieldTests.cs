@@ -24,7 +24,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(entry, Is.Not.Null);
 
 			// Exercise
-			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters, Array.Empty<string>());
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
 
 			// Verify English and french values
 			Assert.That(customDataDocument[0]["customField_entry_Cust_Single_Line_All"].AsBsonDocument.GetElement(0).Value["value"].ToString(),
@@ -47,7 +47,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 
 			// Exercise
 			var senses = entry.SensesOS.ToArray();
-			var customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters, Array.Empty<string>());
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(senses[0], "senses", _listConverters);
 
 			// Verify.  (Note, in the fwdata file, the custom item labels are in reverse order)
 			Assert.That(customDataDocument[0].AsBsonDocument["customField_senses_Cust_Multi_ListRef"]["values"][1].ToString(),
@@ -69,7 +69,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				new TestLogger(TestContext.CurrentContext.Test.Name));
 
 			// Exercise
-			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters, Array.Empty<string>());
+			var customDataDocument = converter.GetCustomFieldsForThisCmObject(entry, "entry", _listConverters);
 
 			// Verify
 			var expectedCustomFieldNames = new List<string>
