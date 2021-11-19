@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LfMerge.Core.DataConverters.CanonicalSources;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using SIL.LCModel;
@@ -19,10 +20,8 @@ namespace LfMerge.Core.DataConverters
 		protected LfOptionList _lfOptionList;
 		protected ILogger _logger;
 		protected CanonicalOptionListSource _canonicalSource;
-		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 		protected int _wsForKeys;
 		protected ICmPossibilityList _parentList;
-		#endif
 
 		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
 
@@ -30,10 +29,8 @@ namespace LfMerge.Core.DataConverters
 		{
 			_possRepo = possRepo;
 			_logger = logger;
-			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 			_parentList = parentList;
 			_wsForKeys = wsForKeys;
-			#endif
 			_canonicalSource = canonicalSource;
 			RebuildLookupTables(lfOptionList);
 		}
@@ -95,6 +92,26 @@ namespace LfMerge.Core.DataConverters
 				poss = CreateFromCanonicalItem(item);
 			}
 			return poss;
+		}
+
+		public ICmPossibilityList EnsureLcmPossibilityListExists(CanonicalOptionListSource canonicalSource, FwServiceLocatorCache serviceLocator, System.Guid parentListGuid, string listName) {
+			if (canonicalSource.Count == 0) {
+				canonicalSource.LoadCanonicalData();
+			}
+			var repo = serviceLocator.GetInstance<ICmPossibilityListRepository>();
+			var listFactory = serviceLocator.GetInstance<ICmPossibilityListFactory>();
+			var guid = new System.Guid(MagicStrings.LcmOptionListGuidForLfTags);
+			if (_parentList == null) {
+				if (!repo.TryGetObject(guid, out _parentList)) {
+					_parentList = listFactory.CreateUnowned(guid, MagicStrings.LcmCustomFieldNameForLfTags, _wsForKeys);
+				}
+			}
+			foreach (var item in canonicalSource.ValuesByKey)
+			{
+				this.FindOrCreateFromCanonicalItem(item);
+			}
+			// TODO: Write acceptance test that verifies that a CmPossibilityList with the right GUID gets created and populated.
+			return _parentList;  // TODO: May not be necessary now
 		}
 
 		public ICmPossibility FromStringField(LfStringField keyField)

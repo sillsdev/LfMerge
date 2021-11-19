@@ -75,6 +75,8 @@ namespace LfMerge.Core.DataConverters
 			//_analysisWritingSystems = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
 			//_vernacularWritingSystems = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
 
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+
 			ListConverters = new Dictionary<string, ConvertMongoToLcmOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
 			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode);
@@ -85,8 +87,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
 			ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
-
-			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+			int lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
@@ -119,31 +120,35 @@ namespace LfMerge.Core.DataConverters
 
 		private ConvertMongoToLcmOptionList PrepareOptionListConverterFromCanonicalSource(string listCode)
 		{
-			// lf-tags custom field needs special handling
 			// 1. Check if parent list for LF Tags already exists in LCM
 			// 2. Create it if it doesn't, using canonical source data
 
-			CanonicalLfTagSource canonicalSource = (CanonicalLfTagSource)CanonicalOptionListSource.Create(listCode);
-			// TODO: That's hard-coded for LfTags list. Handle it way better in the future by making it able to handle other lists.
-			// I.e., move the method up into the parent, and skip it for lists that we shouldn't necessarily create (semantic domains, grammatical categories)
-			ICmPossibilityList possList = canonicalSource?.EnsureLcmPossibilityListExists(
+			var canonicalSource = CanonicalOptionListSource.Create(listCode);
+			var converter = new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
+				null, Logger, null, _wsEn, canonicalSource);
+			ICmPossibilityList parentList = converter.EnsureLcmPossibilityListExists(
+				canonicalSource,
 				ServiceLocator,
-				new System.Guid(MagicStrings.LcmCustomFieldGuidForLfTags),
-				MagicStrings.LcmCustomFieldNameForLfTags,
-				_wsEn
+				new System.Guid(MagicStrings.LcmOptionListGuidForLfTags),
+				MagicStrings.LcmCustomFieldNameForLfTags
 			);
 
-			// 3. Check if custom field already exists in LCM
-			// 4. Create it if it doesn't, using parent list that is now guaranteed to exist
+			return converter;
+		}
 
-			// TODO: Implement using some of the following methods:
-			// int AddCustomField(string className, string fieldName, CellarPropertyType fieldType, int destinationClass, string fieldHelp, int fieldWs, Guid fieldListRoot);
-			// bool FieldExists(int classId, string fieldName, bool includeBaseClasses);
-			// bool FieldExists(string className, string fieldName, bool includeBaseClasses);
-			// bool FieldExists(int flid);
+		private int EnsureCustomFieldExists(Guid parentListGuid, string name)
+		{
+			// 1. Check if custom field already exists in LCM
+			// 2. Create it if it doesn't, using parent list that is now guaranteed to exist
 
-			return new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
-				null, Logger, possList, _wsEn, CanonicalOptionListSource.Create(listCode));
+			var mdc = ServiceLocator.MetaDataCache;
+			int flid = 0;
+			if (mdc.FieldExists("LexEntry", name, false)) {
+				flid = mdc.GetFieldId("LexEntry", name, false);
+			} else {
+				flid = mdc.AddCustomField("LexEntry", name, SIL.LCModel.Core.Cellar.CellarPropertyType.ReferenceCollection, CmPossibilityTags.kClassId, "Internal Language Forge field - do not edit", _wsEn, parentListGuid);
+			}
+			return flid;
 		}
 
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the function

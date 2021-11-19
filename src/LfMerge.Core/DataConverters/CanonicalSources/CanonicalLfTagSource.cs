@@ -25,12 +25,12 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 			}
 			var repo = serviceLocator.GetInstance<ICmPossibilityListRepository>();
 			var listFactory = serviceLocator.GetInstance<ICmPossibilityListFactory>();
-			var guid = new System.Guid(MagicStrings.LcmCustomFieldGuidForLfTags);
+			var guid = new System.Guid(MagicStrings.LcmOptionListGuidForLfTags);
 			ICmPossibilityList possList;
-			if (!repo.TryGetObject(guid, out possList) {
+			if (!repo.TryGetObject(guid, out possList)) {
 				possList = listFactory.CreateUnowned(guid, MagicStrings.LcmCustomFieldNameForLfTags, wsForKeys);
 			}
-			var converter = new ConvertMongoToLcmOptionList(serviceLocator.GetInstance<ICmPossibilityRepository>(), null, null, possList, wsEn, this);
+			var converter = new ConvertMongoToLcmOptionList(serviceLocator.GetInstance<ICmPossibilityRepository>(), null, null, possList, wsForKeys, this);
 			foreach (KeyValuePair<string,CanonicalItem> item in this.byKey)
 			{
 				converter.FindOrCreateFromCanonicalItem(item.Value);

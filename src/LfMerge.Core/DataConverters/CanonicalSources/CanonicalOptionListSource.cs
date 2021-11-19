@@ -73,6 +73,10 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 			return (result != null);
 		}
 
+		public Dictionary<Guid, CanonicalItem>.ValueCollection ValuesByGuid => this.byGuid.Values;
+		public Dictionary<string, CanonicalItem>.ValueCollection ValuesByKey => this.byKey.Values;
+		public int Count => this.byGuid.Count;
+
 		// Descendants will override this to specify the generic type T.
 		// E.g., LoadCanonicalData<CanonicalPartOfSpeechItem>();
 		public abstract void LoadCanonicalData();

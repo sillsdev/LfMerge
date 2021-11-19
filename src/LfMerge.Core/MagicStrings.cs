@@ -93,7 +93,7 @@ namespace LfMerge.Core
 
 		// Custom fields that we reserve for LF use in Send/Receive FLEx projects
 		public const string LcmCustomFieldNameForLfTags = "LF_Tags";
-		public const string LcmCustomFieldGuidForLfTags = "6d9b3052-195b-46cb-a300-e8598e59fed5";
+		public const string LcmOptionListGuidForLfTags = "6d9b3052-195b-46cb-a300-e8598e59fed5";
 
 		// FW strings
 		public const string FwFixitAppName = "FixFwData.exe";
