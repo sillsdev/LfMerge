@@ -11,6 +11,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using MongoDB.Bson;
 using SIL.LCModel;
+using SIL.LCModel.Application;
 using SIL.LCModel.Core.KernelInterfaces;
 using SIL.Progress;
 
@@ -84,7 +85,13 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[SenseTypeListCode] = ConvertOptionListFromLcm(LfProject, SenseTypeListCode, ServiceLocator.LanguageProject.LexDbOA.SenseTypesOA);
 			ListConverters[AnthroCodeListCode] = ConvertOptionListFromLcm(LfProject, AnthroCodeListCode, ServiceLocator.LanguageProject.AnthroListOA);
 			ListConverters[StatusListCode] = ConvertOptionListFromLcm(LfProject, StatusListCode, ServiceLocator.LanguageProject.StatusOA);
-			// ListConverters[LfTagsListCode] = ConvertOptionListFromLcm(LfProject, StatusListCode, null);  // Don't do this after all. This one needs special handling.
+
+			// Custom field "LF Tags" in LCM needs special handling
+			var lfTagsListGuid = new System.Guid(MagicStrings.LcmOptionListGuidForLfTags);
+			var possibilityListRepo = ServiceLocator.GetInstance<ICmPossibilityListRepository>();
+			if (possibilityListRepo.TryGetObject(lfTagsListGuid, out var possibilityList)) {
+				ListConverters[LfTagsListCode] = ConvertOptionListFromLcm(LfProject, LfTagsListCode, possibilityList, updateMongoList: false);
+			}
 
 			_convertCustomField = new ConvertLcmToMongoCustomField(Cache, ServiceLocator, logger);
 			foreach (KeyValuePair<string, ICmPossibilityList> pair in _convertCustomField.GetCustomFieldParentLists())
@@ -171,6 +178,22 @@ namespace LfMerge.Core.DataConverters
 		private T GetInstance<T>() where T : class
 		{
 			return ServiceLocator.GetInstance<T>();
+		}
+
+		// TODO: This is fine for entries, but it should eventually be more generic so it can handle senses and examples
+		private LfStringArrayField StringArrayFieldFromCustomField(string listCode, ILexEntry entry, string fieldName) {
+			var result = Array.Empty<string>();
+			int flid = Cache.MetaDataCacheAccessor.GetFieldId("LexEntry", fieldName, false);
+			if (flid != 0) {
+				ISilDataAccessManaged data = (ISilDataAccessManaged)Cache.DomainDataByFlid;
+				int[] hvos = data.VecProp(entry.Hvo, flid);
+				var possibilities = hvos
+					.Where(hvo => data.get_IsValidObject(hvo))
+					.Select(hvo => Cache.GetAtomicPropObject(hvo))
+					.OfType<ICmPossibility>();
+				return ToStringArrayField(listCode, possibilities);
+			}
+			return null;
 		}
 
 		private LfMultiText ToMultiText(IMultiAccessorBase LcmMultiString)
@@ -309,6 +332,8 @@ namespace LfMerge.Core.DataConverters
 				lfEntry.Senses = new List<LfSense>();
 			lfEntry.Senses.AddRange(LcmEntry.SensesOS.Select(LcmSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(LcmEntry.SummaryDefinition);
+
+			lfEntry.Tags = StringArrayFieldFromCustomField(LfTagsListCode, LcmEntry, MagicStrings.LcmCustomFieldNameForLfTags);
 
 			var customFieldNamesToSkip = new string[] { MagicStrings.LcmCustomFieldNameForLfTags };
 			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmEntry, "entry", ListConverters, customFieldNamesToSkip);

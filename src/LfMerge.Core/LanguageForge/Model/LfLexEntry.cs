@@ -43,6 +43,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		[BsonRepresentation(BsonType.String)]
 		public Guid PronunciationGuid { get; set; }
 		public LfMultiText SummaryDefinition { get; set; }
+		public LfStringArrayField Tags { get; set; }
 		public LfMultiText Tone { get; set; }
 
 		public LfLexEntry()
