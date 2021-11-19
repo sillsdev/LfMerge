@@ -243,13 +243,15 @@ namespace LfMerge.Core.DataConverters
 		/// <param name="objectType">Either "entry", "senses", or "examples"</param>
 		/// <param name="listConverters">Dictionary of ConvertLcmToMongoOptionList instances, keyed by list code</param>
 		public BsonDocument GetCustomFieldsForThisCmObject(ICmObject cmObj, string objectType,
-			IDictionary<string, ConvertLcmToMongoOptionList> listConverters)
+			IDictionary<string, ConvertLcmToMongoOptionList> listConverters,
+			string[] fieldNamesToSkip)
 		{
 			if (cmObj == null) return null;
 
 			List<int> customFieldIds = new List<int>(
 				LcmMetaData.GetFields(cmObj.ClassID, false, (int)CellarPropertyTypeFilter.All)
-				.Where(flid => cache.GetIsCustomField(flid)));
+				.Where(flid => cache.GetIsCustomField(flid))
+				.Where(flid => !fieldNamesToSkip.Contains(LcmMetaData.GetFieldName(flid))));
 
 			var customFieldData = new BsonDocument();
 			var customFieldGuids = new BsonDocument();

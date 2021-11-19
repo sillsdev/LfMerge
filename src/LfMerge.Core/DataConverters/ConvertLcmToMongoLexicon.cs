@@ -310,7 +310,8 @@ namespace LfMerge.Core.DataConverters
 			lfEntry.Senses.AddRange(LcmEntry.SensesOS.Select(LcmSenseToLfSense));
 			lfEntry.SummaryDefinition = ToMultiText(LcmEntry.SummaryDefinition);
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmEntry, "entry", ListConverters);
+			var customFieldNamesToSkip = new string[] { MagicStrings.LcmCustomFieldNameForLfTags };
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmEntry, "entry", ListConverters, customFieldNamesToSkip);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -498,7 +499,7 @@ namespace LfMerge.Core.DataConverters
 			lcmSense.PublishIn;
 			*/
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(lcmSense, "senses", ListConverters);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(lcmSense, "senses", ListConverters, Array.Empty<string>());
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 
@@ -549,7 +550,7 @@ namespace LfMerge.Core.DataConverters
 				lfExample.TranslationGuid = translation.Guid;
 			}
 
-			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmExample, "examples", ListConverters);
+			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmExample, "examples", ListConverters, Array.Empty<string>());
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
 			BsonDocument customFieldGuids = customFieldsAndGuids["customFieldGuids"].AsBsonDocument;
 

@@ -167,7 +167,7 @@ namespace LfMerge.Core.Tests.Lcm
 		{
 			// The objectType parameter is used in the names of the custom fields (and nowhere else).
 			var convertCustomField = new ConvertLcmToMongoCustomField(cache, _servLoc, new LfMerge.Core.Logging.NullLogger());
-			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters);
+			return convertCustomField.GetCustomFieldsForThisCmObject(obj, objectType, _listConverters, Array.Empty<string>());
 		}
 
 		protected IDictionary<string, object> GetFieldValuesByName(LcmCache cache, ICmObject obj)
