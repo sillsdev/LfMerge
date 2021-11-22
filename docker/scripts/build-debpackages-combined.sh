@@ -45,6 +45,7 @@ cd -
 </configuration>
 EOF
 
+	TRACE dotnet tool restore
 	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
 	TRACE /opt/mono5-sil/bin/msbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
