@@ -27,6 +27,7 @@ namespace LfMerge
 			var options = Options.ParseCommandLineArgs(args);
 			if (options == null)
 				return (int)ErrorCode.InvalidOptions;
+			MainClass.Logger.Error("Starting LfMerge");
 
 			// initialize the SLDR
 			Sldr.Initialize();
@@ -59,6 +60,7 @@ namespace LfMerge
 					return (int)ErrorCode.GeneralError;
 
 				MongoConnection.Initialize();
+				MainClass.Logger.Error("Registered class mappings ignoring extra elements");
 
 				differentModelVersion = RunAction(options.ProjectCode, options.CurrentAction);
 			}

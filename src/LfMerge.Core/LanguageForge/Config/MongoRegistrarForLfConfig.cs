@@ -16,6 +16,7 @@ namespace LfMerge.Core.LanguageForge.Config
 		{
 			RegisterClassMapsForDerivedClassesOf(typeof(LfConfigFieldBase));
 			RegisterClassIgnoreExtraFields(typeof(LfProjectConfig));
+			MainClass.Logger.Error("Registered class mappings for LfProjectConfig");
 			RegisterClassIgnoreExtraFields(typeof(MongoProjectRecord));
 		}
 	}
