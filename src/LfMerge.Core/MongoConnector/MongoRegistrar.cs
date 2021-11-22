@@ -34,7 +34,7 @@ namespace LfMerge.Core.MongoConnector
 		{
 			BsonClassMap cm = new BsonClassMap(type);
 			cm.AutoMap();
-			//cm.SetIgnoreExtraElements(true); // Let's see if this is the default
+			cm.SetIgnoreExtraElements(true); // Let's see if this is the default
 			BsonClassMap.RegisterClassMap(cm);
 			//BsonSerializer.RegisterDiscriminatorConvention(type, new ScalarDiscriminatorConvention("type"));
 		}
