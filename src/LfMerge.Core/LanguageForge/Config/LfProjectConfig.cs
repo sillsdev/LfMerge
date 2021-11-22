@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.Core.LanguageForge.Config
 {
@@ -15,6 +16,8 @@ namespace LfMerge.Core.LanguageForge.Config
 		public LfConfigFieldList Entry { get; set; }
 		public BsonDocument RoleViews { get; set; }
 		public BsonDocument UserViews { get; set; }
+		[BsonExtraElements]
+		public BsonDocument OtherConfig { get; set; }
 	}
 }
 
