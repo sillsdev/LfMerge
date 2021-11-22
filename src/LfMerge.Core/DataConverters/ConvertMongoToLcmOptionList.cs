@@ -79,6 +79,7 @@ namespace LfMerge.Core.DataConverters
 				// and populate the parent if the parent didn't exist already).
 				FromStringKey(item.Parent.Key);
 			}
+			MainClass.Logger.Error($"Creating from canonical item with ws {_wsForKeys} from item {item.ToString()}");
 			ICmPossibility poss = _parentList.FindOrCreatePossibility(item.ORCDelimitedKey, _wsForKeys);
 			item.PopulatePossibility(poss);
 			PossibilitiesByKey[item.Key] = poss;

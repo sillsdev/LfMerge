@@ -51,6 +51,11 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 			ExtraData = new Dictionary<string, object>();
 		}
 
+		public override string ToString()
+		{
+			return $"{Key} ({GuidStr})";
+		}
+
 		/// <summary>
 		/// Given an XmlReader positioned on this node's XML representation, populate its names, abbrevs, etc. from the XML.
 		/// After running PopulateFromXml, the reader should be positioned just past this node's closing element.
