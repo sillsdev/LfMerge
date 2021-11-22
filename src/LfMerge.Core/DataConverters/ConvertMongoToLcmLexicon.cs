@@ -88,8 +88,7 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
-			ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
-			_lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
+			_lfTagsFieldId = 0;
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
@@ -181,6 +180,10 @@ namespace LfMerge.Core.DataConverters
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
+					// Can't run this in the constructor, as we need a unit of work for EnsureCustomFieldExists
+					ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
+					_lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
+
 					#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
 					foreach (ConvertMongoToLcmOptionList converter in ListConverters.Values)
 					{
