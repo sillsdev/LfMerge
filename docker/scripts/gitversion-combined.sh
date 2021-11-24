@@ -8,8 +8,6 @@ if [ -n "$GITHUB_REF" -a "x$GITHUB_REF" != "xrefs/heads/master" ]; then
 	git branch --create-reflog master origin/master
 fi
 
-git fetch --unshallow .
-
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 msbuild /t:RestoreBuildTasks build/LfMerge.proj
