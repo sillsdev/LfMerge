@@ -71,8 +71,7 @@ RUN mkdir -p /home/builder/.gnupg /home/builder/ci-builder-scripts/bash /home/bu
 WORKDIR /home/builder/packages/lfmerge
 ENV MONO_PREFIX=/opt/mono5-sil
 
-COPY --chown=builder:users .git .git/
-RUN git checkout "${GitBranch}"
+COPY --chown=builder:users . ./
 RUN git clean -dxf --exclude=packages/
 RUN git reset --hard
 
