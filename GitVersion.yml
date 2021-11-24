@@ -24,7 +24,7 @@ branches:
     mode: ContinuousDeployment
     track-merge-target: true
     tag: PR
-    regex: (origin/)?(pull|heads|refs/heads|pr|PR)[/-]
+    regex: (origin/)?(pull|pr|PR)[/-]
     tag-number-pattern: '[/-](?<number>\d+)[-/]'
     source-branches: [ 'main', 'qa', 'live' ]
 ignore:
