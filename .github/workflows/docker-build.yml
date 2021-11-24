@@ -30,6 +30,9 @@ jobs:
         if: github.ref != 'refs/heads/master'
         run: git branch --create-reflog master origin/master
 
+      - name: Make complete checkout
+        run: git fetch --unshallow
+
       - name: Build base Docker image
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
 
