@@ -41,16 +41,3 @@ for f in 68 69 70 72; do
 # for f in 72; do
     docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/finalresults ./
 done
-
-KEYFILE=$(pwd)/docker/sil-packages-testing-key.gpg
-cd finalresults
-
-# Build binary packages (sbuild refuses to run in parallel, so this step has to be serial)
-for f in 68 69 70 72; do
-# for f in 72; do
-    # for distro in xenial bionic focal; do
-    for distro in bionic; do
-        echo sbuild -d ${distro} lfmerge-70000${f}*.dsc --extra-repository="deb http://localhost:3142/linux.lsdev.sil.org/ubuntu ${distro} main" --extra-repository="deb http://localhost:3142/linux.lsdev.sil.org/ubuntu ${distro}-experimental main" --extra-repository-key=${KEYFILE} --extra-repository="deb http://localhost:3142/mirror1.totbb.net/ubuntu ${distro} universe"
-        time sbuild -d ${distro} lfmerge-70000${f}*.dsc --extra-repository="deb http://localhost:3142/linux.lsdev.sil.org/ubuntu ${distro} main" --extra-repository="deb http://localhost:3142/linux.lsdev.sil.org/ubuntu ${distro}-experimental main" --extra-repository-key=${KEYFILE} --extra-repository="deb http://localhost:3142/mirror1.totbb.net/ubuntu ${distro} universe"
-    done
-done

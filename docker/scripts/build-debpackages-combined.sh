@@ -70,3 +70,24 @@ EOF
 	mv ../lfmerge-${curDbVersion}* finalresults/
 # done
 ls -lR finalresults
+
+# Now build binaries right here
+cd finalresults
+# TODO: Determine if "apt install -y equivs" is needed
+sudo apt update
+sudo apt install -y equivs
+echo lfmerge*dsc
+DSC=$(ls -1 lfmerge*dsc)
+SOURCE=$(grep '^Source: ' "${DSC}" | cut -c9-)
+echo $SOURCE
+PKGVERSION=$(grep '^Version: ' "${DSC}" | cut -c10- | sed -e 's/-[0-9]\+$//')
+# PKGVERSION=${PackageVersion}
+sudo mk-build-deps -r -i $DSC -t 'apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends'
+dpkg-source -x $DSC
+ls -l
+cd "${SOURCE}-${PKGVERSION}"
+debuild -rfakeroot
+# TODO: Determine whether packages are actually built in parent directory or this one, then remove unneeded lines below
+ls *deb || true
+ls ../*deb || true
+cp ../*deb . || true
