@@ -59,7 +59,6 @@ ENV GitBranch="master"
 ENV GitPatch="remove-GitVersionTask.targets.patch"
 ENV DbVersion=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
-ENV NUGET_PACKAGES=/storage/nuget
 ENV RUN_UNIT_TESTS=0
 ENV NUNIT_VERSION_MAJOR=3
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
