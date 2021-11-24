@@ -30,7 +30,7 @@ jobs:
         run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
 
       - name: Run the build container
-        run: docker run --mount type=tmpfs,dst=/tmp --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
