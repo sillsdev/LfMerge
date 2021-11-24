@@ -1,0 +1,41 @@
+name: docker-build
+
+on:
+  push:
+    branches: [ docker-build ]
+  pull_request:
+    branches: [ docker-build ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # As of 2021-11-24, we build LfMerge for LCM DB versions 68-72 (and there is no 71)
+    strategy:
+      matrix:
+        dbversion: [7000068, 7000069, 7000070, 7000072]
+        distro: [ 'bionic' ]
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Build base Docker image
+        run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
+
+      - name: Build DBVersion-specific Docker image
+        run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
+
+      - name: Run the build container
+        run: docker run --mount type=tmpfs,dst=/tmp --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+
+      - name: Collect Debian images
+        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: lfmerge-deb-files
+          path: finalresults/lfmerge*deb
