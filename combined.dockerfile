@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM sillsdev/web-languageforge:app-latest AS lf-build
+FROM sillsdev/web-languageforge:latest AS lf-build
 # No changes needed, LF app result in /var/www/html
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS lfmerge-builder-base
