@@ -19,3 +19,5 @@ fi
 echo "PackageVersion=${GitVersion_MajorMinorPatch}${PreReleaseTag}.${BUILD_NUMBER}" >> gitversion.properties
 
 echo "Building packages for version ${GitVersion_MajorMinorPatch}${PreReleaseTag}.${BUILD_NUMBER}"
+
+ls -l gitversion.properties || echo No gitversion.properties file created!

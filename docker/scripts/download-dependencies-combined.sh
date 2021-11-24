@@ -8,3 +8,4 @@ else
 msbuild /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
 fi
 
+ls -l gitversion.properties || echo no gitversion.properties found in download.sh

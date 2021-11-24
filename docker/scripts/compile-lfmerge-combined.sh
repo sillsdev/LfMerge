@@ -15,3 +15,4 @@ fi
 
 # ln -sf ../Mercurial output/
 # xbuild /t:TestOnly /v:detailed /property:Configuration=Release build/LfMerge.proj
+ls -l gitversion.properties || echo no gitversion.properties found in compile.sh
