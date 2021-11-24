@@ -2,9 +2,9 @@ name: docker-build
 
 on:
   push:
-    branches: [ docker-build ]
+    branches: [ master ]
   pull_request:
-    branches: [ docker-build ]
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
         if: github.ref != 'refs/heads/master'
         run: git branch --create-reflog master origin/master
 
-      - name: Make complete checkout
+      - name: Make checkout unshallow for GitVersion
         run: git fetch --unshallow
 
       - name: Build base Docker image

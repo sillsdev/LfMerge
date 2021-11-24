@@ -24,17 +24,11 @@ namespace LfMerge.Core.Tests
 				LogOneLine(writer, "Starting " + testName);
 		}
 
-		public string LogFileName { get; private set; }
+		public string LogFileName { get; }
 
-		public string Errors
-		{
-			get { return _errors.ToString(); }
-		}
+		public string Errors => _errors.ToString();
 
-		public string Messages
-		{
-			get { return _all.ToString(); }
-		}
+		public string Messages => _all.ToString();
 
 		private void LogOneLine(TextWriter writer, string message)
 		{

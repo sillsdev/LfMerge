@@ -17,20 +17,17 @@ using SIL.IO;
 using SIL.LCModel.Core.WritingSystems;
 using SIL.LCModel.Utils;
 using SIL.TestUtilities;
-using SIL.WritingSystems;
-using SIL.WritingSystems.Migration;
-using ReflectionHelper = SIL.Reflection.ReflectionHelper;
 
 namespace LfMerge.Core.Tests
 {
 	public class TestEnvironment : IDisposable
 	{
-		private readonly TemporaryFolder _languageForgeServerFolder;
-		private bool _resetLfProjectsDuringCleanup;
-		private bool _releaseSingletons;
-		public LfMergeSettings Settings;
-		private MongoConnectionDouble _mongoConnection;
-		public ILogger Logger { get { return MainClass.Logger; }}
+		private readonly TemporaryFolder       _languageForgeServerFolder;
+		private readonly bool                  _resetLfProjectsDuringCleanup;
+		private readonly bool                  _releaseSingletons;
+		public           LfMergeSettings       Settings;
+		private readonly MongoConnectionDouble _mongoConnection;
+		public ILogger Logger => MainClass.Logger;
 
 		static TestEnvironment()
 		{
@@ -76,7 +73,7 @@ namespace LfMerge.Core.Tests
 		private ContainerBuilder RegisterTypes(bool registerSettingsModel,
 			bool registerProcessingStateDouble, string temporaryFolder, bool registerLfProxyMock)
 		{
-			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
+			var containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
 				.WithParameter(new TypedParameter(typeof(string), temporaryFolder)).SingleInstance()
 				.As<LfMergeSettings>();
@@ -123,18 +120,13 @@ namespace LfMerge.Core.Tests
 			Environment.SetEnvironmentVariable("FW_CommonAppData", null);
 		}
 
-		public string LanguageForgeFolder
-		{
+		public string LanguageForgeFolder =>
 			// get { return Path.Combine(_languageForgeServerFolder.Path, "webwork"); }
 			// Should get this from Settings object, but unfortunately we have to resolve this
 			// *before* the Settings object is available.
-			get { return LangForgeDirFinder.LcmDirectorySettings.ProjectsDirectory; }
-		}
+			LangForgeDirFinder.LcmDirectorySettings.ProjectsDirectory;
 
-		public LfMergeSettings LangForgeDirFinder
-		{
-			get { return Settings; }
-		}
+		public LfMergeSettings LangForgeDirFinder => Settings;
 
 		public string ProjectPath(string projectCode)
 		{
@@ -148,7 +140,7 @@ namespace LfMerge.Core.Tests
 
 		public static void CopyFwProjectTo(string projectCode, string destDir)
 		{
-			string dataDir = Path.Combine(FindGitRepoRoot(), "data");
+			var dataDir = Path.Combine(FindGitRepoRoot(), "data");
 			DirectoryHelper.Copy(Path.Combine(dataDir, projectCode), Path.Combine(destDir, projectCode));
 
 			// Adjust hgrc file
@@ -176,9 +168,9 @@ namespace LfMerge.Core.Tests
 
 		public static string FindGitRepoRoot(string startDir = null)
 		{
-			if (String.IsNullOrEmpty(startDir))
+			if (string.IsNullOrEmpty(startDir))
 				startDir = ExecutionEnvironment.DirectoryOfExecutingAssembly;
-			while (!Directory.Exists(Path.Combine(startDir, ".git")))
+			while (!Directory.Exists(Path.Combine(startDir, ".git")) && !File.Exists(Path.Combine(startDir, ".git")))
 			{
 				var di = new DirectoryInfo(startDir);
 				if (di.Parent == null) // We've reached the root directory
@@ -196,17 +188,15 @@ namespace LfMerge.Core.Tests
 			if (!File.Exists(fileName))
 				return;
 
-			string s = null;
-			using (StreamReader r = new StreamReader(fileName, inEncoding))
+			string fileContent;
+			using (var streamReader = new StreamReader(fileName, inEncoding))
 			{
-				s = r.ReadToEnd();
+				fileContent = streamReader.ReadToEnd();
 			}
-			if (s != null)
+
+			using (var streamWriter = new StreamWriter(fileName, false, outEncoding))
 			{
-				using (StreamWriter w = new StreamWriter(fileName, false, outEncoding))
-				{
-					w.Write(s);
-				}
+				streamWriter.Write(fileContent);
 			}
 		}
 
@@ -215,10 +205,21 @@ namespace LfMerge.Core.Tests
 			if (!File.Exists(fileName))
 				return;
 
-			using (FileStream f = new FileStream(fileName, FileMode.OpenOrCreate))
+			using (var f = new FileStream(fileName, FileMode.OpenOrCreate))
 			{
 				f.Seek(offset, SeekOrigin.Begin);
 				f.Write(bytes, 0, bytes.Length);
+			}
+		}
+
+		public static void WriteTextFile(string fileName, string content, bool append = false, Encoding encoding = null)
+		{
+			if (encoding == null)
+				encoding = new UTF8Encoding(false);
+
+			using (var writer = new StreamWriter(fileName, append, encoding))
+			{
+				writer.Write(content);
 			}
 		}
 	}

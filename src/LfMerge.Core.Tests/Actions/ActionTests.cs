@@ -29,13 +29,7 @@ namespace LfMerge.Core.Tests.Actions
 			}
 		}
 
-		private ProcessingStateFactoryDouble Factory
-		{
-			get
-			{
-				return MainClass.Container.Resolve<ProcessingStateFactoryDouble>();
-			}
-		}
+		private ProcessingStateFactoryDouble Factory => MainClass.Container.Resolve<ProcessingStateFactoryDouble>();
 
 		[SetUp]
 		public void Setup()

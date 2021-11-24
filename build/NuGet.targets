@@ -5,6 +5,7 @@
 
 		<!-- Enable the restore command to run before builds -->
 		<RestorePackages Condition="  '$(RestorePackages)' == '' ">true</RestorePackages>
+		<RestorePackagesPath Condition=" '$(RestorePackagesPath)' == ''">packages</RestorePackagesPath>
 
 		<!-- Determines if package restore consent is required to restore packages -->
 		<RequireRestoreConsent Condition=" '$(RequireRestoreConsent)' != 'false' ">false</RequireRestoreConsent>

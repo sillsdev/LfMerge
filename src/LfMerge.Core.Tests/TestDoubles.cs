@@ -460,8 +460,8 @@ namespace LfMerge.Core.Tests
 				Directory.CreateDirectory(projectFolderPath);
 				Directory.CreateDirectory(Path.Combine(projectFolderPath, ".hg"));
 				File.WriteAllText(Path.Combine(projectFolderPath, ".hg", "hgrc"), "blablabla");
-				cloneResult = string.Format("Clone success: new clone created on branch '' in folder {0}",
-					projectFolderPath);
+				cloneResult =
+					$"Clone success: new clone created on branch '' in folder {projectFolderPath}";
 				return true;
 			}
 			if (_throwAuthorizationException)
@@ -521,10 +521,7 @@ namespace LfMerge.Core.Tests
 			_exceptions.Add(report);
 		}
 
-		public List<Report> Exceptions
-		{
-			get { return _exceptions; }
-		}
+		public List<Report> Exceptions => _exceptions;
 
 		public static ExceptionLoggingDouble Initialize()
 		{

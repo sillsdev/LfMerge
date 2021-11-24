@@ -83,9 +83,9 @@
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
-	<Target Name="CompileOnly">
+	<Target Name="CompileOnly" DependsOnTargets="RestorePackages">
 		<!-- This target gets called during binary package build and shouldn't download
-			anything -->
+			anything (restore is ok if packages already exist in $(RootDir)/packages)-->
 		<MSBuild
 			Projects="$(SolutionPath)"
 			Targets="Build"

@@ -14,7 +14,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 		static ChorusHelper()
 		{
 			Username = "x";
-			Password = "x";
+			Password = System.Environment.GetEnvironmentVariable("LD_TRUST_TOKEN") ?? "x";
 		}
 
 		public virtual string GetSyncUri(ILfProject project)
@@ -25,7 +25,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 
 			var uriBldr = new UriBuilder(project.LanguageDepotProjectUri) {
 				UserName = Username,
-				Password = Password,
+				Password = System.Environment.GetEnvironmentVariable("LD_TRUST_TOKEN") ?? Password,
 				Path = HttpUtility.UrlEncode(project.LanguageDepotProject.Identifier)
 			};
 			return uriBldr.Uri.ToString();
