@@ -1,5 +1,13 @@
 #!/bin/bash -e
 
+# Fetch tags for GitVersion
+git fetch --tags
+
+# Fetch master for GitVersion
+if [ -n "$GITHUB_REF" -a "x$GITHUB_REF" != "xrefs/heads/master" ]; then
+	git branch --create-reflog master origin/master
+fi
+
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 msbuild /t:RestoreBuildTasks build/LfMerge.proj
