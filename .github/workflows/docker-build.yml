@@ -16,7 +16,7 @@ jobs:
     # As of 2021-11-24, we build LfMerge for LCM DB versions 68-72 (and there is no 71)
     strategy:
       matrix:
-        dbversion: [7000068, 7000069, 7000070, 7000072]
+        dbversion: [7000072]
         distro: [ 'bionic' ]
 
     steps:
