@@ -65,7 +65,9 @@ jobs:
 
       - name: Run the build container
         if: false #steps.should_run.outcome == 'success'
-        run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        env:
+          BUILD_NUMBER: ${{ github.run_id }}
+        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
         if: false #steps.should_run.outcome == 'success'
