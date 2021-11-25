@@ -22,9 +22,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      - name: Fetch complete repo, tags included, for GitVersion
-        run: git fetch --tags --unshallow
+        with:
+          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Build base Docker image
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
@@ -42,3 +41,5 @@ jobs:
         with:
           name: lfmerge-deb-files
           path: finalresults/lfmerge*deb
+
+      # TODO: If `live` branch, then create release
