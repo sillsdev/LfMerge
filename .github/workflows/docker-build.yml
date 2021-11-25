@@ -19,9 +19,6 @@ jobs:
         dbversion: [7000068, 7000069, 7000070, 7000072]
         distro: [ 'bionic' ]
 
-    # Don't build unrelated versions on PRs
-    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
-
     steps:
       - name: Echo dbversion and current ref
         env:
@@ -29,6 +26,10 @@ jobs:
           REFNAME: ${{ github.ref_name }}
           BASEREF: ${{ github.base_ref }}
         run: echo "DB version ${DBVERSION} and ref ${GITHUB_REF} (ref name ${REFNAME} and base ref ${BASEREF}) with current SHA ${GITHUB_SHA}"
+
+      - name: Decide if this is a PR
+        run: echo "Event name is ${{github.event_name}} and base ref is ${{github.base_ref}} and dbversionis ${{matrix.dbversion}}"
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
         uses: actions/checkout@v2
