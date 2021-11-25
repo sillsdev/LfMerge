@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v2
         if: github.event_name == 'push' && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         with:
-          ref: fieldworks8-${{ github.base_ref }}
+          ref: fieldworks8-${{ github.ref_name }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Verify current branch
