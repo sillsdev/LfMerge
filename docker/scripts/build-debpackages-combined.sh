@@ -1,5 +1,4 @@
 #!/bin/bash -e
-ls -l gitversion.properties || echo no gitversion.properties found in build-debpackages.sh
 . gitversion.properties
 echo -e "\033[0;34mBuilding packages for version ${PackageVersion}\033[0m"
 
