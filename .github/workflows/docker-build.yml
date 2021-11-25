@@ -46,22 +46,21 @@ jobs:
       - name: Verify current branch
         run: git branch --contains HEAD --format '%(refname)'
 
-      # Commenting out long-running steps while I verify that the Git checkout logic is correct
-      # - name: Build base Docker image
-      #   run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
+      - name: Build base Docker image
+        run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
 
-      # - name: Build DBVersion-specific Docker image
-      #   run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
+      - name: Build DBVersion-specific Docker image
+        run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
 
-      # - name: Run the build container
-      #   run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+      - name: Run the build container
+        run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
-      # - name: Collect Debian images
-      #   run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
+      - name: Collect Debian images
+        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: lfmerge-deb-files
-      #     path: finalresults/lfmerge*deb
+      - uses: actions/upload-artifact@v2
+        with:
+          name: lfmerge-deb-files
+          path: finalresults/lfmerge*deb
 
       # TODO: If `live` branch, then create release
