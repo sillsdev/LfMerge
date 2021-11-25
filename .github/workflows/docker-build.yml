@@ -2,9 +2,9 @@ name: docker-build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, qa, live, fieldworks8-master, fieldworks8-qa, fieldworks8-live ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, fieldworks8-master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,33 +16,70 @@ jobs:
     # As of 2021-11-24, we build LfMerge for LCM DB versions 68-72 (and there is no 71)
     strategy:
       matrix:
-        dbversion: [7000072]
+        dbversion: [7000068, 7000069, 7000070, 7000072]
         distro: [ 'bionic' ]
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Echo dbversion and current ref
+        env:
+          DBVERSION: ${{ matrix.dbversion }}
+          REFNAME: ${{ github.ref_name }}
+          BASEREF: ${{ github.base_ref }}
+        run: echo "DB version ${DBVERSION} and ref ${GITHUB_REF} (ref name ${REFNAME} and base ref ${BASEREF}) with current SHA ${GITHUB_SHA}"
 
-      - name: Fetch tags for GitVersion
-        run: git fetch --tags
+      - name: Decide if this build configuration should run
+        id: should_run
+        run: true
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
-      - name: Fetch master for GitVersion
-        if: github.ref != 'refs/heads/master'
-        run: git branch --create-reflog master origin/master
+      - name: Check out current branch
+        uses: actions/checkout@v2
+        if: steps.should_run.outcome == 'success'
+        with:
+          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
+
+      - name: Check out FW8 branch
+        uses: actions/checkout@v2
+        if: github.event_name == 'push' && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
+        with:
+          ref: fieldworks8-${{ github.base_ref }}
+          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
+
+      - name: Verify current branch
+        run: git branch --contains HEAD --format '%(refname)'
+        if: steps.should_run.outcome == 'success'
+
+      # TODO: Step that calculates version number from `git-describe` and prerelease name based on branch
+      # That will allow us to ditch GitVersion, which is randomly failing on some PR builds with no rhyme or reason
+
+      - name: Check out files needed for Docker build if on older branches
+        # TODO: Will not be needed once Docker build is merged into fieldworks8-master
+        if: matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
+        run:
+          git checkout refs/remotes/origin/docker-build -- docker combined.dockerfile
 
       - name: Build base Docker image
-        run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
+        if: steps.should_run.outcome == 'success'
+        run: docker build -t lfmerge-builder-base --target lfmerge-builder-base .
 
       - name: Build DBVersion-specific Docker image
-        run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
+        if: steps.should_run.outcome == 'success'
+        run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} .
 
       - name: Run the build container
-        run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        if: steps.should_run.outcome == 'success'
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
+        if: steps.should_run.outcome == 'success'
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
 
       - uses: actions/upload-artifact@v2
+        if: steps.should_run.outcome == 'success'
         with:
           name: lfmerge-deb-files
           path: finalresults/lfmerge*deb
+
+      # TODO: If `live` branch, then create release
