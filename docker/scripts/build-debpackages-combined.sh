@@ -73,21 +73,20 @@ ls -lR finalresults
 
 # Now build binaries right here
 cd finalresults
-# TODO: Determine if "apt install -y equivs" is needed
-sudo apt update
-sudo apt install -y equivs
-echo lfmerge*dsc
+echo Building packages from .dsc file: lfmerge*dsc
 DSC=$(ls -1 lfmerge*dsc)
 SOURCE=$(grep '^Source: ' "${DSC}" | cut -c9-)
-echo $SOURCE
 PKGVERSION=$(grep '^Version: ' "${DSC}" | cut -c10- | sed -e 's/-[0-9]\+$//')
-# PKGVERSION=${PackageVersion}
+# Build dependency pseudo-package, install it, and immediately delete the file, in one command
 sudo mk-build-deps -r -i $DSC -t 'apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends'
+# Extract source
 dpkg-source -x $DSC
 ls -l
+echo Should be a directory named "${SOURCE}-${PKGVERSION}"
 cd "${SOURCE}-${PKGVERSION}"
+# Build package
 debuild -rfakeroot
-# TODO: Determine whether packages are actually built in parent directory or this one, then remove unneeded lines below
+# Built packages are placed in parent directory, so move them into finalresults for artifact collection
 ls *deb || true
 ls ../*deb || true
 cp ../*deb . || true
