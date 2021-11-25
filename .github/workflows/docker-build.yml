@@ -23,15 +23,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Fetch tags for GitVersion
-        run: git fetch --tags
-
-      - name: Fetch master for GitVersion
-        if: github.ref != 'refs/heads/master'
-        run: git branch --create-reflog master origin/master
-
-      - name: Make checkout unshallow for GitVersion
-        run: git fetch --unshallow
+      - name: Fetch complete repo, tags included, for GitVersion
+        run: git fetch --tags --unshallow
 
       - name: Build base Docker image
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
