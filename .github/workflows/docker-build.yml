@@ -29,7 +29,6 @@ jobs:
 
       - name: Decide if this is a PR
         run: echo "Event name is ${{github.event_name}} and base ref is ${{github.base_ref}} and dbversionis ${{matrix.dbversion}}"
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
         uses: actions/checkout@v2
