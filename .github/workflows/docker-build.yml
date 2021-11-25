@@ -20,7 +20,7 @@ jobs:
         distro: [ 'bionic' ]
 
     # Don't build unrelated versions on PRs
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072)
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
     steps:
       - name: Echo dbversion and current ref
