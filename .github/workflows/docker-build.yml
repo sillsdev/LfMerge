@@ -2,9 +2,9 @@ name: docker-build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, qa, live, fieldworks8-master, fieldworks8-qa, fieldworks8-live ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, fieldworks8-master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -19,6 +19,9 @@ jobs:
         dbversion: [7000068, 7000069, 7000070, 7000072]
         distro: [ 'bionic' ]
 
+    # Don't build unrelated versions on PRs
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072)
+
     steps:
       - name: Echo dbversion and current ref
         env:
@@ -29,21 +32,16 @@ jobs:
 
       - name: Check out current branch
         uses: actions/checkout@v2
-        # if: matrix.dbversion >= 7000072
-        if: false   # Skip during testing
+        if: matrix.dbversion >= 7000072
         with:
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
           # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out FW8 branch
         uses: actions/checkout@v2
-        # if: matrix.dbversion < 7000072
-        if: false   # Skip during testing
+        if: matrix.dbversion < 7000072
         with:
-          ref: fieldworks8-master  # For testing purposes only
-          # Eventually this should be fieldworks8-${{ github.ref_name }}, but only for non-PR branches
-          # For runs in pull requests, would only make sense to build the DB versions appropriate to that PR (either 72 or 68/69/70, depending)
-          # Can use the logic of "if ref_head starts with 'fieldworks8-' then run" for DB versions before 72
+          ref: fieldworks8-${{ github.base_ref }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Verify current branch
