@@ -46,6 +46,11 @@ jobs:
       - name: Verify current branch
         run: git branch --contains HEAD --format '%(refname)'
 
+      - name: Check out files needed for Docker build if on older branches
+        if: matrix.dbversion < 7000072
+        run:
+          git checkout docker-build -- docker
+
       - name: Build base Docker image
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
 
