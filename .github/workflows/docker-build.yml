@@ -56,7 +56,7 @@ jobs:
         # TODO: Will not be needed once Docker build is merged into fieldworks8-master
         if: matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         run:
-          git checkout refs/remotes/origin/docker-build -- docker Dockerfile
+          git checkout master -- docker Dockerfile
 
       - name: Build base Docker image
         if: steps.should_run.outcome == 'success'
