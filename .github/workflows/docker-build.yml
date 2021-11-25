@@ -37,8 +37,10 @@ jobs:
         uses: actions/checkout@v2
         if: matrix.dbversion < 7000072
         with:
-          ref: fieldworks8-${{ github.ref_name }}
-          # That will fail for the `docker-build` branch, which is fine
+          ref: fieldworks8-master  # For testing purposes only
+          # Eventually this should be fieldworks8-${{ github.ref_name }}, but only for non-PR branches
+          # For runs in pull requests, would only make sense to build the DB versions appropriate to that PR (either 72 or 68/69/70, depending)
+          # Can use the logic of "if ref_head starts with 'fieldworks8-' then run" for DB versions before 72
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Verify current branch
