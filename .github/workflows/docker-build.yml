@@ -27,51 +27,52 @@ jobs:
           BASEREF: ${{ github.base_ref }}
         run: echo "DB version ${DBVERSION} and ref ${GITHUB_REF} (ref name ${REFNAME} and base ref ${BASEREF}) with current SHA ${GITHUB_SHA}"
 
-      - name: Decide if this is a PR
-        run: echo "Event name is ${{github.event_name}} and base ref is ${{github.base_ref}} and dbversionis ${{matrix.dbversion}}"
+      - name: Decide if this build configuration should run
+        id: should_run
+        run: true
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
         uses: actions/checkout@v2
-        if: matrix.dbversion >= 7000072
+        if: steps.should_run.outcome == 'success'
         with:
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
-          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out FW8 branch
         uses: actions/checkout@v2
-        if: matrix.dbversion < 7000072
+        if: github.event_name == 'push' && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         with:
           ref: fieldworks8-${{ github.base_ref }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Verify current branch
         run: git branch --contains HEAD --format '%(refname)'
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
 
       - name: Check out files needed for Docker build if on older branches
-        # if: matrix.dbversion < 7000072
-        if: false   # Skip during testing
+        # TODO: Will not be needed once Docker build is merged into fieldworks8-master
+        if: matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         run:
           git checkout refs/remotes/origin/docker-build -- docker combined.dockerfile
 
       - name: Build base Docker image
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
 
       - name: Build DBVersion-specific Docker image
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
         run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
 
       - name: Run the build container
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
         run: docker run --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
 
       - uses: actions/upload-artifact@v2
-        if: false   # Skip during testing
+        if: steps.should_run.outcome == 'success'
         with:
           name: lfmerge-deb-files
           path: finalresults/lfmerge*deb
