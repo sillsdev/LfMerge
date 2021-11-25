@@ -56,25 +56,25 @@ jobs:
           git checkout refs/remotes/origin/docker-build -- docker combined.dockerfile
 
       - name: Build base Docker image
-        if: false #steps.should_run.outcome == 'success'
+        if: steps.should_run.outcome == 'success'
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
 
       - name: Build DBVersion-specific Docker image
-        if: false #steps.should_run.outcome == 'success'
+        if: steps.should_run.outcome == 'success'
         run: docker build --build-arg DbVersion=${{matrix.dbversion}} -t lfmerge-build-${{matrix.dbversion}} -f combined.dockerfile .
 
       - name: Run the build container
-        if: false #steps.should_run.outcome == 'success'
+        if: steps.should_run.outcome == 'success'
         env:
           BUILD_NUMBER: ${{ github.run_id }}
         run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
-        if: false #steps.should_run.outcome == 'success'
+        if: steps.should_run.outcome == 'success'
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
 
       - uses: actions/upload-artifact@v2
-        if: false #steps.should_run.outcome == 'success'
+        if: steps.should_run.outcome == 'success'
         with:
           name: lfmerge-deb-files
           path: finalresults/lfmerge*deb
