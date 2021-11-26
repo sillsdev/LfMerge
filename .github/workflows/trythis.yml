@@ -49,7 +49,14 @@ jobs:
           TAGNAME: ${{ github.ref }}
         run: echo "::set-output name=version::$(echo ${TAGNAME} | sed 's/^refs\/heads\///')"
 
+      - name: Calculate version for PRs
+        id: pr_version
+        if: startsWith(github.ref, 'refs/pull/')
+        env:
+          TAGNAME: ${{ github.ref }}
+        run: echo "::set-output name=version::$(echo ${TAGNAME} | sed -E 's/^refs\/pull\/([0-9]+)\/merge/\1/')"
+
       - name: Get output version
         env:
-          VERSION: ${{ steps.id_version.outputs.version || steps.branch_version.outputs.version || 'no version found' }}
+          VERSION: ${{ steps.id_version.outputs.version || steps.branch_version.outputs.version || steps.pr_version.outputs.version || 'no version found' }}
         run: echo "Version calculated as ${VERSION}"
