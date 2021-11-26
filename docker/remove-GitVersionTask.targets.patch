@@ -1,0 +1,13 @@
+diff --git a/debian/rules.in b/debian/rules.in
+index ab4c183..4821a8e 100755
+--- a/debian/rules.in
++++ b/debian/rules.in
+@@ -19,7 +19,7 @@ LIB				= usr/lib/lfmerge/__DatabaseVersion__
+ SHARE			= usr/share/lfmerge/__DatabaseVersion__
+
+ export DBVERSIONPATH=/usr/lib/lfmerge/__DatabaseVersion__
+-
++echo DBVERSIONPATH = $DBVERSIONPATH
+ define MERCURIAL_INI
+ [extensions]
+ eol=
