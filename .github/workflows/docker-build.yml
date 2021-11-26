@@ -123,7 +123,7 @@ jobs:
 
           esac
           DebPackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}
-          MsBuildVersion=$(echo "${DebPackageVersion" | sed 's/~/-/')
+          MsBuildVersion=$(echo "${DebPackageVersion}" | sed 's/~/-/')
           echo "Will build package version ${DebPackageVersion}"
           echo "::set-output name=DebPackageVersion::${DebPackageVersion}"
           echo "::set-output name=MsBuildVersion::${MsBuildVersion}"
