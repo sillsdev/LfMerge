@@ -78,6 +78,7 @@ DSC=$(ls -1 lfmerge*dsc)
 SOURCE=$(grep '^Source: ' "${DSC}" | cut -c9-)
 PKGVERSION=$(grep '^Version: ' "${DSC}" | cut -c10- | sed -e 's/-[0-9]\+$//')
 # Build dependency pseudo-package, install it, and immediately delete the file, in one command
+sudo apt-get update
 sudo mk-build-deps -r -i $DSC -t 'apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends'
 # Extract source
 dpkg-source -x $DSC
