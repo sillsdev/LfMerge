@@ -30,7 +30,7 @@ jobs:
       - name: Decide if this build configuration should run
         id: should_run
         run: true
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
+        if: ${{ (github.event_name == 'push' && !startsWith(github.ref_name, 'fieldworks8-')) || (github.event_name == 'push' && startsWith(github.ref_name, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
         uses: actions/checkout@v2
