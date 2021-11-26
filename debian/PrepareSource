@@ -13,7 +13,7 @@ if [ "$CurDbVersion" == "" ]; then
 	CurDbVersion=$MaxDbVersion
 fi
 
-PackageVersion=${PackageVersion:-0.0.1}
+PackageVersion=${DebPackageVersion:-0.0.1}
 
 cd "$(dirname $0)"
 

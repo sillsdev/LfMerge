@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks><GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworks>net462</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <RootNamespace>FixFwData</RootNamespace>
     <Configurations>Debug;Release</Configurations>

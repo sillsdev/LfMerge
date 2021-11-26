@@ -1,6 +1,6 @@
 #!/bin/bash -e
-. gitversion.properties
-echo -e "\033[0;34mBuilding packages for version ${PackageVersion}\033[0m"
+
+echo -e "\033[0;34mBuilding packages for version ${DebPackageVersion} (inserted as ${Version} in .NET AssemblyInfo files)\033[0m"
 
 #DistributionsToPackage="xenial bionic"
 DistributionsToPackage="bionic"
@@ -45,9 +45,6 @@ cd -
 </configuration>
 EOF
 
-	TRACE dotnet tool restore
-	# TODO: Replace the line below with our own AssemblyInfo updater
-	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
 	TRACE /opt/mono5-sil/bin/msbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	TRACE debian/PrepareSource $curDbVersion
@@ -56,7 +53,7 @@ EOF
 	TRACE $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 		--arches "amd64" --main-package-name "lfmerge" --source-code-subdir "." \
 		--supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY \
-		--package-version "$PackageVersion" --preserve-changelog
+		--package-version "$DebPackageVersion" --preserve-changelog
 
 	# echo -e "\033[0;34mBuild binary package\033[0m"
 	# TRACE $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks><GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworks>net462</TargetFrameworks>
     <RootNamespace>LfMerge.Tests</RootNamespace>
     <Configurations>Debug;Release</Configurations>
     <Description>LfMerge.Tests</Description>
