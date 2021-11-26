@@ -62,6 +62,8 @@ jobs:
         run: echo "Version calculated as ${VERSION}"
 
       - name: Calculate version in one step
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
           echo Start
           REV=${GITHUB_REF:-$(git rev-parse --symbolic-full-name HEAD)}
@@ -94,38 +96,38 @@ jobs:
           case "$REV" in
             refs/heads/master | refs/heads/fieldworks8-master)
               echo Found master
-              PRERELEASE=alpha
+              PRERELEASE="~alpha.${BUILD_NUMBER}"
               ;;
 
             refs/heads/qa | refs/heads/fieldworks8-qa)
               echo Found qa
-              PRERELEASE=beta
+              PRERELEASE="~beta.${BUILD_NUMBER}"
               ;;
 
             refs/heads/live | refs/heads/fieldworks8-live)
               echo Found live
               PRERELEASE=
-              MINOR=$((${MINOR} + 1))
+              PATCH=$((${PATCH} + 1))
               ;;
 
             refs/heads/chore/version-numbers-from-gha)
               echo Found specific version number branch
-              PRERELEASE="~${REV##refs/heads/}"
+              PRERELEASE="~${REV##refs/heads/}.${BUILD_NUMBER}"
               # For testing
-              MINOR=$((${MINOR} + 1))
+              PATCH=$((${PATCH} + 1))
               ;;
 
             refs/pull/*)
               echo Found PR
-              PRERELEASE="~PR.${REV##refs/pull/}"
+              PRERELEASE="~PR.${REV##refs/pull/}.${BUILD_NUMBER}"
               ;;
 
             refs/heads/*)
               echo Found branch
-              PRERELEASE="~${REV##refs/heads/}"
+              PRERELEASE="~${REV##refs/heads/}.${BUILD_NUMBER}"
               ;;
 
           esac
           echo Prelease would be ${PRERELEASE}
-          PackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}.${BUILD_NUMBER}
+          PackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}
           echo Package version would be ${PackageVersion}
