@@ -83,7 +83,7 @@ ls -l
 echo Should be a directory named "${SOURCE}-${PKGVERSION}"
 cd "${SOURCE}-${PKGVERSION}"
 # Build package, preserving env vars used in MsBuild packaging
-debuild -rfakeroot --preserve-env Version --preserve-env AssemblyVersion --preserve-env FileVersion --preserve-env InformationalVersion
+debuild -rfakeroot --preserve-envvar Version --preserve-envvar AssemblyVersion --preserve-envvar FileVersion --preserve-envvar InformationalVersion
 # Built packages are placed in parent directory, so move them into finalresults for artifact collection
 ls *deb || true
 ls ../*deb || true
