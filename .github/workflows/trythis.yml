@@ -60,3 +60,26 @@ jobs:
         env:
           VERSION: ${{ steps.id_version.outputs.version || steps.branch_version.outputs.version || steps.pr_version.outputs.version || 'no version found' }}
         run: echo "Version calculated as ${VERSION}"
+
+      - name: Calculate version in one step
+        run: |
+          echo Start
+          REV=${GITHUB_REF:-$(git rev-parse --symbolic-full-name HEAD)}
+          if [ -z ${REV} ]; then
+            echo Failed to get a meaningful commit name
+          fi
+          echo Got commit name ${REV}
+          RESULT=notfound
+          if echo "${REV}" | grep -E '^refs/pull/'; then
+            echo Found PR
+            RESULT=echo "${REV}" sed -E '/^refs\/pull\//s/^refs\/pull\/([0-9]+)\/merge/\1/'
+          fi
+          if echo "${REV}" | grep -E '^refs/heads/'; then
+            echo Found branch
+            RESULT=echo "${REV}" sed -E '/^refs\/heads\//'
+          fi
+          if echo "${REV}" | grep -E '^refs/tags/'; then
+            echo Found tag
+            RESULT=echo "${REV}" sed -E '/^refs\/tags\//'
+          fi
+          echo Will calculate version from "${RESULT}"
