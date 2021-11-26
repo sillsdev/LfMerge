@@ -20,6 +20,11 @@ jobs:
         distro: [ 'bionic' ]
 
     steps:
+      - name: Dump GitHub context for testing
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Echo dbversion and current ref
         env:
           DBVERSION: ${{ matrix.dbversion }}
@@ -40,7 +45,7 @@ jobs:
 
       - name: Check out FW8 branch
         uses: actions/checkout@v2
-        if: github.event_name == 'push' && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
+        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fieldworks8-') && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         with:
           ref: fieldworks8-${{ github.ref_name }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
