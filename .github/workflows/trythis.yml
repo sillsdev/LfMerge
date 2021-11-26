@@ -69,6 +69,8 @@ jobs:
           MAJOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\1/')
           MINOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\2/')
           PATCH=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\3/')
+          COMMIT_COUNT=$(echo "$DESCRIBE" | sed -E 's/^[^-]+-([^-]+)-.*$/\1/'))
+          COMMIT_HASH=$(echo "$DESCRIBE" | sed -E 's/^[^-]+-[^-]+-g(.*)$/\1/'))
           echo "Calculating name from ${REV}"
           if [ -z ${REV} ]; then
             echo Failed to get a meaningful commit name
@@ -87,4 +89,30 @@ jobs:
             echo Found tag
             RESULT=$(echo "${REV}" | sed -E 's/^refs\/tags\///')
           fi
-          echo Will calculate version from "${RESULT}" and "${MAJOR}.${MINOR}.${PATCH}"
+          echo Will calculate version from "${RESULT}" and "${MAJOR}.${MINOR}.${PATCH} with $COMMIT_COUNT commits since then, and current hash $COMMIT_HASH"
+
+          case "$REV" in
+            refs/heads/master | refs/heads/fieldworks8-master)
+              echo Found master
+              PRERELEASE=alpha
+              ;;
+
+            refs/heads/chore/version-numbers-from-gha)
+              echo Found specific version number branch
+              PRERELEASE="~${REV##refs/heads/}"
+              ;;
+
+            refs/pull/*)
+              echo Found PR
+              PRERELEASE="~${REV##refs/pull/}"
+              ;;
+
+            refs/heads/*)
+              echo Found branch
+              PRERELEASE="~${REV##refs/heads/}"
+              ;;
+
+          esac
+          echo Prelease would be ${PRERELEASE}
+          PackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}.${BUILD_NUMBER}
+          echo Package version would be ${PackageVersion}
