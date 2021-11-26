@@ -122,9 +122,9 @@ jobs:
               exit 1
 
           esac
-          PackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}
-          echo "Will build package version ${PackageVersion}"
-          echo "::set-output name=PackageVersion::${PackageVersion}"
+          DebPackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}
+          echo "Will build package version ${DebPackageVersion}"
+          echo "::set-output name=DebPackageVersion::${DebPackageVersion}"
           echo "::set-output name=MajorMinorPatch::${MajorMinorPatch}"
           echo "::set-output name=AssemblySemVer::${AssemblySemVer}"
           echo "::set-output name=AssemblySemFileVer::${AssemblySemFileVer}"
@@ -151,12 +151,12 @@ jobs:
         if: steps.should_run.outcome == 'success'
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          PackageVersion: ${{ steps.version.outputs.PackageVersion }}
+          DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
           MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
           AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
-        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "PackageVersion=${PackageVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblySemVer=${AssemblySemVer}" --env "AssemblySemFileVer=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblySemVer=${AssemblySemVer}" --env "AssemblySemFileVer=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
         if: steps.should_run.outcome == 'success'

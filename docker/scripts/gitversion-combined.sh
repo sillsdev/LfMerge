@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 echo "Calculated versions:"
-echo "PackageVersion=${PackageVersion}"
+echo "DebPackageVersion=${DebPackageVersion}"
 echo "MajorMinorPatch=${MajorMinorPatch}"
 echo "AssemblySemVer=${AssemblySemVer}"
 echo "AssemblySemFileVer=${AssemblySemFileVer}"
