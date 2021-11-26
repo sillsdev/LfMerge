@@ -39,14 +39,14 @@ jobs:
         id: tag_version
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          TAGNAME: ${{ gitub.ref }}
+          TAGNAME: ${{ github.ref }}
         run: echo "::set-output name=version::$(echo ${TAGNAME} | sed 's/^refs\/tags\///')"
 
       - name: Calculate version for branches
         id: branch_version
         if: startsWith(github.ref, 'refs/heads/')
         env:
-          TAGNAME: ${{ gitub.ref }}
+          TAGNAME: ${{ github.ref }}
         run: echo "::set-output name=version::$(echo ${TAGNAME} | sed 's/^refs\/heads\///')"
 
       - name: Get output version
