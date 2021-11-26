@@ -1,4 +1,4 @@
-name: docker-build
+name: version-numbers-test
 
 on:
   push:
