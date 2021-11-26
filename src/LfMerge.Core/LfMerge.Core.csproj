@@ -237,7 +237,6 @@
     <Compile Include="Tools\ProjectInUncleanStateException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.4.0.0-beta0009\build\GitVersionTask.targets')" />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="..\..\lib\chorusmerge">
