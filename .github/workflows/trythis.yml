@@ -120,7 +120,7 @@ jobs:
             refs/pull/*)
               echo Found PR
               PR_NUMBER=$(echo "${REV}" | sed -E 's/^refs\/pull\/([0-9]+)\/merge/\1/')
-              PRERELEASE="~PR.${PR_NUMBER}.${BUILD_NUMBER}"
+              PRERELEASE="~PR${PR_NUMBER}.${BUILD_NUMBER}"
               ;;
 
             refs/heads/*)
