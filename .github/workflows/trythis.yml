@@ -1,0 +1,55 @@
+name: docker-build
+
+on:
+  push:
+    branches: [ chore/version-numbers-from-gha ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # As of 2021-11-24, we build LfMerge for LCM DB versions 68-72 (and there is no 71)
+    strategy:
+      matrix:
+        dbversion: [7000072]
+        distro: [ 'bionic' ]
+
+    steps:
+      - name: Dump GitHub context for testing
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Check out current branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
+
+      - name: Run git-describe
+        id: describe
+        run: git describe --long
+
+      - name: Run git-describe including branches
+        id: describe_all
+        run: git describe --all
+
+      - name: Calculate version for tags
+        id: tag_version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          TAGNAME: ${{ gitub.ref }}
+        run: echo "::set-output name=version::$(echo ${TAGNAME} | sed 's/^refs\/tags\///')"
+
+      - name: Calculate version for branches
+        id: branch_version
+        if: startsWith(github.ref, 'refs/heads/')
+        env:
+          TAGNAME: ${{ gitub.ref }}
+        run: echo "::set-output name=version::$(echo ${TAGNAME} | sed 's/^refs\/heads\///')"
+
+      - name: Get output version
+        env:
+          VERSION: ${{ steps.id_version.outputs.version || steps.branch_version.outputs.version || 'no version found' }}
+        run: echo "Version calculated as ${VERSION}"
