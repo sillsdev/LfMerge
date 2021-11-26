@@ -1,5 +1,12 @@
 #!/bin/bash -e
 
+echo "Calculated versions:"
+echo "PackageVersion=${PackageVersion}"
+echo "MajorMinorPatch=${MajorMinorPatch}"
+echo "AssemblySemVer=${AssemblySemVer}"
+echo "AssemblySemFileVer=${AssemblySemFileVer}"
+echo "InformationalVersion=${InformationalVersion}"
+
 # Fetch tags for GitVersion
 git fetch --tags
 
@@ -17,6 +24,9 @@ dotnet tool restore
 # GitVersion detects Jenkins builds if the JENKINS_URL environment variable is set (to anything),
 # and outputs a "gitversion.properties" file that's suitable for Bash scripting
 JENKINS_URL=x dotnet gitversion -output buildserver
+
+echo "GitVersion calculations:"
+cat gitversion.properties
 
 . gitversion.properties
 

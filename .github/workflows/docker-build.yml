@@ -54,6 +54,82 @@ jobs:
         run: git branch --contains HEAD --format '%(refname)'
         if: steps.should_run.outcome == 'success'
 
+      - name: Calculate version number
+        id: version
+        if: steps.should_run.outcome == 'success'
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          echo Start
+          REV=${GITHUB_REF:-$(git rev-parse --symbolic-full-name HEAD)}
+          DESCRIBE=$(git describe --long --match "v*")
+          MAJOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\1/')
+          MINOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\2/')
+          PATCH=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*$/\3/')
+          COMMIT_COUNT=$(echo "$DESCRIBE" | sed -E 's/^[^-]+-([^-]+)-.*$/\1/')
+          COMMIT_HASH=$(echo "$DESCRIBE" | sed -E 's/^[^-]+-[^-]+-g(.*)$/\1/')
+          MajorMinorPatch="${MAJOR}.${MINOR}.${PATCH}"
+          AssemblySemVer="${MajorMinorPatch}.${BUILD_NUMBER}"
+          AssemblySemFileVer="${MajorMinorPatch}.0"
+          InformationalVersion="${DESCRIBE}"
+          echo "Calculating name from ${REV}"
+          if [ -z ${REV} ]; then
+            echo Failed to get a meaningful commit name
+          fi
+          echo Got commit name ${REV}
+          RESULT=notfound
+          if echo "${REV}" | grep -E '^refs/pull/'; then
+            echo Found PR
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/pull\/([0-9]+)\/merge/\1/')
+          fi
+          if echo "${REV}" | grep -E '^refs/heads/'; then
+            echo Found branch
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/heads\///')
+          fi
+          if echo "${REV}" | grep -E '^refs/tags/'; then
+            echo Found tag
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/tags\///')
+          fi
+          echo Will calculate version from "${RESULT}" and "${MAJOR}.${MINOR}.${PATCH} with $COMMIT_COUNT commits since then, and current hash $COMMIT_HASH"
+
+          case "$REV" in
+            refs/heads/master | refs/heads/fieldworks8-master)
+              PRERELEASE="~alpha.${BUILD_NUMBER}"
+              ;;
+
+            refs/heads/qa | refs/heads/fieldworks8-qa)
+              PRERELEASE="~beta.${BUILD_NUMBER}"
+              ;;
+
+            refs/heads/live | refs/heads/fieldworks8-live)
+              PRERELEASE=
+              PATCH=$((${PATCH} + 1))
+              # TODO: Detect need for minor/major updates and increment those instead of PATCH
+              ;;
+
+            refs/pull/*)
+              PR_NUMBER=$(echo "${REV}" | sed -E 's/^refs\/pull\/([0-9]+)\/merge/\1/')
+              PRERELEASE="~PR${PR_NUMBER}.${BUILD_NUMBER}"
+              ;;
+
+            refs/heads/*)
+              PRERELEASE="~${REV##refs/heads/}.${BUILD_NUMBER}"
+              ;;
+
+            *)
+              echo "Could not determine version number from ${REV}"
+              echo "::error ::Could not determine version number from ${REV}"
+              exit 1
+
+          esac
+          PackageVersion=${MAJOR}.${MINOR}.${PATCH}${PRERELEASE}
+          echo "Will build package version ${PackageVersion}"
+          echo "::set-output name=PackageVersion::${PackageVersion}"
+          echo "::set-output name=MajorMinorPatch::${MajorMinorPatch}"
+          echo "::set-output name=AssemblySemVer::${AssemblySemVer}"
+          echo "::set-output name=AssemblySemFileVer::${AssemblySemFileVer}"
+          echo "::set-output name=InformationalVersion::${InformationalVersion}"
+
       # TODO: Step that calculates version number from `git-describe` and prerelease name based on branch
       # That will allow us to ditch GitVersion, which is randomly failing on some PR builds with no rhyme or reason
 
@@ -75,7 +151,12 @@ jobs:
         if: steps.should_run.outcome == 'success'
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+          PackageVersion: ${{ steps.version.outputs.PackageVersion }}
+          MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+          AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
+          AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
+          InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
+        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "PackageVersion=${PackageVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblySemVer=${AssemblySemVer}" --env "AssemblySemFileVer=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
         if: steps.should_run.outcome == 'success'

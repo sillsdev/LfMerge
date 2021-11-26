@@ -108,13 +108,13 @@ jobs:
               echo Found live
               PRERELEASE=
               PATCH=$((${PATCH} + 1))
+              # TODO: Detect need for minor/major updates and increment those instead of PATCH
               ;;
 
             refs/heads/chore/version-numbers-from-gha)
               echo Found specific version number branch
               PRERELEASE="~${REV##refs/heads/}.${BUILD_NUMBER}"
               # For testing
-              PATCH=$((${PATCH} + 1))
               ;;
 
             refs/pull/*)
