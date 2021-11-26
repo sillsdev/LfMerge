@@ -73,14 +73,14 @@ jobs:
           RESULT=notfound
           if echo "${REV}" | grep -E '^refs/pull/'; then
             echo Found PR
-            RESULT=$(echo "${REV}" | sed -E 's/^refs\/pull\//s/^refs\/pull\/([0-9]+)\/merge/\1/')
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/pull\/([0-9]+)\/merge/\1/')
           fi
           if echo "${REV}" | grep -E '^refs/heads/'; then
             echo Found branch
-            RESULT=$(echo "${REV}" | sed -E 's/^refs\/heads\//')
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/heads\///')
           fi
           if echo "${REV}" | grep -E '^refs/tags/'; then
             echo Found tag
-            RESULT=$(echo "${REV}" | sed -E 's/^refs\/tags\//')
+            RESULT=$(echo "${REV}" | sed -E 's/^refs\/tags\///')
           fi
           echo Will calculate version from "${RESULT}"
