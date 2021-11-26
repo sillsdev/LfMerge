@@ -97,14 +97,27 @@ jobs:
               PRERELEASE=alpha
               ;;
 
+            refs/heads/qa | refs/heads/fieldworks8-qa)
+              echo Found qa
+              PRERELEASE=beta
+              ;;
+
+            refs/heads/live | refs/heads/fieldworks8-live)
+              echo Found live
+              PRERELEASE=
+              MINOR=$((${MINOR} + 1))
+              ;;
+
             refs/heads/chore/version-numbers-from-gha)
               echo Found specific version number branch
               PRERELEASE="~${REV##refs/heads/}"
+              # For testing
+              MINOR=$((${MINOR} + 1))
               ;;
 
             refs/pull/*)
               echo Found PR
-              PRERELEASE="~${REV##refs/pull/}"
+              PRERELEASE="~PR.${REV##refs/pull/}"
               ;;
 
             refs/heads/*)
