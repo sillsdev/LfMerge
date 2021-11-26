@@ -27,8 +27,6 @@ RUN useradd -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m 
 
 # Any setup unique to the various builds goes in one of these four images
 FROM lfmerge-builder-base AS lfmerge-build-7000068
-ENV GitBranch="fieldworks8-master"
-ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000068
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
 ENV RUN_UNIT_TESTS=0
@@ -37,8 +35,6 @@ ENV NUNIT_VERSION_MAJOR=2
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000069
-ENV GitBranch="fieldworks8-master"
-ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000069
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000069
 ENV RUN_UNIT_TESTS=0
@@ -46,8 +42,6 @@ ENV NUNIT_VERSION_MAJOR=2
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000070
-ENV GitBranch="fieldworks8-master"
-ENV GitPatch="remove-GitVersionTask-fw8.targets.patch"
 ENV DbVersion=7000070
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000070
 ENV RUN_UNIT_TESTS=0
@@ -55,8 +49,6 @@ ENV NUNIT_VERSION_MAJOR=2
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-builder-base AS lfmerge-build-7000072
-ENV GitBranch="master"
-ENV GitPatch="remove-GitVersionTask.targets.patch"
 ENV DbVersion=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
 ENV RUN_UNIT_TESTS=0
@@ -89,9 +81,6 @@ COPY --chown=builder:users [ "docker/common.sh", "docker/make-source", "/home/bu
 # LanguageForge repo expected to be in (will be copied into ./data/php/src before running unit tests)
 COPY --chown=builder:users --from=lf-build /var/www/html /var/www/html
 
-# Remove GitVersionTask which doesn't work well on modern Debian and replace with dotnet-based GitVersion
-COPY --chown=builder:users "docker/${GitPatch}" .
-RUN echo ${GitPatch}; git apply "${GitPatch}"
 RUN echo In build, DB version is ${DbVersion}
 
 # RUN --mount=type=tmpfs,target=/tmp ./build-and-test.sh ${DbVersion}
