@@ -66,9 +66,9 @@ jobs:
           echo Start
           REV=${GITHUB_REF:-$(git rev-parse --symbolic-full-name HEAD)}
           DESCRIBE=$(git describe --long --match "v*")
-          MAJOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\1')
-          MINOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\2')
-          PATCH=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\3')
+          MAJOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\1/')
+          MINOR=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\2/')
+          PATCH=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)/\3/')
           echo "Calculating name from ${REV}"
           if [ -z ${REV} ]; then
             echo Failed to get a meaningful commit name
