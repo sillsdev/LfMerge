@@ -58,7 +58,7 @@ jobs:
 
       - name: Get output version
         env:
-          VERSION: ${{ steps.id_version.outputs.version || steps.branch_version.outputs.version || steps.pr_version.outputs.version || 'no version found' }}
+          VERSION: ${{ steps.tag_version.outputs.version || steps.branch_version.outputs.version || steps.pr_version.outputs.version || 'no version found' }}
         run: echo "Version calculated as ${VERSION}"
 
       - name: Calculate version in one step
