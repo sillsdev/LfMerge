@@ -130,12 +130,6 @@ jobs:
       # TODO: Step that calculates version number from `git-describe` and prerelease name based on branch
       # That will allow us to ditch GitVersion, which is randomly failing on some PR builds with no rhyme or reason
 
-      - name: Check out files needed for Docker build if on older branches
-        # TODO: Will not be needed once Docker build is merged into fieldworks8-master
-        if: matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
-        run:
-          git checkout refs/remotes/origin/master -- docker Dockerfile
-
       - name: Build base Docker image
         if: steps.should_run.outcome == 'success'
         run: docker build -t lfmerge-builder-base --target lfmerge-builder-base .
