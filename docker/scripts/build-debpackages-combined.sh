@@ -40,7 +40,7 @@ cd -
 	find src -name AssemblyInfo.cs
 	if [ -n "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -a "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -ne 0 ]; then
 		echo "Will update AssemblyInfo.cs files"
-		find src -name AssemblyInfo.cs -print0 | xargs -0 -n 1 ./update-assemblyinfo.sh
+		find src -name AssemblyInfo.cs -print0 | xargs -0 -n 1 ${HOME}/packages/lfmerge/update-assemblyinfo.sh
 	fi
 
 	cat > NuGet.Config <<EOF
