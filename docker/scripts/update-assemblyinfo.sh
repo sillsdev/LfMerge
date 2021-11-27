@@ -25,6 +25,8 @@ FileVersion=${FileVersion:-$(echo "$Version" | sed -E 's/^([^-]*)+.*/\1/')}
 tmpfname="$(mktemp)"
 fname="$1"
 
+echo "Updating ${fname} with AssemblyVersion ${AssemblyVersion} and InformationalVersion ${InformationalVersion}"
+
 # First remove any existing lines
 cat "$fname" \
 | sed '/^\[assembly: AssemblyVersion("[^"]*")\]$/d' \
