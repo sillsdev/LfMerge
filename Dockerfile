@@ -30,6 +30,7 @@ FROM lfmerge-builder-base AS lfmerge-build-7000068
 ENV DbVersion=7000068
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000068
 ENV RUN_UNIT_TESTS=0
+ENV UPDATE_ASSEMBLYINFO_BY_SCRIPT=1
 ENV NUNIT_VERSION_MAJOR=2
 # To run specific unit tests, set TEST_SPEC env var, e.g.:
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
@@ -38,6 +39,7 @@ FROM lfmerge-builder-base AS lfmerge-build-7000069
 ENV DbVersion=7000069
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000069
 ENV RUN_UNIT_TESTS=0
+ENV UPDATE_ASSEMBLYINFO_BY_SCRIPT=1
 ENV NUNIT_VERSION_MAJOR=2
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
@@ -45,6 +47,7 @@ FROM lfmerge-builder-base AS lfmerge-build-7000070
 ENV DbVersion=7000070
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000070
 ENV RUN_UNIT_TESTS=0
+ENV UPDATE_ASSEMBLYINFO_BY_SCRIPT=1
 ENV NUNIT_VERSION_MAJOR=2
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
@@ -52,6 +55,7 @@ FROM lfmerge-builder-base AS lfmerge-build-7000072
 ENV DbVersion=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
 ENV RUN_UNIT_TESTS=0
+ENV UPDATE_ASSEMBLYINFO_BY_SCRIPT=0
 ENV NUNIT_VERSION_MAJOR=3
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
