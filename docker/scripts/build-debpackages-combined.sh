@@ -36,10 +36,7 @@ cd -
 	git clean -dxf --exclude=packages/ --exclude=lib/
 	git reset --hard
 
-	echo "AssemblyInfo files that would be updated if '$UPDATE_ASSEMBLYINFO_BY_SCRIPT' is not '' or '0':"
-	find src -name AssemblyInfo.cs -path '*LfMerge*'
 	if [ -n "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -a "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -ne 0 ]; then
-		echo "Will update AssemblyInfo.cs files"
 		find src -name AssemblyInfo.cs -path '*LfMerge*' -print0 | xargs -0 -n 1 ${HOME}/packages/lfmerge/docker/scripts/update-assemblyinfo.sh
 	fi
 
