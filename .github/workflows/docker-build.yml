@@ -144,7 +144,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: false
-          tags: lfmerge-build-${{matrix.dbversion}}
+          tags: lfmerge-build-${{matrix.dbversion}}:latest
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -161,7 +161,7 @@ jobs:
           AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
-        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}:latest
 
       - name: Collect Debian images
         if: steps.should_run.outcome == 'success'
