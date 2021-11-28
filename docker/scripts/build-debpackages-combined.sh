@@ -36,6 +36,10 @@ cd -
 	git clean -dxf --exclude=packages/ --exclude=lib/
 	git reset --hard
 
+	if [ -n "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -a "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -ne 0 ]; then
+		find src -name AssemblyInfo.cs -path '*LfMerge*' -print0 | xargs -0 -n 1 ${HOME}/packages/lfmerge/docker/scripts/update-assemblyinfo.sh
+	fi
+
 	cat > NuGet.Config <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
