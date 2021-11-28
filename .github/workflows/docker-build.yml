@@ -151,6 +151,10 @@ jobs:
           build-args: |
             DbVersion=${{matrix.dbversion}}
 
+      - name: Run docker image ls to verify build
+        if: steps.should_run.outcome == 'success'
+        run: docker image ls
+
       - name: Run the build container
         if: steps.should_run.outcome == 'success'
         env:
