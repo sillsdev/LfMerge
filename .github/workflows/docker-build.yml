@@ -135,10 +135,6 @@ jobs:
       - name: Set up buildx for Docker
         uses: docker/setup-buildx-action@v1
 
-      - name: Build base Docker image
-        if: steps.should_run.outcome == 'success'
-        run: docker build -t lfmerge-builder-base --target lfmerge-builder-base .
-
       - name: Build DBVersion-specific Docker image
         if: steps.should_run.outcome == 'success'
         uses: docker/build-push-action@v2
