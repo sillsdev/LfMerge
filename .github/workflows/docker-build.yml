@@ -152,17 +152,30 @@ jobs:
         if: steps.should_run.outcome == 'success'
         run: docker image ls
 
+      - name: Create and populate secrets folder
+        if: steps.should_run.outcome == 'success'
+        env:
+          SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY_SIMPLE }}
+        run: |
+          mkdir -p secrets
+          echo "${SIGNING_KEY}" > secrets/signing_key.sec.asc
+
       - name: Run the build container
         if: steps.should_run.outcome == 'success'
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          DEB_SIGN_KEYID: AD15E4A69D9750B3AEBC9DF06E0BC361361C1AED
           DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
           MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
           MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
           AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
-        run: docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        run: docker run --mount type=bind,source="$(pwd)/secrets",target=/secrets,readonly --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DEB_SIGN_KEYID=${DEB_SIGN_KEYID}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+
+      - name: Delete secrets folder
+        if: always()
+        run: rm -rf secrets
 
       - name: Collect Debian images
         if: steps.should_run.outcome == 'success'
