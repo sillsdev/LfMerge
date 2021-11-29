@@ -140,6 +140,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: false
+          load: true
           tags: lfmerge-build-${{matrix.dbversion}}:latest
           context: .
           cache-from: type=gha
