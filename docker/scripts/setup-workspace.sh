@@ -8,6 +8,8 @@ export MONO_PREFIX=/opt/mono5-sil
 
 mkdir -p ${HOME}/.gnupg ${HOME}/ci-builder-scripts/bash ${HOME}/packages/lfmerge
 
+sudo chown -R builder:users ${HOME}/packages/lfmerge
+
 cd ${HOME}/packages/lfmerge
 git clean -dxf --exclude=packages/
 git reset --hard
