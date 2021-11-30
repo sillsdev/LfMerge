@@ -25,4 +25,5 @@ cp ${HOME}/dependencies/fw8-flexbridge.tar.xz lib/
 mkdir -p ${HOME}/ci-builder-scripts/bash
 cp ${HOME}/docker/common.sh ${HOME}/ci-builder-scripts/bash/
 cp ${HOME}/docker/make-source ${HOME}/ci-builder-scripts/bash/
-
+chmod +x ${HOME}/ci-builder-scripts/bash/{common.sh,make-source}
+ls -lR ${HOME}/ci-builder-scripts
