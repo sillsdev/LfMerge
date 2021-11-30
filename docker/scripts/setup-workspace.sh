@@ -23,7 +23,5 @@ cp ${HOME}/dependencies/fw8-flexbridge.tar.xz lib/
 
 # The make-source shell script (and its common.sh helper) expects to live under ${HOME}/ci-builder-scripts/bash, so make sure that's the case
 mkdir -p ${HOME}/ci-builder-scripts/bash
-cp ${HOME}/docker/common.sh ${HOME}/ci-builder-scripts/bash/
-cp ${HOME}/docker/make-source ${HOME}/ci-builder-scripts/bash/
-chmod +x ${HOME}/ci-builder-scripts/bash/{common.sh,make-source}
-ls -lR ${HOME}/ci-builder-scripts
+cp ${HOME}/packages/lfmerge/docker/common.sh ${HOME}/ci-builder-scripts/bash/
+cp ${HOME}/packages/lfmerge/docker/make-source ${HOME}/ci-builder-scripts/bash/
