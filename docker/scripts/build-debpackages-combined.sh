@@ -5,7 +5,7 @@ echo -e "\033[0;34mBuilding packages for version ${DebPackageVersion} (inserted 
 #DistributionsToPackage="xenial bionic"
 DistributionsToPackage="bionic"
 
-DEBSIGNKEY=BB89B185D63A1DD5
+gpg --import /secrets/*asc || true
 
 # Needed in setup.sh from Debian packaging scripts. TODO: Investigate why this environment variable is being removed, and at what point
 export USER=root
