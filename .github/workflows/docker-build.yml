@@ -205,12 +205,4 @@ jobs:
       with:
         tag_name: v${{needs.build.outputs.MajorMinorPatch}}
         files: release/*.deb
-        body: |
-          # LfMerge v${{needs.build.outputs.MajorMinorPatch}}
-
-          First release via GitHub Releases
-
-          ## To install
-
-          Download all the .deb files, then make sure the `gdebi-core` package is installed. Then run `gdebi lfmerge*.deb`.
-
+        generate_release_notes: true
