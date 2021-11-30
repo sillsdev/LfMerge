@@ -20,22 +20,10 @@ jobs:
         distro: [ 'bionic' ]
 
     steps:
-      - name: Dump GitHub context for testing
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Echo dbversion and current ref
-        env:
-          DBVERSION: ${{ matrix.dbversion }}
-          REFNAME: ${{ github.ref_name }}
-          BASEREF: ${{ github.base_ref }}
-        run: echo "DB version ${DBVERSION} and ref ${GITHUB_REF} (ref name ${REFNAME} and base ref ${BASEREF}) with current SHA ${GITHUB_SHA}"
-
       - name: Decide if this build configuration should run
         id: should_run
         run: true
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
+        if: ${{ (github.event_name == 'push' && !startsWith(github.ref_name, 'fieldworks8-')) || (github.event_name == 'push' && startsWith(github.ref_name, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
         uses: actions/checkout@v2
