@@ -155,14 +155,6 @@ jobs:
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
-      - name: pwd && ls -lR
-        if: steps.should_run.outcome == 'success'
-        run: pwd && ls -lR
-
-      - name: Collect Debian images
-        if: steps.should_run.outcome == 'success'
-        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
-
       - uses: actions/upload-artifact@v2
         if: steps.should_run.outcome == 'success'
         with:
