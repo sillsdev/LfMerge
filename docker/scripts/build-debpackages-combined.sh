@@ -56,7 +56,7 @@ EOF
 	echo -e "\033[0;34mBuild source package\033[0m"
 	TRACE $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 		--arches "amd64" --main-package-name "lfmerge" --source-code-subdir "." \
-		--supported-distros "xenial bionic" --debkeyid $DEBSIGNKEY \
+		--supported-distros "xenial bionic" --debkeyid $DEB_SIGN_KEYID \
 		--package-version "$DebPackageVersion" --preserve-changelog
 
 	# echo -e "\033[0;34mBuild binary package\033[0m"
