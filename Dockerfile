@@ -61,32 +61,14 @@ ENV NUNIT_VERSION_MAJOR=3
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
-USER builder
-RUN mkdir -p /home/builder/.gnupg /home/builder/ci-builder-scripts/bash /home/builder/packages/lfmerge
-WORKDIR /home/builder/packages/lfmerge
-ENV MONO_PREFIX=/opt/mono5-sil
-
-COPY --chown=builder:users . ./
-RUN git clean -dxf --exclude=packages/
-RUN git reset --hard
-
-# Instead of downloading FLExBridge DLLs which have vanished from TeamCity, store them in the Docker image
-ADD docker/fw8-flexbridge.tar.xz lib/
-
-# TODO: Consider running a package restore here so that it's cached in the build image instead of having to run in the container each time
-# E.g., call download-dependencies-combined.sh at this point
-
-COPY --chown=builder:users docker/scripts .
-COPY --chown=builder:users .config/dotnet-tools.json .config/dotnet-tools.json
-# Our packaging shell scripts expect to live under /home/builder/ci-builder-scripts/bash
-# COPY --chown=builder:users [ "docker/common.sh", "docker/setup.sh", "docker/sbuildrc", "docker/build-package", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
-COPY --chown=builder:users [ "docker/common.sh", "docker/make-source", "/home/builder/ci-builder-scripts/bash/" ]
-
-# LanguageForge repo expected to be in (will be copied into ./data/php/src before running unit tests)
+# LanguageForge repo expected to be in /var/www/html (will be copied into ./data/php/src before running unit tests)
 COPY --chown=builder:users --from=lf-build /var/www/html /var/www/html
 
-RUN echo In build, DB version is ${DbVersion}
+USER builder
 
-# RUN --mount=type=tmpfs,target=/tmp ./build-and-test.sh ${DbVersion}
-
-CMD ./build-and-test.sh ${DbVersion}
+# Git repo should be mounted under ${HOME}/packages/lfmerge when run
+# E.g., `docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge`
+RUN mkdir -p /home/builder/packages/lfmerge
+CMD /home/builder/packages/lfmerge/docker/scripts/build-and-test.sh ${DbVersion}
+# CMD doesn't actually run the script, it just gives `docker run` a default.
+# So it's okay for the Git repo to not be mounted yet.

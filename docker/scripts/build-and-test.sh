@@ -4,7 +4,15 @@ export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
 sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
+# Assumptions:
+# - Git repo is mounted under ${HOME}/packages/lfmerge
+# - Scripts live in ${HOME}/packages/lfmerge/docker/scripts
+cd /home/builder/packages/lfmerge/docker/scripts/
+
+./setup-workspace.sh ${DBVersion}
+
 ./gitversion-combined.sh ${DbVersion}
+
 ./download-dependencies-combined.sh ${DbVersion}
 
 ./compile-lfmerge-combined.sh ${DbVersion}
