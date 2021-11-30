@@ -32,9 +32,13 @@ cd -
 # for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 	echo -e "\033[0;34mBuilding package for database version ${curDbVersion}\033[0m"
 
+	echo -e "Before git reset, ls -lR $HOME/ci-builder-scripts produced:"
+	ls -lR $HOME/ci-builder-scripts
 	echo -e "\033[0;34mPrepare source\033[0m"
 	git clean -dxf --exclude=packages/ --exclude=lib/
 	git reset --hard
+	echo -e "After git reset, ls -lR $HOME/ci-builder-scripts produced:"
+	ls -lR $HOME/ci-builder-scripts
 
 	if [ -n "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -a "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -ne 0 ]; then
 		find src -name AssemblyInfo.cs -path '*LfMerge*' -print0 | xargs -0 -n 1 ${HOME}/packages/lfmerge/docker/scripts/update-assemblyinfo.sh
