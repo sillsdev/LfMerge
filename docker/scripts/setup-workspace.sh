@@ -26,5 +26,3 @@ mkdir -p ${HOME}/ci-builder-scripts/bash
 cp ${HOME}/docker/common.sh ${HOME}/ci-builder-scripts/bash/
 cp ${HOME}/docker/make-source ${HOME}/ci-builder-scripts/bash/
 
-cd docker/scripts
-
