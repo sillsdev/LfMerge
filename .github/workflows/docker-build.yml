@@ -20,13 +20,6 @@ jobs:
         distro: [ 'bionic' ]
 
     steps:
-      - name: Echo dbversion and current ref
-        env:
-          DBVERSION: ${{ matrix.dbversion }}
-          REFNAME: ${{ github.ref_name }}
-          BASEREF: ${{ github.base_ref }}
-        run: echo "DB version ${DBVERSION} and ref ${GITHUB_REF} (ref name ${REFNAME} and base ref ${BASEREF}) with current SHA ${GITHUB_SHA}"
-
       - name: Decide if this build configuration should run
         id: should_run
         run: true
@@ -169,4 +162,52 @@ jobs:
           name: lfmerge-deb-files
           path: finalresults/lfmerge*deb
 
-      # TODO: If `live` branch, then create release
+    outputs:
+      MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/live'
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Ensure release number exists
+      # Will throw an error, thereby cancelling the build, if MajorMinorPatch output was empty
+      env:
+        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
+      run: test -n "${MajorMinorPatch}" && echo "Producing release ${MajorMinorPatch}"
+
+    - name: Tag new release
+      env:
+        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git tag -a -m "Release v${MajorMinorPatch}" "v${MajorMinorPatch}"
+        git push --tags
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: lfmerge-deb-files
+        path: release
+
+    - name: Create GitHub release
+      env:
+        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{needs.build.outputs.MajorMinorPatch}}
+        files: release/*.deb
+        body: |
+          # LfMerge v${{needs.build.outputs.MajorMinorPatch}}
+
+          First release via GitHub Releases
+
+          ## To install
+
+          Download all the .deb files, then make sure the `gdebi-core` package is installed. Then run `gdebi lfmerge*.deb`.
+
