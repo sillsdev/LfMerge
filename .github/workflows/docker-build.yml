@@ -26,13 +26,15 @@ jobs:
         if: ${{ (github.event_name == 'push' && !startsWith(github.ref_name, 'fieldworks8-')) || (github.event_name == 'push' && startsWith(github.ref_name, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion < 7000072) || (github.event_name == 'pull_request' && !startsWith(github.base_ref, 'fieldworks8-') && matrix.dbversion >= 7000072) }}
 
       - name: Check out current branch
-        uses: actions/checkout@v2
+        # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         if: steps.should_run.outcome == 'success'
         with:
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Check out FW8 branch
-        uses: actions/checkout@v2
+        # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         if: github.event_name == 'push' && !startsWith(github.ref_name, 'fieldworks8-') && matrix.dbversion < 7000072 && steps.should_run.outcome == 'success'
         with:
           ref: fieldworks8-${{ github.ref_name }}
@@ -124,11 +126,13 @@ jobs:
           echo "::set-output name=InformationalVersion::${InformationalVersion}"
 
       - name: Set up buildx for Docker
-        uses: docker/setup-buildx-action@v1
+        # docker/setup-buildx-action@v1.6.0 is commit 94ab11c41e45d028884a99163086648e898eed25
+        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
 
       - name: Build DBVersion-specific Docker image
         if: steps.should_run.outcome == 'success'
-        uses: docker/build-push-action@v2
+        # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
         with:
           push: false
           load: true
@@ -155,7 +159,8 @@ jobs:
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
-      - uses: actions/upload-artifact@v2
+      # actions/upload-artifact@v2.2.4 is commit 27121b0bdffd731efa15d66772be8dc71245d074
+      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
         if: steps.should_run.outcome == 'success'
         with:
           name: lfmerge-deb-files
@@ -169,7 +174,8 @@ jobs:
     needs: build
     if: github.event_name == 'push' && (github.ref == 'refs/heads/live' || github.ref == 'refs/heads/fieldworks8-live')
     steps:
-    - uses: actions/checkout@v2
+    # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
+    - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
       with:
         fetch-depth: 0
 
@@ -192,16 +198,16 @@ jobs:
 
     - name: Download build artifacts
       if: github.ref == 'refs/heads/live'
-      uses: actions/download-artifact@v2
+      # actions/download-artifact@v2.0.10 is commit 3be87be14a055c47b01d3bd88f8fe02320a9bb60
+      uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60
       with:
         name: lfmerge-deb-files
         path: release
 
     - name: Create GitHub release
       if: github.ref == 'refs/heads/live'
-      env:
-        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
-      uses: softprops/action-gh-release@v1
+      # softprops/action-gh-release@v0.1.14 is commit 1e07f4398721186383de40550babbdf2b84acfc5
+      uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
       with:
         tag_name: v${{needs.build.outputs.MajorMinorPatch}}
         files: release/*.deb
