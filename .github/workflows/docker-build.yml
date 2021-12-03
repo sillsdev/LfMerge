@@ -147,6 +147,10 @@ jobs:
         if: steps.should_run.outcome == 'success'
         run: docker image ls
 
+      - name: Create sentinel file
+        if: steps.should_run.outcome == 'success'
+        run: touch it-worked.txt
+
       - name: Run the build container
         if: steps.should_run.outcome == 'success'
         env:
@@ -162,6 +166,10 @@ jobs:
       - name: Collect Debian images
         if: steps.should_run.outcome == 'success'
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
+
+      - name: Verify sentinel file is still there
+        if: steps.should_run.outcome == 'success'
+        run: test -f it-worked.txt
 
       # actions/upload-artifact@v2.2.4 is commit 27121b0bdffd731efa15d66772be8dc71245d074
       - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
