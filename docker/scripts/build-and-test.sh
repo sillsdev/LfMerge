@@ -6,12 +6,14 @@ export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
 sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
-# Assumptions:
-# - Git repo is mounted under ${HOME}/packages/lfmerge
-# - Scripts live in ${HOME}/packages/lfmerge/docker/scripts
-cd /home/builder/packages/lfmerge
+# Assuming script is being run from inside the repo, find the repo root and use that as the working directory from now on
+cd "${SCRIPT_DIR}"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "${REPO_ROOT}"
 
-"$SCRIPT_DIR"/setup-workspace.sh ${DBVersion}
+"$SCRIPT_DIR"/setup-workspace.sh "${REPO_ROOT}"
+
+echo After setup-workspace.sh, pwd is $(pwd)
 
 "$SCRIPT_DIR"/gitversion-combined.sh ${DbVersion}
 
