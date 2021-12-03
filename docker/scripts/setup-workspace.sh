@@ -9,6 +9,10 @@ mkdir -p "${HOME}/.gnupg" "${HOME}/ci-builder-scripts/bash" "${DEST}"
 REPO_ROOT="${1:-$(git rev-parse --show-toplevel)}"
 echo "Inside setup-workspace.sh, pwd is $(pwd) and repo root is ${REPO_ROOT}"
 
+echo 'DEBUG: ls -lR ${DEST}'
+ls -lR "${DEST}"
+echo 'DEBUG: ls -lR ${REPO_ROOT}'
+ls -lR "${REPO_ROOT}"
 sudo cp -a "${REPO_ROOT}" "${DEST}"
 sudo chown -R builder:users "${DEST}"
 echo 'DEBUG: ls -lR ${DEST}'
