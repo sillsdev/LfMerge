@@ -9,7 +9,8 @@ mkdir -p "${HOME}/.gnupg" "${HOME}/ci-builder-scripts/bash" "${DEST}"
 REPO_ROOT="${1:-$(git rev-parse --show-toplevel)}"
 sudo cp -a "${REPO_ROOT}" "${DEST}"
 sudo chown -R builder:users "${DEST}"
-
+echo 'DEBUG: ls -lR ${DEST}'
+ls -lR "${DEST}"
 # The make-source shell script (and its common.sh helper) expects to live under ${HOME}/ci-builder-scripts/bash, so make sure that's the case
 mkdir -p "${HOME}/ci-builder-scripts/bash"
 cp "${DEST}/docker/common.sh" "${HOME}/ci-builder-scripts/bash/"
@@ -18,6 +19,8 @@ cp "${DEST}/docker/make-source" "${HOME}/ci-builder-scripts/bash/"
 cd "${DEST}"
 git clean -dxf --exclude=packages/
 git reset --hard
+echo 'DEBUG: ls -lR ${DEST} after git clean'
+ls -lR "${DEST}"
 
 # FLExBridge dependencies from FW 8 builds have vanished from TeamCity, so we stored them in the Docker image under ${REPO_ROOT}/docker
 mkdir -p lib
