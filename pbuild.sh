@@ -10,27 +10,28 @@ for f in 68 69 70 72; do
 done
 
 # First create the base build container ONCE (not in parallel), to ensure that the slow steps (apt-get install mono5-sil) are cached
-docker build -t lfmerge-builder-base --target lfmerge-builder-base -f combined.dockerfile .
+docker build -t lfmerge-builder-base --target lfmerge-builder-base .
 
 # Create the build containers in series, because I've had trouble when creating them in parallel
 # (To create the build containers in series, which might be necessary if you have trouble with
 # Docker caching while creating them in parallel, just comment out the "time parallel" and "EOF" lines)
 time parallel --no-notice <<EOF
-docker build --build-arg DbVersion=7000068 -t lfmerge-build-7000068 -f combined.dockerfile .
-docker build --build-arg DbVersion=7000069 -t lfmerge-build-7000069 -f combined.dockerfile .
-docker build --build-arg DbVersion=7000070 -t lfmerge-build-7000070 -f combined.dockerfile .
-docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 -f combined.dockerfile .
+docker build --build-arg DbVersion=7000068 -t lfmerge-build-7000068 .
+docker build --build-arg DbVersion=7000069 -t lfmerge-build-7000069 .
+docker build --build-arg DbVersion=7000070 -t lfmerge-build-7000070 .
+docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 .
 EOF
 
 # To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
 # docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 -f combined.dockerfile .
+. docker/scripts/get-version-number.sh
 
 # Run the build
 time parallel --no-notice <<EOF
-docker run --mount type=tmpfs,dst=/tmp --name tmp-lfmerge-build-7000068 lfmerge-build-7000068
-docker run --mount type=tmpfs,dst=/tmp --name tmp-lfmerge-build-7000069 lfmerge-build-7000069
-docker run --mount type=tmpfs,dst=/tmp --name tmp-lfmerge-build-7000070 lfmerge-build-7000070
-docker run --mount type=tmpfs,dst=/tmp --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
+docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000068 lfmerge-build-7000068
+docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000069 lfmerge-build-7000069
+docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000070 lfmerge-build-7000070
+docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
 EOF
 
 # To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
@@ -39,5 +40,5 @@ EOF
 # Collect results
 for f in 68 69 70 72; do
 # for f in 72; do
-    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/finalresults ./
+    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/repo/finalresults ./
 done
