@@ -13,7 +13,8 @@ echo 'DEBUG: ls -lR ${DEST}' which is "${DEST}"
 ls -lR "${DEST}"
 echo 'DEBUG: ls -lR ${REPO_ROOT}' which is "${REPO_ROOT}"
 ls -lR "${REPO_ROOT}"
-sudo cp -a "${REPO_ROOT}" "${DEST}"
+# cp -a "${REPO_ROOT}" "${DEST}" creates ${DEST}/repo and then everything is under there. That's not actually what we want. So...
+sudo cp -a "${REPO_ROOT}"/* "${REPO_ROOT}"/.[a-zA-Z0-9]* "${DEST}"
 sudo chown -R builder:users "${DEST}"
 echo 'DEBUG: ls -lR ${DEST}'
 ls -lR "${DEST}"
