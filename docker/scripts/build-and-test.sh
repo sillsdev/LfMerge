@@ -7,8 +7,10 @@ echo "Building for ${DbVersion}"
 sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 # Assuming script is being run from inside the repo, find the repo root and use that as the working directory from now on
+echo "Script dir is ${SCRIPT_DIR}"
 cd "${SCRIPT_DIR}"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
+echo "Repo root is ${REPO_ROOT}"
 cd "${REPO_ROOT}"
 
 "$SCRIPT_DIR"/setup-workspace.sh "${HOME}/packages/lfmerge"
