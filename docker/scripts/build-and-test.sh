@@ -11,7 +11,7 @@ cd "${SCRIPT_DIR}"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "${REPO_ROOT}"
 
-"$SCRIPT_DIR"/setup-workspace.sh "${REPO_ROOT}"
+"$SCRIPT_DIR"/setup-workspace.sh "${HOME}/packages/lfmerge"
 
 echo After setup-workspace.sh, pwd is $(pwd)
 
