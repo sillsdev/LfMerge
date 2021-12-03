@@ -68,7 +68,7 @@ USER builder
 
 # Git repo should be mounted under ${HOME}/packages/lfmerge when run
 # E.g., `docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge`
-RUN mkdir -p /home/builder/packages/lfmerge
-CMD /home/builder/packages/lfmerge/docker/scripts/build-and-test.sh ${DbVersion}
+RUN mkdir -p /home/builder/repo /home/builder/packages/lfmerge
+CMD /home/builder/repo/docker/scripts/build-and-test.sh ${DbVersion}
 # CMD doesn't actually run the script, it just gives `docker run` a default.
 # So it's okay for the Git repo to not be mounted yet.

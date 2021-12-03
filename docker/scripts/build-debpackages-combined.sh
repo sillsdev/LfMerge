@@ -23,11 +23,8 @@ cd ${HOME}/packages/lfmerge
 mkdir -p finalresults
 rm -f finalresults/*
 rm -f lfmerge-*
-
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-
-cd -
 
 # for ((curDbVersion=7000068; curDbVersion<=7000070; curDbVersion++)); do
 	echo -e "\033[0;34mBuilding package for database version ${curDbVersion}\033[0m"
