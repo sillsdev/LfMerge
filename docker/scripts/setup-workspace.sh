@@ -6,7 +6,7 @@ export MONO_PREFIX=/opt/mono5-sil
 
 mkdir -p "${HOME}/.gnupg" "${HOME}/ci-builder-scripts/bash" "${DEST}"
 
-REPO_ROOT="${1:-$(git rev-parse --show-toplevel)}"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 echo "Inside setup-workspace.sh, pwd is $(pwd) and repo root is ${REPO_ROOT}"
 
 echo 'DEBUG: ls -lR ${DEST}' which is "${DEST}"
