@@ -1,27 +1,25 @@
 #!/bin/bash
 
-# Assumptions:
-# - Git repo is mounted under ${HOME}/packages/lfmerge
-# - fw8-flexbridge.tar.xz dependency is mounted under ${HOME}/dependencies
+DEST="${1:-${HOME}/packages/lfmerge}"
 
 export MONO_PREFIX=/opt/mono5-sil
 
-mkdir -p ${HOME}/.gnupg ${HOME}/ci-builder-scripts/bash ${HOME}/packages/lfmerge
+mkdir -p "${HOME}/.gnupg" "${HOME}/ci-builder-scripts/bash" "${DEST}"
 
-sudo chown -R builder:users ${HOME}/packages/lfmerge
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 
-cd ${HOME}/packages/lfmerge
+# cp -a "${REPO_ROOT}" "${DEST}" creates ${DEST}/repo and then everything is under there. That's not actually what we want. So...
+sudo cp -a "${REPO_ROOT}"/* "${REPO_ROOT}"/.[a-zA-Z0-9]* "${DEST}"
+sudo chown -R builder:users "${DEST}"
+# The make-source shell script (and its common.sh helper) expects to live under ${HOME}/ci-builder-scripts/bash, so make sure that's the case
+mkdir -p "${HOME}/ci-builder-scripts/bash"
+cp "${DEST}/docker/common.sh" "${HOME}/ci-builder-scripts/bash/"
+cp "${DEST}/docker/make-source" "${HOME}/ci-builder-scripts/bash/"
+
+cd "${DEST}"
 git clean -dxf --exclude=packages/
 git reset --hard
 
-# Instead of downloading FLExBridge DLLs which have vanished from TeamCity, store them in the Docker image
+# FLExBridge dependencies from FW 8 builds have vanished from TeamCity, so we stored them in the Docker image under ${REPO_ROOT}/docker
 mkdir -p lib
-cp ${HOME}/dependencies/fw8-flexbridge.tar.xz lib/
-
-# TODO: Consider running a package restore here so that it's cached in the build image instead of having to run in the container each time
-# E.g., call download-dependencies-combined.sh at this point
-
-# The make-source shell script (and its common.sh helper) expects to live under ${HOME}/ci-builder-scripts/bash, so make sure that's the case
-mkdir -p ${HOME}/ci-builder-scripts/bash
-cp ${HOME}/packages/lfmerge/docker/common.sh ${HOME}/ci-builder-scripts/bash/
-cp ${HOME}/packages/lfmerge/docker/make-source ${HOME}/ci-builder-scripts/bash/
+(cd lib && xz -dc "${REPO_ROOT}/docker/fw8-flexbridge.tar.xz" | tar xf -)

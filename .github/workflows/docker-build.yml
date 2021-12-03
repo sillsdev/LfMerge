@@ -157,7 +157,11 @@ jobs:
           AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
-        run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+        run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+
+      - name: Collect Debian images
+        if: steps.should_run.outcome == 'success'
+        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
 
       # actions/upload-artifact@v2.2.4 is commit 27121b0bdffd731efa15d66772be8dc71245d074
       - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
