@@ -30,4 +30,4 @@ ls -lR "${DEST}"
 
 # FLExBridge dependencies from FW 8 builds have vanished from TeamCity, so we stored them in the Docker image under ${REPO_ROOT}/docker
 mkdir -p lib
-(cd lib && xz -d "${REPO_ROOT}/docker/fw8-flexbridge.tar.xz" | tar xf -)
+(cd lib && xz -dc "${REPO_ROOT}/docker/fw8-flexbridge.tar.xz" | tar xf -)
