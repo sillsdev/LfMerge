@@ -23,8 +23,6 @@ cd ${HOME}/packages/lfmerge
 mkdir -p finalresults
 rm -f finalresults/*
 rm -f lfmerge-*
-echo "DEBUG: pwd && ls -lR"
-pwd && ls -lR
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
