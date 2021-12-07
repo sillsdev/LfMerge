@@ -74,6 +74,7 @@ namespace LfMerge.Core.DataConverters
 			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, lfCustomFieldTypes, false);
 		}
 
+		// TODO: Get rid of isTest bool
 		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes, bool isTest)
 		{
 			var customFieldSpecs = new List<CustomFieldSpec>();
@@ -81,12 +82,7 @@ namespace LfMerge.Core.DataConverters
 			{
 				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, lfCustomFieldTypes[lfCustomFieldName]));
 			}
-
-			var lfproxy = MainClass.Container.Resolve<ILanguageForgeProxy>();
-			string output = lfproxy.UpdateCustomFieldViews(project.ProjectCode, customFieldSpecs, isTest);
-
-			if (string.IsNullOrEmpty(output) || output == "false")
-				return false;
+			// TODO: This no longer needs to return a bool
 			return true;
 		}
 
