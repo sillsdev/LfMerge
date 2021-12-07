@@ -172,7 +172,7 @@ namespace LfMerge.Core.Tests
 			return true;
 		}
 
-		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
 		{
 			if (lfCustomFieldList == null)
 				_storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
