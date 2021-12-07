@@ -16,6 +16,7 @@ namespace LfMerge.Core
 			// Option lists that are currently used in LF (as of 2016-03-01)
 			{ LfOptionListCodeForGrammaticalInfo, "Part of Speech" },
 			{ LfOptionListCodeForSemanticDomains, "Semantic Domain" },
+			{ LfOptionListCodeForLfTags, "LF Tags" },
 			{ LfOptionListCodeForAcademicDomainTypes, "Academic Domains" },
 			{ LfOptionListCodeForEnvironments, "Environments" },
 			{ LfOptionListCodeForLocations, "Location" },
@@ -44,6 +45,7 @@ namespace LfMerge.Core
 		// Option lists that are currently used in LF (as of 2016-03-01)
 		public const string LfOptionListCodeForGrammaticalInfo = "grammatical-info";
 		public const string LfOptionListCodeForSemanticDomains = "semantic-domain-ddp4";
+		public const string LfOptionListCodeForLfTags = "lf-entry-tags";
 		public const string LfOptionListCodeForAcademicDomainTypes = "domain-type";
 		public const string LfOptionListCodeForEnvironments = "environments";
 		public const string LfOptionListCodeForLocations = "location";
@@ -88,6 +90,10 @@ namespace LfMerge.Core
 		// Fake language codes used in storing custom GenDate and int fields in Mongo
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
 		public const string LanguageCodeForIntFields = "qaa-Zmth";
+
+		// Custom fields that we reserve for LF use in Send/Receive FLEx projects
+		public const string LcmCustomFieldNameForLfTags = "LF_Tags";
+		public const string LcmOptionListGuidForLfTags = "6d9b3052-195b-46cb-a300-e8598e59fed5";
 
 		// FW strings
 		public const string FwFixitAppName = "FixFwData.exe";

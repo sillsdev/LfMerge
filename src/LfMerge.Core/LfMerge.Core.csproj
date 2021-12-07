@@ -58,5 +58,9 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
       <Link>SemDom.xml</Link>
       <LogicalName>SemDom.xml</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\data\canonical-lf-tags.xml">
+      <Link>canonical-lf-tags.xml</Link>
+      <LogicalName>canonical-lf-tags.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

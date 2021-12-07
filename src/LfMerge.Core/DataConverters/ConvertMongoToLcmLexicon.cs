@@ -12,6 +12,7 @@ using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.LCModel;
+using SIL.LCModel.Application;
 using SIL.LCModel.Core.KernelInterfaces;
 using SIL.LCModel.Core.WritingSystems;
 using SIL.LCModel.DomainServices;
@@ -38,6 +39,7 @@ namespace LfMerge.Core.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToLcmCustomField _convertCustomField;
+		private int _lfTagsFieldId;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
@@ -51,6 +53,7 @@ namespace LfMerge.Core.DataConverters
 		private const string SenseTypeListCode = MagicStrings.LfOptionListCodeForSenseTypes;
 		private const string AnthroCodeListCode = MagicStrings.LfOptionListCodeForAnthropologyCodes;
 		private const string StatusListCode = MagicStrings.LfOptionListCodeForStatus;
+		private const string LfTagsListCode = MagicStrings.LfOptionListCodeForLfTags;
 
 		private IDictionary<string, ConvertMongoToLcmOptionList> ListConverters;
 
@@ -74,6 +77,8 @@ namespace LfMerge.Core.DataConverters
 			//_analysisWritingSystems = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
 			//_vernacularWritingSystems = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
 
+			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+
 			ListConverters = new Dictionary<string, ConvertMongoToLcmOptionList>();
 			ListConverters[GrammarListCode] = PrepareOptionListConverter(GrammarListCode);
 			ListConverters[SemDomListCode] = PrepareOptionListConverter(SemDomListCode);
@@ -83,8 +88,8 @@ namespace LfMerge.Core.DataConverters
 			ListConverters[SenseTypeListCode] = PrepareOptionListConverter(SenseTypeListCode);
 			ListConverters[AnthroCodeListCode] = PrepareOptionListConverter(AnthroCodeListCode);
 			ListConverters[StatusListCode] = PrepareOptionListConverter(StatusListCode);
-
-			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
+			ListConverters[LfTagsListCode] = PrepareOptionListConverterFromCanonicalSource(LfTagsListCode);
+			_lfTagsFieldId = EnsureCustomFieldExists(new System.Guid(MagicStrings.LcmOptionListGuidForLfTags), MagicStrings.LcmCustomFieldNameForLfTags);
 
 			// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the code block
 			// above with this one (that provides TWO parameters to PrepareOptionListConverter)
@@ -112,7 +117,40 @@ namespace LfMerge.Core.DataConverters
 		{
 			LfOptionList optionListToConvert = Connection.GetLfOptionListByCode(LfProject, listCode);
 			return new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
-				optionListToConvert, Logger, CanonicalOptionListSource.Create(listCode));
+				optionListToConvert, Logger, null, 0, CanonicalOptionListSource.Create(listCode));
+		}
+
+		private ConvertMongoToLcmOptionList PrepareOptionListConverterFromCanonicalSource(string listCode)
+		{
+			// 1. Check if parent list for LF Tags already exists in LCM
+			// 2. Create it if it doesn't, using canonical source data
+
+			var canonicalSource = CanonicalOptionListSource.Create(listCode);
+			var converter = new ConvertMongoToLcmOptionList(GetInstance<ICmPossibilityRepository>(),
+				null, Logger, null, _wsEn, canonicalSource);
+			ICmPossibilityList parentList = converter.EnsureLcmPossibilityListExists(
+				canonicalSource,
+				ServiceLocator,
+				new System.Guid(MagicStrings.LcmOptionListGuidForLfTags),
+				MagicStrings.LcmCustomFieldNameForLfTags
+			);
+
+			return converter;
+		}
+
+		private int EnsureCustomFieldExists(Guid parentListGuid, string name)
+		{
+			// 1. Check if custom field already exists in LCM
+			// 2. Create it if it doesn't, using parent list that is now guaranteed to exist
+
+			var mdc = ServiceLocator.MetaDataCache;
+			int flid = 0;
+			if (mdc.FieldExists("LexEntry", name, false)) {
+				flid = mdc.GetFieldId("LexEntry", name, false);
+			} else {
+				flid = mdc.AddCustomField("LexEntry", name, SIL.LCModel.Core.Cellar.CellarPropertyType.ReferenceCollection, CmPossibilityTags.kClassId, "Internal Language Forge field - do not edit", _wsEn, parentListGuid);
+			}
+			return flid;
 		}
 
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), replace the function
@@ -570,8 +608,14 @@ namespace LfMerge.Core.DataConverters
 			// lfEntry.Senses -> LcmEntry.SensesOS
 			SetLcmListFromLfList(LcmEntry, LcmEntry.SensesOS, lfEntry.Senses, LfSenseToLcmSense);
 
+			// TODO: Handle lf-tags custom field with something like the following
+			// ListConverters[AnthroCodeListCode].UpdatePossibilitiesFromStringArray(LcmSense.AnthroCodesRC,
+			// 	lfSense.AnthropologyCategories);
+
+			SetLcmCustomFieldFromLfStringArrayField(LcmEntry, _lfTagsFieldId, lfEntry.Tags);
+
 			_convertCustomField.SetCustomFieldsForThisCmObject(LcmEntry, "entry", lfEntry.CustomFields,
-				lfEntry.CustomFieldGuids);
+				lfEntry.CustomFieldGuids, _lfTagsFieldId);
 
 			// If we got this far, we either created or modified this entry
 			if (createdEntry)
@@ -781,6 +825,16 @@ namespace LfMerge.Core.DataConverters
 				}
 				i++;
 			}
+		}
+
+		private void SetLcmCustomFieldFromLfStringArrayField(ILexEntry lcmEntry, int flid, LfStringArrayField keys)
+		{
+			if (keys == null || keys.Values == null) return;
+			ISilDataAccessManaged data = (ISilDataAccessManaged)Cache.DomainDataByFlid;
+			int[] oldHvos = data.VecProp(lcmEntry.Hvo, flid);
+			var possibilities = ListConverters[LfTagsListCode].FromStringArrayField<ICmPossibility>(keys);
+			int[] newHvos = possibilities.Select(poss => poss.Hvo).ToArray();
+			ConvertUtilities.ReplaceHvosInCustomField(lcmEntry.Hvo, flid, data, oldHvos, newHvos);
 		}
 
 		private Guid GuidFromLiftId(string liftId)

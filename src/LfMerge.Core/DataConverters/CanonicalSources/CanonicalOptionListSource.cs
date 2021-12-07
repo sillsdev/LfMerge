@@ -36,6 +36,8 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 				return new CanonicalPartOfSpeechSource();
 			else if (listCode == MagicStrings.LfOptionListCodeForSemanticDomains)
 				return new CanonicalSemanticDomainSource();
+			else if (listCode == MagicStrings.LfOptionListCodeForLfTags)
+				return new CanonicalLfTagSource();
 			else
 				return null;
 		}
@@ -70,6 +72,10 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 			result = ByKeyOrNull(key);
 			return (result != null);
 		}
+
+		public Dictionary<Guid, CanonicalItem>.ValueCollection ValuesByGuid => this.byGuid.Values;
+		public Dictionary<string, CanonicalItem>.ValueCollection ValuesByKey => this.byKey.Values;
+		public int Count => this.byGuid.Count;
 
 		// Descendants will override this to specify the generic type T.
 		// E.g., LoadCanonicalData<CanonicalPartOfSpeechItem>();
