@@ -59,7 +59,6 @@ namespace LfMerge.Core
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			containerBuilder.RegisterType<EntryCounts>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
-			containerBuilder.RegisterType<LanguageForgeProxy>().As<ILanguageForgeProxy>();
 			Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
