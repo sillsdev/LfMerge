@@ -48,7 +48,6 @@ namespace LfMerge.Core.DataConverters
 		};
 
 		private Dictionary<Guid, string> GuidToListCode;
-		private Dictionary<string, string> _fieldNameToFieldType;
 
 		public ConvertLcmToMongoCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
 		{
@@ -69,7 +68,6 @@ namespace LfMerge.Core.DataConverters
 				{servLoc.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
 				{servLoc.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
-			_fieldNameToFieldType = new Dictionary<string, string>();
 		}
 
 		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
@@ -82,7 +80,7 @@ namespace LfMerge.Core.DataConverters
 			var customFieldSpecs = new List<CustomFieldSpec>();
 			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
 			{
-				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, _fieldNameToFieldType[lfCustomFieldName]));
+				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, lfCustomFieldTypes[lfCustomFieldName]));
 			}
 
 			var lfproxy = MainClass.Container.Resolve<ILanguageForgeProxy>();
@@ -157,7 +155,6 @@ namespace LfMerge.Core.DataConverters
 					continue;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, fieldSourceType);
 				CellarPropertyType LcmFieldType = (CellarPropertyType)LcmMetaData.GetFieldType(flid);
-				_fieldNameToFieldType[lfCustomFieldName] = LcmFieldType.ToString();  // TODO: Comment this one OUT. Bad design.
 				lfCustomFieldTypes[lfCustomFieldName] = LcmFieldType.ToString();
 				string lfCustomFieldType;
 				if (CellarPropertyTypeToLfCustomFieldType.TryGetValue(LcmFieldType, out lfCustomFieldType))
