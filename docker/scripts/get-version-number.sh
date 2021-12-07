@@ -59,7 +59,8 @@
               ;;
 
             refs/heads/*)
-              PRERELEASE="~${REV##refs/heads/}.${BUILD_NUMBER}"
+              BRANCH=$(echo "${REV##refs/heads/}" | sed 's/\//-/')
+              PRERELEASE="~${BRANCH}.${BUILD_NUMBER}"
               ;;
 
             *)

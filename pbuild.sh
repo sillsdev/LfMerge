@@ -78,5 +78,5 @@ EOF
 # Collect results
 for f in 68 69 70 72; do
 # for f in 72; do
-    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/repo/finalresults ./
+    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/finalresults ./
 done
