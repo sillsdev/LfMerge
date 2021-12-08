@@ -38,7 +38,7 @@ namespace LfMerge.Core.LanguageForge.Config
 	public static class LexViewFieldConfigFactory
 	{
 		public static LexViewFieldConfig CreateByType(string lfCustomFieldType, bool show = true) {
-			if (lfCustomFieldType == "MultiUnicode" || lfCustomFieldType == "MultiString") {
+			if (lfCustomFieldType == "MultiUnicode" || lfCustomFieldType == "MultiString" || lfCustomFieldType == "String") {
 				return new LexViewMultiTextFieldConfig(show);
 			} else {
 				return new LexViewFieldConfig(show);
