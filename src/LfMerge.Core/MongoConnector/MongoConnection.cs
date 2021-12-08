@@ -692,8 +692,8 @@ namespace LfMerge.Core.MongoConnector
 			BsonDocument roleViews = GetRoleViews(project);
 			BsonDocument userViews = GetUserViews(project);
 
-			List<string> roleViewNames = roleViews?.Names.ToList<string>() ?? new List<string>();
-			List<string> userViewNames = userViews?.Names.ToList<string>() ?? new List<string>();
+			List<string> roleViewNames = roleViews != null ? roleViews.Names.ToList<string>() : new List<string>();
+			List<string> userViewNames = userViews != null ? userViews.Names.ToList<string>() : new List<string>();
 			// Note that userViewNames doesn't contain usernames like "rmunn", but ObjectId strings like "54c780ea863f1c2127635ca9"
 
 			// Clean out previous fields and fieldOrders that no longer exist (removed from FDO)
