@@ -189,9 +189,6 @@
     <Compile Include="LanguageForge\Config\LfProjectConfig.cs" />
     <Compile Include="LanguageForge\Config\MongoRegistrarForLfConfig.cs" />
     <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
-    <Compile Include="LanguageForge\Infrastructure\ILanguageForgeProxy.cs" />
-    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxy.cs" />
-    <Compile Include="LanguageForge\Infrastructure\RunClassParameters.cs" />
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
     <Compile Include="LanguageForge\Model\IHasNullableGuid.cs" />
     <Compile Include="LanguageForge\Model\LfAuthorInfo.cs" />
