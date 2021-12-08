@@ -1,9 +1,6 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM sillsdev/web-languageforge:latest AS lf-build
-# No changes needed, LF app result in /var/www/html
-
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS lfmerge-builder-base
 WORKDIR /build/lfmerge
 
@@ -60,9 +57,6 @@ ENV NUNIT_VERSION_MAJOR=3
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
-
-# LanguageForge repo expected to be in /var/www/html (will be copied into ./data/php/src before running unit tests)
-COPY --chown=builder:users --from=lf-build /var/www/html /var/www/html
 
 USER builder
 
