@@ -35,15 +35,13 @@ namespace LfMerge.Core.Tests
 		public TestEnvironment(bool registerSettingsModelDouble = true,
 			bool registerProcessingStateDouble = true,
 			bool resetLfProjectsDuringCleanup = true,
-			TemporaryFolder languageForgeServerFolder = null,
-			bool registerLfProxyMock = true)
+			TemporaryFolder languageForgeServerFolder = null)
 		{
 			_resetLfProjectsDuringCleanup = resetLfProjectsDuringCleanup;
 			_languageForgeServerFolder = languageForgeServerFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName());
 			Environment.SetEnvironmentVariable("FW_CommonAppData", _languageForgeServerFolder.Path);
 			MainClass.Container = RegisterTypes(registerSettingsModelDouble,
-				registerProcessingStateDouble, _languageForgeServerFolder.Path,
-				registerLfProxyMock).Build();
+				registerProcessingStateDouble, _languageForgeServerFolder.Path).Build();
 			Settings = MainClass.Container.Resolve<LfMergeSettings>();
 			MainClass.Logger = MainClass.Container.Resolve<ILogger>();
 			Directory.CreateDirectory(Settings.FdoDirectorySettings.ProjectsDirectory);
@@ -65,7 +63,7 @@ namespace LfMerge.Core.Tests
 		}
 
 		private ContainerBuilder RegisterTypes(bool registerSettingsModel,
-			bool registerProcessingStateDouble, string temporaryFolder, bool registerLfProxyMock)
+			bool registerProcessingStateDouble, string temporaryFolder)
 		{
 			ContainerBuilder containerBuilder = MainClass.RegisterTypes();
 			containerBuilder.RegisterType<LfMergeSettingsDouble>()
@@ -76,9 +74,6 @@ namespace LfMerge.Core.Tests
 
 
 			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
-
-			if (registerLfProxyMock)
-				containerBuilder.RegisterType<LanguageForgeProxyMock>().As<ILanguageForgeProxy>();
 
 			if (registerSettingsModel)
 			{
