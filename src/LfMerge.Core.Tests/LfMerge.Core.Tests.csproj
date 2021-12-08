@@ -154,8 +154,6 @@
     <Compile Include="Actions\SynchronizeActionTests.cs" />
     <Compile Include="Actions\EnsureCloneActionTests.cs" />
     <Compile Include="TestLogger.cs" />
-    <Compile Include="LanguageForge\Infrastructure\LanguageForgeProxyTests.cs" />
-    <Compile Include="LanguageForgeProxyMock.cs" />
     <Compile Include="MercurialTestHelper.cs" />
     <Compile Include="Actions\EnsureCloneActionBridgeIntegrationTests.cs" />
     <Compile Include="Actions\SynchronizeActionBridgeIntegrationTests.cs" />
