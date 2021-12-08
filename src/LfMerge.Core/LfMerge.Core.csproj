@@ -187,6 +187,7 @@
     <Compile Include="LanguageForge\Config\LfConfigPictures.cs" />
     <Compile Include="LanguageForge\Config\LfFieldTypeMapper.cs" />
     <Compile Include="LanguageForge\Config\LfProjectConfig.cs" />
+    <Compile Include="LanguageForge\Config\LfRoleOrUserViewConfig.cs" />
     <Compile Include="LanguageForge\Config\MongoRegistrarForLfConfig.cs" />
     <Compile Include="LanguageForge\Infrastructure\CustomFieldSpec.cs" />
     <Compile Include="LanguageForge\Model\CustomMongoSerializerForBoolean.cs" />
