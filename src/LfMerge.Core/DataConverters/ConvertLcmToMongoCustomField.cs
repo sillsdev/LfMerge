@@ -70,23 +70,6 @@ namespace LfMerge.Core.DataConverters
 			};
 		}
 
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
-		{
-			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, lfCustomFieldTypes, false);
-		}
-
-		// TODO: Get rid of isTest bool
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes, bool isTest)
-		{
-			var customFieldSpecs = new List<CustomFieldSpec>();
-			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
-			{
-				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, lfCustomFieldTypes[lfCustomFieldName]));
-			}
-			// TODO: This no longer needs to return a bool
-			return true;
-		}
-
 		/// <summary>
 		/// Returns a dictionary of custom fields at the LexEntry, LexSense, and LexExampleSentence levels
 		/// From Lcm to LF.  If the dictionary doesn't exist, create one.

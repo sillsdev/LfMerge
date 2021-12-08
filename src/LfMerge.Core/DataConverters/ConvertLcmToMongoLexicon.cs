@@ -109,7 +109,6 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, string> lfCustomFieldTypes = new Dictionary<string, string>();
 			_convertCustomField.WriteCustomFieldConfig(lfCustomFieldList, lfCustomFieldTypes);
 			Connection.SetCustomFieldConfig(LfProject, lfCustomFieldList, lfCustomFieldTypes);
-			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, lfCustomFieldList, lfCustomFieldTypes);
 
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
