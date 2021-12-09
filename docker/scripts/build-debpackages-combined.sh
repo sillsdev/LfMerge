@@ -85,8 +85,6 @@ echo Should be a directory named "${SOURCE}-${PKGVERSION}"
 cd "${SOURCE}-${PKGVERSION}"
 # Build package, preserving env vars used in MsBuild packaging
 debuild -rfakeroot --preserve-envvar Version --preserve-envvar AssemblyVersion --preserve-envvar FileVersion --preserve-envvar InformationalVersion
-# Built packages are placed in parent directory, so move them into finalresults for artifact collection
-ls -l *deb || true
-ls -l ../*deb || true
-cp ../*deb . || true
-pwd
+# Built packages are placed in parent directory, so now we'll delete the unpacked directory so `docker container cp` doesn't collect it
+cd ..
+rm -rf "${SOURCE}-${PKGVERSION}"
