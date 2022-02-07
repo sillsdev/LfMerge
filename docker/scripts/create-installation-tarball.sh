@@ -21,7 +21,9 @@ SHARE			= usr/share/lfmerge/${DatabaseVersion}
 
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
-cat >MERCURIAL_INI <<EOF
+# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
+# has wrong line endings, so we re-create the entire file
+cat >Mercurial/mercurial.ini <<EOF
 [extensions]
 eol=
 hgext.graphlog=
@@ -56,9 +58,6 @@ install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
-# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
-# has wrong line endings, so we re-create the entire file
-echo "$$MERCURIAL_INI" > ${DBDESTDIR}/${LIB}/Mercurial/mercurial.ini
 # Remove unit test related files
 cd ${DBDESTDIR}/${LIB} && \
 	rm -f *.Tests.dll* *.Tests.pdb* *.TestApp.exe* SIL.TestUtilities.dll* \
