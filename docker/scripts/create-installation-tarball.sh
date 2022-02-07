@@ -1,5 +1,4 @@
-#!/usr/bin/make -f
-# -*- makefile -*-
+#!/bin/bash
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -11,42 +10,29 @@ export MONO_PREFIX=/opt/mono5-sil
 export MSBUILD=msbuild
 export FRAMEWORK=net462
 
+export DatabaseVersion=${1:-7000072}
+
+echo ${DatabaseVersion}
+exit 1
+
 # Model version dependent DESTDIR
-DBDESTDIR		= debian/lfmerge-__DatabaseVersion__
+DBDESTDIR		= debian/lfmerge-${DatabaseVersion}
 # Common DESTDIR
 COMMONDESTDIR	= debian/lfmerge
-LIB				= usr/lib/lfmerge/__DatabaseVersion__
-SHARE			= usr/share/lfmerge/__DatabaseVersion__
+LIB				= usr/lib/lfmerge/${DatabaseVersion}
+SHARE			= usr/share/lfmerge/${DatabaseVersion}
 
-export DBVERSIONPATH=/usr/lib/lfmerge/__DatabaseVersion__
+export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
-define MERCURIAL_INI
+cat >MERCURIAL_INI <<EOF
 [extensions]
 eol=
 hgext.graphlog=
 convert=
 fixutf8=/$(LIB)/MercurialExtensions/fixutf8/fixutf8.py
 endef
-export MERCURIAL_INI
+EOF
 
-%:
-	dh $@ --with=cli --parallel
-
-override_dh_auto_configure:
-
-override_dh_auto_build:
-	. ./environ && \
-		which $(MSBUILD) && \
-		$(MSBUILD) /p:Configuration=$(BUILD) /p:DatabaseVersion=__DatabaseVersion__ /p:DisableGitVersionTask=true /t:CompileOnly build/LfMerge.proj
-
-override_dh_auto_test:
-
-override_dh_auto_clean:
-	. ./environ && \
-		$(MSBUILD) /p:Configuration=$(BUILD) /p:DisableGitVersionTask=true /t:Clean build/LfMerge.proj
-	dh_clean
-
-override_dh_auto_install:
 	# Install binaries
 	install -d $(DBDESTDIR)/$(LIB)
 	install -m 644 output/$(BUILD)/$(FRAMEWORK)/*.* $(DBDESTDIR)/$(LIB)
@@ -99,19 +85,3 @@ override_dh_auto_install:
 	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/receivequeue
 	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/sendqueue
 	mkdir -p $(COMMONDESTDIR)/var/lib/languageforge/lexicon/sendreceive/Templates
-
-# Don't export any assemblies to other packages
-override_dh_makeclilibs:
-
-# Include mono5-sil in shlib dirs searched
-override_dh_shlibdeps:
-	dh_shlibdeps -l$(MONO_PREFIX)/lib
-
-# Don't calculate .NET dependencies - we include everything we need so there are
-# no dependencies on other packages with managed assemblies
-override_dh_clideps:
-
-# Don't strip debug symbols -- we want them for informative crash stack traces
-override_dh_strip:
-
-override_dh_clistrip:
