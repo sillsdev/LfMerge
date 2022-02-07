@@ -12,9 +12,6 @@ export FRAMEWORK=net462
 
 export DatabaseVersion=${1:-7000072}
 
-echo ${DatabaseVersion}
-exit 1
-
 # Model version dependent DESTDIR
 DBDESTDIR		= debian/lfmerge-${DatabaseVersion}
 # Common DESTDIR
