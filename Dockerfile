@@ -18,7 +18,7 @@ RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /et
 RUN apt-get update && apt-get install -y sudo debhelper devscripts cli-common-dev iputils-ping cpp python-dev pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
 
 # # Build as a non-root user
-RUN useradd -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m -s /bin/bash builder ; \
+RUN useradd -u 1001 -d /home/builder -g users -G www-data,fieldworks,systemd-journal -m -s /bin/bash builder ; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
 	chown -R builder:users /build
 
