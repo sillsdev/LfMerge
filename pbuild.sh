@@ -50,9 +50,8 @@ done
 # First create the base build container ONCE (not in parallel), to ensure that the slow steps (apt-get install mono5-sil) are cached
 docker build -t lfmerge-builder-base --target lfmerge-builder-base .
 
-# Create the build containers in series, because I've had trouble when creating them in parallel
-# (To create the build containers in series, which might be necessary if you have trouble with
-# Docker caching while creating them in parallel, just comment out the "time parallel" and "EOF" lines)
+# Create the build images for each DbVersion in parallel
+# NOTE: now that the differences are only ENV lines, parallel no longer gains any time. Should we turn this into a for loop?
 time parallel --no-notice <<EOF
 docker build --build-arg DbVersion=7000068 -t lfmerge-build-7000068 .
 docker build --build-arg DbVersion=7000069 -t lfmerge-build-7000069 .
@@ -62,7 +61,10 @@ EOF
 
 # To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
 # docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 -f combined.dockerfile .
+
 . docker/scripts/get-version-number.sh
+
+# TODO: Create /storage/nuget now if it doesn't exist, with rwxrwsr-x permissions and appropriate uid/gid settings
 
 # Run the build
 time parallel --no-notice <<EOF
