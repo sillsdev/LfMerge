@@ -29,4 +29,6 @@ fi
 
 rm -rf "$SCRIPT_DIR"/data/php   # So it doesn't get into the .deb source package
 
-"$SCRIPT_DIR"/build-debpackages-combined.sh ${DbVersion}
+# "$SCRIPT_DIR"/build-debpackages-combined.sh ${DbVersion}
+
+"$SCRIPT_DIR"/create-installation-tarball.sh ${DbVersion}

@@ -44,6 +44,7 @@ echo Will build FW9 build from "${FW9_BUILD_BRANCH}" and FW8 builds from "${FW8_
 for f in 68 69 70 72; do
 # for f in 72; do
     # Can safely ignore "container doesn't exist" as that's not an error
+    docker container kill tmp-lfmerge-build-70000${f} >/dev/null 2>/dev/null || true
     docker container rm tmp-lfmerge-build-70000${f} >/dev/null 2>/dev/null || true
 done
 

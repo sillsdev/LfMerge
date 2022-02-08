@@ -6,18 +6,16 @@
 export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
-export MONO_PREFIX=/opt/mono5-sil
-export MSBUILD=msbuild
 export FRAMEWORK=net462
 
 export DatabaseVersion=${1:-7000072}
 
 # Model version dependent DESTDIR
-DBDESTDIR		= debian/lfmerge-${DatabaseVersion}
+export DBDESTDIR=tarball/lfmerge-${DatabaseVersion}
 # Common DESTDIR
-COMMONDESTDIR	= debian/lfmerge
-LIB				= usr/lib/lfmerge/${DatabaseVersion}
-SHARE			= usr/share/lfmerge/${DatabaseVersion}
+export COMMONDESTDIR=tarball/lfmerge
+export LIB=usr/lib/lfmerge/${DatabaseVersion}
+export SHARE=usr/share/lfmerge/${DatabaseVersion}
 
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
@@ -59,9 +57,9 @@ install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercu
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 # Remove unit test related files
-cd ${DBDESTDIR}/${LIB} && \
+(cd ${DBDESTDIR}/${LIB} && \
 	rm -f *.Tests.dll* *.Tests.pdb* *.TestApp.exe* SIL.TestUtilities.dll* \
-		SIL.TestUtilities.pdb* nunit.framework.dll *Moq.dll
+		SIL.TestUtilities.pdb* nunit.framework.dll *Moq.dll)
 # Install environ file
 install -d ${DBDESTDIR}/${SHARE}
 install -m 644 environ ${DBDESTDIR}/${SHARE}
@@ -81,3 +79,12 @@ mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/commitqueue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/receivequeue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/sendqueue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/Templates
+
+# Create tarball
+cd ${COMMONDESTDIR}/..
+BASEPATH=$(pwd)
+DEBPATH=$(realpath "${DBDESTDIR}" --relative-to "${BASEPATH}")
+COMMONPATH=$(realpath "${COMMONDESTDIR}" --relative-to "${BASEPATH}")
+tar cf - "${DEBPATH}" | gzip -c > "${DEBPATH}.tar.gz"
+tar cf - "${COMMONPATH}" | gzip -c > "${COMMONPATH}.tar.gz"
+ls -l "${DEBPATH}.tar.gz" "${COMMONPATH}.tar.gz"
