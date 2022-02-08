@@ -79,7 +79,8 @@ EOF
 # docker run --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
 
 # Collect results
+mkdir -p tarball
 for f in 68 69 70 72; do
 # for f in 72; do
-    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/finalresults ./
+    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/repo/tarball ./
 done

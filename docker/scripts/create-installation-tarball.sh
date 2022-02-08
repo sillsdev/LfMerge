@@ -79,12 +79,3 @@ mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/commitqueue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/receivequeue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/sendqueue
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/Templates
-
-# Create tarball
-cd ${COMMONDESTDIR}/..
-BASEPATH=$(pwd)
-DEBPATH=$(realpath "${DBDESTDIR}" --relative-to "${BASEPATH}")
-COMMONPATH=$(realpath "${COMMONDESTDIR}" --relative-to "${BASEPATH}")
-tar cf - "${DEBPATH}" | gzip -c > "${DEBPATH}.tar.gz"
-tar cf - "${COMMONPATH}" | gzip -c > "${COMMONPATH}.tar.gz"
-ls -l "${DEBPATH}.tar.gz" "${COMMONPATH}.tar.gz"
