@@ -50,6 +50,7 @@ RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue && ch
 
 # TODO: Turn this into environment variables, because we want to be able to just set env vars in k8s config and restart the container
 COPY lfmerge.conf /etc/languageforge/conf/sendreceive.conf
+COPY mercurial-cacerts.rc /etc/mercurial/hgrc.d/cacerts.rc
 COPY lfmergeqm-background.sh /
 COPY lfmergeqm-looping.sh /
 COPY entrypoint.sh /
