@@ -46,6 +46,8 @@ ADD tarball/lfmerge/ /
 
 RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue && chown -R www-data:www-data /var/lib/languageforge
 
+# TODO: Turn this into environment variables, because we want to be able to just set env vars in k8s config and restart the container
+COPY lfmerge.conf /etc/languageforge/conf/sendreceive.conf
 COPY lfmergeqm-background.sh /
 COPY lfmergeqm-looping.sh /
 COPY entrypoint.sh /
