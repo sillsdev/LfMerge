@@ -28,13 +28,15 @@ FROM lfmerge-base AS lfmerge
 # install LFMerge prerequisites
 # python - required by Mercurial, which is bundled in the LFMerge installation
 # rsyslog - lfmerge logs to rsyslog and expects this to exist
+# rsyslog customizations (imklog reads kernel messages, which isn't allowed or desired in Docker containers)
 # logrotate - TODO: is this required?
 # iputils-ping - Chorus (part of LFMerge) requires the "ping" command to be available on the command line
 RUN curl -L http://linux.lsdev.sil.org/downloads/sil-testing.gpg | apt-key add - \
 && echo "deb http://linux.lsdev.sil.org/ubuntu bionic main" > /etc/apt/sources.list.d/linux-lsdev-sil-org.list \
 && apt-get update \
 && apt-get install --yes --no-install-recommends python rsyslog logrotate iputils-ping inotify-tools \
-&& rm -rf /var/lib/apt/lists/*
+&& rm -rf /var/lib/apt/lists/* \
+&& sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
 
 ADD tarball/lfmerge-7000068/ /
 ADD tarball/lfmerge-7000069/ /
