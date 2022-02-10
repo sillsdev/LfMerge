@@ -175,7 +175,7 @@ jobs:
         with:
           push: false
           load: true
-          tags: sillsdev/lfmerge:${{ steps.version.outputs.DebPackageVersion }}
+          tags: sillsdev/lfmerge:${{ steps.version.outputs.MsBuildVersion }}
           context: .
           file: Dockerfile.finalresult
           cache-from: type=gha
