@@ -5,5 +5,5 @@
 # This is expected to run as the CMD, launched by the entry point.
 
 while inotifywait -e create /var/lib/languageforge/lexicon/sendreceive/syncqueue; do
-  su www-data -s /bin/bash -c lfmergeqm
+  sudo -u www-data lfmergeqm
 done

@@ -10,6 +10,6 @@ sleep 60
 # Now enter an infinite loop that will run eery 24*60*60 = 86400 seconds
 while :
 do
-  which lfmergeqm && su www-data -s /bin/bash -c lfmergeqm
+  sudo -u www-data lfmergeqm
   sleep 86400
 done
