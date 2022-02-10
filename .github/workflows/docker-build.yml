@@ -172,6 +172,9 @@ jobs:
         with:
           name: lfmerge-tarball
           path: tarball
+    outputs:
+      MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+      MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
 
   release:
     runs-on: ubuntu-latest
@@ -207,7 +210,7 @@ jobs:
       with:
         push: false
         load: true
-        tags: sillsdev/lfmerge:${{ steps.version.outputs.MsBuildVersion }}
+        tags: sillsdev/lfmerge:${{ needs.build.outputs.MsBuildVersion }}
         context: .
         file: Dockerfile.finalresult
       # TODO: Set push to equal the value of (github.event_name == 'push' && github.ref == 'refs/heads/live')
