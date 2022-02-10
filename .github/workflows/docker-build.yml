@@ -211,8 +211,6 @@ jobs:
         tags: sillsdev/lfmerge:${{ steps.version.outputs.MsBuildVersion }}
         context: .
         file: Dockerfile.finalresult
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
       # TODO: Set push to equal the value of (github.event_name == 'push' && github.ref == 'refs/heads/live')
 
     - name: Show metadata from LfMerge image build step
