@@ -139,6 +139,7 @@ jobs:
           load: true
           tags: lfmerge-build-${{matrix.dbversion}}
           context: .
+          file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -161,59 +162,31 @@ jobs:
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect Debian images
+      # Now should collect tarballs
         if: steps.should_run.outcome == 'success'
-        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/finalresults ./
+        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/repo/tarball ./
 
-      # actions/upload-artifact@v2.2.4 is commit 27121b0bdffd731efa15d66772be8dc71245d074
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
+      - name: Build final Docker image
+        id: lfmerge_image
         if: steps.should_run.outcome == 'success'
+        # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        # TODO: Follow https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md for tagging
         with:
-          name: lfmerge-deb-files
-          path: finalresults/lfmerge*deb
+          push: false
+          load: true
+          tags: sillsdev/lfmerge:${{ steps.version.outputs.DebPackageVersion }}
+          context: .
+          file: Dockerfile.finalresult
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    outputs:
-      MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+      - name: Show metadata from LfMerge image build step
+        run: echo "$METADATA"
+        env:
+          METADATA: ${{ steps.lfmerge_image.output.metadata }}
+        if: steps.should_run.outcome == 'success'
 
-  release:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/live' || github.ref == 'refs/heads/fieldworks8-live')
-    steps:
-    # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
-    - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-      with:
-        fetch-depth: 0
-
-    - name: Ensure release number exists
-      # Will throw an error, thereby cancelling the build, if MajorMinorPatch output was empty
-      env:
-        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
-      run: test -n "${MajorMinorPatch}" && echo "Producing release ${MajorMinorPatch}"
-
-    - name: Tag new release
-      env:
-        MajorMinorPatch: ${{needs.build.outputs.MajorMinorPatch}}
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git tag -a -m "Release v${MajorMinorPatch}" "v${MajorMinorPatch}"
-        git push --tags
-
-    # On fieldworks8-live branch, we stop there and don't create a GitHub release
-
-    - name: Download build artifacts
-      if: github.ref == 'refs/heads/live'
-      # actions/download-artifact@v2.0.10 is commit 3be87be14a055c47b01d3bd88f8fe02320a9bb60
-      uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60
-      with:
-        name: lfmerge-deb-files
-        path: release
-
-    - name: Create GitHub release
-      if: github.ref == 'refs/heads/live'
-      # softprops/action-gh-release@v0.1.14 is commit 1e07f4398721186383de40550babbdf2b84acfc5
-      uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
-      with:
-        tag_name: v${{needs.build.outputs.MajorMinorPatch}}
-        files: release/*.deb
-        generate_release_notes: true
+      - name: List Docker images to verify build
+        if: steps.should_run.outcome == 'success'
+        run: docker image ls
