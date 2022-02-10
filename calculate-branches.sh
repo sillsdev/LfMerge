@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Find appropriate branch(es) to build
-CURRENT_BRANCH="$(git name-rev --name-only HEAD)"
+CURRENT_BRANCH=$(git name-rev --name-only HEAD | sed -e 's/^remotes\///')
 PARENT_MAJOR_VERSION=$(git describe --long --match "v*" | cut -c1-2)
 
 # FW8 branches will have ancestors tagged v1.x, while FW9 branches will have ancestors tagged v2.x
