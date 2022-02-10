@@ -21,6 +21,7 @@ jobs:
 
       - name: Calculate branches to build
         run: |
+          echo "${GITHUB_REF}"
           ./calculate-branches.sh | grep FW.Branch >> "${GITHUB_ENV}"
 
       - name: Save branch names in output
