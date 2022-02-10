@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         if: matrix.dbversion < 7000072
         with:
-          ref: ${{ needs.calculate_branches.output.FW8Branch }}
+          ref: ${{ needs.calculate_branches.outputs.FW8Branch }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Check out FW9 branch
@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         if: matrix.dbversion >= 7000072
         with:
-          ref: ${{ needs.calculate_branches.output.FW9Branch }}
+          ref: ${{ needs.calculate_branches.outputs.FW9Branch }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Verify current branch
@@ -68,8 +68,8 @@ jobs:
           echo FW8 was "${FW8Branch}"
           echo FW9 was "${FW9Branch}"
         env:
-          FW8Branch: ${{ needs.calculate_branches.output.FW8Branch }}
-          FW9Branch: ${{ needs.calculate_branches.output.FW9Branch }}
+          FW8Branch: ${{ needs.calculate_branches.outputs.FW8Branch }}
+          FW9Branch: ${{ needs.calculate_branches.outputs.FW9Branch }}
 
   #     - name: Calculate version number
   #       id: version
