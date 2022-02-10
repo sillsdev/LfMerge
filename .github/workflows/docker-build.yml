@@ -191,6 +191,15 @@ jobs:
         name: lfmerge-tarball
         path: tarball
 
+    - name: Ensure all parts of final tarball exist
+      # Mostly used for PR builds where lfmerge-7000068 might not exist in an FW9 build, etc.
+      run: |
+        mkdir -p tarball/lfmerge-7000068 || true
+        mkdir -p tarball/lfmerge-7000069 || true
+        mkdir -p tarball/lfmerge-7000070 || true
+        mkdir -p tarball/lfmerge-7000072 || true
+        mkdir -p tarball/lfmerge || true
+
     - name: Build final Docker image
       id: lfmerge_image
       if: steps.should_run.outcome == 'success'
