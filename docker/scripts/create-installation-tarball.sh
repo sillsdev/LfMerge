@@ -27,7 +27,6 @@ eol=
 hgext.graphlog=
 convert=
 fixutf8=/${LIB}/MercurialExtensions/fixutf8/fixutf8.py
-endef
 EOF
 
 # Install binaries
