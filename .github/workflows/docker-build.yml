@@ -176,7 +176,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/live' || github.ref == 'refs/heads/fieldworks8-live')
+    # if: github.event_name == 'push' && (github.ref == 'refs/heads/live' || github.ref == 'refs/heads/fieldworks8-live')
     steps:
     # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
     - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
@@ -202,7 +202,6 @@ jobs:
 
     - name: Build final Docker image
       id: lfmerge_image
-      if: steps.should_run.outcome == 'success'
       # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
       uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
       # TODO: Follow https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md for tagging
@@ -214,13 +213,12 @@ jobs:
         file: Dockerfile.finalresult
         cache-from: type=gha
         cache-to: type=gha,mode=max
+      # TODO: Set push to equal the value of (github.event_name == 'push' && github.ref == 'refs/heads/live')
 
     - name: Show metadata from LfMerge image build step
       run: echo "$METADATA"
       env:
         METADATA: ${{ steps.lfmerge_image.output.metadata }}
-      if: steps.should_run.outcome == 'success'
 
     - name: List Docker images to verify build
-      if: steps.should_run.outcome == 'success'
       run: docker image ls
