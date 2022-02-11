@@ -29,7 +29,7 @@ FROM lfmerge-base AS lfmerge
 # python - required by Mercurial, which is bundled in the LFMerge installation
 # rsyslog - lfmerge logs to rsyslog and expects this to exist
 # rsyslog customizations (imklog reads kernel messages, which isn't allowed or desired in Docker containers)
-# logrotate - TODO: is this required?
+# logrotate - ensure logs won't grow without bound, and that old logs get cleaned up automatically
 # iputils-ping - Chorus (part of LFMerge) requires the "ping" command to be available on the command line
 # less - so we can read syslog during manual debugging of issues
 # vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
