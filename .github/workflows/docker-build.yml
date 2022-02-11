@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out current branch
-        # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0  # All history for all tags and branches, since branch calculation step needs that
 
@@ -48,16 +47,14 @@ jobs:
 
     steps:
       - name: Check out FW8 branch
-        # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@v2.4.0
         if: matrix.dbversion < 7000072
         with:
           ref: ${{ needs.calculate_branches.outputs.FW8Branch }}
           fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
 
       - name: Check out FW9 branch
-        # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@v2.4.0
         if: matrix.dbversion >= 7000072
         with:
           ref: ${{ needs.calculate_branches.outputs.FW9Branch }}
@@ -165,7 +162,6 @@ jobs:
           load: true
           tags: lfmerge-build-${{matrix.dbversion}}
           context: .
-          file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -189,8 +185,7 @@ jobs:
       # Now should collect tarballs
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/repo/tarball ./
 
-      # actions/upload-artifact@v2.2.4 is commit 27121b0bdffd731efa15d66772be8dc71245d074
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: lfmerge-tarball
           path: tarball
@@ -201,16 +196,14 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
-    # if: github.event_name == 'push' && (github.ref == 'refs/heads/live' || github.ref == 'refs/heads/fieldworks8-live')
+
     steps:
-    # actions/checkout@v2.0.10 is commit ec3a7ce113134d7a93b817d10a8272cb61118579
-    - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+    - uses: actions/checkout@v2.4.0
       with:
         fetch-depth: 0
 
     - name: Download build artifacts
-      # actions/download-artifact@v2.0.10 is commit 3be87be14a055c47b01d3bd88f8fe02320a9bb60
-      uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60
+      uses: actions/download-artifact@v2.0.10
       with:
         name: lfmerge-tarball
         path: tarball
