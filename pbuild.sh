@@ -48,16 +48,18 @@ for f in 68 69 70 72; do
     docker container rm tmp-lfmerge-build-70000${f} >/dev/null 2>/dev/null || true
 done
 
+CURRENT_UID=$(id -u)
+
 # First create the base build container ONCE (not in parallel), to ensure that the slow steps (apt-get install mono5-sil) are cached
-docker build -t lfmerge-builder-base --target lfmerge-builder-base .
+docker build --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-builder-base --target lfmerge-builder-base .
 
 # Create the build images for each DbVersion in parallel
 # NOTE: now that the differences are only ENV lines, parallel no longer gains any time. Should we turn this into a for loop?
 time parallel --no-notice <<EOF
-docker build --build-arg DbVersion=7000068 -t lfmerge-build-7000068 .
-docker build --build-arg DbVersion=7000069 -t lfmerge-build-7000069 .
-docker build --build-arg DbVersion=7000070 -t lfmerge-build-7000070 .
-docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 .
+docker build --build-arg DbVersion=7000068 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000068 .
+docker build --build-arg DbVersion=7000069 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000069 .
+docker build --build-arg DbVersion=7000070 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000070 .
+docker build --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
 EOF
 
 # To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
