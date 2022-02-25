@@ -222,18 +222,25 @@ jobs:
         mkdir -p tarball/lfmerge-7000072 || true
         mkdir -p tarball/lfmerge || true
 
+    - name: Login to GHCR
+      if: github.event_name == 'push' && github.ref == 'refs/heads/live'
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Build final Docker image
       id: lfmerge_image
       # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
       uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
       # TODO: Follow https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md for tagging
       with:
-        push: false
+        push: ${{(github.event_name == 'push' && github.ref == 'refs/heads/live')}}
         load: true
-        tags: sillsdev/lfmerge:${{ needs.build.outputs.MsBuildVersion }}
+        tags: ghcr.io/sillsdev/lfmerge:${{ needs.build.outputs.MsBuildVersion }},ghcr.io/sillsdev/lfmerge:latest
         context: .
         file: Dockerfile.finalresult
-      # TODO: Set push to equal the value of (github.event_name == 'push' && github.ref == 'refs/heads/live')
 
     - name: Show metadata from LfMerge image build step
       run: echo "$METADATA"
