@@ -47,9 +47,6 @@ namespace LfMerge
 				return -1;
 			}
 
-			if (!string.IsNullOrEmpty(options.ConfigDir))
-				LfMergeSettings.ConfigDir = options.ConfigDir;
-
 			FwProject.AllowDataMigration = options.AllowDataMigration;
 
 			string differentModelVersion = null;
@@ -79,7 +76,7 @@ namespace LfMerge
 			if (!string.IsNullOrEmpty(differentModelVersion))
 			{
 				result = MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
-					differentModelVersion, false, options.ConfigDir);
+					differentModelVersion, false);
 			}
 
 			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);
