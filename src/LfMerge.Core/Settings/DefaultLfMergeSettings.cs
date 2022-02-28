@@ -5,18 +5,15 @@ namespace LfMerge.Core.Settings
 {
 	public static class DefaultLfMergeSettings
 	{
-		public const string DefaultIniText = @"
-BaseDir = /tmp/LfMerge.TestApp
-WebworkDir = webwork
-TemplatesDir = Templates
-MongoHostname = localhost
-MongoPort = 27017
-MongoMainDatabaseName = scriptureforge
-MongoDatabaseNamePrefix = sf_
-VerboseProgress = false
-PhpSourcePath = /var/www/languageforge.org/htdocs
-";
-		// optional, usually not set: LanguageDepotRepoUri =
+		public const string BaseDir = "/var/lib/languageforge/lexicon/sendreceive";
+		public const string WebworkDir = "webwork";
+		public const string TemplatesDir = "Templates";
+		public const string MongoHostname = "localhost";
+		public const int MongoPort = 27017;
+		public const string MongoMainDatabaseName = "scriptureforge";
+		public const string MongoDatabaseNamePrefix = "sf_";
+		public const bool VerboseProgress = false;
+		public const string LanguageDepotRepoUri = "";  // optional, usually not set
 	}
 }
 
