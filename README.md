@@ -24,27 +24,12 @@ In addition to `master` and `fieldworks8-master`, there are also `qa` and `field
 
 For each DbVersion that LfMerge supports, we build a different lfmerge binary. DbVersions 7000068 through 7000070 are built from FW 8 branches (`fieldworks8-master` or `feature/foo-fw8`), while DbVersion 7000072 is built from an FW 9 branch (`master` or `feature/foo`). There is a script called `pbuild.sh` (for "parallel build") that will handle all the complexity of the build process for you. It will run the build for each DbVersion in a Docker container, using a common Docker build image, and then copy the final results into a directory called `tarball`. Finally, it will run a Docker build that will take the files in the `tarball` directory and turn then into a Docker image for `lfmerge`. By default, this Docker image will be tagged `ghcr.io/sillsdev/lfmerge:latest`, the same tag as the tag built by the GitHub Actions workflow.
 
-. DbVersions 7000068 were from FieldWorks releases 8.2 or 8.3, and those builds will use the `fieldworks8-master` branch by default (see below for how you can change this). The `master` branch is for
+**Normally you will run `pbuild.sh` with no parameters.** It will look at the Git branch you have checked out, determine whether that branch is a branch based on FieldWorks 9 (DbVersion 7000072 or later) or FieldWorks 8 (DbVersions 7000068 through 7000070), and calculate the corresponding branch in the other FW version. E.g., if you're on `master` the corresponding branch will be `fieldworks8-master`. If you want different behavior, for example you want to run a build from `feature/foo` but use `fieldworks8-master` as the FW8 branch instead of `feature/foo-fw8`, then you can pass a parameter to `pbbuild.sh` to set what the corresponding branch should be. E.g. with `feature/foo` checked out, run `pbuild.sh fieldworks8-master` and you'll get a build where the DbVersion 7000072 binaries were built from the `feature/foo` branch, but where the DbVersion 7000068-7000070 binaries were built from `fieldworks8-master`. **You should rarely need this**, but it's sometimes helpful when you're trying to track down a bug that appears only in the FW 8 builds but not the FW 9 build, or vice-versa.
 
-Normally you will run `pbuild.sh` with no parameters. It will look at the Git branch you have checked out, determine whether that branch is a branch based on FieldWorks 9 (DbVersion 7000072 or later) or FieldWorks 8 (DbVersions 7000068 through 7000070), and calculate the corresponding branch in the other FW version. E.g., if you're on `master` the corresponding branch will be `fieldworks8-master`. If you're on `feature/something` the corresponding branch will be calculated as `feature/something-fw8`. If you're on `feature/something-fw8` then the corresponding branch will be `feature/something`. But if `pbuild.sh` gets this calculation wrong, then you can pass it a parameter to set what the corresponding branch should be. E.g. if you're on `feature/something` but you want the FW 8 builds to be built from `fieldworks8-live`, then run `pbuild.sh fieldworks8-live`.
+## Testing locally
 
-Alternatively you can build and run the tests on the command line:
+The image that `pbuild.sh` produces is tagged with the same image tag as the one built by the official GitHub Actions workflow. This means that if you're running Language Forge locally via the Makefile in Language Forge's `docker` directory, you should be able to simply run `make` and the `lfmerge` container will be re-created with your local build. You can then do a Send/Receive via your `localhost` copy of Language Forge and check the results.
 
-	msbuild /t:Test /p:Configuration=Debug build/LfMerge.proj
+## Logs
 
-### Building on Windows
-
-LfMerge is intended to be run on Linux and the development happens on Linux. For testing/debugging
-purposes it might be useful to build on Windows. Be prepared that building on Windows might currently
-not work or that the tests don't work out of the box.
-
-## Logfiles
-
-LfMerge and LfMergeQueueManager log some output. On a Xenial system this can be seen by running:
-
-	journalctl -t LfMerge -t LfMergeQueueManager -e
-
-If you want to redirect the output to a file and still see the colors, you can use:
-
-	script -qfc "journalctl -t LfMerge --no-pager" /dev/null > lfmerge.log.txt
-	less -R lfmerge.log.txt
+The `lfmerge` container logs to stdout, so run `docker logs -f lfmerge` if you want to watch the logs.
