@@ -1,6 +1,17 @@
 #!/bin/bash
 
-which parallel >/dev/null || (echo 'Please run "sudo apt-get install parallel" and try again.'; exit 1)
+which parallel >/dev/null
+if [ $? -ne 0 ]; then
+	echo 'Please run "sudo apt-get install parallel" and try again.'
+	exit 1
+fi
+
+mkdir -p /storage/nuget
+if [ $? -ne 0 ]; then
+	echo "Please create a /storage directory and then run 'chown ${USER} /storage', to be able to cache NuGet packages"
+	exit 1
+fi
+# TODO: Check for rwxrwsr-x permissions and appropriate uid/gid settings
 
 # Find appropriate branch(es) to build
 CURRENT_BRANCH="$(git name-rev --name-only HEAD)"
@@ -67,8 +78,6 @@ EOF
 
 . docker/scripts/get-version-number.sh
 
-# TODO: Create /storage/nuget now if it doesn't exist, with rwxrwsr-x permissions and appropriate uid/gid settings
-
 # Run the build
 time parallel --no-notice <<EOF
 docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW8_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000068 lfmerge-build-7000068
@@ -86,3 +95,5 @@ for f in 68 69 70 72; do
 # for f in 72; do
     docker container cp tmp-lfmerge-build-70000${f}:/home/builder/repo/tarball ./
 done
+
+time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .
