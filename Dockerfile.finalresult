@@ -40,6 +40,9 @@ RUN curl -L http://linux.lsdev.sil.org/downloads/sil-testing.gpg | apt-key add -
 && rm -rf /var/lib/apt/lists/* \
 && sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
 
+ADD tarball/lfmerge-7000068/ /
+ADD tarball/lfmerge-7000069/ /
+ADD tarball/lfmerge-7000070/ /
 ADD tarball/lfmerge-7000072/ /
 # Add more lines here if we add new DbVersions
 
