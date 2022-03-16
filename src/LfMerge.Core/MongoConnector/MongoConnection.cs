@@ -82,7 +82,7 @@ namespace LfMerge.Core.MongoConnector
 			var clientSettings = new MongoClientSettings();
 			// clientSettings.WriteConcern = WriteConcern.WMajority; // If increasing the wait queue size still doesn't help, try this as well
 			clientSettings.WaitQueueSize = 50000;
-			clientSettings.Server = new MongoServerAddress(Settings.MongoDbHostName, Settings.MongoDbPort);
+			clientSettings.Server = new MongoServerAddress(Settings.MongoHostname, Settings.MongoPort);
 			return new MongoClient(clientSettings);
 		}
 

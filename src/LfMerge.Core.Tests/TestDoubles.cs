@@ -81,29 +81,12 @@ namespace LfMerge.Core.Tests
 
 	public class LfMergeSettingsDouble: LfMergeSettings
 	{
-		static LfMergeSettingsDouble()
-		{
-			ConfigDir = Path.GetRandomFileName();
-		}
-
 		public LfMergeSettingsDouble(string replacementBaseDir)
 		{
-			var replacementConfig = new IniData(ParsedConfig);
-			replacementConfig.Global["BaseDir"] = replacementBaseDir;
-			Initialize(replacementConfig);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, replacementBaseDir);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress, "true");
+			base.Initialize();
 			CommitWhenDone = false;
-			VerboseProgress = true;
-			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data", "php", "src");
-		}
-
-		public override IniData ParseFiles(string defaultConfig, string globalConfigFilename)
-		{
-			// Hide the console warning about "no global configuration file found" because we're doing that on purpose
-			var savedStdout = Console.Out;
-			Console.SetOut(TextWriter.Null);
-			IniData result = base.ParseFiles(defaultConfig, globalConfigFilename);
-			Console.SetOut(savedStdout);
-			return result;
 		}
 	}
 
