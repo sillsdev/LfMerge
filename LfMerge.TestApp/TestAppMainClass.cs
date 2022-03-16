@@ -18,14 +18,11 @@ namespace LfMerge.TestApp
 				return;
 
 			var folder = Path.Combine(Path.GetTempPath(), "LfMerge.TestApp");
-			LfMergeSettings.ConfigDir = folder;
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, folder);
 
 			MainClass.Container = MainClass.RegisterTypes().Build();
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
-			var config = new IniData();
-			var main = config.Global;
-			main["BaseDir"] = folder;
-			settings.Initialize(config);
+			settings.Initialize();
 
 			var queueDir = settings.GetQueueDirectory(QueueNames.Synchronize);
 			Directory.CreateDirectory(queueDir);
