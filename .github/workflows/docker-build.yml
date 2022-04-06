@@ -150,6 +150,14 @@ jobs:
           echo "::set-output name=AssemblySemFileVer::${AssemblySemFileVer}"
           echo "::set-output name=InformationalVersion::${InformationalVersion}"
 
+      - name: Save current version number to an output
+        id: output_version_number
+        run: |
+          echo Will tag ${{matrix.dbversion}} with ${TAG}
+          echo "::set-output name=TagFor${{matrix.dbversion}}::${TAG}"
+        env:
+          TAG: v${{ steps.version.outputs.MsBuildVersion }}
+
       - name: Set up buildx for Docker
         # docker/setup-buildx-action@v1.6.0 is commit 94ab11c41e45d028884a99163086648e898eed25
         uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
@@ -195,56 +203,20 @@ jobs:
           name: lfmerge-tarball
           path: tarball
     outputs:
-      MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
       MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
+      TagFor7000068: ${{ steps.output_version_number.outputs.TagFor7000068 }}
+      TagFor7000069: ${{ steps.output_version_number.outputs.TagFor7000069 }}
+      TagFor7000070: ${{ steps.output_version_number.outputs.TagFor7000070 }}
+      TagFor7000072: ${{ steps.output_version_number.outputs.TagFor7000072 }}
+      FW8Branch: ${{ needs.calculate_branches.outputs.FW8Branch }}
+      FW9Branch: ${{ needs.calculate_branches.outputs.FW9Branch }}
 
   release:
-    runs-on: ubuntu-latest
     needs: build
-
-    steps:
-    - uses: actions/checkout@v2.4.0
-      with:
-        fetch-depth: 0
-
-    - name: Download build artifacts
-      uses: actions/download-artifact@v2.0.10
-      with:
-        name: lfmerge-tarball
-        path: tarball
-
-    - name: Ensure all parts of final tarball exist
-      # TODO: Should no longer be needed; verify, then remove
-      run: |
-        mkdir -p tarball/lfmerge-7000068 || true
-        mkdir -p tarball/lfmerge-7000069 || true
-        mkdir -p tarball/lfmerge-7000070 || true
-        mkdir -p tarball/lfmerge-7000072 || true
-        mkdir -p tarball/lfmerge || true
-
-    - name: Login to GHCR
-      if: github.event_name == 'push' && github.ref == 'refs/heads/live'
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build final Docker image
-      id: lfmerge_image
-      # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-      uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-      # TODO: Follow https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md for tagging
-      with:
-        push: ${{(github.event_name == 'push' && github.ref == 'refs/heads/live')}}
-        tags: ghcr.io/sillsdev/lfmerge:${{ needs.build.outputs.MsBuildVersion }},ghcr.io/sillsdev/lfmerge:latest
-        context: .
-        file: Dockerfile.finalresult
-
-    - name: Show metadata from LfMerge image build step
-      run: echo "$METADATA"
-      env:
-        METADATA: ${{ steps.lfmerge_image.output.metadata }}
-
-    - name: List Docker images to verify build
-      run: docker image ls
+    uses: ./.github/workflows/release.yml
+    with:
+      MsBuildVersion: ${{ needs.build.outputs.MsBuildVersion }}
+      TagFor7000070: ${{ needs.build.outputs.TagFor7000070 }}
+      TagFor7000072: ${{ needs.build.outputs.TagFor7000072 }}
+      FW8Branch: ${{ needs.build.outputs.FW8Branch }}
+      FW9Branch: ${{ needs.build.outputs.FW9Branch }}
