@@ -155,8 +155,10 @@ jobs:
         run: |
           echo Will tag ${{matrix.dbversion}} with ${TAG}
           echo "::set-output name=TagFor${{matrix.dbversion}}::${TAG}"
+          echo "::set-output name=VersionFor${{matrix.dbversion}}::${VERSION}"
         env:
           TAG: v${{ steps.version.outputs.MsBuildVersion }}
+          VERSION: ${{ steps.version.outputs.MsBuildVersion }}
 
       - name: Set up buildx for Docker
         # docker/setup-buildx-action@v1.6.0 is commit 94ab11c41e45d028884a99163086648e898eed25
@@ -203,7 +205,7 @@ jobs:
           name: lfmerge-tarball
           path: tarball
     outputs:
-      MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
+      MsBuildVersion: ${{ steps.output_version_number.outputs.VersionFor7000072 }}
       TagFor7000068: ${{ steps.output_version_number.outputs.TagFor7000068 }}
       TagFor7000069: ${{ steps.output_version_number.outputs.TagFor7000069 }}
       TagFor7000070: ${{ steps.output_version_number.outputs.TagFor7000070 }}
