@@ -65,6 +65,15 @@ jobs:
         mkdir -p tarball/lfmerge-7000072 || true
         mkdir -p tarball/lfmerge || true
 
+    - name: Restore executable bits
+      # GitHub artifacts system strips executable bits, so restore them here
+      run: |
+        chmod +x tarball/lfmerge*/usr/bin/lfmerge
+        chmod +x tarball/lfmerge*/usr/bin/lfmergeqm
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/chorusmerge
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/startlfmerge
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/Mercurial/hg
+
     - name: Login to GHCR
       if: github.event_name == 'push' && github.ref == 'refs/heads/live'
       uses: docker/login-action@v1
