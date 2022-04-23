@@ -29,6 +29,7 @@ namespace LfMerge.QueueManager
 			MainClass.Logger.Notice("LfMergeQueueManager starting with args: {0}", string.Join(" ", args));
 
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			settings.Initialize();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
 			try
 			{
