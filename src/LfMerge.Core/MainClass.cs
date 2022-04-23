@@ -152,6 +152,7 @@ namespace LfMerge.Core
 				if (!Directory.Exists(folderPath))
 				{
 					Logger.Notice("Folder '{0}' doesn't exist", folderPath);
+					Logger.Notice("Folder paths searched: {0}", string.Join(":", folderPaths));
 					return false;
 				}
 			}
