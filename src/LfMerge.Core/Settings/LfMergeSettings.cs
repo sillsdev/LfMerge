@@ -38,6 +38,7 @@ namespace LfMerge.Core.Settings
 				if (_webworkDir != null) return _webworkDir;
 				else {
 					_webworkDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir) ?? DefaultLfMergeSettings.WebworkDir;
+					_webworkDir = Path.IsPathRooted(_webworkDir) ? _webworkDir : Path.Combine(BaseDir, _webworkDir);
 					return _webworkDir;
 				}
 			}
@@ -48,6 +49,7 @@ namespace LfMerge.Core.Settings
 				if (_templatesDir != null) return _templatesDir;
 				else {
 					_templatesDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir) ?? DefaultLfMergeSettings.TemplatesDir;
+					_templatesDir = Path.IsPathRooted(_templatesDir) ? _templatesDir : Path.Combine(BaseDir, _templatesDir);
 					return _templatesDir;
 				}
 			}
@@ -154,8 +156,8 @@ namespace LfMerge.Core.Settings
 
 		private void SetAllMembers()
 		{
-			FdoDirectorySettings.SetProjectsDirectory(Path.IsPathRooted(WebworkDir) ? WebworkDir : Path.Combine(BaseDir, WebworkDir));
-			FdoDirectorySettings.SetTemplateDirectory(Path.IsPathRooted(TemplatesDir) ? TemplatesDir : Path.Combine(BaseDir, TemplatesDir));
+			FdoDirectorySettings.SetProjectsDirectory(WebworkDir);
+			FdoDirectorySettings.SetTemplateDirectory(TemplatesDir);
 			StateDirectory = Path.Combine(BaseDir, "state");
 
 			CommitWhenDone = true;
