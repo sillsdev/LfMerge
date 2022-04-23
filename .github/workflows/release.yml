@@ -46,8 +46,8 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git tag -a -m "Release ${TAG70}" "${TAG70}" "refs/remotes/origin/${FW8Branch}"
-        git tag -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/${FW9Branch}"
+        git tag -f -a -m "Release ${TAG70}" "${TAG70}" "refs/remotes/origin/${FW8Branch}"
+        git tag -f -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/${FW9Branch}"
         git push -v origin "${TAG70}" "${TAG72}"
 
     - name: Download build artifacts
