@@ -81,19 +81,12 @@ namespace LfMerge.Core.Tests
 
 	public class LfMergeSettingsDouble: LfMergeSettings
 	{
-		static LfMergeSettingsDouble()
-		{
-			ConfigDir = Path.GetRandomFileName();
-		}
-
 		public LfMergeSettingsDouble(string replacementBaseDir)
 		{
-			var replacementConfig = new IniData(ParsedConfig);
-			replacementConfig.Global["BaseDir"] = replacementBaseDir;
-			Initialize(replacementConfig);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, replacementBaseDir);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress, "true");
+			base.Initialize();
 			CommitWhenDone = false;
-			VerboseProgress = true;
-			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data/php/src");
 		}
 	}
 

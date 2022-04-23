@@ -28,9 +28,6 @@ namespace LfMerge
 		[Option("migrate", HelpText = "Allow data migration")]
 		public bool AllowDataMigration { get; set; }
 
-		[Option("config", HelpText = "Alternate location of the 'sendreceive.conf' configuration file")]
-		public string ConfigDir { get; set; }
-
 		[Option("user", HelpText = "LanguageDepot username (for debugging purposes only)", DefaultValue = "x")]
 		public string User { get; set; }
 
