@@ -126,6 +126,7 @@ namespace LfMerge.Core
 		public static bool CheckSetup()
 		{
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			settings.Initialize();
 			var homeFolder = Environment.GetEnvironmentVariable("HOME") ?? "/var/www";
 			string[] folderPaths = { Path.Combine(homeFolder, ".local"),
 				Path.GetDirectoryName(settings.WebWorkDirectory) };
