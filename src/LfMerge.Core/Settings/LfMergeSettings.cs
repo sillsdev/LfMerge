@@ -144,12 +144,11 @@ namespace LfMerge.Core.Settings
 		{
 			LcmDirectorySettings = new LcmDirectories();
 			QueueDirectories = new string[0];
+			SetAllMembers();
 		}
 
 		public void Initialize()
 		{
-			SetAllMembers();
-
 			// TODO: Get rid of this once we simplify the queue system. 2022-02 RM
 			Queue.CreateQueueDirectories(this);
 		}
