@@ -4,8 +4,8 @@ on:
   # Don't run automatically, YET
   # push:
   #   branches: [ master, qa, live, fieldworks8-master, fieldworks8-qa, fieldworks8-live ]
-  # pull_request:
-  #   branches: [ master, fieldworks8-master ]
+  pull_request:
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
