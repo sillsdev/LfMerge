@@ -9,9 +9,6 @@ on:
       FW9Branch:
         required: true
         type: string
-      TagFor7000070:
-        required: true
-        type: string
       TagFor7000072:
         required: true
         type: string
