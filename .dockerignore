@@ -1,5 +1,6 @@
 data/
 !data/testlangproj
+!data/testlangproj-modified
 finalresults*
 Dockerfile
 packages/

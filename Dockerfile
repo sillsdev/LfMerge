@@ -13,6 +13,13 @@ RUN useradd -u "${BUILDER_UID:-DEFAULT_BUILDER_UID}" -d /home/builder -g users -
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
 	chown -R builder:users /build
 
+# Unit tests need specific permissions on /var/lib/languageforge
+RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue \
+    /var/lib/languageforge/lexicon/sendreceive/webwork \
+    /var/lib/languageforge/lexicon/sendreceive/Templates \
+    /var/lib/languageforge/lexicon/sendreceive/state \
+    && chown -R builder:users /var/lib/languageforge
+
 # Any setup unique to the various builds goes in one of these four images
 FROM lfmerge-builder-base AS lfmerge-build-7000068
 ENV DbVersion=7000068

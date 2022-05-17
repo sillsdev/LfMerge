@@ -85,6 +85,7 @@ namespace LfMerge.Core.Tests
 		{
 			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, replacementBaseDir);
 			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress, "true");
+			base.SetAllMembers();
 			base.Initialize();
 			CommitWhenDone = false;
 		}

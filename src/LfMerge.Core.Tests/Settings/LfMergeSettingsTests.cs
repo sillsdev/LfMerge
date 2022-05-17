@@ -22,6 +22,7 @@ namespace LfMerge.Core.Tests
 					System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir, webworkDir);
 				if (!string.IsNullOrEmpty(templateDir))
 					System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir, templateDir);
+				base.SetAllMembers();
 				base.Initialize();
 			}
 		}

@@ -45,6 +45,7 @@ namespace LfMerge.Core.Tests.Lcm
 				languageForgeServerFolder: LanguageForgeFolder
 			);
 			Settings = new LfMergeSettingsDouble(LanguageForgeFolder.Path);
+			Settings.Initialize();
 			TestEnvironment.CopyFwProjectTo(testProjectCode, Settings.LcmDirectorySettings.DefaultProjectsDirectory);
 			lfProj = LanguageForgeProject.Create(testProjectCode);
 		}

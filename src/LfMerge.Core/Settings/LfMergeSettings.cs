@@ -10,121 +10,56 @@ namespace LfMerge.Core.Settings
 {
 	public class LfMergeSettings
 	{
-		private string _baseDir = null;
-		private string _webworkDir = null;
-		private string _templatesDir = null;
-		private string _mongoHostname = null;
-		private int _mongoPort = 0;
-		private string _mongoMainDatabaseName = null;
-		private string _mongoDatabaseNamePrefix = null;
-		private string _verboseProgressStr = null;
-		private bool _verboseProgress = false;
-		private string _languageDepotRepoUri = null;
-
 		// Settings derived from environment variables
 
-		public string BaseDir {
-			get {
-				if (_baseDir != null) return _baseDir;
-				else {
-					_baseDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir) ?? DefaultLfMergeSettings.BaseDir;
-					return _baseDir;
-				}
-			}
-		}
+		public string BaseDir => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir) ?? DefaultLfMergeSettings.BaseDir;
 
 		public string WebworkDir {
 			get {
-				if (_webworkDir != null) return _webworkDir;
-				else {
-					_webworkDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir) ?? DefaultLfMergeSettings.WebworkDir;
-					_webworkDir = Path.IsPathRooted(_webworkDir) ? _webworkDir : Path.Combine(BaseDir, _webworkDir);
-					return _webworkDir;
-				}
+					string webworkDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir) ?? DefaultLfMergeSettings.WebworkDir;
+					webworkDir = Path.IsPathRooted(webworkDir) ? webworkDir : Path.Combine(this.BaseDir, webworkDir);
+					return webworkDir;
 			}
 		}
 
 		public string TemplatesDir {
 			get {
-				if (_templatesDir != null) return _templatesDir;
-				else {
-					_templatesDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir) ?? DefaultLfMergeSettings.TemplatesDir;
-					_templatesDir = Path.IsPathRooted(_templatesDir) ? _templatesDir : Path.Combine(BaseDir, _templatesDir);
-					return _templatesDir;
-				}
+					string templatesDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir) ?? DefaultLfMergeSettings.TemplatesDir;
+					templatesDir = Path.IsPathRooted(templatesDir) ? templatesDir : Path.Combine(BaseDir, templatesDir);
+					return templatesDir;
 			}
 		}
 
-		public string MongoHostname {
-			get {
-				if (_mongoHostname != null) return _mongoHostname;
-				else {
-					_mongoHostname = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
-					return _mongoHostname;
-				}
-			}
-		}
+		public string MongoHostname => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
 
 		public int MongoPort {
 			get {
-				if (_mongoPort != 0) return _mongoPort;
-				else {
 					string mongoPortStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort);
 					if (mongoPortStr == null) mongoPortStr = "";
-					if (Int32.TryParse(mongoPortStr, out _mongoPort)) {
-						return _mongoPort;
+					if (Int32.TryParse(mongoPortStr, out int mongoPort)) {
+						return mongoPort;
 					} else {
-						_mongoPort = DefaultLfMergeSettings.MongoPort;
-						return _mongoPort;
+						return DefaultLfMergeSettings.MongoPort;
 					}
-				}
 			}
 		}
 
-		public string MongoMainDatabaseName {
-			get {
-				if (_mongoMainDatabaseName != null) return _mongoMainDatabaseName;
-				else {
-					_mongoMainDatabaseName = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoMainDatabaseName) ?? DefaultLfMergeSettings.MongoMainDatabaseName;
-					return _mongoMainDatabaseName;
-				}
-			}
-		}
+		public string MongoMainDatabaseName => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoMainDatabaseName) ?? DefaultLfMergeSettings.MongoMainDatabaseName;
 
 		/// <summary>
 		/// The prefix prepended to project codes to get the Mongo database name.
 		/// </summary>
-		public string MongoDatabaseNamePrefix {
-			get {
-				if (_mongoDatabaseNamePrefix != null) return _mongoDatabaseNamePrefix;
-				else {
-					_mongoDatabaseNamePrefix = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoDatabaseNamePrefix) ?? DefaultLfMergeSettings.MongoDatabaseNamePrefix;
-					return _mongoDatabaseNamePrefix;
-				}
-			}
-		}
+		public string MongoDatabaseNamePrefix => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoDatabaseNamePrefix) ?? DefaultLfMergeSettings.MongoDatabaseNamePrefix;
 
 		public bool VerboseProgress {
 			get {
-				if (_verboseProgressStr != null) return _verboseProgress;
-				else {
-					_verboseProgressStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress);
-					if (_verboseProgressStr == null) _verboseProgressStr = "";
-					_verboseProgress = LanguageForge.Model.ParseBoolean.FromString(_verboseProgressStr);
-					return _verboseProgress;
-				}
+					string verboseProgressStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress);
+					if (verboseProgressStr == null) verboseProgressStr = "";
+					return LanguageForge.Model.ParseBoolean.FromString(verboseProgressStr);
 			}
 		}
 
-		public string LanguageDepotRepoUri {
-			get {
-				if (_languageDepotRepoUri != null) return _languageDepotRepoUri;
-				else {
-					_languageDepotRepoUri = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
-					return _languageDepotRepoUri;
-				}
-			}
-		}
+		public string LanguageDepotRepoUri => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
 
 		// Settings calculated at runtime from sources other than environment variables
 
@@ -153,7 +88,7 @@ namespace LfMerge.Core.Settings
 			Queue.CreateQueueDirectories(this);
 		}
 
-		private void SetAllMembers()
+		protected void SetAllMembers()
 		{
 			LcmDirectorySettings.SetProjectsDirectory(WebworkDir);
 			LcmDirectorySettings.SetTemplateDirectory(TemplatesDir);
