@@ -15,7 +15,12 @@ fi
 if [ "${IS_FW9}" ]; then
 	FW9_BUILD_BRANCH="${CURRENT_BRANCH}"
 	if [ "$1" ]; then
-		FW8_BUILD_BRANCH="$1"
+		if [ "$1" = "--no-fw8" ]; then
+			BUILD_FW8=0
+			FW8_BUILD_BRANCH=""
+		else
+			FW8_BUILD_BRANCH="$1"
+		fi
 	elif [ "${CURRENT_BRANCH}" = "master" -o "${CURRENT_BRANCH}" = "qa" -o "${CURRENT_BRANCH}" = "live" ]; then
 		FW8_BUILD_BRANCH="fieldworks8-${CURRENT_BRANCH}"
 	else

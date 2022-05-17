@@ -40,13 +40,7 @@ RUN curl -L http://linux.lsdev.sil.org/downloads/sil-testing.gpg | apt-key add -
 && rm -rf /var/lib/apt/lists/* \
 && sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
 
-ADD tarball/lfmerge-7000068/ /
-ADD tarball/lfmerge-7000069/ /
-ADD tarball/lfmerge-7000070/ /
-ADD tarball/lfmerge-7000072/ /
-# Add more lines here if we add new DbVersions
-
-ADD tarball/lfmerge/ /
+ADD tarball/lfmerge* /
 
 RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue /var/lib/languageforge/lexicon/sendreceive/webwork /var/lib/languageforge/lexicon/sendreceive/Templates /var/lib/languageforge/lexicon/sendreceive/state && chown -R www-data:www-data /var/lib/languageforge
 
