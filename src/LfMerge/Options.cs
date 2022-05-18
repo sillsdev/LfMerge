@@ -3,7 +3,6 @@
 using CommandLine;
 using CommandLine.Text;
 using LfMerge.Core.Actions;
-using System.IO;
 
 namespace LfMerge
 {
