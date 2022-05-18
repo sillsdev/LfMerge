@@ -1,21 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS lfmerge-builder-base
-WORKDIR /build/lfmerge
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
-RUN apt-get update && apt-get install -y gnupg
-
-COPY docker/sil-packages-key.gpg .
-COPY docker/sil-packages-testing-key.gpg .
-RUN apt-key add sil-packages-key.gpg
-RUN apt-key add sil-packages-testing-key.gpg
-RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
-RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
-# Dependencies from Debian "control" file
-RUN apt-get update && apt-get install -y sudo debhelper devscripts cli-common-dev iputils-ping cpp python-dev pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo
+FROM ghcr.io/sillsdev/lfmerge-base AS lfmerge-builder-base
 
 ENV DEFAULT_BUILDER_UID=1000
 ARG BUILDER_UID
