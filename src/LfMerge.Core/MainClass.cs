@@ -19,7 +19,6 @@ using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.IO;
 using SIL.LCModel;
-using SIL.PlatformUtilities;
 using SIL.Progress;
 using Action = LfMerge.Core.Actions.Action;
 
