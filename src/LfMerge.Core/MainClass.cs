@@ -17,7 +17,6 @@ using LfMerge.Core.Queues;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using Palaso.IO;
-using Palaso.PlatformUtilities;
 using Palaso.Progress;
 using SIL.FieldWorks.FDO;
 
