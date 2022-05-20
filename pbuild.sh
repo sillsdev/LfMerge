@@ -82,12 +82,14 @@ if [ "${BUILD_FW8}" -eq 0 ]; then
 	docker build --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
 else
 	time parallel --no-notice <<EOF
-docker build --build-arg DbVersion=7000068 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000068 .
-docker build --build-arg DbVersion=7000069 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000069 .
-docker build --build-arg DbVersion=7000070 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000070 .
-docker build --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
+docker build --build-arg "RunUnitTests=1" --build-arg DbVersion=7000068 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000068 .
+docker build --build-arg "RunUnitTests=1" --build-arg DbVersion=7000069 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000069 .
+docker build --build-arg "RunUnitTests=1" --build-arg DbVersion=7000070 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000070 .
+docker build --build-arg "RunUnitTests=1" --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
 EOF
 fi
+
+# TODO: Make unit testing (--build-arg "RunUnitTests=1") controllable by a pbuild.sh flag
 
 # To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
 # docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 -f combined.dockerfile .

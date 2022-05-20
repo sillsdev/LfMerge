@@ -20,5 +20,5 @@ if [ -n "$TEST_SPEC" ]; then
     mono packages/NUnit.ConsoleRunner/tools/nunit3-console.exe output/Release/LfMerge*.Tests.dll --test "$TEST_SPEC"
   fi
 else
-  msbuild /t:TestOnly /v:detailed /property:Configuration=Release build/LfMerge.proj
+  msbuild /t:TestOnly /v:detailed /property:Configuration=Release /property:ExtraExcludeCategories="$UNIT_TEST_EXCLUSIONS" build/LfMerge.proj
 fi
