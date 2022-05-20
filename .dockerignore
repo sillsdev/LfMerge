@@ -3,3 +3,4 @@ data/
 finalresults*
 Dockerfile
 packages/
+scratch/
