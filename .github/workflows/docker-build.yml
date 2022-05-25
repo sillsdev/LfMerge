@@ -198,7 +198,7 @@ jobs:
 
       - name: Collect tarball images
       # Now should collect tarballs
-        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/repo/tarball ./
+        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/tarball ./
 
       - uses: actions/upload-artifact@v2.2.4
         with:

@@ -31,8 +31,8 @@ EOF
 
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
-install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB}
-install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
+install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/convert
@@ -69,7 +69,6 @@ install -m 755 lfmergeqm ${COMMONDESTDIR}/usr/bin
 install -m 755 startlfmerge ${DBDESTDIR}/${LIB}
 # Install conf file
 install -d ${COMMONDESTDIR}/etc/languageforge/conf
-install -m 644 debian/sendreceive.conf ${COMMONDESTDIR}/etc/languageforge/conf
 # Create working directories
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/state
 mkdir -p ${COMMONDESTDIR}/var/lib/languageforge/lexicon/sendreceive/webwork
