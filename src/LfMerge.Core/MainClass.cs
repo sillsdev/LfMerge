@@ -80,6 +80,7 @@ namespace LfMerge.Core
 			if (FwProject.AllowDataMigration)
 				argsBldr.Append(" --migrate");
 			startInfo.Arguments = argsBldr.ToString();
+			Logger.Notice("About to run ({0}) with args ({1})", startInfo.FileName, startInfo.Arguments);
 			startInfo.CreateNoWindow = true;
 			startInfo.ErrorDialog = false;
 			startInfo.UseShellExecute = false;
