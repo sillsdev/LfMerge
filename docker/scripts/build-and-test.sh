@@ -19,6 +19,8 @@ cd "${REPO_ROOT}"
 "$SCRIPT_DIR"/setup-workspace.sh "${HOME}/packages/lfmerge"
 
 echo After setup-workspace.sh, pwd is $(pwd)
+echo cd to "${HOME}/packages/lfmerge"
+cd "${HOME}/packages/lfmerge"
 
 "$SCRIPT_DIR"/gitversion-combined.sh ${DbVersion}
 
