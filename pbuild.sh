@@ -82,5 +82,5 @@ EOF
 mkdir -p tarball
 for f in 68 69 70 72; do
 # for f in 72; do
-    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/repo/tarball ./
+    docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/tarball ./
 done
