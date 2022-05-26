@@ -6,6 +6,9 @@ export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
 sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
+echo "*** ENVIRONMENT ***"
+printenv
+
 echo Running as $(id)
 # Assuming script is being run from inside the repo, find the repo root and use that as the working directory from now on
 echo "Script dir is ${SCRIPT_DIR}"
