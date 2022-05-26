@@ -13,8 +13,11 @@ DEFAULT_MONO_PREFIX=/opt/mono5-sil
 MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
+echo "In environ, DBVERSIONPATH=($DBVERSIONPATH)"
+
 if [ "$RUNMODE" != "NUGET" ]; then
 	[ -z "$DBVERSIONPATH" ] && DBVERSIONPATH=$(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1)
+	echo "May have just changed DBVERSIONPATH to be ($DBVERSIONPATH) instead"
 	COMPONENTS_MAP_PATH=$DBVERSIONPATH
 fi
 ICU_DATA=/usr/share/fieldworks/Icu54
