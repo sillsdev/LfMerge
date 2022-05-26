@@ -14,8 +14,11 @@ MONO_RUNTIME=v4.0.30319
 MONO_DEBUG=explicit-null-checks
 MONO_ENV_OPTIONS="-O=-gshared"
 
+echo "In environ, DBVERSIONPATH=($DBVERSIONPATH)"
+
 if [ "$RUNMODE" != "NUGET" ]; then
 	[ -z "$DBVERSIONPATH" ] && DBVERSIONPATH=/usr/lib/lfmerge/7000070
+	echo "May have just changed DBVERSIONPATH to be ($DBVERSIONPATH) instead"
 
 	COMPONENTS_MAP_PATH=$DBVERSIONPATH
 fi

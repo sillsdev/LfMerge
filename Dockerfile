@@ -49,6 +49,9 @@ ENV NUNIT_VERSION_MAJOR=3
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
+RUN echo "DbVersion=(${DbVersion})"
+RUN echo "DBVERSIONPATH=(${DBVERSIONPATH})"
+
 USER builder
 
 # Git repo should be mounted under ${HOME}/packages/lfmerge when run
