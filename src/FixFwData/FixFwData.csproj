@@ -28,7 +28,8 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
     <ChangelogFile>../../CHANGELOG.md</ChangelogFile>
     <DefinePlatformConstants Condition="'$(OS)'!='Windows_NT'">LINUX</DefinePlatformConstants>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_7000072;</DefineConstants>
+    <DatabaseVersion Condition="'$(DatabaseVersion)'==''">7000072</DatabaseVersion>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);</DefineConstants>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
