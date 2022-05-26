@@ -53,8 +53,17 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v2.0.10
       with:
-        name: lfmerge-tarball
-        path: tarball
+        # No name specified, so will download all artifacts
+        path: all-tarballs
+
+    - name: Verify that download step worked
+      run: ls -lR all-tarballs
+
+    - name: Uncompress build artifacts
+      run: for f in all-tarballs/*/*.tar.gz; do gzip -cd "${f}" | tar xf -; done
+
+    - name: Verify that uncompress step worked
+      run: ls -lR tarball
 
     - name: Ensure all parts of final tarball exist
       # TODO: Should no longer be needed; verify, then remove
@@ -67,6 +76,7 @@ jobs:
 
     - name: Restore executable bits
       # GitHub artifacts system strips executable bits, so restore them here
+      # TODO: If we keep the tar.gz compression of artifacts, this will become unnecessary
       run: |
         chmod +x tarball/lfmerge*/usr/bin/lfmerge
         chmod +x tarball/lfmerge*/usr/bin/lfmergeqm
