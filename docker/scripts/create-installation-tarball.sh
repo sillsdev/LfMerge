@@ -29,8 +29,11 @@ convert=
 fixutf8=/${LIB}/MercurialExtensions/fixutf8/fixutf8.py
 EOF
 
+echo "Creating installation tarball for ${DatabaseVersion}"
+
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
+echo "${DatabaseVersion}" > ${DBDESTDIR}/${LIB}/dbversion.txt
 install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -d ${DBDESTDIR}/${LIB}/Mercurial
