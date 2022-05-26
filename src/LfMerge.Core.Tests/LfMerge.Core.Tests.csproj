@@ -25,7 +25,8 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
     </AppendToReleaseNotesProperty>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <IsPackable>false</IsPackable>
-    <DefineConstants>TRACE;DEBUG;DBVERSION_7000072</DefineConstants>
+    <DatabaseVersion Condition="'$(DatabaseVersion)'==''">7000072</DatabaseVersion>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
