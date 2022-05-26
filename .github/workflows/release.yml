@@ -111,14 +111,3 @@ jobs:
     - name: List Docker images to verify build
       run: docker image ls
 
-    - name: Export Docker image since push didn't happen
-      if: ${{ !(github.event_name == 'push' && github.ref == 'refs/heads/live') }}
-      run:
-        docker save ghcr.io/sillsdev/lfmerge:latest | gzip -c9 > lfmerge-latest.docker.tar.gz
-
-    - name: Upload Docker image as build artifact since push didn't happen
-      if: ${{ !(github.event_name == 'push' && github.ref == 'refs/heads/live') }}
-      uses: actions/upload-artifact@v2.2.4
-      with:
-        name: lfmerge-latest.docker.tar.gz
-        path: lfmerge-latest.docker.tar.gz
