@@ -148,7 +148,6 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
-			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare LCM DateModified to previous LCM DateModified.
 			filter.Add("authorInfo.modifiedDate", new BsonDocument("$ne", BsonNull.Value));
 			var projection = new BsonDocument();
 			projection.Add("guid", 1);
