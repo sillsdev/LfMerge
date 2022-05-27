@@ -184,13 +184,15 @@ jobs:
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Collect tarball images
-      # Now should collect tarballs
         run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/tarball ./
+
+      - name: Compress tarball images for faster uploads
+        run: time (tar cf - tarball | gzip -c9 > tarball.tar.gz)
 
       - uses: actions/upload-artifact@v3.0.0
         with:
           name: lfmerge-tarball
-          path: tarball
+          path: tarball.tar.gz
     outputs:
       MsBuildVersion: ${{ steps.output_version_number.outputs.VersionFor7000072 }}
       TagFor7000072: ${{ steps.output_version_number.outputs.TagFor7000072 }}

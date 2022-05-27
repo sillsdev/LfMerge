@@ -40,19 +40,23 @@ jobs:
         git push -v origin "${TAG72}"
 
     - name: Download build artifacts
-      uses: actions/download-artifact@v3.0.0
+      uses: actions/download-artifact@v2.0.10
       with:
-        name: lfmerge-tarball
-        path: tarball
+        # No name specified, so will download all artifacts
+        path: all-tarballs
 
-    - name: Ensure all parts of final tarball exist
-      # TODO: Should no longer be needed; verify, then remove
-      run: |
-        mkdir -p tarball/lfmerge-7000072 || true
-        mkdir -p tarball/lfmerge || true
+    - name: Verify that download step worked
+      run: ls -lR all-tarballs
+
+    - name: Uncompress build artifacts
+      run: for f in all-tarballs/*/*.tar.gz; do gzip -cd "${f}" | tar xf -; done
+
+    - name: Verify that uncompress step worked
+      run: ls -lR tarball
 
     - name: Restore executable bits
       # GitHub artifacts system strips executable bits, so restore them here
+      # TODO: Now that we upload .tar.gz format, no longer needed since tar format preserves Unix permissions. Verify, then remove this section
       run: |
         chmod +x tarball/lfmerge*/usr/bin/lfmerge
         chmod +x tarball/lfmerge*/usr/bin/lfmergeqm
