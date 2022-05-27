@@ -148,7 +148,6 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
-			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare FDO DateModified to previous FDO DateModified.
 			filter.Add("authorInfo.modifiedDate", new BsonDocument("$ne", BsonNull.Value));
 			var projection = new BsonDocument();
 			projection.Add("guid", 1);
@@ -484,28 +483,6 @@ namespace LfMerge.Core.MongoConnector
 			var options = new BulkWriteOptions { IsOrdered = false };
 			var result = collection.BulkWrite(updates, options);
 		}
-
-		// public void OldVersionOfSetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
-		// {
-		// 	if (uniqIdToGuidMappings == null || uniqIdToGuidMappings.Count <= 0)
-		// 	{
-		// 		// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
-		// 		// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
-		// 		return;
-		// 	}
-		// 	IMongoDatabase db = GetProjectDatabase(project);
-		// 	IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexiconComments);
-		// 	var updates = new List<UpdateOneModel<BsonDocument>>(uniqIdToGuidMappings.Count);
-		// 	foreach (KeyValuePair<string, string> kv in uniqIdToGuidMappings)
-		// 	{
-		// 		string uniqid = kv.Key;
-		// 		string guid = kv.Value;
-		// 		UpdateOneModel<BsonDocument> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
-		// 		updates.Add(update);
-		// 	}
-		// 	var options = new BulkWriteOptions { IsOrdered = false };
-		// 	var result = collection.BulkWrite(updates, options);
-		// }
 
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{

@@ -192,9 +192,6 @@ namespace LfMerge.Core.DataConverters.CanonicalSources
 				int i = 0;
 				foreach (SemDomQuestion qStruct in questionsByWs[ws])
 				{
-					// TODO: Find out what set_String() would do with a null value. Would it remove the string?
-					// If it would *remove* it, then we might be able to replace string.Empty with nulls in the code below
-					// Right now, just be extra-cautious and ensure we never put nulls into set_String().
 					semdom.QuestionsOS[i].Question.set_String(wsId, qStruct.Question ?? string.Empty);
 					semdom.QuestionsOS[i].ExampleSentences.set_String(wsId, qStruct.ExampleSentences ?? string.Empty);
 					semdom.QuestionsOS[i].ExampleWords.set_String(wsId, qStruct.ExampleWords ?? string.Empty);
