@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM ghcr.io/sillsdev/lfmerge-base AS lfmerge-builder-base
+FROM ghcr.io/sillsdev/lfmerge-base:sdk AS lfmerge-builder-base
 
 ENV DEFAULT_BUILDER_UID=1000
 ARG BUILDER_UID
