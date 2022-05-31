@@ -1,4 +1,7 @@
 #!/bin/bash -e
+
+set -e
+
 echo "Downloading dependencies"
 export MONO_PREFIX=/opt/mono5-sil
 . environ
