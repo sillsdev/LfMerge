@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_DIR=$(dirname $(readlink -f "$0"))
 
 export DbVersion="${1-7000072}"

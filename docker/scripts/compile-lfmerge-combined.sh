@@ -1,4 +1,7 @@
 #!/bin/bash -e
+
+set -e
+
 echo "Compiling LfMerge and running unit tests"
 BUILD=Release . environ
 
