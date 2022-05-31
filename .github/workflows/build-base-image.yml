@@ -24,20 +24,23 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build base Docker image
-      id: lfmerge_base_image
+    - name: Build base Docker image (builder)
       # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
       uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
       with:
         push: true
-        tags: ghcr.io/sillsdev/lfmerge-base:latest
+        tags: ghcr.io/sillsdev/lfmerge-base:sdk
         context: docker
-        file: Dockerfile.base
+        file: Dockerfile.builder-base
 
-    - name: Show metadata from LfMerge image build step
-      run: echo "$METADATA"
-      env:
-        METADATA: ${{ steps.lfmerge_base_image.output.metadata }}
+    - name: Build base Docker image (runtime)
+      # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
+      uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+      with:
+        push: true
+        tags: ghcr.io/sillsdev/lfmerge-base:runtime
+        context: docker
+        file: Dockerfile.runtime-base
 
     - name: List Docker images to verify build
       run: docker image ls

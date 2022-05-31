@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM ghcr.io/sillsdev/lfmerge-base
+FROM ghcr.io/sillsdev/lfmerge-base:runtime
 
 # install LFMerge prerequisites
 # python - required by Mercurial, which is bundled in the LFMerge installation
