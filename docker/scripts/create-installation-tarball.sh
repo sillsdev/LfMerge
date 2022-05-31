@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
