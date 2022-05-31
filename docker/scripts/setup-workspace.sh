@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 DEST="${1:-${HOME}/packages/lfmerge}"
 
 export MONO_PREFIX=/opt/mono5-sil
