@@ -186,6 +186,15 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
+				// Re-queue projects if clone failed due to DNS errors, as those are likely to be transient
+				if (SyncResultedInError(project, syncResult,
+						"Temporary failure in name resolution",
+						ProcessingState.SendReceiveStates.CLONING))
+				{
+					LfMerge.Core.Queues.Queue.GetQueue(LfMerge.Core.Queues.QueueNames.Synchronize).EnqueueProject(project.ProjectCode);
+					return;
+				}
+
 				line = LfMergeBridgeServices.GetLineContaining(syncResult, "No changes from others");
 				if (!string.IsNullOrEmpty(line))
 				{
