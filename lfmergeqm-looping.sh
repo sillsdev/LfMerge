@@ -7,4 +7,6 @@
 
 while inotifywait -e close_write /var/lib/languageforge/lexicon/sendreceive/syncqueue; do
   sudo -u www-data lfmergeqm
+  # Run it again just to ensure that any initial clones that missed a race condition have a chance to get noticed
+  sudo -u www-data lfmergeqm
 done
