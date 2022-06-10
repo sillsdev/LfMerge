@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo Entrypoint running with args "$@"
+
 # Catch SIGTERM and exit cleanly
 trap "exit" TERM
 
