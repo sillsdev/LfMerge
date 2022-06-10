@@ -4,6 +4,7 @@ ARG DbVersion=7000072
 FROM ghcr.io/sillsdev/lfmerge-base:runtime
 
 # install LFMerge prerequisites
+# tini - PID 1 handler
 # python - required by Mercurial, which is bundled in the LFMerge installation
 # rsyslog - lfmerge logs to rsyslog and expects this to exist
 # rsyslog customizations (imklog reads kernel messages, which isn't allowed or desired in Docker containers)
@@ -14,7 +15,7 @@ FROM ghcr.io/sillsdev/lfmerge-base:runtime
 RUN curl -L http://linux.lsdev.sil.org/downloads/sil-testing.gpg | apt-key add - \
 && echo "deb http://linux.lsdev.sil.org/ubuntu bionic main" > /etc/apt/sources.list.d/linux-lsdev-sil-org.list \
 && apt-get update \
-&& apt-get install --yes --no-install-recommends python rsyslog logrotate iputils-ping inotify-tools less vim-tiny \
+&& apt-get install --yes --no-install-recommends tini python rsyslog logrotate iputils-ping inotify-tools less vim-tiny \
 && rm -rf /var/lib/apt/lists/* \
 && sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
 
@@ -37,5 +38,5 @@ COPY lfmergeqm-looping.sh /
 COPY entrypoint.sh /
 RUN chmod +x /lfmergeqm-background.sh /lfmergeqm-looping.sh /entrypoint.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/entrypoint.sh" ]
 CMD [ "/lfmergeqm-looping.sh" ]
