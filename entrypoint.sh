@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Catch SIGTERM and exit cleanly
+trap "exit" TERM
+
 # rsyslog needs to run so that lfmerge can log to /var/log/syslog
 /etc/init.d/rsyslog start
 

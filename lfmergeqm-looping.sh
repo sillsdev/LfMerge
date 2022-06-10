@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Catch SIGTERM and exit cleanly
+trap "exit" TERM
+# This is also handled in entrypoint.sh, but since entrypoint.sh uses exec to run this script, we need to handle SIGTERM here as well
+
 # Run lfmergeqm every time a file is created in the sync queue
 # We use the close_write event because the create event can be fired before the file's contents are written, and then `lfmergeqm` can run too early
 
