@@ -1,8 +1,10 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
+using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -81,12 +83,14 @@ namespace LfMerge.Core
 		private string _errorMessage;
 		private int _errorCode;
 		private long _previousRunTotalMilliseconds;
+		private IList<ErrorReport> _errors;
 
 		protected ProcessingState()
 		{
 			_state = SendReceiveStates.CLONING;
 			_lastStateChangeTicks = DateTime.UtcNow.Ticks;
 			ProjectCode = string.Empty;
+			_errors = new List<ErrorReport>();
 		}
 
 		public ProcessingState(string projectCode, LfMergeSettings settings): this()
@@ -180,6 +184,11 @@ namespace LfMerge.Core
 		{
 			get { return _uncommittedEditCounter; }
 			set { SetProperty(ref _uncommittedEditCounter, value); }
+		}
+		public IList<ErrorReport> Errors
+		{
+			get { return _errors; }
+			set { SetProperty(ref _errors, value); }
 		}
 		public string ErrorMessage
 		{

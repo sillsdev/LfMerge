@@ -18,14 +18,16 @@ namespace LfMerge.Core.DataConverters
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
+		private readonly IEnumerable<Tuple<ILexEntry, Exception>> _entryConversionErrors;
 		private ILogger _logger;
 		private IProgress _progress;
 		private FwServiceLocatorCache _servLoc;
 		private MongoProjectRecordFactory _factory;
-		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
+		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, IEnumerable<Tuple<ILexEntry, Exception>> entryConversionErrors, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
 		{
 			_conn = conn;
 			_project = proj;
+			_entryConversionErrors = entryConversionErrors;
 			_servLoc = proj.FieldWorksProject.ServiceLocator;
 			_logger = logger;
 			_progress = progress;

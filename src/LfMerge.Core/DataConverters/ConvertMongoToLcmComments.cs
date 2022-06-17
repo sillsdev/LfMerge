@@ -17,13 +17,15 @@ namespace LfMerge.Core.DataConverters
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
+		private List<Tuple<LfLexEntry, Exception>> _entryConversionErrors;
 		private ILogger _logger;
 		private IProgress _progress;
 
-		public ConvertMongoToLcmComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress)
+		public ConvertMongoToLcmComments(IMongoConnection conn, ILfProject proj, List<Tuple<LfLexEntry, Exception>> entryConversionErrors, ILogger logger, IProgress progress)
 		{
 			_conn = conn;
 			_project = proj;
+			_entryConversionErrors = entryConversionErrors;
 			_logger = logger;
 			_progress = progress;
 		}
