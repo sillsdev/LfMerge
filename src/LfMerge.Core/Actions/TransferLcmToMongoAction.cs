@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
@@ -64,8 +65,12 @@ namespace LfMerge.Core.Actions
 			Logger.Debug("TransferLcmToMongoAction: setting up lexicon converter");
 			_lexiconConverter = new ConvertLcmToMongoLexicon(project, Logger, _connection, Progress, _projectRecordFactory);
 			Logger.Debug("TransferLcmToMongoAction: about to run lexicon conversion");
-			var errors = _lexiconConverter.RunConversion();
+			var errorsCopy = _lexiconConverter.RunConversion().ToList();
 			//todo error handling
+			if (errorsCopy.Any())
+			{
+				
+			}
 
 			Logger.Debug("TransferLcmToMongoAction: successful transfer; setting last-synced date");
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);

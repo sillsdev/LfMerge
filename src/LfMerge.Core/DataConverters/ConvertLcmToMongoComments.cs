@@ -36,6 +36,8 @@ namespace LfMerge.Core.DataConverters
 
 		public void RunConversion()
 		{
+			var skippedEntryGuids = new HashSet<Guid>(_entryConversionErrors.Select(s => s.Item1.Guid));
+			var skippedComments = new List<Tuple<LfComment, Exception>>();
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
@@ -63,7 +65,14 @@ namespace LfMerge.Core.DataConverters
 						{
 							// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
 							// We want to handle these three cases differently -- see FromTargetGuid below.
-							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+							try
+							{
+								comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+							}
+							catch (Exception e)
+							{	
+								skippedComments.Add(Tuple.Create(comment, e));
+							}
 						}
 					}
 					// _logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8} (GUID {9})",
@@ -79,7 +88,8 @@ namespace LfMerge.Core.DataConverters
 					// 	comment.StatusGuid
 					// 	);
 				}
-				_conn.UpdateComments(_project, comments);
+				var skippedCommentsMap = new HashSet<LfComment>(skippedComments.Select(s => s.Item1));
+				_conn.UpdateComments(_project, comments.Where(s => !skippedCommentsMap.Contains(s)).ToList());
 				_conn.UpdateReplies(_project, replies);
 				_conn.UpdateCommentStatuses(_project, statusChanges);
 			}
