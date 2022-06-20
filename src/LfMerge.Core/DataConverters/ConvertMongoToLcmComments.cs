@@ -30,35 +30,52 @@ namespace LfMerge.Core.DataConverters
 			_progress = progress;
 		}
 
-		public void RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
+		public List<Tuple<LfComment, Exception, LfLexEntry, Exception>> RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
 		{
+			var skippedEntries = _entryConversionErrors.Where(s => s.Item1.Guid.HasValue).ToDictionary(s => s.Item1.Guid.Value.ToString());
+			var skippedComments = new List<Tuple<LfComment, Exception, LfLexEntry, Exception>>();  // TODO: Convert to a nicer class at some point
+			var exceptions = new List<Tuple<LfComment, Exception, LfLexEntry, Exception>>();
 			var commentsWithIds = new List<KeyValuePair<string, LfComment>>();
 			foreach (var comment in _conn.GetComments(_project))
 			{
-				Guid guid;
-				// LfMergeBridge wants lex entry GUIDs (passed along in comment.Regarding.TargetGuid), not Mongo ObjectIds like comment.EntryRef contains.
-				if (comment.EntryRef != null &&
-					entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
+				try
 				{
-					comment.Regarding.TargetGuid = guid.ToString();
-
-					// LF-186
-					if (string.IsNullOrEmpty(comment.Regarding.Word))
+					Guid guid;
+					// LfMergeBridge wants lex entry GUIDs (passed along in comment.Regarding.TargetGuid), not Mongo ObjectIds like comment.EntryRef contains.
+					if (comment.EntryRef != null &&
+						entryObjectIdToGuidMappings.TryGetValue(comment.EntryRef, out guid))
 					{
-						var lexeme = GetLexEntry(comment.EntryRef).Lexeme.FirstNonEmptyString();
-						var field = comment.Regarding.FieldNameForDisplay;
-						var ws = comment.Regarding.InputSystemAbbreviation;
-						var value = string.IsNullOrEmpty(comment.Regarding.FieldValue)
-							? ""
-							: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
-						comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
-							field, ws, value);
-				}
-				}
+						comment.Regarding.TargetGuid = guid.ToString();
 
-				commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
+						// LF-186
+						if (string.IsNullOrEmpty(comment.Regarding.Word))
+						{
+							var lexeme = GetLexEntry(comment.EntryRef).Lexeme.FirstNonEmptyString();
+							var field = comment.Regarding.FieldNameForDisplay;
+							var ws = comment.Regarding.InputSystemAbbreviation;
+							var value = string.IsNullOrEmpty(comment.Regarding.FieldValue)
+								? ""
+								: string.Format(" \"{0}\"", comment.Regarding.FieldValue);
+							comment.Regarding.Word = string.Format("{0} ({1} - {2}{3})", lexeme,
+								field, ws, value);
+						}
+					}
+					if (skippedEntries.TryGetValue(comment.Regarding?.TargetGuid, out var entryConversionError)) {
+						var entry = entryConversionError.Item1;
+						var error = entryConversionError.Item2;
+						skippedComments.Add(Tuple.Create(comment, null as Exception, entry, error));
+					}
+
+					commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
+				}
+				catch (Exception e)
+				{
+					exceptions.Add(Tuple.Create(comment, e, null as LfLexEntry, null as Exception));
+				}
 			}
-			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds);
+			skippedComments.AddRange(exceptions);
+			var skippedCommentGuids = new HashSet<string>(skippedComments.Select(s => s.Item1.Guid?.ToString() ?? ""));
+			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)));
 			string bridgeOutput;
 			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
 			// LfMergeBridge returns two lists of IDs (comment IDs or reply IDs) that need to have their GUIDs updated in Mongo.
@@ -68,6 +85,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
 			_conn.SetCommentGuids(_project, commentIdToGuidMappings);
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
+			return skippedComments;
 		}
 
 		private LfLexEntry GetLexEntry(ObjectId idOfEntry)

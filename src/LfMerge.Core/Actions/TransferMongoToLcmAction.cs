@@ -6,6 +6,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
+using System.Linq;
 using SIL.LCModel;
 
 namespace LfMerge.Core.Actions
@@ -71,7 +72,14 @@ namespace LfMerge.Core.Actions
 			}
 
 			var converter = new ConvertMongoToLcmLexicon(Settings, project, Logger, Progress, _connection, _projectRecord, EntryCounts);
-			converter.RunConversion();
+			var errorsCopy = converter.RunConversion();
+			var entryErrors = errorsCopy.Item1;
+			var commentErrors = errorsCopy.Item2;
+			if (entryErrors.Any() || commentErrors.Any())
+			{
+				var errorReport = Reporting.ConversionErrors.Create(entryErrors, commentErrors);
+				// TODO: Do something with the error report. Log something appropriate, set last synced date, and return the error report, maybe.
+			}
 		}
 
 		protected override ActionNames NextActionName

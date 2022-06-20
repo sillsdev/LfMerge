@@ -125,7 +125,7 @@ namespace LfMerge.Core.DataConverters
 		}
 		#endif
 
-		public void RunConversion()
+		public Tuple<List<Tuple<LfLexEntry, Exception>>, List<Tuple<LfComment, Exception, LfLexEntry, Exception>>> RunConversion()
 		{
 			var exceptions = new List<Tuple<LfLexEntry, Exception>>();
 			Logger.Notice("MongoToLcm: Converting lexicon for project {0}", LfProject.ProjectCode);
@@ -150,7 +150,7 @@ namespace LfMerge.Core.DataConverters
 						converter.UpdateLcmOptionListFromLf(ProjectRecord.InterfaceLanguageCode);
 					}
 					#endif
-					
+
 					foreach (LfLexEntry lfEntry in lexicon)
 					{
 						try
@@ -165,9 +165,10 @@ namespace LfMerge.Core.DataConverters
 				});
 			// Comment conversion gets run AFTER lexicon conversion, so that any comments on new entries are handled correctly in FW
 			var commCvtr = new ConvertMongoToLcmComments(Connection, LfProject, exceptions, Logger, Progress);
-			commCvtr.RunConversion(entryObjectIdToGuidMappings);
+			var skippedComments = commCvtr.RunConversion(entryObjectIdToGuidMappings);
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
+			return Tuple.Create(exceptions, skippedComments);
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
