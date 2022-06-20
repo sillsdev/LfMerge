@@ -94,7 +94,7 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public IEnumerable<Tuple<ILexEntry, Exception>> RunConversion()
+		public Tuple<List<Tuple<ILexEntry, Exception>>, List<Tuple<LfComment, Exception, ILexEntry>>> RunConversion()
 		{
 			var exceptions = new List<Tuple<ILexEntry, Exception>>();
 			Logger.Notice("LcmToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
@@ -102,7 +102,8 @@ namespace LfMerge.Core.DataConverters
 			if (repo == null)
 			{
 				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.ProjectCode);
-				return exceptions;
+				var emptyCommentExceptions = new List<Tuple<LfComment, Exception, ILexEntry>>();
+				return Tuple.Create(exceptions, emptyCommentExceptions);
 			}
 
 			// Custom field configuration AND view configuration should all be set at once
@@ -155,9 +156,20 @@ namespace LfMerge.Core.DataConverters
 			RemoveMongoEntriesDeletedInLcm();
 			// Logger.Debug("Running FtMComments, should see comments show up below:");
 			var commCvtr = new ConvertLcmToMongoComments(Connection, LfProject, exceptions, Logger, Progress, ProjectRecordFactory);
-			commCvtr.RunConversion();
+			var commExceptions = commCvtr.RunConversion();
+			var commExceptionsWithEntries = commExceptions.Select(err => {
+				var entryGuidStr = err.Item1?.Regarding?.TargetGuid;
+				Guid entryGuid;
+				if (Guid.TryParse(entryGuidStr, out entryGuid)) {
+					ILexEntry entry;
+					if (repo.TryGetObject(entryGuid, out entry)) {
+						return Tuple.Create(err.Item1, err.Item2, entry);
+					}
+				}
+				return Tuple.Create(err.Item1, err.Item2, null as ILexEntry);
+			}).ToList();
 
-			return exceptions;
+			return Tuple.Create(exceptions, commExceptionsWithEntries);
 		}
 
 		private void RemoveMongoEntriesDeletedInLcm()

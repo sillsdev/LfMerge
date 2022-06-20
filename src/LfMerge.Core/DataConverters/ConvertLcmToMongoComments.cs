@@ -34,7 +34,7 @@ namespace LfMerge.Core.DataConverters
 			_factory = factory;
 		}
 
-		public void RunConversion()
+		public List<Tuple<LfComment, Exception>> RunConversion()
 		{
 			var skippedEntryGuids = new HashSet<Guid>(_entryConversionErrors.Select(s => s.Item1.Guid));
 			var skippedComments = new List<Tuple<LfComment, Exception>>();
@@ -98,6 +98,7 @@ namespace LfMerge.Core.DataConverters
 			{
 				// Failure, which has already been logged so we don't need to log it again
 			}
+			return skippedComments;
 		}
 
 		public struct FieldLists

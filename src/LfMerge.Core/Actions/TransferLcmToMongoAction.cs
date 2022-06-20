@@ -65,15 +65,18 @@ namespace LfMerge.Core.Actions
 			Logger.Debug("TransferLcmToMongoAction: setting up lexicon converter");
 			_lexiconConverter = new ConvertLcmToMongoLexicon(project, Logger, _connection, Progress, _projectRecordFactory);
 			Logger.Debug("TransferLcmToMongoAction: about to run lexicon conversion");
-			var errorsCopy = _lexiconConverter.RunConversion().ToList();
-			//todo error handling
-			if (errorsCopy.Any())
+			var errorsCopy = _lexiconConverter.RunConversion();
+			var entryErrors = errorsCopy.Item1;
+			var commentErrors = errorsCopy.Item2;
+			if (entryErrors.Any() || commentErrors.Any())
 			{
-				
+				var errorReport = Reporting.ConversionErrors.Create(entryErrors, commentErrors);
+				// TODO: Do something with the error report. Log something appropriate, set last synced date, and return the error report, maybe.
 			}
 
 			Logger.Debug("TransferLcmToMongoAction: successful transfer; setting last-synced date");
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);
+			// TODO: Return null since there were no errors
 		}
 
 		protected override ActionNames NextActionName
