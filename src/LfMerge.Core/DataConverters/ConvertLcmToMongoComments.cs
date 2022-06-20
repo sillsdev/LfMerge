@@ -70,7 +70,7 @@ namespace LfMerge.Core.DataConverters
 								comment.Regarding = FromTargetGuid(guid, fieldConfigs);
 							}
 							catch (Exception e)
-							{	
+							{
 								skippedComments.Add(Tuple.Create(comment, e));
 							}
 						}
@@ -88,10 +88,11 @@ namespace LfMerge.Core.DataConverters
 					// 	comment.StatusGuid
 					// 	);
 				}
-				var skippedCommentsMap = new HashSet<LfComment>(skippedComments.Select(s => s.Item1));
-				_conn.UpdateComments(_project, comments.Where(s => !skippedCommentsMap.Contains(s)).ToList());
-				_conn.UpdateReplies(_project, replies);
-				_conn.UpdateCommentStatuses(_project, statusChanges);
+				var skippedCommentGuids = new HashSet<Nullable<Guid>>(skippedComments.Select(s => s.Item1.Guid));
+				var skippedCommentGuidStrs = new HashSet<string>(skippedCommentGuids.Select(s => s.HasValue ? s.Value.ToString() : ""));
+				_conn.UpdateComments(_project, comments.Where(s => !skippedCommentGuids.Contains(s.Guid)).ToList());
+				_conn.UpdateReplies(_project, replies.Where(s => !skippedCommentGuidStrs.Contains(s.Item1)).ToList());
+				_conn.UpdateCommentStatuses(_project, statusChanges.Where(s => !skippedCommentGuidStrs.Contains(s.Key)).ToList());
 			}
 			else
 			{
