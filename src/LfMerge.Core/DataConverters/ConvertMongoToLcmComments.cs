@@ -7,6 +7,7 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Model;
+using LfMerge.Core.Reporting;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using SIL.Progress;
@@ -17,11 +18,11 @@ namespace LfMerge.Core.DataConverters
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
-		private List<Tuple<LfLexEntry, Exception>> _entryConversionErrors;
+		private ConversionError<LfLexEntry> _entryConversionErrors;
 		private ILogger _logger;
 		private IProgress _progress;
 
-		public ConvertMongoToLcmComments(IMongoConnection conn, ILfProject proj, List<Tuple<LfLexEntry, Exception>> entryConversionErrors, ILogger logger, IProgress progress)
+		public ConvertMongoToLcmComments(IMongoConnection conn, ILfProject proj, ConversionError<LfLexEntry> entryConversionErrors, ILogger logger, IProgress progress)
 		{
 			_conn = conn;
 			_project = proj;
@@ -30,11 +31,10 @@ namespace LfMerge.Core.DataConverters
 			_progress = progress;
 		}
 
-		public List<Tuple<LfComment, Exception, LfLexEntry, Exception>> RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
+		public List<CommentConversionError<LfLexEntry>> RunConversion(Dictionary<MongoDB.Bson.ObjectId, Guid> entryObjectIdToGuidMappings)
 		{
-			var skippedEntries = _entryConversionErrors.Where(s => s.Item1.Guid.HasValue).ToDictionary(s => s.Item1.Guid.Value.ToString());
-			var skippedComments = new List<Tuple<LfComment, Exception, LfLexEntry, Exception>>();  // TODO: Convert to a nicer class at some point
-			var exceptions = new List<Tuple<LfComment, Exception, LfLexEntry, Exception>>();
+			var skippedEntries = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
+			var exceptions = new List<CommentConversionError<LfLexEntry>>();
 			var commentsWithIds = new List<KeyValuePair<string, LfComment>>();
 			foreach (var comment in _conn.GetComments(_project))
 			{
@@ -60,21 +60,30 @@ namespace LfMerge.Core.DataConverters
 								field, ws, value);
 						}
 					}
-					if (skippedEntries.TryGetValue(comment.Regarding?.TargetGuid, out var entryConversionError)) {
-						var entry = entryConversionError.Item1;
-						var error = entryConversionError.Item2;
-						skippedComments.Add(Tuple.Create(comment, null as Exception, entry, error));
+					// Skip comment if, and only if, the entry was skipped
+					if (Guid.TryParse(comment.Regarding?.TargetGuid ?? "", out Guid targetGuid)) {
+						if (skippedEntries.TryGetValue(targetGuid, out var entryConversionError)) {
+							exceptions.Add(new CommentConversionError<LfLexEntry>(comment, null, entryConversionError));
+						}
 					}
 
 					commentsWithIds.Add(new KeyValuePair<string, LfComment>(comment.Id.ToString(), comment));
 				}
 				catch (Exception e)
 				{
-					exceptions.Add(Tuple.Create(comment, e, null as LfLexEntry, null as Exception));
+					// Try to look up the target GUID if possible
+					if (Guid.TryParse(comment.Regarding?.TargetGuid ?? "", out Guid targetGuid)) {
+						if (skippedEntries.TryGetValue(targetGuid, out var entryConversionError)) {
+							exceptions.Add(new CommentConversionError<LfLexEntry>(comment, e, entryConversionError));
+						} else {
+							exceptions.Add(new CommentConversionError<LfLexEntry>(comment, e, null, targetGuid));
+						}
+					} else {
+						exceptions.Add(new CommentConversionError<LfLexEntry>(comment, e, null));
+					}
 				}
 			}
-			skippedComments.AddRange(exceptions);
-			var skippedCommentGuids = new HashSet<string>(skippedComments.Select(s => s.Item1.Guid?.ToString() ?? ""));
+			var skippedCommentGuids = new HashSet<string>(exceptions.Select(s => s.CommentGuid().ToString()));
 			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)));
 			string bridgeOutput;
 			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
@@ -85,7 +94,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
 			_conn.SetCommentGuids(_project, commentIdToGuidMappings);
 			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
-			return skippedComments;
+			return exceptions;
 		}
 
 		private LfLexEntry GetLexEntry(ObjectId idOfEntry)

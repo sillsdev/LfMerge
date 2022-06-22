@@ -66,11 +66,8 @@ namespace LfMerge.Core.Actions
 			_lexiconConverter = new ConvertLcmToMongoLexicon(project, Logger, _connection, Progress, _projectRecordFactory);
 			Logger.Debug("TransferLcmToMongoAction: about to run lexicon conversion");
 			var errorsCopy = _lexiconConverter.RunConversion();
-			var entryErrors = errorsCopy.Item1;
-			var commentErrors = errorsCopy.Item2;
-			if (entryErrors.Any() || commentErrors.Any())
-			{
-				var errorReport = Reporting.ConversionErrors.Create(entryErrors, commentErrors);
+			if (errorsCopy.Any()) {
+				var report = errorsCopy.CreateReports();
 				// TODO: Do something with the error report. Log something appropriate, set last synced date, and return the error report, maybe.
 			}
 

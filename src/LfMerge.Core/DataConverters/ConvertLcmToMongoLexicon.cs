@@ -9,6 +9,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
+using LfMerge.Core.Reporting;
 using MongoDB.Bson;
 using SIL.LCModel;
 using SIL.LCModel.Core.KernelInterfaces;
@@ -94,16 +95,15 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public Tuple<List<Tuple<ILexEntry, Exception>>, List<Tuple<LfComment, Exception, ILexEntry>>> RunConversion()
+		public ConversionError<ILexEntry> RunConversion()
 		{
-			var exceptions = new List<Tuple<ILexEntry, Exception>>();
+			var exceptions = new ConversionError<ILexEntry>();
 			Logger.Notice("LcmToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
 				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.ProjectCode);
-				var emptyCommentExceptions = new List<Tuple<LfComment, Exception, ILexEntry>>();
-				return Tuple.Create(exceptions, emptyCommentExceptions);
+				return exceptions;
 			}
 
 			// Custom field configuration AND view configuration should all be set at once
@@ -141,7 +141,7 @@ namespace LfMerge.Core.DataConverters
 				}
 				catch (Exception e)
 				{
-					exceptions.Add(Tuple.Create(LcmEntry, e));
+					exceptions.AddEntryError(LcmEntry, e);
 
 					//todo check if all entries have been failures
 				}
@@ -157,19 +157,8 @@ namespace LfMerge.Core.DataConverters
 			// Logger.Debug("Running FtMComments, should see comments show up below:");
 			var commCvtr = new ConvertLcmToMongoComments(Connection, LfProject, exceptions, Logger, Progress, ProjectRecordFactory);
 			var commExceptions = commCvtr.RunConversion();
-			var commExceptionsWithEntries = commExceptions.Select(err => {
-				var entryGuidStr = err.Item1?.Regarding?.TargetGuid;
-				Guid entryGuid;
-				if (Guid.TryParse(entryGuidStr, out entryGuid)) {
-					ILexEntry entry;
-					if (repo.TryGetObject(entryGuid, out entry)) {
-						return Tuple.Create(err.Item1, err.Item2, entry);
-					}
-				}
-				return Tuple.Create(err.Item1, err.Item2, null as ILexEntry);
-			}).ToList();
-
-			return Tuple.Create(exceptions, commExceptionsWithEntries);
+			exceptions.AddCommentErrors(commExceptions);
+			return exceptions;
 		}
 
 		private void RemoveMongoEntriesDeletedInLcm()

@@ -8,6 +8,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
+using LfMerge.Core.Reporting;
 using Newtonsoft.Json;
 using SIL.LCModel;
 using SIL.Progress;
@@ -18,12 +19,12 @@ namespace LfMerge.Core.DataConverters
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
-		private readonly IEnumerable<Tuple<ILexEntry, Exception>> _entryConversionErrors;
+		private ConversionError<ILexEntry> _entryConversionErrors;
 		private ILogger _logger;
 		private IProgress _progress;
 		private FwServiceLocatorCache _servLoc;
 		private MongoProjectRecordFactory _factory;
-		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, IEnumerable<Tuple<ILexEntry, Exception>> entryConversionErrors, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
+		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, ConversionError<ILexEntry> entryConversionErrors, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
 		{
 			_conn = conn;
 			_project = proj;
@@ -34,10 +35,10 @@ namespace LfMerge.Core.DataConverters
 			_factory = factory;
 		}
 
-		public List<Tuple<LfComment, Exception>> RunConversion()
+		public List<CommentConversionError<ILexEntry>> RunConversion()
 		{
-			var skippedEntryGuids = new HashSet<Guid>(_entryConversionErrors.Select(s => s.Item1.Guid));
-			var skippedComments = new List<Tuple<LfComment, Exception>>();
+			var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
+			var exceptions = new List<CommentConversionError<ILexEntry>>();
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
@@ -71,7 +72,11 @@ namespace LfMerge.Core.DataConverters
 							}
 							catch (Exception e)
 							{
-								skippedComments.Add(Tuple.Create(comment, e));
+								if (entryErrorsByGuid.TryGetValue(guid, out var entryError)) {
+									exceptions.Add(new CommentConversionError<ILexEntry>(comment, e, entryError));
+								} else {
+									exceptions.Add(new CommentConversionError<ILexEntry>(comment, e, guid));
+								}
 							}
 						}
 					}
@@ -88,9 +93,9 @@ namespace LfMerge.Core.DataConverters
 					// 	comment.StatusGuid
 					// 	);
 				}
-				var skippedCommentGuids = new HashSet<Nullable<Guid>>(skippedComments.Select(s => s.Item1.Guid));
-				var skippedCommentGuidStrs = new HashSet<string>(skippedCommentGuids.Select(s => s.HasValue ? s.Value.ToString() : ""));
-				_conn.UpdateComments(_project, comments.Where(s => !skippedCommentGuids.Contains(s.Guid)).ToList());
+				var skippedCommentGuids = new HashSet<Guid>(exceptions.Select(s => s.CommentGuid()));
+				var skippedCommentGuidStrs = new HashSet<string>(skippedCommentGuids.Select(s => s.ToString()));
+				_conn.UpdateComments(_project, comments.Where(s => !(s.Guid.HasValue && skippedCommentGuids.Contains(s.Guid.Value))).ToList());
 				_conn.UpdateReplies(_project, replies.Where(s => !skippedCommentGuidStrs.Contains(s.Item1)).ToList());
 				_conn.UpdateCommentStatuses(_project, statusChanges.Where(s => !skippedCommentGuidStrs.Contains(s.Key)).ToList());
 			}
@@ -98,7 +103,7 @@ namespace LfMerge.Core.DataConverters
 			{
 				// Failure, which has already been logged so we don't need to log it again
 			}
-			return skippedComments;
+			return exceptions;
 		}
 
 		public struct FieldLists
