@@ -42,4 +42,4 @@ RUNMODE=INSTALLED
 . ./environ
 cd "$LIB"
 
-exec mono --debug "$LIB"/LfMergeQueueManager.exe "$@"
+exec dotnet run "$LIB"/LfMergeQueueManager.exe "$@"

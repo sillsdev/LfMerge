@@ -1,6 +1,4 @@
 #!/bin/bash
-unset MONO_PREFIX
-unset MONO_ENVIRON
 
 SCRIPT_DIR=$(dirname $(readlink -f $0))
 
@@ -32,4 +30,4 @@ cd "$SHARE"
 . ./environ
 cd "$LIB"
 
-exec mono --debug "$LIB"/ChorusMerge.exe "$@"
+exec dotnet run "$LIB"/ChorusMerge.exe "$@"
