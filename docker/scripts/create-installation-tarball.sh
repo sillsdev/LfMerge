@@ -8,7 +8,7 @@ set -e
 export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
-export FRAMEWORK=net462
+export FRAMEWORK=net6.0
 
 export DatabaseVersion=${1:-7000072}
 
@@ -34,6 +34,7 @@ EOF
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
 install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/LfMerge* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/LfMerge* ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext

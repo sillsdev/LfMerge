@@ -42,4 +42,4 @@ RUNMODE=INSTALLED
 . ./environ
 cd "$LIB"
 
-exec dotnet run "$LIB"/LfMergeQueueManager.exe "$@"
+exec "$LIB"/LfMergeQueueManager "$@"
