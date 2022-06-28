@@ -24,6 +24,10 @@ namespace LfMerge.Core.Reporting
 			return EntryErrors.Any() || CommentErrors.Any();
 		}
 
+		public int EntryErrorCount { get { return EntryErrors.Count; } }
+		public int CommentErrorCount { get { return CommentErrors.Count; } }
+		public int Count { get { return EntryErrorCount + CommentErrorCount; } }
+
 		public void AddEntryError(TEntry entry, Exception error) {
 			EntryErrors.Add(new EntryConversionError<TEntry>(entry, error));
 		}

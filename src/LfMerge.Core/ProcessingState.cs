@@ -83,14 +83,13 @@ namespace LfMerge.Core
 		private string _errorMessage;
 		private int _errorCode;
 		private long _previousRunTotalMilliseconds;
-		private IList<ErrorReport> _errors;
+		private ErrorReport _error;
 
 		protected ProcessingState()
 		{
 			_state = SendReceiveStates.CLONING;
 			_lastStateChangeTicks = DateTime.UtcNow.Ticks;
 			ProjectCode = string.Empty;
-			_errors = new List<ErrorReport>();
 		}
 
 		public ProcessingState(string projectCode, LfMergeSettings settings): this()
@@ -111,6 +110,40 @@ namespace LfMerge.Core
 				// the user will see this VERY uninformative error message. Don't let that happen.
 				errorMessage = "Project going on hold due to unspecified error";
 			SetErrorState(SendReceiveStates.HOLD, ErrorCodes.Unspecified, errorMessage, args);
+		}
+
+		public void ReportMongoToLcmErrors(ConversionErrors toLcmErrors, Exception overallException = null)
+		{
+			if (_error != null && _error.Skipped != null) {
+				_error.Skipped.ToLcm = toLcmErrors;
+				_error.Timestamp = DateTime.UtcNow;
+			} else {
+				var skipped = ConversionErrorReport.Create(null, toLcmErrors);
+				if (_error != null) {
+					_error.Skipped = skipped;
+					_error.Timestamp = DateTime.UtcNow;
+				} else {
+					_error = ErrorReport.Create(skipped, overallException);
+				}
+			}
+			Error = _error;  // Trigger SetProperty() so the error is serialized
+		}
+
+		public void ReportLcmToMongoErrors(ConversionErrors toMongoErrors, Exception overallException = null)
+		{
+			if (_error != null && _error.Skipped != null) {
+				_error.Skipped.ToMongo = toMongoErrors;
+				_error.Timestamp = DateTime.UtcNow;
+			} else {
+				var skipped = ConversionErrorReport.Create(toMongoErrors, null);
+				if (_error != null) {
+					_error.Skipped = skipped;
+					_error.Timestamp = DateTime.UtcNow;
+				} else {
+					_error = ErrorReport.Create(skipped, overallException);
+				}
+			}
+			Error = _error;  // Trigger SetProperty() so the error is serialized
 		}
 
 		public void SetErrorState(SendReceiveStates state, ErrorCodes errorCode, string errorMessage, params object[] args)
@@ -185,10 +218,10 @@ namespace LfMerge.Core
 			get { return _uncommittedEditCounter; }
 			set { SetProperty(ref _uncommittedEditCounter, value); }
 		}
-		public IList<ErrorReport> Errors
+		public ErrorReport Error
 		{
-			get { return _errors; }
-			set { SetProperty(ref _errors, value); }
+			get { return _error; }
+			set { SetProperty(ref _error, value); }
 		}
 		public string ErrorMessage
 		{

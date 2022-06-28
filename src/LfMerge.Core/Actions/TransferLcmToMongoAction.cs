@@ -67,13 +67,13 @@ namespace LfMerge.Core.Actions
 			Logger.Debug("TransferLcmToMongoAction: about to run lexicon conversion");
 			var errorsCopy = _lexiconConverter.RunConversion();
 			if (errorsCopy.Any()) {
+				Logger.Warning($"TransferLcmToMongoAction: partial transfer, skipped {errorsCopy.EntryErrorCount} entries and {errorsCopy.CommentErrorCount} comments");
 				var report = errorsCopy.CreateReports();
-				// TODO: Do something with the error report. Log something appropriate, set last synced date, and return the error report, maybe.
+				project.State.ReportLcmToMongoErrors(report);
 			}
 
 			Logger.Debug("TransferLcmToMongoAction: successful transfer; setting last-synced date");
 			_connection.SetLastSyncedDate(project, DateTime.UtcNow);
-			// TODO: Return null since there were no errors
 		}
 
 		protected override ActionNames NextActionName
