@@ -49,7 +49,7 @@ namespace LfMerge.Core
 			}
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettings>().SingleInstance().AsSelf();
-			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
+			containerBuilder.RegisterType<ConsoleLogger>().SingleInstance().As<ILogger>()
 				.WithParameter(new TypedParameter(typeof(string), programName));
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();

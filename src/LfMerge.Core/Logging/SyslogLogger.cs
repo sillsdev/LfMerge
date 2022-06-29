@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace LfMerge.Core.Logging
 {
-	public class SyslogLogger : LoggerBase
+	public class ConsoleLogger : LoggerBase
 	{
-		public SyslogLogger(string programName = null)
+		public ConsoleLogger(string programName = null)
 		{
 		}
 
