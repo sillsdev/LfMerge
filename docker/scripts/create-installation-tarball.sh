@@ -31,13 +31,11 @@ convert=
 fixutf8=/${LIB}/MercurialExtensions/fixutf8/fixutf8.py
 EOF
 
-chmod +x output/${BUILD}/${FRAMEWORK}/LfMerge
-chmod +x output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager
-
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
 install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
-install -m 644 output/${BUILD}/${FRAMEWORK}/LfMerge* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/LfMerge* ${DBDESTDIR}/${LIB}
+install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMerge ${DBDESTDIR}/${LIB}
+install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
