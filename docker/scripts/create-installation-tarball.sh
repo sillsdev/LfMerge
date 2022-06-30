@@ -9,6 +9,7 @@ export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
 export FRAMEWORK=net6.0
+export NETSTANDARD=netstandard2.0
 
 export DatabaseVersion=${1:-7000072}
 
@@ -18,7 +19,8 @@ export DBDESTDIR=tarball/lfmerge-${DatabaseVersion}
 export COMMONDESTDIR=tarball/lfmerge
 export LIB=usr/lib/lfmerge/${DatabaseVersion}
 export SHARE=usr/share/lfmerge/${DatabaseVersion}
-
+export NATIVERUNTIME=runtimes/linux-x64/native
+export LIBRUNTIME=runtimes/linux-x64/lib
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
 # Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
@@ -34,6 +36,8 @@ EOF
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
 install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/${NATIVERUNTIME}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/${NATIVERUNTIME}/*.* ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/${LIBRUNTIME}/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/${LIBRUNTIME}/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMerge ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}

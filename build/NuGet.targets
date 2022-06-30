@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<NUGET_PACKAGES Condition="'$(NUGET_PACKAGES)'==''">$(RootDir)/packages</NUGET_PACKAGES>
+	</PropertyGroup>
 	<Target Name="RestorePackages">
 		<Exec
-			Command='dotnet restore "$(SolutionPath)" --packages packages'/>
+			Command='dotnet restore "$(SolutionPath)" --packages "$(NUGET_PACKAGES)"'/>
 	</Target>
 </Project>

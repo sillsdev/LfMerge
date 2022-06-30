@@ -9,6 +9,7 @@ echo "Using $(which dotnet)"
 
 export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
+
 dotnet build /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
 
 # ln -sf ../Mercurial output/

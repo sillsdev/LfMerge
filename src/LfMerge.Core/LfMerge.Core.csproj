@@ -37,6 +37,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
     <PackageReference Include="MongoDB.Driver.signed" Version="2.4.*" />
     <PackageReference Include="MongoDB.Driver.Core.signed" Version="2.4.*" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="SIL.Bugsnag.Signed" Version="2.2.1" />
     <PackageReference Include="SIL.Chorus.ChorusMerge" Version="5.0.0-netcore0102" />
     <PackageReference Include="SIL.ChorusPlugin.LfMergeBridge" Version="3.6.3-netcore*" />
