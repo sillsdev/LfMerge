@@ -63,6 +63,13 @@ install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
+install -d ${DBDESTDIR}/${LIB}/runtimes
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD}
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native
+install -m 644 output/${BUILD}/${FRAMEWORK}/runtimes/linux-x64/lib/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD} 2>/dev/null || install -m 644 output/${BUILD}/runtimes/linux-x64/lib/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD}
+install -m 644 output/${BUILD}/${FRAMEWORK}/runtimes/linux-x64/native/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native 2>/dev/null || install -m 644 output/${BUILD}/runtimes/linux-x64/native/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native
 # Remove unit test related files
 (cd ${DBDESTDIR}/${LIB} && \
 	rm -f *.Tests.dll* *.Tests.pdb* *.TestApp.exe* SIL.TestUtilities.dll* \
