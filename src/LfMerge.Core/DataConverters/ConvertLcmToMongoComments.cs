@@ -37,8 +37,6 @@ namespace LfMerge.Core.DataConverters
 
 		public List<CommentConversionError<ILexEntry>> RunConversion()
 		{
-			var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
-			var exceptions = new List<CommentConversionError<ILexEntry>>();
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
@@ -56,6 +54,8 @@ namespace LfMerge.Core.DataConverters
 				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
 				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
 
+				var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
+				var exceptions = new List<CommentConversionError<ILexEntry>>();
 				foreach (LfComment comment in comments)
 				{
 					// LfMergeBridge only sets the Guid in comment.Regarding, and leaves it to the LfMerge side to set the rest of the fields meaningfully
@@ -95,9 +95,12 @@ namespace LfMerge.Core.DataConverters
 				}
 				var skippedCommentGuids = new HashSet<Guid>(exceptions.Select(s => s.CommentGuid()));
 				var skippedCommentGuidStrs = new HashSet<string>(skippedCommentGuids.Select(s => s.ToString()));
-				_conn.UpdateComments(_project, comments.Where(s => !(s.Guid.HasValue && skippedCommentGuids.Contains(s.Guid.Value))).ToList());
-				_conn.UpdateReplies(_project, replies.Where(s => !skippedCommentGuidStrs.Contains(s.Item1)).ToList());
-				_conn.UpdateCommentStatuses(_project, statusChanges.Where(s => !skippedCommentGuidStrs.Contains(s.Key)).ToList());
+				var unskippedComments = comments.Where(s => !(s.Guid.HasValue && skippedCommentGuids.Contains(s.Guid.Value)));
+				var unskippedReplies = replies.Where(s => !skippedCommentGuidStrs.Contains(s.Item1));
+				var unskippedStatusChanges = statusChanges.Where(s => !skippedCommentGuidStrs.Contains(s.Key));
+				_conn.UpdateComments(_project, unskippedComments.ToList());
+				_conn.UpdateReplies(_project, unskippedReplies.ToList());
+				_conn.UpdateCommentStatuses(_project, unskippedStatusChanges.ToList());
 			}
 			else
 			{

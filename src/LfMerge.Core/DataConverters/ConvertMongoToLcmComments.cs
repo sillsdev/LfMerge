@@ -84,9 +84,9 @@ namespace LfMerge.Core.DataConverters
 				}
 			}
 			var skippedCommentGuids = new HashSet<string>(exceptions.Select(s => s.CommentGuid().ToString()));
-			string allCommentsJson = JsonConvert.SerializeObject(commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)));
+			string unskippedCommentsJson = JsonConvert.SerializeObject(commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)));
 			string bridgeOutput;
-			CallLfMergeBridge(allCommentsJson, out bridgeOutput);
+			CallLfMergeBridge(unskippedCommentsJson, out bridgeOutput);
 			// LfMergeBridge returns two lists of IDs (comment IDs or reply IDs) that need to have their GUIDs updated in Mongo.
 			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
 			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");

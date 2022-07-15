@@ -121,6 +121,7 @@ namespace LfMerge.Core
 				var skipped = ConversionErrorReport.Create(null, toLcmErrors);
 				if (_error != null) {
 					_error.Skipped = skipped;
+					_error.ExceptionMessage = overallException?.ToString();
 					_error.Timestamp = DateTime.UtcNow;
 				} else {
 					_error = ErrorReport.Create(skipped, overallException);
@@ -138,6 +139,7 @@ namespace LfMerge.Core
 				var skipped = ConversionErrorReport.Create(toMongoErrors, null);
 				if (_error != null) {
 					_error.Skipped = skipped;
+					_error.ExceptionMessage = overallException?.ToString();
 					_error.Timestamp = DateTime.UtcNow;
 				} else {
 					_error = ErrorReport.Create(skipped, overallException);
