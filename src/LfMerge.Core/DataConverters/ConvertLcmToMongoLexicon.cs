@@ -142,8 +142,6 @@ namespace LfMerge.Core.DataConverters
 				catch (Exception e)
 				{
 					exceptions.AddEntryError(LcmEntry, e);
-
-					//todo check if all entries have been failures
 				}
 				finally
 				{
