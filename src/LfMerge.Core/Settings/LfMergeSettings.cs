@@ -198,7 +198,7 @@ namespace LfMerge.Core.Settings
 		{
 			get
 			{
-				var path = "/var/run";
+				var path = "/var/run/lfmerge";
 				const string filename = "lfmerge.pid";
 
 				var attributes = File.GetAttributes(path);

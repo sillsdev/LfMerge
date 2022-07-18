@@ -23,6 +23,8 @@ ADD tarball/lfmerge* /
 
 RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue /var/lib/languageforge/lexicon/sendreceive/webwork /var/lib/languageforge/lexicon/sendreceive/Templates /var/lib/languageforge/lexicon/sendreceive/state && chown -R www-data:www-data /var/lib/languageforge
 
+RUN install -d -o www-data -g www-data -m 02775 /var/run/lfmerge
+
 # TODO: Turn this into environment variables, because we want to be able to just set env vars in k8s config and restart the container
 COPY lfmerge.conf /etc/languageforge/conf/sendreceive.conf
 COPY sudoers.d.lfmerge.conf /etc/sudoers.d/lfmerge
