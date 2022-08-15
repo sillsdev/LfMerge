@@ -112,40 +112,14 @@ namespace LfMerge.Core
 			SetErrorState(SendReceiveStates.HOLD, ErrorCodes.Unspecified, errorMessage, args);
 		}
 
-		public void ReportMongoToLcmErrors(ConversionErrors toLcmErrors, Exception overallException = null)
+		public void ReportMongoToLcmErrors(ConversionError<LanguageForge.Model.LfLexEntry> toLcmErrors)
 		{
-			if (_error != null && _error.Skipped != null) {
-				_error.Skipped.ToLcm = toLcmErrors;
-				_error.Timestamp = DateTime.UtcNow;
-			} else {
-				var skipped = ConversionErrorReport.Create(null, toLcmErrors);
-				if (_error != null) {
-					_error.Skipped = skipped;
-					_error.ExceptionMessage = overallException?.ToString();
-					_error.Timestamp = DateTime.UtcNow;
-				} else {
-					_error = ErrorReport.Create(skipped, overallException);
-				}
-			}
-			Error = _error;  // Trigger SetProperty() so the error is serialized
+			Error = ErrorReport.WithLcmErrors(Error, toLcmErrors);
 		}
 
-		public void ReportLcmToMongoErrors(ConversionErrors toMongoErrors, Exception overallException = null)
+		public void ReportLcmToMongoErrors(ConversionError<SIL.LCModel.ILexEntry> toMongoErrors)
 		{
-			if (_error != null && _error.Skipped != null) {
-				_error.Skipped.ToMongo = toMongoErrors;
-				_error.Timestamp = DateTime.UtcNow;
-			} else {
-				var skipped = ConversionErrorReport.Create(toMongoErrors, null);
-				if (_error != null) {
-					_error.Skipped = skipped;
-					_error.ExceptionMessage = overallException?.ToString();
-					_error.Timestamp = DateTime.UtcNow;
-				} else {
-					_error = ErrorReport.Create(skipped, overallException);
-				}
-			}
-			Error = _error;  // Trigger SetProperty() so the error is serialized
+			Error = ErrorReport.WithMongoErrors(Error, toMongoErrors);
 		}
 
 		public void SetErrorState(SendReceiveStates state, ErrorCodes errorCode, string errorMessage, params object[] args)

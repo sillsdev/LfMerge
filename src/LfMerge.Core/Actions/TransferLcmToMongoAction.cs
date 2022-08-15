@@ -68,8 +68,7 @@ namespace LfMerge.Core.Actions
 			var errorsCopy = _lexiconConverter.RunConversion();
 			if (errorsCopy.Any()) {
 				Logger.Warning($"TransferLcmToMongoAction: partial transfer, skipped {errorsCopy.EntryErrorCount} entries and {errorsCopy.CommentErrorCount} comments");
-				var report = errorsCopy.CreateReports();
-				project.State.ReportLcmToMongoErrors(report);
+				project.State.ReportLcmToMongoErrors(errorsCopy);
 			}
 
 			Logger.Debug("TransferLcmToMongoAction: successful transfer; setting last-synced date");

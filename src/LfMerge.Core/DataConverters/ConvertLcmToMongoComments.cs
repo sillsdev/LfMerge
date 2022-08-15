@@ -40,6 +40,7 @@ namespace LfMerge.Core.DataConverters
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
+			var exceptions = new List<CommentConversionError<ILexEntry>>();
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
 			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
 			// _logger.Debug("Doing Lcm->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
@@ -55,7 +56,6 @@ namespace LfMerge.Core.DataConverters
 				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
 
 				var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
-				var exceptions = new List<CommentConversionError<ILexEntry>>();
 				foreach (LfComment comment in comments)
 				{
 					// LfMergeBridge only sets the Guid in comment.Regarding, and leaves it to the LfMerge side to set the rest of the fields meaningfully

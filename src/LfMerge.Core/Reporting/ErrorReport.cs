@@ -26,9 +26,42 @@ namespace LfMerge.Core.Reporting
             };
         }
 
-        public static ErrorReport Create(ConversionErrorReport skipped)
+        public ErrorReport WithSkipped(ConversionErrorReport skipped)
         {
-            return ErrorReport.Create(skipped, null);
+            return new ErrorReport {
+                Timestamp = DateTime.UtcNow,
+                ExceptionMessage = ExceptionMessage,
+                Skipped = skipped
+            };
+        }
+
+        public static ErrorReport CreateOrUpdate(ErrorReport orig, ConversionErrorReport skipped)
+        {
+			if (orig == null) {
+				return new ErrorReport {
+					Timestamp = DateTime.UtcNow,
+					ExceptionMessage = null,
+					Skipped = skipped
+				};
+			} else {
+				return new ErrorReport {
+					Timestamp = DateTime.UtcNow,
+					ExceptionMessage = orig.ExceptionMessage,
+					Skipped = skipped
+				};
+			}
+        }
+
+        public static ErrorReport WithMongoErrors(ErrorReport orig, ConversionError<ILexEntry> toMongoErrors)
+        {
+			var skipped = orig?.Skipped ?? ConversionErrorReport.FromMongoConversionError(toMongoErrors);
+			return ErrorReport.CreateOrUpdate(orig, skipped);
+        }
+
+        public static ErrorReport WithLcmErrors(ErrorReport orig, ConversionError<LfLexEntry> toLcmErrors)
+        {
+			var skipped = orig?.Skipped ?? ConversionErrorReport.FromLcmConversionError(toLcmErrors);
+			return ErrorReport.CreateOrUpdate(orig, skipped);
         }
     }
 
@@ -44,6 +77,22 @@ namespace LfMerge.Core.Reporting
                 ToLcm = toLcmErrors
             };
         }
+
+        public static ConversionErrorReport FromMongoConversionError<T>(ConversionError<T> mongoErrors)
+        {
+            return new ConversionErrorReport {
+                ToMongo = ConversionErrors.FromConversionError(mongoErrors),
+				ToLcm = null,
+            };
+        }
+
+        public static ConversionErrorReport FromLcmConversionError<T>(ConversionError<T> lcmErrors)
+        {
+            return new ConversionErrorReport {
+                ToMongo = null,
+				ToLcm = ConversionErrors.FromConversionError(lcmErrors),
+            };
+        }
     }
 
     public class ConversionErrors
@@ -51,23 +100,12 @@ namespace LfMerge.Core.Reporting
         public ErrorList Entries { get; set; }
         public ErrorList Comments { get; set; }
 
-        public static ConversionErrors Create(
-            IEnumerable<Tuple<ILexEntry, Exception>> entryErrors,
-            IEnumerable<Tuple<LfComment, Exception, ILexEntry>> commentErrors)
+        public static ConversionErrors FromConversionError<T>(
+			ConversionError<T> errorSet)
         {
             return new ConversionErrors {
-                Entries = ErrorList.CreateEntryList(entryErrors),
-                Comments = ErrorList.CreateCommentList(commentErrors)
-            };
-        }
-
-        public static ConversionErrors Create(
-            IEnumerable<Tuple<LfLexEntry, Exception>> entryErrors,
-            IEnumerable<Tuple<LfComment, Exception, LfLexEntry, Exception>> commentErrors)
-        {
-            return new ConversionErrors {
-                Entries = ErrorList.CreateEntryList(entryErrors),
-                Comments = ErrorList.CreateCommentList(commentErrors)
+                Entries = ErrorList.FromEntryErrors<T>(errorSet.EntryErrors),
+				Comments = ErrorList.FromCommentErrors<T>(errorSet.CommentErrors),
             };
         }
     }
@@ -77,32 +115,19 @@ namespace LfMerge.Core.Reporting
         public int Count { get { return List?.Count ?? 0; } }
         public IList<SingleItemReport> List { get; set; }
 
-        public static ErrorList CreateEntryList(IEnumerable<Tuple<LfLexEntry, Exception>> t)
-        {
-            return new ErrorList {
-                List = t.Select(SingleItemReport.CreateEntryReport).ToList()
-            };
-        }
+		public static ErrorList FromEntryErrors<T>(List<EntryConversionError<T>> entryErrors)
+		{
+			return new ErrorList {
+				List = entryErrors.Select(SingleItemReport.FromEntryError<T>).ToList()
+			};
+		}
 
-        public static ErrorList CreateEntryList(IEnumerable<Tuple<ILexEntry, Exception>> t)
-        {
-            return new ErrorList {
-                List = t.Select(SingleItemReport.CreateEntryReport).ToList()
-            };
-        }
-
-        public static ErrorList CreateCommentList(IEnumerable<Tuple<LfComment, Exception, LfLexEntry, Exception>> t)
-        {
-            return new ErrorList {
-                List = t.Select(SingleItemReport.CreateCommentReport).ToList()
-            };
-        }
-        public static ErrorList CreateCommentList(IEnumerable<Tuple<LfComment, Exception, ILexEntry>> t)
-        {
-            return new ErrorList {
-                List = t.Select(SingleItemReport.CreateCommentReport).ToList()
-            };
-        }
+		public static ErrorList FromCommentErrors<T>(List<CommentConversionError<T>> commentErrors)
+		{
+			return new ErrorList {
+				List = commentErrors.Select(SingleItemReport.FromCommentError<T>).ToList()
+			};
+		}
     }
 
 	public class SingleItemReport
@@ -115,48 +140,26 @@ namespace LfMerge.Core.Reporting
 
         public bool ShouldSerializeEntry() { return Entry != null; }
 
-        public static SingleItemReport CreateEntryReport(Tuple<LfLexEntry, Exception> t)
-        {
-            return new SingleItemReport {
-                Guid = t.Item1.Guid ?? Guid.Empty,
-                Id = null,
-                ExceptionMessage = t.Item2?.ToString(),
-                Label = DataConverters.ConvertUtilities.EntryNameForDebugging(t.Item1),
-                Entry = null
-            };
-        }
+		public static SingleItemReport FromEntryError<T>(EntryConversionError<T> error)
+		{
+			return new SingleItemReport {
+				Guid = error.EntryGuid(),
+				Id = null,
+				ExceptionMessage = error.Error?.ToString(),
+				Label = error.Label(),
+				Entry = null
+			};
+		}
 
-        public static SingleItemReport CreateEntryReport(Tuple<ILexEntry, Exception> t)
-        {
-            return new SingleItemReport {
-                Guid = t.Item1.Guid,
-                Id = null,
-                ExceptionMessage = t.Item2?.ToString(),
-                Label = DataConverters.ConvertUtilities.EntryNameForDebugging(t.Item1),
-                Entry = null
-            };
-        }
-
-        public static SingleItemReport CreateCommentReport(Tuple<LfComment, Exception, LfLexEntry, Exception> t)
-        {
-            return new SingleItemReport {
-                Guid = t.Item1.Guid ?? Guid.Empty,
-                Id = t.Item1.Id.ToString(),
-                ExceptionMessage = t.Item2?.ToString(),
-                Label = t.Item1.Content?.Substring(0, 100) ?? "<empty comment>",
-                Entry = SingleItemReport.CreateEntryReport(Tuple.Create(t.Item3, t.Item4))
-            };
-        }
-
-        public static SingleItemReport CreateCommentReport(Tuple<LfComment, Exception, ILexEntry> t)
-        {
-            return new SingleItemReport {
-                Guid = t.Item1.Guid ?? Guid.Empty,
-                Id = t.Item1.Id.ToString(),
-                ExceptionMessage = t.Item2?.ToString(),
-                Label = t.Item1.Content?.Substring(0, 100) ?? "<empty comment>",
-                Entry = SingleItemReport.CreateEntryReport(Tuple.Create(t.Item3, null as Exception))
-            };
-        }
+		public static SingleItemReport FromCommentError<T>(CommentConversionError<T> error)
+		{
+			return new SingleItemReport {
+				Guid = error.CommentGuid(),
+				Id = error.MongoId(),
+				ExceptionMessage = error.Error?.ToString(),
+				Label = error.Label(),
+				Entry = error.EntryError == null ? null : FromEntryError<T>(error.EntryError),
+			};
+		}
 	}
 }

@@ -44,16 +44,6 @@ namespace LfMerge.Core.Reporting
 		public void AddCommentErrors(List<CommentConversionError<TEntry>> commentErrors) {
 			CommentErrors.AddRange(commentErrors);
 		}
-
-		public ConversionErrors CreateReports() {
-			var entryReports = EntryErrors.Select(e => e.CreateReport());
-			var commentReports = CommentErrors.Select(c => c.CreateReport());
-
-			return new ConversionErrors {
-				Entries = new ErrorList { List = entryReports.ToList() },
-				Comments = new ErrorList { List = commentReports.ToList() },
-			};
-		}
 	}
 
 	public class EntryConversionError<TEntry>
@@ -90,16 +80,6 @@ namespace LfMerge.Core.Reporting
 			ILexEntry lcmEntry = Entry as ILexEntry;
 			if (lcmEntry != null) return ConvertUtilities.EntryNameForDebugging(lcmEntry);
 			return string.Empty;
-		}
-
-		public SingleItemReport CreateReport() {
-			return new SingleItemReport {
-                Guid = EntryGuid(),
-                Id = MongoId(),
-                ExceptionMessage = Error.ToString(),
-                Label = Label(),
-                Entry = null  // This field is only used in comments
-            };
 		}
 	}
 
@@ -139,16 +119,6 @@ namespace LfMerge.Core.Reporting
 		public string Label() {
 			if (Comment == null || Comment.Content == null) return string.Empty;
 			return Comment.Content.Substring(0, 100);
-		}
-
-		public SingleItemReport CreateReport() {
-			return new SingleItemReport {
-                Guid = EntryGuid(),
-                Id = MongoId(),
-                ExceptionMessage = Error.ToString(),
-                Label = Label(),
-                Entry = EntryError?.CreateReport()
-            };
 		}
 	}
 }

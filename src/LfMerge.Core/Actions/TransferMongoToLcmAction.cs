@@ -75,8 +75,7 @@ namespace LfMerge.Core.Actions
 			var errorsCopy = converter.RunConversion();
 			if (errorsCopy.Any()) {
 				Logger.Warning($"TransferMongoToLcmAction: partial transfer, skipped {errorsCopy.EntryErrorCount} entries and {errorsCopy.CommentErrorCount} comments");
-				var report = errorsCopy.CreateReports();
-				project.State.ReportMongoToLcmErrors(report);
+				project.State.ReportMongoToLcmErrors(errorsCopy);
 			}
 		}
 
