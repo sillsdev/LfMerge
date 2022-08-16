@@ -11,6 +11,10 @@ namespace LfMerge.Core
 			MinimalModelVersion = 7000068;
 		}
 
+		// Environment variables used by LfMerge
+		public const string EnvVar_LoggingDest = "LFMERGE_LOGGING_DEST";
+		public const string EnvVar_LoggingDestination = "LFMERGE_LOGGING_DESTINATION";
+		public const string EnvVar_LoggingStderrTreshhold = "LFMERGE_LOGGING_STDERR_THRESHHOLD";
 		public const string SettingsEnvVar_BaseDir = "LFMERGE_BASE_DIR";
 		public const string SettingsEnvVar_WebworkDir = "LFMERGE_WEBWORK_DIR";
 		public const string SettingsEnvVar_TemplatesDir = "LFMERGE_TEMPLATES_DIR";

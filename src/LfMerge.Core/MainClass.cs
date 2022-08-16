@@ -49,8 +49,23 @@ namespace LfMerge.Core
 			}
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettings>().SingleInstance().AsSelf();
-			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
-				.WithParameter(new TypedParameter(typeof(string), programName));
+			string logDest =
+				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDest) ??
+				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDestination) ?? "-";
+			if (logDest == "syslog") {
+				containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
+					.WithParameter(new TypedParameter(typeof(string), programName));
+			} else {
+				// TODO: Implement a FileLogger to handle cases where the logDest is a filename, then only use ConsoleLogger if env var is "-" or missing
+				string stderrThreshholdStr = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingStderrTreshhold) ?? "-";
+				LogSeverity stderrThreshhold;
+				if (System.Enum.TryParse<LogSeverity>(stderrThreshholdStr, true, out stderrThreshhold)) {
+					containerBuilder.RegisterType<ConsoleLogger>().SingleInstance().As<ILogger>()
+						.WithParameter(new TypedParameter(typeof(LogSeverity), stderrThreshhold));
+				} else {
+					containerBuilder.RegisterType<ConsoleLogger>().SingleInstance().As<ILogger>();
+				}
+			}
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();
