@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:experimental
+ARG DbVersion=7000072
+
+FROM ghcr.io/sillsdev/lfmerge-base:runtime
+
+# install LFMerge prerequisites
+# tini - PID 1 handler
+# python - required by Mercurial, which is bundled in the LFMerge installation
+# rsyslog - lfmerge logs to rsyslog and expects this to exist
+# rsyslog customizations (imklog reads kernel messages, which isn't allowed or desired in Docker containers)
+# logrotate - ensure logs won't grow without bound, and that old logs get cleaned up automatically
+# iputils-ping - Chorus (part of LFMerge) requires the "ping" command to be available on the command line
+# less - so we can read syslog during manual debugging of issues
+# vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
+RUN curl -L http://linux.lsdev.sil.org/downloads/sil-testing.gpg | apt-key add - \
+&& echo "deb http://linux.lsdev.sil.org/ubuntu bionic main" > /etc/apt/sources.list.d/linux-lsdev-sil-org.list \
+&& apt-get update \
+&& apt-get install --yes --no-install-recommends tini python rsyslog logrotate iputils-ping inotify-tools less vim-tiny \
+&& rm -rf /var/lib/apt/lists/* \
+&& sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
+
+ADD tarball/lfmerge* /
+
+RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue /var/lib/languageforge/lexicon/sendreceive/webwork /var/lib/languageforge/lexicon/sendreceive/Templates /var/lib/languageforge/lexicon/sendreceive/state && chown -R www-data:www-data /var/lib/languageforge
+
+# TODO: Turn this into environment variables, because we want to be able to just set env vars in k8s config and restart the container
+COPY lfmerge.conf /etc/languageforge/conf/sendreceive.conf
+COPY sudoers.d.lfmerge.conf /etc/sudoers.d/lfmerge
+COPY mercurial-cacerts.rc /etc/mercurial/hgrc
+COPY lfmergeqm-background.sh /
+COPY lfmergeqm-looping.sh /
+COPY entrypoint.sh /
+RUN chmod +x /lfmergeqm-background.sh /lfmergeqm-looping.sh /entrypoint.sh
+
+ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/entrypoint.sh" ]
+CMD [ "/lfmergeqm-looping.sh" ]

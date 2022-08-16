@@ -34,7 +34,7 @@ namespace LfMerge
 			// Username and Password will usually be "x" because it's dealt with on Language Forge site.
 			// However, when debugging LfMerge we want to be able to set it to a real name
 			ChorusHelper.Username = options.User;
-			ChorusHelper.Password = System.Environment.GetEnvironmentVariable("LD_TRUST_TOKEN") ?? options.Password;
+			ChorusHelper.Password = System.Environment.GetEnvironmentVariable("LANGUAGE_DEPOT_TRUST_TOKEN") ?? options.Password;
 
 			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 
@@ -46,9 +46,6 @@ namespace LfMerge
 				MainClass.Logger.Error("Command line doesn't contain project code - exiting.");
 				return -1;
 			}
-
-			if (!string.IsNullOrEmpty(options.ConfigDir))
-				LfMergeSettings.ConfigDir = options.ConfigDir;
 
 			FwProject.AllowDataMigration = options.AllowDataMigration;
 
@@ -79,7 +76,7 @@ namespace LfMerge
 			if (!string.IsNullOrEmpty(differentModelVersion))
 			{
 				result = MainClass.StartLfMerge(options.ProjectCode, options.CurrentAction,
-					differentModelVersion, false, options.ConfigDir);
+					differentModelVersion, false);
 			}
 
 			MainClass.Logger.Notice("LfMerge-{0} finished", MainClass.ModelVersion);

@@ -12,7 +12,6 @@ using System.Reflection;
 using LfMerge.Core.Logging;
 using SIL.LCModel.FixData;
 using SIL.LCModel.Utils;
-//using SIL.Reporting;
 using SyslogLogger = SIL.Linux.Logging.SyslogLogger;
 using SIL.PlatformUtilities;
 

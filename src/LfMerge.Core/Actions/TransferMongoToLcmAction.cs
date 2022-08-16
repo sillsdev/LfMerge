@@ -6,6 +6,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
+using System.Linq;
 using SIL.LCModel;
 
 namespace LfMerge.Core.Actions
@@ -71,7 +72,11 @@ namespace LfMerge.Core.Actions
 			}
 
 			var converter = new ConvertMongoToLcmLexicon(Settings, project, Logger, Progress, _connection, _projectRecord, EntryCounts);
-			converter.RunConversion();
+			var errorsCopy = converter.RunConversion();
+			if (errorsCopy.Any()) {
+				Logger.Warning($"TransferMongoToLcmAction: partial transfer, skipped {errorsCopy.EntryErrorCount} entries and {errorsCopy.CommentErrorCount} comments");
+				project.State.ReportMongoToLcmErrors(errorsCopy);
+			}
 		}
 
 		protected override ActionNames NextActionName

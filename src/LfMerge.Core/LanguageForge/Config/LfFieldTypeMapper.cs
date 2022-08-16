@@ -4,8 +4,6 @@ using System;
 
 namespace LfMerge.Core.LanguageForge.Config
 {
-	// TODO: Is this extra layer of indirection really benefitting us? Maybe MongoRegistrar should
-	// take a BidirectionalDictionary instead of an LfFieldTypeMapper.
 	public class LfFieldTypeMapper
 	{
 		public BidirectionalDictionary<string, Type> Map { get; private set; }

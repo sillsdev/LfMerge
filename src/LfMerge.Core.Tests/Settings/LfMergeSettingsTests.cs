@@ -17,13 +17,12 @@ namespace LfMerge.Core.Tests
 			public void Initialize(string basePath, string webworkDir = null,
 				string templateDir = null)
 			{
-				var replacementConfig = new IniData(ParsedConfig);
-				replacementConfig.Global["BaseDir"] = basePath;
+				System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, basePath);
 				if (!string.IsNullOrEmpty(webworkDir))
-					replacementConfig.Global["WebworkDir"] = webworkDir;
+					System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir, webworkDir);
 				if (!string.IsNullOrEmpty(templateDir))
-					replacementConfig.Global["TemplatesDir"] = templateDir;
-				Initialize(replacementConfig);
+					System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir, templateDir);
+				base.Initialize();
 			}
 		}
 

@@ -1,0 +1,46 @@
+name: build-base-image
+
+on:
+  # Only run this workflow manually, to ensure it WON'T run with every commit
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3.0.2
+
+    - name: Set up buildx for Docker
+      # docker/setup-buildx-action@v2.0.0 is commit dc7b9719a96d48369863986a06765841d7ea23f6
+      uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6
+
+    - name: Login to GHCR
+      # docker/login-action@v2.0.0 is commit 49ed152c8eca782a232dede0303416e8f356c37b
+      uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build base Docker image (builder)
+      # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
+      uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+      with:
+        push: true
+        tags: ghcr.io/sillsdev/lfmerge-base:sdk
+        context: docker
+        file: Dockerfile.builder-base
+
+    - name: Build base Docker image (runtime)
+      # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
+      uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+      with:
+        push: true
+        tags: ghcr.io/sillsdev/lfmerge-base:runtime
+        context: docker
+        file: Dockerfile.runtime-base
+
+    - name: List Docker images to verify build
+      run: docker image ls

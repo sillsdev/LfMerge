@@ -1,0 +1,93 @@
+name: release-fw9only
+
+on:
+  workflow_call:
+    inputs:
+      MsBuildVersion:
+        required: true
+        type: string
+      FW9Branch:
+        required: true
+        type: string
+      TagFor7000072:
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.4.0
+      with:
+        fetch-depth: 0
+
+    - name: Ensure all TagForDbVersion outputs were present
+      env:
+        TAG72: ${{ inputs.TagFor7000072 }}
+      run: |
+        echo "Tag for FW9 (DbVersion 72): (${TAG72})"
+
+    - name: Tag release branches
+      if: github.event_name == 'push' && github.ref == 'refs/heads/live'
+      env:
+        FW9Branch: ${{ inputs.FW9Branch }}
+        TAG72: ${{ inputs.TagFor7000072 }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git tag -f -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/${FW9Branch}"
+        git push -v origin "${TAG72}"
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2.0.10
+      with:
+        # No name specified, so will download all artifacts
+        path: all-tarballs
+
+    - name: Verify that download step worked
+      run: ls -lR all-tarballs
+
+    - name: Uncompress build artifacts
+      run: for f in all-tarballs/*/*.tar.gz; do gzip -cd "${f}" | tar xf -; done
+
+    - name: Verify that uncompress step worked
+      run: ls -lR tarball
+
+    - name: Restore executable bits
+      # GitHub artifacts system strips executable bits, so restore them here
+      # TODO: Now that we upload .tar.gz format, no longer needed since tar format preserves Unix permissions. Verify, then remove this section
+      run: |
+        chmod +x tarball/lfmerge*/usr/bin/lfmerge
+        chmod +x tarball/lfmerge*/usr/bin/lfmergeqm
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/chorusmerge
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/startlfmerge
+        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/Mercurial/hg
+
+    - name: Login to GHCR
+      if: github.event_name == 'push' && github.ref == 'refs/heads/live'
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build final Docker image
+      id: lfmerge_image
+      # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+      uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+      # TODO: Follow https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md for tagging
+      with:
+        push: ${{(github.event_name == 'push' && github.ref == 'refs/heads/live')}}
+        tags: ghcr.io/sillsdev/lfmerge:${{ inputs.MsBuildVersion }},ghcr.io/sillsdev/lfmerge:latest
+        context: .
+        file: Dockerfile.finalresult
+
+    - name: Show metadata from LfMerge image build step
+      run: echo "$METADATA"
+      env:
+        METADATA: ${{ steps.lfmerge_image.output.metadata }}
+
+    - name: List Docker images to verify build
+      run: docker image ls
+

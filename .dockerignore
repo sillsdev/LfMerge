@@ -1,0 +1,6 @@
+data/
+!data/testlangproj
+finalresults*
+Dockerfile
+packages/
+scratch/
