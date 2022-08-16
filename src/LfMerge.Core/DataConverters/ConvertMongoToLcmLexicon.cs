@@ -125,8 +125,9 @@ namespace LfMerge.Core.DataConverters
 		}
 		#endif
 
-		public void RunConversion()
+		public ConversionError<LfLexEntry> RunConversion()
 		{
+			var exceptions = new ConversionError<LfLexEntry>();
 			Logger.Notice("MongoToLcm: Converting lexicon for project {0}", LfProject.ProjectCode);
 			// Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
@@ -149,14 +150,26 @@ namespace LfMerge.Core.DataConverters
 						converter.UpdateLcmOptionListFromLf(ProjectRecord.InterfaceLanguageCode);
 					}
 					#endif
+
 					foreach (LfLexEntry lfEntry in lexicon)
-						LfLexEntryToLcmLexEntry(lfEntry);
+					{
+						try
+						{
+							LfLexEntryToLcmLexEntry(lfEntry);
+						}
+						catch (Exception e)
+						{
+							exceptions.AddEntryError(lfEntry, e);
+						}
+					}
 				});
 			// Comment conversion gets run AFTER lexicon conversion, so that any comments on new entries are handled correctly in FW
-			var commCvtr = new ConvertMongoToLcmComments(Connection, LfProject, Logger, Progress);
-			commCvtr.RunConversion(entryObjectIdToGuidMappings);
+			var commCvtr = new ConvertMongoToLcmComments(Connection, LfProject, exceptions, Logger, Progress);
+			var commErrors = commCvtr.RunConversion(entryObjectIdToGuidMappings);
+			exceptions.AddCommentErrors(commErrors);
 			if (Settings.CommitWhenDone)
 				Cache.ActionHandlerAccessor.Commit();
+			return exceptions;
 		}
 
 		// Shorthand for getting an instance from the cache's service locator
