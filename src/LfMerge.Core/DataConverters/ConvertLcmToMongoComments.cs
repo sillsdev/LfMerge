@@ -8,6 +8,7 @@ using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
+using LfMerge.Core.Reporting;
 using Newtonsoft.Json;
 using SIL.LCModel;
 using SIL.Progress;
@@ -18,25 +19,28 @@ namespace LfMerge.Core.DataConverters
 	{
 		private IMongoConnection _conn;
 		private ILfProject _project;
+		private ConversionError<ILexEntry> _entryConversionErrors;
 		private ILogger _logger;
 		private IProgress _progress;
 		private FwServiceLocatorCache _servLoc;
 		private MongoProjectRecordFactory _factory;
-		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
+		public ConvertLcmToMongoComments(IMongoConnection conn, ILfProject proj, ConversionError<ILexEntry> entryConversionErrors, ILogger logger, IProgress progress, MongoProjectRecordFactory factory)
 		{
 			_conn = conn;
 			_project = proj;
+			_entryConversionErrors = entryConversionErrors;
 			_servLoc = proj.FieldWorksProject.ServiceLocator;
 			_logger = logger;
 			_progress = progress;
 			_factory = factory;
 		}
 
-		public void RunConversion()
+		public List<CommentConversionError<ILexEntry>> RunConversion()
 		{
 			LfProjectConfig config = _factory.Create(_project).Config;
 			FieldLists fieldConfigs = FieldListsForEntryAndSensesAndExamples(config);
 
+			var exceptions = new List<CommentConversionError<ILexEntry>>();
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
 			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
 			// _logger.Debug("Doing Lcm->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
@@ -51,6 +55,7 @@ namespace LfMerge.Core.DataConverters
 				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
 				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
 
+				var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
 				foreach (LfComment comment in comments)
 				{
 					// LfMergeBridge only sets the Guid in comment.Regarding, and leaves it to the LfMerge side to set the rest of the fields meaningfully
@@ -61,7 +66,18 @@ namespace LfMerge.Core.DataConverters
 						{
 							// The GUID in Chorus notes MIGHT be an entry, or it might be a sense or an example sentence.
 							// We want to handle these three cases differently -- see FromTargetGuid below.
-							comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+							try
+							{
+								comment.Regarding = FromTargetGuid(guid, fieldConfigs);
+							}
+							catch (Exception e)
+							{
+								if (entryErrorsByGuid.TryGetValue(guid, out var entryError)) {
+									exceptions.Add(new CommentConversionError<ILexEntry>(comment, e, entryError));
+								} else {
+									exceptions.Add(new CommentConversionError<ILexEntry>(comment, e, guid));
+								}
+							}
 						}
 					}
 					// _logger.Debug("Comment by {6} regarding field {0} (containing {1}) of word {2} (GUID {7}, meaning {3}) has content {4}{5} and status {8} (GUID {9})",
@@ -77,14 +93,20 @@ namespace LfMerge.Core.DataConverters
 					// 	comment.StatusGuid
 					// 	);
 				}
-				_conn.UpdateComments(_project, comments);
-				_conn.UpdateReplies(_project, replies);
-				_conn.UpdateCommentStatuses(_project, statusChanges);
+				var skippedCommentGuids = new HashSet<Guid>(exceptions.Select(s => s.CommentGuid()));
+				var skippedCommentGuidStrs = new HashSet<string>(skippedCommentGuids.Select(s => s.ToString()));
+				var unskippedComments = comments.Where(s => !(s.Guid.HasValue && skippedCommentGuids.Contains(s.Guid.Value)));
+				var unskippedReplies = replies.Where(s => !skippedCommentGuidStrs.Contains(s.Item1));
+				var unskippedStatusChanges = statusChanges.Where(s => !skippedCommentGuidStrs.Contains(s.Key));
+				_conn.UpdateComments(_project, unskippedComments.ToList());
+				_conn.UpdateReplies(_project, unskippedReplies.ToList());
+				_conn.UpdateCommentStatuses(_project, unskippedStatusChanges.ToList());
 			}
 			else
 			{
 				// Failure, which has already been logged so we don't need to log it again
 			}
+			return exceptions;
 		}
 
 		public struct FieldLists

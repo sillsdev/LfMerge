@@ -9,6 +9,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
+using LfMerge.Core.Reporting;
 using MongoDB.Bson;
 using SIL.LCModel;
 using SIL.LCModel.Core.KernelInterfaces;
@@ -94,14 +95,15 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		public void RunConversion()
+		public ConversionError<ILexEntry> RunConversion()
 		{
+			var exceptions = new ConversionError<ILexEntry>();
 			Logger.Notice("LcmToMongo: Converting lexicon for project {0}", LfProject.ProjectCode);
 			ILexEntryRepository repo = GetInstance<ILexEntryRepository>();
 			if (repo == null)
 			{
 				Logger.Error("Can't find LexEntry repository for FieldWorks project {0}", LfProject.ProjectCode);
-				return;
+				return exceptions;
 			}
 
 			// Custom field configuration AND view configuration should all be set at once
@@ -129,17 +131,32 @@ namespace LfMerge.Core.DataConverters
 					// Hasn't been modified since last time: just skip this record entirely
 					continue;
 				}
-				LfLexEntry lfEntry = LcmLexEntryToLfLexEntry(LcmEntry);
-				lfEntry.IsDeleted = false;
-				Logger.Info("{3} - LcmToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i++);
-				Connection.UpdateRecord(LfProject, lfEntry);
+
+				try
+				{
+					LfLexEntry lfEntry = LcmLexEntryToLfLexEntry(LcmEntry);
+					lfEntry.IsDeleted = false;
+					Logger.Info("{3} - LcmToMongo: {0} LfEntry {1} ({2})", createdEntry ? "Created" : "Modified", lfEntry.Guid, ConvertUtilities.EntryNameForDebugging(lfEntry), i);
+					Connection.UpdateRecord(LfProject, lfEntry);
+				}
+				catch (Exception e)
+				{
+					exceptions.AddEntryError(LcmEntry, e);
+				}
+				finally
+				{
+					i++;
+				}
 			}
+
 			LfProject.IsInitialClone = false;
 
 			RemoveMongoEntriesDeletedInLcm();
 			// Logger.Debug("Running FtMComments, should see comments show up below:");
-			var commCvtr = new ConvertLcmToMongoComments(Connection, LfProject, Logger, Progress, ProjectRecordFactory);
-			commCvtr.RunConversion();
+			var commCvtr = new ConvertLcmToMongoComments(Connection, LfProject, exceptions, Logger, Progress, ProjectRecordFactory);
+			var commExceptions = commCvtr.RunConversion();
+			exceptions.AddCommentErrors(commExceptions);
+			return exceptions;
 		}
 
 		private void RemoveMongoEntriesDeletedInLcm()
