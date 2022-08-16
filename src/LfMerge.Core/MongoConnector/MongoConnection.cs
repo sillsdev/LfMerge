@@ -82,7 +82,7 @@ namespace LfMerge.Core.MongoConnector
 			var clientSettings = new MongoClientSettings();
 			// clientSettings.WriteConcern = WriteConcern.WMajority; // If increasing the wait queue size still doesn't help, try this as well
 			clientSettings.WaitQueueSize = 50000;
-			clientSettings.Server = new MongoServerAddress(Settings.MongoDbHostName, Settings.MongoDbPort);
+			clientSettings.Server = new MongoServerAddress(Settings.MongoHostname, Settings.MongoPort);
 			return new MongoClient(clientSettings);
 		}
 
@@ -148,7 +148,6 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<BsonDocument> lexicon = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexicon);
 			var filter = new BsonDocument();
 			filter.Add("guid", new BsonDocument("$ne", BsonNull.Value));
-			// TODO: Get this out of AuthorInfo.ModifiedDate instead! We want to compare FDO DateModified to previous FDO DateModified.
 			filter.Add("authorInfo.modifiedDate", new BsonDocument("$ne", BsonNull.Value));
 			var projection = new BsonDocument();
 			projection.Add("guid", 1);
@@ -485,28 +484,6 @@ namespace LfMerge.Core.MongoConnector
 			var result = collection.BulkWrite(updates, options);
 		}
 
-		// public void OldVersionOfSetCommentReplyGuids(ILfProject project, IDictionary<string,string> uniqIdToGuidMappings)
-		// {
-		// 	if (uniqIdToGuidMappings == null || uniqIdToGuidMappings.Count <= 0)
-		// 	{
-		// 		// Nothing to do! And BulkWrite *requires* at least one update, otherwise Mongo will throw an
-		// 		// error. So it would cause an error to proceed if there are no uniqid -> GUID mappings to write.
-		// 		return;
-		// 	}
-		// 	IMongoDatabase db = GetProjectDatabase(project);
-		// 	IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>(MagicStrings.LfCollectionNameForLexiconComments);
-		// 	var updates = new List<UpdateOneModel<BsonDocument>>(uniqIdToGuidMappings.Count);
-		// 	foreach (KeyValuePair<string, string> kv in uniqIdToGuidMappings)
-		// 	{
-		// 		string uniqid = kv.Key;
-		// 		string guid = kv.Value;
-		// 		UpdateOneModel<BsonDocument> update = PrepareUpdateCommentReplyGuidForUniqId(uniqid, guid);
-		// 		updates.Add(update);
-		// 	}
-		// 	var options = new BulkWriteOptions { IsOrdered = false };
-		// 	var result = collection.BulkWrite(updates, options);
-		// }
-
 		public Dictionary<string, LfInputSystemRecord> GetInputSystems(ILfProject project)
 		{
 			MongoProjectRecord projectRecord = GetProjectRecord(project);
@@ -645,6 +622,22 @@ namespace LfMerge.Core.MongoConnector
 			return true;
 		}
 
+		public BsonDocument GetRoleViews(ILfProject project)
+		{
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null)
+				return new BsonDocument();
+			return projectRecord.Config.RoleViews;
+		}
+
+		public BsonDocument GetUserViews(ILfProject project)
+		{
+			MongoProjectRecord projectRecord = GetProjectRecord(project);
+			if (projectRecord == null)
+				return new BsonDocument();
+			return projectRecord.Config.UserViews;
+		}
+
 		/// <summary>
 		/// Remove previous project custom field configurations that no longer exist,
 		/// and then update them at the appropriate entry, senses, and examples level.
@@ -653,7 +646,7 @@ namespace LfMerge.Core.MongoConnector
 		/// <param name="project">LF project</param>
 		/// <param name="lfCustomFieldList"> Dictionary of LF custom field settings</param>
 		/// <returns>True if mongodb was updated</returns>
-		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
 		{
 //			Logger.Debug("Setting {0} custom field setting(s)", lfCustomFieldList.Count());
 
@@ -672,8 +665,16 @@ namespace LfMerge.Core.MongoConnector
 			List<string> senseCustomFieldOrder = new List<string>();
 			List<string> exampleCustomFieldOrder = new List<string>();
 
+			Dictionary<string, LfConfigFieldBase> customFieldConfig = GetCustomFieldConfig(project);
+			BsonDocument roleViews = GetRoleViews(project);
+			BsonDocument userViews = GetUserViews(project);
+
+			List<string> roleViewNames = roleViews != null ? roleViews.Names.ToList<string>() : new List<string>();
+			List<string> userViewNames = userViews != null ? userViews.Names.ToList<string>() : new List<string>();
+			// Note that userViewNames doesn't contain usernames like "rmunn", but ObjectId strings like "54c780ea863f1c2127635ca9"
+
 			// Clean out previous fields and fieldOrders that no longer exist (removed from FDO)
-			foreach (string customFieldNameToRemove in GetCustomFieldConfig(project).Keys.Except(lfCustomFieldList.Keys.ToList()))
+			foreach (string customFieldNameToRemove in customFieldConfig.Keys.Except(lfCustomFieldList.Keys.ToList()))
 			{
 				if (customFieldNameToRemove.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
 				{
@@ -690,6 +691,13 @@ namespace LfMerge.Core.MongoConnector
 					previousUpdates.Add(builder.Unset(String.Format("config.entry.fields.senses.fields.examples.fields.{0}", customFieldNameToRemove)));
 					exampleCustomFieldOrder.Add(customFieldNameToRemove);
 				}
+				// User views and role views are stored "flat", not nested under senses/examples
+				foreach (string viewName in roleViewNames) {
+					previousUpdates.Add(builder.Unset(String.Format("config.roleViews.{0}.fields.{1}", viewName, customFieldNameToRemove)));
+				}
+				foreach (string viewName in userViewNames) {
+					previousUpdates.Add(builder.Unset(String.Format("config.userViews.{0}.fields.{1}", viewName, customFieldNameToRemove)));
+				}
 			}
 			if (entryCustomFieldOrder.Count > 0)
 				previousUpdates.Add(builder.PullAll("config.entry.fieldOrder", entryCustomFieldOrder));
@@ -705,6 +713,35 @@ namespace LfMerge.Core.MongoConnector
 			exampleCustomFieldOrder = new List<string>();
 			foreach (var customFieldKVP in lfCustomFieldList)
 			{
+				string fieldName = customFieldKVP.Key;
+				LfConfigFieldBase fieldConfig = customFieldKVP.Value;
+
+				string fieldType;
+				if (!lfCustomFieldTypes.TryGetValue(fieldName, out fieldType)) {
+					fieldType = "basic";
+				}
+				BsonDocument viewFieldConfig = LexViewFieldConfigFactory.CreateBsonDocumentByType(fieldType);
+
+				foreach (var viewName in roleViewNames) {
+					BsonValue value = roleViews.GetValue(viewName);
+					if (value != null && value.IsBsonDocument) {
+						BsonDocument view = value.AsBsonDocument;
+						if (!view.Contains(fieldName)) {
+							currentUpdates.Add(builder.Set(String.Format("config.roleViews.{0}.fields.{1}", viewName, fieldName), viewFieldConfig));
+						}
+					}
+				}
+
+				foreach (var viewName in userViewNames) {
+					BsonValue value = userViews.GetValue(viewName);
+					if (value != null && value.IsBsonDocument) {
+						BsonDocument view = value.AsBsonDocument;
+						if (!view.Contains(fieldName)) {
+							currentUpdates.Add(builder.Set(String.Format("config.userViews.{0}.fields.{1}", viewName, fieldName), viewFieldConfig));
+						}
+					}
+				}
+
 				if (customFieldKVP.Key.StartsWith(MagicStrings.LfCustomFieldEntryPrefix))
 				{
 					currentUpdates.Add(builder.Set(String.Format("config.entry.fields.{0}", customFieldKVP.Key), customFieldKVP.Value));
@@ -721,6 +758,7 @@ namespace LfMerge.Core.MongoConnector
 					exampleCustomFieldOrder.Add(customFieldKVP.Key);
 				}
 			}
+
 			if (entryCustomFieldOrder.Count > 0)
 				currentUpdates.Add(builder.AddToSetEach("config.entry.fieldOrder", entryCustomFieldOrder));
 			if (senseCustomFieldOrder.Count > 0)

@@ -264,7 +264,6 @@ namespace LfMerge.Core
 				if (File.Exists(fileName))
 				{
 					var json = File.ReadAllText(fileName);
-					// TODO: Use http://stackoverflow.com/a/8312048/2314532 instead of this hack
 					try
 					{
 						ProcessingState state = JsonConvert.DeserializeObject<ProcessingState>(json);

@@ -15,6 +15,15 @@ namespace LfMerge.Core
 		public const string EnvVar_LoggingDest = "LFMERGE_LOGGING_DEST";
 		public const string EnvVar_LoggingDestination = "LFMERGE_LOGGING_DESTINATION";
 		public const string EnvVar_LoggingStderrTreshhold = "LFMERGE_LOGGING_STDERR_THRESHHOLD";
+		public const string SettingsEnvVar_BaseDir = "LFMERGE_BASE_DIR";
+		public const string SettingsEnvVar_WebworkDir = "LFMERGE_WEBWORK_DIR";
+		public const string SettingsEnvVar_TemplatesDir = "LFMERGE_TEMPLATES_DIR";
+		public const string SettingsEnvVar_MongoHostname = "LFMERGE_MONGO_HOSTNAME";
+		public const string SettingsEnvVar_MongoPort = "LFMERGE_MONGO_PORT";
+		public const string SettingsEnvVar_MongoMainDatabaseName = "LFMERGE_MONGO_MAIN_DB_NAME";
+		public const string SettingsEnvVar_MongoDatabaseNamePrefix = "LFMERGE_MONGO_DB_NAME_PREFIX";
+		public const string SettingsEnvVar_VerboseProgress = "LFMERGE_VERBOSE_PROGRESS";
+		public const string SettingsEnvVar_LanguageDepotRepoUri = "LFMERGE_LANGUAGE_DEPOT_REPO_URI";
 
 		public static Dictionary<string, string> FdoOptionlistNames = new Dictionary<string, string>()
 		{

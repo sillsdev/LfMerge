@@ -17,7 +17,6 @@ using LfMerge.Core.Queues;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using Palaso.IO;
-using Palaso.PlatformUtilities;
 using Palaso.Progress;
 using SIL.FieldWorks.FDO;
 
@@ -72,14 +71,13 @@ namespace LfMerge.Core
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			containerBuilder.RegisterType<EntryCounts>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
-			containerBuilder.RegisterType<LanguageForgeProxy>().As<ILanguageForgeProxy>();
 			Actions.Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
 		}
 
 		public static int StartLfMerge(string projectCode, ActionNames action,
-			string modelVersion, bool allowFreshClone, string configDir = null)
+			string modelVersion, bool allowFreshClone)
 		{
 			// Call the correct model version specific LfMerge executable
 			if (string.IsNullOrEmpty(modelVersion))
@@ -96,9 +94,8 @@ namespace LfMerge.Core
 				argsBldr.Append(" --clone");
 			if (FwProject.AllowDataMigration)
 				argsBldr.Append(" --migrate");
-			if (!string.IsNullOrEmpty(configDir))
-				argsBldr.AppendFormat(" --config \"{0}\"", configDir);
 			startInfo.Arguments = argsBldr.ToString();
+			Logger.Notice("About to run ({0}) with args ({1})", startInfo.FileName, startInfo.Arguments);
 			startInfo.CreateNoWindow = true;
 			startInfo.ErrorDialog = false;
 			startInfo.UseShellExecute = false;

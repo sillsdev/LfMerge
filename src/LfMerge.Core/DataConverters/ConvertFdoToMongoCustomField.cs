@@ -47,7 +47,6 @@ namespace LfMerge.Core.DataConverters
 		};
 
 		private Dictionary<Guid, string> GuidToListCode;
-		private Dictionary<string, string> _fieldNameToFieldType;
 
 		public ConvertFdoToMongoCustomField(FdoCache cache, FwServiceLocatorCache serviceLocator, ILogger logger)
 		{
@@ -68,28 +67,6 @@ namespace LfMerge.Core.DataConverters
 				{servLoc.LanguageProject.StatusOA.Guid, MagicStrings.LfOptionListCodeForStatus},
 				{servLoc.LanguageProject.LexDbOA.UsageTypesOA.Guid, MagicStrings.LfOptionListCodeForUsageTypes}
 			};
-			_fieldNameToFieldType = new Dictionary<string, string>();
-		}
-
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
-		{
-			return CreateCustomFieldsConfigViews(project, lfCustomFieldList, lfCustomFieldTypes, false);
-		}
-
-		public bool CreateCustomFieldsConfigViews(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes, bool isTest)
-		{
-			var customFieldSpecs = new List<CustomFieldSpec>();
-			foreach (string lfCustomFieldName in lfCustomFieldList.Keys)
-			{
-				customFieldSpecs.Add(new CustomFieldSpec(lfCustomFieldName, _fieldNameToFieldType[lfCustomFieldName]));
-			}
-
-			var lfproxy = MainClass.Container.Resolve<ILanguageForgeProxy>();
-			string output = lfproxy.UpdateCustomFieldViews(project.ProjectCode, customFieldSpecs, isTest);
-
-			if (string.IsNullOrEmpty(output) || output == "false")
-				return false;
-			return true;
 		}
 
 		/// <summary>
@@ -156,7 +133,6 @@ namespace LfMerge.Core.DataConverters
 					continue;
 				string lfCustomFieldName = ConvertUtilities.NormalizedFieldName(label, fieldSourceType);
 				CellarPropertyType fdoFieldType = (CellarPropertyType)fdoMetaData.GetFieldType(flid);
-				_fieldNameToFieldType[lfCustomFieldName] = fdoFieldType.ToString();  // TODO: Comment this one OUT. Bad design.
 				lfCustomFieldTypes[lfCustomFieldName] = fdoFieldType.ToString();
 				string lfCustomFieldType;
 				if (CellarPropertyTypeToLfCustomFieldType.TryGetValue(fdoFieldType, out lfCustomFieldType))

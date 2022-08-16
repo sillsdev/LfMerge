@@ -109,8 +109,7 @@ namespace LfMerge.Core.DataConverters
 			Dictionary<string, LfConfigFieldBase> lfCustomFieldList = new Dictionary<string, LfConfigFieldBase>();
 			Dictionary<string, string> lfCustomFieldTypes = new Dictionary<string, string>();
 			_convertCustomField.WriteCustomFieldConfig(lfCustomFieldList, lfCustomFieldTypes);
-			Connection.SetCustomFieldConfig(LfProject, lfCustomFieldList);
-			_convertCustomField.CreateCustomFieldsConfigViews(LfProject, lfCustomFieldList, lfCustomFieldTypes);
+			Connection.SetCustomFieldConfig(LfProject, lfCustomFieldList, lfCustomFieldTypes);
 
 			Dictionary<Guid, DateTime> previousModificationDates = Connection.GetAllModifiedDatesForEntries(LfProject);
 
@@ -613,9 +612,9 @@ namespace LfMerge.Core.DataConverters
 				};
 
 				#if FW8_COMPAT
-				lfWsList.Add(fdoWs.Id, lfWs);
+				lfWsList[fdoWs.Id] = lfWs;
 				#else
-				lfWsList.Add(fdoWs.LanguageTag, lfWs);
+				lfWsList[fdoWs.LanguageTag] = lfWs;
 				#endif
 			}
 			return lfWsList;

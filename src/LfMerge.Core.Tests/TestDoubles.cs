@@ -81,19 +81,12 @@ namespace LfMerge.Core.Tests
 
 	public class LfMergeSettingsDouble: LfMergeSettings
 	{
-		static LfMergeSettingsDouble()
-		{
-			ConfigDir = Path.GetRandomFileName();
-		}
-
 		public LfMergeSettingsDouble(string replacementBaseDir)
 		{
-			var replacementConfig = new IniData(ParsedConfig);
-			replacementConfig.Global["BaseDir"] = replacementBaseDir;
-			Initialize(replacementConfig);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir, replacementBaseDir);
+			System.Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress, "true");
+			base.Initialize();
 			CommitWhenDone = false;
-			VerboseProgress = true;
-			PhpSourcePath = Path.Combine(TestEnvironment.FindGitRepoRoot(), "data/php/src");
 		}
 	}
 
@@ -172,7 +165,7 @@ namespace LfMerge.Core.Tests
 			return true;
 		}
 
-		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList)
+		public bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes)
 		{
 			if (lfCustomFieldList == null)
 				_storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
