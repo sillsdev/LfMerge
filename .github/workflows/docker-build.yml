@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: calculate_branches
 
-    # As of 2022-xx-xx, we build LfMerge for LCM DB version 72 only (and will expand this to include any future DbVersions)
+    # As of 2022-08-16, we build LfMerge for LCM DB version 72 only (and will expand this to include any future DbVersions)
     strategy:
       matrix:
         dbversion: [7000072]
