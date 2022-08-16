@@ -2,9 +2,6 @@
 # Start LfMerge
 # This script will reside in /usr/lib/lfmerge/<dbversion>/
 
-unset MONO_PREFIX
-unset MONO_ENVIRON
-
 DBVERSION=$(basename $(dirname $(readlink -f $0)))
 
 if [[ $DBVERSION != 70* ]]; then
@@ -20,4 +17,4 @@ RUNMODE=INSTALLED
 . ./environ
 cd "$LIB"
 
-exec mono --debug "$LIB"/LfMerge.exe "$@"
+exec "$LIB"/LfMerge "$@"

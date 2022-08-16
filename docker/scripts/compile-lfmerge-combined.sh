@@ -5,17 +5,12 @@ set -e
 echo "Compiling LfMerge and running unit tests"
 BUILD=Release . environ
 
-echo "Using $(which mono)"
-export FrameworkPathOverride=/opt/mono5-sil/lib/mono/4.5
+echo "Using $(which dotnet)"
 
 export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
-if [ "x$1" = "x7000072" ]; then
-/opt/mono5-sil/bin/msbuild /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
-# dotnet build /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
-else
-/opt/mono5-sil/bin/msbuild /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
-fi
+
+dotnet build /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
 
 # ln -sf ../Mercurial output/
 # xbuild /t:TestOnly /v:detailed /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj

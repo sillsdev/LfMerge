@@ -8,7 +8,8 @@ set -e
 export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
-export FRAMEWORK=net462
+export FRAMEWORK=net6.0
+export NETSTANDARD=netstandard2.0
 
 export DatabaseVersion=${1:-7000072}
 
@@ -18,7 +19,8 @@ export DBDESTDIR=tarball/lfmerge-${DatabaseVersion}
 export COMMONDESTDIR=tarball/lfmerge
 export LIB=usr/lib/lfmerge/${DatabaseVersion}
 export SHARE=usr/share/lfmerge/${DatabaseVersion}
-
+export NATIVERUNTIME=runtimes/linux-x64/native
+export LIBRUNTIME=runtimes/linux-x64/lib
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
 # Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
@@ -34,6 +36,10 @@ EOF
 # Install binaries
 install -d ${DBDESTDIR}/${LIB}
 install -m 644 output/${BUILD}/${FRAMEWORK}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/*.* ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/${NATIVERUNTIME}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/${NATIVERUNTIME}/*.* ${DBDESTDIR}/${LIB}
+install -m 644 output/${BUILD}/${FRAMEWORK}/${LIBRUNTIME}/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 644 output/${BUILD}/${LIBRUNTIME}/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}
+install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMerge ${DBDESTDIR}/${LIB}
+install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
@@ -57,6 +63,13 @@ install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
+install -d ${DBDESTDIR}/${LIB}/runtimes
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD}
+install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native
+install -m 644 output/${BUILD}/${FRAMEWORK}/runtimes/linux-x64/lib/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD} 2>/dev/null || install -m 644 output/${BUILD}/runtimes/linux-x64/lib/${NETSTANDARD}/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/lib/${NETSTANDARD}
+install -m 644 output/${BUILD}/${FRAMEWORK}/runtimes/linux-x64/native/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native 2>/dev/null || install -m 644 output/${BUILD}/runtimes/linux-x64/native/*.* ${DBDESTDIR}/${LIB}/runtimes/linux-x64/native
 # Remove unit test related files
 (cd ${DBDESTDIR}/${LIB} && \
 	rm -f *.Tests.dll* *.Tests.pdb* *.TestApp.exe* SIL.TestUtilities.dll* \

@@ -19,7 +19,7 @@ fi
 
 export MONO_PREFIX=/opt/mono5-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-msbuild /t:RestoreBuildTasks build/LfMerge.proj
+# msbuild build/LfMerge.proj
 mkdir -p output/Release
 
 if [ -n "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -a "$UPDATE_ASSEMBLYINFO_BY_SCRIPT" -ne 0 ]; then

@@ -25,7 +25,6 @@
 	<Import Project="NuGet.targets"/>
 
 	<Target Name="Build">
-		<CallTarget Targets="RestoreBuildTasks" />
 		<CallTarget Targets="BuildInternal" Condition="!$(RestartBuild)" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildInternal"
 			Properties="Configuration=$(Configuration);RootDir=$(RootDir)"
@@ -46,15 +45,6 @@
 		<PackageDirs Include="$([System.IO.Directory]::GetDirectories(&quot;$(RootDir)/packages/&quot;, &quot;NUnit.*&quot;, SearchOption.TopDirectoryOnly))" Condition="Exists('$(RootDir)/packages/')" />
 	</ItemGroup>
 
-	<Target Name="RestoreBuildTasks" DependsOnTargets="CheckPrerequisites">
-		<!-- first remove any existing packages - if they were installed with appended version numbers nuget refuses to install it again, messing up things -->
-		<RemoveDir Directories="@(PackageDirs)" />
-		<Exec Command='$(NuGetCommand) install MSBuildTasks -excludeVersion -version 1.5.0.235 -solutionDirectory "$(RootDir)"' />
-		<Exec Command='$(NuGetCommand) install SIL.BuildTasks -excludeVersion -version 2.3.4 -solutionDirectory "$(RootDir)"' />
-		<!-- Install NUnit.Console which has the required extensions as dependencies -->
-		<Exec Command='$(NuGetCommand) install NUnit.Console -excludeVersion -version 3.11.1 -solutionDirectory "$(RootDir)"' />
-	</Target>
-
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
@@ -71,7 +61,7 @@
 			WorkingDirectory="$(RootDir)" />
 	</Target>
 
-	<Target Name="PrepareSource" DependsOnTargets="RestorePackages;RestoreBuildTasks">
+	<Target Name="PrepareSource" DependsOnTargets="RestorePackages">
 		<!-- This target gets called before building the source package -->
 		<RemoveDir Directories="$(RootDir)/Downloads"/>
 	</Target>

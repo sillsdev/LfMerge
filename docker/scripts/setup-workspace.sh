@@ -22,7 +22,8 @@ cd "${DEST}"
 if [ "${BRANCH_TO_BUILD}" ]; then
 	git checkout "${BRANCH_TO_BUILD}"
 fi
-git clean -dxf --exclude=packages/
+
+git clean -dxf --exclude=packages/ --exclude=build/packages/
 git reset --hard
 
 # FLExBridge dependencies from FW 8 builds have vanished from TeamCity, so we stored them in the Docker image under ${REPO_ROOT}/docker

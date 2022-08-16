@@ -2,9 +2,9 @@ name: docker-build
 
 on:
   push:
-    branches: [ master, qa, live, fieldworks8-master, fieldworks8-qa, fieldworks8-live ]
+    branches: [ master, qa, live ]
   pull_request:
-    branches: [ master, fieldworks8-master ]
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -14,59 +14,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out current branch
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0  # All history for all tags and branches, since branch calculation step needs that
 
       - name: Calculate branches to build
         run: |
           echo "${GITHUB_REF}"
-          ./calculate-branches.sh | grep FW.Branch >> "${GITHUB_ENV}"
+          ./calculate-branches.sh --no-fw8 | grep FW9Branch >> "${GITHUB_ENV}"
 
       - name: Save branch names in output
         id: branches_to_build
         run: |
-          echo "FW8Branch=${FW8Branch}"
           echo "FW9Branch=${FW9Branch}"
-          echo "::set-output name=FW8Branch::${FW8Branch}"
           echo "::set-output name=FW9Branch::${FW9Branch}"
 
     outputs:
-      FW8Branch: ${{ steps.branches_to_build.outputs.FW8Branch }}
       FW9Branch: ${{ steps.branches_to_build.outputs.FW9Branch }}
 
   build:
     runs-on: ubuntu-latest
     needs: calculate_branches
 
-    # As of 2021-11-24, we build LfMerge for LCM DB versions 68-72 (and there is no 71)
+    # As of 2022-08-16, we build LfMerge for LCM DB version 72 only (and will expand this to include any future DbVersions)
     strategy:
       matrix:
-        dbversion: [7000068, 7000069, 7000070, 7000072]
+        dbversion: [7000072]
         distro: [ 'bionic' ]
 
     steps:
-      - name: Check out FW8 branch
-        uses: actions/checkout@v2.4.0
-        if: matrix.dbversion < 7000072
+      - name: Check out current branch
+        uses: actions/checkout@v3.0.2
         with:
-          ref: ${{ needs.calculate_branches.outputs.FW8Branch }}
-          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
-
-      - name: Check out FW9 branch
-        uses: actions/checkout@v2.4.0
-        if: matrix.dbversion >= 7000072
-        with:
-          ref: ${{ needs.calculate_branches.outputs.FW9Branch }}
-          fetch-depth: 0  # All history for all tags and branches, since GitVersion needs that
+          fetch-depth: 0  # All history for all tags and branches, since version number script needs that
 
       - name: Verify current branch
         run: |
           git branch --contains HEAD --format '%(refname)'
-          echo FW8 was "${FW8Branch}"
           echo FW9 was "${FW9Branch}"
         env:
-          FW8Branch: ${{ needs.calculate_branches.outputs.FW8Branch }}
           FW9Branch: ${{ needs.calculate_branches.outputs.FW9Branch }}
 
       - name: Calculate version number
@@ -87,16 +73,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.MsBuildVersion }}
 
       - name: Set up buildx for Docker
-        # docker/setup-buildx-action@v1.6.0 is commit 94ab11c41e45d028884a99163086648e898eed25
-        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
+        # docker/setup-buildx-action@v2.0.0 is commit dc7b9719a96d48369863986a06765841d7ea23f6
+        uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6
 
       - name: Find current UID
         id: uid
         run: echo "::set-output name=uid::$(id -u)"
 
       - name: Build DBVersion-specific Docker image
-        # docker/build-push-action@v2.7.0 is commit a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
+        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
         with:
           push: false
           load: true
@@ -128,17 +114,13 @@ jobs:
       - name: Compress tarball images for faster uploads
         run: time (tar cf - tarball | gzip -c9 > tarball.tar.gz)
 
-      - uses: actions/upload-artifact@v2.2.4
+      - uses: actions/upload-artifact@v3.0.0
         with:
-          name: lfmerge-tarball-${{matrix.dbversion}}
+          name: lfmerge-tarball
           path: tarball.tar.gz
     outputs:
       MsBuildVersion: ${{ steps.output_version_number.outputs.VersionFor7000072 }}
-      TagFor7000068: ${{ steps.output_version_number.outputs.TagFor7000068 }}
-      TagFor7000069: ${{ steps.output_version_number.outputs.TagFor7000069 }}
-      TagFor7000070: ${{ steps.output_version_number.outputs.TagFor7000070 }}
       TagFor7000072: ${{ steps.output_version_number.outputs.TagFor7000072 }}
-      FW8Branch: ${{ needs.calculate_branches.outputs.FW8Branch }}
       FW9Branch: ${{ needs.calculate_branches.outputs.FW9Branch }}
 
   release:
@@ -146,7 +128,5 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       MsBuildVersion: ${{ needs.build.outputs.MsBuildVersion }}
-      TagFor7000070: ${{ needs.build.outputs.TagFor7000070 }}
       TagFor7000072: ${{ needs.build.outputs.TagFor7000072 }}
-      FW8Branch: ${{ needs.build.outputs.FW8Branch }}
       FW9Branch: ${{ needs.build.outputs.FW9Branch }}
