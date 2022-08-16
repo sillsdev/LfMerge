@@ -6,13 +6,7 @@ on:
       MsBuildVersion:
         required: true
         type: string
-      FW8Branch:
-        required: true
-        type: string
       FW9Branch:
-        required: true
-        type: string
-      TagFor7000070:
         required: true
         type: string
       TagFor7000072:
@@ -30,25 +24,20 @@ jobs:
 
     - name: Ensure all TagForDbVersion outputs were present
       env:
-        TAG70: ${{ inputs.TagFor7000070 }}
         TAG72: ${{ inputs.TagFor7000072 }}
       run: |
-        echo "Tag for FW8 (DbVersion 70): (${TAG70})"
         echo "Tag for FW9 (DbVersion 72): (${TAG72})"
 
     - name: Tag release branches
       if: github.event_name == 'push' && github.ref == 'refs/heads/live'
       env:
-        FW8Branch: ${{ inputs.FW8Branch }}
         FW9Branch: ${{ inputs.FW9Branch }}
-        TAG70: ${{ inputs.TagFor7000070 }}
         TAG72: ${{ inputs.TagFor7000072 }}
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git tag -f -a -m "Release ${TAG70}" "${TAG70}" "refs/remotes/origin/${FW8Branch}"
         git tag -f -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/${FW9Branch}"
-        git push -v origin "${TAG70}" "${TAG72}"
+        git push -v origin "${TAG72}"
 
     - name: Download build artifacts
       uses: actions/download-artifact@v2.0.10
