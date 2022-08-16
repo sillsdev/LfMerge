@@ -211,6 +211,7 @@
     <Compile Include="LanguageForge\Model\LfStringArrayField.cs" />
     <Compile Include="LanguageForge\Model\LfStringField.cs" />
     <Compile Include="LanguageForge\Model\MongoRegistrarForLfFields.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
