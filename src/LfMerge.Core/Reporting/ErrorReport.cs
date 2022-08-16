@@ -11,11 +11,11 @@ namespace LfMerge.Core.Reporting
 {
 	public class ErrorReport
 	{
-		public DateTime Timestamp { get; set; }
+		public DateTime Timestamp { get; private set; }
 
-		public string ExceptionMessage { get; set; }
+		public string ExceptionMessage { get; private set; }
 
-		public ConversionErrorReport Skipped { get; set; }
+		public ConversionErrorReport Skipped { get; private set; }
 
 		public static ErrorReport Create(ConversionErrorReport skipped, Exception overallException)
 		{
@@ -67,8 +67,8 @@ namespace LfMerge.Core.Reporting
 
 	public class ConversionErrorReport
 	{
-		public ConversionErrors ToMongo { get; set; }
-		public ConversionErrors ToLcm { get; set; }
+		public ConversionErrors ToMongo { get; private set; }
+		public ConversionErrors ToLcm { get; private set; }
 
 		public static ConversionErrorReport Create(ConversionErrors toMongoErrors, ConversionErrors toLcmErrors)
 		{
@@ -97,8 +97,8 @@ namespace LfMerge.Core.Reporting
 
 	public class ConversionErrors
 	{
-		public ErrorList Entries { get; set; }
-		public ErrorList Comments { get; set; }
+		public ErrorList Entries { get; private set; }
+		public ErrorList Comments { get; private set; }
 
 		public static ConversionErrors FromConversionError<T>(
 			ConversionError<T> errorSet)
@@ -113,7 +113,7 @@ namespace LfMerge.Core.Reporting
 	public class ErrorList
 	{
 		public int Count { get { return List?.Count ?? 0; } }
-		public IList<SingleItemReport> List { get; set; }
+		public IList<SingleItemReport> List { get; private set; }
 
 		public static ErrorList FromEntryErrors<T>(List<EntryConversionError<T>> entryErrors)
 		{
@@ -132,11 +132,11 @@ namespace LfMerge.Core.Reporting
 
 	public class SingleItemReport
 	{
-		public Guid Guid { get; set; }
-		public string Id { get; set; }
-		public string ExceptionMessage { get; set; }
-		public string Label { get; set; }
-		public SingleItemReport Entry { get; set; }
+		public Guid Guid { get; private set; }
+		public string Id { get; private set; }
+		public string ExceptionMessage { get; private set; }
+		public string Label { get; private set; }
+		public SingleItemReport Entry { get; private set; }
 
 		public bool ShouldSerializeEntry() { return Entry != null; }
 
