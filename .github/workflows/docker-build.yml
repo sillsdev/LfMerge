@@ -1,9 +1,8 @@
 name: docker-build
 
 on:
-  # Don't run automatically, YET
-  # push:
-  #   branches: [ master, qa, live, fieldworks8-master, fieldworks8-qa, fieldworks8-live ]
+  push:
+    branches: [ master, qa, live ]
   pull_request:
     branches: [ master ]
 
