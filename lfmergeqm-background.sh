@@ -5,6 +5,6 @@
 
 while :
 do
-  sudo -u www-data lfmergeqm
+  sudo -H -u www-data lfmergeqm
   sleep 86400
 done
