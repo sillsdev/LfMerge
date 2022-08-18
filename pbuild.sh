@@ -32,13 +32,6 @@ HISTORICAL_VERSIONS=(7000068 7000069 7000070)
 
 # ATTENTION: Stop uncommenting here
 
-mkdir -p /storage/nuget
-if [ $? -ne 0 ]; then
-	echo "Please create a /storage directory and then run 'chown ${USER} /storage', to be able to cache NuGet packages"
-	exit 1
-fi
-# TODO: Check for rwxrwsr-x permissions and appropriate uid/gid settings
-
 # Find appropriate branch(es) to build
 FW9_BUILD_BRANCH="$(git name-rev --name-only HEAD)"
 echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
@@ -69,7 +62,7 @@ done
 for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 	docker run -it \
 		--mount type=bind,source="$(pwd)",target=/home/builder/repo \
-		--mount type=bind,src=/storage/nuget,dst=/home/builder/.nuget/packages \
+		--mount type=bind,src="${HOME}/.nuget/packages",dst=/home/builder/.nuget/packages \
 		--mount type=tmpfs,dst=/tmp \
 		--env "BRANCH_TO_BUILD=${FW9_BUILD_BRANCH}" \
 		--env "BUILD_NUMBER=999" \
