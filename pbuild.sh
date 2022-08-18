@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # These are arrays; see https://www.gnu.org/software/bash/manual/html_node/Arrays.html
 DBMODEL_VERSIONS=(7000072)
 HISTORICAL_VERSIONS=(7000068 7000069 7000070)
@@ -52,6 +54,8 @@ done
 CURRENT_UID=$(id -u)
 
 # First create the base build container ONCE (it will be reused as a base by each DbVersion build), which should help with caching
+docker build -t ghcr.io/sillsdev/lfmerge-base:sdk -f Dockerfile.builder-base .
+docker build -t ghcr.io/sillsdev/lfmerge-base:runtime -f Dockerfile.runtime-base .
 docker build --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-builder-base --target lfmerge-builder-base .
 
 # Create the build images for each DbVersion
