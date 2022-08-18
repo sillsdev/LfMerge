@@ -65,7 +65,7 @@ done
 for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 	docker run -it \
 		--mount type=bind,source="$(pwd)",target=/home/builder/repo \
-		--mount type=bind,src=/storage/nuget,dst=/storage/nuget \
+		--mount type=bind,src=/storage/nuget,dst=/home/builder/.nuget/packages \
 		--mount type=tmpfs,dst=/tmp \
 		--env "BRANCH_TO_BUILD=${FW9_BUILD_BRANCH}" \
 		--env "BUILD_NUMBER=999" \

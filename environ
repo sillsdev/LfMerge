@@ -28,7 +28,7 @@ then
 	MONO_PATH="${BASE}:${MONO_PATH}"
 else
 	# Add the build output to paths
-	PATH="${BASE}/output/${BUILD}:${PATH}"
+	PATH="${BASE}/output/${BUILD}:${BASE}/output/Mercurial:${PATH}"
 	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH}"
 	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
 	[ -f "${BASE}/output/${BUILD}/components.map" ] && COMPONENTS_MAP_PATH="${BASE}/output/${BUILD}"

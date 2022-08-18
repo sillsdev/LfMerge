@@ -42,7 +42,6 @@ install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/n
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/FixFwData ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/FixFwData ${DBDESTDIR}/${LIB}
-(cd ${DBDESTDIR}/${LIB}; ln FixFwData FixFwData.exe)
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/convert

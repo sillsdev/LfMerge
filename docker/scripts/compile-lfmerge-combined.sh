@@ -10,7 +10,7 @@ echo "Using $(which dotnet)"
 export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
 
-dotnet msbuild /t:CompileOnly /v:quiet /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj
+dotnet build --no-restore /v:m /property:Configuration=Release /property:DatabaseVersion=${DbVersion} LfMerge.sln
 
 # ln -sf ../Mercurial output/
 # xbuild /t:TestOnly /v:detailed /property:Configuration=Release /property:DatabaseVersion=${DbVersion} build/LfMerge.proj

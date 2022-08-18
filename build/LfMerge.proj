@@ -3,7 +3,6 @@
 		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 		<Solution>LfMerge.sln</Solution>
 		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
-		<NUGET_PACKAGES>$(RootDir)/packages</NUGET_PACKAGES>
 		<ApplicationName>LfMerge</ApplicationName>
 		<ApplicationNameLC>lfmerge</ApplicationNameLC>
 		<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
@@ -22,7 +21,6 @@
 		AssemblyFile="$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll"
 		Condition="Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll')" />
 
-	<Import Project="NuGet.targets"/>
 
 	<Target Name="Build">
 		<CallTarget Targets="BuildInternal" Condition="!$(RestartBuild)" />
@@ -61,19 +59,14 @@
 			WorkingDirectory="$(RootDir)" />
 	</Target>
 
-	<Target Name="PrepareSource" DependsOnTargets="RestorePackages">
-		<!-- This target gets called before building the source package -->
-		<RemoveDir Directories="$(RootDir)/Downloads"/>
-	</Target>
-
-	<Target Name="Compile" DependsOnTargets="RestorePackages">
+	<Target Name="Compile">
 		<!-- <Message Text="RootDir=$(RootDir)"/>
 		<FileUpdate Files="$(RootDir)/Mercurial/mercurial.ini" Regex="fixutf8=../"
 			ReplacementText="fixutf8=$(RootDir)/" ContinueOnError="WarnAndContinue"/> -->
 		<CallTarget Targets="CompileOnly"/>
 	</Target>
 
-	<Target Name="CompileOnly" DependsOnTargets="RestorePackages">
+	<Target Name="CompileOnly">
 		<!-- This target gets called during binary package build and shouldn't download
 			anything (restore is ok if packages already exist in $(RootDir)/packages)-->
 		<MSBuild
