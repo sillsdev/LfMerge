@@ -24,6 +24,11 @@ ENV NUNIT_VERSION_MAJOR=3
 
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
+# So unit tests can run
+RUN mkdir -p /var/lib/languageforge/lexicon/sendreceive/ \
+	&& cd /var/lib/languageforge/lexicon/sendreceive/ && mkdir Templates state editqueue syncqueue webwork && cd - \
+	&& chown -R builder:users /var/lib/languageforge/lexicon/sendreceive
+
 USER builder
 
 # Git repo should be mounted under ${HOME}/packages/lfmerge when run
