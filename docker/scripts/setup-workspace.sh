@@ -16,5 +16,5 @@ if [ "${BRANCH_TO_BUILD}" ]; then
 	git checkout "${BRANCH_TO_BUILD}"
 fi
 
-git clean -dxf --exclude=packages/ --exclude=build/packages/
+git clean -dxf
 git reset --hard
