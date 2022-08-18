@@ -18,24 +18,27 @@ echo "Repo root is ${REPO_ROOT}"
 ls -ld "${REPO_ROOT}"
 cd "${REPO_ROOT}"
 
-"$SCRIPT_DIR"/setup-workspace.sh "${HOME}/packages/lfmerge"
+BUILD_DIR="${HOME}/packages/lfmerge"
+echo "Setting up clean workspace in ${BUILD_DIR}"
+"$SCRIPT_DIR"/setup-workspace.sh "${BUILD_DIR}"
+cd "${BUILD_DIR}"
 
-echo After setup-workspace.sh, pwd is $(pwd)
-echo cd to "${HOME}/packages/lfmerge"
-cd "${HOME}/packages/lfmerge"
+# TODO: Can we get rid of this mkdir?
+mkdir -p output/Release
 
-"$SCRIPT_DIR"/gitversion-combined.sh ${DbVersion}
+echo "Building packages for version ${DebPackageVersion}"
 
-"$SCRIPT_DIR"/download-dependencies-combined.sh ${DbVersion}
+# Explicit restore step so we can save time in later build steps by using --no-restore
+echo "Downloading dependencies"
+dotnet restore -v:m
 
-"$SCRIPT_DIR"/compile-lfmerge-combined.sh ${DbVersion}
+echo "Compiling LfMerge"
+dotnet build --no-restore /v:m /property:Configuration=Release /property:DatabaseVersion=${DbVersion} LfMerge.sln
 
 if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
-    "$SCRIPT_DIR"/test-lfmerge-combined.sh ${DbVersion}
+	echo "Running unit tests"
+	# TODO: Honor TEST_SPEC enviornment variable
+    dotnet test --no-restore -c Release
 fi
-
-rm -rf "$SCRIPT_DIR"/data/php   # So it doesn't get into the .deb source package
-
-# "$SCRIPT_DIR"/build-debpackages-combined.sh ${DbVersion}
 
 "$SCRIPT_DIR"/create-installation-tarball.sh ${DbVersion}
