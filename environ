@@ -1,78 +1,10 @@
-# Environment settings for running programs with the SIL version of mono
-# Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono5-sil/bin/mono --debug LfMerge.exe
-# These settings assume that the packaged SIL Mono is installed in /opt/mono5-sil.
+# A few necessary environment variables for the Mercurial build from Chorus to run correctly
 # Note that this file is intended to be "sourced", not "executed".
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
-DEFAULT_MONO_PREFIX=/opt/mono5-sil
-[ -z "$BUILD" ] && BUILD=Debug
-[ -z "$MONO_PREFIX" ] && MONO_PREFIX=${DEFAULT_MONO_PREFIX}
 
-MONO_DEBUG=explicit-null-checks
-MONO_ENV_OPTIONS="-O=-gshared"
-
-if [ "$RUNMODE" != "NUGET" ]; then
-	[ -z "$DBVERSIONPATH" ] && DBVERSIONPATH=$(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1)
-	COMPONENTS_MAP_PATH=$DBVERSIONPATH
-fi
-ICU_DATA=/usr/share/fieldworks/Icu54
-
-################################################################################################
-
-if [ "$RUNMODE" = "INSTALLED" ]
-then
-	# Add the installation directory to the library paths
-	LD_LIBRARY_PATH="${BASE}:${LD_LIBRARY_PATH}"
-	MONO_PATH="${BASE}:${MONO_PATH}"
-else
-	# Add the build output to paths
-	PATH="${BASE}/output/${BUILD}:${BASE}/output/Mercurial:${PATH}"
-	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH}"
-	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
-	[ -f "${BASE}/output/${BUILD}/components.map" ] && COMPONENTS_MAP_PATH="${BASE}/output/${BUILD}"
-fi
-
-################################################################################################
-
-if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
-then
-	# Add packaged mono items to paths
-	PATH="${DEFAULT_MONO_PREFIX}/bin:${PATH}"
-	LD_LIBRARY_PATH="${DEFAULT_MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="${DEFAULT_MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="${DEFAULT_MONO_PREFIX}:/usr"
-else
-	# Add locally-built mono items to paths
-	# We also add the default values for PKG_CONFIG_PATH - MonoDevelop resets the PKG_CONFIG_PATH
-	# environment variable if we're running under a different Mono runtime so that some
-	# packages that got installed in standard locations can't be found otherwise.
-	PATH="${MONO_PREFIX}/bin:${PATH}"
-	LD_LIBRARY_PATH="${MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="${MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig:/lib/pkgconfig:/usr/lib/pkgconfig"
-	MONO_GAC_PREFIX="${MONO_PREFIX}:/usr"
-fi
-
-################################################################################################
-
-LD_LIBRARY_PATH="${DBVERSIONPATH}:${LD_LIBRARY_PATH}"
-
-FW_ROOTCODE=/usr/share/fieldworks
-
-MONO_TRACE_LISTENER="Console.Out"
-
-# if debugging for performance unset DEBUG_ENABLE_PTR_VALIDATION env var.
-#export DEBUG_ENABLE_PTR_VALIDATION=1
-
-export \
-	PATH LD_LIBRARY_PATH PKG_CONFIG_PATH LD_PRELOAD \
-	COMPONENTS_MAP_PATH ICU_DATA \
-	MONO_PATH \
-	MONO_PREFIX MONO_GAC_PREFIX \
-	MONO_TRACE_LISTENER \
-	MONO_DEBUG MONO_ENV_OPTIONS \
-	FW_ROOTCODE
+export PATH="${BASE}/output/${BUILD}:${BASE}/output/Mercurial:${PATH}"
 
 # set HGRCPATH so that we ignore ~/.hgrc files which might have content that is
 # incompatible with our version of Mercurial
