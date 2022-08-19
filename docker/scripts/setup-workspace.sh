@@ -12,9 +12,3 @@ sudo cp -a "${REPO_ROOT}"/* "${REPO_ROOT}"/.[a-zA-Z0-9]* "${DEST}"
 sudo chown -R builder:users "${DEST}"
 
 cd "${DEST}"
-if [ "${BRANCH_TO_BUILD}" ]; then
-	git checkout "${BRANCH_TO_BUILD}"
-fi
-
-git clean -dxf
-git reset --hard

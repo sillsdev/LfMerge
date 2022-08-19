@@ -64,7 +64,6 @@ for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 		--mount type=bind,source="$(pwd)",target=/home/builder/repo \
 		--mount type=bind,src="${HOME}/.nuget/packages",dst=/home/builder/.nuget/packages \
 		--mount type=tmpfs,dst=/tmp \
-		--env "BRANCH_TO_BUILD=${FW9_BUILD_BRANCH}" \
 		--env "BUILD_NUMBER=999" \
 		--env "DebPackageVersion=${DebPackageVersion}" \
 		--env "Version=${MsBuildVersion}" \
