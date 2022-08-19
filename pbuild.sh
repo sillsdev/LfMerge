@@ -58,6 +58,9 @@ done
 
 . docker/scripts/get-version-number.sh
 
+# Clean out previous installation files if they exist
+[ -d tarball ] && rm -rf tarball
+
 # Run the build
 for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 	docker run -it \
