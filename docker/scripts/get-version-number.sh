@@ -36,15 +36,15 @@ fi
 echo Will calculate version from "${RESULT}" and "${MAJOR}.${MINOR}.${PATCH} with $COMMIT_COUNT commits since then, and current hash $COMMIT_HASH"
 
 case "$REV" in
-  refs/heads/master | refs/heads/fieldworks8-master)
+  refs/heads/master)
     PRERELEASE="~alpha.${BUILD_NUMBER}"
     ;;
 
-  refs/heads/qa | refs/heads/fieldworks8-qa)
+  refs/heads/qa)
     PRERELEASE="~beta.${BUILD_NUMBER}"
     ;;
 
-  refs/heads/live | refs/heads/fieldworks8-live)
+  refs/heads/live)
     PRERELEASE=
     ;;
 

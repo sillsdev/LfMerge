@@ -10,121 +10,55 @@ namespace LfMerge.Core.Settings
 {
 	public class LfMergeSettings
 	{
-		private string _baseDir = null;
-		private string _webworkDir = null;
-		private string _templatesDir = null;
-		private string _mongoHostname = null;
-		private int _mongoPort = 0;
-		private string _mongoMainDatabaseName = null;
-		private string _mongoDatabaseNamePrefix = null;
-		private string _verboseProgressStr = null;
-		private bool _verboseProgress = false;
-		private string _languageDepotRepoUri = null;
-
 		// Settings derived from environment variables
 
-		public string BaseDir {
-			get {
-				if (_baseDir != null) return _baseDir;
-				else {
-					_baseDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir) ?? DefaultLfMergeSettings.BaseDir;
-					return _baseDir;
-				}
-			}
-		}
+		public string BaseDir => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_BaseDir) ?? DefaultLfMergeSettings.BaseDir;
 
 		public string WebworkDir {
 			get {
-				if (_webworkDir != null) return _webworkDir;
-				else {
-					_webworkDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir) ?? DefaultLfMergeSettings.WebworkDir;
-					_webworkDir = Path.IsPathRooted(_webworkDir) ? _webworkDir : Path.Combine(BaseDir, _webworkDir);
-					return _webworkDir;
-				}
+				string _webworkDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_WebworkDir) ?? DefaultLfMergeSettings.WebworkDir;
+				_webworkDir = Path.IsPathRooted(_webworkDir) ? _webworkDir : Path.Combine(BaseDir, _webworkDir);
+				return _webworkDir;
 			}
 		}
 
 		public string TemplatesDir {
 			get {
-				if (_templatesDir != null) return _templatesDir;
-				else {
-					_templatesDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir) ?? DefaultLfMergeSettings.TemplatesDir;
-					_templatesDir = Path.IsPathRooted(_templatesDir) ? _templatesDir : Path.Combine(BaseDir, _templatesDir);
-					return _templatesDir;
-				}
+				string _templatesDir = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_TemplatesDir) ?? DefaultLfMergeSettings.TemplatesDir;
+				_templatesDir = Path.IsPathRooted(_templatesDir) ? _templatesDir : Path.Combine(BaseDir, _templatesDir);
+				return _templatesDir;
 			}
 		}
 
-		public string MongoHostname {
-			get {
-				if (_mongoHostname != null) return _mongoHostname;
-				else {
-					_mongoHostname = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
-					return _mongoHostname;
-				}
-			}
-		}
+		public string MongoHostname => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
 
 		public int MongoPort {
 			get {
-				if (_mongoPort != 0) return _mongoPort;
-				else {
-					string mongoPortStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort);
-					if (mongoPortStr == null) mongoPortStr = "";
-					if (Int32.TryParse(mongoPortStr, out _mongoPort)) {
-						return _mongoPort;
-					} else {
-						_mongoPort = DefaultLfMergeSettings.MongoPort;
-						return _mongoPort;
-					}
+				string _mongoPortStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort);
+				if (_mongoPortStr == null) _mongoPortStr = "";
+				if (Int32.TryParse(_mongoPortStr, out int _mongoPort)) {
+					return _mongoPort;
+				} else {
+					return DefaultLfMergeSettings.MongoPort;
 				}
 			}
 		}
 
-		public string MongoMainDatabaseName {
-			get {
-				if (_mongoMainDatabaseName != null) return _mongoMainDatabaseName;
-				else {
-					_mongoMainDatabaseName = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoMainDatabaseName) ?? DefaultLfMergeSettings.MongoMainDatabaseName;
-					return _mongoMainDatabaseName;
-				}
-			}
-		}
+		public string MongoMainDatabaseName => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoMainDatabaseName) ?? DefaultLfMergeSettings.MongoMainDatabaseName;
 
 		/// <summary>
 		/// The prefix prepended to project codes to get the Mongo database name.
 		/// </summary>
-		public string MongoDatabaseNamePrefix {
-			get {
-				if (_mongoDatabaseNamePrefix != null) return _mongoDatabaseNamePrefix;
-				else {
-					_mongoDatabaseNamePrefix = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoDatabaseNamePrefix) ?? DefaultLfMergeSettings.MongoDatabaseNamePrefix;
-					return _mongoDatabaseNamePrefix;
-				}
-			}
-		}
+		public string MongoDatabaseNamePrefix => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoDatabaseNamePrefix) ?? DefaultLfMergeSettings.MongoDatabaseNamePrefix;
 
 		public bool VerboseProgress {
 			get {
-				if (_verboseProgressStr != null) return _verboseProgress;
-				else {
-					_verboseProgressStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress);
-					if (_verboseProgressStr == null) _verboseProgressStr = "";
-					_verboseProgress = LanguageForge.Model.ParseBoolean.FromString(_verboseProgressStr);
-					return _verboseProgress;
-				}
+				string _verboseProgressStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_VerboseProgress) ?? "";
+				return LanguageForge.Model.ParseBoolean.FromString(_verboseProgressStr);
 			}
 		}
 
-		public string LanguageDepotRepoUri {
-			get {
-				if (_languageDepotRepoUri != null) return _languageDepotRepoUri;
-				else {
-					_languageDepotRepoUri = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
-					return _languageDepotRepoUri;
-				}
-			}
-		}
+		public string LanguageDepotRepoUri => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
 
 		// Settings calculated at runtime from sources other than environment variables
 
@@ -150,6 +84,7 @@ namespace LfMerge.Core.Settings
 		public void Initialize()
 		{
 			// TODO: Get rid of this once we simplify the queue system. 2022-02 RM
+			SetAllMembers();
 			Queue.CreateQueueDirectories(this);
 		}
 

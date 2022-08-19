@@ -5,16 +5,9 @@ WORKDIR /build/lfmerge
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
-RUN apt-get update && apt-get install -y gnupg
 
-COPY sil-packages-key.gpg .
-COPY sil-packages-testing-key.gpg .
-RUN apt-key add sil-packages-key.gpg
-RUN apt-key add sil-packages-testing-key.gpg
-RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic main' > /etc/apt/sources.list.d/llso-experimental.list
-RUN echo 'deb http://linux.lsdev.sil.org/ubuntu bionic-experimental main' >> /etc/apt/sources.list.d/llso-experimental.list
 # Dependencies from Debian "control" file
-RUN apt-get update && apt-get install -y sudo debhelper devscripts cli-common-dev iputils-ping cpp python-dev pkg-config mono5-sil mono5-sil-msbuild libicu-dev lfmerge-fdo && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl sudo iputils-ping cpp python-is-python2 python2-dev pkg-config libicu-dev && rm -rf /var/lib/apt/lists/*
 
 # Ensure fieldworks group exists in case lfmerge-fdo package didn't install it, and that www-data is part of that group
 # Also ensure that www-data has a .local dir in its home directory (/var/www) since some of lfmerge's dependencies assume that $HOME/.local exists

@@ -6,9 +6,6 @@ on:
       MsBuildVersion:
         required: true
         type: string
-      FW9Branch:
-        required: true
-        type: string
       TagFor7000072:
         required: true
         type: string
@@ -18,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2.4.0
+    - uses: actions/checkout@v3.0.2
       with:
         fetch-depth: 0
 
@@ -31,12 +28,11 @@ jobs:
     - name: Tag release branches
       if: github.event_name == 'push' && github.ref == 'refs/heads/live'
       env:
-        FW9Branch: ${{ inputs.FW9Branch }}
         TAG72: ${{ inputs.TagFor7000072 }}
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git tag -f -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/${FW9Branch}"
+        git tag -f -a -m "Release ${TAG72}" "${TAG72}" "refs/remotes/origin/live"
         git push -v origin "${TAG72}"
 
     - name: Download build artifacts
@@ -53,16 +49,6 @@ jobs:
 
     - name: Verify that uncompress step worked
       run: ls -lR tarball
-
-    - name: Restore executable bits
-      # GitHub artifacts system strips executable bits, so restore them here
-      # TODO: Now that we upload .tar.gz format, no longer needed since tar format preserves Unix permissions. Verify, then remove this section
-      run: |
-        chmod +x tarball/lfmerge*/usr/bin/lfmerge
-        chmod +x tarball/lfmerge*/usr/bin/lfmergeqm
-        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/chorusmerge
-        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/startlfmerge
-        chmod +x tarball/lfmerge*/usr/lib/lfmerge/*/Mercurial/hg
 
     - name: Login to GHCR
       if: github.event_name == 'push' && github.ref == 'refs/heads/live'

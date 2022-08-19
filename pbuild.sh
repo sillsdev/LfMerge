@@ -1,124 +1,81 @@
 #!/bin/bash
 
-which parallel >/dev/null
-if [ $? -ne 0 ]; then
-	echo 'Please run "sudo apt-get install parallel" and try again.'
-	exit 1
-fi
+set -e
 
-mkdir -p /storage/nuget
-if [ $? -ne 0 ]; then
-	echo "Please create a /storage directory and then run 'chown ${USER} /storage', to be able to cache NuGet packages"
-	exit 1
-fi
-# TODO: Check for rwxrwsr-x permissions and appropriate uid/gid settings
+# These are arrays; see https://www.gnu.org/software/bash/manual/html_node/Arrays.html
+DBMODEL_VERSIONS=(7000072)
+HISTORICAL_VERSIONS=(7000068 7000069 7000070)
+
+# In the future when we have more than one model version, we may want to use GNU parallel for building.
+# ATTENTION: If GNU parallel is desired, uncomment the below (until the "ATTENTION: Stop uncommenting here" line):
+
+# DBMODEL_COUNT=${#DBMODEL_VERSIONS[@]}
+# MULTIPLE_VERSIONS=0
+# if [ $DBMODEL_COUNT -gt 1 ]; then
+# 	MULTIPLE_VERSIONS=1
+# fi
+
+# # Use GNU parallel only if we have multiple DBVersions to deal with
+# # Specify USE_PARALLEL=0 or USE_PARALLEL=1 in environment to override this default
+# USE_PARALLEL=${USE_PARALLEL:-$MULTIPLE_VERSIONS}
+
+# # echo We have ${DBMODEL_COUNT} versions: "${DBMODEL_VERSIONS[@]}"
+# if [ $USE_PARALLEL -gt 0 ]; then
+# 	which parallel >/dev/null
+# 	if [ $? -ne 0 ]; then
+# 		echo 'Please run "sudo apt-get install parallel" and try again.'
+# 		exit 1
+# 	fi
+# else
+# 	echo GNU parallel will not be used
+# fi
+
+# ATTENTION: Stop uncommenting here
 
 # Find appropriate branch(es) to build
-CURRENT_BRANCH="$(git name-rev --name-only HEAD)"
-PARENT_MAJOR_VERSION=$(git describe --long --match "v*" | cut -c1-2)
-BUILD_FW8=1
-
-# FW8 branches will have ancestors tagged v1.x, while FW9 branches will have ancestors tagged v2.x
-if [ "x$PARENT_MAJOR_VERSION" = "xv2" ]; then
-	IS_FW9=true
-else
-	IS_FW9=""
-fi
-
-if [ "${IS_FW9}" ]; then
-	echo Current branch is FW9, detecting FW8 branch to use...
-	FW9_BUILD_BRANCH="${CURRENT_BRANCH}"
-	if [ "$1" ]; then
-		if [ "$1" = "--no-fw8" ]; then
-			BUILD_FW8=0
-			FW8_BUILD_BRANCH=""
-		else
-			FW8_BUILD_BRANCH="$1"
-		fi
-	elif [ "${CURRENT_BRANCH}" = "master" -o "${CURRENT_BRANCH}" = "qa" -o "${CURRENT_BRANCH}" = "live" ]; then
-		FW8_BUILD_BRANCH="fieldworks8-${CURRENT_BRANCH}"
-	else
-		echo No FW 8 branch specified, assuming fieldworks8-master
-		echo To specify a different branch, run pbuild.sh '<'fw8-branch'>', e.g. '"'pbuild.sh feature/some-fw8-branch'"'
-		echo 'Or to skip FW 8 branch entirely, run pbuild.sh --no-fw8'
-		FW8_BUILD_BRANCH="fieldworks8-master"
-	fi
-else
-	echo Current branch is FW8, detecting FW9 branch to use...
-	FW8_BUILD_BRANCH="${CURRENT_BRANCH}"
-	if [ "$1" ]; then
-		FW9_BUILD_BRANCH="$1"
-	elif [ "${CURRENT_BRANCH}" = "fieldworks8-master" -o "${CURRENT_BRANCH}" = "fieldworks8-qa" -o "${CURRENT_BRANCH}" = "fieldworks8-live" ]; then
-		FW9_BUILD_BRANCH="${CURRENT_BRANCH##fieldworks8-}"
-	else
-		echo No FW 9 branch specified, assuming master
-		echo To specify a different branch, run pbuild.sh '<'fw8-branch'>', e.g. '"'pbuild.sh feature/some-fw8-branch'"'
-		FW9_BUILD_BRANCH="master"
-	fi
-fi
-
-if [ "${BUILD_FW8}" -eq 0 ]; then
-	echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
-else
-	echo Will build FW9 build from "${FW9_BUILD_BRANCH}" and FW8 builds from "${FW8_BUILD_BRANCH}"
-fi
+FW9_BUILD_BRANCH="$(git name-rev --name-only HEAD)"
+echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
 
 # Clean up any previous builds
-# This for loop should be across all DbVersions even if BUILD_FW8 is 0
-for f in 68 69 70 72; do
-    # Can safely ignore "container doesn't exist" as that's not an error
-    docker container kill tmp-lfmerge-build-70000${f} >/dev/null 2>/dev/null || true
-    docker container rm tmp-lfmerge-build-70000${f} >/dev/null 2>/dev/null || true
+# This for loop includes all historical DbVersions even if BUILD_FW8 is 0
+for DbVersion in ${HISTORICAL_VERSIONS[@]} ${DBMODEL_VERSIONS[@]}; do
+	# Can safely ignore "container doesn't exist" as that's not an error
+	docker container kill tmp-lfmerge-build-${DbVersion} >/dev/null 2>/dev/null || true
+	docker container rm tmp-lfmerge-build-${DbVersion} >/dev/null 2>/dev/null || true
 done
 
 CURRENT_UID=$(id -u)
 
-# First create the base build container ONCE (not in parallel), to ensure that the slow steps (apt-get install mono5-sil) are cached
+# First create the base build container ONCE (it will be reused as a base by each DbVersion build), which should help with caching
+docker build -t ghcr.io/sillsdev/lfmerge-base:sdk -f Dockerfile.builder-base .
+docker build -t ghcr.io/sillsdev/lfmerge-base:runtime -f Dockerfile.runtime-base .
 docker build --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-builder-base --target lfmerge-builder-base .
 
-# Create the build images for each DbVersion in parallel
-# NOTE: now that the differences are only ENV lines, parallel no longer gains any time. Should we turn this into a for loop?
-if [ "${BUILD_FW8}" -eq 0 ]; then
-	docker build --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
-else
-	time parallel --no-notice <<EOF
-docker build --build-arg DbVersion=7000068 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000068 .
-docker build --build-arg DbVersion=7000069 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000069 .
-docker build --build-arg DbVersion=7000070 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000070 .
-docker build --build-arg DbVersion=7000072 --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-7000072 .
-EOF
-fi
-
-# To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
-# docker build --build-arg DbVersion=7000072 -t lfmerge-build-7000072 -f combined.dockerfile .
+# Create the build images for each DbVersion
+for DbVersion in ${DBMODEL_VERSIONS[@]}; do
+	docker build --build-arg DbVersion=${DbVersion} --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-${DbVersion} .
+done
 
 . docker/scripts/get-version-number.sh
 
+# Clean out previous installation files if they exist
+[ -d tarball ] && rm -rf tarball
+
 # Run the build
-if [ "${BUILD_FW8}" -eq 0 ]; then
-	docker run -it --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW9_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
-else
-	time parallel --no-notice <<EOF
-docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW8_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000068 lfmerge-build-7000068
-docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW8_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000069 lfmerge-build-7000069
-docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW8_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-7000070 lfmerge-build-7000070
-docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --mount type=tmpfs,dst=/tmp --env "BRANCH_TO_BUILD=${FW9_BUILD_BRANCH}" --env "BUILD_NUMBER=999" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
-EOF
-fi
-# To run a single build instead, comment out the block above and uncomment the next line (and change 72 to 68/69/70 if needed)
-# docker run --mount type=bind,src=/storage/nuget,dst=/storage/nuget --name tmp-lfmerge-build-7000072 lfmerge-build-7000072
-
-# Collect results
-mkdir -p tarball
-
-if [ "${BUILD_FW8}" -eq 0 ]; then
-	for f in 72; do
-		docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/tarball ./
-	done
-else
-	for f in 68 69 70 72; do
-		docker container cp tmp-lfmerge-build-70000${f}:/home/builder/packages/lfmerge/tarball ./
-	done
-fi
+for DbVersion in ${DBMODEL_VERSIONS[@]}; do
+	docker run -it \
+		--mount type=bind,source="$(pwd)",target=/home/builder/repo \
+		--mount type=bind,src="${HOME}/.nuget/packages",dst=/home/builder/.nuget/packages \
+		--mount type=tmpfs,dst=/tmp \
+		--env "BUILD_NUMBER=999" \
+		--env "DebPackageVersion=${DebPackageVersion}" \
+		--env "Version=${MsBuildVersion}" \
+		--env "MajorMinorPatch=${MajorMinorPatch}" \
+		--env "AssemblyVersion=${AssemblySemVer}" \
+		--env "FileVersion=${AssemblySemFileVer}" \
+		--env "InformationalVersion=${InformationalVersion}" \
+		--name tmp-lfmerge-build-${DbVersion} \
+		lfmerge-build-${DbVersion}
+done
 
 time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .

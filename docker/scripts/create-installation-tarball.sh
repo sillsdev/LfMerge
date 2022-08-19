@@ -14,14 +14,24 @@ export NETSTANDARD=netstandard2.0
 export DatabaseVersion=${1:-7000072}
 
 # Model version dependent DESTDIR
-export DBDESTDIR=tarball/lfmerge-${DatabaseVersion}
+export DESTROOT=tarball
+export DBDESTDIR=${DESTROOT}/lfmerge-${DatabaseVersion}
 # Common DESTDIR
-export COMMONDESTDIR=tarball/lfmerge
+export COMMONDESTDIR=${DESTROOT}/lfmerge
 export LIB=usr/lib/lfmerge/${DatabaseVersion}
 export SHARE=usr/share/lfmerge/${DatabaseVersion}
 export NATIVERUNTIME=runtimes/linux-x64/native
 export LIBRUNTIME=runtimes/linux-x64/lib
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
+
+# Sanity check before doing anything destructive
+if [ -d output/${BUILD}/${FRAMEWORK}/ -a -e output/${BUILD}/${FRAMEWORK}/LfMerge.Core.dll ]
+then
+	echo "Copying installation files into ${DESTROOT}"
+else
+	echo "Build appears to have failed; not touching ${DESTROOT}"
+	exit 1
+fi
 
 # Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
 # has wrong line endings, so we re-create the entire file
@@ -42,7 +52,6 @@ install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/n
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/FixFwData ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/FixFwData ${DBDESTDIR}/${LIB}
-(cd ${DBDESTDIR}/${LIB}; ln FixFwData FixFwData.exe)
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/convert
