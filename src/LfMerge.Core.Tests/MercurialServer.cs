@@ -46,7 +46,7 @@ namespace LfMerge.Core.Tests
 			var pid = File.ReadAllText(_pidFile);
 			if (Platform.IsLinux)
 			{
-				CommandLineRunner.Run("kill", "-9 " + pid, Directory.GetCurrentDirectory(),
+				CommandLineRunner.Run("sh", "-c 'kill -9 " + pid + "'", Directory.GetCurrentDirectory(),
 					120, new NullProgress());
 			}
 			else

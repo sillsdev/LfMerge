@@ -138,6 +138,7 @@ namespace LfMerge.Core.Tests
   ""CurrentStep"": 1,
   ""RetryCounter"": 2,
   ""UncommittedEditCounter"": 0,
+  ""Error"": null,
   ""ErrorMessage"": null,
   ""ErrorCode"": 0,
   ""PreviousRunTotalMilliseconds"": 0,
