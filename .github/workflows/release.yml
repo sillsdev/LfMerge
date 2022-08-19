@@ -27,6 +27,7 @@ jobs:
 
     - name: Tag release branches
       if: github.event_name == 'push' && github.ref == 'refs/heads/live'
+      env:
         TAG72: ${{ inputs.TagFor7000072 }}
       run: |
         git config --global user.name "github-actions"
