@@ -37,8 +37,14 @@ dotnet build --no-restore /v:m /property:Configuration=Release /property:Databas
 
 if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
 	echo "Running unit tests"
-	# TODO: Honor TEST_SPEC enviornment variable
-    dotnet test --no-restore -c Release
+	# dotnet test defaults to killing test processes after 100ms, which is way too short
+	export VSTEST_TESTHOST_SHUTDOWN_TIMEOUT=30000  # 30 seconds, please, since some of our tests can run very long
+	# Treat TEST_SPEC enviornment variable as a "contains" operation
+	if [ -n "$TEST_SPEC" ]; then
+		dotnet test --no-restore -c Release --filter "FullyQualifiedName~${TEST_SPEC}"
+	else
+		dotnet test --no-restore -c Release
+	fi
 fi
 
 "$SCRIPT_DIR"/create-installation-tarball.sh ${DbVersion}
