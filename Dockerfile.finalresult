@@ -6,16 +6,12 @@ FROM ghcr.io/sillsdev/lfmerge-base:runtime
 # install LFMerge prerequisites
 # tini - PID 1 handler
 # python - required by Mercurial, which is bundled in the LFMerge installation
-# rsyslog - lfmerge logs to rsyslog and expects this to exist
-# rsyslog customizations (imklog reads kernel messages, which isn't allowed or desired in Docker containers)
-# logrotate - ensure logs won't grow without bound, and that old logs get cleaned up automatically
 # iputils-ping - Chorus (part of LFMerge) requires the "ping" command to be available on the command line
 # less - so we can read syslog during manual debugging of issues
 # vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
 RUN apt-get update \
-&& apt-get install --yes --no-install-recommends tini python rsyslog logrotate iputils-ping inotify-tools less vim-tiny \
-&& rm -rf /var/lib/apt/lists/* \
-&& sed -i '/load="imklog"/s/^/#/' /etc/rsyslog.conf
+	&& apt-get install --yes --no-install-recommends tini python iputils-ping inotify-tools less vim-tiny \
+	&& rm -rf /var/lib/apt/lists/*
 
 ADD tarball/lfmerge* /
 
