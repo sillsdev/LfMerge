@@ -24,6 +24,15 @@ export NATIVERUNTIME=runtimes/linux-x64/native
 export LIBRUNTIME=runtimes/linux-x64/lib
 export DBVERSIONPATH=/usr/lib/lfmerge/${DatabaseVersion}
 
+# Sanity check before doing anything destructive
+if [ -d output/${BUILD}/${FRAMEWORK}/ -a -e output/${BUILD}/${FRAMEWORK}/LfMerge.Core.dll ]
+then
+	echo "Copying installation files into ${DESTROOT}"
+else
+	echo "Build appears to have failed; not touching ${DESTROOT}"
+	exit 1
+fi
+
 # Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also
 # has wrong line endings, so we re-create the entire file
 cat >Mercurial/mercurial.ini <<EOF
