@@ -30,10 +30,14 @@ RUN mkdir -p /var/lib/languageforge/lexicon/sendreceive/ \
 	&& chown -R builder:users /var/lib/languageforge/lexicon/sendreceive
 
 USER builder
+WORKDIR /home/builder/repo
+# Git repo should be mounted under /home/builder/repo when run
+# E.g., `docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo
 
-# Git repo should be mounted under ${HOME}/packages/lfmerge when run
-# E.g., `docker run --mount type=bind,source="$(pwd)",target=/home/builder/packages/lfmerge`
-RUN mkdir -p /home/builder/repo /home/builder/packages/lfmerge /home/builder/.nuget/packages
-CMD /home/builder/repo/docker/scripts/build-and-test.sh ${DbVersion}
+# NuGet package cache dir should be bind-mounted from home of running user
+# E.g., `docker run --mount type=bind,source="${HOME}/.nuget/packages",target=/home/builder/.nuget/packages
+RUN mkdir -p /home/builder/.nuget/packages
+
+CMD docker/scripts/build-and-test.sh ${DbVersion}
 # CMD doesn't actually run the script, it just gives `docker run` a default.
 # So it's okay for the Git repo to not be mounted yet.

@@ -14,9 +14,10 @@ export NETSTANDARD=netstandard2.0
 export DatabaseVersion=${1:-7000072}
 
 # Model version dependent DESTDIR
-export DBDESTDIR=tarball/lfmerge-${DatabaseVersion}
+export DESTROOT=tarball
+export DBDESTDIR=${DESTROOT}/lfmerge-${DatabaseVersion}
 # Common DESTDIR
-export COMMONDESTDIR=tarball/lfmerge
+export COMMONDESTDIR=${DESTROOT}/lfmerge
 export LIB=usr/lib/lfmerge/${DatabaseVersion}
 export SHARE=usr/share/lfmerge/${DatabaseVersion}
 export NATIVERUNTIME=runtimes/linux-x64/native

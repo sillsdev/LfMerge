@@ -75,10 +75,4 @@ for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 		lfmerge-build-${DbVersion}
 done
 
-# Collect results
-mkdir -p tarball
-for DbVersion in ${DBMODEL_VERSIONS[@]}; do
-	docker container cp tmp-lfmerge-build-${DbVersion}:/home/builder/packages/lfmerge/tarball ./
-done
-
 time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .

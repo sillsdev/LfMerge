@@ -18,14 +18,6 @@ echo "Repo root is ${REPO_ROOT}"
 ls -ld "${REPO_ROOT}"
 cd "${REPO_ROOT}"
 
-BUILD_DIR="${HOME}/packages/lfmerge"
-echo "Setting up clean workspace in ${BUILD_DIR}"
-"$SCRIPT_DIR"/setup-workspace.sh "${BUILD_DIR}"
-cd "${BUILD_DIR}"
-
-# TODO: Can we get rid of this mkdir?
-mkdir -p output/Release
-
 echo "Building packages for version ${DebPackageVersion}"
 
 # Explicit restore step so we can save time in later build steps by using --no-restore

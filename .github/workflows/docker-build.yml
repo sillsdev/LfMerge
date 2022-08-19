@@ -78,9 +78,6 @@ jobs:
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
-      - name: Collect tarball images
-        run: docker container cp tmp-lfmerge-build-${{matrix.dbversion}}:/home/builder/packages/lfmerge/tarball ./
-
       - name: Compress tarball images for faster uploads
         run: time (tar cf - tarball | gzip -c9 > tarball.tar.gz)
 
