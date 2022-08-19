@@ -23,8 +23,6 @@ RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue /var/
 
 RUN install -d -o www-data -g www-data -m 02775 /var/run/lfmerge
 
-# TODO: Turn this into environment variables, because we want to be able to just set env vars in k8s config and restart the container
-COPY lfmerge.conf /etc/languageforge/conf/sendreceive.conf
 COPY sudoers.d.lfmerge.conf /etc/sudoers.d/lfmerge
 COPY mercurial-cacerts.rc /etc/mercurial/hgrc
 COPY lfmergeqm-background.sh /
