@@ -25,7 +25,7 @@
             "type": "process",
             "isBackground": true,
             "command": "dotnet",
-            "args": [ "test", "--filter", "FullyQualifiedName=LfMerge.Core.Tests.Lcm.DataConverters.ConvertLcmToMongoCustomFieldTests.GetCustomFieldForThisCmObject_ShouldGetMultiListRef" ],
+            "args": [ "test" ],
             "options":
                 {
                     "cwd": "${workspaceFolder}",
