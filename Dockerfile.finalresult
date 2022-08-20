@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:experimental
+ARG DbVersion=7000072
+
+FROM ghcr.io/sillsdev/lfmerge-base:runtime
+
+# install LFMerge prerequisites
+# tini - PID 1 handler
+# python - required by Mercurial, which is bundled in the LFMerge installation
+# iputils-ping - Chorus (part of LFMerge) requires the "ping" command to be available on the command line
+# less - so we can read syslog during manual debugging of issues
+# vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
+RUN apt-get update \
+	&& apt-get install --yes --no-install-recommends tini python iputils-ping inotify-tools less vim-tiny \
+	&& rm -rf /var/lib/apt/lists/*
+
+ADD tarball/lfmerge* /
+
+RUN mkdir -m 02775 -p /var/lib/languageforge/lexicon/sendreceive/syncqueue /var/lib/languageforge/lexicon/sendreceive/webwork /var/lib/languageforge/lexicon/sendreceive/Templates /var/lib/languageforge/lexicon/sendreceive/state && chown -R www-data:www-data /var/lib/languageforge
+
+RUN install -d -o www-data -g www-data -m 02775 /var/run/lfmerge
+
+COPY sudoers.d.lfmerge.conf /etc/sudoers.d/lfmerge
+COPY mercurial-cacerts.rc /etc/mercurial/hgrc
+COPY lfmergeqm-background.sh /
+COPY lfmergeqm-looping.sh /
+COPY entrypoint.sh /
+RUN chmod +x /lfmergeqm-background.sh /lfmergeqm-looping.sh /entrypoint.sh
+
+ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/entrypoint.sh" ]
+CMD [ "/lfmergeqm-looping.sh" ]

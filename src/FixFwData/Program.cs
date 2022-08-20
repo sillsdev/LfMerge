@@ -12,9 +12,6 @@ using System.Reflection;
 using LfMerge.Core.Logging;
 using SIL.LCModel.FixData;
 using SIL.LCModel.Utils;
-//using SIL.Reporting;
-using SyslogLogger = SIL.Linux.Logging.SyslogLogger;
-using SIL.PlatformUtilities;
 
 namespace FixFwData
 {
@@ -34,16 +31,12 @@ namespace FixFwData
 			return errorsOccurred ? 1 : 0;
 		}
 
-		private static SyslogLogger logger = null;
 		private static bool errorsOccurred = false;
 		private static int errorCount = 0;
 
 		private static void logError(string description, bool errorFixed)
 		{
-			if (logger == null)
-				Console.WriteLine(description);
-			else
-				logger.Error(description);
+			Console.WriteLine(description);
 
 			errorsOccurred = true;
 			if (errorFixed)
@@ -58,8 +51,6 @@ namespace FixFwData
 		private static void SetUpErrorHandling()
 		{
 			ExceptionLogging.Initialize("17a42e4a67dd2e42d4aa40d8bf2d23ee", Assembly.GetExecutingAssembly().GetName().Name);
-			if (Platform.IsUnix)
-				logger = new SyslogLogger("FixFwData");
 		}
 
 		private sealed class LoggingProgress : IProgress, IDisposable
@@ -82,10 +73,7 @@ namespace FixFwData
 				get { return null; }
 				set
 				{
-					if (logger == null)
-						Console.Out.WriteLine(value);
-					else
-						logger.Info(value);
+					Console.Out.WriteLine(value);
 				}
 			}
 

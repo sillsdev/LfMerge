@@ -1,16 +1,13 @@
 ﻿// Copyright (c) 2011-2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using CommandLine;
-using CommandLine.Text;
+using LfMerge.Core;
 using LfMerge.Core.Actions;
-using System.IO;
 
 namespace LfMerge
 {
-	public class Options
+	public class Options : OptionsBase<Options>
 	{
-		public static Options Current;
-
 		public Options()
 		{
 			Current = this;
@@ -28,36 +25,11 @@ namespace LfMerge
 		[Option("migrate", HelpText = "Allow data migration")]
 		public bool AllowDataMigration { get; set; }
 
-		[Option("config", HelpText = "Alternate location of the 'sendreceive.conf' configuration file")]
-		public string ConfigDir { get; set; }
-
-		[Option("user", HelpText = "LanguageDepot username (for debugging purposes only)", DefaultValue = "x")]
+		[Option("user", HelpText = "LanguageDepot username (for debugging purposes only)", Default = "x")]
 		public string User { get; set; }
 
-		[Option("password", HelpText = "LanguageDepot password (for debugging purposes only)", DefaultValue = "x")]
+		[Option("password", HelpText = "LanguageDepot password (for debugging purposes only)", Default = "x")]
 		public string Password { get; set; }
-
-		[HelpOption('h', "help")]
-		public string GetUsage()
-		{
-			return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
-		}
-
-		[ParserState]
-		public IParserState LastParserState { get; set; }
-
-		public static Options ParseCommandLineArgs(string[] args)
-		{
-			var options = new Options();
-			var parser = ParserInstance ?? Parser.Default;
-			if (parser.ParseArguments(args, options))
-			{
-				Current = options;
-				return options;
-			}
-			// CommandLineParser automagically handles displaying help
-			return null;
-		}
 
 		/// <summary>
 		/// Gets or sets the parser.

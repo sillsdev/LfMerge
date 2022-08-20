@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <RootNamespace>FixFwData</RootNamespace>
     <Configurations>Debug;Release</Configurations>
@@ -28,16 +28,22 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.
     <ChangelogFile>../../CHANGELOG.md</ChangelogFile>
     <DefinePlatformConstants Condition="'$(OS)'!='Windows_NT'">LINUX</DefinePlatformConstants>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <DefineConstants>DEBUG;TRACE;DBVERSION_7000072;</DefineConstants>
+    <DatabaseVersion Condition="'$(DatabaseVersion)'==''">7000072</DatabaseVersion>
+    <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);</DefineConstants>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.7.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="SIL.LCModel.FixData" Version="10.1.0-beta0382" />
+    <PackageReference Include="SIL.LCModel.FixData" Version="10.2.0-netcore*" />
     <PackageReference Include="SIL.ReleaseTasks" Version="2.5.0" PrivateAssets="All" />
   </ItemGroup>
+
+  <Target Name="CreateExe" AfterTargets="Build" Condition="Exists('$(OutputPath)/FixFwData') And !Exists('$(OutputPath)/FixFwData.exe')">
+    <Message Text="Running 'ln FixFwData FixFwData.exe' in $(OutputPath)" />
+    <Exec Command="ln FixFwData FixFwData.exe"
+			WorkingDirectory="$(OutputPath)" />
+  </Target>
 
   <ItemGroup>
     <ProjectReference Include="..\LfMerge.Core\LfMerge.Core.csproj" />

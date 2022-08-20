@@ -19,7 +19,6 @@ using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;
 using SIL.IO;
 using SIL.LCModel;
-using SIL.PlatformUtilities;
 using SIL.Progress;
 using Action = LfMerge.Core.Actions.Action;
 
@@ -50,8 +49,21 @@ namespace LfMerge.Core
 			}
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder.RegisterType<LfMergeSettings>().SingleInstance().AsSelf();
-			containerBuilder.RegisterType<SyslogLogger>().SingleInstance().As<ILogger>()
-				.WithParameter(new TypedParameter(typeof(string), programName));
+			string logDest =
+				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDest) ??
+				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDestination) ?? "-";
+			if (logDest == "syslog") {
+				Console.WriteLine("WARNING: syslog logging no longer available, logging to console instead");
+			}
+			// TODO: Implement a FileLogger to handle cases where the logDest is a filename, then only use ConsoleLogger if env var is "-" or missing
+			string stderrThreshholdStr = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingStderrTreshhold) ?? "-";
+			LogSeverity stderrThreshhold;
+			if (System.Enum.TryParse<LogSeverity>(stderrThreshholdStr, true, out stderrThreshhold)) {
+				containerBuilder.RegisterType<ConsoleLogger>().SingleInstance().As<ILogger>()
+					.WithParameter(new TypedParameter(typeof(LogSeverity), stderrThreshhold));
+			} else {
+				containerBuilder.RegisterType<ConsoleLogger>().SingleInstance().As<ILogger>();
+			}
 			containerBuilder.RegisterType<LanguageDepotProject>().As<ILanguageDepotProject>();
 			containerBuilder.RegisterType<ProcessingState.Factory>().As<IProcessingStateDeserialize>();
 			containerBuilder.RegisterType<ChorusHelper>().SingleInstance().AsSelf();
@@ -59,14 +71,13 @@ namespace LfMerge.Core
 			containerBuilder.RegisterType<MongoProjectRecordFactory>().AsSelf();
 			containerBuilder.RegisterType<EntryCounts>().AsSelf();
 			containerBuilder.RegisterType<SyslogProgress>().As<IProgress>();
-			containerBuilder.RegisterType<LanguageForgeProxy>().As<ILanguageForgeProxy>();
 			Action.Register(containerBuilder);
 			Queue.Register(containerBuilder);
 			return containerBuilder;
 		}
 
 		public static int StartLfMerge(string projectCode, ActionNames action,
-			string modelVersion, bool allowFreshClone, string configDir = null)
+			string modelVersion, bool allowFreshClone)
 		{
 			if (string.IsNullOrEmpty(modelVersion))
 			{
@@ -99,9 +110,8 @@ namespace LfMerge.Core
 				argsBldr.Append(" --clone");
 			if (FwProject.AllowDataMigration)
 				argsBldr.Append(" --migrate");
-			if (!string.IsNullOrEmpty(configDir))
-				argsBldr.AppendFormat(" --config \"{0}\"", configDir);
 			startInfo.Arguments = argsBldr.ToString();
+			Logger.Notice("About to run ({0}) with args ({1})", startInfo.FileName, startInfo.Arguments);
 			startInfo.CreateNoWindow = true;
 			startInfo.ErrorDialog = false;
 			startInfo.UseShellExecute = false;

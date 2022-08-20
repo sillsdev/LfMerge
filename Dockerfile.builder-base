@@ -1,0 +1,16 @@
+ARG DbVersion=7000072
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS lfmerge-builder-base
+WORKDIR /build/lfmerge
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+# Dependencies from Debian "control" file
+RUN apt-get update && apt-get install -y curl sudo iputils-ping cpp python-is-python2 python2-dev pkg-config libicu-dev && rm -rf /var/lib/apt/lists/*
+
+# Ensure fieldworks group exists in case lfmerge-fdo package didn't install it, and that www-data is part of that group
+# Also ensure that www-data has a .local dir in its home directory (/var/www) since some of lfmerge's dependencies assume that $HOME/.local exists
+RUN addgroup --system --quiet fieldworks ; \
+    adduser --quiet www-data fieldworks ; \
+	install -d -o www-data -g www-data -m 02775 /var/www/.local/share

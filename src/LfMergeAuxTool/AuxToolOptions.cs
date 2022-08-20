@@ -1,12 +1,17 @@
 ﻿// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using CommandLine;
-using CommandLine.Text;
+using LfMerge.Core;
 
 namespace LfMergeAuxTool
 {
-	public class AuxToolOptions
+	public class AuxToolOptions : OptionsBase<AuxToolOptions>
 	{
+		public AuxToolOptions()
+		{
+			Current = this;
+		}
+
 		[Option('p', "project", Required = true, HelpText = "Path to fwdata file to process.")]
 		public string Project { get; set; }
 
@@ -18,27 +23,6 @@ namespace LfMergeAuxTool
 
 		[Option('m', "migrate", HelpText = "Migrate project to current model version")]
 		public bool Migrate { get; set; }
-
-		[HelpOption('h', "help")]
-		public string GetUsage()
-		{
-			return HelpText.AutoBuild(this,
-				current => HelpText.DefaultParsingErrorsHandler(this, current));
-		}
-
-		[ParserState]
-		public IParserState LastParserState { get; set; }
-
-		public static AuxToolOptions ParseCommandLineArgs(string[] args)
-		{
-			var options = new AuxToolOptions();
-			if (Parser.Default.ParseArguments(args, options))
-			{
-				return options;
-			}
-			// CommandLineParser automagically handles displaying help
-			return null;
-		}
 	}
 }
 

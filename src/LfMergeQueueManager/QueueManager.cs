@@ -33,6 +33,7 @@ namespace LfMerge.QueueManager
 			Sldr.Initialize();
 
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			settings.Initialize();
 			var fileLock = SimpleFileLock.CreateFromFilePath(settings.LockFile);
 			try
 			{

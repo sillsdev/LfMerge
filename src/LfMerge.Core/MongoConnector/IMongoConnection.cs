@@ -29,7 +29,7 @@ namespace LfMerge.Core.MongoConnector
 		void UpdateCommentStatuses(ILfProject project, List<KeyValuePair<string, Tuple<string, string>>> statusChanges);
 		bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss);
-		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList);
+		bool SetCustomFieldConfig(ILfProject project, Dictionary<string, LfConfigFieldBase> lfCustomFieldList, Dictionary<string, string> lfCustomFieldTypes);
 		Dictionary<string, LfConfigFieldBase> GetCustomFieldConfig(ILfProject project);
 		bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate);  // TODO: Decide if this is really where this method belongs
 		void SetCommentReplyGuids(ILfProject project, IDictionary<string,Guid> uniqIdToGuidMappings);

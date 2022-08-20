@@ -34,31 +34,10 @@
 			}
 		},
 		*/
-		{
-			"name": "Launch unit tests",
-			"env": {
-				// Display on main display :0, or on a Xephyr :2.
-				"DISPLAY": ":0",
-				// When launching LfMerge, use this mono.
-				"PATH": "/opt/mono5-sil/bin:${env:PATH}",
-				// Path to the rest of the necessary enviromnent settings for LfMerge. This is handled by a mono wrapper script in /opt.
-				"MONO_ENVIRON": "${workspaceRoot}/environ"
-			},
-			"type": "mono",
-			"request": "launch",
-			"program": "${workspaceRoot}/packages/NUnit.Runners.Net4.2.6.4/tools/nunit.exe",
-			"args": [
-				"LfMerge.Core.Tests.dll"
-			],
-			"cwd": "${workspaceRoot}/output/Debug",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Attach",
-			"type": "mono",
-			"request": "attach",
-			"address": "localhost",
-			"port": 55555
-		}
-	]
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach",
+    },
+  ]
 }
