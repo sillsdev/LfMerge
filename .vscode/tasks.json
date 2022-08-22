@@ -9,6 +9,9 @@
             "type": "shell",
             "args": [
                 "build",
+                "${workspaceFolder}/src/LfMergeQueueManager/LfMergeQueueManager.csproj",
+                "-o",
+                "${workspaceFolder}/tarball/lfmerge-7000072/usr/lib/lfmerge/7000072/",
                 // Ask dotnet build to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 // Do not generate summary otherwise it leads to duplicate errors in Problems panel
