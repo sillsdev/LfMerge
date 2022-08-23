@@ -8,6 +8,7 @@ MercurialExtensions/
 Mercurial/
 Downloads/
 lib/
+!lib/chorusmerge
 build/LfMerge.files
 data/php/
 data/testlangproj*/*.bak
