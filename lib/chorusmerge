@@ -36,8 +36,8 @@ then
 else
 	if [ -e "$LIB"/ChorusMerge.dll ]
 	then
-		exec dotnet "$LIB"/ChorusMerge.dll "$@"  # Failed 3 Passed 2
+		exec dotnet "$LIB"/ChorusMerge.dll "$@"
 	else
-		exec dotnet run "$LIB"/ChorusMerge.exe "$@"  # How about this?
+		exec dotnet run "$LIB"/ChorusMerge.exe "$@"
 	fi
 fi
