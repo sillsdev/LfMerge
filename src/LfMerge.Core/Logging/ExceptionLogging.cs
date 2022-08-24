@@ -182,14 +182,12 @@ namespace LfMerge.Core.Logging
 
 				if (gitBranch.EndsWith("/live", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "live";
-				else if (gitBranch.EndsWith("/qa", StringComparison.InvariantCulture))
-					configuration.ReleaseStage = "qa";
 				else if (gitBranch.StartsWith("origin/", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "development";
 				else
 					configuration.ReleaseStage = "local";
 			}
-			configuration.NotifyReleaseStages = new[] { "live", "qa", "development" };
+			configuration.NotifyReleaseStages = new[] { "live", "development" };
 
 
 			var metadata = new List<KeyValuePair<string, object>>();
