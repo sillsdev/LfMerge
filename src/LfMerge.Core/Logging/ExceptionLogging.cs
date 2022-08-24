@@ -180,7 +180,7 @@ namespace LfMerge.Core.Logging
 			{
 				var gitBranch = MainClass.GetVersionInfo("BranchName");
 
-				if (gitBranch.EndsWith("/live", StringComparison.InvariantCulture))
+				if (gitBranch.EndsWith("/master", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "live";
 				else if (gitBranch.StartsWith("origin/", StringComparison.InvariantCulture))
 					configuration.ReleaseStage = "development";

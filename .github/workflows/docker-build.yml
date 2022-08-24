@@ -2,7 +2,7 @@ name: docker-build
 
 on:
   push:
-    branches: [ develop, live ]
+    branches: [ develop, master ]
   pull_request:
     branches: [ develop ]
 
