@@ -14,16 +14,16 @@ You'll need Docker installed, as well as GNU Parallel to use the parallel-build 
 
 ## Development
 
-The `master` branch in this repository is where most development happens (it would be called `develop` if we were strictly following a Git-Flow naming scheme). The `live` branch is what release images are built from. Pushing to the `live` branch will build the Docker image, then if the build succeeds, it will tag the built commit with the version number with a `v` prefix (e.g., `v2.0.123`) and tag the Docker image with the unprefixed version number (e.g., `lfmerge:2.0.123`).
+The `develop` branch in this repository is where most development happens. The `master` branch is what release images are built from. Pushing to the `master` branch will build the Docker image, then if the build succeeds, it will tag the built commit with the version number with a `v` prefix (e.g., `v2.0.123`) and tag the Docker image with the unprefixed version number (e.g., `lfmerge:2.0.123`).
 
-The `live` branch is expected to be **fast-forwarded**, with no merge commits, from the `master` branch. When you want to push a new release, please do:
+The `master` branch is expected to be **fast-forwarded**, with no merge commits, from the `develop` branch. When you want to push a new release, please do:
 
-1. `git checkout master`
+1. `git checkout develop`
 1. `git pull --ff-only` to make sure you have the latest merged PRs
 1. Deal with any merge conflicts, then run `git pull --ff-only` again if there were any conflicts
-1. Once there are no merge conflicts, `git checkout live`
-1. `git merge --ff-only master`
-1. If no merge conflicts, `git push live`
+1. Once there are no merge conflicts, `git checkout master`
+1. `git merge --ff-only develop`
+1. If no merge conflicts, `git push master`
 
 ## Building
 
