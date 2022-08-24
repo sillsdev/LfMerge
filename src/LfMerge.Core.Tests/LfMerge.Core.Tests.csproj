@@ -21,7 +21,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AppendToReleaseNotesProperty><![CDATA[
-See full changelog at https://github.com/sillsdev/LfMerge/blob/master/CHANGELOG.md]]>
+See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG.md]]>
     </AppendToReleaseNotesProperty>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <IsPackable>false</IsPackable>
