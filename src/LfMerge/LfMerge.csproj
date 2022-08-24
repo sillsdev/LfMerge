@@ -56,7 +56,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
 
-  <Target Name="CreateChorusMergeExe" AfterTargets="CustomBuild" Condition="Exists('$(OutputPath)/ChorusMerge') And !Exists('$(OutputPath)/ChorusMerge.exe')">
+  <Target Name="CreateChorusMergeExe" AfterTargets="CustomBuild" Condition="Exists('$(OutputPath)/chorusmerge') And !Exists('$(OutputPath)/ChorusMerge.exe')">
     <Message Text="About to run 'ln chorusmerge ChorusMerge.exe' in $(OutputPath)" />
     <Exec Command="ln chorusmerge ChorusMerge.exe"
 			WorkingDirectory="$(OutputPath)" />
