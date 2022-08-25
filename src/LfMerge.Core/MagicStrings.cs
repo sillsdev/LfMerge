@@ -108,6 +108,7 @@ namespace LfMerge.Core
 
 		// Other magic strings that don't fall into any particular category
 		public const string UnknownString = "***";
+		public const string EnvVar_TrustToken = "LANGUAGE_DEPOT_TRUST_TOKEN";
 
 		// Minimal supported model version (static property to support testing)
 		public static int MinimalModelVersion { get; private set; }
