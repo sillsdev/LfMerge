@@ -205,7 +205,7 @@ namespace LfMerge.Core.Tests.Actions
 			string errors = _env.Logger.GetErrors();
 			Assert.That(errors, Does.Contain("System.Xml.XmlException"));
 			// Stack trace should also have been logged
-			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
@@ -229,7 +229,7 @@ namespace LfMerge.Core.Tests.Actions
 			string errors = _env.Logger.GetErrors();
 			Assert.That(errors, Does.Contain("System.Xml.XmlException: '.', hexadecimal value 0x00, is an invalid character."));
 			// Stack trace should also have been logged
-			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow (Chorus.sync.SyncOptions options)"));
+			Assert.That(errors, Does.Contain("\n  at Chorus.sync.Synchronizer.SyncNow"));
 			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
 		}
 
