@@ -86,7 +86,7 @@ jobs:
     - name: Show metadata from LfMerge image build step
       run: echo "$METADATA"
       env:
-        METADATA: ${{ steps.lfmerge_image.output.metadata }}
+        METADATA: ${{ steps.lfmerge_image.outputs.metadata }}
 
     - name: List Docker images to verify build
       run: docker image ls
