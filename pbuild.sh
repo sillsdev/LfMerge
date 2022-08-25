@@ -61,6 +61,8 @@ done
 # Clean out previous installation files if they exist
 [ -d tarball ] && rm -rf tarball
 
+mkdir -p ${HOME}/.nuget/packages 
+
 # Run the build
 for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 	docker run -it \
