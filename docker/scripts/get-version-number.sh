@@ -40,7 +40,7 @@ case "$REV" in
     PRERELEASE="~alpha.${BUILD_NUMBER}"
     ;;
 
-  refs/heads/live)
+  refs/heads/master)
     PRERELEASE=
     ;;
 
