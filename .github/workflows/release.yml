@@ -41,7 +41,7 @@ jobs:
       env:
         MS_BUILD_VERSION: ${{ inputs.MsBuildVersion }}
       run: |
-        if [ "${GITHUB_REF}" == 'refs/heads/master' ]
+        if [ "${GITHUB_REF}" = 'refs/heads/master' ]
         then
           TAGS=ghcr.io/sillsdev/lfmerge:${MS_BUILD_VERSION},ghcr.io/sillsdev/lfmerge:latest
         else
