@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -e
+# Commented out due to `dotnet test` crashing even on successful tests
+# Once we upgrade to a version of `dotnet test` that no longer crashes, uncomment the "set -e" line
+# set -e
 
 SCRIPT_DIR=$(dirname $(readlink -f "$0"))
 
