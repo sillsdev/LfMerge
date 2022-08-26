@@ -17,6 +17,7 @@ RUN useradd -u "${BUILDER_UID:-DEFAULT_BUILDER_UID}" -d /home/builder -g users -
 
 FROM lfmerge-builder-base AS lfmerge-build-7000072
 ENV DbVersion=7000072
+ENV DBVERSION=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
 ENV RUN_UNIT_TESTS=0
 ENV NUNIT_VERSION_MAJOR=3
@@ -25,7 +26,7 @@ ENV NUNIT_VERSION_MAJOR=3
 FROM lfmerge-build-${DbVersion} AS lfmerge-build
 
 # So unit tests can run
-RUN mkdir -p /var/lib/languageforge/lexicon/sendreceive/ \
+RUN mkdir -p /usr/lib/lfmerge/${DbVersion} /var/lib/languageforge/lexicon/sendreceive/ \
 	&& cd /var/lib/languageforge/lexicon/sendreceive/ && mkdir Templates state editqueue syncqueue webwork && cd - \
 	&& chown -R builder:users /var/lib/languageforge/lexicon/sendreceive
 

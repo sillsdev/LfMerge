@@ -30,4 +30,14 @@ cd "$SHARE"
 . ./environ
 cd "$LIB"
 
-exec dotnet run "$LIB"/ChorusMerge.exe "$@"
+if [ -e "$LIB"/ChorusMerge ]
+then
+	exec "$LIB"/ChorusMerge "$@"
+else
+	if [ -e "$LIB"/ChorusMerge.dll ]
+	then
+		exec dotnet "$LIB"/ChorusMerge.dll "$@"
+	else
+		exec dotnet run "$LIB"/ChorusMerge.exe "$@"
+	fi
+fi

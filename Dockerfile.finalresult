@@ -25,6 +25,8 @@ COPY lfmergeqm-background.sh /
 COPY lfmergeqm-looping.sh /
 COPY entrypoint.sh /
 RUN chmod +x /lfmergeqm-background.sh /lfmergeqm-looping.sh /entrypoint.sh
+# ENV DbVersion=${DbVersion}
+# ENV DBVERSION=${DbVersion}
 
 ENTRYPOINT [ "/usr/bin/tini", "-g", "--", "/entrypoint.sh" ]
 CMD [ "/lfmergeqm-looping.sh" ]

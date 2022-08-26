@@ -33,7 +33,9 @@ then
   fi
 fi
 
-DBVERSION=$(basename $(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1))
+if [ -z "$DBVERSION" ]; then
+	DBVERSION=$(basename $(find /usr/lib/lfmerge -maxdepth 1 -type d -name [0-9]\* | sort | tail -n 1))
+fi
 LIB=/usr/lib/lfmerge/$DBVERSION
 SHARE=/usr/share/lfmerge/$DBVERSION
 
