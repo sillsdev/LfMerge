@@ -19,7 +19,7 @@ FROM lfmerge-builder-base AS lfmerge-build-7000072
 ENV DbVersion=7000072
 ENV DBVERSION=7000072
 ENV DBVERSIONPATH=/usr/lib/lfmerge/7000072
-ENV RUN_UNIT_TESTS=0
+ENV RUN_UNIT_TESTS=1
 ENV NUNIT_VERSION_MAJOR=3
 # ENV TEST_SPEC=LfMerge.Core.Tests.Actions.SynchronizeActionTests.SynchronizeAction_CustomReferenceAtomicField_DoesNotThrowExceptionDuringSync
 

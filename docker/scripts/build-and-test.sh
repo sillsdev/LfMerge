@@ -29,9 +29,9 @@ if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
 	export VSTEST_TESTHOST_SHUTDOWN_TIMEOUT=30000  # 30 seconds, please, since some of our tests can run very long
 	# Treat TEST_SPEC enviornment variable as a "contains" operation
 	if [ -n "$TEST_SPEC" ]; then
-		dotnet test --no-restore -c Release --filter "FullyQualifiedName~${TEST_SPEC}"
+		dotnet test --no-restore -l:"console;verbosity=normal" -l:nunit -c Release --filter "FullyQualifiedName~${TEST_SPEC}"
 	else
-		dotnet test --no-restore -c Release
+		dotnet test --no-restore -l:"console;verbosity=normal" -l:nunit -c Release
 	fi
 fi
 
