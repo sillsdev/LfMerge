@@ -34,6 +34,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="Moq" Version="4.7.0" />
     <PackageReference Include="NUnit" Version="3.13.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnitXml.TestLogger" Version="3.0.117" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.1" />
     <PackageReference Include="SIL.LCModel.Core.Tests" Version="10.1.0-beta0382" />
