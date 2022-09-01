@@ -56,21 +56,7 @@ namespace LfMerge.Core.Actions
 
 		public static ActionNames FirstActionName
 		{
-			get { return GetActionNameForQueue(QueueNames.Edit); }
-		}
-
-		public static ActionNames GetActionNameForQueue(QueueNames queue)
-		{
-			switch (queue)
-			{
-			case QueueNames.Edit:
-				return ActionNames.Edit;
-			case QueueNames.None:
-				break;
-			case QueueNames.Synchronize:
-				return ActionNames.Synchronize;
-			}
-			return ActionNames.None;
+			get { return ActionNames.Synchronize; }
 		}
 
 		internal static IEnumerable<ActionNames> EnumerateActionsStartingWith(ActionNames currentAction)

@@ -43,12 +43,11 @@ namespace LfMerge.Core.Tests.Actions
 			_env.Dispose();
 		}
 
-		[TestCase(QueueNames.Edit, new[] { ActionNames.Edit })]
-		[TestCase(QueueNames.Synchronize, new[] { ActionNames.Synchronize })]
-		public void NextAction(QueueNames queueName, ActionNames[] expectedActionNames)
+		[TestCase(new[] { ActionNames.Synchronize })]
+		public void NextAction(ActionNames[] expectedActionNames)
 		{
 			var actions = new List<ActionNames>();
-			for (var sut = Action.GetAction(Queue.GetQueue(queueName).CurrentActionName);
+			for (var sut = Action.GetAction(Queue.GetQueue().CurrentActionName);
 				sut != null;
 				sut = sut.NextAction)
 			{
@@ -96,14 +95,6 @@ namespace LfMerge.Core.Tests.Actions
 
 			// Verify
 			Assert.That(ProcessState.SavedStates, Is.Empty);
-		}
-
-		[TestCase(QueueNames.None, ActionNames.None)]
-		[TestCase(QueueNames.Edit, ActionNames.Edit)]
-		[TestCase(QueueNames.Synchronize, ActionNames.Synchronize)]
-		public void GetActionFromQueue(QueueNames queue, ActionNames expectedAction)
-		{
-			Assert.That(Action.GetActionNameForQueue(queue), Is.EqualTo(expectedAction));
 		}
 
 		[TestCase(ActionNames.None, ActionNames.EnsureClone)]

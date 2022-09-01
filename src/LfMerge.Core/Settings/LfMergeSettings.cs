@@ -66,7 +66,7 @@ namespace LfMerge.Core.Settings
 
 		public string MongoDbHostNameAndPort { get { return String.Format("{0}:{1}", MongoHostname, MongoPort.ToString()); } }
 
-		private string[] QueueDirectories { get; set; }
+		private string QueueDirectory { get; set; }
 
 		public string StateDirectory { get; private set; }
 
@@ -77,7 +77,6 @@ namespace LfMerge.Core.Settings
 		public LfMergeSettings()
 		{
 			LcmDirectorySettings = new LcmDirectories();
-			QueueDirectories = new string[0];
 			SetAllMembers();
 		}
 
@@ -85,7 +84,6 @@ namespace LfMerge.Core.Settings
 		{
 			// TODO: Get rid of this once we simplify the queue system. 2022-02 RM
 			SetAllMembers();
-			Queue.CreateQueueDirectories(this);
 		}
 
 		private void SetAllMembers()
@@ -93,14 +91,10 @@ namespace LfMerge.Core.Settings
 			LcmDirectorySettings.SetProjectsDirectory(WebworkDir);
 			LcmDirectorySettings.SetTemplateDirectory(TemplatesDir);
 			StateDirectory = Path.Combine(BaseDir, "state");
+			QueueDirectory = Path.Combine(BaseDir, "syncqueue");
+			Directory.CreateDirectory(QueueDirectory);
 
 			CommitWhenDone = true;
-
-			var queueCount = Enum.GetValues(typeof(QueueNames)).Length;
-			QueueDirectories = new string[queueCount];
-			QueueDirectories[(int)QueueNames.None] = null;
-			QueueDirectories[(int)QueueNames.Edit] = Path.Combine(BaseDir, "editqueue");
-			QueueDirectories[(int)QueueNames.Synchronize] = Path.Combine(BaseDir, "syncqueue");
 		}
 
 		public class LcmDirectories: ILcmDirectories
@@ -150,9 +144,9 @@ namespace LfMerge.Core.Settings
 			}
 		}
 
-		public string GetQueueDirectory(QueueNames queue)
+		public string GetQueueDirectory()
 		{
-			return QueueDirectories[(int)queue];
+			return QueueDirectory;
 		}
 
 		/// <summary>

@@ -17,76 +17,19 @@ namespace LfMerge.Core.Queues
 		#region Queue handling
 		internal static void Register(ContainerBuilder containerBuilder)
 		{
-			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
-			{
-				if (queueName == QueueNames.None)
-					continue;
-
-				containerBuilder.RegisterType<Queue>().Keyed<IQueue>(queueName)
-					.WithParameter(new TypedParameter(typeof(QueueNames), queueName));
-			}
+				containerBuilder.RegisterType<Queue>();
 		}
 
-		public static IQueue GetQueue(QueueNames name)
+		public static IQueue GetQueue()
 		{
-			return MainClass.Container.ResolveKeyed<IQueue>(name);
-		}
-
-		public static IQueue FirstQueueWithWork
-		{
-			get { return GetNextQueueWithWork(Actions.Action.FirstActionName); }
-		}
-
-		public static QueueNames GetQueueForAction(ActionNames action)
-		{
-			switch (action)
-			{
-			case ActionNames.TransferMongoToLcm:
-			case ActionNames.Synchronize:
-				return QueueNames.Synchronize;
-			case ActionNames.Commit:
-			case ActionNames.None:
-			case ActionNames.Edit:
-			case ActionNames.TransferLcmToMongo:
-				break;
-			}
-			return QueueNames.None;
-		}
-
-		public static IQueue GetNextQueueWithWork(ActionNames currentAction)
-		{
-			foreach (var action in Actions.Action.EnumerateActionsStartingWith(currentAction))
-			{
-				var queueName = GetQueueForAction(action);
-				if (queueName != QueueNames.None)
-				{
-					var queue = GetQueue(queueName);
-					if (!queue.IsEmpty)
-						return queue;
-				}
-			}
-			return null;
-		}
-
-		public static void CreateQueueDirectories(LfMergeSettings settings)
-		{
-			foreach (QueueNames queueName in Enum.GetValues(typeof(QueueNames)))
-			{
-				var queueDir = settings.GetQueueDirectory(queueName);
-				if (queueDir != null)
-					Directory.CreateDirectory(queueDir);
-			}
+			return MainClass.Container.Resolve<Queue>();
 		}
 
 		#endregion
 
-		public Queue(LfMergeSettings settings, QueueNames name)
+		public Queue(LfMergeSettings settings)
 		{
-			if (name == QueueNames.None)
-				throw new ArgumentException("Can't create a queue of type QueueNames.None", "name");
-
 			Settings = settings;
-			Name = name;
 		}
 
 		#region IQueue implementation
@@ -94,8 +37,6 @@ namespace LfMerge.Core.Queues
 		{
 			get { return QueuedProjects.Length == 0; }
 		}
-
-		public QueueNames Name { get; private set; }
 
 		public string[] QueuedProjects
 		{
@@ -112,14 +53,9 @@ namespace LfMerge.Core.Queues
 			File.Delete(Path.Combine(QueueDirectory, projectCode));
 		}
 
-		public IQueue NextQueueWithWork
-		{
-			get { return GetNextQueueWithWork(Actions.Action.GetActionNameForQueue(Name)); }
-		}
-
 		public ActionNames CurrentActionName
 		{
-			get { return Actions.Action.GetActionNameForQueue(Name); }
+			get { return ActionNames.Synchronize; }
 		}
 		#endregion
 
@@ -162,7 +98,7 @@ namespace LfMerge.Core.Queues
 
 		private string QueueDirectory
 		{
-			get { return Settings.GetQueueDirectory(Name); }
+			get { return Settings.GetQueueDirectory(); }
 		}
 	}
 }
