@@ -23,21 +23,22 @@ namespace LfMerge.Core.Actions
 			get { return ProcessingState.SendReceiveStates.SYNCING; }
 		}
 
-		private bool SyncResultedInError(ILfProject project,
-			string syncResult, string errorString, ProcessingState.SendReceiveStates? newState = null)
+		private bool FindErrorAndUpdateState(ILfProject project,
+			string syncResult, string errorToFind, ProcessingState.SendReceiveStates? newState = null)
 		{
-			var line = LfMergeBridgeServices.GetLineContaining(syncResult, errorString);
+			var line = LfMergeBridgeServices.GetLineContaining(syncResult, errorToFind);
 			if (!string.IsNullOrEmpty(line))
 			{
 				if (line.Contains("Exception"))
 				{
-					 IEnumerable<string> stackTrace = LfMergeBridgeServices.GetLineAndStackTraceContaining(syncResult, errorString);
+					 IEnumerable<string> stackTrace = LfMergeBridgeServices.GetLineAndStackTraceContaining(syncResult, errorToFind);
 					 Logger.Error(String.Join(Environment.NewLine, stackTrace));  // We want entire stack trace logged as a single log entry, so don't use Logger.LogMany()
 				}
 				else
 				{
 					Logger.Error(line);
 				}
+
 				if (newState.HasValue)
 				{
 					if (newState.Value == ProcessingState.SendReceiveStates.HOLD)
@@ -51,6 +52,7 @@ namespace LfMerge.Core.Actions
 				}
 				return true;
 			}
+
 			return false;
 		}
 
@@ -124,7 +126,7 @@ namespace LfMerge.Core.Actions
 					}
 					if (modelVersion < MagicStrings.MinimalModelVersion)
 					{
-						SyncResultedInError(project, syncResult, cannotCommitCurrentBranch,
+						FindErrorAndUpdateState(project, syncResult, cannotCommitCurrentBranch,
 							ProcessingState.SendReceiveStates.HOLD);
 						Logger.Error("Error during sync of '{0}': " +
 							"clone model version '{1}' less than minimal supported model version '{2}'.",
@@ -154,19 +156,19 @@ namespace LfMerge.Core.Actions
 					return;
 				}
 
-				if (SyncResultedInError(project, syncResult,
-						"Cannot create a repository at this point in LF development.",
-						ProcessingState.SendReceiveStates.HOLD) ||
-					// REVIEW: should we set the state to HOLD if we don't have previous commits?
-					SyncResultedInError(project, syncResult, "Cannot do first commit.",
-						ProcessingState.SendReceiveStates.HOLD) ||
-					SyncResultedInError(project, syncResult, "Sync failure:"))
+				if (FindErrorAndUpdateState(project, syncResult, "Cannot create a repository at this point in LF development.",
+							ProcessingState.SendReceiveStates.HOLD) ||
+						// REVIEW: should we set the state to HOLD if we don't have previous commits?
+						FindErrorAndUpdateState(project, syncResult, "Cannot do first commit.",
+							ProcessingState.SendReceiveStates.HOLD) ||
+						FindErrorAndUpdateState(project, syncResult, "Sync failure:",
+							ProcessingState.SendReceiveStates.HOLD))
 				{
 					return;
 				}
 
 				// Re-queue projects if clone failed due to DNS errors, as those are likely to be transient
-				if (SyncResultedInError(project, syncResult,
+				if (FindErrorAndUpdateState(project, syncResult,
 						"Temporary failure in name resolution",
 						ProcessingState.SendReceiveStates.CLONING))
 				{

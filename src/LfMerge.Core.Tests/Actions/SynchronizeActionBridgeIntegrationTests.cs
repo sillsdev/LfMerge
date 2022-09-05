@@ -208,7 +208,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Stack trace should also have been logged
 			var regex = new Regex(@"^\s*at Chorus\.sync\.Synchronizer\.SyncNow.*SyncOptions options", RegexOptions.Multiline);
 			Assert.That(errors, Does.Match(regex));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 		}
 
 		[Test]
@@ -233,7 +233,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Stack trace should also have been logged
 			var regex = new Regex(@"^\s*at Chorus\.sync\.Synchronizer\.SyncNow.*SyncOptions options", RegexOptions.Multiline);
 			Assert.That(errors, Does.Match(regex));
-			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.SYNCING));
+			Assert.That(_lfProject.State.SRState, Is.EqualTo(ProcessingState.SendReceiveStates.HOLD));
 		}
 
 		public void Success_NewBranchFormat_LfMerge68()
