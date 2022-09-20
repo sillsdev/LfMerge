@@ -51,7 +51,7 @@ install -m 644 output/${BUILD}/${FRAMEWORK}/${LIBRUNTIME}/${NETSTANDARD}/*.* ${D
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMerge ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/LfMergeQueueManager ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/LfMergeQueueManager ${DBDESTDIR}/${LIB}
 install -m 755 output/${BUILD}/${FRAMEWORK}/chorusmerge ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/chorusmerge ${DBDESTDIR}/${LIB}
-install -m 755 output/${BUILD}/${FRAMEWORK}/FixFwData ${DBDESTDIR}/${LIB} 2>/dev/null || install -m 755 output/${BUILD}/FixFwData ${DBDESTDIR}/${LIB}
+chmod 755 ${DBDESTDIR}/${LIB}/FixFwData.exe
 install -d ${DBDESTDIR}/${LIB}/Mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/convert
