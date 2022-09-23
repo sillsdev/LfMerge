@@ -55,7 +55,7 @@ namespace LfMerge.Core.Tools
 			ExceptionLogging.Client.Notify(new ProjectInUncleanStateException(message));
 			state.SRState = ProcessingState.SendReceiveStates.IDLE;
 			state.Serialize();
-			Queue.GetQueue(QueueNames.Synchronize).EnqueueProject(projectCode);
+			Queue.GetQueue().EnqueueProject(projectCode);
 		}
 	}
 }
