@@ -7,8 +7,6 @@ namespace LfMerge.Core.Queues
 {
 	public interface IQueue
 	{
-		QueueNames Name { get; }
-
 		bool IsEmpty { get; }
 
 		string[] QueuedProjects { get; }
@@ -16,8 +14,6 @@ namespace LfMerge.Core.Queues
 		void EnqueueProject(string projectCode);
 
 		void DequeueProject(string projectCode);
-
-		IQueue NextQueueWithWork { get; }
 
 		ActionNames CurrentActionName { get; }
 	}

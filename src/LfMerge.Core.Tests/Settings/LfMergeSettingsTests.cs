@@ -76,10 +76,7 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		[TestCase(QueueNames.Edit, "editqueue")]
-		[TestCase(QueueNames.Synchronize, "syncqueue")]
-		[TestCase(QueueNames.None, null)]
-		public void GetQueueDirectory_Correct(QueueNames queue, string expectedDir)
+		public void GetQueueDirectory_Correct()
 		{
 			// Setup
 			using (var temp = new TemporaryFolder("QueueDirectory"))
@@ -88,10 +85,10 @@ namespace LfMerge.Core.Tests
 				sut.Initialize(temp.Path);
 
 				// Exercise
-				var queueDir = sut.GetQueueDirectory(queue);
+				var queueDir = sut.GetQueueDirectory();
 
 				// Verify
-				Assert.That(Path.GetFileName(queueDir), Is.EqualTo(expectedDir));
+				Assert.That(Path.GetFileName(queueDir), Is.EqualTo("syncqueue"));
 			}
 		}
 	}

@@ -17,7 +17,7 @@ namespace LfMerge.Tests
 		/// </summary>
 		private class QueueDouble: Queue
 		{
-			public QueueDouble(LfMergeSettings settings, QueueNames name): base(settings, name)
+			public QueueDouble(LfMergeSettings settings): base(settings)
 			{
 			}
 
@@ -56,7 +56,7 @@ namespace LfMerge.Tests
 			Options.ParseCommandLineArgs(new[] { "--project", prioProj });
 
 			// we use the test double here so that we don't have to wait between creating files
-			var sut = new QueueDouble(_env.Settings, QueueNames.Edit);
+			var sut = new QueueDouble(_env.Settings);
 			sut.ProjectsForTesting = new[] { "projc", "projb", "proja", "projd" };
 
 			// Exercise

@@ -28,8 +28,8 @@ namespace LfMerge.Core
 
 		[TestCase("7000060", ExpectedResult = false)]
 		[TestCase("7000067", ExpectedResult = false)]
-		[TestCase("7000068", ExpectedResult = true)]
-		[TestCase("7000069", ExpectedResult = true)]
+		[TestCase("7000068", ExpectedResult = false)]
+		[TestCase("7000069", ExpectedResult = false)]
 		[TestCase("7000071", ExpectedResult = false)]
 		[TestCase("7000072", ExpectedResult = true)]
 		public bool IsSupportedModelVersion(string modelVersion)

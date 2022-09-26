@@ -6,6 +6,7 @@ using Autofac;
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Settings;
+using LfMerge.Core.Queues;
 using SIL.Code;
 using SIL.LCModel;
 
@@ -172,7 +173,7 @@ namespace LfMerge.Core.Actions
 						"Temporary failure in name resolution",
 						ProcessingState.SendReceiveStates.CLONING))
 				{
-					LfMerge.Core.Queues.Queue.GetQueue(LfMerge.Core.Queues.QueueNames.Synchronize).EnqueueProject(project.ProjectCode);
+					Queue.GetQueue().EnqueueProject(project.ProjectCode);
 					return;
 				}
 

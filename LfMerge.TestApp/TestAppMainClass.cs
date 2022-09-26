@@ -24,7 +24,7 @@ namespace LfMerge.TestApp
 			var settings = MainClass.Container.Resolve<LfMergeSettings>();
 			settings.Initialize();
 
-			var queueDir = settings.GetQueueDirectory(QueueNames.Synchronize);
+			var queueDir = settings.GetQueueDirectory();
 			Directory.CreateDirectory(queueDir);
 			File.WriteAllText(Path.Combine(queueDir, options.ProjectCode), string.Empty);
 

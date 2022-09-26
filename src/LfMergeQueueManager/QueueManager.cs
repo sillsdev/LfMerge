@@ -50,25 +50,21 @@ namespace LfMerge.QueueManager
 				// Cleanup any hang projects
 				new Janitor(settings, MainClass.Logger).CleanupAndRescheduleJobs();
 
-				for (var queue = Queue.FirstQueueWithWork;
-					queue != null;
-					queue = queue.NextQueueWithWork)
+				var queue = Queue.GetQueue();
+				var clonedQueue = queue.QueuedProjects.ToList();
+				foreach (var projectCode in clonedQueue)
 				{
-					var clonedQueue = queue.QueuedProjects.ToList();
-					foreach (var projectCode in clonedQueue)
-					{
-						var projectPath = Path.Combine(settings.LcmDirectorySettings.ProjectsDirectory,
-							projectCode, $"{projectCode}{LcmFileHelper.ksFwDataXmlFileExtension}");
-						var modelVersion = FwProject.GetModelVersion(projectPath);
-						queue.DequeueProject(projectCode);
-						int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
-							modelVersion, true);
+					var projectPath = Path.Combine(settings.LcmDirectorySettings.ProjectsDirectory,
+						projectCode, $"{projectCode}{LcmFileHelper.ksFwDataXmlFileExtension}");
+					var modelVersion = FwProject.GetModelVersion(projectPath);
+					queue.DequeueProject(projectCode);
+					int retCode = MainClass.StartLfMerge(projectCode, queue.CurrentActionName,
+						modelVersion, true);
 
-						// TODO: If LfMerge fails, should we re-queue the project, or not?
-						if (retCode != 0)
-						{
-							// queue.EnqueueProject(projectCode);
-						}
+					// TODO: If LfMerge fails, should we re-queue the project, or not?
+					if (retCode != 0)
+					{
+						// queue.EnqueueProject(projectCode);
 					}
 				}
 			}

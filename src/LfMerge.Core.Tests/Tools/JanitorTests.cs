@@ -43,7 +43,7 @@ namespace LfMerge.Core.Tests.Tools
 			janitor.CleanupAndRescheduleJobs();
 
 			// Verify
-			var queue = Queue.GetQueue(QueueNames.Synchronize);
+			var queue = Queue.GetQueue();
 			Assert.That(queue.IsEmpty, Is.True);
 
 			var newState = ProcessingState.Deserialize(TestContext.CurrentContext.Test.Name);
@@ -68,7 +68,7 @@ namespace LfMerge.Core.Tests.Tools
 			janitor.CleanupAndRescheduleJobs();
 
 			// Verify
-			var queue = Queue.GetQueue(QueueNames.Synchronize);
+			var queue = Queue.GetQueue();
 			Assert.That(queue.QueuedProjects, Is.EqualTo(new[] { testName }));
 
 			var newState = ProcessingState.Deserialize(testName);
@@ -97,7 +97,7 @@ namespace LfMerge.Core.Tests.Tools
 			janitor.CleanupAndRescheduleJobs();
 
 			// Verify
-			var queue = Queue.GetQueue(QueueNames.Synchronize);
+			var queue = Queue.GetQueue();
 			Assert.That(queue.QueuedProjects, Is.EqualTo(new[] { testName }));
 
 			var newState = ProcessingState.Deserialize(testName);

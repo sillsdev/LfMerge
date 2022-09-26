@@ -8,7 +8,7 @@ namespace LfMerge.Core
 	{
 		static MagicStrings()
 		{
-			MinimalModelVersion = 7000068;
+			MinimalModelVersion = 7000072;
 		}
 
 		// Environment variables used by LfMerge
