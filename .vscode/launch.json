@@ -60,7 +60,38 @@
     {
       "name": ".NET Core Attach",
       "type": "coreclr",
+      "request": "attach"
+		},
+    {
+      "name": "Docker Attach",
+      "type": "coreclr",
       "request": "attach",
-    },
-  ]
+      "processId": "${command:pickRemoteProcess}",
+      "justMyCode": false,
+      "requireExactSource": false,
+      // "symbolOptions": {
+      //   "searchPaths": [  ],
+      //   "searchMicrosoftSymbolServer": false,
+      //   "searchNuGetOrgSymbolServer": false,
+			// 	"moduleFilter": {
+			// 		"mode": "loadOnlyIncluded",
+			// 		"includedModules": [
+			// 			"LfMerge*.dll",
+			// 			"SIL*.dll",
+			// 		]
+			// 	}
+      // },
+      "pipeTransport": {
+        "pipeProgram": "docker",
+        "pipeArgs": [
+          "exec",
+          "-i",
+          "lfmerge"
+        ],
+        "debuggerPath": "/vsdbg/vsdbg",
+        "pipeCwd": "${workspaceRoot}",
+        "quoteArgs": false
+      },
+    }
+	]
 }
