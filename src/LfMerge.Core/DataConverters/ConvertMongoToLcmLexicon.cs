@@ -716,10 +716,10 @@ namespace LfMerge.Core.DataConverters
 			LcmSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
 
 			SetMultiStringFrom(LcmSense.Restrictions, lfSense.SenseRestrictions);
-			LcmSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
+			LcmSense.SenseTypeRA = ListConverters[SenseTypeListCode].LookupByItem(lfSense.SenseType);
 			SetMultiStringFrom(LcmSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
 			LcmSense.Source = BestTsStringFromMultiText(lfSense.Source);
-			LcmSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
+			LcmSense.StatusRA = ListConverters[StatusListCode].LookupByItem(lfSense.Status);
 			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(LcmSense.UsageTypesRC,
 				lfSense.Usages);
 
@@ -915,15 +915,15 @@ namespace LfMerge.Core.DataConverters
 			LcmPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
 			SetMultiStringFrom(LcmPronunciation.Form, lfEntry.Pronunciation);
 			LcmPronunciation.LocationRA =
-				(ICmLocation)ListConverters[LocationListCode].FromStringField(lfEntry.Location);
+				(ICmLocation)ListConverters[LocationListCode].LookupByItem(lfEntry.Location);
 			// Not handling LcmPronunciation.MediaFilesOS. TODO: At some point we may want to handle
 			// media files as well.
 			// Not handling LcmPronunciation.LiftResidue
 		}
 
-		private IPartOfSpeech ConvertPos(LfStringField source, LfSense owner)
+		private IPartOfSpeech ConvertPos(LfOptionListItem source, LfSense owner)
 		{
-			return ListConverters[GrammarListCode].FromStringField(source) as IPartOfSpeech;
+			return ListConverters[GrammarListCode].LookupByItem(source) as IPartOfSpeech;
 		}
 	}
 }

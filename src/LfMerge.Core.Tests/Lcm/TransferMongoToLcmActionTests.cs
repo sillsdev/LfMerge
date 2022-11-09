@@ -96,7 +96,7 @@ namespace LfMerge.Core.Tests.Lcm
 				Is.EqualTo(expectedExternalFileName));
 
 			LfMultiText expectedNewCaption = LfMultiText.FromLcmMultiString(
-				entry.SensesOS[0].PicturesOS[0].Caption, entry.Guid, cache.ServiceLocator.WritingSystemFactory);
+				entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemFactory);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
 			string expectedNewVernacularCaption = expectedNewCaption["qaa-x-kal"].Value;
@@ -207,7 +207,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -237,7 +237,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
-			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme, entryGuid);
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
 			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
@@ -289,7 +289,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -298,7 +298,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LfLexEntry newEntry2 = new LfLexEntry();
 			newEntry2.Guid = Guid.NewGuid();
 			string newLexeme2 = "new lexeme #2 for this test";
-			newEntry2.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme2, newEntry2.Guid.Value);
+			newEntry2.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme2);
 			newEntry2.AuthorInfo = new LfAuthorInfo();
 			newEntry2.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry2.AuthorInfo.ModifiedDate = newEntry2.AuthorInfo.CreatedDate;
@@ -328,7 +328,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
-			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme, entryGuid);
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
 			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
@@ -336,7 +336,7 @@ namespace LfMerge.Core.Tests.Lcm
 			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
 			LfLexEntry kenEntry = _conn.GetLfLexEntryByGuid(kenGuid);
 			string changedLexeme2 = "modified lexeme #2 for this test";
-			kenEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2, kenGuid);
+			kenEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
 			kenEntry.AuthorInfo = new LfAuthorInfo();
 			kenEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(kenEntry);
@@ -392,7 +392,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -433,7 +433,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
-			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme, entryGuid);
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
 			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
@@ -507,7 +507,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -528,7 +528,7 @@ namespace LfMerge.Core.Tests.Lcm
 			newEntry = new LfLexEntry();
 			newEntry.Guid = Guid.NewGuid();
 			newLexeme = "second new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = DateTime.UtcNow;
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -560,7 +560,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
-			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme, entryGuid);
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme);
 			entry.AuthorInfo = new LfAuthorInfo();
 			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);
@@ -578,7 +578,7 @@ namespace LfMerge.Core.Tests.Lcm
 
 			// Setup second run
 			string changedLexeme2 = "second modified lexeme for this test";
-			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2, entryGuid);
+			entry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
 			entry.AuthorInfo = new LfAuthorInfo();
 			entry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(entry);

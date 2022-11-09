@@ -9,8 +9,6 @@ namespace LfMerge.Core.LanguageForge.Model
 	{
 		public string Value { get; private set; }
 
-		public Guid LcmGuid { get; private set; }
-
 		public bool IsEmpty { get { return String.IsNullOrEmpty(Value); } }
 
 		public override string ToString()
@@ -18,11 +16,11 @@ namespace LfMerge.Core.LanguageForge.Model
 			return Value;
 		}
 
-		public static LfStringField CreateFrom(string source, Guid lcmId)
+		public static LfStringField CreateFrom(string source)
 		{
-			if (source == null || lcmId == null)
+			if (source == null)
 				return null;
-			return new LfStringField { Value = source, LcmGuid = lcmId };
+			return new LfStringField { Value = source };
 		}
 
 		private LfStringField() {	}

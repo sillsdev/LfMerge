@@ -181,7 +181,7 @@ namespace LfMerge.Core.Tests.Lcm
 			string vernacularWS = cache.ServiceLocator.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
 			string originalLexeme = originalLfEntry.Lexeme[vernacularWS].Value;
 			string changedLexeme = "Changed lexeme for this test";
-			var originalValue = LfStringField.CreateFrom(changedLexeme, new Guid());
+			var originalValue = LfStringField.CreateFrom(changedLexeme);
 			originalLfEntry.Lexeme[vernacularWS] = originalValue;
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
@@ -193,7 +193,7 @@ namespace LfMerge.Core.Tests.Lcm
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by LcmToMongo";
-			originalLfEntry.Lexeme[vernacularWS] = LfStringField.CreateFrom(changedLexemeDuringUpdate, new Guid());
+			originalLfEntry.Lexeme[vernacularWS] = LfStringField.CreateFrom(changedLexemeDuringUpdate);
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 			SutLcmToMongo.Run(lfProject);
@@ -269,8 +269,8 @@ namespace LfMerge.Core.Tests.Lcm
 
 			var originalSense0Definition = originalEntry.Senses[0].Definition["en"];
 			var originalSense1Definition = originalEntry.Senses[1].Definition["en"];
-			var changedSense0Definition = LfStringField.CreateFrom("Changed sense0 definition for this test", new Guid());
-			var changedSense1Definition = LfStringField.CreateFrom("Changed sense1 definition for this test", new Guid());
+			var changedSense0Definition = LfStringField.CreateFrom("Changed sense0 definition for this test");
+			var changedSense1Definition = LfStringField.CreateFrom("Changed sense1 definition for this test");
 			originalEntry.Senses[0].Definition["en"] = changedSense0Definition;
 			originalEntry.Senses[1].Definition["en"] = changedSense1Definition;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -278,7 +278,7 @@ namespace LfMerge.Core.Tests.Lcm
 
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
-			var changedDefinitionDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo", new Guid());
+			var changedDefinitionDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo");
 			originalEntry.Senses[0].Definition["en"] = changedDefinitionDuringUpdate;
 			originalEntry.Senses[1].Definition["en"] = changedDefinitionDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -381,8 +381,8 @@ namespace LfMerge.Core.Tests.Lcm
 
 			var originalSense0Example0Translation = originalEntry.Senses[0].Examples[0].Translation["en"];
 			var originalSense0Example1Translation = originalEntry.Senses[0].Examples[1].Translation["en"];
-			var changedSense0Example0Translation = LfStringField.CreateFrom("Changed sense0 example0 sentence for this test", new Guid());
-			var changedSense0Example1Translation = LfStringField.CreateFrom("Changed sense0 example1 sentence for this test", new Guid());
+			var changedSense0Example0Translation = LfStringField.CreateFrom("Changed sense0 example0 sentence for this test");
+			var changedSense0Example1Translation = LfStringField.CreateFrom("Changed sense0 example1 sentence for this test");
 			originalEntry.Senses[0].Examples[0].Translation["en"] = changedSense0Example0Translation;
 			originalEntry.Senses[0].Examples[1].Translation["en"] = changedSense0Example1Translation;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -390,7 +390,7 @@ namespace LfMerge.Core.Tests.Lcm
 
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
-			var changedTranslationDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo", new Guid());
+			var changedTranslationDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo");
 			originalEntry.Senses[0].Examples[0].Translation["en"] = changedTranslationDuringUpdate;
 			originalEntry.Senses[0].Examples[1].Translation["en"] = changedTranslationDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -473,7 +473,7 @@ namespace LfMerge.Core.Tests.Lcm
 			newEntry.Guid = Guid.NewGuid();
 			string vernacularWS = lfProject.FieldWorksProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string newLexeme = "new lexeme for this test";
-			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme, newEntry.Guid.Value);
+			newEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, newLexeme);
 			newEntry.AuthorInfo = new LfAuthorInfo();
 			newEntry.AuthorInfo.CreatedDate = new DateTime();
 			newEntry.AuthorInfo.ModifiedDate = newEntry.AuthorInfo.CreatedDate;
@@ -553,8 +553,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(2));
 			LfSense newSense = new LfSense();
 			newSense.Guid = Guid.NewGuid();
-			newSense.Definition = LfMultiText.FromSingleStringMapping(vernacularWS, newDefinition, newSense.Guid.Value);
-			newSense.PartOfSpeech = LfStringField.CreateFrom(newPartOfSpeech, newSense.Guid.Value);
+			newSense.Definition = LfMultiText.FromSingleStringMapping(vernacularWS, newDefinition);
+			newSense.PartOfSpeech = new LfOptionListItem { Value = newPartOfSpeech };
 			lfEntry.Senses.Add(newSense);
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(3));
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -643,8 +643,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfSense.Examples.Count, Is.EqualTo(2));
 			LfExample newExample = new LfExample();
 			newExample.Guid = Guid.NewGuid();
-			newExample.Sentence = LfMultiText.FromSingleStringMapping(vernacularWS, newSentence, newExample.Guid.Value);
-			newExample.Translation = LfMultiText.FromSingleStringMapping(vernacularWS, newTranslation, newExample.Guid.Value);
+			newExample.Sentence = LfMultiText.FromSingleStringMapping(vernacularWS, newSentence);
+			newExample.Translation = LfMultiText.FromSingleStringMapping(vernacularWS, newTranslation);
 			lfSense.Examples.Add(newExample);
 			Assert.That(lfSense.Examples.Count, Is.EqualTo(3));
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
@@ -737,7 +737,7 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfSense.Pictures.Count, Is.EqualTo(1));
 			LfPicture newPicture = new LfPicture();
 			newPicture.Guid = Guid.NewGuid();
-			newPicture.Caption = LfMultiText.FromSingleStringMapping(vernacularWS, newCaption, newPicture.Guid.Value);
+			newPicture.Caption = LfMultiText.FromSingleStringMapping(vernacularWS, newCaption);
 			newPicture.FileName = newFilename;
 			lfSense.Pictures.Add(newPicture);
 			Assert.That(lfSense.Pictures.Count, Is.EqualTo(2));

@@ -14,7 +14,10 @@ namespace LfMerge.Core.LanguageForge.Model
 		public Guid? Guid { get; set; }
 		public string Key
 		{
-			get => key;
+			get
+			{
+				return key ?? Guid.Value.ToString();
+			}
 			set
 			{
 				if (System.Guid.TryParse(value, out var guid))
@@ -33,6 +36,8 @@ namespace LfMerge.Core.LanguageForge.Model
 		}
 		public string Value { get; set; }
 		public string Abbreviation { get; set; }
+		
+		public bool IsEmpty { get { return String.IsNullOrEmpty(Value); } }
 	}
 }
 

@@ -28,6 +28,11 @@ namespace LfMerge.Core.LanguageForge.Model
 			return value != null && !value.IsEmpty;
 		}
 
+		protected bool _ShouldSerialize(LfOptionListItem value)
+		{
+			return value != null && !value.IsEmpty;
+		}
+
 		protected bool _ShouldSerializeList(IEnumerable<object> value)
 		{
 			return value != null && value.GetEnumerator().MoveNext() != false;

@@ -24,8 +24,7 @@ namespace LfMerge.Core.DataConverters
 		protected ICmPossibilityList _parentList;
 		#endif
 
-		//todo
-		public Dictionary<Guid?, ICmPossibility> Possibilities { get; protected set; }
+		public Dictionary<Guid, ICmPossibility> Possibilities { get; protected set; }
 
 		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
 		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
@@ -47,14 +46,14 @@ namespace LfMerge.Core.DataConverters
 		{
 			_lfOptionList = lfOptionList;
 
-			Possibilities = new Dictionary<Guid?, ICmPossibility>();
+			Possibilities = new Dictionary<Guid, ICmPossibility>();
 			if (lfOptionList == null || lfOptionList.Items == null)
 				return;
 			foreach (LfOptionListItem item in lfOptionList.Items)
 			{
 				ICmPossibility poss = LookupByItem(item);
 				if (poss != null)
-					Possibilities[item.Guid] = poss;
+					Possibilities[item.Guid.Value] = poss;
 			}
 		}
 
@@ -74,44 +73,19 @@ namespace LfMerge.Core.DataConverters
 		}
 		#endif
 
-		public ICmPossibility FromStringField(LfStringField keyField)
-		{
-			if (keyField == null)
-				return null;
-			if (Possibilities.TryGetValue(keyField.LcmGuid, out var result))
-				return result;
-			if (_canonicalSource != null)
-				return LookupByCanonicalItem(_canonicalSource.ByKeyOrNull(keyField.Value));
-
-			return null;
-		}
-
-		public ICmPossibility FromStringArrayFieldWithOneCase(LfStringArrayField keyField)
-		{
-			if (keyField == null || keyField.Values == null || keyField.IsEmpty)
-				return null;
-			return Possibilities[keyField.LcmGuids.First()];
-		}
-
-		// Used in UpdatePossibilitiesFromStringArray and UpdateInvertedPossibilitiesFromStringArray below
-		// Generic so that they can handle lists like AnthroCodes, etc.
-		public IEnumerable<T> FromStringArrayField<T>(LfStringArrayField source)
-		{
-			if (source == null) return new List<T>();
-
-			var result = source.LcmGuids.Select(g => (T) Possibilities[g]);
-			return result;
-		}
-
-		protected ICmPossibility LookupByItem(LfOptionListItem item)
+		public ICmPossibility LookupByItem(LfOptionListItem item)
 		{
 			if (item == null)
 				return null;
 			ICmPossibility result;
 			if (item.Guid.HasValue)
 			{
-				if (_possRepo.TryGetObject(item.Guid.Value, out result))
+				if (Possibilities.TryGetValue(item.Guid.Value, out result))
 					return result;
+				else if (_possRepo.TryGetObject(item.Guid.Value, out result))
+					return result;
+				else if (_canonicalSource != null)
+					return LookupByCanonicalItem(_canonicalSource.ByKeyOrNull(item.Value));
 			}
 			#if false  // Once we are populating Lcm from LF, we might also need to fall back to abbreviation and name for these lookups, because Guids might not be available
 			return FromAbbrevAndName(item.Abbreviation, item.Value);
@@ -143,7 +117,7 @@ namespace LfMerge.Core.DataConverters
 		// from ICmPossibility (e.g., ICmAnthroItem). This results in type errors at compile time: parameter
 		// types like ILcmReferenceCollection<ICmPossibility> don't match ILcmReferenceCollection<ICmAnthroCode>.
 		// Generics solve the problem, and can be automatically inferred by the compiler to boot.
-		public void SetPossibilitiesCollection<T>(ILcmReferenceCollection<T> dest, IEnumerable<T> newItems)
+		private void SetPossibilitiesCollection<T>(ILcmReferenceCollection<T> dest, IEnumerable<T> newItems)
 			where T: class, ICmPossibility
 		{
 			// If we know of NO valid possibility keys, don't make any changes. That's because knowing of NO valid possibility keys
@@ -164,10 +138,11 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		// Assumption: "source" contains valid keys. CAUTION: No error checking is done to ensure that this is true.
-		public void UpdatePossibilitiesFromStringArray<T>(ILcmReferenceCollection<T> dest, LfStringArrayField source)
+		public void UpdatePossibilitiesFromStringArray<T>(ILcmReferenceCollection<T> dest, List<LfOptionListItem> source)
 			where T: class, ICmPossibility
 		{
-			SetPossibilitiesCollection(dest, FromStringArrayField<T>(source));
+			var list = from s in source select (T)LookupByItem(s);
+	  	SetPossibilitiesCollection(dest, list);
 		}
 
 		// Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block

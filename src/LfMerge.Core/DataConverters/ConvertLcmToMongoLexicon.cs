@@ -187,16 +187,16 @@ namespace LfMerge.Core.DataConverters
 			return ServiceLocator.GetInstance<T>();
 		}
 
-		private LfMultiText ToMultiText(IMultiAccessorBase LcmMultiString, Guid lcmGuid)
+		private LfMultiText ToMultiText(IMultiAccessorBase LcmMultiString)
 		{
 			if (LcmMultiString == null) return null;
-			return LfMultiText.FromLcmMultiString(LcmMultiString, lcmGuid, ServiceLocator.WritingSystemManager);
+			return LfMultiText.FromLcmMultiString(LcmMultiString, ServiceLocator.WritingSystemManager);
 		}
 
 		private LfStringField ToStringField(string listCode, ICmPossibility LcmPoss)
 		{
 			var abbreviation = ConvertLcmToMongoTsStrings.TextFromTsString(LcmPoss.Abbreviation.get_String(_wsEn), ServiceLocator.WritingSystemFactory);
-			return LfStringField.CreateFrom(abbreviation, LcmPoss.Guid);
+			return LfStringField.CreateFrom(abbreviation);
 		}
 
 		private LfStringArrayField ToStringArrayField(string listCode, IEnumerable<ICmPossibility> LcmPossCollection)
@@ -205,10 +205,20 @@ namespace LfMerge.Core.DataConverters
 			return LfStringArrayField.CreateFrom(strings);
 		}
 
-		// Special case: LF sense Status field is a StringArray, but Lcm sense status is single possibility
-		private LfStringArrayField ToStringArrayField(string listCode, ICmPossibility LcmPoss)
+		private LfOptionListItem ToOptionListItem(string listCode, ICmPossibility LcmPoss)
 		{
-			return LfStringArrayField.CreateFrom(new List<LfStringField>() { ToStringField(listCode, LcmPoss) });
+			var abbreviation = ConvertLcmToMongoTsStrings.TextFromTsString(LcmPoss.Abbreviation.get_String(_wsEn), ServiceLocator.WritingSystemFactory);
+			var ret = new LfOptionListItem();
+			ret.Guid = LcmPoss.Guid;
+			ret.Key = LcmPoss.Guid.ToString();
+			ret.Value = abbreviation;
+			ret.Abbreviation = abbreviation;
+			return ret;
+		}
+
+		private List<LfOptionListItem> ToOptionListItems(string listCode, IEnumerable<ICmPossibility> LcmPossCollection)
+		{
+			return LcmPossCollection.Select(p => ToOptionListItem(listCode, p)).ToList();
 		}
 
 		/// <summary>
@@ -229,7 +239,7 @@ namespace LfMerge.Core.DataConverters
 			if (LcmLexeme == null)
 				lfEntry.Lexeme = null;
 			else
-				lfEntry.Lexeme = ToMultiText(LcmLexeme.Form, LcmLexeme.Guid);
+				lfEntry.Lexeme = ToMultiText(LcmLexeme.Form);
 			// Other fields of LcmLexeme (AllomorphEnvironments, LiftResidue, MorphTypeRA, etc.) not mapped
 
 			// Fields below in alphabetical order by ILexSense property, except for Lexeme
@@ -237,11 +247,11 @@ namespace LfMerge.Core.DataConverters
 			{
 				// Do nothing; LanguageForge doesn't currently handle allomorphs, so we don't convert them
 			}
-			lfEntry.EntryBibliography = ToMultiText(LcmEntry.Bibliography, LcmEntry.Guid);
+			lfEntry.EntryBibliography = ToMultiText(LcmEntry.Bibliography);
 			// TODO: Consider whether to use LcmEntry.CitationFormWithAffixType instead
 			// (which would produce "-s" instead of "s" for the English plural suffix, for instance)
-			lfEntry.CitationForm = ToMultiText(LcmEntry.CitationForm, LcmEntry.Guid);
-			lfEntry.Note = ToMultiText(LcmEntry.Comment, LcmEntry.Guid);
+			lfEntry.CitationForm = ToMultiText(LcmEntry.CitationForm);
+			lfEntry.Note = ToMultiText(LcmEntry.Comment);
 
 			// DateModified and DateCreated can be confusing, because LF and Lcm are doing two different
 			// things with them. In Lcm, there is just one DateModified and one DateCreated; simple. But
@@ -280,15 +290,15 @@ namespace LfMerge.Core.DataConverters
 #endif
 			if (LcmEtymology != null)
 			{
-				lfEntry.Etymology = ToMultiText(LcmEtymology.Form, LcmEtymology.Guid);
-				lfEntry.EtymologyComment = ToMultiText(LcmEtymology.Comment, LcmEtymology.Guid);
-				lfEntry.EtymologyGloss = ToMultiText(LcmEtymology.Gloss, LcmEtymology.Guid);
-				lfEntry.EtymologySource = ToMultiText(LcmEtymology.LanguageNotes, LcmEtymology.Guid);
+				lfEntry.Etymology = ToMultiText(LcmEtymology.Form);
+				lfEntry.EtymologyComment = ToMultiText(LcmEtymology.Comment);
+				lfEntry.EtymologyGloss = ToMultiText(LcmEtymology.Gloss);
+				lfEntry.EtymologySource = ToMultiText(LcmEtymology.LanguageNotes);
 				// LcmEtymology.LiftResidue not mapped
 			}
 			lfEntry.Guid = LcmEntry.Guid;
 			// LcmEntry.LIFTid not mapped (changed 2019-10 by RM since the LiftId in LF is not useful: see LF-378)
-			lfEntry.LiteralMeaning = ToMultiText(LcmEntry.LiteralMeaning, LcmEntry.Guid);
+			lfEntry.LiteralMeaning = ToMultiText(LcmEntry.LiteralMeaning);
 			if (LcmEntry.PrimaryMorphType != null) {
 				lfEntry.MorphologyType = LcmEntry.PrimaryMorphType.NameHierarchyString;
 			}
@@ -297,17 +307,17 @@ namespace LfMerge.Core.DataConverters
 			if (LcmEntry.PronunciationsOS.Count > 0)
 			{
 				ILexPronunciation LcmPronunciation = LcmEntry.PronunciationsOS.First();
-				lfEntry.Pronunciation = ToMultiText(LcmPronunciation.Form, LcmPronunciation.Guid);
-				lfEntry.CvPattern = LfMultiText.FromSingleITsString(LcmPronunciation.CVPattern, LcmPronunciation.Guid, ServiceLocator.WritingSystemFactory);
-				lfEntry.Tone = LfMultiText.FromSingleITsString(LcmPronunciation.Tone, LcmPronunciation.Guid, ServiceLocator.WritingSystemFactory);
+				lfEntry.Pronunciation = ToMultiText(LcmPronunciation.Form);
+				lfEntry.CvPattern = LfMultiText.FromSingleITsString(LcmPronunciation.CVPattern, ServiceLocator.WritingSystemFactory);
+				lfEntry.Tone = LfMultiText.FromSingleITsString(LcmPronunciation.Tone, ServiceLocator.WritingSystemFactory);
 				// TODO: Map LcmPronunciation.MediaFilesOS properly (converting video to sound files if necessary)
-				lfEntry.Location = ToStringField(LocationListCode, LcmPronunciation.LocationRA);
+				lfEntry.Location = ToOptionListItem(LocationListCode, LcmPronunciation.LocationRA);
 			}
-			lfEntry.EntryRestrictions = ToMultiText(LcmEntry.Restrictions, LcmEntry.Guid);
+			lfEntry.EntryRestrictions = ToMultiText(LcmEntry.Restrictions);
 			if (lfEntry.Senses == null) // Shouldn't happen, but let's be careful
 				lfEntry.Senses = new List<LfSense>();
 			lfEntry.Senses.AddRange(LcmEntry.SensesOS.Select(LcmSenseToLfSense));
-			lfEntry.SummaryDefinition = ToMultiText(LcmEntry.SummaryDefinition, LcmEntry.Guid);
+			lfEntry.SummaryDefinition = ToMultiText(LcmEntry.SummaryDefinition);
 
 			BsonDocument customFieldsAndGuids = _convertCustomField.GetCustomFieldsForThisCmObject(LcmEntry, "entry", ListConverters);
 			BsonDocument customFieldsBson = customFieldsAndGuids["customFields"].AsBsonDocument;
@@ -375,22 +385,22 @@ namespace LfMerge.Core.DataConverters
 			ILgWritingSystem AnalysisWritingSystem = ServiceLocator.LanguageProject.DefaultAnalysisWritingSystem;
 
 			lfSense.Guid = lcmSense.Guid;
-			lfSense.Gloss = ToMultiText(lcmSense.Gloss, lcmSense.Guid);
-			lfSense.Definition = ToMultiText(lcmSense.Definition, lcmSense.Guid);
+			lfSense.Gloss = ToMultiText(lcmSense.Gloss);
+			lfSense.Definition = ToMultiText(lcmSense.Definition);
 
 			// Fields below in alphabetical order by ILexSense property, except for Guid, Gloss and Definition
-			lfSense.AcademicDomains = ToStringArrayField(AcademicDomainListCode, lcmSense.DomainTypesRC);
-			lfSense.AnthropologyCategories = ToStringArrayField(AnthroCodeListCode, lcmSense.AnthroCodesRC);
-			lfSense.AnthropologyNote = ToMultiText(lcmSense.AnthroNote, lcmSense.Guid);
-			lfSense.DiscourseNote = ToMultiText(lcmSense.DiscourseNote, lcmSense.Guid);
-			lfSense.EncyclopedicNote = ToMultiText(lcmSense.EncyclopedicInfo, lcmSense.Guid);
+			lfSense.AcademicDomains = ToOptionListItems(AcademicDomainListCode, lcmSense.DomainTypesRC);
+			lfSense.AnthropologyCategories = ToOptionListItems(AnthroCodeListCode, lcmSense.AnthroCodesRC);
+			lfSense.AnthropologyNote = ToMultiText(lcmSense.AnthroNote);
+			lfSense.DiscourseNote = ToMultiText(lcmSense.DiscourseNote);
+			lfSense.EncyclopedicNote = ToMultiText(lcmSense.EncyclopedicInfo);
 			if (lcmSense.ExamplesOS != null)
 			{
 				lfSense.Examples = new List<LfExample>(lcmSense.ExamplesOS.Select(LcmExampleToLfExample));
 			}
 
-			lfSense.GeneralNote = ToMultiText(lcmSense.GeneralNote, lcmSense.Guid);
-			lfSense.GrammarNote = ToMultiText(lcmSense.GrammarNote, lcmSense.Guid);
+			lfSense.GeneralNote = ToMultiText(lcmSense.GeneralNote);
+			lfSense.GrammarNote = ToMultiText(lcmSense.GrammarNote);
 			// LcmSense.LIFTid not mapped (changed 2019-10 by RM since the LiftId in LF is not useful: see LF-378)
 			if (lcmSense.MorphoSyntaxAnalysisRA != null)
 			{
@@ -404,11 +414,11 @@ namespace LfMerge.Core.DataConverters
 						LfProject.ProjectCode);
 				else
 				{
-					lfSense.PartOfSpeech = ToStringField(GrammarListCode, pos);
-					lfSense.SecondaryPartOfSpeech = ToStringField(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
+					lfSense.PartOfSpeech = ToOptionListItem(GrammarListCode, pos);
+					lfSense.SecondaryPartOfSpeech = ToOptionListItem(GrammarListCode, secondaryPos); // It's fine if secondaryPos is still null here
 				}
 			}
-			lfSense.PhonologyNote = ToMultiText(lcmSense.PhonologyNote, lcmSense.Guid);
+			lfSense.PhonologyNote = ToMultiText(lcmSense.PhonologyNote);
 			if (lcmSense.PicturesOS != null)
 			{
 				lfSense.Pictures = new List<LfPicture>(lcmSense.PicturesOS.Select(LcmPictureToLfPicture));
@@ -418,26 +428,26 @@ namespace LfMerge.Core.DataConverters
 				//foreach (var LcmPic in lcmSense.PicturesOS)
 				//	lfSense.Pictures.Add(LcmPictureToLfPicture(LcmPic));
 			}
-			lfSense.SenseBibliography = ToMultiText(lcmSense.Bibliography, lcmSense.Guid);
-			lfSense.SenseRestrictions = ToMultiText(lcmSense.Restrictions, lcmSense.Guid);
+			lfSense.SenseBibliography = ToMultiText(lcmSense.Bibliography);
+			lfSense.SenseRestrictions = ToMultiText(lcmSense.Restrictions);
 
 			if (lcmSense.ReferringReversalIndexEntries != null)
 			{
-				var reversalEntries = lcmSense.ReferringReversalIndexEntries.Select(e => LfStringField.CreateFrom(e.LongName, lcmSense.Guid));
+				var reversalEntries = lcmSense.ReferringReversalIndexEntries.Select(e => LfStringField.CreateFrom(e.LongName));
 				lfSense.ReversalEntries = LfStringArrayField.CreateFrom(reversalEntries);
 			}
-			lfSense.ScientificName = LfMultiText.FromSingleITsString(lcmSense.ScientificName, lcmSense.Guid, ServiceLocator.WritingSystemFactory);
-			lfSense.SemanticDomain = ToStringArrayField(SemDomListCode, lcmSense.SemanticDomainsRC);
-			lfSense.SemanticsNote = ToMultiText(lcmSense.SemanticsNote, lcmSense.Guid);
+			lfSense.ScientificName = LfMultiText.FromSingleITsString(lcmSense.ScientificName, ServiceLocator.WritingSystemFactory);
+			lfSense.SemanticDomain = ToOptionListItems(SemDomListCode, lcmSense.SemanticDomainsRC);
+			lfSense.SemanticsNote = ToMultiText(lcmSense.SemanticsNote);
 			// lcmSense.SensesOS; // Not mapped because LF doesn't handle subsenses. TODO: When LF handles subsenses, map this one.
-			lfSense.SenseType = ToStringField(SenseTypeListCode, lcmSense.SenseTypeRA);
-			lfSense.SociolinguisticsNote = ToMultiText(lcmSense.SocioLinguisticsNote, lcmSense.Guid);
+			lfSense.SenseType = ToOptionListItem(SenseTypeListCode, lcmSense.SenseTypeRA);
+			lfSense.SociolinguisticsNote = ToMultiText(lcmSense.SocioLinguisticsNote);
 			if (lcmSense.Source != null)
 			{
-				lfSense.Source = LfMultiText.FromSingleITsString(lcmSense.Source, lcmSense.Guid, ServiceLocator.WritingSystemFactory);
+				lfSense.Source = LfMultiText.FromSingleITsString(lcmSense.Source, ServiceLocator.WritingSystemFactory);
 			}
-			lfSense.Status = ToStringArrayField(StatusListCode, lcmSense.StatusRA);
-			lfSense.Usages = ToStringArrayField(UsageTypeListCode, lcmSense.UsageTypesRC);
+			lfSense.Status = ToOptionListItem(StatusListCode, lcmSense.StatusRA);
+			lfSense.Usages = ToOptionListItems(UsageTypeListCode, lcmSense.UsageTypesRC);
 
 
 			/* Fields not mapped because it doesn't make sense to map them (e.g., Hvo, backreferences, etc):
@@ -522,8 +532,8 @@ namespace LfMerge.Core.DataConverters
 			ILgWritingSystem VernacularWritingSystem = ServiceLocator.LanguageProject.DefaultVernacularWritingSystem;
 
 			lfExample.Guid = LcmExample.Guid;
-			lfExample.Sentence = ToMultiText(LcmExample.Example, LcmExample.Guid);
-			lfExample.Reference = LfMultiText.FromSingleITsString(LcmExample.Reference, LcmExample.Guid, ServiceLocator.WritingSystemFactory);
+			lfExample.Sentence = ToMultiText(LcmExample.Example);
+			lfExample.Reference = LfMultiText.FromSingleITsString(LcmExample.Reference, ServiceLocator.WritingSystemFactory);
 			// ILexExampleSentence fields we currently do not convert:
 			// LcmExample.DoNotPublishInRC;
 			// LcmExample.LiftResidue;
@@ -537,7 +547,7 @@ namespace LfMerge.Core.DataConverters
 			// TODO: Once LF improves its data model for translations, persist all of them instead of just the first.
 			foreach (ICmTranslation translation in LcmExample.TranslationsOC.Take(1))
 			{
-				lfExample.Translation = ToMultiText(translation.Translation, LcmExample.Guid);
+				lfExample.Translation = ToMultiText(translation.Translation);
 				lfExample.TranslationGuid = translation.Guid;
 			}
 
@@ -553,7 +563,7 @@ namespace LfMerge.Core.DataConverters
 		private LfPicture LcmPictureToLfPicture(ICmPicture LcmPicture)
 		{
 			var result = new LfPicture();
-			result.Caption = ToMultiText(LcmPicture.Caption, LcmPicture.Guid);
+			result.Caption = ToMultiText(LcmPicture.Caption);
 			if ((LcmPicture.PictureFileRA != null) && (!string.IsNullOrEmpty(LcmPicture.PictureFileRA.InternalPath)))
 			{
 				result.FileName = LcmPictureFilenameToLfPictureFilename(LcmPicture.PictureFileRA.InternalPath);

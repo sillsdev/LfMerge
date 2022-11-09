@@ -11,7 +11,6 @@ namespace LfMerge.Core.LanguageForge.Model
 	{
 		private IList<LfStringField> _values = new List<LfStringField>();
 
-		public IEnumerable<Guid> LcmGuids { get { return _values.Select(v => v.LcmGuid); } }
 		public List<string> Values { get; set; }
 		public bool IsEmpty { get { return Values.Count <= 0; } }
 

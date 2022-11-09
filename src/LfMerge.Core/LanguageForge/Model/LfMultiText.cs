@@ -14,7 +14,7 @@ namespace LfMerge.Core.LanguageForge.Model
 	{
 		public bool IsEmpty { get { return (Count <= 0) || (this.All(kv => kv.Value == null || kv.Value.IsEmpty)); } }
 
-		public static LfMultiText FromLcmMultiString(IMultiAccessorBase other, Guid lcmId, ILgWritingSystemFactory wsManager)
+		public static LfMultiText FromLcmMultiString(IMultiAccessorBase other, ILgWritingSystemFactory wsManager)
 		{
 			LfMultiText newInstance = new LfMultiText();
 			foreach (int wsid in other.AvailableWritingSystemIds)
@@ -22,34 +22,34 @@ namespace LfMerge.Core.LanguageForge.Model
 				string wsstr = wsManager.GetStrFromWs(wsid);
 				ITsString value = other.get_String(wsid);
 				string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
-				LfStringField field = LfStringField.CreateFrom(text, lcmId);
+				LfStringField field = LfStringField.CreateFrom(text);
 				if (field != null)
 					newInstance.Add(wsstr, field);
 			}
 			return newInstance;
 		}
 
-		public static LfMultiText FromSingleStringMapping(string key, string value, Guid lcmId)
+		public static LfMultiText FromSingleStringMapping(string key, string value)
 		{
-			LfStringField field = LfStringField.CreateFrom(value, lcmId);
+			LfStringField field = LfStringField.CreateFrom(value);
 			if (field == null)
 				return null;
 			return new LfMultiText { { key, field } };
 		}
 
-		public static LfMultiText FromSingleITsString(ITsString value, Guid lcmId, ILgWritingSystemFactory wsManager)
+		public static LfMultiText FromSingleITsString(ITsString value, ILgWritingSystemFactory wsManager)
 		{
 			if (value == null || value.Text == null) return null;
 			int wsId = value.get_WritingSystem(0);
 			string wsStr = wsManager.GetStrFromWs(wsId);
 			string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
-			LfStringField field = LfStringField.CreateFrom(text, lcmId);
+			LfStringField field = LfStringField.CreateFrom(text);
 			if (field == null)
 				return null;
 			return new LfMultiText { { wsStr, field } };
 		}
 
-		public static LfMultiText FromMultiITsString(ITsMultiString value, Guid lcmId, ILgWritingSystemFactory wsManager)
+		public static LfMultiText FromMultiITsString(ITsMultiString value, ILgWritingSystemFactory wsManager)
 		{
 			if (value == null || value.StringCount == 0) return null;
 			LfMultiText mt = new LfMultiText();
@@ -61,7 +61,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				if (!string.IsNullOrEmpty(wsStr))
 				{
 					string valueStr = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(tss, wsManager);
-					LfStringField field = LfStringField.CreateFrom(valueStr, lcmId);
+					LfStringField field = LfStringField.CreateFrom(valueStr);
 					if (field != null)
 						mt.Add(wsStr, field);
 				}

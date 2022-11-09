@@ -326,8 +326,6 @@ namespace LfMerge.Core.DataConverters
 			CellarPropertyType LcmFieldType = (CellarPropertyType)LcmMetaData.GetFieldType(flid);
 			var dataGuids = new List<Guid>();
 
-			var guid = data.get_GuidProp(hvo, flid);
-
 			// Valid field types in Lcm are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
 			switch (LcmFieldType)
 			{
@@ -337,7 +335,7 @@ namespace LfMerge.Core.DataConverters
 				// LF wants single-string fields in the format { "ws": { "value": "contents" } }
 				fieldValue = String.IsNullOrEmpty(genDateStr) ? null :
 					LfMultiText.FromSingleStringMapping(
-						MagicStrings.LanguageCodeForGenDateFields, genDateStr, guid).AsBsonDocument();
+						MagicStrings.LanguageCodeForGenDateFields, genDateStr).AsBsonDocument();
 				break;
 				// When parsing, will use GenDate.TryParse(str, out genDate)
 
@@ -348,7 +346,7 @@ namespace LfMerge.Core.DataConverters
 				else
 					// LF wants single-string fields in the format { "ws": { "value": "contents" } }
 					fieldValue = LfMultiText.FromSingleStringMapping(
-						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString(), guid).AsBsonDocument();
+						MagicStrings.LanguageCodeForIntFields, fieldValue.AsInt32.ToString()).AsBsonDocument();
 				break;
 
 			case CellarPropertyType.OwningAtomic:
@@ -365,7 +363,7 @@ namespace LfMerge.Core.DataConverters
 			case CellarPropertyType.MultiUnicode:
 				ITsMultiString tss = data.get_MultiStringProp(hvo, flid);
 				if (tss != null && tss.StringCount > 0)
-					fieldValue = LfMultiText.FromMultiITsString(tss, guid, servLoc.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromMultiITsString(tss, servLoc.WritingSystemManager).AsBsonDocument();
 				break;
 			case CellarPropertyType.OwningCollection:
 			case CellarPropertyType.OwningSequence:
@@ -387,7 +385,7 @@ namespace LfMerge.Core.DataConverters
 				if (iTsValue == null || String.IsNullOrEmpty(iTsValue.Text))
 					fieldValue = null;
 				else
-					fieldValue = LfMultiText.FromSingleITsString(iTsValue, guid, servLoc.WritingSystemManager).AsBsonDocument();
+					fieldValue = LfMultiText.FromSingleITsString(iTsValue, servLoc.WritingSystemManager).AsBsonDocument();
 				break;
 			default:
 				fieldValue = null;
