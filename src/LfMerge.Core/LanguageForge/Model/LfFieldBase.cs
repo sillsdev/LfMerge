@@ -20,7 +20,7 @@ namespace LfMerge.Core.LanguageForge.Model
 
 		protected bool _ShouldSerializeLfStringArrayField(LfStringArrayField value)
 		{
-			return value != null && !value.IsEmpty && value.Values.TrueForAll(s => !string.IsNullOrEmpty(s));
+			return value != null && !value.IsEmpty && value.Values.ToList().TrueForAll(s => !string.IsNullOrEmpty(s));
 		}
 
 		protected bool _ShouldSerializeLfStringField(LfStringField value)

@@ -24,7 +24,8 @@ namespace LfMerge.Core.DataConverters
 		protected ICmPossibilityList _parentList;
 		#endif
 
-		public Dictionary<string, ICmPossibility> PossibilitiesByKey { get; protected set; }
+		//todo
+		public Dictionary<Guid?, ICmPossibility> Possibilities { get; protected set; }
 
 		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this version of the constructor
 		public ConvertMongoToLcmOptionList(IRepository<ICmPossibility> possRepo, LfOptionList lfOptionList, ILogger logger, ICmPossibilityList parentList, int wsForKeys, CanonicalOptionListSource canonicalSource = null)
@@ -46,35 +47,15 @@ namespace LfMerge.Core.DataConverters
 		{
 			_lfOptionList = lfOptionList;
 
-			PossibilitiesByKey = new Dictionary<string, ICmPossibility>();
+			Possibilities = new Dictionary<Guid?, ICmPossibility>();
 			if (lfOptionList == null || lfOptionList.Items == null)
 				return;
 			foreach (LfOptionListItem item in lfOptionList.Items)
 			{
 				ICmPossibility poss = LookupByItem(item);
 				if (poss != null)
-					PossibilitiesByKey[item.Key] = poss;
+					Possibilities[item.Guid] = poss;
 			}
-		}
-
-		public ICmPossibility FromStringKey(string key)
-		{
-			ICmPossibility result;
-			if (PossibilitiesByKey.TryGetValue(key, out result))
-				return result;
-			if (_canonicalSource != null)
-				return LookupByCanonicalItem(_canonicalSource.ByKeyOrNull(key));
-			#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block to replace the "return _canonicalSource.ByKeyOrNull(key)" line above.
-			if (_canonicalSource != null)
-			{
-				CanonicalItem item;
-				if (_canonicalSource.TryGetByKey(key, out item))
-				{
-					return CreateFromCanonicalItem(item);
-				}
-			}
-			#endif
-			return null;
 		}
 
 		#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
@@ -97,29 +78,29 @@ namespace LfMerge.Core.DataConverters
 		{
 			if (keyField == null)
 				return null;
-			string key = keyField.ToString();
-			if (string.IsNullOrEmpty(key))
-				return null;
-			return FromStringKey(key);
+			if (Possibilities.TryGetValue(keyField.LcmGuid, out var result))
+				return result;
+			if (_canonicalSource != null)
+				return LookupByCanonicalItem(_canonicalSource.ByKeyOrNull(keyField.Value));
+
+			return null;
 		}
 
 		public ICmPossibility FromStringArrayFieldWithOneCase(LfStringArrayField keyField)
 		{
 			if (keyField == null || keyField.Values == null || keyField.IsEmpty)
 				return null;
-			return FromStringKey(keyField.Values.First());
+			return Possibilities[keyField.LcmGuids.First()];
 		}
 
 		// Used in UpdatePossibilitiesFromStringArray and UpdateInvertedPossibilitiesFromStringArray below
 		// Generic so that they can handle lists like AnthroCodes, etc.
 		public IEnumerable<T> FromStringArrayField<T>(LfStringArrayField source)
 		{
-			IEnumerable<string> keys;
-			if (source == null || source.Values == null)
-				keys = new List<string>(); // Empty list
-			else
-				keys = source.Values.Where(value => !string.IsNullOrEmpty(value));
-			return keys.Select(key => (T)FromStringKey(key)).Where(poss => poss != null);
+			if (source == null) return new List<T>();
+
+			var result = source.LcmGuids.Select(g => (T) Possibilities[g]);
+			return result;
 		}
 
 		protected ICmPossibility LookupByItem(LfOptionListItem item)
@@ -168,7 +149,7 @@ namespace LfMerge.Core.DataConverters
 			// If we know of NO valid possibility keys, don't make any changes. That's because knowing of NO valid possibility keys
 			// is FAR more likely to happen because of a bug than because we really removed an entire possibility list, and if there's
 			// a bug, we shouldn't drop all the Lcm data for this possibility list.
-			if (PossibilitiesByKey.Count == 0 && _canonicalSource == null)
+			if (Possibilities.Count == 0 && _canonicalSource == null)
 				return;
 			// We have to calculate the update (which items to remove and which to add) here; ILcmReferenceCollection won't do it for us.
 			List<T> itemsToAdd = newItems.ToList();
