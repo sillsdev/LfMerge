@@ -215,7 +215,7 @@ namespace LfMerge.Core.DataConverters
 						fieldWs = WritingSystemServices.ActualWs(cache, fieldWs, hvo, flid);
 					}
 					ICmPossibilityList parentList = GetParentListForField(flid);
-					ICmPossibility newPoss = parentList.FindOrCreatePossibility(nameHierarchy, fieldWs);
+					ICmPossibility newPoss = FindPossibility(value.AsString, parentList, fieldWs);
 
 					int oldHvo = data.get_ObjectProp(hvo, flid);
 					if (newPoss.Hvo == oldHvo)
@@ -308,7 +308,7 @@ namespace LfMerge.Core.DataConverters
 					// So we assume they exist in FW, and just look them up.
 					foreach (string key in keysFromLF)
 					{
-						ICmPossibility poss = parentList.FindOrCreatePossibility(key, wsEn);
+						ICmPossibility poss = FindPossibility(key, parentList, wsEn);
 						// TODO: If this is a new possibility, then we need to populate it with ALL the corresponding data from LF,
 						// which we don't necessarily have at this point. Need to make that a separate step in the Send/Receive: converting option lists first.
 						fieldObjs.Add(poss);
@@ -419,6 +419,24 @@ namespace LfMerge.Core.DataConverters
 				// Above lines commented out until we can create new custom fields correctly. 2015-11 RM
 				logger.Warning("Custom field {0} from LF skipped, because we're not yet creating new custom fields in LCM", fieldName);
 			}
+		}
+
+		private ICmPossibility FindPossibility(string key, ICmPossibilityList parentList, int fieldWs)
+		{
+			ICmPossibility newPoss;
+			var guid = ParseGuidOrDefault(key);
+			if (guid != default(Guid))
+			{
+				// assuming LF doesn't have the ability to add list options,
+				// a GUID in the DB should have a match in LCM
+				newPoss = parentList.ReallyReallyAllPossibilities.First(p => p.Guid.Equals(guid));
+			}
+			else
+			{
+				newPoss = parentList.FindOrCreatePossibility(key, fieldWs);
+			}
+
+			return newPoss;
 		}
 	}
 }
