@@ -624,11 +624,23 @@ namespace LfMerge.Core.DataConverters
 			return lfWsList;
 		}
 
-		private ConvertLcmToMongoOptionList ConvertOptionListFromLcm(ILfProject project, string listCode, ICmPossibilityList LcmOptionList, bool updateMongoList = true)
+		private ConvertLcmToMongoOptionList ConvertOptionListFromLcm(ILfProject project, string listCode, ICmPossibilityList lcmOptionList, bool updateMongoList = true)
 		{
-			LfOptionList lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode);
+			LfOptionList lfExistingOptionList = null;
+			try
+			{
+				lfExistingOptionList = Connection.GetLfOptionListByCode(project, listCode); //doesn't work unless the DB is fully populated
+			}
+			catch (Exception) { }
+
 			var converter = new ConvertLcmToMongoOptionList(lfExistingOptionList, _wsEn, listCode, Logger, ServiceLocator.WritingSystemFactory);
-			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(LcmOptionList);
+			LfOptionList lfChangedOptionList = converter.PrepareOptionListUpdate(lcmOptionList);
+
+			if (lfExistingOptionList == null)
+			{
+				lfChangedOptionList.DateModified = lcmOptionList.DateModified; //if DB didn't have an entry, preserve LCM date
+			}
+
 			if (updateMongoList)
 				Connection.UpdateRecord(project, lfChangedOptionList, listCode);
 			return new ConvertLcmToMongoOptionList(lfChangedOptionList, _wsEn, listCode, Logger, ServiceLocator.WritingSystemFactory);
