@@ -10,7 +10,7 @@ ENV BUILDER_UID=$BUILDER_UID
 
 
 # # Build as a non-root user
-RUN useradd -u "${BUILDER_UID:-DEFAULT_BUILDER_UID}" -d /home/builder -g users -G www-data,fieldworks -m -s /bin/bash builder ; \
+RUN useradd -u ${BUILDER_UID:-DEFAULT_BUILDER_UID} -d /home/builder -g users -G www-data,fieldworks -m -s /bin/bash builder ; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
 	chown -R builder:users /build
 
