@@ -36,8 +36,8 @@ jobs:
         id: output_version_number
         run: |
           echo Will tag ${{matrix.dbversion}} with ${TAG}
-          echo "::set-output name=TagFor${{matrix.dbversion}}::${TAG}"
-          echo "::set-output name=VersionFor${{matrix.dbversion}}::${VERSION}"
+          echo "name=TagFor${{matrix.dbversion}}::${TAG}" >> $GITHUB_OUTPUT
+          echo "name=VersionFor${{matrix.dbversion}}::${VERSION}" >> $GITHUB_OUTPUT
         env:
           TAG: v${{ steps.version.outputs.MsBuildVersion }}
           VERSION: ${{ steps.version.outputs.MsBuildVersion }}
@@ -48,7 +48,7 @@ jobs:
 
       - name: Find current UID
         id: uid
-        run: echo "::set-output name=uid::$(id -u)"
+        run: echo "name=uid::$(id -u)" >> $GITHUB_OUTPUT
 
       - name: Build DBVersion-specific Docker image
         # docker/build-push-action@v3.0.0 is commit e551b19e49efd4e98792db7592c17c09b89db8d8
