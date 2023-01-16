@@ -5,8 +5,8 @@ FROM ghcr.io/sillsdev/lfmerge-base:sdk AS lfmerge-builder-base
 
 ENV DEFAULT_BUILDER_UID=1000
 ARG BUILDER_UID
-ENV BUILDER_UID="$BUILDER_UID"
-RUN test -n "$BUILDER_UID"
+RUN test -n $BUILDER_UID
+ENV BUILDER_UID=$BUILDER_UID
 
 
 # # Build as a non-root user
