@@ -5,11 +5,11 @@ FROM ghcr.io/sillsdev/lfmerge-base:sdk AS lfmerge-builder-base
 
 ENV DEFAULT_BUILDER_UID=1000
 ARG BUILDER_UID
-RUN test -n $BUILDER_UID
-ENV BUILDER_UID=$BUILDER_UID
+RUN test -n "$BUILDER_UID"
+ENV BUILDER_UID="$BUILDER_UID"
 
 # # Build as a non-root user
-RUN useradd -u ${BUILDER_UID:-DEFAULT_BUILDER_UID} -d /home/builder -g users -G www-data,fieldworks -m -s /bin/bash builder ; \
+RUN useradd -u "${BUILDER_UID:-DEFAULT_BUILDER_UID}" -d /home/builder -g users -G www-data,fieldworks -m -s /bin/bash builder ; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
 	chown -R builder:users /build
 
