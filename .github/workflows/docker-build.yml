@@ -52,6 +52,8 @@ jobs:
       - name: Output diagnostics
         run: |
           echo "here is the uid = ${{steps.uid.outputs.uid}}"
+          echo "here is the GITHUB_OUTPUT"
+          cat $GITHUB_OUTPUT
           
       - name: Build DBVersion-specific Docker image
         uses: docker/build-push-action@v3.3.0
