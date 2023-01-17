@@ -51,7 +51,7 @@ jobs:
 
       - name: Output diagnostics
         run: |
-          echo "{{steps.uid.outputs}}"
+          echo "${{steps.uid.outputs}}"
           
       - name: Build DBVersion-specific Docker image
         uses: docker/build-push-action@v3.3.0
