@@ -36,8 +36,8 @@ jobs:
         id: output_version_number
         run: |
           echo Will tag ${{matrix.dbversion}} with ${TAG}
-          echo "name=TagFor${{matrix.dbversion}}::${TAG}" >> $GITHUB_OUTPUT
-          echo "name=VersionFor${{matrix.dbversion}}::${VERSION}" >> $GITHUB_OUTPUT
+          echo "TagFor${{matrix.dbversion}}=${TAG}" >> $GITHUB_OUTPUT
+          echo "VersionFor${{matrix.dbversion}}=${VERSION}" >> $GITHUB_OUTPUT
         env:
           TAG: v${{ steps.version.outputs.MsBuildVersion }}
           VERSION: ${{ steps.version.outputs.MsBuildVersion }}
@@ -47,9 +47,7 @@ jobs:
 
       - name: Find current UID
         id: uid
-        run: |
-          echo "uid=$(id -u)" >> $GITHUB_OUTPUT
-          echo "developer=chris" >> $GITHUB_OUTPUT
+        run: echo "uid=$(id -u)" >> $GITHUB_OUTPUT
 
       - name: Output diagnostics
         run: |

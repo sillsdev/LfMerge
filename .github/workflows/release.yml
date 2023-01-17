@@ -47,7 +47,7 @@ jobs:
         else
           TAGS=ghcr.io/sillsdev/lfmerge:${MS_BUILD_VERSION}
         fi
-        echo "name=DockerTags::${TAGS}" >> $GITHUB_OUTPUT
+        echo "DockerTags=${TAGS}" >> $GITHUB_OUTPUT
 
     - name: Download build artifacts
       uses: actions/download-artifact@v2.0.10
