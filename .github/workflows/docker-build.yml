@@ -48,7 +48,7 @@ jobs:
       - name: Find current UID
         id: uid
         #run: echo "name=uid::$(id -u)" >> $GITHUB_OUTPUT
-        run: echo "name=developer::chris" >> $GITHUB_OUTPUT
+        run: echo "developer=chris" >> $GITHUB_OUTPUT
 
       - name: Output diagnostics
         run: |
