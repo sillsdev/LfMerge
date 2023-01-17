@@ -49,6 +49,10 @@ jobs:
         id: uid
         run: echo "name=uid::$(id -u)" >> $GITHUB_OUTPUT
 
+      - name: Output diagnostics
+        run: |
+          echo "{{steps.uid.outputs}}"
+          
       - name: Build DBVersion-specific Docker image
         uses: docker/build-push-action@v3.3.0
         with:
