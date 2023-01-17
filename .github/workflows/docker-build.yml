@@ -51,11 +51,7 @@ jobs:
 
       - name: Output diagnostics
         run: |
-          for i in "${!steps.uid.outputs[@]}"
-            do
-            echo "key  : $i"
-            echo "value: ${array[$i]}"
-          done
+          echo "here is the uid = ${{steps.uid.outputs.uid}}"
           
       - name: Build DBVersion-specific Docker image
         uses: docker/build-push-action@v3.3.0
