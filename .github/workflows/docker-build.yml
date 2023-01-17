@@ -47,13 +47,12 @@ jobs:
 
       - name: Find current UID
         id: uid
-        run: echo "name=uid::$(id -u)" >> $GITHUB_OUTPUT
+        #run: echo "name=uid::$(id -u)" >> $GITHUB_OUTPUT
+        run: echo "name=developer::chris" >> $GITHUB_OUTPUT
 
       - name: Output diagnostics
         run: |
-          echo "here is the uid = ${{steps.uid.outputs.uid}}"
-          echo "here is the GITHUB_OUTPUT"
-          cat $GITHUB_OUTPUT
+          echo "the developer is = ${{steps.uid.outputs.developer}}"
           
       - name: Build DBVersion-specific Docker image
         uses: docker/build-push-action@v3.3.0
