@@ -74,9 +74,9 @@ GIT_SHA=${GITHUB_SHA:-$(git rev-parse ${REV})}
 TAG_SUFFIX="$(date +%Y%m%d)-${GIT_SHA}"
 export InformationalVersion="${MsBuildVersion}${INFO_SUFFIX}:${TAG_SUFFIX}"
 echo "Calculated version number ${MsBuildVersion} for ${DbVersion}"
-echo "name=DebPackageVersion::${DebPackageVersion}" >> $GITHUB_OUTPUT
-echo "name=MsBuildVersion::${MsBuildVersion}" >> $GITHUB_OUTPUT
-echo "name=MajorMinorPatch::${MajorMinorPatch}" >> $GITHUB_OUTPUT
-echo "name=AssemblySemVer::${AssemblySemVer}" >> $GITHUB_OUTPUT
-echo "name=AssemblySemFileVer::${AssemblySemFileVer}" >> $GITHUB_OUTPUT
-echo "name=InformationalVersion::${InformationalVersion}" >> $GITHUB_OUTPUT
+echo "DebPackageVersion=${DebPackageVersion}" >> $GITHUB_OUTPUT
+echo "MsBuildVersion=${MsBuildVersion}" >> $GITHUB_OUTPUT
+echo "MajorMinorPatch=${MajorMinorPatch}" >> $GITHUB_OUTPUT
+echo "AssemblySemVer=${AssemblySemVer}" >> $GITHUB_OUTPUT
+echo "AssemblySemFileVer=${AssemblySemFileVer}" >> $GITHUB_OUTPUT
+echo "InformationalVersion=${InformationalVersion}" >> $GITHUB_OUTPUT
