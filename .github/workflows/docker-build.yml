@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Check out current branch
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # All history for all tags and branches, since version number script needs that
 
@@ -43,7 +43,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.MsBuildVersion }}
 
       - name: Set up buildx for Docker
-        uses: docker/setup-buildx-action@v2.2.1
+        uses: docker/setup-buildx-action@v2.4.1
 
       - name: Find current UID
         id: uid
@@ -54,7 +54,7 @@ jobs:
           echo "the developer is = ${{steps.uid.outputs.developer}}"
           
       - name: Build DBVersion-specific Docker image
-        uses: docker/build-push-action@v3.3.0
+        uses: docker/build-push-action@v4.0.0
         with:
           push: false
           load: true
@@ -81,7 +81,7 @@ jobs:
         run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
 
       - name: Report test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@v2.3.0
         if: always()
         with:
           nunit_files: "**/TestResults/TestResults.xml"
@@ -89,7 +89,7 @@ jobs:
       - name: Compress tarball images for faster uploads
         run: time (tar cf - tarball | gzip -c9 > tarball.tar.gz)
 
-      - uses: actions/upload-artifact@v3.0.0
+      - uses: actions/upload-artifact@v3
         with:
           name: lfmerge-tarball
           path: tarball.tar.gz

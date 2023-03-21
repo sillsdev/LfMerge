@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3.0.2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -74,7 +74,7 @@ jobs:
 
     - name: Build final Docker image
       id: lfmerge_image
-      uses: docker/build-push-action@v3.3.0
+      uses: docker/build-push-action@v4.0.0
       with:
         push: ${{(github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'))}}
         tags: ${{ steps.docker_tag.outputs.DockerTags }}
