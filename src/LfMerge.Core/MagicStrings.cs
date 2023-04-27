@@ -25,9 +25,9 @@ namespace LfMerge.Core
 		public const string SettingsEnvVar_VerboseProgress = "LFMERGE_VERBOSE_PROGRESS";
 		public const string SettingsEnvVar_LanguageDepotRepoUri = "LFMERGE_LANGUAGE_DEPOT_REPO_URI";
 		public const string EnvVar_TrustToken = "LANGUAGE_DEPOT_TRUST_TOKEN";
-		public const string EnvVar_LanguageDepotPublicHostname = "LD_HG_PUBLIC_HOSTNAME";
-		public const string EnvVar_LanguageDepotPrivateHostname = "LD_HG_PRIVATE_HOSTNAME";
-		public const string EnvVar_LanguageDepotUriProtocol = "LD_HG_PROTOCOL";
+		public const string EnvVar_LanguageDepotPublicHostname = "LANGUAGE_DEPOT_HG_PUBLIC_HOSTNAME";
+		public const string EnvVar_LanguageDepotPrivateHostname = "LANGUAGE_DEPOT_HG_PRIVATE_HOSTNAME";
+		public const string EnvVar_LanguageDepotUriProtocol = "LANGUAGE_DEPOT_HG_PROTOCOL";
 
 		public static Dictionary<string, string> LcmOptionlistNames = new Dictionary<string, string>()
 		{
