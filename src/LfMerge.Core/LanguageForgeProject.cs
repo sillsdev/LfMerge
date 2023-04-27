@@ -118,10 +118,10 @@ namespace LfMerge.Core
 		{
 			get
 			{
-				string hostname = System.Environment.GetEnvironmentVariable("LD_HG_PUBLIC_HOSTNAME") ?? "hg-public.languagedepot.org";
-				string protocol = System.Environment.GetEnvironmentVariable("LD_HG_PROTOCOL") ?? "https";
+				string hostname = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "hg-public.languagedepot.org";
+				string protocol = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "https";
 				if (LanguageDepotProject.Repository != null && LanguageDepotProject.Repository.Contains("private"))
-					hostname = System.Environment.GetEnvironmentVariable("LD_HG_PRIVATE_HOSTNAME") ?? hostname.Replace("public", "private");
+					hostname = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname) ?? hostname.Replace("public", "private");
 				return string.Format("{0}://{1}", protocol, hostname);
 			}
 		}
