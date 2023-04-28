@@ -29,6 +29,28 @@ The `master` branch is expected to be **fast-forwarded**, with no merge commits,
 
 For each DbVersion that LfMerge supports, we build a different lfmerge binary. We used to support DbVersions 7000068 through 7000070, which correspond to various versions of FieldWorks 8.x, but we now only support FieldWorks 9.x. The only DbVersion found in FieldWorks 9.x is currently (as of August 2022) 7000072. There is a script called `pbuild.sh` (for "parallel build") that will handle building all currently-supported DbVersions. It will run the build for each DbVersion in a Docker container, using a common Docker build image, and then copy the final results into a directory called `tarball`. Finally, it will run a Docker build that will take the files in the `tarball` directory and turn then into a Docker image for `lfmerge`. By default, this Docker image will be tagged `ghcr.io/sillsdev/lfmerge:latest`, while the GitHub Actions workflow will produce a specific version number tag as well as `latest`, i.e. the GHA workflow will tag `lfmerge:2.0.123` as well as `lfmerge:latest`.
 
+## Environment variables
+
+LfMerge can be configured by setting environment variables before launching LfMerge (probably in a Docker Compose or Kubernetes control file). These environment variables are:
+
+- **LFMERGE_LOGGING_DESTINATION** (or **LFMERGE_LOGGING_DEST** for short): where to send logging output. **DEPRECATED**; LfMerge now always logs to the console.
+- **LFMERGE_LOGGING_STDERR_THRESHHOLD**: Default `Warning`. The severity at which messages are send to stderr instead of stdout. Valid values can be found in [LogSeverity.cs](src/LfMerge.Core/Logging/LogSeverity.cs). Recommended values: `Warning` or `Error`.
+
+Other settings you shouldn't need to touch:
+
+- **LFMERGE_BASE_DIR**: Default `/var/lib/languageforge/lexicon/sendreceive`. The folder where LfMerge will keep its working files (copies of cloned projects, working queue, and state files)
+- **LFMERGE_WEBWORK_DIR**: Default `webwork`. The name of the folder (under the base dir) where cloned projects will be kept.
+- **LFMERGE_TEMPLATES_DIR**: Default `Templates`. The name of the folder (under the base dir) where liblcm will look for project templates. May be empty, but needs to exist or liblcm (and therefore LfMerge) will not work.
+- **LFMERGE_MONGO_HOSTNAME**: Default `localhost`. The hostname where LfMerge will look for Language Forge's MongoDB database.
+- **LFMERGE_MONGO_PORT**: Default `27017`. The port number where LfMerge will look for Language Forge's MongoDB database.
+- **LFMERGE_MONGO_MAIN_DB_NAME**: Default `scriptureforge` for historical reasons. The name of the MongoDB database that stores the list of Language Forge projects.
+- **LFMERGE_MONGO_DB_NAME_PREFIX**: Default `sf_` (one trailing underscore), not `lf_`, again for historical reasons. The prefix added to a project's project code to create the name of the MongoDB database for that project's data. E.g. data for the `test-rmunn-05` project will be found in the `sf_test-rmunn-05` database.
+- **LFMERGE_VERBOSE_PROGRESS**: Boolean, default `false`. Whether to log verbose progress during Send/Receive. Recommended `true` in development & staging, `false` in production.
+- **LFMERGE_LANGUAGE_DEPOT_REPO_URI**: Default not set. The *complete* URI to a Language Depot project, including username & password. Not useful in production, highly useful in debugging and unit test scenarios.
+- **LFMERGE_LANGUAGE_DEPOT_HG_PUBLIC_HOSTNAME**: Default `hg-public.languagedepot.org`. The hostname of the Language Depot instance to use for **public** projects.
+- **LFMERGE_LANGUAGE_DEPOT_HG_PRIVATE_HOSTNAME**: Default is the value of the `PUBLIC_HOSTNAME` string with `public` replaced with `private`. The hostname of the Language Depot instance to use for **private** projects.
+- **LFMERGE_LANGUAGE_DEPOT_HG_PROTOCOL**: Default `https`. The protocol to use when sending projects to Language Depot. You may with to set to `http` if you have deployed a local Language Depot or Mercurial server during development, but **always** set this to `https` in production.
+
 ## Debugging
 
 Debugging is possible, in some form, with the C# extension in VS Code. Run pbuild.sh (which creates the environment used by the debugger), set your breakpoints, and run the .NET Core Launch task. Due to the complex nature of the software, which necessitates the use of pbuild.sh, for example, there may be custom setup required to progress far enough to reach your breakpoints, depending on where they are. Debugging will launch and use LfQueueManager as its entry point.
