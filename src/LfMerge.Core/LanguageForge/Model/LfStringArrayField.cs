@@ -3,29 +3,24 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
 	public class LfStringArrayField : LfFieldBase
 	{
-		public List<string> Values { get; set; }
+		private IList<LfStringField> _values = new List<LfStringField>();
 
+		public List<string> Values { get; set; }
 		public bool IsEmpty { get { return Values.Count <= 0; } }
 
-		public LfStringArrayField()
-		{
-			Values = new List<string>();
-		}
+		private LfStringArrayField() { }
 
-		public static LfStringArrayField FromStrings(IEnumerable<string> source)
+		public static LfStringArrayField CreateFrom(IEnumerable<LfStringField> source)
 		{
-			return new LfStringArrayField { Values = new List<string>(source.Where(s => s != null)) };
-		}
-
-		public static LfStringArrayField FromSingleString(string source)
-		{
-			if (source == null) return null;
-			return new LfStringArrayField { Values = new List<string> { source } };
+			if (source == null)
+				throw new ApplicationException("Tried to create LfStringArrayField with no source.");
+			return new LfStringArrayField { _values = source.Where(f => f != null).ToList() };
 		}
 	}
 }

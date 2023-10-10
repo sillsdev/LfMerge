@@ -95,8 +95,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(entry.SensesOS[0].PicturesOS[1].PictureFileRA.InternalPath.ToString(),
 				Is.EqualTo(expectedExternalFileName));
 
-			LfMultiText expectedNewCaption = ConvertLcmToMongoLexicon.
-				ToMultiText(entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemManager);
+			LfMultiText expectedNewCaption = LfMultiText.FromLcmMultiString(
+				entry.SensesOS[0].PicturesOS[0].Caption, cache.ServiceLocator.WritingSystemFactory);
 			int expectedNumOfNewCaptions = expectedNewCaption.Count();
 			Assert.That(expectedNumOfNewCaptions, Is.EqualTo(2));
 			string expectedNewVernacularCaption = expectedNewCaption["qaa-x-kal"].Value;

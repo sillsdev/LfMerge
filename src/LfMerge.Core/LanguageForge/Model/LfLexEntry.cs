@@ -36,7 +36,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public LfMultiText EtymologyComment { get; set; }
 		public LfMultiText EtymologySource { get; set; }
 		public LfMultiText LiteralMeaning { get; set; }
-		public LfStringField Location { get; set; }
+		public LfOptionListItem Location { get; set; }
 		public string MorphologyType { get; set; }
 		public LfMultiText Note { get; set; }
 		public LfMultiText Pronunciation { get; set; }
@@ -67,7 +67,7 @@ namespace LfMerge.Core.LanguageForge.Model
 		public bool ShouldSerializeEtymologyComment() { return _ShouldSerializeLfMultiText(EtymologyComment); }
 		public bool ShouldSerializeEtymologySource() { return _ShouldSerializeLfMultiText(EtymologySource); }
 		public bool ShouldSerializeLiteralMeaning() { return _ShouldSerializeLfMultiText(LiteralMeaning); }
-		public bool ShouldSerializeLocation() { return _ShouldSerializeLfStringField(Location); }
+		public bool ShouldSerializeLocation() { return _ShouldSerialize(Location); }
 		public bool ShouldSerializeMorphologyType() { return !String.IsNullOrEmpty(MorphologyType); }
 		public bool ShouldSerializeNote() { return _ShouldSerializeLfMultiText(Note); }
 		public bool ShouldSerializePronunciation() { return _ShouldSerializeLfMultiText(Pronunciation); }

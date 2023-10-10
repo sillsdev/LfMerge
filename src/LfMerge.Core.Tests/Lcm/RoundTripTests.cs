@@ -181,7 +181,8 @@ namespace LfMerge.Core.Tests.Lcm
 			string vernacularWS = cache.ServiceLocator.WritingSystemManager.GetStrFromWs(cache.DefaultVernWs);
 			string originalLexeme = originalLfEntry.Lexeme[vernacularWS].Value;
 			string changedLexeme = "Changed lexeme for this test";
-			originalLfEntry.Lexeme[vernacularWS].Value = changedLexeme;
+			var originalValue = LfStringField.CreateFrom(changedLexeme);
+			originalLfEntry.Lexeme[vernacularWS] = originalValue;
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 
@@ -192,7 +193,7 @@ namespace LfMerge.Core.Tests.Lcm
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
 			string changedLexemeDuringUpdate = "This value should be overwritten by LcmToMongo";
-			originalLfEntry.Lexeme[vernacularWS].Value = changedLexemeDuringUpdate;
+			originalLfEntry.Lexeme[vernacularWS] = LfStringField.CreateFrom(changedLexemeDuringUpdate);
 			originalLfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalLfEntry);
 			SutLcmToMongo.Run(lfProject);
@@ -220,7 +221,7 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfEntry.Lexeme[vernacularWS].Value, Is.Not.EqualTo(changedLexemeDuringUpdate));
 			Assert.That(lfEntry.Lexeme[vernacularWS].Value, Is.EqualTo(changedLexeme));
 
-			originalLfEntry.Lexeme[vernacularWS].Value = originalLexeme;
+			originalLfEntry.Lexeme[vernacularWS] = originalValue;
 			differencesByName = GetMongoDifferences(originalLfEntry.ToBsonDocument(), lfEntry.ToBsonDocument());
 			differencesByName.Remove("lexeme");
 			differencesByName.Remove("dateModified");
@@ -266,20 +267,20 @@ namespace LfMerge.Core.Tests.Lcm
 			LfLexEntry originalEntry = originalData.FirstOrDefault(e => e.Guid.ToString() == TestEntryGuidStr);
 			Assert.That(originalEntry.Senses.Count, Is.EqualTo(2));
 
-			string originalSense0Definition = originalEntry.Senses[0].Definition["en"].Value;
-			string originalSense1Definition = originalEntry.Senses[1].Definition["en"].Value;
-			string changedSense0Definition = "Changed sense0 definition for this test";
-			string changedSense1Definition = "Changed sense1 definition for this test";
-			originalEntry.Senses[0].Definition["en"].Value = changedSense0Definition;
-			originalEntry.Senses[1].Definition["en"].Value = changedSense1Definition;
+			var originalSense0Definition = originalEntry.Senses[0].Definition["en"];
+			var originalSense1Definition = originalEntry.Senses[1].Definition["en"];
+			var changedSense0Definition = LfStringField.CreateFrom("Changed sense0 definition for this test");
+			var changedSense1Definition = LfStringField.CreateFrom("Changed sense1 definition for this test");
+			originalEntry.Senses[0].Definition["en"] = changedSense0Definition;
+			originalEntry.Senses[1].Definition["en"] = changedSense1Definition;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
-			string changedDefinitionDuringUpdate = "This value should be overwritten by LcmToMongo";
-			originalEntry.Senses[0].Definition["en"].Value = changedDefinitionDuringUpdate;
-			originalEntry.Senses[1].Definition["en"].Value = changedDefinitionDuringUpdate;
+			var changedDefinitionDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo");
+			originalEntry.Senses[0].Definition["en"] = changedDefinitionDuringUpdate;
+			originalEntry.Senses[1].Definition["en"] = changedDefinitionDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
@@ -318,8 +319,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfEntry.Senses[0].Definition["en"].Value, Is.EqualTo(changedSense0Definition));
 			Assert.That(lfEntry.Senses[1].Definition["en"].Value, Is.EqualTo(changedSense1Definition));
 
-			originalEntry.Senses[0].Definition["en"].Value = originalSense0Definition;
-			originalEntry.Senses[1].Definition["en"].Value = originalSense1Definition;
+			originalEntry.Senses[0].Definition["en"] = originalSense0Definition;
+			originalEntry.Senses[1].Definition["en"] = originalSense1Definition;
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].ToBsonDocument(), lfEntry.Senses[0].ToBsonDocument());
 			differencesByName.Remove("definition");
@@ -378,20 +379,20 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(originalEntry.Senses.Count, Is.EqualTo(2));
 			Assert.That(originalEntry.Senses[0].Examples.Count, Is.EqualTo(2));
 
-			string originalSense0Example0Translation = originalEntry.Senses[0].Examples[0].Translation["en"].Value;
-			string originalSense0Example1Translation = originalEntry.Senses[0].Examples[1].Translation["en"].Value;
-			string changedSense0Example0Translation = "Changed sense0 example0 sentence for this test";
-			string changedSense0Example1Translation = "Changed sense0 example1 sentence for this test";
-			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedSense0Example0Translation;
-			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedSense0Example1Translation;
+			var originalSense0Example0Translation = originalEntry.Senses[0].Examples[0].Translation["en"];
+			var originalSense0Example1Translation = originalEntry.Senses[0].Examples[1].Translation["en"];
+			var changedSense0Example0Translation = LfStringField.CreateFrom("Changed sense0 example0 sentence for this test");
+			var changedSense0Example1Translation = LfStringField.CreateFrom("Changed sense0 example1 sentence for this test");
+			originalEntry.Senses[0].Examples[0].Translation["en"] = changedSense0Example0Translation;
+			originalEntry.Senses[0].Examples[1].Translation["en"] = changedSense0Example1Translation;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
 			// Exercise
 			SutMongoToLcm.Run(lfProject);
-			string changedTranslationDuringUpdate = "This value should be overwritten by LcmToMongo";
-			originalEntry.Senses[0].Examples[0].Translation["en"].Value = changedTranslationDuringUpdate;
-			originalEntry.Senses[0].Examples[1].Translation["en"].Value = changedTranslationDuringUpdate;
+			var changedTranslationDuringUpdate = LfStringField.CreateFrom("This value should be overwritten by LcmToMongo");
+			originalEntry.Senses[0].Examples[0].Translation["en"] = changedTranslationDuringUpdate;
+			originalEntry.Senses[0].Examples[1].Translation["en"] = changedTranslationDuringUpdate;
 			originalEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_conn.UpdateMockLfLexEntry(originalEntry);
 
@@ -436,8 +437,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(lfEntry.Senses[0].Examples[0].Translation["en"].Value, Is.EqualTo(changedSense0Example0Translation));
 			Assert.That(lfEntry.Senses[0].Examples[1].Translation["en"].Value, Is.EqualTo(changedSense0Example1Translation));
 
-			originalEntry.Senses[0].Examples[0].Translation["en"].Value = originalSense0Example0Translation;
-			originalEntry.Senses[0].Examples[1].Translation["en"].Value = originalSense0Example1Translation;
+			originalEntry.Senses[0].Examples[0].Translation["en"] = originalSense0Example0Translation;
+			originalEntry.Senses[0].Examples[1].Translation["en"] = originalSense0Example1Translation;
 			IDictionary<string, Tuple<string, string>> differencesByName =
 				GetMongoDifferences(originalEntry.Senses[0].Examples[0].ToBsonDocument(), lfEntry.Senses[0].Examples[0].ToBsonDocument());
 			differencesByName.Remove("translation");
@@ -553,7 +554,7 @@ namespace LfMerge.Core.Tests.Lcm
 			LfSense newSense = new LfSense();
 			newSense.Guid = Guid.NewGuid();
 			newSense.Definition = LfMultiText.FromSingleStringMapping(vernacularWS, newDefinition);
-			newSense.PartOfSpeech = LfStringField.FromString(newPartOfSpeech);
+			newSense.PartOfSpeech = new LfOptionListItem { Value = newPartOfSpeech };
 			lfEntry.Senses.Add(newSense);
 			Assert.That(lfEntry.Senses.Count, Is.EqualTo(3));
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;

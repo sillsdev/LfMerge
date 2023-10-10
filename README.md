@@ -53,7 +53,9 @@ Other settings you shouldn't need to touch:
 
 ## Debugging
 
-Debugging is possible, in some form, with the C# extension in VS Code. Run pbuild.sh (which creates the environment used by the debugger), set your breakpoints, and run the .NET Core Launch task. Due to the complex nature of the software, which necessitates the use of pbuild.sh, for example, there may be custom setup required to progress far enough to reach your breakpoints, depending on where they are. Debugging will launch and use LfQueueManager as its entry point.
+Debugging is possible through the "Docker Attach" launch configuration in VS Code. All the expected debugging features are there, including breakpoints, call stack, and source viewing. There is some work left to be done, however: the source used is pulled from GitHub, excluding local changes. The breakpoints work, simply swap between the file pulled from GitHub and the local, comparing line numbers.
+
+If you get your project put on HOLD and need to recover quickly, use the "Attach to Running Container..." command to attach to the "lfmerge" container and change the project state manually (to IDLE) located in `/var/lib/languageforge/lexicon/sendreceive/state/<project-name>.state`. 
 
 ## Testing locally
 

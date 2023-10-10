@@ -35,7 +35,6 @@ namespace LfMerge.Core.Tests.Lcm
 				string abbrev = PartOfSpeechMasterList.FlatPosAbbrevs[guidStr];
 				yield return new LfOptionListItem {
 					Guid = Guid.Parse(guidStr),
-					Key = abbrev,
 					Abbreviation = abbrev,
 					Value = name,
 				};
@@ -242,7 +241,6 @@ namespace LfMerge.Core.Tests.Lcm
 			Guid g = itemForTest.Guid.Value;
 			itemForTest.Abbreviation = "Different abbreviation";
 			itemForTest.Value = "Different name";
-			itemForTest.Key = "Different key";
 			_conn.UpdateMockOptionList(lfGrammar);
 
 			// Exercise
@@ -258,7 +256,6 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(itemForTest, Is.Not.Null);
 			Assert.That(itemForTest.Abbreviation, Is.Not.EqualTo("Different abbreviation"));
 			Assert.That(itemForTest.Value, Is.Not.EqualTo("Different name"));
-			Assert.That(itemForTest.Key, Is.EqualTo("Different key")); // NOTE: Is.EqualTo, because keys shouldn't be updated
 		}
 	}
 }

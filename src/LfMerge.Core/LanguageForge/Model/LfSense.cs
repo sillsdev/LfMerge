@@ -17,11 +17,11 @@ namespace LfMerge.Core.LanguageForge.Model
 		public Guid? Guid { get; set; }
 
 		// Data properties
-		public LfStringField PartOfSpeech { get; set; }
-		public LfStringField SecondaryPartOfSpeech { get; set; }
+		public LfOptionListItem PartOfSpeech { get; set; }
+		public LfOptionListItem SecondaryPartOfSpeech { get; set; }
 		[BsonRepresentation(BsonType.String)]
 		public Guid? PartOfSpeechGuid { get; set; } // Present for historical reasons, but never persisted
-		public LfStringArrayField SemanticDomain { get; set; }
+		public List<LfOptionListItem> SemanticDomain { get; set; }
 		public List<LfExample> Examples { get; set; }
 		public BsonDocument CustomFields { get; set; } // Mapped at runtime
 		public BsonDocument CustomFieldGuids { get; set; }
@@ -42,20 +42,20 @@ namespace LfMerge.Core.LanguageForge.Model
 		public LfMultiText SociolinguisticsNote { get; set; }
 		public LfMultiText Source { get; set; }
 		public LfMultiText SenseImportResidue { get; set; }
-		public LfStringArrayField Usages { get; set; }
+		public List<LfOptionListItem> Usages { get; set; }
 		public LfStringArrayField ReversalEntries { get; set; }
-		public LfStringField SenseType { get; set; }
-		public LfStringArrayField AcademicDomains { get; set; }
+		public LfOptionListItem SenseType { get; set; }
+		public List<LfOptionListItem> AcademicDomains { get; set; }
 		public LfStringArrayField SensePublishIn { get; set; }
-		public LfStringArrayField AnthropologyCategories { get; set; }
-		public LfStringArrayField Status { get; set; }
+		public List<LfOptionListItem> AnthropologyCategories { get; set; }
+		public LfOptionListItem Status { get; set; }
 
 		// Ugh. But Mongo doesn't let you provide a ShouldSerialize() by field *type*, only by field *name*.
 		// Maybe later we can write reflection code to automatically add these to the class...
-		public bool ShouldSerializePartOfSpeech() { return _ShouldSerializeLfStringField(PartOfSpeech); }
-		public bool ShouldSerializeSecondaryPartOfSpeech() { return _ShouldSerializeLfStringField(SecondaryPartOfSpeech); }
+		public bool ShouldSerializePartOfSpeech() { return _ShouldSerialize(PartOfSpeech); }
+		public bool ShouldSerializeSecondaryPartOfSpeech() { return _ShouldSerialize(SecondaryPartOfSpeech); }
 		public bool ShouldSerializePartOfSpeechGuid() { return false; }
-		public bool ShouldSerializeSemanticDomain() { return _ShouldSerializeLfStringArrayField(SemanticDomain); }
+		public bool ShouldSerializeSemanticDomain() { return _ShouldSerializeList(SemanticDomain); }
 		public bool ShouldSerializeExamples() { return _ShouldSerializeList(Examples); }
 		public bool ShouldSerializeCustomFields() { return _ShouldSerializeBsonDocument(CustomFields); }
 		public bool ShouldSerializeCustomFieldGuids() { return _ShouldSerializeBsonDocument(CustomFieldGuids); }
@@ -76,13 +76,13 @@ namespace LfMerge.Core.LanguageForge.Model
 		public bool ShouldSerializeSociolinguisticsNote() { return _ShouldSerializeLfMultiText(SociolinguisticsNote); }
 		public bool ShouldSerializeSource() { return _ShouldSerializeLfMultiText(Source); }
 		public bool ShouldSerializeSenseImportResidue() { return _ShouldSerializeLfMultiText(SenseImportResidue); }
-		public bool ShouldSerializeUsages() { return _ShouldSerializeLfStringArrayField(Usages); }
+		public bool ShouldSerializeUsages() { return _ShouldSerializeList(Usages); }
 		public bool ShouldSerializeReversalEntries() { return _ShouldSerializeLfStringArrayField(ReversalEntries); }
-		public bool ShouldSerializeSenseType() { return _ShouldSerializeLfStringField(SenseType); }
-		public bool ShouldSerializeAcademicDomains() { return _ShouldSerializeLfStringArrayField(AcademicDomains); }
+		public bool ShouldSerializeSenseType() { return _ShouldSerialize(SenseType); }
+		public bool ShouldSerializeAcademicDomains() { return _ShouldSerializeList(AcademicDomains); }
 		public bool ShouldSerializeSensePublishIn() { return false; }  // Get rid of this one if we find it
-		public bool ShouldSerializeAnthropologyCategories() { return _ShouldSerializeLfStringArrayField(AnthropologyCategories); }
-		public bool ShouldSerializeStatus() { return _ShouldSerializeLfStringArrayField(Status); }
+		public bool ShouldSerializeAnthropologyCategories() { return _ShouldSerializeList(AnthropologyCategories); }
+		public bool ShouldSerializeStatus() { return _ShouldSerialize(Status); }
 
 		public LfSense()
 		{

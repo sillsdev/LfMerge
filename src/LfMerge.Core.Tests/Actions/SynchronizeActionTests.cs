@@ -164,8 +164,8 @@ namespace LfMerge.Core.Tests.Actions
 			IEnumerable<LfLexEntry> originalMongoData = _mongoConnection.GetLfLexEntries();
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == _testEntryGuid);
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
-			string lfChangedGloss = unchangedGloss + " - changed in LF";
-			lfEntry.Senses[0].Gloss["en"].Value = lfChangedGloss;
+			var lfChangedGloss = LfStringField.CreateFrom(unchangedGloss + " - changed in LF");
+			lfEntry.Senses[0].Gloss["en"] = lfChangedGloss;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 
 			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
@@ -186,7 +186,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(lfChangedGloss));
 		}
 
-		[Test, Explicit("Superceeded by later tests")]
+		[Test, Explicit("Superceded by later tests")]
 		public void SynchronizeAction_LDDataChanged_GlossChanged()
 		{
 			// Setup
@@ -246,8 +246,8 @@ namespace LfMerge.Core.Tests.Actions
 
 			string unchangedGloss = lfEntry.Senses[0].Gloss["en"].Value;
 			string fwChangedGloss = unchangedGloss + " - changed in FW";
-			string lfChangedGloss = unchangedGloss + " - changed in LF";
-			lfEntry.Senses[0].Gloss["en"].Value = lfChangedGloss;
+			var lfChangedGloss = LfStringField.CreateFrom(unchangedGloss + " - changed in LF");
+			lfEntry.Senses[0].Gloss["en"] = lfChangedGloss;
 			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
 

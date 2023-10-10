@@ -22,7 +22,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				string wsstr = wsManager.GetStrFromWs(wsid);
 				ITsString value = other.get_String(wsid);
 				string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
-				LfStringField field = LfStringField.FromString(text);
+				LfStringField field = LfStringField.CreateFrom(text);
 				if (field != null)
 					newInstance.Add(wsstr, field);
 			}
@@ -31,7 +31,7 @@ namespace LfMerge.Core.LanguageForge.Model
 
 		public static LfMultiText FromSingleStringMapping(string key, string value)
 		{
-			LfStringField field = LfStringField.FromString(value);
+			LfStringField field = LfStringField.CreateFrom(value);
 			if (field == null)
 				return null;
 			return new LfMultiText { { key, field } };
@@ -43,7 +43,7 @@ namespace LfMerge.Core.LanguageForge.Model
 			int wsId = value.get_WritingSystem(0);
 			string wsStr = wsManager.GetStrFromWs(wsId);
 			string text = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(value, wsManager);
-			LfStringField field = LfStringField.FromString(text);
+			LfStringField field = LfStringField.CreateFrom(text);
 			if (field == null)
 				return null;
 			return new LfMultiText { { wsStr, field } };
@@ -61,7 +61,7 @@ namespace LfMerge.Core.LanguageForge.Model
 				if (!string.IsNullOrEmpty(wsStr))
 				{
 					string valueStr = LfMerge.Core.DataConverters.ConvertLcmToMongoTsStrings.TextFromTsString(tss, wsManager);
-					LfStringField field = LfStringField.FromString(valueStr);
+					LfStringField field = LfStringField.CreateFrom(valueStr);
 					if (field != null)
 						mt.Add(wsStr, field);
 				}

@@ -376,7 +376,7 @@ namespace LfMerge.Core.DataConverters
 				else
 				{
 					fieldValue = new BsonDocument("values", innerValues);
-					fieldGuid = new BsonArray(dataGuids.Select(guid => guid.ToString()));
+					fieldGuid = new BsonArray(dataGuids.Select(g => g.ToString()));
 				}
 				break;
 
@@ -489,9 +489,9 @@ namespace LfMerge.Core.DataConverters
 					servLoc.WritingSystemManager, LcmMetaData, cache.DefaultUserWs);
 			else if (referencedObject is ICmPossibility)
 			{
-				//return GetCustomListValues((ICmPossibility)referencedObject, flid);
-				string listCode = GetParentListCode(flid);
-				return new BsonString(listConverters[listCode].LfItemKeyString((ICmPossibility)referencedObject, _wsEn));
+				ICmPossibility poss = (ICmPossibility) referencedObject;
+				var abbreviation = ConvertLcmToMongoTsStrings.TextFromTsString(poss.Abbreviation.get_String(_wsEn), servLoc.WritingSystemFactory);
+				return new BsonString(abbreviation);
 			}
 			else
 				return null;

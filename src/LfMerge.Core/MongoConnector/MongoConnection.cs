@@ -970,10 +970,10 @@ namespace LfMerge.Core.MongoConnector
 				mongoDb = GetMainDatabase();
 			UpdateDefinition<TDocument> update = BuildUpdate(data, false);
 			IMongoCollection<TDocument> collection = mongoDb.GetCollection<TDocument>(collectionName);
-			var updateOptions = new FindOneAndUpdateOptions<TDocument> {
+			var updateOptions = new UpdateOptions {
 				IsUpsert = true
 			};
-			collection.FindOneAndUpdate(filter, update, updateOptions);
+			collection.UpdateOne(filter, update, updateOptions);
 			return true;
 		}
 

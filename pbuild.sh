@@ -5,6 +5,7 @@ set -e
 # These are arrays; see https://www.gnu.org/software/bash/manual/html_node/Arrays.html
 DBMODEL_VERSIONS=(7000072)
 HISTORICAL_VERSIONS=(7000068 7000069 7000070)
+Environment=${1:-production}
 
 # In the future when we have more than one model version, we may want to use GNU parallel for building.
 # ATTENTION: If GNU parallel is desired, uncomment the below (until the "ATTENTION: Stop uncommenting here" line):
@@ -80,4 +81,4 @@ for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 		lfmerge-build-${DbVersion}
 done
 
-time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .
+time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult . --build-arg Environment=${Environment}
