@@ -28,6 +28,7 @@ namespace LfMerge.Core
 		public const string EnvVar_LanguageDepotPrivateHostname = "LFMERGE_LANGUAGE_DEPOT_HG_PRIVATE_HOSTNAME";
 		public const string EnvVar_LanguageDepotUriProtocol = "LFMERGE_LANGUAGE_DEPOT_HG_PROTOCOL";
 		public const string EnvVar_TrustToken = "LANGUAGE_DEPOT_TRUST_TOKEN";
+		public const string EnvVar_HgUsername = "LANGUAGE_DEPOT_HG_USERNAME";
 
 		public static Dictionary<string, string> LcmOptionlistNames = new Dictionary<string, string>()
 		{
