@@ -33,7 +33,7 @@ namespace LfMerge
 
 			// Username and Password will usually be "x" because it's dealt with on Language Forge site.
 			// However, when debugging LfMerge we want to be able to set it to a real name
-			ChorusHelper.Username = options.User;
+			ChorusHelper.Username = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? options.User;
 			ChorusHelper.Password = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? options.Password;
 			ExceptionLogging.Client.AddInfo(options.ProjectCode, MainClass.ModelVersion);
 

@@ -13,7 +13,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 	{
 		static ChorusHelper()
 		{
-			Username = "x";
+			Username = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "x";
 			Password = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "x";
 		}
 
@@ -24,7 +24,7 @@ namespace LfMerge.Core.Actions.Infrastructure
 				return settings.LanguageDepotRepoUri;
 
 			var uriBldr = new UriBuilder(project.LanguageDepotProjectUri) {
-				UserName = Username,
+				UserName = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? Username,
 				Password = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? Password,
 				Path = HttpUtility.UrlEncode(project.LanguageDepotProject.Identifier)
 			};
