@@ -52,9 +52,6 @@ namespace LfMerge.Core
 			string logDest =
 				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDest) ??
 				System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingDestination) ?? "-";
-			if (logDest == "syslog") {
-				Console.WriteLine("WARNING: syslog logging no longer available, logging to console instead");
-			}
 			// TODO: Implement a FileLogger to handle cases where the logDest is a filename, then only use ConsoleLogger if env var is "-" or missing
 			string stderrThreshholdStr = System.Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LoggingStderrTreshhold) ?? "-";
 			LogSeverity stderrThreshhold;
