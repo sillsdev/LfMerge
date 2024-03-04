@@ -60,7 +60,7 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
-install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -m 755 Mercurial/hg ${DBDESTDIR}/${LIB}/Mercurial
