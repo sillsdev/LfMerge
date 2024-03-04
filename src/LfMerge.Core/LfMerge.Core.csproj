@@ -40,7 +40,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="SIL.Bugsnag.Signed" Version="2.2.1" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="6.5.1.22" PrivateAssets="All" />
-    <PackageReference Include="SIL.Chorus.ChorusMerge" Version="5.2.0-beta0002" GeneratePathProperty="true" />
+    <PackageReference Include="SIL.Chorus.ChorusMerge" Version="6.0.0-beta0043" GeneratePathProperty="true" />
     <PackageReference Include="SIL.ChorusPlugin.LfMergeBridge" Version="4.2.0-beta*" />
     <PackageReference Include="SIL.Chorus.LibChorus" Version="6.0.0-beta0043" />
     <PackageReference Include="SIL.Core.Desktop" Version="12.0.0" />
@@ -55,7 +55,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
       <Link>chorusmerge</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(PkgSIL_Chorus_ChorusMerge)\lib\net6.0\ChorusMerge.runtimeconfig.json">
+    <None Include="$(PkgSIL_Chorus_ChorusMerge)\lib\net8.0\ChorusMerge.runtimeconfig.json">
       <Link>ChorusMerge.runtimeconfig.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
