@@ -55,7 +55,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
       <Link>chorusmerge</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(PkgSIL_Chorus_ChorusMerge)\lib\net8.0\ChorusMerge.runtimeconfig.json">
+    <None Include="$(PkgSIL_Chorus_ChorusMerge)\lib\net6.0\ChorusMerge.runtimeconfig.json">
       <Link>ChorusMerge.runtimeconfig.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
