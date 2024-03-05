@@ -10,7 +10,7 @@ FROM ghcr.io/sillsdev/lfmerge-base:runtime
 # less - so we can read syslog during manual debugging of issues
 # vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
 RUN apt-get update \
-	&& apt-get install --yes --no-install-recommends tini python iputils-ping inotify-tools less vim-tiny \
+	&& apt-get install --yes --no-install-recommends tini iputils-ping inotify-tools less vim-tiny \
 	&& rm -rf /var/lib/apt/lists/*
 
 ADD tarball/lfmerge* /
