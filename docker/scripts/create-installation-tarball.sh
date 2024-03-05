@@ -8,7 +8,7 @@ set -e
 export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
-export FRAMEWORK=net8.0
+export FRAMEWORK=net6.0
 export NETSTANDARD=netstandard2.0
 
 export DatabaseVersion=${1:-7000072}
@@ -60,7 +60,7 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
-install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -m 755 Mercurial/hg ${DBDESTDIR}/${LIB}/Mercurial

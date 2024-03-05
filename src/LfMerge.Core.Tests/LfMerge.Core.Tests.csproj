@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>LfMerge.Core.Tests</RootNamespace>
     <Configurations>Debug;Release</Configurations>
     <Description>LfMerge.Core.Tests</Description>
@@ -36,7 +36,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnitXml.TestLogger" Version="3.0.117" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <PackageReference Include="SIL.Chorus.Mercurial" Version="6.5.1.22" />
+    <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.11" />
     <PackageReference Include="SIL.LCModel.Core.Tests" Version="10.1.0-beta0382" />
     <PackageReference Include="SIL.ReleaseTasks" Version="2.5.0" PrivateAssets="All" />
     <PackageReference Include="SIL.TestUtilities" Version="9.0.0" />

@@ -4,7 +4,7 @@
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
 
-export PATH="${BASE}/output/${BUILD}/net8.0:${BASE}/output/Mercurial:${PATH}"
+export PATH="${BASE}/output/${BUILD}/net6.0:${BASE}/output/Mercurial:${PATH}"
 
 # set HGRCPATH so that we ignore ~/.hgrc files which might have content that is
 # incompatible with our version of Mercurial
