@@ -29,7 +29,6 @@ if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
 	echo "Running unit tests"
 	# dotnet test defaults to killing test processes after 100ms, which is way too short
 	export VSTEST_TESTHOST_SHUTDOWN_TIMEOUT=30000  # 30 seconds, please, since some of our tests can run very long
-	export LD_DEBUG=files
 	# Treat TEST_SPEC enviornment variable as a "contains" operation
 	if [ -n "$TEST_SPEC" ]; then
 		dotnet test --no-restore -l:"console;verbosity=normal" -l:nunit -c Release --filter "FullyQualifiedName~${TEST_SPEC}"
