@@ -37,8 +37,8 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="NUnitXml.TestLogger" Version="3.0.117" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="6.5.1.25" />
-    <PackageReference Include="SIL.LCModel.Core" Version="10.1.0-beta0382" GeneratePathProperty="true" />
-    <PackageReference Include="SIL.LCModel.Core.Tests" Version="10.1.0-beta0382" />
+    <PackageReference Include="SIL.LCModel.Core" Version="11.0.0-beta0077" GeneratePathProperty="true" />
+    <PackageReference Include="SIL.LCModel.Core.Tests" Version="11.0.0-beta0077" />
     <PackageReference Include="SIL.ReleaseTasks" Version="2.5.0" PrivateAssets="All" />
     <PackageReference Include="SIL.TestUtilities" Version="9.0.0" />
   </ItemGroup>
