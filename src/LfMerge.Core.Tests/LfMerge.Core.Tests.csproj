@@ -27,6 +27,7 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <IsPackable>false</IsPackable>
     <DatabaseVersion Condition="'$(DatabaseVersion)'==''">7000072</DatabaseVersion>
     <DefineConstants>DEBUG;TRACE;DBVERSION_$(DatabaseVersion);</DefineConstants>
+    <TargetDir>$(MSBuildProjectDirectory)\$(OutputPath)</TargetDir>
   </PropertyGroup>
 
   <ItemGroup>
