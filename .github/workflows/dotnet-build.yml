@@ -62,7 +62,8 @@ jobs:
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
 
-      # TODO: Will need to add step to mkdir /usr/lib/lfmerge/${DbVersion} and any other directories that the tests assume are already there
+      - name: Set up required directories for dotnet test
+        run: mkdir -p /usr/lib/lfmerge/${DbVersion} /var/lib/languageforge/lexicon/sendreceive/{Templates,state,editqueue,syncqueue,webwork}
 
       - name: dotnet test
         run: dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
