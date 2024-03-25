@@ -76,7 +76,6 @@ jobs:
       - name: dotnet test
         run: |
           source environ
-          ls -lR
           dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
         env:
           BUILD_NUMBER: ${{ github.run_number }}
