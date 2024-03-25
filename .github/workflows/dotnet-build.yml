@@ -46,9 +46,11 @@ jobs:
       - name: Set up buildx for Docker
         uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3.2.0
 
-      - name: Find current UID
+      - name: Find current UID and GID
         id: uid
-        run: echo "uid=$(id -u)" >> $GITHUB_OUTPUT
+        run: |
+          echo "uid=$(id -u)" >> $GITHUB_OUTPUT
+          echo "gid=$(id -g)" >> $GITHUB_OUTPUT
 
       - name: dotnet build
         run: dotnet build /property:Configuration=Release /property:DatabaseVersion=${DbVersion} LfMerge.sln
@@ -63,7 +65,13 @@ jobs:
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
 
       - name: Set up required directories for dotnet test
-        run: mkdir -p /usr/lib/lfmerge/${DbVersion} /var/lib/languageforge/lexicon/sendreceive/{Templates,state,editqueue,syncqueue,webwork}
+        run: |
+          sudo mkdir -p /usr/lib/lfmerge/${DbVersion} /var/lib/languageforge/lexicon/sendreceive/{Templates,state,editqueue,syncqueue,webwork}
+          sudo chown -R ${uid}:${gid} /usr/lib/lfmerge /var/lib/languageforge/lexicon/sendreceive
+        env:
+          DbVersion: ${{ matrix.dbversion }}
+          uid: ${{ steps.uid.outputs.uid }}
+          gid: ${{ steps.uid.outputs.gid }}
 
       - name: dotnet test
         run: dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
