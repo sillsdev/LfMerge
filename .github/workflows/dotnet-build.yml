@@ -1,8 +1,9 @@
-name: docker-build
+name: dotnet-build
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ develop, master, chore/dotnet-build-in-ci ]
+    # TODO: Remove chore/dotnet-build-in-ci once testing is complete
   pull_request:
     branches: [ develop ]
 
@@ -11,13 +12,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # We won't use ubuntu-latest so that we can control when to switch to the ubuntu-24.04 runner once it comes out
+    runs-on: ubuntu-22.04
 
     # As of 2022-08-16, we build LfMerge for LCM DB version 72 only (and will expand this to include any future DbVersions)
     strategy:
       matrix:
         dbversion: [7000072]
-        distro: [ 'bionic' ]
 
     steps:
       - name: Check out current branch
@@ -49,36 +50,32 @@ jobs:
         id: uid
         run: echo "uid=$(id -u)" >> $GITHUB_OUTPUT
 
-      - name: Output diagnostics
-        run: |
-          echo "the developer is = ${{steps.uid.outputs.developer}}"
-
-      - name: Build DBVersion-specific Docker image
-        uses: docker/build-push-action@v4.0.0
-        with:
-          push: false
-          load: true
-          tags: lfmerge-build-${{matrix.dbversion}}
-          context: .
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            DbVersion=${{matrix.dbversion}}
-            BUILDER_UID=${{steps.uid.outputs.uid}}
-
-      - name: Run docker image ls to verify build
-        run: docker image ls
-
-      - name: Run the build container
+      - name: dotnet build
+        run: dotnet build /property:Configuration=Release /property:DatabaseVersion=${DbVersion} LfMerge.sln
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          DbVersion: ${{ matrix.dbversion }}
           DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
           MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
           MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
           AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
           AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
           InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
-        run: docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "DebPackageVersion=${DebPackageVersion}" --env "Version=${MsBuildVersion}" --env "MajorMinorPatch=${MajorMinorPatch}" --env "AssemblyVersion=${AssemblySemVer}" --env "FileVersion=${AssemblySemFileVer}" --env "InformationalVersion=${InformationalVersion}" --name tmp-lfmerge-build-${{matrix.dbversion}} lfmerge-build-${{matrix.dbversion}}
+
+      # TODO: Will need to add step to mkdir /usr/lib/lfmerge/${DbVersion} and any other directories that the tests assume are already there
+
+      - name: dotnet test
+        run: dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          DbVersion: ${{ matrix.dbversion }}
+          VSTEST_TESTHOST_SHUTDOWN_TIMEOUT: "30000"
+          DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
+          MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
+          MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+          AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
+          AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
+          InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
 
       - name: Report test results
         uses: EnricoMi/publish-unit-test-result-action@v2.3.0
@@ -86,9 +83,14 @@ jobs:
         with:
           nunit_files: "**/TestResults/TestResults.xml"
 
+      - name: Prepare build output for installation tarball
+        run: docker/scripts/create-installation-tarball.sh ${DbVersion}
+        env:
+          DbVersion: ${{ matrix.dbversion }}
+
       # TODO: Test if this is still needed with upload-artifact@v4. Does GitHub now create tarballs that preserve Unix file permissions? If so, we can eliminate this step.
       - name: Compress tarball images for faster uploads
-        run: time (tar cf - tarball | gzip -c9 > tarball.tar.gz)
+        run: time (tar cf - tarball | gzip -c > tarball.tar.gz)
 
       - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:

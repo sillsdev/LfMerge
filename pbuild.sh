@@ -37,47 +37,20 @@ FW9_BUILD_BRANCH="$(git name-rev --name-only HEAD)"
 echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
 
 # Clean up any previous builds
-# This for loop includes all historical DbVersions even if BUILD_FW8 is 0
-for DbVersion in ${HISTORICAL_VERSIONS[@]} ${DBMODEL_VERSIONS[@]}; do
-	# Can safely ignore "container doesn't exist" as that's not an error
-	docker container kill tmp-lfmerge-build-${DbVersion} >/dev/null 2>/dev/null || true
-	docker container rm tmp-lfmerge-build-${DbVersion} >/dev/null 2>/dev/null || true
-done
+dotnet clean LfMerge.sln
+[ -d tarball ] && rm -rf tarball
 
-CURRENT_UID=$(id -u)
-
-# First create the base build container ONCE (it will be reused as a base by each DbVersion build), which should help with caching
-docker build -t ghcr.io/sillsdev/lfmerge-base:sdk -f Dockerfile.builder-base .
-docker build -t ghcr.io/sillsdev/lfmerge-base:runtime -f Dockerfile.runtime-base .
-docker build --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-builder-base --target lfmerge-builder-base .
-
-# Create the build images for each DbVersion
-for DbVersion in ${DBMODEL_VERSIONS[@]}; do
-	docker build --build-arg DbVersion=${DbVersion} --build-arg "BUILDER_UID=${CURRENT_UID}" -t lfmerge-build-${DbVersion} .
-done
+# Create prerequisite directories that LfMerge expects in the unit tests
+# TODO: Probably not needed now?
+# mkdir -p ${HOME}/.nuget/packages
+# mkdir -p output/{Debug,Release}/net8.0
+# mkdir -p src/{FixFwData,LfMergeAuxTool,LfMerge.Core,LfMerge.Core.Tests,LfMerge,LfMergeQueueManager,LfMerge.Tests}/obj/{Debug,Release}/net8.0
 
 . docker/scripts/get-version-number.sh
 
-# Clean out previous installation files if they exist
-[ -d tarball ] && rm -rf tarball
-
-mkdir -p ${HOME}/.nuget/packages 
-
-# Run the build
+# Run build once for each DbVersion
 for DbVersion in ${DBMODEL_VERSIONS[@]}; do
-	docker run -it \
-		--mount type=bind,source="$(pwd)",target=/home/builder/repo \
-		--mount type=bind,src="${HOME}/.nuget/packages",dst=/home/builder/.nuget/packages \
-		--mount type=tmpfs,dst=/tmp \
-		--env "BUILD_NUMBER=999" \
-		--env "DebPackageVersion=${DebPackageVersion}" \
-		--env "Version=${MsBuildVersion}" \
-		--env "MajorMinorPatch=${MajorMinorPatch}" \
-		--env "AssemblyVersion=${AssemblySemVer}" \
-		--env "FileVersion=${AssemblySemFileVer}" \
-		--env "InformationalVersion=${InformationalVersion}" \
-		--name tmp-lfmerge-build-${DbVersion} \
-		lfmerge-build-${DbVersion}
+	docker/scripts/build-and-test.sh ${DbVersion}
 done
 
 time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .

@@ -30,7 +30,6 @@ RUN mkdir -p /usr/lib/lfmerge/${DbVersion} /var/lib/languageforge/lexicon/sendre
 	&& cd /var/lib/languageforge/lexicon/sendreceive/ && mkdir Templates state editqueue syncqueue webwork && cd - \
 	&& chown -R builder:users /var/lib/languageforge/lexicon/sendreceive
 
-USER builder
 WORKDIR /home/builder/repo
 # Git repo should be mounted under /home/builder/repo when run
 # E.g., `docker run --mount type=bind,source="$(pwd)",target=/home/builder/repo
