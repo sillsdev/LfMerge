@@ -74,7 +74,9 @@ jobs:
           gid: ${{ steps.uid.outputs.gid }}
 
       - name: dotnet test
-        run: dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
+        run: |
+          source environ
+          dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           DbVersion: ${{ matrix.dbversion }}
