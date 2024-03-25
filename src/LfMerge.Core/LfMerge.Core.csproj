@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/sillsdev/LfMerge</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <OutputPath>../../output/$(Configuration)</OutputPath>
+    <TargetDir>$(MSBuildProjectDirectory)\$(OutputPath)</TargetDir>
     <PackageOutputPath>../../output</PackageOutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../LfMerge.snk</AssemblyOriginatorKeyFile>

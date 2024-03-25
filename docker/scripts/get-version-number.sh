@@ -73,6 +73,10 @@ fi
 GIT_SHA=${GITHUB_SHA:-$(git rev-parse ${REV})}
 TAG_SUFFIX="$(date +%Y%m%d)-${GIT_SHA}"
 export InformationalVersion="${MsBuildVersion}${INFO_SUFFIX}:${TAG_SUFFIX}"
+
+# If not running on GitHub Actions, GITHUB_OUTPUT is empty which would cause "ambiguous redirect" errors below
+GITHUB_OUTPUT=${GITHUB_OUTPUT:-/dev/stdout}
+
 echo "Calculated version number ${MsBuildVersion} for ${DbVersion}"
 echo "DebPackageVersion=${DebPackageVersion}" >> $GITHUB_OUTPUT
 echo "MsBuildVersion=${MsBuildVersion}" >> $GITHUB_OUTPUT
