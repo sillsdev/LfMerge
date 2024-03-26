@@ -37,7 +37,7 @@ FW9_BUILD_BRANCH="$(git name-rev --name-only HEAD)"
 echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
 
 # Clean up any previous builds
-dotnet clean LfMerge.sln
+dotnet clean LfMerge.sln || true
 [ -d tarball ] && rm -rf tarball
 
 # Create prerequisite directories that LfMerge expects in the unit tests
