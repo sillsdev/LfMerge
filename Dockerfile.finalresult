@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG DbVersion=7000072
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0 AS lfmerge-builder-base
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS lfmerge-builder-base
 
 # Ensure fieldworks group exists in case lfmerge-fdo package didn't install it, and that www-data is part of that group
 # Also ensure that www-data has a .local dir in its home directory (/var/www) since some of lfmerge's dependencies assume that $HOME/.local exists
@@ -16,7 +16,7 @@ RUN addgroup --system --quiet fieldworks ; \
 # less - so we can read syslog during manual debugging of issues
 # vim-tiny - so we can edit state files (to change HOLD to IDLE) during manual debugging of issues
 RUN apt-get update \
-	&& apt-get install --yes --no-install-recommends tini python-is-python2 sudo iputils-ping inotify-tools less vim-tiny \
+	&& apt-get install --yes --no-install-recommends tini python-is-python3 sudo iputils-ping inotify-tools less vim-tiny \
 	&& rm -rf /var/lib/apt/lists/*
 
 ADD tarball/lfmerge* /
