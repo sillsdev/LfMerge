@@ -52,11 +52,11 @@ jobs:
       uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
       with:
         # No name specified, so will download all artifacts
-        path: all-tarballs
+        path: tarball
         merge-multiple: true
 
     - name: Verify that download step worked
-      run: ls -lR all-tarballs
+      run: ls -lR tarball
 
     # Commented out to test whether upload@v4 preserves Unix file permissions correctly now
     # - name: Uncompress build artifacts
