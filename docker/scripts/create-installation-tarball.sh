@@ -60,11 +60,18 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/highlight
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/dirstateutils
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/interfaces
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/pure
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/revlogutils
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/stabletailgraph
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/testing
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/thirdparty
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/thirdparty/attr
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/utils
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/upgrade_utils
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -m 755 Mercurial/hg ${DBDESTDIR}/${LIB}/Mercurial
@@ -76,11 +83,18 @@ install -m 644 Mercurial/hgext/highlight/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -m 644 Mercurial/hgext/largefiles/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -m 644 Mercurial/hgext/zeroconf/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
+install -m 644 Mercurial/mercurial/dirstateutils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/dirstateutils
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
+install -m 644 Mercurial/mercurial/interfaces/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/interfaces
 install -m 644 Mercurial/mercurial/pure/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/pure
+install -m 644 Mercurial/mercurial/revlogutils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/revlogutils
+install -m 644 Mercurial/mercurial/stabletailgraph/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/stabletailgraph
+install -m 644 Mercurial/mercurial/testing/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/testing
 install -m 644 Mercurial/mercurial/thirdparty/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/thirdparty
+install -m 644 Mercurial/mercurial/thirdparty/attr/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/thirdparty/attr
 install -m 644 Mercurial/mercurial/utils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/utils
+install -m 644 Mercurial/mercurial/upgrade_utils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/upgrade_utils
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -d ${DBDESTDIR}/${LIB}/runtimes
 install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64
