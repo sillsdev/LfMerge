@@ -40,12 +40,7 @@ echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
 dotnet clean LfMerge.sln || true
 [ -d tarball ] && rm -rf tarball
 
-# Create prerequisite directories that LfMerge expects in the unit tests
-# TODO: Probably not needed now?
-# mkdir -p ${HOME}/.nuget/packages
-# mkdir -p output/{Debug,Release}/net8.0
-# mkdir -p src/{FixFwData,LfMergeAuxTool,LfMerge.Core,LfMerge.Core.Tests,LfMerge,LfMergeQueueManager,LfMerge.Tests}/obj/{Debug,Release}/net8.0
-
+# Set MsBuildVersion environment variable (and a couple others) to use in build-and-test.sh
 . docker/scripts/get-version-number.sh
 
 # Run build once for each DbVersion
