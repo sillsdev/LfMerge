@@ -60,6 +60,7 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/highlight
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/defaultrc
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/dirstateutils
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
@@ -83,6 +84,7 @@ install -m 644 Mercurial/hgext/highlight/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext
 install -m 644 Mercurial/hgext/largefiles/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext/largefiles
 install -m 644 Mercurial/hgext/zeroconf/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
+install -m 644 Mercurial/mercurial/defaultrc/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/defaultrc
 install -m 644 Mercurial/mercurial/dirstateutils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/dirstateutils
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
