@@ -72,26 +72,27 @@ jobs:
           uid: ${{ steps.uid.outputs.uid }}
           gid: ${{ steps.uid.outputs.gid }}
 
-      - name: dotnet test
-        run: |
-          source environ
-          dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          DbVersion: ${{ matrix.dbversion }}
-          VSTEST_TESTHOST_SHUTDOWN_TIMEOUT: "30000"
-          DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
-          MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
-          MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
-          AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
-          AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
-          InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
+      # Commented out for speed while we test upload@v4 file permissions
+      # - name: dotnet test
+      #   run: |
+      #     source environ
+      #     dotnet test -l:"console;verbosity=normal" -l:nunit -c Release
+      #   env:
+      #     BUILD_NUMBER: ${{ github.run_number }}
+      #     DbVersion: ${{ matrix.dbversion }}
+      #     VSTEST_TESTHOST_SHUTDOWN_TIMEOUT: "30000"
+      #     DebPackageVersion: ${{ steps.version.outputs.DebPackageVersion }}
+      #     MsBuildVersion: ${{ steps.version.outputs.MsBuildVersion }}
+      #     MajorMinorPatch: ${{ steps.version.outputs.MajorMinorPatch }}
+      #     AssemblySemVer: ${{ steps.version.outputs.AssemblySemVer }}
+      #     AssemblySemFileVer: ${{ steps.version.outputs.AssemblySemFileVer }}
+      #     InformationalVersion: ${{ steps.version.outputs.InformationalVersion }}
 
-      - name: Report test results
-        uses: EnricoMi/publish-unit-test-result-action@v2.3.0
-        if: always()
-        with:
-          nunit_files: "**/TestResults/TestResults.xml"
+      # - name: Report test results
+      #   uses: EnricoMi/publish-unit-test-result-action@v2.3.0
+      #   if: always()
+      #   with:
+      #     nunit_files: "**/TestResults/TestResults.xml"
 
       - name: Prepare build output for installation tarball
         run: docker/scripts/create-installation-tarball.sh ${DbVersion}
@@ -99,13 +100,15 @@ jobs:
           DbVersion: ${{ matrix.dbversion }}
 
       # TODO: Test if this is still needed with upload-artifact@v4. Does GitHub now create tarballs that preserve Unix file permissions? If so, we can eliminate this step.
-      - name: Compress tarball images for faster uploads
-        run: time (tar cf - tarball | gzip -c > tarball.tar.gz)
+      # Commented out, and path changed to just "tarball", to see if Unix file permissions get preserved
+      # - name: Compress tarball images for faster uploads
+      #   run: time (tar cf - tarball | gzip -c > tarball.tar.gz)
 
       - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: lfmerge-tarball-${{ matrix.dbversion }}
-          path: tarball.tar.gz
+          path: tarball
+          # path: tarball.tar.gz
           compression-level: 0 # Already compressed in previous step. If we ever remove the previous step, we should remove this line also
     outputs:
       MsBuildVersion: ${{ steps.output_version_number.outputs.VersionFor7000072 }}

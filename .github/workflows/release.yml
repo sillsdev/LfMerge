@@ -57,8 +57,9 @@ jobs:
     - name: Verify that download step worked
       run: ls -lR all-tarballs
 
-    - name: Uncompress build artifacts
-      run: for f in all-tarballs/*/*.tar.gz; do gzip -cd "${f}" | tar xf -; done
+    # Commented out to test whether upload@v4 preserves Unix file permissions correctly now
+    # - name: Uncompress build artifacts
+    #   run: for f in all-tarballs/*/*.tar.gz; do gzip -cd "${f}" | tar xf -; done
 
     - name: Verify that uncompress step worked
       run: ls -lR tarball
