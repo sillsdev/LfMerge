@@ -42,9 +42,6 @@ jobs:
           TAG: v${{ steps.version.outputs.MsBuildVersion }}
           VERSION: ${{ steps.version.outputs.MsBuildVersion }}
 
-      - name: Set up buildx for Docker
-        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3.2.0
-
       - name: Find current UID and GID
         id: uid
         run: |
