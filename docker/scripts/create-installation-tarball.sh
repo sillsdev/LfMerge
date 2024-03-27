@@ -62,6 +62,7 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/hgext/zeroconf
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
+install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/utils
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -m 755 Mercurial/hg ${DBDESTDIR}/${LIB}/Mercurial
@@ -75,6 +76,7 @@ install -m 644 Mercurial/hgext/zeroconf/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgext/
 install -m 644 Mercurial/mercurial/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial
 install -m 644 Mercurial/mercurial/hgweb/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/hgweb
 install -m 644 Mercurial/mercurial/httpclient/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/httpclient || true
+install -m 644 Mercurial/mercurial/utils/*.* ${DBDESTDIR}/${LIB}/Mercurial/mercurial/utils
 install -m 644 MercurialExtensions/fixutf8/*.* ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
 install -d ${DBDESTDIR}/${LIB}/runtimes
 install -d ${DBDESTDIR}/${LIB}/runtimes/linux-x64
