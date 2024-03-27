@@ -53,4 +53,4 @@ for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 	docker/scripts/build-and-test.sh ${DbVersion}
 done
 
-time docker build -t ghcr.io/sillsdev/lfmerge -f Dockerfile.finalresult .
+time docker build -t ghcr.io/sillsdev/lfmerge:${MsBuildVersion:-latest} -f Dockerfile.finalresult .
