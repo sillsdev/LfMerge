@@ -8,7 +8,7 @@ SCRIPT_DIR=$(dirname $(readlink -f "$0"))
 
 export DbVersion="${1-7000072}"
 echo "Building for ${DbVersion}"
-sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
+[ -d "/usr/lib/lfmerge/${DbVersion}" ] || sudo mkdir -p /usr/lib/lfmerge/${DbVersion}
 
 echo Running as $(id)
 # Assuming script is being run from inside the repo, find the repo root and use that as the working directory from now on
@@ -25,7 +25,7 @@ dotnet restore -v:m
 echo "Compiling LfMerge"
 dotnet build --no-restore /v:m /property:Configuration=Release /property:DatabaseVersion=${DbVersion} LfMerge.sln
 
-if [ -n "$RUN_UNIT_TESTS" -a "$RUN_UNIT_TESTS" -ne 0 ]; then
+if [ -n "$RUN_UNIT_TESTS" ] && [ "$RUN_UNIT_TESTS" -ne 0 ]; then
 	echo "Running unit tests"
 	# dotnet test defaults to killing test processes after 100ms, which is way too short
 	export VSTEST_TESTHOST_SHUTDOWN_TIMEOUT=30000  # 30 seconds, please, since some of our tests can run very long
