@@ -53,6 +53,7 @@ jobs:
       with:
         # No name specified, so will download all artifacts
         path: all-tarballs
+        merge-multiple: true
 
     - name: Verify that download step worked
       run: ls -lR all-tarballs
