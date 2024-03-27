@@ -2,8 +2,7 @@ name: dotnet-build
 
 on:
   push:
-    branches: [ develop, master, update-mercurial-version ]
-    # TODO: Remove update-mercurial-version once testing is complete
+    branches: [ develop, master ]
   pull_request:
     branches: [ develop ]
 
