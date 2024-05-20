@@ -74,7 +74,7 @@ namespace LfMerge.Core.MongoConnector
 			_settings = settings;
 			_logger = logger;
 			connectionString = string.Format(
-				"mongodb://{0}&authSource={1}",
+				"mongodb://{0}?authSource={1}",
 				Settings.MongoDbHostPortAndAuth,
 				Settings.MongoAuthSource);
 			mainDatabaseName = Settings.MongoMainDatabaseName;
