@@ -20,6 +20,9 @@ namespace LfMerge.Core
 		public const string SettingsEnvVar_TemplatesDir = "LFMERGE_TEMPLATES_DIR";
 		public const string SettingsEnvVar_MongoHostname = "LFMERGE_MONGO_HOSTNAME";
 		public const string SettingsEnvVar_MongoPort = "LFMERGE_MONGO_PORT";
+		public const string SettingsEnvVar_MongoAuthSource = "LFMERGE_MONGO_AUTHSOURCE";
+		public const string SettingsEnvVar_MongoUsername = "LFMERGE_MONGO_USER";
+		public const string SettingsEnvVar_MongoPassword = "LFMERGE_MONGO_PASS";
 		public const string SettingsEnvVar_MongoMainDatabaseName = "LFMERGE_MONGO_MAIN_DB_NAME";
 		public const string SettingsEnvVar_MongoDatabaseNamePrefix = "LFMERGE_MONGO_DB_NAME_PREFIX";
 		public const string SettingsEnvVar_VerboseProgress = "LFMERGE_VERBOSE_PROGRESS";

@@ -27,6 +27,7 @@ namespace LfMerge.Core.MongoConnector
 
 	public class MongoConnection : IMongoConnection
 	{
+		private string connectionString;
 		private string mainDatabaseName;
 		private Lazy<IMongoClient> client;
 		// Since calling GetDatabase() too often creates a new connection, we memoize the databases in this dictionary.
@@ -72,6 +73,10 @@ namespace LfMerge.Core.MongoConnector
 		{
 			_settings = settings;
 			_logger = logger;
+			connectionString = string.Format(
+				"mongodb://{0}&authSource={1}",
+				Settings.MongoDbHostPortAndAuth,
+				Settings.MongoAuthSource);
 			mainDatabaseName = Settings.MongoMainDatabaseName;
 			client = new Lazy<IMongoClient>(GetNewConnection);
 			dbs = new ConcurrentDictionary<string, IMongoDatabase>();
@@ -79,7 +84,7 @@ namespace LfMerge.Core.MongoConnector
 
 		private MongoClient GetNewConnection()
 		{
-			var clientSettings = new MongoClientSettings();
+			var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
 			// clientSettings.WriteConcern = WriteConcern.WMajority; // If increasing the wait queue size still doesn't help, try this as well
 			clientSettings.WaitQueueSize = 50000;
 			clientSettings.Server = new MongoServerAddress(Settings.MongoHostname, Settings.MongoPort);

@@ -12,6 +12,10 @@ namespace LfMerge.Core.Settings
 		public const int MongoPort = 27017;
 		public const string MongoMainDatabaseName = "scriptureforge";
 		public const string MongoDatabaseNamePrefix = "sf_";
+		public const string MongoAuthSource = "admin";
+		// Mongo username and password defaults should be *empty*
+		public const string MongoUsername = "";
+		public const string MongoPassword = "";
 		public const bool VerboseProgress = false;
 		public const string LanguageDepotRepoUri = "";  // optional, usually not set
 	}

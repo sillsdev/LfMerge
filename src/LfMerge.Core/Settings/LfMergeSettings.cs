@@ -44,6 +44,12 @@ namespace LfMerge.Core.Settings
 			}
 		}
 
+		public string MongoAuthSource => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoAuthSource) ?? DefaultLfMergeSettings.MongoAuthSource;
+		public string MongoUsername => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoUsername) ?? DefaultLfMergeSettings.MongoUsername;
+		public string MongoPassword => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPassword) ?? DefaultLfMergeSettings.MongoPassword;
+		private string EncodedUsername => Uri.EscapeUriString(MongoUsername);
+		private string EncodedPassword => Uri.EscapeUriString(MongoPassword);
+
 		public string MongoMainDatabaseName => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoMainDatabaseName) ?? DefaultLfMergeSettings.MongoMainDatabaseName;
 
 		/// <summary>
@@ -65,6 +71,9 @@ namespace LfMerge.Core.Settings
 		public bool CommitWhenDone { get; internal set; }
 
 		public string MongoDbHostNameAndPort { get { return String.Format("{0}:{1}", MongoHostname, MongoPort.ToString()); } }
+		public string MongoDbHostPortAndAuth => string.IsNullOrEmpty(MongoUsername) || string.IsNullOrEmpty(MongoPassword)
+			? string.Format("{0}:{1}", MongoHostname, MongoPort.ToString())
+			: string.Format("{0}:{1}@{2}:{3}", EncodedUsername, EncodedPassword, MongoHostname, MongoPort.ToString());
 
 		private string QueueDirectory { get; set; }
 
