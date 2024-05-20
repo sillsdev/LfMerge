@@ -24,7 +24,7 @@ namespace LfMerge.Core
 		public void Initialize(string lfProjectCode)
 		{
 			// TODO: This should use the MongoConnection class instead
-			MongoClient client = new MongoClient("mongodb://" + Settings.MongoDbHostNameAndPort);
+			MongoClient client = new MongoClient("mongodb://" + Settings.MongoDbHostPortAndAuth);
 			IMongoDatabase database = client.GetDatabase("scriptureforge");
 			IMongoCollection<BsonDocument> projectCollection = database.GetCollection<BsonDocument>("projects");
 			//var userCollection = database.GetCollection<BsonDocument>("users");
