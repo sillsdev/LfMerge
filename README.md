@@ -27,6 +27,10 @@ The `master` branch is expected to be **fast-forwarded**, with no merge commits,
 
 ## Building
 
+Short version: run `build.sh`.
+
+Long version:
+
 For each DbVersion that LfMerge supports, we build a different lfmerge binary. We used to support DbVersions 7000068 through 7000070, which correspond to various versions of FieldWorks 8.x, but we now only support FieldWorks 9.x. The only DbVersion found in FieldWorks 9.x is currently (as of August 2022) 7000072. There is a script called `build.sh` that will handle building all currently-supported DbVersions. It will first calculate a version number and store it in the `MsBuildVersion` variable. The script will then run `dotnet build` for each DbVersion, and then copy the build output into a directory called `tarball/lfmerge-${DbVersion}`. Finally, it will run a Docker build that will take the files in the `tarball` directory and turn then into a Docker image for `lfmerge`. This Docker image will be tagged with the `ghcr.io/sillsdev/lfmerge:latest` tag as well as a tag built from the `MsBuildVersion` variable, i.e. if the calculated version number is 2.0.123 then the Docker image will be tagged both `lfmerge:2.0.123` and `lfmerge:latest`.
 
 ## Environment variables
