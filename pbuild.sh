@@ -6,10 +6,6 @@ set -e
 DBMODEL_VERSIONS=(7000072)
 HISTORICAL_VERSIONS=(7000068 7000069 7000070)
 
-# Find appropriate branch(es) to build
-FW9_BUILD_BRANCH="$(git name-rev --name-only HEAD)"
-echo Will build ONLY the FW9 build, from "${FW9_BUILD_BRANCH}"
-
 # Clean up any previous builds
 dotnet clean LfMerge.sln || true
 [ -d tarball ] && rm -rf tarball
@@ -23,3 +19,5 @@ for DbVersion in ${DBMODEL_VERSIONS[@]}; do
 done
 
 time docker build -t ghcr.io/sillsdev/lfmerge:${MsBuildVersion:-latest} -f Dockerfile.finalresult .
+
+echo "Successfully built ghcr.io/sillsdev/lfmerge:${MsBuildVersion:-latest} image"

@@ -10,7 +10,7 @@ For error reporting:
 
 ## Prerequisites
 
-You'll need Docker installed, as well as GNU Parallel to use the parallel-build script `pbuild.sh`. Run `sudo apt install parallel` on an Ubuntu or Debian-based system.
+You'll need Docker installed; run `docker version` to verify installation.
 
 ## Development
 
@@ -27,7 +27,7 @@ The `master` branch is expected to be **fast-forwarded**, with no merge commits,
 
 ## Building
 
-For each DbVersion that LfMerge supports, we build a different lfmerge binary. We used to support DbVersions 7000068 through 7000070, which correspond to various versions of FieldWorks 8.x, but we now only support FieldWorks 9.x. The only DbVersion found in FieldWorks 9.x is currently (as of August 2022) 7000072. There is a script called `pbuild.sh` (for "parallel build") that will handle building all currently-supported DbVersions. It will run the build for each DbVersion in a Docker container, using a common Docker build image, and then copy the final results into a directory called `tarball`. Finally, it will run a Docker build that will take the files in the `tarball` directory and turn then into a Docker image for `lfmerge`. By default, this Docker image will be tagged `ghcr.io/sillsdev/lfmerge:latest`, while the GitHub Actions workflow will produce a specific version number tag as well as `latest`, i.e. the GHA workflow will tag `lfmerge:2.0.123` as well as `lfmerge:latest`.
+For each DbVersion that LfMerge supports, we build a different lfmerge binary. We used to support DbVersions 7000068 through 7000070, which correspond to various versions of FieldWorks 8.x, but we now only support FieldWorks 9.x. The only DbVersion found in FieldWorks 9.x is currently (as of August 2022) 7000072. There is a script called `build.sh` that will handle building all currently-supported DbVersions. It will first calculate a version number and store it in the `MsBuildVersion` variable. The script will then run `dotnet build` for each DbVersion, and then copy the build output into a directory called `tarball/lfmerge-${DbVersion}`. Finally, it will run a Docker build that will take the files in the `tarball` directory and turn then into a Docker image for `lfmerge`. This Docker image will be tagged with the `ghcr.io/sillsdev/lfmerge:latest` tag as well as a tag built from the `MsBuildVersion` variable, i.e. if the calculated version number is 2.0.123 then the Docker image will be tagged both `lfmerge:2.0.123` and `lfmerge:latest`.
 
 ## Environment variables
 
@@ -53,11 +53,11 @@ Other settings you shouldn't need to touch:
 
 ## Debugging
 
-Debugging is possible, in some form, with the C# extension in VS Code. Run pbuild.sh (which creates the environment used by the debugger), set your breakpoints, and run the .NET Core Launch task. Due to the complex nature of the software, which necessitates the use of pbuild.sh, for example, there may be custom setup required to progress far enough to reach your breakpoints, depending on where they are. Debugging will launch and use LfQueueManager as its entry point.
+Debugging is possible, in some form, with the C# extension in VS Code. Run build.sh (which creates the environment used by the debugger), set your breakpoints, and run the .NET Core Launch task. Due to the complex nature of the software, which necessitates the use of build.sh, for example, there may be custom setup required to progress far enough to reach your breakpoints, depending on where they are. Debugging will launch and use LfQueueManager as its entry point.
 
 ## Testing locally
 
-The image that `pbuild.sh` produces is tagged with the same image tag as the one built by the official GitHub Actions workflow, but with a `latest` tag instead of a versino number. This means that if you're running Language Forge locally via the Makefile in Language Forge's `docker` directory, you should be able to simply edit the `docker/lfmerge/Dockerfile` in Language Forge. Make sure that file specifies `lfmerge:latest` rather than `lfmerge:20..123`. Then run `make` and the `lfmerge` container will be re-created with your local build. You can then do a Send/Receive via your `localhost` copy of Language Forge and check the results.
+The image that `build.sh` produces is tagged with the same image tag as the one built by the official GitHub Actions workflow, with an `alpha` version number calculated from the name of the branch you're running and the number of commits since the branch was created. This means that if you're running Language Forge locally via the Makefile in Language Forge's `docker` directory, you should be able to simply edit the `docker/lfmerge/Dockerfile` in Language Forge. Make sure that file specifies the tag that was just built. Then run `make` and the `lfmerge` container will be re-created with your local build. Now run `docker logs -f lfmerge` in a console tab to watch the LfMerge logs, then do a Send/Receive via your `localhost` copy of Language Forge and check the resulting log files for any errors.
 
 ## Debugging unit tests in VS Code
 
