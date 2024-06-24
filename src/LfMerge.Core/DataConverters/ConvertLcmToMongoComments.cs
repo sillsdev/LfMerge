@@ -46,6 +46,8 @@ namespace LfMerge.Core.DataConverters
 			// _logger.Debug("Doing Lcm->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
 			// _logger.Debug("Doing Lcm->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
+			// var commentsForLfMergeBridge = _conn.GetCommentsForLfMergeBridge(_project).ToList();
+			// if (CallLfMergeBridge(commentsForLfMergeBridge, out bridgeOutput))
 			if (CallLfMergeBridge(allCommentsJson, out bridgeOutput))
 			{
 				string newCommentsStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
@@ -314,5 +316,29 @@ namespace LfMerge.Core.DataConverters
 				}
 			}
 		}
+
+		// private bool CallLfMergeBridge(List<SerializableLfComment> bridgeInput, out string bridgeOutput)
+		// {
+		// 	// Call into LF Bridge to do the work.
+		// 	bridgeOutput = string.Empty;
+		// 	var options = new Dictionary<string, string>
+		// 	{
+		// 		{"-p", _project.FwDataPath},
+		// 		// {"serializedCommentsFromLfMerge", tmpFile.Path},
+		// 	};
+		// 	// Uncomment once FLExBridge changes have been merged
+		// 	// LfMergeBridge.LfMergeBridge.ExtraData.Add(options, bridgeInput);
+		// 	if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
+		// 		options, out bridgeOutput))
+		// 	{
+		// 		_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+		// 		return false;
+		// 	}
+		// 	else
+		// 	{
+		// 		// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+		// 		return true;
+		// 	}
+		// }
 	}
 }
