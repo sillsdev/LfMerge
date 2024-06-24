@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace LfMerge.Core.LanguageForge.Model
 {
 	[BsonIgnoreExtraElements] // WARNING: Beware of using FindOneAndReplace() with IgnoreExtraElements, as you can lose data
-	public class LfCommentReply : LfFieldBase, IHasNullableGuid
+	public class LfCommentReply : IHasNullableGuid
 	{
 		[BsonRepresentation(BsonType.String)]
 		public Guid? Guid { get; set; }

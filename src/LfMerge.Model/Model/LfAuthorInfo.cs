@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
-	public class LfAuthorInfo : LfFieldBase
+	public class LfAuthorInfo
 	{
 		public ObjectId? CreatedByUserRef { get; set; }
 		public DateTime CreatedDate { get; set; }

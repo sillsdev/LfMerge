@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
-	public class LfComment : LfFieldBase, IHasNullableGuid
+	public class LfComment : IHasNullableGuid
 	{
 		public ObjectId Id { get; set; }
 		[BsonRepresentation(BsonType.String)]
