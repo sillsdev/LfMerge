@@ -44,19 +44,13 @@ namespace LfMerge.Core.DataConverters
 			var exceptions = new List<CommentConversionError<ILexEntry>>();
 			var fixedComments = new List<LfComment>(_conn.GetComments(_project));
 			string allCommentsJson = JsonConvert.SerializeObject(fixedComments);
-			// _logger.Debug("Doing Lcm->Mongo direction. The json for ALL comments from Mongo would be: {0}", allCommentsJson);
-			// _logger.Debug("Doing Lcm->Mongo direction. About to call LfMergeBridge with that JSON...");
 			string bridgeOutput;
-			// var commentsForLfMergeBridge = _conn.GetCommentsForLfMergeBridge(_project).ToList();
-			// if (CallLfMergeBridge(commentsForLfMergeBridge, out bridgeOutput))
-			if (CallLfMergeBridge(allCommentsJson, out bridgeOutput))
+			GetChorusNotesResponse response = CallLfMergeBridge(fixedComments, out bridgeOutput);
+			if (response != null)
 			{
-				string newCommentsStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comments not yet in LF: ");
-				string newRepliesStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New replies on comments already in LF: ");
-				string newStatusChangesStr = ConvertMongoToLcmComments.GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New status changes on comments already in LF: ");
-				List<LfComment> comments = JsonConvert.DeserializeObject<List<LfComment>>(newCommentsStr);
-				List<Tuple<string, List<LfCommentReply>>> replies = JsonConvert.DeserializeObject<List<Tuple<string, List<LfCommentReply>>>>(newRepliesStr);
-				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = JsonConvert.DeserializeObject<List<KeyValuePair<string, Tuple<string, string>>>>(newStatusChangesStr);
+				List<LfComment> comments = response.LfComments;
+				List<Tuple<string, List<LfCommentReply>>> replies = response.LfReplies;
+				List<KeyValuePair<string, Tuple<string, string>>> statusChanges = response.LfStatusChanges;
 
 				var entryErrorsByGuid = _entryConversionErrors.EntryErrors.ToDictionary(s => s.EntryGuid());
 				foreach (LfComment comment in comments)
@@ -293,56 +287,29 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
+		private GetChorusNotesResponse CallLfMergeBridge(List<LfComment> comments, out string bridgeOutput)
 		{
 			// Call into LF Bridge to do the work.
 			bridgeOutput = string.Empty;
-			using (var tmpFile = new SIL.IO.TempFile(bridgeInput))
-			{
-				var options = new Dictionary<string, string>
-				{
-					{"-p", _project.FwDataPath},
-					{"serializedCommentsFromLfMerge", tmpFile.Path},
-				};
-				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
-					options, out bridgeOutput))
-				{
-					_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-					return false;
-				}
-				else
-				{
-					// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-					return true;
-				}
-			}
-		}
-
-		private bool CallLfMergeBridgeNewApi(List<LfComment> comments, out GetChorusNotesResponse bridgeOutput)
-		{
-			// Call into LF Bridge to do the work.
-			var bridgeStringOutput = string.Empty;
 			var bridgeInput = new LfMergeBridge.GetChorusNotesInput { LfComments = comments };
 			var options = new Dictionary<string, string>
 			{
 				{"-p", _project.FwDataPath},
-				// {"serializedCommentsFromLfMerge", tmpFile.Path},
+				// {"serializedCommentsFromLfMerge", "Only needed during transition"}, // TODO: eventually get rid of this in FLExBridge once we've verified the transition works
 			};
 			// Uncomment once FLExBridge changes have been merged
-			// LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
+			LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
 			if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
-				options, out bridgeStringOutput))
+				options, out bridgeOutput))
 			{
-				_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeStringOutput);
-				bridgeOutput = new GetChorusNotesResponse { LfComments = null, LfReplies = null, LfStatusChanges = null };
-				return false;
+				_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
+				return null;
 			}
 			else
 			{
 				// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeStringOutput);
 				var success = LfMergeBridge.LfMergeBridge.ExtraOutputData.TryGetValue(options, out var outputObject);
-				bridgeOutput = outputObject as GetChorusNotesResponse;
-				return success && (bridgeOutput != null);
+				return outputObject as GetChorusNotesResponse;
 			}
 		}
 	}
