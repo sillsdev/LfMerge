@@ -295,9 +295,7 @@ namespace LfMerge.Core.DataConverters
 			var options = new Dictionary<string, string>
 			{
 				{"-p", _project.FwDataPath},
-				// {"serializedCommentsFromLfMerge", "Only needed during transition"}, // TODO: eventually get rid of this in FLExBridge once we've verified the transition works
 			};
-			// Uncomment once FLExBridge changes have been merged
 			LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
 			if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
 				options, out bridgeOutput))
@@ -307,7 +305,6 @@ namespace LfMerge.Core.DataConverters
 			}
 			else
 			{
-				// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeStringOutput);
 				var success = LfMergeBridge.LfMergeBridge.ExtraOutputData.TryGetValue(options, out var outputObject);
 				return outputObject as GetChorusNotesResponse;
 			}
