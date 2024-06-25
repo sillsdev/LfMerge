@@ -37,13 +37,13 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="Autofac" Version="4.*" />
     <PackageReference Include="INIFileParserDotNetCore.Signed" Version="2.5.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MongoDB.Driver.signed" Version="2.14.*" />
-    <PackageReference Include="MongoDB.Driver.Core.signed" Version="2.14.*" />
+    <PackageReference Include="MongoDB.Driver.signed" Version="2.13.*" />
+    <PackageReference Include="MongoDB.Driver.Core.signed" Version="2.13.*" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="SIL.Bugsnag.Signed" Version="2.2.1" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="6.5.1.25" PrivateAssets="All" />
     <PackageReference Include="SIL.Chorus.ChorusMerge" Version="6.0.0-beta0044" GeneratePathProperty="true" />
-    <PackageReference Include="SIL.ChorusPlugin.LfMergeBridge" Version="4.2.0-beta*" />
+    <!-- <PackageReference Include="SIL.ChorusPlugin.LfMergeBridge" Version="4.2.0-beta*" /> -->
     <PackageReference Include="SIL.Chorus.LibChorus" Version="6.0.0-beta0044" />
     <PackageReference Include="SIL.Core.Desktop" Version="12.0.0" />
     <PackageReference Include="SIL.LCModel" Version="11.0.0-beta0077" />
@@ -52,6 +52,10 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
     <PackageReference Include="SIL.ReleaseTasks" Version="2.5.0" PrivateAssets="All" />
     <PackageReference Include="SIL.Lexicon" Version="12.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\flexbridge\src\LfMergeBridge\LfMergeBridge.csproj" />
   </ItemGroup>
 
   <ItemGroup>
