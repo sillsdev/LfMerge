@@ -3,15 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Model;
 using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Reporting;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 using SIL.Progress;
+using LfMergeBridge;
 
 namespace LfMerge.Core.DataConverters
 {
@@ -85,16 +84,15 @@ namespace LfMerge.Core.DataConverters
 				}
 			}
 			var skippedCommentGuids = new HashSet<string>(exceptions.Select(s => s.CommentGuid().ToString()));
-			string unskippedCommentsJson = JsonConvert.SerializeObject(commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)));
+			var unskippedComments = commentsWithIds.Where(s => !skippedCommentGuids.Contains(s.Key)).ToList();
 			string bridgeOutput;
-			CallLfMergeBridge(unskippedCommentsJson, out bridgeOutput);
-			// LfMergeBridge returns two lists of IDs (comment IDs or reply IDs) that need to have their GUIDs updated in Mongo.
-			string commentGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New comment ID->Guid mappings: ");
-			string replyGuidMappingsStr = GetPrefixedStringFromLfMergeBridgeOutput(bridgeOutput, "New reply ID->Guid mappings: ");
-			Dictionary<string, Guid> commentIdToGuidMappings = ParseGuidMappings(commentGuidMappingsStr);
-			Dictionary<string, Guid> uniqIdToGuidMappings = ParseGuidMappings(replyGuidMappingsStr);
-			_conn.SetCommentGuids(_project, commentIdToGuidMappings);
-			_conn.SetCommentReplyGuids(_project, uniqIdToGuidMappings);
+			var response = CallLfMergeBridge(unskippedComments, out bridgeOutput);
+			if (response != null)
+			{
+				// LfMergeBridge returns two lists of IDs (comment IDs or reply IDs) that need to have their GUIDs updated in Mongo.
+				_conn.SetCommentGuids(_project, response.CommentIdsThatNeedGuids);
+				_conn.SetCommentReplyGuids(_project, response.ReplyIdsThatNeedGuids);
+			}
 			return exceptions;
 		}
 
@@ -103,72 +101,34 @@ namespace LfMerge.Core.DataConverters
 			return _conn.GetRecords<LfLexEntry>(_project, MagicStrings.LfCollectionNameForLexicon, entry => entry.Id == idOfEntry).First();
 		}
 
-		private bool CallLfMergeBridge(string bridgeInput, out string bridgeOutput)
+		private WriteToChorusNotesResponse CallLfMergeBridge(List<KeyValuePair<string, LfComment>> lfComments, out string bridgeOutput)
 		{
 			bridgeOutput = string.Empty;
-			using (var tmpFile = new SIL.IO.TempFile(bridgeInput))
+			var options = new Dictionary<string, string>
 			{
-				var options = new Dictionary<string, string>
-				{
-					{"-p", _project.FwDataPath},
-					{"serializedCommentsFromLfMerge", tmpFile.Path}
-				};
-				try {
+				{"-p", _project.FwDataPath},
+			};
+			try {
+				var bridgeInput = new WriteToChorusNotesInput { LfComments = lfComments };
+				LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
 				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", _progress,
 					options, out bridgeOutput))
 				{
 					_logger.Error("Got an error from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
-					return false;
+					return null;
 				}
 				else
 				{
-					// _logger.Debug("Good  output from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
-					return true;
-				}
-				}
-				catch (NullReferenceException)
-				{
-					_logger.Debug("Got an exception. Before rethrowing it, here is what LfMergeBridge sent:");
-					_logger.Debug("{0}", bridgeOutput);
-					throw;
+					var success = LfMergeBridge.LfMergeBridge.ExtraOutputData.TryGetValue(options, out var outputObject);
+					return outputObject as WriteToChorusNotesResponse;
 				}
 			}
-		}
-
-		public static string GetPrefixedStringFromLfMergeBridgeOutput(string lfMergeBridgeOutput, string prefix)
-		{
-			if (string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(lfMergeBridgeOutput))
+			catch (NullReferenceException)
 			{
-				return string.Empty;
+				_logger.Debug("Got an exception. Before rethrowing it, here is what LfMergeBridge sent:");
+				_logger.Debug("{0}", bridgeOutput);
+				throw;
 			}
-			string result = LfMergeBridgeServices.GetLineContaining(lfMergeBridgeOutput, prefix);
-			if (result.StartsWith(prefix))
-			{
-				return result.Substring(prefix.Length);
-			}
-			else
-			{
-				return string.Empty; // If the "prefix" wasn't actually a prefix, this wasn't the string we wanted.
-			}
-		}
-
-		public Dictionary<string, Guid> ParseGuidMappings(string input)
-		{
-			string[] parts = input.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-			var result = new Dictionary<string, Guid>();
-			foreach (string part in parts)
-			{
-				string[] kv = part.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-				if (kv.Length == 2)
-				{
-					Guid parsed;
-					if (Guid.TryParse(kv[1], out parsed))
-					{
-						result[kv[0]] = parsed;
-					}
-				}
-			}
-			return result;
 		}
 	}
 }
