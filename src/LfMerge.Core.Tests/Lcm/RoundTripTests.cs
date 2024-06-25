@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.LCModel;

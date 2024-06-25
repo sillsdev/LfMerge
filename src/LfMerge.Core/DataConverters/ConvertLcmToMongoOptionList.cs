@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
 using SIL.LCModel;
 using SIL.LCModel.Core.KernelInterfaces;

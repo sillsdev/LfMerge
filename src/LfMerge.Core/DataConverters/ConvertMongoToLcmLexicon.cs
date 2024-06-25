@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;

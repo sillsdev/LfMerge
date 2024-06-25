@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
 using SIL.LCModel;
 

@@ -17,6 +17,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
+using LfMergeBridge.LfMergeModel;
 
 namespace LfMerge.Core.MongoConnector
 {
@@ -62,7 +63,7 @@ namespace LfMerge.Core.MongoConnector
 			ConventionRegistry.Register(
 				"My Custom Conventions",
 				pack,
-				t => t.FullName.StartsWith("LfMerge."));
+				t => t.FullName.StartsWith("LfMerge.") || t.FullName.StartsWith("LfMergeBridge.LfMergeModel"));
 
 			// Register class mappings before opening first connection
 			new MongoRegistrarForLfConfig().RegisterClassMappings();

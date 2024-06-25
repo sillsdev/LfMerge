@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using Bugsnag.Payload;
+using LfMergeBridge.LfMergeModel;
 using IniParser.Model;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;

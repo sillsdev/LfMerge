@@ -3,6 +3,7 @@
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
 using NUnit.Framework;
 using System;

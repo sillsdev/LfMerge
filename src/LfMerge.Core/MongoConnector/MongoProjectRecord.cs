@@ -4,7 +4,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using LfMerge.Core.LanguageForge.Config;
-using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using System;
 using System.Collections.Generic;
 

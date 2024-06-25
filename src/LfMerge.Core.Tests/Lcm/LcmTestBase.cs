@@ -6,7 +6,7 @@ using Autofac;
 using LfMerge.Core.Actions;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.FieldWorks;
-using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
 using LfMerge.Core.Settings;

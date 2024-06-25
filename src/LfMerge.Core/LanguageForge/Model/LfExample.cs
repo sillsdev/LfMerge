@@ -3,6 +3,7 @@
 using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using LfMergeBridge.LfMergeModel;
 
 namespace LfMerge.Core.LanguageForge.Model
 {
