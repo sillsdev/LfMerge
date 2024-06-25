@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using MongoDB.Driver;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 
 namespace LfMerge.Core.MongoConnector
 {

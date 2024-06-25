@@ -17,6 +17,7 @@ using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
+using LfMergeBridge.LfMergeModel;
 
 namespace LfMerge.Core.MongoConnector
 {

@@ -8,6 +8,7 @@ using System.Linq;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using NUnit.Framework;
 using SIL.LCModel;
 

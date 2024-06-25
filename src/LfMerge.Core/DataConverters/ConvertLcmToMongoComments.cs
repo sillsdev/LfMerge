@@ -7,7 +7,8 @@ using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Config;
-using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Reporting;
 using Newtonsoft.Json;
 using SIL.LCModel;
@@ -317,28 +318,32 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
-		// private bool CallLfMergeBridge(List<SerializableLfComment> bridgeInput, out string bridgeOutput)
-		// {
-		// 	// Call into LF Bridge to do the work.
-		// 	bridgeOutput = string.Empty;
-		// 	var options = new Dictionary<string, string>
-		// 	{
-		// 		{"-p", _project.FwDataPath},
-		// 		// {"serializedCommentsFromLfMerge", tmpFile.Path},
-		// 	};
-		// 	// Uncomment once FLExBridge changes have been merged
-		// 	// LfMergeBridge.LfMergeBridge.ExtraData.Add(options, bridgeInput);
-		// 	if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
-		// 		options, out bridgeOutput))
-		// 	{
-		// 		_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-		// 		return false;
-		// 	}
-		// 	else
-		// 	{
-		// 		// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeOutput);
-		// 		return true;
-		// 	}
-		// }
+		private bool CallLfMergeBridgeNewApi(List<LfComment> comments, out GetChorusNotesResponse bridgeOutput)
+		{
+			// Call into LF Bridge to do the work.
+			var bridgeStringOutput = string.Empty;
+			var bridgeInput = new LfMergeBridge.GetChorusNotesInput { LfComments = comments };
+			var options = new Dictionary<string, string>
+			{
+				{"-p", _project.FwDataPath},
+				// {"serializedCommentsFromLfMerge", tmpFile.Path},
+			};
+			// Uncomment once FLExBridge changes have been merged
+			// LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
+			if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Get_Chorus_Notes", _progress,
+				options, out bridgeStringOutput))
+			{
+				_logger.Error("Got an error from Language_Forge_Get_Chorus_Notes: {0}", bridgeStringOutput);
+				bridgeOutput = new GetChorusNotesResponse { LfComments = null, LfReplies = null, LfStatusChanges = null };
+				return false;
+			}
+			else
+			{
+				// _logger.Debug("Got the JSON from Language_Forge_Get_Chorus_Notes: {0}", bridgeStringOutput);
+				var success = LfMergeBridge.LfMergeBridge.ExtraOutputData.TryGetValue(options, out var outputObject);
+				bridgeOutput = outputObject as GetChorusNotesResponse;
+				return success && (bridgeOutput != null);
+			}
+		}
 	}
 }

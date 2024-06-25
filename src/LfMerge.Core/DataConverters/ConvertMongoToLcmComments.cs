@@ -7,6 +7,7 @@ using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.Logging;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.LanguageForge.Model;
+using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Reporting;
 using MongoDB.Bson;
 using Newtonsoft.Json;
