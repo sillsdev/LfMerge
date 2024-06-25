@@ -55,10 +55,6 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LfMerge.Model\LfMerge.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\lib\chorusmerge">
       <Link>chorusmerge</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
