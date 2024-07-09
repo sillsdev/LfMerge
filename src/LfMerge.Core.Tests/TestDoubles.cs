@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using Bugsnag.Payload;
+using LfMergeBridge.LfMergeModel;
 using IniParser.Model;
 using LfMerge.Core.Actions;
 using LfMerge.Core.Actions.Infrastructure;
@@ -107,7 +108,7 @@ namespace LfMerge.Core.Tests
 			ConventionRegistry.Register(
 				"My Custom Conventions",
 				pack,
-				t => t.FullName.StartsWith("LfMerge."));
+				t => t.FullName.StartsWith("LfMerge.") || t.FullName.StartsWith("LfMergeBridge.LfMergeModel"));
 
 			// Register class mappings before opening first connection
 			new MongoRegistrarForLfConfig().RegisterClassMappings();

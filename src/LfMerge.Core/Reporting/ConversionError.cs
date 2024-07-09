@@ -7,6 +7,7 @@ using System.Linq;
 using LfMerge.Core.LanguageForge.Model;
 using SIL.LCModel;
 using LfMerge.Core.DataConverters;
+using LfMergeBridge.LfMergeModel;
 
 namespace LfMerge.Core.Reporting
 {
