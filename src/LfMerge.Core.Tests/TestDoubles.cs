@@ -108,7 +108,7 @@ namespace LfMerge.Core.Tests
 			ConventionRegistry.Register(
 				"My Custom Conventions",
 				pack,
-				t => t.FullName.StartsWith("LfMerge."));
+				t => t.FullName.StartsWith("LfMerge.") || t.FullName.StartsWith("LfMergeBridge.LfMergeModel"));
 
 			// Register class mappings before opening first connection
 			new MongoRegistrarForLfConfig().RegisterClassMappings();
