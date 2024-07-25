@@ -1,11 +1,10 @@
 using System;
-using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Bugsnag.Payload;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
@@ -24,7 +23,9 @@ namespace LfMerge.Core.Tests
 		public Uri LexboxUrl { get; init; }
 		public Uri LexboxUrlBasicAuth { get; init; }
 		private TemporaryFolder TempFolder { get; init; }
-		private HttpClient Http { get; init; } = new HttpClient();
+		private HttpClient Http { get; init; }
+		private HttpClientHandler Handler { get; init; } = new HttpClientHandler();
+		private CookieContainer Cookies { get; init; } = new CookieContainer();
 		private string Jwt { get; set; }
 
 		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", int lexboxPort = 80, string lexboxUsername = "admin", string lexboxPassword = "pass")
@@ -37,6 +38,8 @@ namespace LfMerge.Core.Tests
 			LexboxUrl = new Uri($"{lexboxProtocol}://{lexboxHostname}:{lexboxPort}");
 			LexboxUrlBasicAuth = new Uri($"{lexboxProtocol}://{WebUtility.UrlEncode(lexboxUsername)}:{WebUtility.UrlEncode(lexboxPassword)}@{lexboxHostname}:{lexboxPort}");
 			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
+			Handler.CookieContainer = Cookies;
+			Http = new HttpClient(Handler);
 		}
 
 		public Task Login()
@@ -48,9 +51,11 @@ namespace LfMerge.Core.Tests
 
 		public async Task LoginAs(string lexboxUsername, string lexboxPassword)
 		{
-			var loginResult = await Http.PostAsJsonAsync(new Uri(LexboxUrl, "api/login"), new { EmailOrUsername=lexboxUsername, Password=lexboxPassword });
-			Jwt = await loginResult.Content.ReadAsStringAsync();
-			Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
+			var loginResult = await Http.PostAsync(new Uri(LexboxUrl, "api/login"), JsonContent.Create(new { EmailOrUsername=lexboxUsername, Password=lexboxPassword }));
+			var cookies = Cookies.GetCookies(LexboxUrl);
+			Jwt = cookies[".LexBoxAuth"].Value;
+			// Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
+			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
 
 		public void InitRepo(string code, string dest)
@@ -78,12 +83,43 @@ namespace LfMerge.Core.Tests
 
 		public async Task UploadZip(string code, string zipPath)
 		{
-			var sourceUrl = new Uri(LexboxUrl, $"api/project/upload-zip/{code}");
+			var sourceUrl = new Uri(LexboxUrl, $"/api/project/upload-zip/{code}");
 			var file = new FileInfo(zipPath);
 			var client = new TusClient();
-			client.AdditionalHeaders["Authorization"] = $"Bearer {Jwt}";
-			var fileUrl = await client.CreateAsync(sourceUrl.AbsolutePath, file.Length, []);
+			// client.AdditionalHeaders["Authorization"] = $"Bearer {Jwt}"; // Once we set up for LexBox OAuth, we'll use Bearer auth instead
+			var cookies = Cookies.GetCookies(LexboxUrl);
+			var authCookie = cookies[".LexBoxAuth"].ToString();
+			client.AdditionalHeaders["cookie"] = authCookie;
+			var fileUrl = await client.CreateAsync(sourceUrl.AbsoluteUri, file.Length, ("filetype", "application/zip"));
 			await client.UploadAsync(fileUrl, file);
+		}
+
+		public async Task DownloadProjectBackup(string code)
+		{
+			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
+			var result = await Http.GetAsync(backupUrl);
+			var filename = result.Content.Headers.ContentDisposition?.FileName;
+			var savePath = Path.Join(TempFolder.Path, filename);
+			using (var outStream = File.Create(savePath))
+			{
+				await result.Content.CopyToAsync(outStream);
+			}
+		}
+
+		public async Task RollbackProjectToRev(string code, int revnum)
+		{
+			// Negative rev numbers will be interpreted as Mercurial does: -1 is the tip revision, -2 is one back from the tip, etc.
+			// I.e. rolling back to rev -2 will remove the most recent commit
+			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
+			var result = await Http.GetAsync(backupUrl);
+			var zipStream = await result.Content.ReadAsStreamAsync();
+			var projectDir = Path.Join(TempFolder.Path, code);
+			ZipFile.ExtractToDirectory(zipStream, projectDir);
+			var clonedDir = Path.Join(TempFolder.Path, $"{code}-{revnum}");
+			MercurialTestHelper.CloneRepoAtRevnum(projectDir, clonedDir, revnum);
+			var zipPath = Path.Join(TempFolder.Path, $"{code}-{revnum}.zip");
+			ZipFile.CreateFromDirectory(clonedDir, zipPath);
+			await ResetAndUploadZip(code, zipPath);
 		}
 
 		private string TestName
