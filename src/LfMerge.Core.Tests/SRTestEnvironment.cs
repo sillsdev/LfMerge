@@ -22,6 +22,7 @@ namespace LfMerge.Core.Tests
 	{
 		public ILogger Logger => MainClass.Logger;
 		public Uri LexboxUrl { get; init; }
+		public Uri LexboxUrlBasicAuth { get; init; }
 		private TemporaryFolder TempFolder { get; init; }
 		private HttpClient Http { get; init; } = new HttpClient();
 		private string Jwt { get; set; }
@@ -33,14 +34,20 @@ namespace LfMerge.Core.Tests
 			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol, lexboxProtocol);
 			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_HgUsername, lexboxUsername);
 			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
-			LexboxUrl = new Uri($"{lexboxProtocol}://{WebUtility.UrlEncode(lexboxUsername)}:{WebUtility.UrlEncode(lexboxPassword)}@{lexboxHostname}:{lexboxPort}");
+			LexboxUrl = new Uri($"{lexboxProtocol}://{lexboxHostname}:{lexboxPort}");
+			LexboxUrlBasicAuth = new Uri($"{lexboxProtocol}://{WebUtility.UrlEncode(lexboxUsername)}:{WebUtility.UrlEncode(lexboxPassword)}@{lexboxHostname}:{lexboxPort}");
 			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
 		}
 
-		public async Task Login()
+		public Task Login()
 		{
 			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername);
 			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken);
+			return LoginAs(lexboxUsername, lexboxPassword);
+		}
+
+		public async Task LoginAs(string lexboxUsername, string lexboxPassword)
+		{
 			var loginResult = await Http.PostAsJsonAsync(new Uri(LexboxUrl, "api/login"), new { EmailOrUsername=lexboxUsername, Password=lexboxPassword });
 			Jwt = await loginResult.Content.ReadAsStringAsync();
 			Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
@@ -48,7 +55,7 @@ namespace LfMerge.Core.Tests
 
 		public void InitRepo(string code, string dest)
 		{
-			var sourceUrl = new Uri(LexboxUrl, $"hg/{code}");
+			var sourceUrl = new Uri(LexboxUrlBasicAuth, $"hg/{code}");
 			MercurialTestHelper.CloneRepo(sourceUrl.AbsoluteUri, dest);
 		}
 
@@ -74,6 +81,7 @@ namespace LfMerge.Core.Tests
 			var sourceUrl = new Uri(LexboxUrl, $"api/project/upload-zip/{code}");
 			var file = new FileInfo(zipPath);
 			var client = new TusClient();
+			client.AdditionalHeaders["Authorization"] = $"Bearer {Jwt}";
 			var fileUrl = await client.CreateAsync(sourceUrl.AbsolutePath, file.Length, []);
 			await client.UploadAsync(fileUrl, file);
 		}
