@@ -53,13 +53,15 @@ namespace LfMerge.Core.Tests
 
 		public static void CommitChanges(FwProject project, string code, string? commitMsg = null)
 		{
+			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
+			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
 			if (!project.IsDisposed) project.Dispose();
 			commitMsg ??= "Auto-commit";
 			var projectDir = Path.Combine(BaseDir, "webwork", code);
 			var fwdataPath = Path.Join(projectDir, $"{code}.fwdata");
 			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
 			MercurialTestHelper.HgCommit(projectDir, commitMsg);
-			MercurialTestHelper.HgPush(projectDir);
+			MercurialTestHelper.HgPush(projectDir, withAuth.Uri.AbsoluteUri);
 		}
 
 		public static IEnumerable<ILexEntry> GetEntries(FwProject project)
