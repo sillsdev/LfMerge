@@ -24,7 +24,7 @@ namespace LfMerge.Core.Tests.E2E
 		{
 			await LcmTestHelper.LexboxLogin("admin", "pass");
 			var sena3 = LcmTestHelper.CloneFromLexbox("sena-3");
-			var entries = sena3.ServiceLocator.LanguageProject.LexDbOA.Entries;
+			var entries = LcmTestHelper.GetEntries(sena3);
 			Console.WriteLine($"Project has {entries.Count()} entries");
 			sena3.Dispose();
 		}
