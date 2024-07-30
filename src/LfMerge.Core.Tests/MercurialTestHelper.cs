@@ -63,6 +63,11 @@ namespace LfMerge.Core.Tests
 			RunHgCommand(repoPath, $"branch -f \"{branchName}\"");
 		}
 
+		public static void HgPush(string repoPath)
+		{
+			RunHgCommand(repoPath, $"push");
+		}
+
 		public static void CreateFlexRepo(string lDProjectFolderPath, int modelVersion = 0)
 		{
 			if (modelVersion <= 0)

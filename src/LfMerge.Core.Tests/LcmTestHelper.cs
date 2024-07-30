@@ -28,6 +28,7 @@ namespace LfMerge.Core.Tests
 		public static HttpClientHandler Handler { get; set; } = new HttpClientHandler();
 		public static CookieContainer Cookies => Handler.CookieContainer;
 		public static HttpClient Http { get; set; } = new HttpClient(Handler);
+		public static IProgress NullProgress = new NullProgress();
 
 		public static async Task<string> LexboxLogin(string username, string password)
 		{
@@ -50,9 +51,26 @@ namespace LfMerge.Core.Tests
 			return new FwProject(settings, code);
 		}
 
+		public static void CommitChanges(FwProject project, string code, string? commitMsg = null)
+		{
+			if (!project.IsDisposed) project.Dispose();
+			commitMsg ??= "Auto-commit";
+			var projectDir = Path.Combine(BaseDir, "webwork", code);
+			var fwdataPath = Path.Join(projectDir, $"{code}.fwdata");
+			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
+			MercurialTestHelper.HgCommit(projectDir, commitMsg);
+			MercurialTestHelper.HgPush(projectDir);
+		}
+
 		public static IEnumerable<ILexEntry> GetEntries(FwProject project)
 		{
 			return project?.ServiceLocator?.LanguageProject?.LexDbOA?.Entries ?? [];
+		}
+
+		public static ILexEntry GetEntry(FwProject project, Guid guid)
+		{
+			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
+			return repo.GetObject(guid);
 		}
 	}
 }
