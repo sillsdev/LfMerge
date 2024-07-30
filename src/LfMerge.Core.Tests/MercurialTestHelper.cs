@@ -81,10 +81,15 @@ namespace LfMerge.Core.Tests
 			RunHgCommand(destinationRepo, $"clone {sourceRepo} .");
 		}
 
-		public static void CloneRepoAtRevnum(string sourceRepo, string destinationRepo, int revnum)
+		public static void CloneRepoAtRev(string sourceRepo, string destinationRepo, string rev)
 		{
 			Directory.CreateDirectory(destinationRepo);
-			RunHgCommand(destinationRepo, $"clone {sourceRepo} -U -r {revnum} .");
+			RunHgCommand(destinationRepo, $"clone {sourceRepo} -U -r {rev} .");
+		}
+
+		public static void CloneRepoAtRevnum(string sourceRepo, string destinationRepo, int revnum)
+		{
+			CloneRepoAtRev(sourceRepo, destinationRepo, revnum.ToString());
 		}
 
 		public static void ChangeBranch(string repoPath, string newBranch)
