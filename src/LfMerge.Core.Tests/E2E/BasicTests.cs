@@ -23,10 +23,9 @@ namespace LfMerge.Core.Tests.E2E
 		public async Task CheckProjectCloning()
 		{
 			await LcmTestHelper.LexboxLogin("admin", "pass");
-			var sena3 = LcmTestHelper.CloneFromLexbox("sena-3");
+			using var sena3 = LcmTestHelper.CloneFromLexbox("sena-3");
 			var entries = LcmTestHelper.GetEntries(sena3);
 			Console.WriteLine($"Project has {entries.Count()} entries");
-			sena3.Dispose();
 		}
 	}
 }
