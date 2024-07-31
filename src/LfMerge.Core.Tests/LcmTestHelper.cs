@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using LfMerge.Core.FieldWorks;
 using SIL.LCModel;
+using SIL.LCModel.Infrastructure;
 using SIL.PlatformUtilities;
 using SIL.Progress;
 
@@ -73,6 +74,22 @@ namespace LfMerge.Core.Tests
 		{
 			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
 			return repo.GetObject(guid);
+		}
+
+		public static void SetVernacularText(FwProject project, IMultiUnicode field, string newText)
+		{
+			var accessor = project.Cache.ActionHandlerAccessor;
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", accessor, () => {
+				field.SetVernacularDefaultWritingSystem(newText);
+			});
+		}
+
+		public static void SetAnalysisText(FwProject project, IMultiUnicode field, string newText)
+		{
+			var accessor = project.Cache.ActionHandlerAccessor;
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", accessor, () => {
+				field.SetAnalysisDefaultWritingSystem(newText);
+			});
 		}
 	}
 }
