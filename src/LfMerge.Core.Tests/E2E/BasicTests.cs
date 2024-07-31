@@ -31,6 +31,15 @@ namespace LfMerge.Core.Tests.E2E
 			Assert.That(citationForm, Is.EqualTo("ambuka"));
 			LcmTestHelper.SetVernacularText(sena3, entry.CitationForm, "something");
 			LcmTestHelper.CommitChanges(sena3, "sena-3");
+
+			using var sena4 = LcmTestHelper.CloneFromLexbox("sena-3", "sena-4");
+			entry = LcmTestHelper.GetEntry(sena4, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
+			citationForm = entry.CitationForm.BestVernacularAlternative.Text;
+			Assert.That(citationForm, Is.EqualTo("something"));
+			LcmTestHelper.UpdateVernacularText(sena4, entry.CitationForm, (s) => $"{s}XYZ");
+			citationForm = entry.CitationForm.BestVernacularAlternative.Text;
+			Assert.That(citationForm, Is.EqualTo("somethingXYZ"));
+			LcmTestHelper.CommitChanges(sena4, "sena-3", "sena-4");
 		}
 	}
 }

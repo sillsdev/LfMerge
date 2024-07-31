@@ -38,28 +38,30 @@ namespace LfMerge.Core.Tests
 			return cookies[".LexBoxAuth"].Value;
 		}
 
-		public static FwProject CloneFromLexbox(string code, string? dest = null)
+		public static FwProject CloneFromLexbox(string code, string? newCode = null)
 		{
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
-			dest ??= Path.Combine(BaseDir, "webwork", code);
+			newCode ??= code;
+			var dest = Path.Combine(BaseDir, "webwork", newCode);
 			MercurialTestHelper.CloneRepo(withAuth.Uri.AbsoluteUri, dest);
-			var fwdataPath = Path.Join(dest, $"{code}.fwdata");
+			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
 			var progress = new NullProgress();
 			MercurialTestHelper.ChangeBranch(dest, "tip");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(progress, false, fwdataPath);
 			var settings = new LfMergeSettingsDouble(BaseDir);
-			return new FwProject(settings, code);
+			return new FwProject(settings, newCode);
 		}
 
-		public static void CommitChanges(FwProject project, string code, string? commitMsg = null)
+		public static void CommitChanges(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
+			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
 			if (!project.IsDisposed) project.Dispose();
 			commitMsg ??= "Auto-commit";
-			var projectDir = Path.Combine(BaseDir, "webwork", code);
-			var fwdataPath = Path.Join(projectDir, $"{code}.fwdata");
+			var projectDir = Path.Combine(BaseDir, "webwork", localCode);
+			var fwdataPath = Path.Join(projectDir, $"{localCode}.fwdata");
 			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
 			MercurialTestHelper.HgCommit(projectDir, commitMsg);
 			MercurialTestHelper.HgPush(projectDir, withAuth.Uri.AbsoluteUri);
@@ -90,6 +92,26 @@ namespace LfMerge.Core.Tests
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", accessor, () => {
 				field.SetAnalysisDefaultWritingSystem(newText);
 			});
+		}
+
+		public static void UpdateVernacularText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
+		{
+			var oldText = field.BestVernacularAlternative?.Text;
+			if (oldText != null)
+			{
+				var newText = textConverter(oldText);
+				SetVernacularText(project, field, newText);
+			}
+		}
+
+		public static void UpdateAnalysisText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
+		{
+			var oldText = field.BestAnalysisAlternative?.Text;
+			if (oldText != null)
+			{
+				var newText = textConverter(oldText);
+				SetAnalysisText(project, field, newText);
+			}
 		}
 	}
 }
