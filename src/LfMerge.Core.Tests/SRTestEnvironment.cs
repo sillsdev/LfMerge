@@ -28,7 +28,7 @@ namespace LfMerge.Core.Tests
 		private CookieContainer Cookies { get; init; } = new CookieContainer();
 		private string Jwt { get; set; }
 
-		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", int lexboxPort = 80, string lexboxUsername = "admin", string lexboxPassword = "pass")
+		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", string lexboxPort = "80", string lexboxUsername = "admin", string lexboxPassword = "pass")
 		{
 			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname, lexboxHostname);
 			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname, lexboxHostname);
@@ -41,6 +41,9 @@ namespace LfMerge.Core.Tests
 			Handler.CookieContainer = Cookies;
 			Http = new HttpClient(Handler);
 		}
+
+		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", int lexboxPort = 80, string lexboxUsername = "admin", string lexboxPassword = "pass")
+			: this(lexboxHostname, lexboxProtocol, lexboxPort.ToString(), lexboxUsername, lexboxPassword) { }
 
 		public Task Login()
 		{

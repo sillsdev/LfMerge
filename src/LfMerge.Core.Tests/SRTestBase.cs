@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -21,7 +20,7 @@ namespace LfMerge.Core.Tests
 	/// </summary>
 	public class SRTestBase
 	{
-		public ILogger Logger => MainClass.Logger;
+		public LfMerge.Core.Logging.ILogger Logger => MainClass.Logger;
 		public Uri LexboxUrl { get; init; }
 		public Uri LexboxUrlBasicAuth { get; init; }
 		private TemporaryFolder TempFolder { get; init; }
@@ -30,20 +29,17 @@ namespace LfMerge.Core.Tests
 		private CookieContainer Cookies { get; init; } = new CookieContainer();
 		private string Jwt { get; set; }
 		private string TipRevToRestore { get; set; } = "";
+		private SRTestEnvironment TestEnv { get; init; }
 
-		public SRTestBase(string lexboxHostname = "localhost", string lexboxProtocol = "http", int lexboxPort = 80, string lexboxUsername = "admin", string lexboxPassword = "pass")
+		public SRTestBase()
 		{
 			// TODO: Just get an SRTestEnvironment instead of all this
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname, lexboxHostname);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname, lexboxHostname);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol, lexboxProtocol);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_HgUsername, lexboxUsername);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
-			LexboxUrl = new Uri($"{lexboxProtocol}://{lexboxHostname}:{lexboxPort}");
-			LexboxUrlBasicAuth = new Uri($"{lexboxProtocol}://{WebUtility.UrlEncode(lexboxUsername)}:{WebUtility.UrlEncode(lexboxPassword)}@{lexboxHostname}:{lexboxPort}");
-			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
-			Handler.CookieContainer = Cookies;
-			Http = new HttpClient(Handler);
+			var lexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
+			var lexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
+			var lexboxPort = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriPort) ?? "80";
+			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
+			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
+			TestEnv = new SRTestEnvironment(lexboxHostname, lexboxProtocol, lexboxPort, lexboxUsername, lexboxPassword);
 		}
 
 		public Task Login()
@@ -77,11 +73,10 @@ namespace LfMerge.Core.Tests
 		[SetUp]
 		public async Task BackupRemoteProject()
 		{
-			var env = new SRTestEnvironment(); // TODO: Instance property
 			var test = TestContext.CurrentContext.Test;
 			if (test.Properties.ContainsKey("projectCode")) {
 				var code = test.Properties.Get("projectCode") as string;
-				TipRevToRestore = await env.GetTipRev(code);
+				TipRevToRestore = await TestEnv.GetTipRev(code);
 			} else {
 				TipRevToRestore = "";
 			}
@@ -90,11 +85,10 @@ namespace LfMerge.Core.Tests
 		[TearDown]
 		public async Task RestoreRemoteProject()
 		{
-			var env = new SRTestEnvironment(); // TODO: Instance property
 			var test = TestContext.CurrentContext.Test;
 			if (!string.IsNullOrEmpty(TipRevToRestore) && test.Properties.ContainsKey("projectCode")) {
 				var code = test.Properties.Get("projectCode") as string;
-				await env.RollbackProjectToRev(code, TipRevToRestore);
+				await TestEnv.RollbackProjectToRev(code, TipRevToRestore);
 			}
 		}
 	}
