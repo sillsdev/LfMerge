@@ -58,17 +58,8 @@ namespace LfMerge.Core.Tests
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
 
-		private string TestName
-		{
-			get
-			{
-				var testName = TestContext.CurrentContext.Test.Name;
-				var firstInvalidChar = testName.IndexOfAny(Path.GetInvalidPathChars());
-				if (firstInvalidChar >= 0)
-					testName = testName.Substring(0, firstInvalidChar);
-				return testName;
-			}
-		}
+		private string TestName => TestContext.CurrentContext.Test.Name;
+		private string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
 
 		[SetUp]
 		public async Task BackupRemoteProject()
