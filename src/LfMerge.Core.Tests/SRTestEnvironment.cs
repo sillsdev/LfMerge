@@ -110,6 +110,9 @@ namespace LfMerge.Core.Tests
 		{
 			// Negative rev numbers will be interpreted as Mercurial does: -1 is the tip revision, -2 is one back from the tip, etc.
 			// I.e. rolling back to rev -2 will remove the most recent commit
+			if (rev == "-1") return; // Already at tip, nothing to do
+			var currentTip = await GetTipRev(code);
+			if (rev == currentTip) return; // Already at tip, nothing to do
 			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
 			var result = await Http.GetAsync(backupUrl);
 			var zipStream = await result.Content.ReadAsStreamAsync();
