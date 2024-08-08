@@ -56,6 +56,7 @@ namespace LfMerge.Core.Tests
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
+			project.Cache.ActionHandlerAccessor.Commit();
 			if (!project.IsDisposed) project.Dispose();
 			commitMsg ??= "Auto-commit";
 			var projectDir = Path.Combine(baseDir, "webwork", localCode);
