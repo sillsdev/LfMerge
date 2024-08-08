@@ -42,9 +42,6 @@ namespace LfMerge.Core.Tests
 			Http = new HttpClient(Handler);
 		}
 
-		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", int lexboxPort = 80, string lexboxUsername = "admin", string lexboxPassword = "pass")
-			: this(lexboxHostname, lexboxProtocol, lexboxPort.ToString(), lexboxUsername, lexboxPassword) { }
-
 		public Task Login()
 		{
 			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername);
