@@ -24,8 +24,6 @@ namespace LfMerge.Core.Tests
 		public static string LexboxPort = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriPort) ?? (LexboxProtocol == "http" ? "80" : "443");
 		public static Uri LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
 
-		public static string BaseDir = Path.Combine(Path.GetTempPath(), nameof(LcmTestHelper));
-
 		public static HttpClientHandler Handler { get; set; } = new HttpClientHandler();
 		public static CookieContainer Cookies => Handler.CookieContainer;
 		public static HttpClient Http { get; set; } = new HttpClient(Handler);
@@ -38,29 +36,29 @@ namespace LfMerge.Core.Tests
 			return cookies[".LexBoxAuth"].Value;
 		}
 
-		public static FwProject CloneFromLexbox(string code, string? newCode = null)
+		public static FwProject CloneFromLexbox(string code, string baseDir, string? newCode = null)
 		{
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
 			newCode ??= code;
-			var dest = Path.Combine(BaseDir, "webwork", newCode);
+			var dest = Path.Combine(baseDir, "webwork", newCode);
 			MercurialTestHelper.CloneRepo(withAuth.Uri.AbsoluteUri, dest);
 			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
 			var progress = new NullProgress();
 			MercurialTestHelper.ChangeBranch(dest, "tip");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(progress, false, fwdataPath);
-			var settings = new LfMergeSettingsDouble(BaseDir);
+			var settings = new LfMergeSettingsDouble(baseDir);
 			return new FwProject(settings, newCode);
 		}
 
-		public static void CommitChanges(FwProject project, string code, string? localCode = null, string? commitMsg = null)
+		public static void CommitChanges(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
 			if (!project.IsDisposed) project.Dispose();
 			commitMsg ??= "Auto-commit";
-			var projectDir = Path.Combine(BaseDir, "webwork", localCode);
+			var projectDir = Path.Combine(baseDir, "webwork", localCode);
 			var fwdataPath = Path.Join(projectDir, $"{localCode}.fwdata");
 			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
 			MercurialTestHelper.HgCommit(projectDir, commitMsg);

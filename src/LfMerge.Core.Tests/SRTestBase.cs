@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using LfMerge.Core.FieldWorks;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using SIL.TestUtilities;
@@ -16,7 +17,7 @@ namespace LfMerge.Core.Tests
 		public TemporaryFolder TempFolderForClass { get; set; }
 		public TemporaryFolder TempFolderForTest { get; set; }
 		private string TipRevToRestore { get; set; } = "";
-		private SRTestEnvironment TestEnv { get; set; }
+		public SRTestEnvironment TestEnv { get; set; }
 
 		public SRTestBase()
 		{
@@ -88,6 +89,16 @@ namespace LfMerge.Core.Tests
 				var code = test.Properties.Get("projectCode") as string;
 				await TestEnv.RollbackProjectToRev(code, TipRevToRestore);
 			}
+		}
+
+		public FwProject CloneFromLexbox(string code, string? newCode = null)
+		{
+			return LcmTestHelper.CloneFromLexbox(code, TempFolderForTest.Path, newCode);
+		}
+
+		public void CommitChanges(FwProject project, string code, string? localCode = null, string? commitMsg = null)
+		{
+			LcmTestHelper.CommitChanges(project, code, TempFolderForTest.Path, localCode, commitMsg);
 		}
 	}
 }
