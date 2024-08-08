@@ -1,17 +1,9 @@
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using LfMerge.Core.Settings;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using SIL.LCModel;
 using SIL.TestUtilities;
-using TusDotNetClient;
 
 namespace LfMerge.Core.Tests
 {
@@ -21,47 +13,55 @@ namespace LfMerge.Core.Tests
 	public class SRTestBase
 	{
 		public LfMerge.Core.Logging.ILogger Logger => MainClass.Logger;
-		public Uri LexboxUrl { get; init; }
-		public Uri LexboxUrlBasicAuth { get; init; }
-		private TemporaryFolder TempFolder { get; init; }
-		private HttpClient Http { get; init; }
-		private HttpClientHandler Handler { get; init; } = new HttpClientHandler();
-		private CookieContainer Cookies { get; init; } = new CookieContainer();
-		private string Jwt { get; set; }
+		public TemporaryFolder TempFolderForClass { get; set; }
+		public TemporaryFolder TempFolderForTest { get; set; }
 		private string TipRevToRestore { get; set; } = "";
-		private SRTestEnvironment TestEnv { get; init; }
+		private SRTestEnvironment TestEnv { get; set; }
 
 		public SRTestBase()
 		{
-			// TODO: Just get an SRTestEnvironment instead of all this
+		}
+
+		private string TestName => TestContext.CurrentContext.Test.Name;
+		private string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
+
+		[OneTimeSetUp]
+		public async Task FixtureSetup()
+		{
+			// Log in to LexBox as admin
 			var lexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
 			var lexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
 			var lexboxPort = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriPort) ?? "80";
 			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
 			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
 			TestEnv = new SRTestEnvironment(lexboxHostname, lexboxProtocol, lexboxPort, lexboxUsername, lexboxPassword);
+			await TestEnv.Login();
+
+			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder if it already exists
+			var tempPath = Path.Combine(Path.GetTempPath(), "LfMergeSRTests");
+			var rootTempFolder = Directory.Exists(tempPath) ? TemporaryFolder.TrackExisting(tempPath) : new TemporaryFolder(tempPath);
+
+			// But the folder for this specific test suite should be deleted if it already exists
+			var derivedClassName = this.GetType().Name;
+			TempFolderForClass = new TemporaryFolder(rootTempFolder, derivedClassName);
 		}
 
-		public Task Login()
+		[OneTimeTearDown]
+		public void FixtureTeardown()
 		{
-			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername);
-			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken);
-			return LoginAs(lexboxUsername, lexboxPassword);
+			var result = TestContext.CurrentContext.Result;
+			var nonSuccess = result.FailCount + result.InconclusiveCount + result.WarningCount;
+			// Only delete class temp folder if we passed or skipped all tests
+			if (nonSuccess == 0) TempFolderForClass.Dispose();
 		}
-
-		public async Task LoginAs(string lexboxUsername, string lexboxPassword)
-		{
-			var loginResult = await Http.PostAsync(new Uri(LexboxUrl, "api/login"), JsonContent.Create(new { EmailOrUsername=lexboxUsername, Password=lexboxPassword }));
-			var cookies = Cookies.GetCookies(LexboxUrl);
-			Jwt = cookies[".LexBoxAuth"].Value;
-			// Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
-			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
-		}
-
-		private string TestName => TestContext.CurrentContext.Test.Name;
-		private string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
 
 		[SetUp]
+		public async Task TestSetup()
+		{
+			TempFolderForTest = new TemporaryFolder(TempFolderForClass, TestNameForPath);
+			await BackupRemoteProject();
+		}
+
 		public async Task BackupRemoteProject()
 		{
 			var test = TestContext.CurrentContext.Test;
@@ -74,6 +74,13 @@ namespace LfMerge.Core.Tests
 		}
 
 		[TearDown]
+		public async Task TestTeardown()
+		{
+			await RestoreRemoteProject();
+			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
+			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) TempFolderForTest.Dispose();
+		}
+
 		public async Task RestoreRemoteProject()
 		{
 			var test = TestContext.CurrentContext.Test;
