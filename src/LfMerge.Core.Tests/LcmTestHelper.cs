@@ -51,7 +51,7 @@ namespace LfMerge.Core.Tests
 			return new FwProject(settings, newCode);
 		}
 
-		public static void CommitChanges(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		public static void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
@@ -62,6 +62,7 @@ namespace LfMerge.Core.Tests
 			var projectDir = Path.Combine(baseDir, "webwork", localCode);
 			var fwdataPath = Path.Join(projectDir, $"{localCode}.fwdata");
 			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
+			MercurialTestHelper.HgClean(projectDir); // Ensure ConfigurationSettings, etc., don't get committed
 			MercurialTestHelper.HgCommit(projectDir, commitMsg);
 			MercurialTestHelper.HgPush(projectDir, withAuth.Uri.AbsoluteUri);
 		}

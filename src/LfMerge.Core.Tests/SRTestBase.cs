@@ -96,9 +96,9 @@ namespace LfMerge.Core.Tests
 			return LcmTestHelper.CloneFromLexbox(code, TempFolderForTest.Path, newCode);
 		}
 
-		public void CommitChanges(FwProject project, string code, string? localCode = null, string? commitMsg = null)
+		public void CommitAndPush(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
-			LcmTestHelper.CommitChanges(project, code, TempFolderForTest.Path, localCode, commitMsg);
+			LcmTestHelper.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
 		}
 	}
 }

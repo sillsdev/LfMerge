@@ -24,12 +24,11 @@ namespace LfMerge.Core.Tests.E2E
 			await LcmTestHelper.LexboxLogin("admin", "pass");
 			using var sena3 = CloneFromLexbox("sena-3");
 			var entries = LcmTestHelper.GetEntries(sena3);
-			Console.WriteLine($"Project has {entries.Count()} entries");
 			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
 			var citationForm = entry.CitationForm.BestVernacularAlternative.Text;
 			Assert.That(citationForm, Is.EqualTo("ambuka"));
 			LcmTestHelper.SetVernacularText(sena3, entry.CitationForm, "something");
-			CommitChanges(sena3, "sena-3");
+			CommitAndPush(sena3, "sena-3");
 
 			using var sena4 = CloneFromLexbox("sena-3", "sena-4");
 			entry = LcmTestHelper.GetEntry(sena4, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
@@ -38,7 +37,7 @@ namespace LfMerge.Core.Tests.E2E
 			LcmTestHelper.UpdateVernacularText(sena4, entry.CitationForm, (s) => $"{s}XYZ");
 			citationForm = entry.CitationForm.BestVernacularAlternative.Text;
 			Assert.That(citationForm, Is.EqualTo("somethingXYZ"));
-			CommitChanges(sena4, "sena-3", "sena-4");
+			CommitAndPush(sena4, "sena-3", "sena-4");
 		}
 	}
 }

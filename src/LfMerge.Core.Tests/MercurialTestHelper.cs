@@ -53,6 +53,11 @@ namespace LfMerge.Core.Tests
 			RunHgCommand(repoPath, $"add {file}");
 		}
 
+		public static void HgClean(string repoPath)
+		{
+			RunHgCommand(repoPath, $"purge --no-confirm");
+		}
+
 		public static void HgCommit(string repoPath, string message)
 		{
 			RunHgCommand(repoPath, $"commit -A -u dummyUser -m \"{message}\"");
