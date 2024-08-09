@@ -103,30 +103,43 @@ namespace LfMerge.Core.DataConverters
 
 		private WriteToChorusNotesResponse CallLfMergeBridge(List<KeyValuePair<string, LfComment>> lfComments, out string bridgeOutput)
 		{
+			return CallLfMergeBridge(lfComments, out bridgeOutput, _project.FwDataPath, _progress, _logger);
+		}
+
+		public static WriteToChorusNotesResponse CallLfMergeBridge(List<KeyValuePair<string, LfComment>> lfComments, out string bridgeOutput, string fwDataPath, IProgress progress, ILogger logger)
+		{
 			bridgeOutput = string.Empty;
 			var options = new Dictionary<string, string>
 			{
-				{"-p", _project.FwDataPath},
+				{"-p", fwDataPath},
 			};
 			try {
 				var bridgeInput = new WriteToChorusNotesInput { LfComments = lfComments };
 				LfMergeBridge.LfMergeBridge.ExtraInputData.Add(options, bridgeInput);
-				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", _progress,
+				if (!LfMergeBridge.LfMergeBridge.Execute("Language_Forge_Write_To_Chorus_Notes", progress,
 					options, out bridgeOutput))
 				{
-					_logger.Error("Got an error from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
+					logger.Error("Got an error from Language_Forge_Write_To_Chorus_Notes: {0}", bridgeOutput);
 					return null;
 				}
 				else
 				{
 					var success = LfMergeBridge.LfMergeBridge.ExtraOutputData.TryGetValue(options, out var outputObject);
-					return outputObject as WriteToChorusNotesResponse;
+					if (success)
+					{
+						return outputObject as WriteToChorusNotesResponse;
+					}
+					else
+					{
+						logger.Error("Language_Forge_Write_To_Chorus_Notes failed to return any data. Its output was: {0}", bridgeOutput);
+						return null;
+					}
 				}
 			}
 			catch (NullReferenceException)
 			{
-				_logger.Debug("Got an exception. Before rethrowing it, here is what LfMergeBridge sent:");
-				_logger.Debug("{0}", bridgeOutput);
+				logger.Debug("Got an exception. Before rethrowing it, here is what LfMergeBridge sent:");
+				logger.Debug("{0}", bridgeOutput);
 				throw;
 			}
 		}
