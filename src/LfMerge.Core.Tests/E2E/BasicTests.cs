@@ -1,7 +1,10 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using LfMerge.Core.DataConverters;
+using LfMergeBridge.LfMergeModel;
 using NUnit.Framework;
+using SIL.Progress;
 
 namespace LfMerge.Core.Tests.E2E
 {
@@ -38,6 +41,25 @@ namespace LfMerge.Core.Tests.E2E
 			citationForm = entry.CitationForm.BestVernacularAlternative.Text;
 			Assert.That(citationForm, Is.EqualTo("somethingXYZ"));
 			CommitAndPush(sena4, "sena-3", "sena-4");
+		}
+
+		[Test]
+		[Property("projectCode", "sena-3")]
+		public async Task SendReceiveComments()
+		{
+			await LcmTestHelper.LexboxLogin("admin", "pass");
+			using var sena3 = CloneFromLexbox("sena-3");
+			var entries = LcmTestHelper.GetEntries(sena3);
+			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
+			var comment = new LfComment {
+				Guid = new Guid("6864b40d-6ad8-4c42-9590-114c0b8495c8"),
+				Content = "Comment for test",
+				// Let's see if that's enough
+			};
+			var comments = new List<KeyValuePair<string, LfComment>> { new KeyValuePair<string, LfComment>("6864b40d-6ad8-4c42-9590-114c0b8495c8", comment) };
+			var result = ConvertMongoToLcmComments.CallLfMergeBridge(comments, out var lfmergeBridgeOutput, FwDataPathForProject("sena-3"), new NullProgress(), TestEnv.Logger);
+			Console.WriteLine(lfmergeBridgeOutput);
+			CommitAndPush(sena3, "sena-3");
 		}
 	}
 }

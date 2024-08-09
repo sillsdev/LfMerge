@@ -91,6 +91,9 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
+		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForTest.Path, "webwork", projectCode);
+		public string FwDataPathForProject(string projectCode) => Path.Join(TestFolderForProject(projectCode), $"{projectCode}.fwdata");
+
 		public FwProject CloneFromLexbox(string code, string? newCode = null)
 		{
 			return LcmTestHelper.CloneFromLexbox(code, TempFolderForTest.Path, newCode);
