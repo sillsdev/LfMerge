@@ -111,11 +111,13 @@ namespace LfMerge.Core.Tests
 			};
 			var response = await GqlClient.SendMutationAsync<LexboxGraphQLTypes.CreateProjectGqlResponse>(request);
 			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
+			Console.WriteLine($"Created project {response.Data.CreateProject.CreateProjectResponse.Id}");
 			return response.Data.CreateProject.CreateProjectResponse;
 		}
 
 		public async Task DeleteLexBoxProject(Guid projectId)
 		{
+			Console.WriteLine($"About to delete project ID {projectId}");
 			var mutation = """
 			mutation SoftDeleteProject($input: SoftDeleteProjectInput!) {
 				softDeleteProject(input: $input) {
@@ -137,6 +139,7 @@ namespace LfMerge.Core.Tests
 			};
 			var response = await GqlClient.SendMutationAsync<object>(request);
 			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
+			Console.WriteLine($"Successfully deleted project ID {projectId}");
 		}
 
 		public void InitRepo(string code, string dest)
@@ -149,9 +152,12 @@ namespace LfMerge.Core.Tests
 
 		public async Task ResetAndUploadZip(string code, string zipPath)
 		{
+			Console.WriteLine($"About to reset {code}");
 			var resetUrl = new Uri(LexboxUrl, $"api/project/resetProject/{code}");
 			await Http.PostAsync(resetUrl, null);
+			Console.WriteLine($"About to upload {zipPath} to {code}");
 			await UploadZip(code, zipPath);
+			Console.WriteLine($"Done with reset and upload for {code}");
 		}
 
 		public async Task ResetToEmpty(string code)
