@@ -91,11 +91,10 @@ namespace LfMerge.Core.Tests
 
 		public FwProject CloneFromLexbox(string code, string? newCode = null)
 		{
-			var projUrl = new Uri(TestEnv.LexboxUrl, $"/hg/{code}");
-			var withAuth = new UriBuilder(projUrl) { UserName = TestEnv.LexboxUsername, Password = TestEnv.LexboxPassword }; // TODO: extract this bit to its own method returning a project URL with auth
+			var projUrl = TestEnv.LexboxUrlForProjectWithAuth(code);
 			newCode ??= code;
 			var dest = Path.Combine(TempFolderForTest.Path, "webwork", newCode);
-			MercurialTestHelper.CloneRepo(withAuth.Uri.AbsoluteUri, dest);
+			MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
 			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
 			MercurialTestHelper.ChangeBranch(dest, "tip");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);

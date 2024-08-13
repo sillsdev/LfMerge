@@ -73,9 +73,12 @@ namespace LfMerge.Core.Tests
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
 
+		public Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
+		public Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
+
 		public void InitRepo(string code, string dest)
 		{
-			var sourceUrl = new Uri(LexboxUrlBasicAuth, $"hg/{code}");
+			var sourceUrl = LexboxUrlForProjectWithAuth(code);
 			MercurialTestHelper.CloneRepo(sourceUrl.AbsoluteUri, dest);
 		}
 
