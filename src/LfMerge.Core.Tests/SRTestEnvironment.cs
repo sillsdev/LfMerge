@@ -23,6 +23,16 @@ namespace LfMerge.Core.Tests
 		public ILogger Logger => MainClass.Logger;
 		public Uri LexboxUrl { get; init; }
 		public Uri LexboxUrlBasicAuth { get; init; }
+		private string? _lexboxHostname;
+		public string LexboxHostname => _lexboxHostname ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
+		private string? _lexboxProtocol;
+		public string LexboxProtocol => _lexboxProtocol ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
+		private string? _lexboxPort;
+		public string LexboxPort => _lexboxPort ?? (LexboxProtocol == "http" ? "80" : "443");
+		private string? _lexboxUsername;
+		public string LexboxUsername => _lexboxUsername ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
+		private string? _lexboxPassword;
+		public string LexboxPassword => _lexboxPassword ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
 		private TemporaryFolder TempFolder { get; init; }
 		private HttpClient Http { get; init; }
 		private HttpClientHandler Handler { get; init; } = new HttpClientHandler();
@@ -30,15 +40,20 @@ namespace LfMerge.Core.Tests
 		public static SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
 		private string Jwt { get; set; }
 
-		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", string lexboxPort = "80", string lexboxUsername = "admin", string lexboxPassword = "pass")
+		public SRTestEnvironment(string? lexboxHostname = null, string? lexboxProtocol = null, string? lexboxPort = null, string? lexboxUsername = null, string? lexboxPassword = null)
 		{
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname, lexboxHostname);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname, lexboxHostname);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol, lexboxProtocol);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_HgUsername, lexboxUsername);
-			Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
-			LexboxUrl = new Uri($"{lexboxProtocol}://{lexboxHostname}:{lexboxPort}");
-			LexboxUrlBasicAuth = new Uri($"{lexboxProtocol}://{WebUtility.UrlEncode(lexboxUsername)}:{WebUtility.UrlEncode(lexboxPassword)}@{lexboxHostname}:{lexboxPort}");
+			_lexboxHostname = lexboxHostname;
+			_lexboxProtocol = lexboxProtocol;
+			_lexboxPort = lexboxPort;
+			_lexboxUsername = lexboxUsername;
+			_lexboxPassword = lexboxPassword;
+			if (lexboxHostname is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname, lexboxHostname);
+			if (lexboxHostname is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname, lexboxHostname);
+			if (lexboxProtocol is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol, lexboxProtocol);
+			if (lexboxUsername is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_HgUsername, lexboxUsername);
+			if (lexboxPassword is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
+			LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
+			LexboxUrlBasicAuth = new Uri($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
 			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
 			Handler.CookieContainer = Cookies;
 			Http = new HttpClient(Handler);
@@ -46,9 +61,7 @@ namespace LfMerge.Core.Tests
 
 		public Task Login()
 		{
-			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername);
-			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken);
-			return LoginAs(lexboxUsername, lexboxPassword);
+			return LoginAs(LexboxUsername, LexboxPassword);
 		}
 
 		public async Task LoginAs(string lexboxUsername, string lexboxPassword)

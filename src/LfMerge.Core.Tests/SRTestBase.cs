@@ -30,12 +30,7 @@ namespace LfMerge.Core.Tests
 		public async Task FixtureSetup()
 		{
 			// Log in to LexBox as admin so we get a login cookie
-			var lexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
-			var lexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
-			var lexboxPort = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriPort) ?? "80";
-			var lexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
-			var lexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
-			TestEnv = new SRTestEnvironment(lexboxHostname, lexboxProtocol, lexboxPort, lexboxUsername, lexboxPassword);
+			TestEnv = new SRTestEnvironment();
 			await TestEnv.Login();
 
 			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder if it already exists
@@ -97,7 +92,7 @@ namespace LfMerge.Core.Tests
 		public FwProject CloneFromLexbox(string code, string? newCode = null)
 		{
 			var projUrl = new Uri(TestEnv.LexboxUrl, $"/hg/{code}");
-			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" }; // TODO: extract this bit to its own method returning a project URL with auth
+			var withAuth = new UriBuilder(projUrl) { UserName = TestEnv.LexboxUsername, Password = TestEnv.LexboxPassword }; // TODO: extract this bit to its own method returning a project URL with auth
 			newCode ??= code;
 			var dest = Path.Combine(TempFolderForTest.Path, "webwork", newCode);
 			MercurialTestHelper.CloneRepo(withAuth.Uri.AbsoluteUri, dest);
