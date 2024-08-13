@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -109,8 +110,34 @@ namespace LfMerge.Core.Tests
 				Variables = new { input },
 			};
 			var response = await GqlClient.SendMutationAsync<LexboxGraphQLTypes.CreateProjectGqlResponse>(request);
-			Assert.That(response.Errors, Is.Null.Or.Empty);
+			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
 			return response.Data.CreateProject.CreateProjectResponse;
+		}
+
+		public async Task DeleteLexBoxProject(Guid projectId)
+		{
+			var mutation = """
+			mutation SoftDeleteProject($input: SoftDeleteProjectInput!) {
+				softDeleteProject(input: $input) {
+					project {
+						id,
+						deletedDate
+					}
+					errors {
+						... on Error {
+							message
+						}
+					}
+				}
+			}
+			""";
+			var input = new { projectId };
+			var request = new GraphQLRequest {
+				Query = mutation,
+				Variables = new { input },
+			};
+			var response = await GqlClient.SendMutationAsync<object>(request);
+			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
 		}
 
 		public void InitRepo(string code, string dest)

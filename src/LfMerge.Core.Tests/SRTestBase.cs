@@ -19,6 +19,7 @@ namespace LfMerge.Core.Tests
 		public TemporaryFolder TestDataFolder { get; set; }
 		public string Sena3ZipPath { get; set; }
 		private string TipRevToRestore { get; set; } = "";
+		private Guid? ProjectIdToDelete { get; set; }
 		public SRTestEnvironment TestEnv { get; set; }
 
 		public SRTestBase()
@@ -73,7 +74,14 @@ namespace LfMerge.Core.Tests
 		{
 			await RestoreRemoteProject();
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
-			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) TempFolderForTest.Dispose();
+			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) {
+				TempFolderForTest.Dispose();
+				if (ProjectIdToDelete is not null) {
+					var projId = ProjectIdToDelete.Value;
+					ProjectIdToDelete = null;
+					await TestEnv.DeleteLexBoxProject(projId);
+				}
+			}
 		}
 
 		public async Task BackupRemoteProject()
@@ -125,7 +133,7 @@ namespace LfMerge.Core.Tests
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
-			// TODO: Add code in TearDown to delete this project if test successful, so we don't clutter local LexBox with leftovers from successful tests
+			ProjectIdToDelete = result.Id;
 			return testCode;
 		}
 

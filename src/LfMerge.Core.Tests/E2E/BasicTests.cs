@@ -65,8 +65,6 @@ namespace LfMerge.Core.Tests.E2E
 		}
 
 		[Test]
-		// Will eventually move this code into SRTestEnv as a helper method
-		// This is a testbed where I'm working out the necessary steps
 		public async Task UploadNewProject()
 		{
 			var testCode = await CreateNewProjectFromSena3();
