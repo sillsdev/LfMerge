@@ -69,16 +69,8 @@ namespace LfMerge.Core.Tests.E2E
 		// This is a testbed where I'm working out the necessary steps
 		public async Task UploadNewProject()
 		{
-			var randomGuid = Guid.NewGuid();
-			var testCode = $"sr-{randomGuid}";
-			var testPath = TestFolderForProject(testCode);
-			MercurialTestHelper.InitializeHgRepo(testPath);
-			MercurialTestHelper.CreateFlexRepo(testPath);
-			// Now create project in LexBox
-			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
-			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
-			Assert.That(result.Id, Is.EqualTo(randomGuid));
-			await TestEnv.ResetAndUploadZip(testCode, Sena3ZipPath);
+			var testCode = await CreateNewProjectFromSena3();
+			Console.WriteLine($"Created {testCode}");
 		}
 	}
 }

@@ -113,6 +113,24 @@ namespace LfMerge.Core.Tests
 
 		}
 
+		public async Task<string> CreateNewProjectFromTemplate(string origZipPath)
+		{
+			var randomGuid = Guid.NewGuid();
+			var testCode = $"sr-{randomGuid}";
+			var testPath = TestFolderForProject(testCode);
+			MercurialTestHelper.InitializeHgRepo(testPath);
+			MercurialTestHelper.CreateFlexRepo(testPath);
+			// Now create project in LexBox
+			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
+			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
+			Assert.That(result.Id, Is.EqualTo(randomGuid));
+			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
+			// TODO: Add code in TearDown to delete this project if test successful, so we don't clutter local LexBox with leftovers from successful tests
+			return testCode;
+		}
+
+		public Task<string> CreateNewProjectFromSena3() => CreateNewProjectFromTemplate(Sena3ZipPath);
+
 		public void CommitAndPush(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
 			TestEnv.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
