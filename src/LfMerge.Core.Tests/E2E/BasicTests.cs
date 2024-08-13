@@ -63,5 +63,20 @@ namespace LfMerge.Core.Tests.E2E
 			Console.WriteLine(lfmergeBridgeOutput);
 			CommitAndPush(sena3, "sena-3");
 		}
+
+		[Test]
+		// Will eventually move this code into SRTestEnv as a helper method
+		// This is a testbed where I'm working out the necessary steps
+		public async Task UploadNewProject()
+		{
+			var randomGuid = Guid.NewGuid();
+			var testCode = $"sr-{randomGuid}";
+			var testPath = TestFolderForProject(testCode);
+			MercurialTestHelper.InitializeHgRepo(testPath);
+			MercurialTestHelper.CreateFlexRepo(testPath);
+			// Now create project in LexBox
+			var result = await TestEnv.CreateLexBoxProject(testCode);
+			Console.WriteLine(result);
+		}
 	}
 }

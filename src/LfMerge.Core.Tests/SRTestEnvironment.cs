@@ -5,6 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using GraphQL;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.SystemTextJson;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
@@ -39,6 +43,7 @@ namespace LfMerge.Core.Tests
 		private CookieContainer Cookies { get; init; } = new CookieContainer();
 		public static SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
 		private string Jwt { get; set; }
+		private GraphQLHttpClient GqlClient { get; init; }
 
 		public SRTestEnvironment(string? lexboxHostname = null, string? lexboxProtocol = null, string? lexboxPort = null, string? lexboxUsername = null, string? lexboxPassword = null)
 		{
@@ -57,6 +62,8 @@ namespace LfMerge.Core.Tests
 			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
 			Handler.CookieContainer = Cookies;
 			Http = new HttpClient(Handler);
+			var lexboxGqlEndpoint = new Uri(LexboxUrl, "/api/graphql");
+			GqlClient = new GraphQLHttpClient(lexboxGqlEndpoint, new SystemTextJsonSerializer(), Http);
 		}
 
 		public Task Login()
@@ -75,6 +82,36 @@ namespace LfMerge.Core.Tests
 
 		public Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
 		public Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
+
+		public async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
+		{
+			name ??= code;
+			description ??= $"Auto-created project for test {TestName}";
+			var mutation = """
+			mutation createProject($input: CreateProjectInput!) {
+				createProject(input: $input) {
+					createProjectResponse {
+						id
+						result
+					}
+					errors {
+						... on DbError {
+							code
+						}
+					}
+				}
+			}
+			""";
+			var projId = Guid.NewGuid();
+			var input = new LexboxGraphQLTypes.CreateProjectInput(projId, name, description, code, LexboxGraphQLTypes.ProjectType.FLEx, LexboxGraphQLTypes.RetentionPolicy.Dev, false, managerId, orgId);
+			var request = new GraphQLRequest {
+				Query = mutation,
+				Variables = new { input },
+			};
+			var response = await GqlClient.SendMutationAsync<LexboxGraphQLTypes.CreateProjectGqlResponse>(request);
+			Assert.That(response.Errors, Is.Null.Or.Empty);
+			return response.Data.CreateProject.CreateProjectResponse;
+		}
 
 		public void InitRepo(string code, string dest)
 		{

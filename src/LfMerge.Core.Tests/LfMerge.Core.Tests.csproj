@@ -32,6 +32,8 @@ See full changelog at https://github.com/sillsdev/LfMerge/blob/develop/CHANGELOG
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GraphQL.Client" Version="6.1.0" />
+    <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.1.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Moq" Version="4.7.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
