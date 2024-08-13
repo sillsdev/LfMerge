@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using LfMerge.Core.Settings;
 using NUnit.Framework;
@@ -26,6 +27,7 @@ namespace LfMerge.Core.Tests
 		private HttpClient Http { get; init; }
 		private HttpClientHandler Handler { get; init; } = new HttpClientHandler();
 		private CookieContainer Cookies { get; init; } = new CookieContainer();
+		public static SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
 		private string Jwt { get; set; }
 
 		public SRTestEnvironment(string lexboxHostname = "localhost", string lexboxProtocol = "http", string lexboxPort = "80", string lexboxUsername = "admin", string lexboxPassword = "pass")
@@ -137,6 +139,22 @@ namespace LfMerge.Core.Tests
 			var tipUrl = new Uri(LexboxUrl, $"/hg/{code}/file/tip?style=json");
 			var result = await Http.GetFromJsonAsync<TipJson>(tipUrl);
 			return result.Node;
+		}
+
+		public void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		{
+			localCode ??= code;
+			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
+			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
+			project.Cache.ActionHandlerAccessor.Commit();
+			if (!project.IsDisposed) project.Dispose();
+			commitMsg ??= "Auto-commit";
+			var projectDir = Path.Combine(baseDir, "webwork", localCode);
+			var fwdataPath = Path.Join(projectDir, $"{localCode}.fwdata");
+			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(NullProgress, false, fwdataPath);
+			MercurialTestHelper.HgClean(projectDir); // Ensure ConfigurationSettings, etc., don't get committed
+			MercurialTestHelper.HgCommit(projectDir, commitMsg);
+			MercurialTestHelper.HgPush(projectDir, withAuth.Uri.AbsoluteUri);
 		}
 
 		private string TestName

@@ -24,7 +24,6 @@ namespace LfMerge.Core.Tests.E2E
 		[Property("projectCode", "sena-3")] // This will cause it to auto-reset the project afterwards
 		public async Task CheckProjectCloning()
 		{
-			await LcmTestHelper.LexboxLogin("admin", "pass");
 			using var sena3 = CloneFromLexbox("sena-3");
 			var entries = LcmTestHelper.GetEntries(sena3);
 			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
@@ -47,7 +46,6 @@ namespace LfMerge.Core.Tests.E2E
 		[Property("projectCode", "sena-3")]
 		public async Task SendReceiveComments()
 		{
-			await LcmTestHelper.LexboxLogin("admin", "pass");
 			using var sena3 = CloneFromLexbox("sena-3");
 			var entries = LcmTestHelper.GetEntries(sena3);
 			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));

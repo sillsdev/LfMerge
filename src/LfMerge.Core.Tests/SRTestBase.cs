@@ -29,7 +29,7 @@ namespace LfMerge.Core.Tests
 		[OneTimeSetUp]
 		public async Task FixtureSetup()
 		{
-			// Log in to LexBox as admin
+			// Log in to LexBox as admin so we get a login cookie
 			var lexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
 			var lexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
 			var lexboxPort = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriPort) ?? "80";
@@ -96,12 +96,22 @@ namespace LfMerge.Core.Tests
 
 		public FwProject CloneFromLexbox(string code, string? newCode = null)
 		{
-			return LcmTestHelper.CloneFromLexbox(code, TempFolderForTest.Path, newCode);
+			var projUrl = new Uri(TestEnv.LexboxUrl, $"/hg/{code}");
+			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" }; // TODO: extract this bit to its own method returning a project URL with auth
+			newCode ??= code;
+			var dest = Path.Combine(TempFolderForTest.Path, "webwork", newCode);
+			MercurialTestHelper.CloneRepo(withAuth.Uri.AbsoluteUri, dest);
+			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
+			MercurialTestHelper.ChangeBranch(dest, "tip");
+			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
+			var settings = new LfMergeSettingsDouble(TempFolderForTest.Path);
+			return new FwProject(settings, newCode);
+
 		}
 
 		public void CommitAndPush(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
-			LcmTestHelper.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
+			TestEnv.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
 		}
 	}
 }
