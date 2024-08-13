@@ -75,8 +75,10 @@ namespace LfMerge.Core.Tests.E2E
 			MercurialTestHelper.InitializeHgRepo(testPath);
 			MercurialTestHelper.CreateFlexRepo(testPath);
 			// Now create project in LexBox
-			var result = await TestEnv.CreateLexBoxProject(testCode);
-			Console.WriteLine(result);
+			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
+			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
+			Assert.That(result.Id, Is.EqualTo(randomGuid));
+			await TestEnv.ResetAndUploadZip(testCode, Sena3ZipPath);
 		}
 	}
 }

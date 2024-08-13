@@ -16,6 +16,8 @@ namespace LfMerge.Core.Tests
 		public LfMerge.Core.Logging.ILogger Logger => MainClass.Logger;
 		public TemporaryFolder TempFolderForClass { get; set; }
 		public TemporaryFolder TempFolderForTest { get; set; }
+		public TemporaryFolder TestDataFolder { get; set; }
+		public string Sena3ZipPath { get; set; }
 		private string TipRevToRestore { get; set; } = "";
 		public SRTestEnvironment TestEnv { get; set; }
 
@@ -33,13 +35,21 @@ namespace LfMerge.Core.Tests
 			TestEnv = new SRTestEnvironment();
 			await TestEnv.Login();
 
-			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder if it already exists
+			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder and data subfolder if they already exist
 			var tempPath = Path.Combine(Path.GetTempPath(), "LfMergeSRTests");
 			var rootTempFolder = Directory.Exists(tempPath) ? TemporaryFolder.TrackExisting(tempPath) : new TemporaryFolder(tempPath);
+			var testDataPath = Path.Combine(tempPath, "data");
+			TestDataFolder = Directory.Exists(testDataPath) ? TemporaryFolder.TrackExisting(testDataPath) : new TemporaryFolder(testDataPath);
 
 			// But the folder for this specific test suite should be deleted if it already exists
 			var derivedClassName = this.GetType().Name;
 			TempFolderForClass = new TemporaryFolder(rootTempFolder, derivedClassName);
+
+			// Ensure sena-3.zip is available to all tests as a starting point
+			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
+			if (!File.Exists(Sena3ZipPath)) {
+				await TestEnv.DownloadProjectBackup("sena-3", Sena3ZipPath);
+			}
 		}
 
 		[OneTimeTearDown]

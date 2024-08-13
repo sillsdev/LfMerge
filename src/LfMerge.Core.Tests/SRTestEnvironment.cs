@@ -83,8 +83,9 @@ namespace LfMerge.Core.Tests
 		public Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
 		public Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
 
-		public async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
+		public async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, Guid? projId = null, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
 		{
+			projId ??= Guid.NewGuid();
 			name ??= code;
 			description ??= $"Auto-created project for test {TestName}";
 			var mutation = """
@@ -102,7 +103,6 @@ namespace LfMerge.Core.Tests
 				}
 			}
 			""";
-			var projId = Guid.NewGuid();
 			var input = new LexboxGraphQLTypes.CreateProjectInput(projId, name, description, code, LexboxGraphQLTypes.ProjectType.FLEx, LexboxGraphQLTypes.RetentionPolicy.Dev, false, managerId, orgId);
 			var request = new GraphQLRequest {
 				Query = mutation,
@@ -149,12 +149,12 @@ namespace LfMerge.Core.Tests
 			await client.UploadAsync(fileUrl, file);
 		}
 
-		public async Task DownloadProjectBackup(string code)
+		public async Task DownloadProjectBackup(string code, string? destZipPath = null)
 		{
 			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
 			var result = await Http.GetAsync(backupUrl);
 			var filename = result.Content.Headers.ContentDisposition?.FileName;
-			var savePath = Path.Join(TempFolder.Path, filename);
+			var savePath = destZipPath ?? Path.Join(TempFolder.Path, filename);
 			using (var outStream = File.Create(savePath))
 			{
 				await result.Content.CopyToAsync(outStream);
