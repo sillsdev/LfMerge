@@ -6,10 +6,10 @@ namespace LfMerge.Core.Tests.LexboxGraphQLTypes
 	{
 		Unknown = 0,
 		FLEx = 1,
-		// WeSay = 2,
-		// OneStoryEditor = 3,
-		// OurWord = 4,
-		// AdaptIt = 5,
+		WeSay = 2,
+		OneStoryEditor = 3,
+		OurWord = 4,
+		AdaptIt = 5,
 	}
 	public enum RetentionPolicy
 	{
