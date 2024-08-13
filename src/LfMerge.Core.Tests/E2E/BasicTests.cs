@@ -25,8 +25,10 @@ namespace LfMerge.Core.Tests.E2E
 		public async Task CheckProjectCloning()
 		{
 			using var sena3 = CloneFromLexbox("sena-3");
-			var entries = LcmTestHelper.GetEntries(sena3);
+			var entryCount = LcmTestHelper.CountEntries(sena3);
+			Assert.That(entryCount, Is.EqualTo(1462));
 			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
+			Assert.That(entry, Is.Not.Null);
 			var citationForm = entry.CitationForm.BestVernacularAlternative.Text;
 			Assert.That(citationForm, Is.EqualTo("ambuka"));
 			LcmTestHelper.SetVernacularText(sena3, entry.CitationForm, "something");
@@ -47,8 +49,10 @@ namespace LfMerge.Core.Tests.E2E
 		public async Task SendReceiveComments()
 		{
 			using var sena3 = CloneFromLexbox("sena-3");
-			var entries = LcmTestHelper.GetEntries(sena3);
+			var entryCount = LcmTestHelper.CountEntries(sena3);
+			Assert.That(entryCount, Is.EqualTo(1462));
 			var entry = LcmTestHelper.GetEntry(sena3, new Guid("5db6e79d-de66-4ec6-84c1-af3cd170f90d"));
+			Assert.That(entry, Is.Not.Null);
 			var comment = new LfComment {
 				Guid = new Guid("6864b40d-6ad8-4c42-9590-114c0b8495c8"),
 				Content = "Comment for test",

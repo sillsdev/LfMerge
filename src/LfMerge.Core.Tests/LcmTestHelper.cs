@@ -20,6 +20,12 @@ namespace LfMerge.Core.Tests
 			return project?.ServiceLocator?.LanguageProject?.LexDbOA?.Entries ?? [];
 		}
 
+		public static int CountEntries(FwProject project)
+		{
+			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
+			return repo.Count;
+		}
+
 		public static ILexEntry GetEntry(FwProject project, Guid guid)
 		{
 			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
