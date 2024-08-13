@@ -134,11 +134,11 @@ namespace LfMerge.Core.Tests
 			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
 			var result = await Http.GetAsync(backupUrl);
 			var zipStream = await result.Content.ReadAsStreamAsync();
-			var projectDir = Path.Join(TempFolder.Path, code);
+			var projectDir = TempFolder.GetPathForNewTempFile(false);
 			ZipFile.ExtractToDirectory(zipStream, projectDir);
-			var clonedDir = Path.Join(TempFolder.Path, $"{code}-{rev}");
+			var clonedDir = TempFolder.GetPathForNewTempFile(false);
 			MercurialTestHelper.CloneRepoAtRev(projectDir, clonedDir, rev);
-			var zipPath = Path.Join(TempFolder.Path, $"{code}-{rev}.zip");
+			var zipPath = TempFolder.GetPathForNewTempFile(false);
 			ZipFile.CreateFromDirectory(clonedDir, zipPath);
 			await ResetAndUploadZip(code, zipPath);
 		}
