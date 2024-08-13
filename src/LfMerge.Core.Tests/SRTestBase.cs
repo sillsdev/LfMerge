@@ -68,6 +68,14 @@ namespace LfMerge.Core.Tests
 			await BackupRemoteProject();
 		}
 
+		[TearDown]
+		public async Task TestTeardown()
+		{
+			await RestoreRemoteProject();
+			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
+			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) TempFolderForTest.Dispose();
+		}
+
 		public async Task BackupRemoteProject()
 		{
 			var test = TestContext.CurrentContext.Test;
@@ -77,14 +85,6 @@ namespace LfMerge.Core.Tests
 			} else {
 				TipRevToRestore = "";
 			}
-		}
-
-		[TearDown]
-		public async Task TestTeardown()
-		{
-			await RestoreRemoteProject();
-			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
-			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) TempFolderForTest.Dispose();
 		}
 
 		public async Task RestoreRemoteProject()
