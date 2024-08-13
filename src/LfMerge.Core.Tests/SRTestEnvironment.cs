@@ -120,8 +120,7 @@ namespace LfMerge.Core.Tests
 			mutation SoftDeleteProject($input: SoftDeleteProjectInput!) {
 				softDeleteProject(input: $input) {
 					project {
-						id,
-						deletedDate
+						id
 					}
 					errors {
 						... on Error {
