@@ -73,7 +73,6 @@ namespace LfMerge.Core.Tests
 		public async Task TestTeardown()
 		{
 			await RestoreRemoteProject();
-			Console.WriteLine($"Teardown for {TestName}");
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
 			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) {
 				TempFolderForTest.Dispose();
@@ -83,7 +82,6 @@ namespace LfMerge.Core.Tests
 					await TestEnv.DeleteLexBoxProject(projId);
 				}
 			}
-			Console.WriteLine($"Teardown for {TestName} completed");
 		}
 
 		public async Task BackupRemoteProject()
@@ -134,9 +132,6 @@ namespace LfMerge.Core.Tests
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
-			// Uncomment the two lines below to fix the race condition
-			// Console.WriteLine("Sleeping...");
-			// System.Threading.Thread.Sleep(TimeSpan.FromSeconds(5)); // Wait for Mercurial to "catch up" with new project creation
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
 			ProjectIdToDelete = result.Id;
 			return testCode;

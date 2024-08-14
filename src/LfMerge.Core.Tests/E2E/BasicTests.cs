@@ -46,7 +46,7 @@ namespace LfMerge.Core.Tests.E2E
 
 		[Test]
 		[Property("projectCode", "sena-3")]
-		public async Task Foo_SendReceiveComments()
+		public async Task SendReceiveComments()
 		{
 			using var sena3 = CloneFromLexbox("sena-3");
 			var entryCount = LcmTestHelper.CountEntries(sena3);
@@ -65,7 +65,7 @@ namespace LfMerge.Core.Tests.E2E
 		}
 
 		[Test]
-		public async Task Foo_UploadNewProject()
+		public async Task UploadNewProject()
 		{
 			var testCode = await CreateNewProjectFromSena3();
 			Console.WriteLine($"Created {testCode}");
