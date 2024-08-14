@@ -17,6 +17,7 @@ namespace LfMerge.Core.Tests
 		public TemporaryFolder TempFolderForClass { get; set; }
 		public TemporaryFolder TempFolderForTest { get; set; }
 		public TemporaryFolder TestDataFolder { get; set; }
+		public TemporaryFolder LcmDataFolder { get; set; }
 		public string Sena3ZipPath { get; set; }
 		private string TipRevToRestore { get; set; } = "";
 		private Guid? ProjectIdToDelete { get; set; }
@@ -41,6 +42,9 @@ namespace LfMerge.Core.Tests
 			var rootTempFolder = Directory.Exists(tempPath) ? TemporaryFolder.TrackExisting(tempPath) : new TemporaryFolder(tempPath);
 			var testDataPath = Path.Combine(tempPath, "data");
 			TestDataFolder = Directory.Exists(testDataPath) ? TemporaryFolder.TrackExisting(testDataPath) : new TemporaryFolder(testDataPath);
+			var lcmDataPath = Path.Combine(tempPath, "lcm-common");
+			LcmDataFolder = Directory.Exists(lcmDataPath) ? TemporaryFolder.TrackExisting(lcmDataPath) : new TemporaryFolder(lcmDataPath);
+			Environment.SetEnvironmentVariable("FW_CommonAppData", LcmDataFolder.Path);
 
 			// But the folder for this specific test suite should be deleted if it already exists
 			var derivedClassName = this.GetType().Name;
@@ -56,6 +60,7 @@ namespace LfMerge.Core.Tests
 		[OneTimeTearDown]
 		public void FixtureTeardown()
 		{
+			Environment.SetEnvironmentVariable("FW_CommonAppData", null);
 			var result = TestContext.CurrentContext.Result;
 			var nonSuccess = result.FailCount + result.InconclusiveCount + result.WarningCount;
 			// Only delete class temp folder if we passed or skipped all tests
