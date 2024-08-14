@@ -33,10 +33,6 @@ namespace LfMerge.Core.Tests
 		[OneTimeSetUp]
 		public async Task FixtureSetup()
 		{
-			// Log in to LexBox as admin so we get a login cookie
-			TestEnv = new SRTestEnvironment();
-			await TestEnv.Login();
-
 			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder and data subfolder if they already exist
 			var tempPath = Path.Combine(Path.GetTempPath(), "LfMergeSRTests");
 			var rootTempFolder = Directory.Exists(tempPath) ? TemporaryFolder.TrackExisting(tempPath) : new TemporaryFolder(tempPath);
@@ -49,6 +45,10 @@ namespace LfMerge.Core.Tests
 			// But the folder for this specific test suite should be deleted if it already exists
 			var derivedClassName = this.GetType().Name;
 			TempFolderForClass = new TemporaryFolder(rootTempFolder, derivedClassName);
+
+			// Log in to LexBox as admin so we get a login cookie
+			TestEnv = new SRTestEnvironment(TempFolderForClass);
+			await TestEnv.Login();
 
 			// Ensure sena-3.zip is available to all tests as a starting point
 			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
@@ -109,21 +109,45 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForTest.Path, "webwork", projectCode);
+		// TODO See if TempFolderForTest will work instead of TempFolderForClass... (need to refactor SRTestEnv to expect to be instantiated once per test in order to pull that off)
+		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForClass.Path, "webwork", projectCode);
 		public string FwDataPathForProject(string projectCode) => Path.Join(TestFolderForProject(projectCode), $"{projectCode}.fwdata");
 
-		public FwProject CloneFromLexbox(string code, string? newCode = null)
+		public string CloneRepoFromLexbox(string code, string? newCode = null)
 		{
 			var projUrl = TestEnv.LexboxUrlForProjectWithAuth(code);
 			newCode ??= code;
-			var dest = Path.Combine(TempFolderForTest.Path, "webwork", newCode);
+			var dest = TestFolderForProject(newCode);
 			MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
+			return dest;
+		}
+
+		public FwProject CloneFromLexbox(string code, string? newCode = null)
+		{
+			var dest = CloneRepoFromLexbox(code, newCode);
+			var dirInfo = new DirectoryInfo(dest);
+			if (!dirInfo.Exists) throw new InvalidOperationException($"Failed to clone {code} from lexbox, cannot create FwProject");
 			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
 			MercurialTestHelper.ChangeBranch(dest, "tip");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
 			var settings = new LfMergeSettingsDouble(TempFolderForTest.Path);
 			return new FwProject(settings, newCode);
+		}
 
+		public async Task<string> CreateNewFlexProject()
+		{
+			var randomGuid = Guid.NewGuid();
+			var testCode = $"sr-{randomGuid}";
+			var testPath = TestFolderForProject(testCode);
+			MercurialTestHelper.InitializeHgRepo(testPath);
+			MercurialTestHelper.CreateFlexRepo(testPath);
+			// Now create project in LexBox
+			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
+			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
+			Assert.That(result.Id, Is.EqualTo(randomGuid));
+			// TODO: Push that first commit to lexbox so the project is non-empty
+			ProjectIdToDelete = result.Id;
+			return testCode;
 		}
 
 		public async Task<string> CreateNewProjectFromTemplate(string origZipPath)
@@ -131,8 +155,6 @@ namespace LfMerge.Core.Tests
 			var randomGuid = Guid.NewGuid();
 			var testCode = $"sr-{randomGuid}";
 			var testPath = TestFolderForProject(testCode);
-			MercurialTestHelper.InitializeHgRepo(testPath);
-			MercurialTestHelper.CreateFlexRepo(testPath);
 			// Now create project in LexBox
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));

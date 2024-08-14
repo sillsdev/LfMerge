@@ -20,13 +20,13 @@ namespace LfMerge.Core
 		private readonly string _projectCode;
 		private ILanguageDepotProject _languageDepotProject;
 
-		public static LanguageForgeProject Create(string projectCode)
+		public static LanguageForgeProject Create(string projectCode, LfMergeSettings settings = null)
 		{
 			LanguageForgeProject project;
 			if (CachedProjects.TryGetValue(projectCode, out project))
 				return project;
 
-			project = new LanguageForgeProject(projectCode);
+			project = new LanguageForgeProject(projectCode, settings);
 			CachedProjects.Add(projectCode, project);
 			return project;
 		}

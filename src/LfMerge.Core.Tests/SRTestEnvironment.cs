@@ -45,7 +45,8 @@ namespace LfMerge.Core.Tests
 		private string Jwt { get; set; }
 		private GraphQLHttpClient GqlClient { get; init; }
 
-		public SRTestEnvironment(string? lexboxHostname = null, string? lexboxProtocol = null, string? lexboxPort = null, string? lexboxUsername = null, string? lexboxPassword = null)
+		public SRTestEnvironment(TemporaryFolder? tempFolder = null, string? lexboxHostname = null, string? lexboxProtocol = null, string? lexboxPort = null, string? lexboxUsername = null, string? lexboxPassword = null)
+			: base(true, true, true, tempFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName()))
 		{
 			_lexboxHostname = lexboxHostname;
 			_lexboxProtocol = lexboxProtocol;
@@ -59,11 +60,11 @@ namespace LfMerge.Core.Tests
 			if (lexboxPassword is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
 			LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
 			LexboxUrlBasicAuth = new Uri($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
-			TempFolder = new TemporaryFolder(TestName + Path.GetRandomFileName());
+			TempFolder = _languageForgeServerFolder;
 			Handler.CookieContainer = Cookies;
-			Http = new HttpClient(Handler);
+			Http = new HttpClient(Handler); // TODO: Move to static constructor
 			var lexboxGqlEndpoint = new Uri(LexboxUrl, "/api/graphql");
-			GqlClient = new GraphQLHttpClient(lexboxGqlEndpoint, new SystemTextJsonSerializer(), Http);
+			GqlClient = new GraphQLHttpClient(lexboxGqlEndpoint, new SystemTextJsonSerializer(), Http); // TODO: Move to static constructor
 		}
 
 		public Task Login()
@@ -235,7 +236,7 @@ namespace LfMerge.Core.Tests
 			MercurialTestHelper.HgPush(projectDir, withAuth.Uri.AbsoluteUri);
 		}
 
-		private string TestName
+		private static string TestName
 		{
 			get
 			{
