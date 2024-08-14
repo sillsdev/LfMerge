@@ -23,9 +23,8 @@ namespace LfMerge.Core.Tests
 	/// <summary>
 	/// Test environment for end-to-end testing, i.e. Send/Receive with a real LexBox instance
 	/// </summary>
-	public class SRTestEnvironment
+	public class SRTestEnvironment : TestEnvironment
 	{
-		public ILogger Logger => MainClass.Logger;
 		public Uri LexboxUrl { get; init; }
 		public Uri LexboxUrlBasicAuth { get; init; }
 		private string? _lexboxHostname;
