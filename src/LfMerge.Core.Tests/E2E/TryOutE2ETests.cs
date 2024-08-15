@@ -27,32 +27,11 @@ namespace LfMerge.Core.Tests.E2E
 		{
 			// Setup
 
-			// Take testlangproj-modified and "upload" it to mock LD as proj code "testlangproj"
-			// TODO: Replace the above with uploading the modified FwProject to LexBox, or perhaps cloning the original, having FW modify it, then uploading the modified version
-
-			var projCode = await CreateNewProjectFromSena3();
-			Guid entryId = Guid.Parse("0006f482-a078-4cef-9c5a-8bd35b53cf72");
-
-			var projPath = CloneRepoFromLexbox(projCode);
-			Console.WriteLine("cloned");
-			MercurialTestHelper.ChangeBranch(projPath, "tip");
-			Console.WriteLine("on tip");
-			var fwdataPath = Path.Combine(projPath, $"{projCode}.fwdata");
-			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
-			Console.WriteLine("reassembled");
-			// TODO: Write a helper to simplify this process
-
-			var lfProject = LanguageForgeProject.Create(projCode, TestEnv.Settings);
-			lfProject.IsInitialClone = true;
-			Console.WriteLine($"Will look for .fwdata file at {lfProject.FwDataPath}");
-
-			// Do an initial clone from mock LD to LF (in the form of the mock Mongo)
-
-			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, SRTestEnvironment.NullLogger, _mongoConnection, _recordFactory);
-			transferLcmToMongo.Run(lfProject);
+			var lfProject = await CreateLfProjectFromSena3();
 
 			// Do some initial checks to make sure we got the right data
 
+			Guid entryId = Guid.Parse("0006f482-a078-4cef-9c5a-8bd35b53cf72");
 			var lcmObject = lfProject.FieldWorksProject?.ServiceLocator?.ObjectRepository?.GetObject(entryId);
 			Assert.That(lcmObject, Is.Not.Null);
 			var lcmEntry = lcmObject as ILexEntry;

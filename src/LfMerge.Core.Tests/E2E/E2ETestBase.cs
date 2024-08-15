@@ -72,9 +72,23 @@ namespace LfMerge.Core.Tests.E2E
 			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
 			if (_recordFactory == null)
 				throw new AssertionException("E2E tests need a mock MongoProjectRecordFactory in order to work.");
-
 		}
 
+		public async Task<LanguageForgeProject> CreateLfProjectFromSena3()
+		{
+			var projCode = await CreateNewProjectFromSena3();
+			var projPath = CloneRepoFromLexbox(projCode);
+			MercurialTestHelper.ChangeBranch(projPath, "tip");
+			var fwdataPath = Path.Combine(projPath, $"{projCode}.fwdata");
+			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
 
+			// Do an initial clone from LexBox to the mock LF
+			var lfProject = LanguageForgeProject.Create(projCode, TestEnv.Settings);
+			lfProject.IsInitialClone = true;
+			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, SRTestEnvironment.NullLogger, _mongoConnection, _recordFactory);
+			transferLcmToMongo.Run(lfProject);
+
+			return lfProject;
+		}
 	}
 }
