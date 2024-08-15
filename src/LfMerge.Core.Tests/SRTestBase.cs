@@ -27,8 +27,8 @@ namespace LfMerge.Core.Tests
 		{
 		}
 
-		private string TestName => TestContext.CurrentContext.Test.Name;
-		private string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
+		private static string TestName => TestContext.CurrentContext.Test.Name;
+		private static string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
 
 		[OneTimeSetUp]
 		public async Task FixtureSetup()
@@ -83,7 +83,7 @@ namespace LfMerge.Core.Tests
 				if (ProjectIdToDelete is not null) {
 					var projId = ProjectIdToDelete.Value;
 					ProjectIdToDelete = null;
-					await TestEnv.DeleteLexBoxProject(projId);
+					await SRTestEnvironment.DeleteLexBoxProject(projId);
 				}
 			}
 		}
@@ -93,7 +93,7 @@ namespace LfMerge.Core.Tests
 			var test = TestContext.CurrentContext.Test;
 			if (test.Properties.ContainsKey("projectCode")) {
 				var code = test.Properties.Get("projectCode") as string;
-				TipRevToRestore = await TestEnv.GetTipRev(code);
+				TipRevToRestore = await SRTestEnvironment.GetTipRev(code);
 			} else {
 				TipRevToRestore = "";
 			}
@@ -113,7 +113,7 @@ namespace LfMerge.Core.Tests
 
 		public string CloneRepoFromLexbox(string code, string? newCode = null)
 		{
-			var projUrl = TestEnv.LexboxUrlForProjectWithAuth(code);
+			var projUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(code);
 			newCode ??= code;
 			var dest = TestFolderForProject(newCode);
 			MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
@@ -141,7 +141,7 @@ namespace LfMerge.Core.Tests
 			MercurialTestHelper.InitializeHgRepo(testPath);
 			MercurialTestHelper.CreateFlexRepo(testPath);
 			// Now create project in LexBox
-			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
+			var result = await SRTestEnvironment.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			// TODO: Push that first commit to lexbox so the project is non-empty
@@ -155,7 +155,7 @@ namespace LfMerge.Core.Tests
 			var testCode = $"sr-{randomGuid}";
 			var testPath = TestFolderForProject(testCode);
 			// Now create project in LexBox
-			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
+			var result = await SRTestEnvironment.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
@@ -167,7 +167,7 @@ namespace LfMerge.Core.Tests
 
 		public void CommitAndPush(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
-			TestEnv.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
+			SRTestEnvironment.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
 		}
 	}
 }

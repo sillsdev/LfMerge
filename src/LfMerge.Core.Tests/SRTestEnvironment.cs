@@ -25,22 +25,21 @@ namespace LfMerge.Core.Tests
 	/// </summary>
 	public class SRTestEnvironment : TestEnvironment
 	{
-		public static string LexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
-		public static string LexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
-		public static string LexboxPort = LexboxProtocol == "http" ? "80" : "443";
-		public static string LexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
-		public static string LexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
-		public static Uri LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
-		public static Uri LexboxUrlBasicAuth = new Uri($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
-		public static CookieContainer Cookies { get; } = new CookieContainer();
-		private static HttpClientHandler Handler = new HttpClientHandler { CookieContainer = Cookies };
-		private static Lazy<HttpClient> LazyHttp = new(() => new HttpClient(Handler));
+		public static readonly string LexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
+		public static readonly string LexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
+		public static readonly string LexboxPort = LexboxProtocol == "http" ? "80" : "443";
+		public static readonly string LexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
+		public static readonly string LexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
+		public static readonly Uri LexboxUrl = new($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
+		public static readonly Uri LexboxUrlBasicAuth = new($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
+		public static readonly CookieContainer Cookies = new();
+		private static readonly HttpClientHandler Handler = new() { CookieContainer = Cookies };
+		private static readonly Lazy<HttpClient> LazyHttp = new(() => new HttpClient(Handler));
 		public static HttpClient Http => LazyHttp.Value;
-		public static SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
-		public static bool AlreadyLoggedIn = false;
+		public static readonly SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
+		private static bool AlreadyLoggedIn = false;
 		private TemporaryFolder TempFolder { get; init; }
-		private string Jwt { get; set; }
-		private static Lazy<GraphQLHttpClient> LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
+		private static readonly Lazy<GraphQLHttpClient> LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
 		public static GraphQLHttpClient GqlClient => LazyGqlClient.Value;
 
 		public SRTestEnvironment(TemporaryFolder? tempFolder = null)
@@ -64,10 +63,10 @@ namespace LfMerge.Core.Tests
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
 
-		public Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
-		public Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
+		public static Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
+		public static Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
 
-		public async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, Guid? projId = null, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
+		public static async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, Guid? projId = null, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
 		{
 			projId ??= Guid.NewGuid();
 			name ??= code;
@@ -97,7 +96,7 @@ namespace LfMerge.Core.Tests
 			return response.Data.CreateProject.CreateProjectResponse;
 		}
 
-		public async Task DeleteLexBoxProject(Guid projectId)
+		public static async Task DeleteLexBoxProject(Guid projectId)
 		{
 			var mutation = """
 			mutation SoftDeleteProject($input: SoftDeleteProjectInput!) {
@@ -122,7 +121,7 @@ namespace LfMerge.Core.Tests
 			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
 		}
 
-		public void InitRepo(string code, string dest)
+		public static void InitRepo(string code, string dest)
 		{
 			var sourceUrl = LexboxUrlForProjectWithAuth(code);
 			MercurialTestHelper.CloneRepo(sourceUrl.AbsoluteUri, dest);
@@ -137,7 +136,7 @@ namespace LfMerge.Core.Tests
 			await UploadZip(code, zipPath);
 		}
 
-		public async Task ResetToEmpty(string code)
+		public static async Task ResetToEmpty(string code)
 		{
 			var resetUrl = new Uri(LexboxUrl, $"api/project/resetProject/{code}");
 			await Http.PostAsync(resetUrl, null);
@@ -145,7 +144,7 @@ namespace LfMerge.Core.Tests
 			await Http.PostAsync(finishResetUrl, null);
 		}
 
-		public async Task UploadZip(string code, string zipPath)
+		public static async Task UploadZip(string code, string zipPath)
 		{
 			var sourceUrl = new Uri(LexboxUrl, $"/api/project/upload-zip/{code}");
 			var file = new FileInfo(zipPath);
@@ -195,14 +194,14 @@ namespace LfMerge.Core.Tests
 
 		public record TipJson(string Node);
 
-		public async Task<string> GetTipRev(string code)
+		public static async Task<string> GetTipRev(string code)
 		{
 			var tipUrl = new Uri(LexboxUrl, $"/hg/{code}/file/tip?style=json");
 			var result = await Http.GetFromJsonAsync<TipJson>(tipUrl);
 			return result.Node;
 		}
 
-		public void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		public static void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
