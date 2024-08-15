@@ -28,7 +28,7 @@ namespace LfMerge.Core.Tests
 		}
 
 		private static string TestName => TestContext.CurrentContext.Test.Name;
-		private static string TestNameForPath => string.Join("", TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
+		private static string TestNameForPath => string.Concat(TestName.Split(Path.GetInvalidPathChars())); // Easiest way to strip out all invalid chars
 
 		[OneTimeSetUp]
 		public async Task FixtureSetup()
