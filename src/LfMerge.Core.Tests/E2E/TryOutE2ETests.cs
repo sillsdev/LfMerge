@@ -48,7 +48,7 @@ namespace LfMerge.Core.Tests.E2E
 
 			// Do an initial clone from mock LD to LF (in the form of the mock Mongo)
 
-			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, TestEnv.Logger, _mongoConnection, _recordFactory);
+			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, SRTestEnvironment.NullLogger, _mongoConnection, _recordFactory);
 			transferLcmToMongo.Run(lfProject);
 
 			// Do some initial checks to make sure we got the right data

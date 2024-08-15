@@ -37,6 +37,7 @@ namespace LfMerge.Core.Tests
 		private static readonly Lazy<HttpClient> LazyHttp = new(() => new HttpClient(Handler));
 		public static HttpClient Http => LazyHttp.Value;
 		public static readonly SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
+		public static readonly ILogger NullLogger = new NullLogger();
 		private static bool AlreadyLoggedIn = false;
 		private TemporaryFolder TempFolder { get; init; }
 		private static readonly Lazy<GraphQLHttpClient> LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
