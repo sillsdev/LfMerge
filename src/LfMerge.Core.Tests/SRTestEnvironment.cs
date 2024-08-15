@@ -25,58 +25,41 @@ namespace LfMerge.Core.Tests
 	/// </summary>
 	public class SRTestEnvironment : TestEnvironment
 	{
-		public Uri LexboxUrl { get; init; }
-		public Uri LexboxUrlBasicAuth { get; init; }
-		private string? _lexboxHostname;
-		public string LexboxHostname => _lexboxHostname ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
-		private string? _lexboxProtocol;
-		public string LexboxProtocol => _lexboxProtocol ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
-		private string? _lexboxPort;
-		public string LexboxPort => _lexboxPort ?? (LexboxProtocol == "http" ? "80" : "443");
-		private string? _lexboxUsername;
-		public string LexboxUsername => _lexboxUsername ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
-		private string? _lexboxPassword;
-		public string LexboxPassword => _lexboxPassword ?? Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
-		private TemporaryFolder TempFolder { get; init; }
-		private HttpClient Http { get; init; }
-		private HttpClientHandler Handler { get; init; } = new HttpClientHandler();
-		private CookieContainer Cookies { get; init; } = new CookieContainer();
+		public static string LexboxHostname = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname) ?? "localhost";
+		public static string LexboxProtocol = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol) ?? "http";
+		public static string LexboxPort = LexboxProtocol == "http" ? "80" : "443";
+		public static string LexboxUsername = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_HgUsername) ?? "admin";
+		public static string LexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
+		public static Uri LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
+		public static Uri LexboxUrlBasicAuth = new Uri($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
+		public static CookieContainer Cookies { get; } = new CookieContainer();
+		private static HttpClientHandler Handler = new HttpClientHandler { CookieContainer = Cookies };
+		private static Lazy<HttpClient> LazyHttp = new(() => new HttpClient(Handler));
+		public static HttpClient Http => LazyHttp.Value;
 		public static SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
+		public static bool AlreadyLoggedIn = false;
+		private TemporaryFolder TempFolder { get; init; }
 		private string Jwt { get; set; }
-		private GraphQLHttpClient GqlClient { get; init; }
+		private static Lazy<GraphQLHttpClient> LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
+		public static GraphQLHttpClient GqlClient => LazyGqlClient.Value;
 
-		public SRTestEnvironment(TemporaryFolder? tempFolder = null, string? lexboxHostname = null, string? lexboxProtocol = null, string? lexboxPort = null, string? lexboxUsername = null, string? lexboxPassword = null)
+		public SRTestEnvironment(TemporaryFolder? tempFolder = null)
 			: base(true, true, true, tempFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName()))
 		{
-			_lexboxHostname = lexboxHostname;
-			_lexboxProtocol = lexboxProtocol;
-			_lexboxPort = lexboxPort;
-			_lexboxUsername = lexboxUsername;
-			_lexboxPassword = lexboxPassword;
-			if (lexboxHostname is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPublicHostname, lexboxHostname);
-			if (lexboxHostname is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotPrivateHostname, lexboxHostname);
-			if (lexboxProtocol is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_LanguageDepotUriProtocol, lexboxProtocol);
-			if (lexboxUsername is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_HgUsername, lexboxUsername);
-			if (lexboxPassword is not null) Environment.SetEnvironmentVariable(MagicStrings.EnvVar_TrustToken, lexboxPassword);
-			LexboxUrl = new Uri($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
-			LexboxUrlBasicAuth = new Uri($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
-			TempFolder = _languageForgeServerFolder;
-			Handler.CookieContainer = Cookies;
-			Http = new HttpClient(Handler); // TODO: Move to static constructor
-			var lexboxGqlEndpoint = new Uri(LexboxUrl, "/api/graphql");
-			GqlClient = new GraphQLHttpClient(lexboxGqlEndpoint, new SystemTextJsonSerializer(), Http); // TODO: Move to static constructor
+			TempFolder = _languageForgeServerFolder; // Better name for what E2E tests use it for
 		}
 
-		public Task Login()
+		public static Task Login()
 		{
 			return LoginAs(LexboxUsername, LexboxPassword);
 		}
 
-		public async Task LoginAs(string lexboxUsername, string lexboxPassword)
+		public static async Task LoginAs(string lexboxUsername, string lexboxPassword)
 		{
+			if (AlreadyLoggedIn) return;
 			var loginResult = await Http.PostAsync(new Uri(LexboxUrl, "api/login"), JsonContent.Create(new { EmailOrUsername=lexboxUsername, Password=lexboxPassword }));
 			var cookies = Cookies.GetCookies(LexboxUrl);
-			Jwt = cookies[".LexBoxAuth"].Value;
+			AlreadyLoggedIn = true;
 			// Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
@@ -175,13 +158,12 @@ namespace LfMerge.Core.Tests
 			await client.UploadAsync(fileUrl, file);
 		}
 
-		public async Task DownloadProjectBackup(string code, string? destZipPath = null)
+		public static async Task DownloadProjectBackup(string code, string destZipPath)
 		{
 			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
 			var result = await Http.GetAsync(backupUrl);
 			var filename = result.Content.Headers.ContentDisposition?.FileName;
-			var savePath = destZipPath ?? Path.Join(TempFolder.Path, filename);
-			using (var outStream = File.Create(savePath))
+			using (var outStream = File.Create(destZipPath))
 			{
 				await result.Content.CopyToAsync(outStream);
 			}

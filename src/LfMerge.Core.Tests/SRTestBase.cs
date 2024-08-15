@@ -46,14 +46,11 @@ namespace LfMerge.Core.Tests
 			var derivedClassName = this.GetType().Name;
 			TempFolderForClass = new TemporaryFolder(rootTempFolder, derivedClassName);
 
-			// Log in to LexBox as admin so we get a login cookie
-			TestEnv = new SRTestEnvironment(TempFolderForClass);
-			await TestEnv.Login();
-
 			// Ensure sena-3.zip is available to all tests as a starting point
 			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
 			if (!File.Exists(Sena3ZipPath)) {
-				await TestEnv.DownloadProjectBackup("sena-3", Sena3ZipPath);
+				await SRTestEnvironment.Login();
+				await SRTestEnvironment.DownloadProjectBackup("sena-3", Sena3ZipPath);
 			}
 		}
 
@@ -71,6 +68,8 @@ namespace LfMerge.Core.Tests
 		public async Task TestSetup()
 		{
 			TempFolderForTest = new TemporaryFolder(TempFolderForClass, TestNameForPath);
+			TestEnv = new SRTestEnvironment(TempFolderForTest);
+			await SRTestEnvironment.Login();
 			await BackupRemoteProject();
 		}
 
@@ -109,8 +108,7 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		// TODO See if TempFolderForTest will work instead of TempFolderForClass... (need to refactor SRTestEnv to expect to be instantiated once per test in order to pull that off)
-		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForClass.Path, "webwork", projectCode);
+		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForTest.Path, "webwork", projectCode);
 		public string FwDataPathForProject(string projectCode) => Path.Join(TestFolderForProject(projectCode), $"{projectCode}.fwdata");
 
 		public string CloneRepoFromLexbox(string code, string? newCode = null)
@@ -127,11 +125,12 @@ namespace LfMerge.Core.Tests
 			var dest = CloneRepoFromLexbox(code, newCode);
 			var dirInfo = new DirectoryInfo(dest);
 			if (!dirInfo.Exists) throw new InvalidOperationException($"Failed to clone {code} from lexbox, cannot create FwProject");
-			var fwdataPath = Path.Join(dest, $"{newCode}.fwdata");
+			var dirname = dirInfo.Name;
+			var fwdataPath = Path.Join(dest, $"{dirname}.fwdata");
 			MercurialTestHelper.ChangeBranch(dest, "tip");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
 			var settings = new LfMergeSettingsDouble(TempFolderForTest.Path);
-			return new FwProject(settings, newCode);
+			return new FwProject(settings, dirname);
 		}
 
 		public async Task<string> CreateNewFlexProject()
