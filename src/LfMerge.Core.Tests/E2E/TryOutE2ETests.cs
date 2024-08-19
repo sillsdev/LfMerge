@@ -11,6 +11,7 @@ using System.Linq;
 using LfMerge.Core.Actions;
 using LfMerge.Core.LanguageForge.Model;
 using SIL.LCModel;
+using System.Text.RegularExpressions;
 
 namespace LfMerge.Core.Tests.E2E
 {
@@ -28,6 +29,8 @@ namespace LfMerge.Core.Tests.E2E
 			// Setup
 
 			var lfProject = await CreateLfProjectFromSena3();
+			var fwProjectCode = Regex.Replace(lfProject.ProjectCode, "^sr-", "fw-");
+			var fwProject = CloneFromLexbox(lfProject.ProjectCode, fwProjectCode);
 
 			// Do some initial checks to make sure we got the right data
 
@@ -42,6 +45,14 @@ namespace LfMerge.Core.Tests.E2E
 			LfLexEntry lfEntry = originalMongoData.First(e => e.Guid == entryId);
 
 			Assert.That(lfEntry.CitationForm.BestString(["seh"]), Is.EqualTo("cibubu"));
+
+			// Check that FW project cloned correctly too
+
+			var fwObject = fwProject?.ServiceLocator?.ObjectRepository?.GetObject(entryId);
+			Assert.That(fwObject, Is.Not.Null);
+			var fwEntry = fwObject as ILexEntry;
+			Assert.That(fwEntry, Is.Not.Null);
+			Assert.That(fwEntry.CitationForm.BestVernacularAlternative.Text, Is.EqualTo("cibubu"));
 
 			// TODO: Finish implementing the rest of the original test (below) from SynchronizeActionTests, then create helper methods for reusable parts
 
