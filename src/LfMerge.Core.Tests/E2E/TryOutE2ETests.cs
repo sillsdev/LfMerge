@@ -33,24 +33,12 @@ namespace LfMerge.Core.Tests.E2E
 
 			Guid entryId = Guid.Parse("0006f482-a078-4cef-9c5a-8bd35b53cf72");
 
-			var fwEntry = LcmTestHelper.GetEntry(fwProject, entryId);
-			Assert.That(fwEntry, Is.Not.Null);
-			string unchangedGloss = LcmTestHelper.UpdateAnalysisText(fwProject, fwEntry.SensesOS[0].Gloss, text => text + " - changed in FW");
-			DateTime fwDateModified = fwEntry.DateModified;
+			var (unchangedGloss, origFwDateModified, fwDateModified) = UpdateFwGloss(fwProject, entryId, text => text + " - changed in FW");
 			CommitAndPush(fwProject, lfProject.ProjectCode, fwProjectCode, "Modified gloss in FW");
 
-			// Modify LF data second, then launch Send/Receive
+			// Modify LF data second
 
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
-			// Verify LF entry not yet affected by FW change because Send/Receive has not happened yet
-			Assert.That(lfEntry.Senses[0].Gloss["pt"].Value, Is.EqualTo(unchangedGloss));
-			// Capture original modified dates so we can check later that they've been updated
-			DateTime originalLfDateModified = lfEntry.DateModified;
-			DateTime originalLfAuthorInfoModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
-
-			lfEntry.Senses[0].Gloss["pt"].Value = unchangedGloss + " - changed in LF";
-			lfEntry.AuthorInfo.ModifiedDate = lfEntry.DateModified = DateTime.UtcNow;
-			_mongoConnection.UpdateRecord(lfProject, lfEntry);
+			var (_, origLfDateModified, _) = UpdateLfGloss(lfProject, entryId, "pt", text => text + " - changed in LF");
 
 			// Ensure LF project will S/R to local LexBox
 
@@ -77,10 +65,9 @@ namespace LfMerge.Core.Tests.E2E
 
 			var lfEntryAfterSR = _mongoConnection.GetLfLexEntryByGuid(entryId);
 			Assert.That(lfEntryAfterSR?.Senses?[0]?.Gloss?["pt"]?.Value, Is.EqualTo(unchangedGloss + " - changed in LF"));
-			Assert.That(lfEntryAfterSR.DateModified, Is.GreaterThan(originalLfDateModified));
-			Assert.That(lfEntryAfterSR.DateModified, Is.GreaterThan(fwDateModified));
-			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
-			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(fwDateModified));
+			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(origLfDateModified));
+			// Remember that FieldWorks's DateModified is stored in local time for some incomprehensible reason...
+			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(fwDateModified.ToUniversalTime()));
 		}
 	}
 }

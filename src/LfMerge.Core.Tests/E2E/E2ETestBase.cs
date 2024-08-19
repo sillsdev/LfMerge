@@ -90,5 +90,27 @@ namespace LfMerge.Core.Tests.E2E
 
 			return lfProject;
 		}
+
+		public (string, DateTime, DateTime) UpdateFwGloss(FwProject project, Guid entryId, Func<string, string> textConverter)
+		{
+			var fwEntry = LcmTestHelper.GetEntry(project, entryId);
+			Assert.That(fwEntry, Is.Not.Null);
+			var origModifiedDate = fwEntry.DateModified;
+			var unchangedGloss = LcmTestHelper.UpdateAnalysisText(project, fwEntry.SensesOS[0].Gloss, textConverter);
+			return (unchangedGloss, origModifiedDate, fwEntry.DateModified);
+		}
+
+		public (string, DateTime, DateTime) UpdateLfGloss(LanguageForgeProject lfProject, Guid entryId, string wsId, Func<string, string> textConverter)
+		{
+			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
+			Assert.That(lfEntry, Is.Not.Null);
+			var unchangedGloss = lfEntry.Senses[0].Gloss[wsId].Value;
+			lfEntry.Senses[0].Gloss["pt"].Value = textConverter(unchangedGloss);
+			// Remember that in LfMerge it's AuthorInfo that corresponds to the Lcm modified date
+			DateTime origModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_mongoConnection.UpdateRecord(lfProject, lfEntry);
+			return (unchangedGloss, origModifiedDate, lfEntry.AuthorInfo.ModifiedDate);
+		}
 	}
 }
