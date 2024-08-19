@@ -58,7 +58,7 @@ namespace LfMerge.Core.Tests
 			});
 		}
 
-		public static void UpdateVernacularText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
+		public static string UpdateVernacularText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
 		{
 			var oldText = field.BestVernacularAlternative?.Text;
 			if (oldText != null)
@@ -66,9 +66,10 @@ namespace LfMerge.Core.Tests
 				var newText = textConverter(oldText);
 				SetVernacularText(project, field, newText);
 			}
+			return oldText;
 		}
 
-		public static void UpdateAnalysisText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
+		public static string UpdateAnalysisText(FwProject project, IMultiUnicode field, Func<string, string> textConverter)
 		{
 			var oldText = field.BestAnalysisAlternative?.Text;
 			if (oldText != null)
@@ -76,6 +77,7 @@ namespace LfMerge.Core.Tests
 				var newText = textConverter(oldText);
 				SetAnalysisText(project, field, newText);
 			}
+			return oldText;
 		}
 	}
 }

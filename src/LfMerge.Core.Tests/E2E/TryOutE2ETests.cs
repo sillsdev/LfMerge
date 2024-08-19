@@ -33,11 +33,9 @@ namespace LfMerge.Core.Tests.E2E
 
 			Guid entryId = Guid.Parse("0006f482-a078-4cef-9c5a-8bd35b53cf72");
 
-			var fwEntryRepo = fwProject.Cache.ServiceLocator.GetInstance<ILexEntryRepository>();
-			var fwEntry = fwEntryRepo.GetObject(entryId);
+			var fwEntry = LcmTestHelper.GetEntry(fwProject, entryId);
 			Assert.That(fwEntry, Is.Not.Null);
-			string unchangedGloss = LcmTestHelper.GetAnalysisText(fwEntry.SensesOS[0].Gloss);
-			LcmTestHelper.UpdateAnalysisText(fwProject, fwEntry.SensesOS[0].Gloss, text => text + " - changed in FW");
+			string unchangedGloss = LcmTestHelper.UpdateAnalysisText(fwProject, fwEntry.SensesOS[0].Gloss, text => text + " - changed in FW");
 			DateTime fwDateModified = fwEntry.DateModified;
 			CommitAndPush(fwProject, lfProject.ProjectCode, fwProjectCode, "Modified gloss in FW");
 
@@ -68,8 +66,6 @@ namespace LfMerge.Core.Tests.E2E
 
 			try {
 				var syncAction = new SynchronizeAction(TestEnv.Settings, TestEnv.Logger);
-				var timeBeforeRun = DateTime.UtcNow;
-				Assert.That(timeBeforeRun, Is.GreaterThan(lfEntry.AuthorInfo.ModifiedDate)); // TODO: Since this is trivially true, we might be able to get rid of timeBeforeRun.
 				syncAction.Run(lfProject);
 			} finally {
 				Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri, saveEnv);
@@ -82,7 +78,9 @@ namespace LfMerge.Core.Tests.E2E
 			var lfEntryAfterSR = _mongoConnection.GetLfLexEntryByGuid(entryId);
 			Assert.That(lfEntryAfterSR?.Senses?[0]?.Gloss?["pt"]?.Value, Is.EqualTo(unchangedGloss + " - changed in LF"));
 			Assert.That(lfEntryAfterSR.DateModified, Is.GreaterThan(originalLfDateModified));
+			Assert.That(lfEntryAfterSR.DateModified, Is.GreaterThan(fwDateModified));
 			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
+			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(fwDateModified));
 		}
 	}
 }
