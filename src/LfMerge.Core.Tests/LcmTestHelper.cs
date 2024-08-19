@@ -32,6 +32,16 @@ namespace LfMerge.Core.Tests
 			return repo.GetObject(guid);
 		}
 
+		public static string? GetVernacularText(IMultiUnicode field)
+		{
+			return field.BestVernacularAlternative?.Text;
+		}
+
+		public static string? GetAnalysisText(IMultiUnicode field)
+		{
+			return field.BestAnalysisAlternative?.Text;
+		}
+
 		public static void SetVernacularText(FwProject project, IMultiUnicode field, string newText)
 		{
 			var accessor = project.Cache.ActionHandlerAccessor;

@@ -417,6 +417,8 @@ namespace LfMerge.Core.Tests
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
+			var envOverride = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri);
+			if (envOverride != null) return envOverride;
 			var server = LanguageDepotMock.Server;
 			return server != null && server.IsStarted ? server.Url : LanguageDepotMock.ProjectFolderPath;
 		}

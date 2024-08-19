@@ -47,6 +47,7 @@ namespace LfMerge.Core.Tests
 			: base(true, true, true, tempFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName()))
 		{
 			TempFolder = _languageForgeServerFolder; // Better name for what E2E tests use it for
+			Settings.CommitWhenDone = true; // For SR tests specifically, we *do* want changes to .fwdata files to be persisted
 		}
 
 		public static Task Login()
