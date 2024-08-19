@@ -91,6 +91,20 @@ namespace LfMerge.Core.Tests.E2E
 			return lfProject;
 		}
 
+		public void SendReceiveToLexbox(LanguageForgeProject lfProject)
+		{
+			// ChorusHelperDouble.GetSyncUri assumes presence of a LanguageDepotMock, but here we want a real LexBox instance so we override it via environment variable
+			var saveEnv = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri);
+			try {
+				var lexboxRepoUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(lfProject.ProjectCode).AbsoluteUri;
+				Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri, lexboxRepoUrl);
+				var syncAction = new SynchronizeAction(TestEnv.Settings, TestEnv.Logger);
+				syncAction.Run(lfProject);
+			} finally {
+				Environment.SetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri, saveEnv);
+			}
+		}
+
 		public (string, DateTime, DateTime) UpdateFwGloss(FwProject project, Guid entryId, Func<string, string> textConverter)
 		{
 			var fwEntry = LcmTestHelper.GetEntry(project, entryId);
