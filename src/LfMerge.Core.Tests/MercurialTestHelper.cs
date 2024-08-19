@@ -19,9 +19,10 @@ namespace LfMerge.Core.Tests
 		private static string RunHgCommand(string repoPath, string args)
 		{
 			var result = CommandLineRunner.Run(HgCommand, args, repoPath, 120, new NullProgress());
-			Assert.That(result.ExitCode, Is.EqualTo(0),
+			if (result.ExitCode == 0) return result.StandardOutput;
+			throw new System.Exception(
 				$"hg {args} failed.\nStdOut: {result.StandardOutput}\nStdErr: {result.StandardError}");
-			return result.StandardOutput;
+
 		}
 
 		public static void InitializeHgRepo(string projectFolderPath)

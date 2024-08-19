@@ -33,7 +33,7 @@ namespace LfMerge.Core.Tests.E2E
 		public async Task<LanguageForgeProject> CreateLfProjectFromSena3()
 		{
 			var projCode = await CreateNewProjectFromSena3();
-			var projPath = CloneRepoFromLexbox(projCode);
+			var projPath = CloneRepoFromLexbox(projCode, waitTime:TimeSpan.FromSeconds(5));
 			MercurialTestHelper.ChangeBranch(projPath, "tip");
 			var fwdataPath = Path.Combine(projPath, $"{projCode}.fwdata");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);

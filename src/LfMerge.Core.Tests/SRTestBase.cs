@@ -89,18 +89,36 @@ namespace LfMerge.Core.Tests
 		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForTest.Path, "webwork", projectCode);
 		public string FwDataPathForProject(string projectCode) => Path.Join(TestFolderForProject(projectCode), $"{projectCode}.fwdata");
 
-		public string CloneRepoFromLexbox(string code, string? newCode = null)
+		public string CloneRepoFromLexbox(string code, string? newCode = null, TimeSpan? waitTime = null)
 		{
 			var projUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(code);
 			newCode ??= code;
 			var dest = TestFolderForProject(newCode);
-			MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
+			if (waitTime is null) {
+				MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
+			} else {
+				var start = DateTime.UtcNow;
+				var success = false;
+				while (!success) {
+					try {
+						MercurialTestHelper.CloneRepo(projUrl.AbsoluteUri, dest);
+					} catch {
+						if (DateTime.UtcNow > start + waitTime) {
+							throw; // Give up
+						}
+						System.Threading.Thread.Sleep(250);
+						continue;
+					}
+					// If we got this far, no exception so we succeeded
+					success = true;
+				}
+			}
 			return dest;
 		}
 
-		public FwProject CloneFromLexbox(string code, string? newCode = null)
+		public FwProject CloneFromLexbox(string code, string? newCode = null, TimeSpan? waitTime = null)
 		{
-			var dest = CloneRepoFromLexbox(code, newCode);
+			var dest = CloneRepoFromLexbox(code, newCode, waitTime);
 			var dirInfo = new DirectoryInfo(dest);
 			if (!dirInfo.Exists) throw new InvalidOperationException($"Failed to clone {code} from lexbox, cannot create FwProject");
 			var dirname = dirInfo.Name;
