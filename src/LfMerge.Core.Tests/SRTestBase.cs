@@ -19,7 +19,6 @@ namespace LfMerge.Core.Tests
 		public TemporaryFolder TestDataFolder { get; set; }
 		public TemporaryFolder LcmDataFolder { get; set; }
 		public string Sena3ZipPath { get; set; }
-		private string TipRevToRestore { get; set; } = "";
 		private Guid? ProjectIdToDelete { get; set; }
 		public SRTestEnvironment TestEnv { get; set; }
 
@@ -70,41 +69,20 @@ namespace LfMerge.Core.Tests
 			TempFolderForTest = new TemporaryFolder(TempFolderForClass, TestNameForPath);
 			TestEnv = new SRTestEnvironment(TempFolderForTest);
 			await SRTestEnvironment.Login();
-			await BackupRemoteProject();
 		}
 
 		[TearDown]
 		public async Task TestTeardown()
 		{
-			await RestoreRemoteProject();
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
 			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) {
 				TempFolderForTest.Dispose();
 				if (ProjectIdToDelete is not null) {
 					var projId = ProjectIdToDelete.Value;
 					ProjectIdToDelete = null;
+					// Also leave LexBox project in place for post-test investigation, even though this might tend to clutter things up a little
 					await SRTestEnvironment.DeleteLexBoxProject(projId);
 				}
-			}
-		}
-
-		public async Task BackupRemoteProject()
-		{
-			var test = TestContext.CurrentContext.Test;
-			if (test.Properties.ContainsKey("projectCode")) {
-				var code = test.Properties.Get("projectCode") as string;
-				TipRevToRestore = await SRTestEnvironment.GetTipRev(code);
-			} else {
-				TipRevToRestore = "";
-			}
-		}
-
-		public async Task RestoreRemoteProject()
-		{
-			var test = TestContext.CurrentContext.Test;
-			if (!string.IsNullOrEmpty(TipRevToRestore) && test.Properties.ContainsKey("projectCode")) {
-				var code = test.Properties.Get("projectCode") as string;
-				await TestEnv.RollbackProjectToRev(code, TipRevToRestore);
 			}
 		}
 

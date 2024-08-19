@@ -170,39 +170,6 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		public async Task RollbackProjectToRev(string code, string rev)
-		{
-			// Negative rev numbers will be interpreted as Mercurial does: -1 is the tip revision, -2 is one back from the tip, etc.
-			// I.e. rolling back to rev -2 will remove the most recent commit
-			if (rev == "-1") return; // Already at tip, nothing to do
-			var currentTip = await GetTipRev(code);
-			if (rev == currentTip) return; // Already at tip, nothing to do
-			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
-			var result = await Http.GetAsync(backupUrl);
-			var zipStream = await result.Content.ReadAsStreamAsync();
-			var projectDir = TempFolder.GetPathForNewTempFile(false);
-			ZipFile.ExtractToDirectory(zipStream, projectDir);
-			var clonedDir = TempFolder.GetPathForNewTempFile(false);
-			MercurialTestHelper.CloneRepoAtRev(projectDir, clonedDir, rev);
-			var zipPath = TempFolder.GetPathForNewTempFile(false);
-			ZipFile.CreateFromDirectory(clonedDir, zipPath);
-			await ResetAndUploadZip(code, zipPath);
-		}
-
-		public Task RollbackProjectToRev(string code, int revnum)
-		{
-			return RollbackProjectToRev(code, revnum.ToString());
-		}
-
-		public record TipJson(string Node);
-
-		public static async Task<string> GetTipRev(string code)
-		{
-			var tipUrl = new Uri(LexboxUrl, $"/hg/{code}/file/tip?style=json");
-			var result = await Http.GetFromJsonAsync<TipJson>(tipUrl);
-			return result.Node;
-		}
-
 		public static void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			localCode ??= code;
