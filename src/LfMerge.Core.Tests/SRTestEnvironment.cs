@@ -172,11 +172,16 @@ namespace LfMerge.Core.Tests
 
 		public static void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
+			project.Cache.ActionHandlerAccessor.Commit();
+			if (!project.IsDisposed) project.Dispose();
+			CommitAndPush(code, baseDir, localCode, commitMsg);
+		}
+
+		public static void CommitAndPush(string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		{
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
 			var withAuth = new UriBuilder(projUrl) { UserName = "admin", Password = "pass" };
-			project.Cache.ActionHandlerAccessor.Commit();
-			if (!project.IsDisposed) project.Dispose();
 			commitMsg ??= "Auto-commit";
 			var projectDir = Path.Combine(baseDir, "webwork", localCode);
 			var fwdataPath = Path.Join(projectDir, $"{localCode}.fwdata");

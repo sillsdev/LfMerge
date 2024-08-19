@@ -111,7 +111,7 @@ namespace LfMerge.Core.Tests
 			return new FwProject(settings, dirname);
 		}
 
-		public async Task<string> CreateNewFlexProject()
+		public async Task<string> CreateEmptyFlexProjectInLexbox()
 		{
 			var randomGuid = Guid.NewGuid();
 			var testCode = $"sr-{randomGuid}";
@@ -122,7 +122,8 @@ namespace LfMerge.Core.Tests
 			var result = await SRTestEnvironment.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
-			// TODO: Push that first commit to lexbox so the project is non-empty
+			var pushUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(testCode).AbsoluteUri;
+			MercurialTestHelper.HgPush(testPath, pushUrl);
 			ProjectIdToDelete = result.Id;
 			return testCode;
 		}
