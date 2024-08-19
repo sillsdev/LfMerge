@@ -10,6 +10,22 @@ namespace LfMerge.Core.Tests.E2E
 	[Category("IntegrationTests")]
 	public class TryOutE2ETests : E2ETestBase
 	{
+		// This test will often trigger a race condition in LexBox that causes the *next* test to fail
+		// when `hg clone` returns 404. This is because of hgweb's directory cache, which only refreshes
+		// if it hasn't been refreshed more than N seconds ago (default 20, LexBox currently uses 5).
+		// Which means that even though CreateLfProjectFromSena3 has created the LexBox project, LexBox's
+		// copy of hgweb doesn't see it yet so it can't be cloned.
+		//
+		// The solution will be to adjust CloneRepoFromLexbox to take a parameter that is the number of
+		// seconds to wait for the project to become visible, and retry 404's until that much time has elapsed.
+		// Then only throw an exception if hgweb is still returning 404 after its dir cache should be refreshed.
+		[Test]
+		public async Task E2E_CheckFwProjectCreation()
+		{
+			var code = await CreateEmptyFlexProjectInLexbox();
+			Console.WriteLine($"Created new project {code}");
+		}
+
 		[Test]
 		public async Task E2E_LFDataChangedLDDataChanged_LFWins()
 		{
