@@ -1,20 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using LfMerge.Core.Actions;
-using LfMerge.Core.DataConverters;
 using LfMerge.Core.FieldWorks;
-using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.MongoConnector;
-using LfMerge.Core.Settings;
-using LfMergeBridge.LfMergeModel;
 using NUnit.Framework;
 using SIL.LCModel;
-using SIL.Progress;
-using SIL.TestUtilities;
 
 namespace LfMerge.Core.Tests.E2E
 {

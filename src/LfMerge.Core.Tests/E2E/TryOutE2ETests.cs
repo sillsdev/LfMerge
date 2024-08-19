@@ -1,16 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using LfMerge.Core.DataConverters;
-using LfMergeBridge.LfMergeModel;
 using NUnit.Framework;
-using SIL.Progress;
-
-using System.IO;
-using System.Linq;
-using LfMerge.Core.Actions;
-using LfMerge.Core.LanguageForge.Model;
-using SIL.LCModel;
 using System.Text.RegularExpressions;
 
 namespace LfMerge.Core.Tests.E2E

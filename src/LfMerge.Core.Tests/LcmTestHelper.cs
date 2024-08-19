@@ -1,15 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using LfMerge.Core.FieldWorks;
 using SIL.LCModel;
 using SIL.LCModel.Infrastructure;
-using SIL.PlatformUtilities;
-using SIL.Progress;
 
 namespace LfMerge.Core.Tests
 {

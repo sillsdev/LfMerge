@@ -1,20 +1,16 @@
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GraphQL;
-using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
-using LfMerge.Core.Settings;
 using NUnit.Framework;
-using SIL.LCModel;
 using SIL.TestUtilities;
 using TusDotNetClient;
 
