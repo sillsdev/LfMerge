@@ -22,7 +22,7 @@ namespace LfMerge.Core.Tests
 {
 	public class TestEnvironment : IDisposable
 	{
-		protected readonly TemporaryFolder       _languageForgeServerFolder;
+		protected readonly TemporaryFolder     _languageForgeServerFolder;
 		private readonly bool                  _resetLfProjectsDuringCleanup;
 		private readonly bool                  _releaseSingletons;
 		public           LfMergeSettings       Settings;
