@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using LfMerge.Core.Actions;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.MongoConnector;
 using LfMerge.Core.Reporting;
@@ -45,8 +46,10 @@ namespace LfMerge.Core.Tests.Actions
 		private MongoProjectRecordFactory _recordFactory;
 		private LanguageForgeProject _lfProject;
 		private LanguageDepotMock _lDProject;
+		private FwProject _fwProject;
 		private LfMergeSettings _lDSettings;
 		private TemporaryFolder _languageDepotFolder;
+		private TemporaryFolder _fwFolder;
 		private Guid _testEntryGuid;
 		private Guid _testCreatedEntryGuid;
 		private Guid _testDeletedEntryGuid;
@@ -79,18 +82,59 @@ namespace LfMerge.Core.Tests.Actions
 				throw new AssertionException("Sync tests need a mock MongoProjectRecordFactory in order to work.");
 
 			_transferLcmToMongo = new TransferLcmToMongoAction(_env.Settings, _env.Logger, _mongoConnection, _recordFactory);
+			LanguageDepotMock.Server = new MercurialServer(LanguageDepotMock.ProjectFolderPath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
+			if (LanguageDepotMock.Server != null)
+			{
+				LanguageDepotMock.Server.Stop();
+				LanguageDepotMock.Server = null;
+			}
+
 			if (_lfProject != null)
 				LanguageForgeProject.DisposeFwProject(_lfProject);
 			if (_lDProject != null)
 				LanguageDepotMock.DisposeFwProject(_lDProject);
+			if (_fwProject != null && !_fwProject.IsDisposed)
+				_fwProject.Dispose();
 			_languageDepotFolder?.Dispose();
+			_fwFolder?.Dispose();
 			_env.Dispose();
 			_mongoConnection.Reset();
+		}
+
+		public FwProject CreateTestFwProject(string projectCode)
+		{
+			_fwFolder = new TemporaryFolder(_lDSettings.BaseDir.Replace("SyncTestLD", "SyncTestFW"));
+			var fwSettings = new LfMergeSettingsDouble(_fwFolder.Path);
+			TestEnvironment.CopyFwProjectTo(projectCode, _lDSettings.WebWorkDirectory); // Mock LD server
+			TestEnvironment.CopyFwProjectTo(projectCode, fwSettings.WebWorkDirectory); // Local FW project that will be modified and pushed
+			return new FwProject(fwSettings, projectCode);
+		}
+
+		public void CommitAndPush(FwProject fwProject, string commitMsg = "SyncActionTest commit")
+		{
+			if (!File.Exists(fwProject.FwdataPath)) throw new InvalidOperationException($"Fwdata file {fwProject.FwdataPath} should exist");
+			if (!LanguageDepotMock.Server.IsStarted) LanguageDepotMock.Server.Start();
+			fwProject.Cache.ActionHandlerAccessor.Commit();
+			if (!fwProject.IsDisposed) fwProject.Dispose();
+			LfMergeBridge.LfMergeBridge.DisassembleFwdataFile(new SIL.Progress.NullProgress(), false, fwProject.FwdataPath);
+			MercurialTestHelper.HgClean(fwProject.ProjectDir); // Ensure ConfigurationSettings, etc., don't get committed
+			MercurialTestHelper.HgCommit(fwProject.ProjectDir, commitMsg);
+			MercurialTestHelper.HgPush(fwProject.ProjectDir, LanguageDepotMock.Server.Url);
+		}
+
+		[Test]
+		public void SampleTest()
+		{
+			_fwProject = CreateTestFwProject(testProjectCode);
+			var entry = LcmTestHelper.GetEntry(_fwProject, _testEntryGuid);
+			LcmTestHelper.UpdateAnalysisText(_fwProject, entry.SensesOS[0].Gloss, gloss => gloss + " - changed in FW");
+			CommitAndPush(_fwProject);
+			// Now we would run the rest of the test code, doing a S/R and verifying its results
 		}
 
 		[Test, Explicit("Superceeded by later tests")]
