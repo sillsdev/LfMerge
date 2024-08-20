@@ -330,7 +330,6 @@ namespace LfMerge.Core.Tests.Actions
 				_lfProject, _testEntryGuid, entry => entry.Senses[0].Gloss["en"], gloss => gloss + " - changed in LF");
 
 			// Exercise
-
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
@@ -338,7 +337,7 @@ namespace LfMerge.Core.Tests.Actions
 			// Verify
 			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in LF"));
-			// LF had the same data previously; however it's a merge conflict so DateModified  got updated
+			// LF had the same data previously; however it's a merge conflict so DateModified got updated
 			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(origDateModified));
 			// But the LCM modified date (AuthorInfo.ModifiedDate in LF) should be updated.
 			Assert.That(updatedLfEntry.AuthorInfo.ModifiedDate, Is.GreaterThan(origAuthorInfoModifiedDate));
@@ -396,7 +395,6 @@ namespace LfMerge.Core.Tests.Actions
 			var (origDateModified, dateModifiedAfterDeletion) = DeleteLfEntry(_lfProject, _testEntryGuid);
 
 			// Exercise
-
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
 			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
@@ -485,42 +483,32 @@ namespace LfMerge.Core.Tests.Actions
 		public void SynchronizeAction_LFDataChangedLDOtherDataChanged_ModifiedDateUpdated()
 		{
 			// Setup
-			TestEnvironment.CopyFwProjectTo(modifiedTestProjectCode, _lDSettings.WebWorkDirectory);
-			Directory.Move(Path.Combine(_lDSettings.WebWorkDirectory, modifiedTestProjectCode), LanguageDepotMock.ProjectFolderPath);
-
+			// LF project cloned before FW modifications are pushed
 			_lfProject.IsInitialClone = true;
 			_transferLcmToMongo.Run(_lfProject);
 
-			var lfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
-			var originalLfDateModified = lfEntry.DateModified;
-			var originalLfAuthorInfoModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
+			// FW project has changed gloss
+			_fwProject = CreateTestFwProject(testProjectCode);
+			var entry = LcmTestHelper.GetEntry(_fwProject, _testEntryGuid);
+			var unchangedGloss = LcmTestHelper.UpdateAnalysisText(_fwProject, entry.SensesOS[0].Gloss, gloss => gloss + " - changed in FW");
+			CommitAndPush(_fwProject);
 
-			lfEntry.Note = LfMultiText.FromSingleStringMapping("en", "A note from LF");
-			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
-			_mongoConnection.UpdateRecord(_lfProject, lfEntry);
-
-			var fwChangedGloss = lfEntry.Senses[0].Gloss["en"].Value + " - changed in FW";
-
-			_lDProject = new LanguageDepotMock(testProjectCode, _lDSettings);
-			var lDcache = _lDProject.FieldWorksProject.Cache;
-			var lDLcmEntry = lDcache.ServiceLocator.GetObject(_testEntryGuid) as ILexEntry;
-			Assert.That(lDLcmEntry.SensesOS[0].Gloss.AnalysisDefaultWritingSystem.Text, Is.EqualTo(fwChangedGloss));
+			// While LF project adds a note to the entry
+			var (origDateModified, _) = UpdateLfEntry(
+				_lfProject, _testEntryGuid, entry => entry.Note = LfMultiText.FromSingleStringMapping("en", "A note from LF"));
 
 			// Exercise
 			var sutSynchronize = new SynchronizeAction(_env.Settings, _env.Logger);
-			var timeBeforeRun = DateTime.UtcNow;
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			Assert.That(GetGlossFromMongoDb(_testEntryGuid), Is.EqualTo(fwChangedGloss));
-			var updatedLfEntry = _mongoConnection.GetLfLexEntries().First(e => e.Guid == _testEntryGuid);
-			// LF and LD changed the same entry but different fields, so we want to see the
-			// DateModified change so that LF will re-process the entry.
-			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(originalLfDateModified));
-			// The LCM modified date (AuthorInfo.ModifiedDate in LF) should be updated.
-			Assert.That(updatedLfEntry.AuthorInfo.ModifiedDate, Is.GreaterThan(originalLfAuthorInfoModifiedDate));
-
-			Assert.That(_mongoConnection.GetLastSyncedDate(_lfProject), Is.GreaterThanOrEqualTo(timeBeforeRun));
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in FW"));
+			Assert.That(updatedLfEntry.Note["en"].Value, Is.EqualTo("A note from LF"));
+			// LF had the same data previously; however it's a merge conflict so DateModified got updated
+			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(origDateModified));
+			// But the LCM modified date (AuthorInfo.ModifiedDate in LF) should be updated.
+			Assert.That(updatedLfEntry.AuthorInfo.ModifiedDate, Is.GreaterThan(origDateModified));
 		}
 
 		[Test]
