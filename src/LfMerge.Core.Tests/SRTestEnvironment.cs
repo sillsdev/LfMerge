@@ -74,8 +74,10 @@ namespace LfMerge.Core.Tests
 
 		public async Task<bool> IsLexBoxAvailable()
 		{
-			var httpResponse = await Http.GetAsync(new Uri(LexboxUrl, "api/healthz"));
-			return httpResponse.IsSuccessStatusCode && httpResponse.Headers.TryGetValues("lexbox-version", out var _ignore);
+			try {
+				var httpResponse = await Http.GetAsync(new Uri(LexboxUrl, "api/healthz"));
+				return httpResponse.IsSuccessStatusCode && httpResponse.Headers.TryGetValues("lexbox-version", out var _ignore);
+			} catch { return false; }
 		}
 
 		public static Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
