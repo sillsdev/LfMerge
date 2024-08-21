@@ -64,7 +64,11 @@ namespace LfMerge.Core.Settings
 			}
 		}
 
-		public string LanguageDepotRepoUri => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
+		private string _languageDepotRepoUri;
+		public string LanguageDepotRepoUri {
+			get => _languageDepotRepoUri ?? Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_LanguageDepotRepoUri) ?? DefaultLfMergeSettings.LanguageDepotRepoUri;
+			set => _languageDepotRepoUri = value;
+		}
 
 		// Settings calculated at runtime from sources other than environment variables
 
