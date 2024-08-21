@@ -36,12 +36,12 @@ namespace LfMerge.Core.Tests.E2E
 			var projPath = CloneRepoFromLexbox(projCode, waitTime:TimeSpan.FromSeconds(5));
 			MercurialTestHelper.ChangeBranch(projPath, "tip");
 			var fwdataPath = Path.Combine(projPath, $"{projCode}.fwdata");
-			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
+			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(TestEnv.NullProgress, false, fwdataPath);
 
 			// Do an initial clone from LexBox to the mock LF
 			var lfProject = LanguageForgeProject.Create(projCode, TestEnv.Settings);
 			lfProject.IsInitialClone = true;
-			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, SRTestEnvironment.NullLogger, _mongoConnection, _recordFactory);
+			var transferLcmToMongo = new TransferLcmToMongoAction(TestEnv.Settings, TestEnv.NullLogger, _mongoConnection, _recordFactory);
 			transferLcmToMongo.Run(lfProject);
 
 			return lfProject;

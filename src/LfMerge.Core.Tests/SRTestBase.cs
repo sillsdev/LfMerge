@@ -48,8 +48,9 @@ namespace LfMerge.Core.Tests
 			// Ensure sena-3.zip is available to all tests as a starting point
 			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
 			if (!File.Exists(Sena3ZipPath)) {
-				await SRTestEnvironment.Login();
-				await SRTestEnvironment.DownloadProjectBackup("sena-3", Sena3ZipPath);
+				var testEnv = new SRTestEnvironment(TempFolderForTest);
+				await testEnv.Login();
+				await testEnv.DownloadProjectBackup("sena-3", Sena3ZipPath);
 			}
 		}
 
@@ -68,7 +69,7 @@ namespace LfMerge.Core.Tests
 		{
 			TempFolderForTest = new TemporaryFolder(TempFolderForClass, TestNameForPath);
 			TestEnv = new SRTestEnvironment(TempFolderForTest);
-			await SRTestEnvironment.Login();
+			await TestEnv.Login();
 		}
 
 		[TearDown]
@@ -81,7 +82,7 @@ namespace LfMerge.Core.Tests
 					var projId = ProjectIdToDelete.Value;
 					ProjectIdToDelete = null;
 					// Also leave LexBox project in place for post-test investigation, even though this might tend to clutter things up a little
-					await SRTestEnvironment.DeleteLexBoxProject(projId);
+					await TestEnv.DeleteLexBoxProject(projId);
 				}
 			}
 		}
@@ -124,7 +125,7 @@ namespace LfMerge.Core.Tests
 			var dirname = dirInfo.Name;
 			var fwdataPath = Path.Join(dest, $"{dirname}.fwdata");
 			MercurialTestHelper.ChangeBranch(dest, "tip");
-			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(SRTestEnvironment.NullProgress, false, fwdataPath);
+			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(TestEnv.NullProgress, false, fwdataPath);
 			var settings = new LfMergeSettingsDouble(TempFolderForTest.Path);
 			return new FwProject(settings, dirname);
 		}
@@ -137,7 +138,7 @@ namespace LfMerge.Core.Tests
 			MercurialTestHelper.InitializeHgRepo(testPath);
 			MercurialTestHelper.CreateFlexRepo(testPath);
 			// Now create project in LexBox
-			var result = await SRTestEnvironment.CreateLexBoxProject(testCode, randomGuid);
+			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			var pushUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(testCode).AbsoluteUri;
@@ -152,7 +153,7 @@ namespace LfMerge.Core.Tests
 			var testCode = $"sr-{randomGuid}";
 			var testPath = TestFolderForProject(testCode);
 			// Now create project in LexBox
-			var result = await SRTestEnvironment.CreateLexBoxProject(testCode, randomGuid);
+			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
 			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
@@ -164,7 +165,7 @@ namespace LfMerge.Core.Tests
 
 		public void CommitAndPush(FwProject project, string code, string? localCode = null, string? commitMsg = null)
 		{
-			SRTestEnvironment.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
+			TestEnv.CommitAndPush(project, code, TempFolderForTest.Path, localCode, commitMsg);
 		}
 	}
 }

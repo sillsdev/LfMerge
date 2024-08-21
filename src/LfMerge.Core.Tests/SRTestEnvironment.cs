@@ -28,34 +28,45 @@ namespace LfMerge.Core.Tests
 		public static readonly string LexboxPassword = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_TrustToken) ?? "pass";
 		public static readonly Uri LexboxUrl = new($"{LexboxProtocol}://{LexboxHostname}:{LexboxPort}");
 		public static readonly Uri LexboxUrlBasicAuth = new($"{LexboxProtocol}://{WebUtility.UrlEncode(LexboxUsername)}:{WebUtility.UrlEncode(LexboxPassword)}@{LexboxHostname}:{LexboxPort}");
-		public static readonly CookieContainer Cookies = new();
-		private static readonly HttpClientHandler Handler = new() { CookieContainer = Cookies };
-		private static readonly Lazy<HttpClient> LazyHttp = new(() => new HttpClient(Handler));
-		public static HttpClient Http => LazyHttp.Value;
-		public static readonly SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
-		public static readonly ILogger NullLogger = new NullLogger();
-		private static bool AlreadyLoggedIn = false;
+		public static Cookie AdminLoginCookie { get; set; }
+		public readonly CookieContainer Cookies = new();
+		private HttpClientHandler Handler { get; init; }
+		private Lazy<HttpClient> LazyHttp { get; init; }
+		public HttpClient Http => LazyHttp.Value;
+		public readonly SIL.Progress.IProgress NullProgress = new SIL.Progress.NullProgress();
+		public readonly ILogger NullLogger = new NullLogger();
+		private bool AlreadyLoggedIn = false;
 		private TemporaryFolder TempFolder { get; init; }
-		private static readonly Lazy<GraphQLHttpClient> LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
-		public static GraphQLHttpClient GqlClient => LazyGqlClient.Value;
+		private Lazy<GraphQLHttpClient> LazyGqlClient { get; init; }
+		public GraphQLHttpClient GqlClient => LazyGqlClient.Value;
 
 		public SRTestEnvironment(TemporaryFolder? tempFolder = null)
 			: base(true, true, true, tempFolder ?? new TemporaryFolder(TestName + Path.GetRandomFileName()))
 		{
+			Handler = new() { CookieContainer = Cookies };
+			LazyHttp = new(() => new HttpClient(Handler));
+			LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
 			TempFolder = _languageForgeServerFolder; // Better name for what E2E tests use it for
 			Settings.CommitWhenDone = true; // For SR tests specifically, we *do* want changes to .fwdata files to be persisted
 		}
 
-		public static Task Login()
+		public async Task Login()
 		{
-			return LoginAs(LexboxUsername, LexboxPassword);
+			if (AlreadyLoggedIn) return;
+			if (AdminLoginCookie is null) {
+				await LoginAs(LexboxUsername, LexboxPassword);
+			} else {
+				Cookies.Add(AdminLoginCookie);
+				AlreadyLoggedIn = true;
+			}
 		}
 
-		public static async Task LoginAs(string lexboxUsername, string lexboxPassword)
+		public async Task LoginAs(string lexboxUsername, string lexboxPassword)
 		{
 			if (AlreadyLoggedIn) return;
 			var loginResult = await Http.PostAsync(new Uri(LexboxUrl, "api/login"), JsonContent.Create(new { EmailOrUsername=lexboxUsername, Password=lexboxPassword }));
 			var cookies = Cookies.GetCookies(LexboxUrl);
+			AdminLoginCookie = cookies[".LexBoxAuth"];
 			AlreadyLoggedIn = true;
 			// Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Jwt);
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
@@ -64,7 +75,7 @@ namespace LfMerge.Core.Tests
 		public static Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
 		public static Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
 
-		public static async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, Guid? projId = null, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
+		public async Task<LexboxGraphQLTypes.CreateProjectResponse> CreateLexBoxProject(string code, Guid? projId = null, string? name = null, string? description = null, Guid? managerId = null, Guid? orgId = null)
 		{
 			projId ??= Guid.NewGuid();
 			name ??= code;
@@ -94,7 +105,7 @@ namespace LfMerge.Core.Tests
 			return response.Data.CreateProject.CreateProjectResponse;
 		}
 
-		public static async Task DeleteLexBoxProject(Guid projectId)
+		public async Task DeleteLexBoxProject(Guid projectId)
 		{
 			var mutation = """
 			mutation SoftDeleteProject($input: SoftDeleteProjectInput!) {
@@ -134,7 +145,7 @@ namespace LfMerge.Core.Tests
 			await UploadZip(code, zipPath);
 		}
 
-		public static async Task ResetToEmpty(string code)
+		public async Task ResetToEmpty(string code)
 		{
 			var resetUrl = new Uri(LexboxUrl, $"api/project/resetProject/{code}");
 			await Http.PostAsync(resetUrl, null);
@@ -142,7 +153,7 @@ namespace LfMerge.Core.Tests
 			await Http.PostAsync(finishResetUrl, null);
 		}
 
-		public static async Task UploadZip(string code, string zipPath)
+		public async Task UploadZip(string code, string zipPath)
 		{
 			var sourceUrl = new Uri(LexboxUrl, $"/api/project/upload-zip/{code}");
 			var file = new FileInfo(zipPath);
@@ -155,7 +166,7 @@ namespace LfMerge.Core.Tests
 			await client.UploadAsync(fileUrl, file);
 		}
 
-		public static async Task DownloadProjectBackup(string code, string destZipPath)
+		public async Task DownloadProjectBackup(string code, string destZipPath)
 		{
 			var backupUrl = new Uri(LexboxUrl, $"api/project/backupProject/{code}");
 			var result = await Http.GetAsync(backupUrl);
@@ -166,14 +177,14 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
-		public static void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		public void CommitAndPush(FwProject project, string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			project.Cache.ActionHandlerAccessor.Commit();
 			if (!project.IsDisposed) project.Dispose();
 			CommitAndPush(code, baseDir, localCode, commitMsg);
 		}
 
-		public static void CommitAndPush(string code, string baseDir, string? localCode = null, string? commitMsg = null)
+		public void CommitAndPush(string code, string baseDir, string? localCode = null, string? commitMsg = null)
 		{
 			localCode ??= code;
 			var projUrl = new Uri(LexboxUrl, $"/hg/{code}");
