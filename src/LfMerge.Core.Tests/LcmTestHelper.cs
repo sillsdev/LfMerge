@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LfMerge.Core.FieldWorks;
 using SIL.LCModel;
 using SIL.LCModel.Infrastructure;
@@ -23,6 +24,12 @@ namespace LfMerge.Core.Tests
 		{
 			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
 			return repo.GetObject(guid);
+		}
+
+		public static ILexEntry GetFirstEntry(FwProject project)
+		{
+			var repo = project?.ServiceLocator?.GetInstance<ILexEntryRepository>();
+			return repo.AllInstances().First();
 		}
 
 		public static string? GetVernacularText(IMultiUnicode field)

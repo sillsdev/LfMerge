@@ -36,7 +36,7 @@ namespace LfMerge.Core.Tests.E2E
 			var fwProject = CloneFromLexbox(lfProject.ProjectCode, fwProjectCode);
 
 			// Modify FW data first, then push to Lexbox
-			Guid entryId = Guid.Parse("0006f482-a078-4cef-9c5a-8bd35b53cf72");
+			Guid entryId = LcmTestHelper.GetFirstEntry(fwProject).Guid;
 			var (unchangedGloss, origFwDateModified, fwDateModified) = UpdateFwGloss(fwProject, entryId, text => text + " - changed in FW");
 			CommitAndPush(fwProject, lfProject.ProjectCode, fwProjectCode, "Modified gloss in FW");
 
