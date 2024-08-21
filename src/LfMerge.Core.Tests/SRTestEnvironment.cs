@@ -72,6 +72,12 @@ namespace LfMerge.Core.Tests
 			// Bearer auth on LexBox requires logging in to LexBox via their OAuth flow. For now we'll let the cookie container handle it.
 		}
 
+		public async Task<bool> IsLexBoxAvailable()
+		{
+			var httpResponse = await Http.GetAsync(new Uri(LexboxUrl, "api/healthz"));
+			return httpResponse.IsSuccessStatusCode && httpResponse.Headers.TryGetValues("lexbox-version", out var _ignore);
+		}
+
 		public static Uri LexboxUrlForProject(string code) => new Uri(LexboxUrl, $"hg/{code}");
 		public static Uri LexboxUrlForProjectWithAuth(string code) => new Uri(LexboxUrlBasicAuth, $"hg/{code}");
 

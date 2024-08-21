@@ -56,6 +56,9 @@ namespace LfMerge.Core.Tests.E2E
 			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
 			if (!File.Exists(Sena3ZipPath)) {
 				var testEnv = new SRTestEnvironment(TempFolderForTest);
+				if (!await testEnv.IsLexBoxAvailable()) {
+					Assert.Ignore("Can't run E2E tests without a copy of LexBox to test against. Please either launch LexBox on localhost port 80, or set the appropriate environment variables to point to a running copy of LexBox.");
+				}
 				await testEnv.Login();
 				await testEnv.DownloadProjectBackup("sena-3", Sena3ZipPath);
 			}
@@ -76,6 +79,9 @@ namespace LfMerge.Core.Tests.E2E
 		{
 			TempFolderForTest = new TemporaryFolder(TempFolderForClass, TestNameForPath);
 			TestEnv = new SRTestEnvironment(TempFolderForTest);
+			if (!await TestEnv.IsLexBoxAvailable()) {
+				Assert.Ignore("Can't run E2E tests without a copy of LexBox to test against. Please either launch LexBox on localhost port 80, or set the appropriate environment variables to point to a running copy of LexBox.");
+			}
 			await TestEnv.Login();
 
 			MagicStrings.SetMinimalModelVersion(LcmCache.ModelVersion);
