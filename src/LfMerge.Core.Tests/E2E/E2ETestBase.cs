@@ -39,21 +39,20 @@ namespace LfMerge.Core.Tests.E2E
 		[OneTimeSetUp]
 		public async Task FixtureSetup()
 		{
-			// Ensure we don't delete top-level /tmp/LfMergeSRTests folder and data subfolder if they already exist
-			var tempPath = Path.Combine(Path.GetTempPath(), "LfMergeSRTests");
-			var rootTempFolder = Directory.Exists(tempPath) ? TemporaryFolder.TrackExisting(tempPath) : new TemporaryFolder(tempPath);
-			var testDataPath = Path.Combine(tempPath, "data");
-			TestDataFolder = Directory.Exists(testDataPath) ? TemporaryFolder.TrackExisting(testDataPath) : new TemporaryFolder(testDataPath);
-			var lcmDataPath = Path.Combine(tempPath, "lcm-common");
-			LcmDataFolder = Directory.Exists(lcmDataPath) ? TemporaryFolder.TrackExisting(lcmDataPath) : new TemporaryFolder(lcmDataPath);
-			Environment.SetEnvironmentVariable("FW_CommonAppData", LcmDataFolder.Path);
+			// Ensure top-level /tmp/LfMergeSRTests folder and subfolders exist
+			var tempPath = Path.Join(Path.GetTempPath(), "LfMergeSRTests");
+			Directory.CreateDirectory(tempPath);
+			var testDataPath = Path.Join(tempPath, "data");
+			Directory.CreateDirectory(testDataPath);
+			var lcmDataPath = Path.Join(tempPath, "lcm-common");
+			Directory.CreateDirectory(lcmDataPath);
+			Environment.SetEnvironmentVariable("FW_CommonAppData", lcmDataPath);
 
-			// But the folder for this specific test suite should be deleted if it already exists
 			var derivedClassName = this.GetType().Name;
-			TempFolderForClass = new TemporaryFolder(rootTempFolder, derivedClassName);
+			TempFolderForClass = new TemporaryFolder(Path.Join(tempPath, derivedClassName));
 
 			// Ensure sena-3.zip is available to all tests as a starting point
-			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
+			Sena3ZipPath = Path.Join(testDataPath, "sena-3.zip");
 			if (!File.Exists(Sena3ZipPath)) {
 				using var testEnv = new SRTestEnvironment(TempFolderForTest);
 				if (!await testEnv.IsLexBoxAvailable()) {
@@ -191,7 +190,7 @@ namespace LfMerge.Core.Tests.E2E
 			var projCode = await CreateNewProjectFromSena3();
 			var projPath = CloneRepoFromLexbox(projCode, waitTime:TimeSpan.FromSeconds(5));
 			MercurialTestHelper.ChangeBranch(projPath, "tip");
-			var fwdataPath = Path.Combine(projPath, $"{projCode}.fwdata");
+			var fwdataPath = Path.Join(projPath, $"{projCode}.fwdata");
 			LfMergeBridge.LfMergeBridge.ReassembleFwdataFile(TestEnv.NullProgress, false, fwdataPath);
 
 			// Do an initial clone from LexBox to the mock LF
