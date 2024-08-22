@@ -211,7 +211,7 @@ namespace LfMerge.Core.Tests
 			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => DeepCopy(entry)));
 		}
 
-		public LfLexEntry GetLfLexEntryByGuid(Guid key)
+		public LfLexEntry GetLfLexEntryByGuid(ILfProject _project, Guid key)
 		{
 			LfLexEntry result;
 			if (_storedLfLexEntries.TryGetValue(key, out result))

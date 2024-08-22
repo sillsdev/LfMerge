@@ -25,7 +25,7 @@ namespace LfMerge.Core.Tests.E2E
 		private readonly HashSet<Guid> ProjectIdsToDelete = [];
 		public SRTestEnvironment TestEnv { get; set; }
 
-		public MongoConnectionDouble _mongoConnection;
+		public IMongoConnection _mongoConnection;
 		public MongoProjectRecordFactory _recordFactory;
 
 		public E2ETestBase()
@@ -81,14 +81,15 @@ namespace LfMerge.Core.Tests.E2E
 				Assert.Ignore("Can't run E2E tests without a copy of LexBox to test against. Please either launch LexBox on localhost port 80, or set the appropriate environment variables to point to a running copy of LexBox.");
 			}
 			await TestEnv.Login();
+			Console.WriteLine("About to launch Mongo...");
+			TestEnv.LaunchMongo();
 
 			MagicStrings.SetMinimalModelVersion(LcmCache.ModelVersion);
-			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>() as MongoConnectionDouble;
-			if (_mongoConnection == null)
-				throw new AssertionException("E2E tests need a mock MongoConnection that stores data in order to work.");
-			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>() as MongoProjectRecordFactoryDouble;
-			if (_recordFactory == null)
-				throw new AssertionException("E2E tests need a mock MongoProjectRecordFactory in order to work.");
+			_mongoConnection = MainClass.Container.Resolve<IMongoConnection>();
+			var _mongoConnectionDouble = _mongoConnection as MongoConnectionDouble;
+			if (_mongoConnectionDouble != null)
+				throw new AssertionException("E2E tests need a real MongoConnection, not a mock.");
+			_recordFactory = MainClass.Container.Resolve<MongoProjectRecordFactory>();
 		}
 
 		[TearDown]
@@ -220,7 +221,7 @@ namespace LfMerge.Core.Tests.E2E
 
 		public (string, DateTime, DateTime) UpdateLfGloss(LanguageForgeProject lfProject, Guid entryId, string wsId, Func<string, string> textConverter)
 		{
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
+			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(lfProject, entryId);
 			Assert.That(lfEntry, Is.Not.Null);
 			var unchangedGloss = lfEntry.Senses[0].Gloss[wsId].Value;
 			lfEntry.Senses[0].Gloss["pt"].Value = textConverter(unchangedGloss);

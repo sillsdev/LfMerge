@@ -234,7 +234,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
@@ -263,7 +263,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 
@@ -325,7 +325,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
@@ -335,7 +335,7 @@ namespace LfMerge.Core.Tests.Lcm
 			_conn.UpdateMockLfLexEntry(entry);
 
 			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
-			LfLexEntry kenEntry = _conn.GetLfLexEntryByGuid(kenGuid);
+			LfLexEntry kenEntry = _conn.GetLfLexEntryByGuid(lfProj, kenGuid);
 			string changedLexeme2 = "modified lexeme #2 for this test";
 			kenEntry.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, changedLexeme2);
 			kenEntry.AuthorInfo = new LfAuthorInfo();
@@ -362,11 +362,11 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
-			entry = _conn.GetLfLexEntryByGuid(kenGuid);
+			entry = _conn.GetLfLexEntryByGuid(lfProj, kenGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 
@@ -430,7 +430,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
@@ -470,7 +470,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 
@@ -557,7 +557,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			LcmCache cache = lfProj.FieldWorksProject.Cache;
 			string vernacularWS = cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			string changedLexeme = "modified lexeme for this test";
@@ -606,7 +606,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 
@@ -621,7 +621,7 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
 				Is.EqualTo("Language Forge: 1 entry deleted"));
 
-			entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			entry.IsDeleted = true;
 			_conn.UpdateMockLfLexEntry(entry);
 
@@ -689,7 +689,7 @@ namespace LfMerge.Core.Tests.Lcm
 			SutLcmToMongo.Run(lfProj);
 
 			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
-			LfLexEntry entry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
 			LfSense sense = entry.Senses[whichSense];
 			SetCustomMultiOptionList(sense, "customField_senses_Cust_Multi_ListRef", desiredKeys);
 			entry.AuthorInfo = new LfAuthorInfo();

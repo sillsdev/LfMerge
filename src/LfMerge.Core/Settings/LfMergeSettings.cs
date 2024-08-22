@@ -30,18 +30,16 @@ namespace LfMerge.Core.Settings
 			}
 		}
 
-		public string MongoHostname => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
+		private string _mongoHostname;
+		public string MongoHostname {
+			get => _mongoHostname ?? Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoHostname) ?? DefaultLfMergeSettings.MongoHostname;
+			set => _mongoHostname = value;
+		}
 
-		public int MongoPort {
-			get {
-				string _mongoPortStr = Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort);
-				if (_mongoPortStr == null) _mongoPortStr = "";
-				if (Int32.TryParse(_mongoPortStr, out int _mongoPort)) {
-					return _mongoPort;
-				} else {
-					return DefaultLfMergeSettings.MongoPort;
-				}
-			}
+		private string _mongoPort;
+		public string MongoPort {
+			get => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort) ?? DefaultLfMergeSettings.MongoPort.ToString();
+			set => _mongoPort = value;
 		}
 
 		public string MongoAuthSource => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoAuthSource) ?? DefaultLfMergeSettings.MongoAuthSource;
@@ -74,10 +72,10 @@ namespace LfMerge.Core.Settings
 
 		public bool CommitWhenDone { get; internal set; }
 
-		public string MongoDbHostNameAndPort { get { return String.Format("{0}:{1}", MongoHostname, MongoPort.ToString()); } }
+		public string MongoDbHostNameAndPort { get { return String.Format("{0}:{1}", MongoHostname, MongoPort); } }
 		public string MongoDbHostPortAndAuth => string.IsNullOrEmpty(MongoUsername) || string.IsNullOrEmpty(MongoPassword)
-			? string.Format("{0}:{1}", MongoHostname, MongoPort.ToString())
-			: string.Format("{0}:{1}@{2}:{3}", EncodedUsername, EncodedPassword, MongoHostname, MongoPort.ToString());
+			? string.Format("{0}:{1}", MongoHostname, MongoPort)
+			: string.Format("{0}:{1}@{2}:{3}", EncodedUsername, EncodedPassword, MongoHostname, MongoPort);
 
 		private string QueueDirectory { get; set; }
 

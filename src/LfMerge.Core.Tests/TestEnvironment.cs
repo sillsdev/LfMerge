@@ -25,6 +25,7 @@ namespace LfMerge.Core.Tests
 		protected readonly TemporaryFolder     _languageForgeServerFolder;
 		private readonly bool                  _resetLfProjectsDuringCleanup;
 		private readonly bool                  _releaseSingletons;
+		protected        bool                  _disposed;
 		public           bool                  DeleteTempFolderDuringCleanup { get; set; } = true;
 		public           LfMergeSettings       Settings;
 		private readonly MongoConnectionDouble _mongoConnection;
@@ -57,6 +58,8 @@ namespace LfMerge.Core.Tests
 			_releaseSingletons = !SingletonsContainer.Contains<CoreGlobalWritingSystemRepository>();
 		}
 
+		~TestEnvironment() => Dispose(false);
+
 		private string TestName
 		{
 			get
@@ -79,8 +82,7 @@ namespace LfMerge.Core.Tests
 			containerBuilder.RegisterType<TestLogger>().SingleInstance().As<ILogger>()
 				.WithParameter(new TypedParameter(typeof(string), TestName));
 
-
-			containerBuilder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
+			RegisterMongoConnection(containerBuilder);
 
 			if (registerSettingsModel)
 			{
@@ -100,20 +102,33 @@ namespace LfMerge.Core.Tests
 			return containerBuilder;
 		}
 
+		protected virtual void RegisterMongoConnection(ContainerBuilder builder)
+		{
+			builder.RegisterType<MongoConnectionDouble>().As<IMongoConnection>().SingleInstance();
+		}
+
 		public void Dispose()
 		{
-			_mongoConnection?.Reset();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 
-			MainClass.Container?.Dispose();
-			MainClass.Container = null;
-			if (_resetLfProjectsDuringCleanup)
-				LanguageForgeProjectAccessor.Reset();
-			if (DeleteTempFolderDuringCleanup)
-				_languageForgeServerFolder?.Dispose();
-			Settings = null;
-			if (_releaseSingletons)
-				SingletonsContainer.Release();
+		protected virtual void Dispose(bool disposing)
+		{
+			if (_disposed) return;
+			if (disposing) {
+				_mongoConnection?.Reset();
 
+				MainClass.Container?.Dispose();
+				MainClass.Container = null;
+				if (_resetLfProjectsDuringCleanup)
+					LanguageForgeProjectAccessor.Reset();
+				if (DeleteTempFolderDuringCleanup)
+					_languageForgeServerFolder?.Dispose();
+				Settings = null;
+				if (_releaseSingletons)
+					SingletonsContainer.Release();
+			}
 			Environment.SetEnvironmentVariable("FW_CommonAppData", null);
 		}
 

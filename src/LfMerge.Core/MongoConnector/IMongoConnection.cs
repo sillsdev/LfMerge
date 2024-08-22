@@ -19,6 +19,7 @@ namespace LfMerge.Core.MongoConnector
 		IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName);
 		LfOptionList GetLfOptionListByCode(ILfProject project, string listCode);
 		long LexEntryCount(ILfProject project);
+		LfLexEntry GetLfLexEntryByGuid(ILfProject project, Guid key);
 		Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project);
 		bool UpdateRecord(ILfProject project, LfLexEntry data);
 		bool UpdateRecord(ILfProject project, LfOptionList data, string listCode);
