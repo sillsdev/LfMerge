@@ -160,8 +160,6 @@ namespace LfMerge.Core.Tests.E2E
 			MercurialTestHelper.CreateFlexRepo(testPath);
 			// Now create project in LexBox
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
-			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
-			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			var pushUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(testCode).AbsoluteUri;
 			MercurialTestHelper.HgPush(testPath, pushUrl);
 			ProjectIdToDelete = result.Id;
@@ -175,8 +173,6 @@ namespace LfMerge.Core.Tests.E2E
 			var testPath = TestFolderForProject(testCode);
 			// Now create project in LexBox
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
-			Assert.That(result.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
-			Assert.That(result.Id, Is.EqualTo(randomGuid));
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
 			ProjectIdToDelete = result.Id;
 			return testCode;

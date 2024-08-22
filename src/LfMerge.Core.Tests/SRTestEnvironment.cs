@@ -108,9 +108,12 @@ namespace LfMerge.Core.Tests
 				Query = mutation,
 				Variables = new { input },
 			};
-			var response = await GqlClient.SendMutationAsync<LexboxGraphQLTypes.CreateProjectGqlResponse>(request);
-			Assert.That(response.Errors, Is.Null.Or.Empty, () => string.Join("\n", response.Errors.Select(error => error.Message)));
-			return response.Data.CreateProject.CreateProjectResponse;
+			var gqlResponse = await GqlClient.SendMutationAsync<LexboxGraphQLTypes.CreateProjectGqlResponse>(request);
+			Assert.That(gqlResponse.Errors, Is.Null.Or.Empty, () => string.Join("\n", gqlResponse.Errors.Select(error => error.Message)));
+			var response = gqlResponse.Data.CreateProject.CreateProjectResponse;
+			Assert.That(response.Result, Is.EqualTo(LexboxGraphQLTypes.CreateProjectResult.Created));
+			Assert.That(response.Id, Is.EqualTo(projId));
+			return response;
 		}
 
 		public async Task DeleteLexBoxProject(Guid projectId)
