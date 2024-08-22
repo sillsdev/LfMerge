@@ -138,7 +138,7 @@ namespace LfMerge.Core.Tests.E2E
 			return dest;
 		}
 
-		public FwProject CloneFromLexbox(string code, string? newCode = null, TimeSpan? waitTime = null)
+		public FwProject CloneFwProjectFromLexbox(string code, string? newCode = null, TimeSpan? waitTime = null)
 		{
 			var dest = CloneRepoFromLexbox(code, newCode, waitTime);
 			var dirInfo = new DirectoryInfo(dest);

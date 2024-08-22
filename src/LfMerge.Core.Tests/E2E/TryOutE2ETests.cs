@@ -33,7 +33,7 @@ namespace LfMerge.Core.Tests.E2E
 
 			var lfProject = await CreateLfProjectFromSena3();
 			var fwProjectCode = Regex.Replace(lfProject.ProjectCode, "^sr-", "fw-");
-			var fwProject = CloneFromLexbox(lfProject.ProjectCode, fwProjectCode);
+			var fwProject = CloneFwProjectFromLexbox(lfProject.ProjectCode, fwProjectCode);
 
 			// Modify FW data first, then push to Lexbox
 			Guid entryId = LcmTestHelper.GetFirstEntry(fwProject).Guid;
