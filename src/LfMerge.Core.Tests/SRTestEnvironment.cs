@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using BirdMessenger;
+using BirdMessenger.Collections;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
@@ -12,7 +14,6 @@ using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
 using NUnit.Framework;
 using SIL.TestUtilities;
-using TusDotNetClient;
 
 namespace LfMerge.Core.Tests
 {
@@ -164,17 +165,31 @@ namespace LfMerge.Core.Tests
 			await Http.PostAsync(finishResetUrl, null);
 		}
 
-		public async Task UploadZip(string code, string zipPath)
+		public async Task TusUpload(Uri tusEndpoint, string path, string mimeType)
+		{
+			var file = new FileInfo(path);
+			if (!file.Exists) return;
+			var metadata = new MetadataCollection { { "filetype", mimeType } };
+			var createOpts = new TusCreateRequestOption {
+				Endpoint = tusEndpoint,
+				UploadLength = file.Length,
+				Metadata = metadata,
+			};
+			var createResponse = await Http.TusCreateAsync(createOpts);
+
+			// That doesn't actually upload the file; TusPatchAsync does the actual upload
+			var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
+			var patchOpts = new TusPatchRequestOption {
+				FileLocation = createResponse.FileLocation,
+				Stream = fileStream,
+			};
+			await Http.TusPatchAsync(patchOpts);
+		}
+
+		public Task UploadZip(string code, string zipPath)
 		{
 			var sourceUrl = new Uri(LexboxUrl, $"/api/project/upload-zip/{code}");
-			var file = new FileInfo(zipPath);
-			var client = new TusClient();
-			// client.AdditionalHeaders["Authorization"] = $"Bearer {Jwt}"; // Once we set up for LexBox OAuth, we'll use Bearer auth instead
-			var cookies = Cookies.GetCookies(LexboxUrl);
-			var authCookie = cookies[".LexBoxAuth"].ToString();
-			client.AdditionalHeaders["cookie"] = authCookie;
-			var fileUrl = await client.CreateAsync(sourceUrl.AbsoluteUri, file.Length, ("filetype", "application/zip"));
-			await client.UploadAsync(fileUrl, file);
+			return TusUpload(sourceUrl, zipPath, "application/zip");
 		}
 
 		public async Task DownloadProjectBackup(string code, string destZipPath)
