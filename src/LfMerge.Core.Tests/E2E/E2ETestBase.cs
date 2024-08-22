@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
@@ -23,7 +24,7 @@ namespace LfMerge.Core.Tests.E2E
 		public TemporaryFolder TestDataFolder { get; set; }
 		public TemporaryFolder LcmDataFolder { get; set; }
 		public string Sena3ZipPath { get; set; }
-		private Guid? ProjectIdToDelete { get; set; }
+		private readonly HashSet<Guid> ProjectIdsToDelete = [];
 		public SRTestEnvironment TestEnv { get; set; }
 
 		public MongoConnectionDouble _mongoConnection;
@@ -99,12 +100,13 @@ namespace LfMerge.Core.Tests.E2E
 			var success = outcome == ResultState.Success || outcome == ResultState.Ignored;
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
 			TestEnv.DeleteTempFolderDuringCleanup = success;
-			// Also leave LexBox project in place for post-test investigation, even though this might tend to clutter things up a little
-			if (success && ProjectIdToDelete is not null) {
-				var projId = ProjectIdToDelete.Value;
-				ProjectIdToDelete = null;
-				await TestEnv.DeleteLexBoxProject(projId);
+			// On failure, also leave LexBox project(s) in place for post-test investigation, even though this might tend to clutter things up a little
+			if (success) {
+				foreach (var projId in ProjectIdsToDelete) {
+					await TestEnv.DeleteLexBoxProject(projId);
+				}
 			}
+			ProjectIdsToDelete.Clear();
 			TestEnv.Dispose();
 		}
 
@@ -162,7 +164,7 @@ namespace LfMerge.Core.Tests.E2E
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			var pushUrl = SRTestEnvironment.LexboxUrlForProjectWithAuth(testCode).AbsoluteUri;
 			MercurialTestHelper.HgPush(testPath, pushUrl);
-			ProjectIdToDelete = result.Id;
+			if (result.Id.HasValue) ProjectIdsToDelete.Add(result.Id.Value);
 			return testCode;
 		}
 
@@ -174,7 +176,7 @@ namespace LfMerge.Core.Tests.E2E
 			// Now create project in LexBox
 			var result = await TestEnv.CreateLexBoxProject(testCode, randomGuid);
 			await TestEnv.ResetAndUploadZip(testCode, origZipPath);
-			ProjectIdToDelete = result.Id;
+			if (result.Id.HasValue) ProjectIdsToDelete.Add(result.Id.Value);
 			return testCode;
 		}
 
