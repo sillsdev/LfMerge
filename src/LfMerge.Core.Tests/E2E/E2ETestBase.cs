@@ -55,7 +55,7 @@ namespace LfMerge.Core.Tests.E2E
 			// Ensure sena-3.zip is available to all tests as a starting point
 			Sena3ZipPath = Path.Combine(TestDataFolder.Path, "sena-3.zip");
 			if (!File.Exists(Sena3ZipPath)) {
-				var testEnv = new SRTestEnvironment(TempFolderForTest);
+				using var testEnv = new SRTestEnvironment(TempFolderForTest);
 				if (!await testEnv.IsLexBoxAvailable()) {
 					Assert.Ignore("Can't run E2E tests without a copy of LexBox to test against. Please either launch LexBox on localhost port 80, or set the appropriate environment variables to point to a running copy of LexBox.");
 				}
@@ -96,16 +96,17 @@ namespace LfMerge.Core.Tests.E2E
 		[TearDown]
 		public async Task TestTeardown()
 		{
+			var outcome = TestContext.CurrentContext.Result.Outcome;
+			var success = outcome == ResultState.Success || outcome == ResultState.Ignored;
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
-			if (TestContext.CurrentContext.Result.Outcome == ResultState.Success) {
-				TempFolderForTest.Dispose();
-				if (ProjectIdToDelete is not null) {
-					var projId = ProjectIdToDelete.Value;
-					ProjectIdToDelete = null;
-					// Also leave LexBox project in place for post-test investigation, even though this might tend to clutter things up a little
-					await TestEnv.DeleteLexBoxProject(projId);
-				}
+			TestEnv.DeleteTempFolderDuringCleanup = success;
+			// Also leave LexBox project in place for post-test investigation, even though this might tend to clutter things up a little
+			if (success && ProjectIdToDelete is not null) {
+				var projId = ProjectIdToDelete.Value;
+				ProjectIdToDelete = null;
+				await TestEnv.DeleteLexBoxProject(projId);
 			}
+			TestEnv.Dispose();
 		}
 
 		public string TestFolderForProject(string projectCode) => Path.Join(TempFolderForTest.Path, "webwork", projectCode);
