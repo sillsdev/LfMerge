@@ -562,7 +562,7 @@ namespace LfMerge.Core.MongoConnector
 			MongoProjectRecord oldProjectRecord = collection.FindOneAndUpdate(filter, update, updateOptions);
 
 			// For initial clone, also update field writing systems accordingly
-			if (project.IsInitialClone)
+			if (oldProjectRecord != null && project.IsInitialClone)
 			{
 				// Currently only MultiText fields have input systems in the config. If MultiParagraph fields acquire input systems as well,
 				// we'll need to add those to the logic below.
