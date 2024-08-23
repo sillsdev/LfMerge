@@ -26,7 +26,7 @@ namespace LfMerge.Core.Tests
 		private readonly bool                  _resetLfProjectsDuringCleanup;
 		private readonly bool                  _releaseSingletons;
 		protected        bool                  _disposed;
-		public           bool                  DeleteTempFolderDuringCleanup { get; set; } = true;
+		public           bool                  CleanUpTestData { get; set; } = true;
 		public           LfMergeSettings       Settings;
 		private readonly MongoConnectionDouble _mongoConnection;
 		public ILogger Logger => MainClass.Logger;
@@ -123,7 +123,7 @@ namespace LfMerge.Core.Tests
 				MainClass.Container = null;
 				if (_resetLfProjectsDuringCleanup)
 					LanguageForgeProjectAccessor.Reset();
-				if (DeleteTempFolderDuringCleanup)
+				if (CleanUpTestData)
 					_languageForgeServerFolder?.Dispose();
 				Settings = null;
 				if (_releaseSingletons)

@@ -98,7 +98,7 @@ namespace LfMerge.Core.Tests.E2E
 			var outcome = TestContext.CurrentContext.Result.Outcome;
 			var success = outcome == ResultState.Success || outcome == ResultState.Ignored;
 			// Only delete temp folder if test passed, otherwise we'll want to leave it in place for post-test investigation
-			TestEnv.DeleteTempFolderDuringCleanup = success;
+			TestEnv.CleanUpTestData = success;
 			// On failure, also leave LexBox project(s) in place for post-test investigation, even though this might tend to clutter things up a little
 			if (success) {
 				foreach (var projId in ProjectIdsToDelete) {
