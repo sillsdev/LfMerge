@@ -67,7 +67,6 @@ namespace LfMerge.Core.Tests
 			{
 				var result = CommandLineRunner.Run("docker", "run -p 27017 -d mongo:6", ".", 30, NullProgress);
 				MongoContainerId = result.StandardOutput?.TrimEnd();
-				Console.WriteLine($"Launched Mongo container {MongoContainerId ?? "(null) - something went wrong"}");
 				if (MongoContainerId != null)
 				{
 					result = CommandLineRunner.Run("docker", $"port {MongoContainerId} 27017", ".", 30, NullProgress);
@@ -77,7 +76,6 @@ namespace LfMerge.Core.Tests
 						Settings.MongoHostname = parts[0].Replace("0.0.0.0", "localhost");
 						Settings.MongoPort = parts[1];
 					}
-					Console.WriteLine($"Mongo is listening on port {parts?[1] ?? hostAndPort + " (oops, mongoPort was null)"}");
 				}
 			}
 		}
@@ -86,10 +84,8 @@ namespace LfMerge.Core.Tests
 		{
 			if (MongoContainerId is not null)
 			{
-				Console.WriteLine($"Stopping Mongo container {MongoContainerId} ...");
 				CommandLineRunner.Run("docker", $"stop {MongoContainerId}", ".", 30, NullProgress);
 				CommandLineRunner.Run("docker", $"rm {MongoContainerId}", ".", 30, NullProgress);
-				Console.WriteLine($"Stopped Mongo container {MongoContainerId} ...");
 				MongoContainerId = null;
 			}
 		}
@@ -98,7 +94,13 @@ namespace LfMerge.Core.Tests
 		{
 			if (_disposed) return;
 			if (disposing) {
-				StopMongo();
+				if (CleanUpTestData) {
+					StopMongo();
+				} else {
+					Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
+					Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
+					Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
+				}
 			}
 			base.Dispose(disposing);
 		}

@@ -81,7 +81,6 @@ namespace LfMerge.Core.Tests.E2E
 				Assert.Ignore("Can't run E2E tests without a copy of LexBox to test against. Please either launch LexBox on localhost port 80, or set the appropriate environment variables to point to a running copy of LexBox.");
 			}
 			await TestEnv.Login();
-			Console.WriteLine("About to launch Mongo...");
 			TestEnv.LaunchMongo();
 
 			MagicStrings.SetMinimalModelVersion(LcmCache.ModelVersion);
