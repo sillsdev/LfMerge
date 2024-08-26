@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using Autofac;
 using Bugsnag.Payload;
 using LfMergeBridge.LfMergeModel;
 using IniParser.Model;
@@ -417,6 +418,10 @@ namespace LfMerge.Core.Tests
 	{
 		public override string GetSyncUri(ILfProject project)
 		{
+			var settings = MainClass.Container.Resolve<LfMergeSettings>();
+			// Allow tests to override LanguageDepotRepoUri if necessary (e.g., the E2E tests which need ChorusHelperDouble but use a "real" LexBox instance)
+			if (!string.IsNullOrEmpty(settings.LanguageDepotRepoUri))
+				return settings.LanguageDepotRepoUri;
 			var server = LanguageDepotMock.Server;
 			return server != null && server.IsStarted ? server.Url : LanguageDepotMock.ProjectFolderPath;
 		}

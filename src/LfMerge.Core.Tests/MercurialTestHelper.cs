@@ -19,9 +19,10 @@ namespace LfMerge.Core.Tests
 		private static string RunHgCommand(string repoPath, string args)
 		{
 			var result = CommandLineRunner.Run(HgCommand, args, repoPath, 120, new NullProgress());
-			Assert.That(result.ExitCode, Is.EqualTo(0),
+			if (result.ExitCode == 0) return result.StandardOutput;
+			throw new System.Exception(
 				$"hg {args} failed.\nStdOut: {result.StandardOutput}\nStdErr: {result.StandardError}");
-			return result.StandardOutput;
+
 		}
 
 		public static void InitializeHgRepo(string projectFolderPath)
@@ -53,6 +54,11 @@ namespace LfMerge.Core.Tests
 			RunHgCommand(repoPath, $"add {file}");
 		}
 
+		public static void HgClean(string repoPath)
+		{
+			RunHgCommand(repoPath, $"purge --no-confirm");
+		}
+
 		public static void HgCommit(string repoPath, string message)
 		{
 			RunHgCommand(repoPath, $"commit -A -u dummyUser -m \"{message}\"");
@@ -61,6 +67,11 @@ namespace LfMerge.Core.Tests
 		public static void HgCreateBranch(string repoPath, int branchName)
 		{
 			RunHgCommand(repoPath, $"branch -f \"{branchName}\"");
+		}
+
+		public static void HgPush(string repoPath, string remoteUri)
+		{
+			RunHgCommand(repoPath, $"push {remoteUri}");
 		}
 
 		public static void CreateFlexRepo(string lDProjectFolderPath, int modelVersion = 0)
@@ -79,6 +90,17 @@ namespace LfMerge.Core.Tests
 		{
 			Directory.CreateDirectory(destinationRepo);
 			RunHgCommand(destinationRepo, $"clone {sourceRepo} .");
+		}
+
+		public static void CloneRepoAtRev(string sourceRepo, string destinationRepo, string rev)
+		{
+			Directory.CreateDirectory(destinationRepo);
+			RunHgCommand(destinationRepo, $"clone {sourceRepo} -U -r {rev} .");
+		}
+
+		public static void CloneRepoAtRevnum(string sourceRepo, string destinationRepo, int revnum)
+		{
+			CloneRepoAtRev(sourceRepo, destinationRepo, revnum.ToString());
 		}
 
 		public static void ChangeBranch(string repoPath, string newBranch)
