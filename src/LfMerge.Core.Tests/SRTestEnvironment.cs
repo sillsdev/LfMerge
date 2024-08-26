@@ -97,9 +97,11 @@ namespace LfMerge.Core.Tests
 				if (CleanUpTestData) {
 					StopMongo();
 				} else {
-					Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
-					Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
-					Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
+					if (MongoContainerId is not null) {
+						Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
+						Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
+						Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
+					}
 				}
 			}
 			base.Dispose(disposing);
