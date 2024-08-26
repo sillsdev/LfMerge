@@ -38,7 +38,7 @@ namespace LfMerge.Core.Settings
 
 		private string _mongoPort;
 		public string MongoPort {
-			get => Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort) ?? DefaultLfMergeSettings.MongoPort.ToString();
+			get => _mongoPort ?? Environment.GetEnvironmentVariable(MagicStrings.SettingsEnvVar_MongoPort) ?? DefaultLfMergeSettings.MongoPort.ToString();
 			set => _mongoPort = value;
 		}
 
