@@ -21,8 +21,6 @@ namespace LfMerge.Core.Tests.E2E
 		public LfMerge.Core.Logging.ILogger Logger => MainClass.Logger;
 		public TemporaryFolder TempFolderForClass { get; set; }
 		public TemporaryFolder TempFolderForTest { get; set; }
-		public TemporaryFolder TestDataFolder { get; set; }
-		public TemporaryFolder LcmDataFolder { get; set; }
 		public string Sena3ZipPath { get; set; }
 		private readonly HashSet<Guid> ProjectIdsToDelete = [];
 		public SRTestEnvironment TestEnv { get; set; }
