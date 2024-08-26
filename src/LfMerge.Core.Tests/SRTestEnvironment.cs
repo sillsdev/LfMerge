@@ -178,7 +178,7 @@ namespace LfMerge.Core.Tests
 			var createResponse = await Http.TusCreateAsync(createOpts);
 
 			// That doesn't actually upload the file; TusPatchAsync does the actual upload
-			var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
+			using var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
 			var patchOpts = new TusPatchRequestOption {
 				FileLocation = createResponse.FileLocation,
 				Stream = fileStream,
