@@ -8,7 +8,7 @@ namespace LfMerge.Core.Tests.E2E
 	[TestFixture]
 	[Category("LongRunning")]
 	[Category("IntegrationTests")]
-	public class TryOutE2ETests : E2ETestBase
+	public class LexboxSendReceiveTests : E2ETestBase
 	{
 		// This test will often trigger a race condition in LexBox that causes the *next* test to fail
 		// when `hg clone` returns 404. This is because of hgweb's directory cache, which only refreshes
