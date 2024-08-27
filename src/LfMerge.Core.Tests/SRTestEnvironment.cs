@@ -96,7 +96,14 @@ namespace LfMerge.Core.Tests
 		{
 			if (_disposed) return;
 			if (disposing) {
-				StopMongo();
+				// Set the LFMERGE_E2E_LEAVE_MONGO_CONTAINER_RUNNING_ON_FAILURE env var to a non-empty value if you want Mongo container to NOT be torn down on test failure
+				if (CleanUpTestData || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(MagicStrings.EnvVar_E2E_LeaveMongoContainerRunningOnFailure))) {
+					StopMongo();
+				} else {
+					Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
+					Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
+					Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
+				}
 			}
 			base.Dispose(disposing);
 		}
