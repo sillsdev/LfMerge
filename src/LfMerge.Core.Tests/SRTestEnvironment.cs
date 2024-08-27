@@ -67,15 +67,17 @@ namespace LfMerge.Core.Tests
 			{
 				var result = CommandLineRunner.Run("docker", "run -p 27017 -d mongo:6", ".", 30, NullProgress);
 				MongoContainerId = result.StandardOutput?.TrimEnd();
-				if (MongoContainerId != null)
-				{
-					result = CommandLineRunner.Run("docker", $"port {MongoContainerId} 27017", ".", 30, NullProgress);
-					var hostAndPort = result.StandardOutput?.TrimEnd();
-					var parts = hostAndPort.Contains(':') ? hostAndPort.Split(':') : null;
-					if (parts is not null && parts.Length == 2) {
-						Settings.MongoHostname = parts[0].Replace("0.0.0.0", "localhost");
-						Settings.MongoPort = parts[1];
-					}
+				if (string.IsNullOrEmpty(MongoContainerId)) {
+					throw new InvalidOperationException("Mongo container failed to start, aborting test");
+				}
+				result = CommandLineRunner.Run("docker", $"port {MongoContainerId} 27017", ".", 30, NullProgress);
+				var hostAndPort = result.StandardOutput?.TrimEnd();
+				var parts = hostAndPort.Contains(':') ? hostAndPort.Split(':') : null;
+				if (parts is not null && parts.Length == 2) {
+					Settings.MongoHostname = parts[0].Replace("0.0.0.0", "localhost");
+					Settings.MongoPort = parts[1];
+				} else {
+					throw new InvalidOperationException($"Mongo container port {hostAndPort} could not be parsed, test will not be able to proceed");
 				}
 			}
 		}
@@ -94,15 +96,7 @@ namespace LfMerge.Core.Tests
 		{
 			if (_disposed) return;
 			if (disposing) {
-				if (CleanUpTestData) {
-					StopMongo();
-				} else {
-					if (MongoContainerId is not null) {
-						Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
-						Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
-						Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
-					}
-				}
+				StopMongo();
 			}
 			base.Dispose(disposing);
 		}

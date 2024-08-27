@@ -72,7 +72,7 @@ namespace LfMerge.Core.Settings
 
 		public bool CommitWhenDone { get; internal set; }
 
-		public string MongoDbHostNameAndPort { get { return String.Format("{0}:{1}", MongoHostname, MongoPort); } }
+		public string MongoDbHostNameAndPort => $"{MongoHostname}:{MongoPort}";
 		public string MongoDbHostPortAndAuth => string.IsNullOrEmpty(MongoUsername) || string.IsNullOrEmpty(MongoPassword)
 			? string.Format("{0}:{1}", MongoHostname, MongoPort)
 			: string.Format("{0}:{1}@{2}:{3}", EncodedUsername, EncodedPassword, MongoHostname, MongoPort);
