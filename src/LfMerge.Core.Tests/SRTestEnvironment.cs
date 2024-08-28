@@ -92,12 +92,19 @@ namespace LfMerge.Core.Tests
 			}
 		}
 
+		private bool ShouldStopMongoOnFailure()
+		{
+			// Mongo container will be torn down on test failure unless LFMERGE_E2E_LEAVE_MONGO_CONTAINER_RUNNING_ON_FAILURE
+			// is set to a non-empty value (except "false" or "0", which mean the same as leaving it empty)
+			var envVar = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_E2E_LeaveMongoContainerRunningOnFailure)?.Trim();
+			return string.IsNullOrEmpty(envVar) || envVar == "false" || envVar == "0";
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (_disposed) return;
 			if (disposing) {
-				// Set the LFMERGE_E2E_LEAVE_MONGO_CONTAINER_RUNNING_ON_FAILURE env var to a non-empty value if you want Mongo container to NOT be torn down on test failure
-				if (CleanUpTestData || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(MagicStrings.EnvVar_E2E_LeaveMongoContainerRunningOnFailure))) {
+				if (CleanUpTestData || ShouldStopMongoOnFailure()) {
 					StopMongo();
 				} else {
 					Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
