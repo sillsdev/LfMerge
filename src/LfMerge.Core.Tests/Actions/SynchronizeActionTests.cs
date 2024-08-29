@@ -273,17 +273,6 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(ldChangedGloss));
 		}
 
-		// Returns original AuthorInfo.ModifiedDate, followed by *updated* AuthorInfo.ModifiedDate. Does not return either the old or new DateModified values.
-		public (string, DateTime, DateTime) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Func<LfLexEntry, LfStringField> getField, Func<string, string> textConverter)
-		{
-			string unchangedValue = null;
-			var (origModifiedDate, _, lfEntry) = UpdateLfEntry(lfProject, entryId, lfEntry => {
-				unchangedValue = getField(lfEntry).Value;
-				getField(lfEntry).Value = textConverter(unchangedValue);
-			});
-			return (unchangedValue, origModifiedDate, lfEntry.AuthorInfo.ModifiedDate);
-		}
-
 		// Returns original AuthorInfo.ModifiedDate, followed by original DateModified. (This order is chosen because DateModified is only useful in delete tests)
 		// Also returns the entry so that calling code can grab the updated date they want.
 		public (DateTime, DateTime, LfLexEntry) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Action<LfLexEntry> updater)
@@ -297,6 +286,17 @@ namespace LfMerge.Core.Tests.Actions
 			lfEntry.AuthorInfo.ModifiedDate = lfEntry.DateModified = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(lfProject, lfEntry);
 			return (origModifiedDate, origDateModified, lfEntry);
+		}
+
+		// Returns original AuthorInfo.ModifiedDate, followed by *updated* AuthorInfo.ModifiedDate. Does not return either the old or new DateModified values.
+		public (string, DateTime, DateTime) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Func<LfLexEntry, LfStringField> getField, Func<string, string> textConverter)
+		{
+			string unchangedValue = null;
+			var (origModifiedDate, _, lfEntry) = UpdateLfEntry(lfProject, entryId, lfEntry => {
+				unchangedValue = getField(lfEntry).Value;
+				getField(lfEntry).Value = textConverter(unchangedValue);
+			});
+			return (unchangedValue, origModifiedDate, lfEntry.AuthorInfo.ModifiedDate);
 		}
 
 		// Returns original DateModified, followed by *updated* DateModified. Does not return either the old or new AuthorInfo.ModifiedDate values.
