@@ -273,41 +273,38 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(GetGlossFromLanguageDepot(_testEntryGuid, 2), Is.EqualTo(ldChangedGloss));
 		}
 
+		// Returns original AuthorInfo.ModifiedDate, followed by *updated* AuthorInfo.ModifiedDate. Does not return either the old or new DateModified values.
 		public (string, DateTime, DateTime) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Func<LfLexEntry, LfStringField> getField, Func<string, string> textConverter)
 		{
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
-			Assert.That(lfEntry, Is.Not.Null);
-			var unchangedValue = getField(lfEntry).Value;
-			getField(lfEntry).Value = textConverter(unchangedValue);
-			// Remember that in LfMerge it's AuthorInfo that corresponds to the Lcm modified date
-			DateTime origModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
-			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
-			_mongoConnection.UpdateRecord(lfProject, lfEntry);
+			string unchangedValue = null;
+			var (origModifiedDate, _, lfEntry) = UpdateLfEntry(lfProject, entryId, lfEntry => {
+				unchangedValue = getField(lfEntry).Value;
+				getField(lfEntry).Value = textConverter(unchangedValue);
+			});
 			return (unchangedValue, origModifiedDate, lfEntry.AuthorInfo.ModifiedDate);
 		}
 
-		public (DateTime, DateTime) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Action<LfLexEntry> updater)
+		// Returns original AuthorInfo.ModifiedDate, followed by original DateModified. (This order is chosen because DateModified is only useful in delete tests)
+		// Also returns the entry so that calling code can grab the updated date they want.
+		public (DateTime, DateTime, LfLexEntry) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Action<LfLexEntry> updater)
 		{
 			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
 			Assert.That(lfEntry, Is.Not.Null);
 			updater(lfEntry);
 			// Remember that in LfMerge it's AuthorInfo that corresponds to the Lcm modified date
 			DateTime origModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
-			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			DateTime origDateModified = lfEntry.DateModified;
+			lfEntry.AuthorInfo.ModifiedDate = lfEntry.DateModified = DateTime.UtcNow;
 			_mongoConnection.UpdateRecord(lfProject, lfEntry);
-			return (origModifiedDate, lfEntry.AuthorInfo.ModifiedDate);
+			return (origModifiedDate, origDateModified, lfEntry);
 		}
 
+		// Returns original DateModified, followed by *updated* DateModified. Does not return either the old or new AuthorInfo.ModifiedDate values.
 		public (DateTime, DateTime) DeleteLfEntry(LanguageForgeProject lfProject, Guid entryId)
 		{
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
-			Assert.That(lfEntry, Is.Not.Null);
-			lfEntry.IsDeleted = true;
-			// The LF PHP code would have updated DateModified when it deleted the record, so simulate that here
-			// TODO: Check if AuthorInfo would work as well, then consolidate with UpdateLfEntry(updater)
-			DateTime origDateModified = lfEntry.DateModified;
-			lfEntry.DateModified = DateTime.UtcNow;
-			_mongoConnection.UpdateRecord(lfProject, lfEntry);
+			var (_, origDateModified, lfEntry) = UpdateLfEntry(lfProject, entryId, lfEntry => {
+				lfEntry.IsDeleted = true;
+			});
 			return (origDateModified, lfEntry.DateModified);
 		}
 
@@ -461,7 +458,7 @@ namespace LfMerge.Core.Tests.Actions
 			CommitAndPush(_fwProject);
 
 			// Meanwhile LF project changes gloss of same entry
-			var (origDateModified, _) = UpdateLfEntry(_lfProject, _testDeletedEntryGuid,
+			var (origDateModified, _, _) = UpdateLfEntry(_lfProject, _testDeletedEntryGuid,
 				entry => entry.Senses[0].Gloss = LfMultiText.FromSingleStringMapping("en", "new English gloss - added in LF"));
 
 			// Exercise
@@ -494,7 +491,7 @@ namespace LfMerge.Core.Tests.Actions
 			CommitAndPush(_fwProject);
 
 			// While LF project adds a note to the entry
-			var (origDateModified, _) = UpdateLfEntry(
+			var (origDateModified, _, _) = UpdateLfEntry(
 				_lfProject, _testEntryGuid, entry => entry.Note = LfMultiText.FromSingleStringMapping("en", "A note from LF"));
 
 			// Exercise
