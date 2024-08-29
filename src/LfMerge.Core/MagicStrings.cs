@@ -33,6 +33,7 @@ namespace LfMerge.Core
 		public const string EnvVar_LanguageDepotUriPort = "LFMERGE_LANGUAGE_DEPOT_HG_PORT";
 		public const string EnvVar_TrustToken = "LANGUAGE_DEPOT_TRUST_TOKEN";
 		public const string EnvVar_HgUsername = "LANGUAGE_DEPOT_HG_USERNAME";
+		public const string EnvVar_E2E_LeaveMongoContainerRunningOnFailure = "LFMERGE_E2E_LEAVE_MONGO_CONTAINER_RUNNING_ON_FAILURE";
 
 		public static Dictionary<string, string> LcmOptionlistNames = new Dictionary<string, string>()
 		{

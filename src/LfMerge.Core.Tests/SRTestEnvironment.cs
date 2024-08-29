@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Autofac;
 using BirdMessenger;
 using BirdMessenger.Collections;
 using GraphQL;
@@ -12,7 +13,9 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using LfMerge.Core.FieldWorks;
 using LfMerge.Core.Logging;
+using LfMerge.Core.MongoConnector;
 using NUnit.Framework;
+using SIL.CommandLineProcessing;
 using SIL.TestUtilities;
 
 namespace LfMerge.Core.Tests
@@ -39,6 +42,7 @@ namespace LfMerge.Core.Tests
 		private bool AlreadyLoggedIn = false;
 		private TemporaryFolder TempFolder { get; init; }
 		private Lazy<GraphQLHttpClient> LazyGqlClient { get; init; }
+		private string MongoContainerId { get; set; }
 		public GraphQLHttpClient GqlClient => LazyGqlClient.Value;
 
 		public SRTestEnvironment(TemporaryFolder? tempFolder = null)
@@ -49,6 +53,66 @@ namespace LfMerge.Core.Tests
 			LazyGqlClient = new(() => new GraphQLHttpClient(new Uri(LexboxUrl, "/api/graphql"), new SystemTextJsonSerializer(), Http));
 			TempFolder = _languageForgeServerFolder; // Better name for what E2E tests use it for
 			Settings.CommitWhenDone = true; // For SR tests specifically, we *do* want changes to .fwdata files to be persisted
+		}
+
+		override protected void RegisterMongoConnection(ContainerBuilder builder)
+		{
+			// E2E tests want a real Mogno connection
+			builder.RegisterType<MongoConnection>().As<IMongoConnection>().SingleInstance();
+		}
+
+		public void LaunchMongo()
+		{
+			if (MongoContainerId is null)
+			{
+				var result = CommandLineRunner.Run("docker", "run -p 27017 -d mongo:6", ".", 30, NullProgress);
+				MongoContainerId = result.StandardOutput?.TrimEnd();
+				if (string.IsNullOrEmpty(MongoContainerId)) {
+					throw new InvalidOperationException("Mongo container failed to start, aborting test");
+				}
+				result = CommandLineRunner.Run("docker", $"port {MongoContainerId} 27017", ".", 30, NullProgress);
+				var hostAndPort = result.StandardOutput?.TrimEnd();
+				var parts = hostAndPort.Contains(':') ? hostAndPort.Split(':') : null;
+				if (parts is not null && parts.Length == 2) {
+					Settings.MongoHostname = parts[0].Replace("0.0.0.0", "localhost");
+					Settings.MongoPort = parts[1];
+				} else {
+					throw new InvalidOperationException($"Mongo container port {hostAndPort} could not be parsed, test will not be able to proceed");
+				}
+			}
+		}
+
+		public void StopMongo()
+		{
+			if (MongoContainerId is not null)
+			{
+				CommandLineRunner.Run("docker", $"stop {MongoContainerId}", ".", 30, NullProgress);
+				CommandLineRunner.Run("docker", $"rm {MongoContainerId}", ".", 30, NullProgress);
+				MongoContainerId = null;
+			}
+		}
+
+		private bool ShouldStopMongoOnFailure()
+		{
+			// Mongo container will be torn down on test failure unless LFMERGE_E2E_LEAVE_MONGO_CONTAINER_RUNNING_ON_FAILURE
+			// is set to a non-empty value (except "false" or "0", which mean the same as leaving it empty)
+			var envVar = Environment.GetEnvironmentVariable(MagicStrings.EnvVar_E2E_LeaveMongoContainerRunningOnFailure)?.Trim();
+			return string.IsNullOrEmpty(envVar) || envVar == "false" || envVar == "0";
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (_disposed) return;
+			if (disposing) {
+				if (CleanUpTestData || ShouldStopMongoOnFailure()) {
+					StopMongo();
+				} else {
+					Console.WriteLine($"Leaving Mongo container {MongoContainerId} around to examine data on failed test.");
+					Console.WriteLine($"It is listening on {Settings.MongoDbHostNameAndPort}");
+					Console.WriteLine($"To delete it, run `docker stop {MongoContainerId} ; docker rm {MongoContainerId}`.");
+				}
+			}
+			base.Dispose(disposing);
 		}
 
 		public async Task Login()

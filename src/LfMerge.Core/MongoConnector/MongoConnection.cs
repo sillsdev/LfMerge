@@ -88,7 +88,8 @@ namespace LfMerge.Core.MongoConnector
 			var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
 			// clientSettings.WriteConcern = WriteConcern.WMajority; // If increasing the wait queue size still doesn't help, try this as well
 			clientSettings.WaitQueueSize = 50000;
-			clientSettings.Server = new MongoServerAddress(Settings.MongoHostname, Settings.MongoPort);
+			var mongoPort = int.TryParse(Settings.MongoPort, out var port) ? port : DefaultLfMergeSettings.MongoPort;
+			clientSettings.Server = new MongoServerAddress(Settings.MongoHostname, mongoPort);
 			return new MongoClient(clientSettings);
 		}
 
@@ -146,6 +147,13 @@ namespace LfMerge.Core.MongoConnector
 			IMongoCollection<LfLexEntry> lexicon = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
 			FilterDefinition<LfLexEntry> allEntries = Builders<LfLexEntry>.Filter.Empty;
 			return lexicon.Count(allEntries);
+		}
+
+		public LfLexEntry GetLfLexEntryByGuid(ILfProject project, Guid key)
+		{
+			IMongoDatabase db = GetProjectDatabase(project);
+			IMongoCollection<LfLexEntry> collection = db.GetCollection<LfLexEntry>(MagicStrings.LfCollectionNameForLexicon);
+			return collection.Find<LfLexEntry>(entry => entry.Guid == key).First();
 		}
 
 		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
@@ -554,7 +562,7 @@ namespace LfMerge.Core.MongoConnector
 			MongoProjectRecord oldProjectRecord = collection.FindOneAndUpdate(filter, update, updateOptions);
 
 			// For initial clone, also update field writing systems accordingly
-			if (project.IsInitialClone)
+			if (oldProjectRecord != null && project.IsInitialClone)
 			{
 				// Currently only MultiText fields have input systems in the config. If MultiParagraph fields acquire input systems as well,
 				// we'll need to add those to the logic below.

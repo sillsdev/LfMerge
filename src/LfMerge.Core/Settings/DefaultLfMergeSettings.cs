@@ -9,7 +9,7 @@ namespace LfMerge.Core.Settings
 		public const string WebworkDir = "webwork";
 		public const string TemplatesDir = "Templates";
 		public const string MongoHostname = "localhost";
-		public const int MongoPort = 27017;
+		public const int MongoPort = 27017; // This should stay an int even though the LfMergeSettings value is a string
 		public const string MongoMainDatabaseName = "scriptureforge";
 		public const string MongoDatabaseNamePrefix = "sf_";
 		public const string MongoAuthSource = "admin";
