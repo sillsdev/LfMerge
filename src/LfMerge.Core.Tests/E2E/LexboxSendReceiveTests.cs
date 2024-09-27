@@ -50,7 +50,7 @@ namespace LfMerge.Core.Tests.E2E
 			// Verify
 
 			// LF side should win conflict since its modified date was later
-			var lfEntryAfterSR = _mongoConnection.GetLfLexEntryByGuid(entryId);
+			var lfEntryAfterSR = _mongoConnection.GetLfLexEntryByGuid(lfProject, entryId);
 			Assert.That(lfEntryAfterSR?.Senses?[0]?.Gloss?["pt"]?.Value, Is.EqualTo(unchangedGloss + " - changed in LF"));
 			// LF's modified dates should have been updated by the sync action
 			Assert.That(lfEntryAfterSR.AuthorInfo.ModifiedDate, Is.GreaterThan(origLfDateModified));

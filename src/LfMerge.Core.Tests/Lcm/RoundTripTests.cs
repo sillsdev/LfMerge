@@ -830,7 +830,7 @@ namespace LfMerge.Core.Tests.Lcm
 			// Here we check two things:
 			// 1) Can we add paragraphs?
 			// 2) Can we change existing paragraphs?
-			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(lfProject, entryGuid);
 			// BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			BsonDocument customFieldsBson = lfEntry.CustomFields;
 			Assert.That(customFieldsBson.Contains("customField_entry_Cust_MultiPara"), Is.True,
@@ -923,7 +923,7 @@ namespace LfMerge.Core.Tests.Lcm
 
 			// Here we check just one thing:
 			// 1) Can we delete paragraphs?
-			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(entryGuid);
+			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(lfProject, entryGuid);
 			// BsonDocument customFieldValues = GetCustomFieldValues(cache, lcmEntry, "entry");
 			BsonDocument customFieldsBson = lfEntry.CustomFields;
 			Assert.That(customFieldsBson.Contains("customField_entry_Cust_MultiPara"), Is.True,
