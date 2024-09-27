@@ -277,7 +277,7 @@ namespace LfMerge.Core.Tests.Actions
 		// Also returns the entry so that calling code can grab the updated date they want.
 		public (DateTime, DateTime, LfLexEntry) UpdateLfEntry(LanguageForgeProject lfProject, Guid entryId, Action<LfLexEntry> updater)
 		{
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(entryId);
+			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(lfProject, entryId);
 			Assert.That(lfEntry, Is.Not.Null);
 			updater(lfEntry);
 			// Remember that in LfMerge it's AuthorInfo that corresponds to the Lcm modified date
@@ -332,7 +332,7 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in LF"));
 			// LF had the same data previously; however it's a merge conflict so DateModified got updated
 			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(origDateModified));
@@ -362,7 +362,7 @@ namespace LfMerge.Core.Tests.Actions
 			Assert.That(receivedMongoData, Is.Not.Null);
 			// Deleting entries in LF should *not* remove them, just set the isDeleted flag
 			Assert.That(receivedMongoData.Count(), Is.EqualTo(originalNumOfLcmEntries));
-			var entry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var entry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.IsDeleted, Is.EqualTo(true));
 			Assert.That(entry.DateModified, Is.GreaterThan(origDateModified));
@@ -397,7 +397,7 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			Assert.That(updatedLfEntry.IsDeleted, Is.False);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in FW"));
 			// LF entry's modified date updated when it was restored from being deleted
@@ -421,7 +421,7 @@ namespace LfMerge.Core.Tests.Actions
 			CommitAndPush(_fwProject);
 
 			// Now LF project deletes sense from entry
-			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var lfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			var origDateModified = lfEntry.DateModified;
 			var origAuthorInfoModifiedDate = lfEntry.AuthorInfo.ModifiedDate;
 
@@ -436,7 +436,7 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in FW"));
 			// LF entry's modified date updated when the sense was restored from being deleted
 			Assert.That(updatedLfEntry.DateModified, Is.GreaterThan(origDateModified));
@@ -467,7 +467,7 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testDeletedEntryGuid);
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testDeletedEntryGuid);
 			Assert.That(updatedLfEntry, Is.Not.Null);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo("new English gloss - added in LF"));
 			// LF had the same data previously; however it's a merge conflict so DateModified got updated
@@ -499,7 +499,7 @@ namespace LfMerge.Core.Tests.Actions
 			sutSynchronize.Run(_lfProject);
 
 			// Verify
-			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_testEntryGuid);
+			var updatedLfEntry = _mongoConnection.GetLfLexEntryByGuid(_lfProject, _testEntryGuid);
 			Assert.That(updatedLfEntry.Senses[0].Gloss["en"].Value, Is.EqualTo(unchangedGloss + " - changed in FW"));
 			Assert.That(updatedLfEntry.Note["en"].Value, Is.EqualTo("A note from LF"));
 			// LF had the same data previously; however it's a merge conflict so DateModified got updated
