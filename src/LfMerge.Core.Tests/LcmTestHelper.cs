@@ -32,6 +32,15 @@ namespace LfMerge.Core.Tests
 			return repo.AllInstances().First();
 		}
 
+		public static void DeleteEntry(FwProject project, Guid guid)
+		{
+			var entry = GetEntry(project, guid);
+			var accessor = project.Cache.ActionHandlerAccessor;
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", accessor, () => {
+				entry.Delete();
+			});
+		}
+
 		public static string? GetVernacularText(IMultiUnicode field)
 		{
 			return field.BestVernacularAlternative?.Text;

@@ -35,6 +35,10 @@ namespace LfMerge.Core.FieldWorks
 			}
 		}
 
+		public string FwdataPath => _project.Path;
+		public string ProjectDir => _project.ProjectFolder;
+		public string ProjectCode => _project.Name;
+
 		#region Disposable stuff
 
 		#if DEBUG
