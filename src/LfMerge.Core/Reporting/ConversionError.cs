@@ -118,7 +118,8 @@ namespace LfMerge.Core.Reporting
 		}
 
 		public string Label() {
-			if (Comment == null || Comment.Content == null) return string.Empty;
+			if (Comment == null || String.IsNullOrEmpty(Comment.Content)) return string.Empty;
+			if (Comment.Content.Length < 100) return Comment.Content;
 			return Comment.Content.Substring(0, 100);
 		}
 	}
