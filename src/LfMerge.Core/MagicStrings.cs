@@ -107,7 +107,7 @@ namespace LfMerge.Core
 
 		// Field names to use in an LfCommentRegarding instance
 		public const string LfFieldNameForDefinition = "definition";
-		public const string LfFieldNameForExampleSentence = "definition";
+		public const string LfFieldNameForExampleSentence = "sentence";
 
 		// Fake language codes used in storing custom GenDate and int fields in Mongo
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
