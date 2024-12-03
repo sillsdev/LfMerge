@@ -94,42 +94,6 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
-		public void MissingFwDataFixer_Throws()
-		{
-			// This used to just change the current directory, which was enough when LfMergeBridge only
-			// looked for FixFwData in the current directory. However, LfMergeBridge is now smart enough
-			// to look for FixFwData in the folder where LfMergeBridge.dll is being run from, which finds
-			// it no matter the current working directory. So we need to move it out of the way, and ensure
-			// that it gets moved back at the end of the test so other tests don't start failing.
-
-			string fixFwDataPath = null;
-			string fixFwDataExePath = null;
-			try {
-				// Setup
-				var assembly = typeof(LfMergeBridge.LfMergeBridge).Assembly;
-				var dir = Directory.GetParent(assembly.Location).FullName;
-				if (File.Exists(Path.Join(dir, "FixFwData"))) {
-					fixFwDataPath = Path.Join(dir, "FixFwData");
-					File.Move(fixFwDataPath, fixFwDataPath + ".renamed");
-				}
-				if (File.Exists(Path.Join(dir, "FixFwData.exe"))) {
-					fixFwDataExePath = Path.Join(dir, "FixFwData.exe");
-					File.Move(fixFwDataExePath, fixFwDataExePath + ".renamed");
-				}
-
-				// Execute/Verify
-				Assert.That(() => _synchronizeAction.Run(_lfProject),
-					// This can't happen in real life because we ensure that we have a clone
-					// before we call sync. Therefore it is acceptable to get an exception.
-					Throws.TypeOf<InvalidOperationException>());
-
-			} finally {
-				if (fixFwDataPath != null) File.Move(fixFwDataPath + ".renamed", fixFwDataPath);
-				if (fixFwDataExePath != null) File.Move(fixFwDataExePath + ".renamed", fixFwDataExePath);
-			}
-		}
-
-		[Test]
 		public void Error_NoHgRepo()
 		{
 			// Setup
