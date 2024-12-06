@@ -75,6 +75,7 @@ install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/utils
 install -d ${DBDESTDIR}/${LIB}/Mercurial/mercurial/upgrade_utils
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions
 install -d ${DBDESTDIR}/${LIB}/MercurialExtensions/fixutf8
+install -m 755 Mercurial/chg ${DBDESTDIR}/${LIB}/Mercurial
 install -m 755 Mercurial/hg ${DBDESTDIR}/${LIB}/Mercurial
 install -m 644 Mercurial/mercurial.ini ${DBDESTDIR}/${LIB}/Mercurial
 install -m 644 Mercurial/hgdemandimport/*.* ${DBDESTDIR}/${LIB}/Mercurial/hgdemandimport

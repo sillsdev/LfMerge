@@ -40,6 +40,9 @@ namespace LfMerge
 			MainClass.Logger.Notice("LfMerge {2} (database {0}) starting with args: {1}",
 				MainClass.ModelVersion, string.Join(" ", args), MainClass.GetVersionInfo("SemVer"));
 
+			// chg internal logic for finding hg trips up on LfMerge's unconvential path to hg, so we need to tell it where to find hg
+			Environment.SetEnvironmentVariable("CHGHG", $"/usr/lib/lfmerge/{MainClass.ModelVersion}/Mercurial/hg");
+
 			if (string.IsNullOrEmpty(options.ProjectCode))
 			{
 				MainClass.Logger.Error("Command line doesn't contain project code - exiting.");

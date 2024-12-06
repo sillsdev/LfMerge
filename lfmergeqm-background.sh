@@ -5,6 +5,6 @@
 
 while :
 do
-  sudo -H -u www-data lfmergeqm
+  sudo -H --preserve-env=CHORUS_HG_EXE -u www-data lfmergeqm
   sleep 86400
 done

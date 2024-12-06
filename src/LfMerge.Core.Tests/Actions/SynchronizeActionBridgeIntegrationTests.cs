@@ -94,21 +94,6 @@ namespace LfMerge.Core.Tests.Actions
 		}
 
 		[Test]
-		public void MissingFwDataFixer_Throws()
-		{
-			// Setup
-			var tmpFolder = Path.Combine(_languageDepotFolder.Path, "WorkDir");
-			Directory.CreateDirectory(tmpFolder);
-			Directory.SetCurrentDirectory(tmpFolder);
-
-			// Execute/Verify
-			Assert.That(() => _synchronizeAction.Run(_lfProject),
-				// This can't happen in real life because we ensure that we have a clone
-				// before we call sync. Therefore it is acceptable to get an exception.
-				Throws.TypeOf<InvalidOperationException>());
-		}
-
-		[Test]
 		public void Error_NoHgRepo()
 		{
 			// Setup

@@ -27,7 +27,7 @@ namespace LfMerge.QueueManager
 			if (options == null)
 				return;
 
-			MainClass.Logger.Notice("LfMergeQueueManager starting with args: {0}", string.Join(" ", args));
+			MainClass.Logger.Notice("LfMergeQueueManager starting with CHORUS_HG_EXE value \"{1}\" and args: {0}", string.Join(" ", args), Environment.GetEnvironmentVariable("CHORUS_HG_EXE") ?? "<null>");
 
 			// initialize the SLDR
 			Sldr.Initialize();
