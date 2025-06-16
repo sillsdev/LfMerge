@@ -9,3 +9,6 @@ export PATH="${BASE}/output/${BUILD}/net8.0:${BASE}/output/Mercurial:${PATH}"
 # set HGRCPATH so that we ignore ~/.hgrc files which might have content that is
 # incompatible with our version of Mercurial
 export HGRCPATH=/etc/mercurial/hgrc
+
+# Increase Chorus timeout to 60 minutes since some projects take longer than 15 minutes to merge
+export CHORUS_LOCAL_TIMEOUT_SECONDS=3600
