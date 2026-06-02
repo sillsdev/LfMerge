@@ -9,3 +9,9 @@ export PATH="${BASE}/output/${BUILD}/net8.0:${BASE}/output/Mercurial:${PATH}"
 # set HGRCPATH so that we ignore ~/.hgrc files which might have content that is
 # incompatible with our version of Mercurial
 export HGRCPATH=/etc/mercurial/hgrc
+
+# Chorus's 15-min default timeout on local hg ops is too short for very large
+# projects, whose merge commits can exceed it and land the project on hold
+# (https://github.com/sillsdev/LfMerge/issues/357). Overridable per deployment via
+# CHORUS_LOCAL_TIMEOUT_SECONDS, passed through by the launch scripts' --preserve-env.
+export CHORUS_LOCAL_TIMEOUT_SECONDS=${CHORUS_LOCAL_TIMEOUT_SECONDS:-1800}
