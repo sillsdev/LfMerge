@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.FieldWorks;
+using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
@@ -185,6 +186,58 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
+		/// Walks a dotted config field path from <paramref name="root"/>, or null if any step is
+		/// missing. The "fields" segments are the Mongo document that holds a field list's children;
+		/// in the mapped classes that is the Fields dictionary being indexed, so they are skipped.
+		/// </summary>
+		private static LfConfigFieldBase FindConfigField(LfConfigFieldList root, string path)
+		{
+			LfConfigFieldBase current = root;
+			foreach (string segment in path.Split('.'))
+			{
+				if (segment == "fields")
+				{
+					continue;
+				}
+				var fieldList = current as LfConfigFieldList;
+				if (fieldList?.Fields == null || !fieldList.Fields.TryGetValue(segment, out current))
+				{
+					return null;
+				}
+			}
+			return current;
+		}
+
+		/// <summary>
+		/// The writing system tags LF treats as vernacular: the ones used by the fields in
+		/// MagicStrings.LfVernacularConfigFieldPaths. A project may well have several -- a phonetic or
+		/// orthographic alternate alongside the main one -- which is why the project's language code
+		/// alone is not enough.
+		/// </summary>
+		/// <returns>
+		/// The tags, compared case-insensitively as LCM's own lookups are. Falls back to the
+		/// project's language code when the config names no vernacular input systems at all, which
+		/// is the rule this replaces.
+		/// </returns>
+		public static HashSet<string> VernacularWritingSystemTags(LfProjectConfig config, string languageCode)
+		{
+			var tags = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (string path in MagicStrings.LfVernacularConfigFieldPaths)
+			{
+				if (FindConfigField(config?.Entry, path) is LfConfigMultiText multiText &&
+					multiText.InputSystems != null)
+				{
+					tags.UnionWith(multiText.InputSystems);
+				}
+			}
+			if (tags.Count == 0 && !string.IsNullOrEmpty(languageCode))
+			{
+				tags.Add(languageCode);
+			}
+			return tags;
+		}
+
+		/// <summary>
 		/// Converts the list of LF input systems and adds them to Lcm writing systems
 		/// </summary>
 		/// <param name="lfWsList">List of LF input systems.</param>
@@ -214,7 +267,7 @@ namespace LfMerge.Core.DataConverters
 				return;
 			}
 
-			string vernacularLanguageCode = ProjectRecord.LanguageCode;
+			HashSet<string> vernacularTags = VernacularWritingSystemTags(ProjectRecord.Config, ProjectRecord.LanguageCode);
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
@@ -263,16 +316,12 @@ namespace LfMerge.Core.DataConverters
 
 				if (!wsAlreadyExisted)
 				{
-					// LF doesn't distinguish between vernacular/analysis WS, so we'll
-					// only assign the project language code to vernacular.
-					// All other WS assigned to analysis.
-
-					// Compared as LF spells them, both sides being LF's own strings: a project whose
-					// languageCode is itself non-canonical (e.g. "th-Thai") still matches its own
-					// input system, which is spelled the same way.
-
-					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
-					if (lfWs.Tag.Equals(vernacularLanguageCode))
+					// LF doesn't distinguish between vernacular/analysis WS, so take the vernacular
+					// ones from the fields that are vernacular by convention -- lexeme and citation
+					// form -- and treat everything else as analysis. Matching on the tag as LF spells
+					// it, both sides being LF's own strings, so a non-canonical spelling still matches
+					// itself.
+					if (vernacularTags.Contains(lfWs.Tag))
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
