@@ -117,7 +117,7 @@ namespace LfMerge.Core.LanguageForge.Model
 			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
 			if (kv.Key == null) return new KeyValuePair<int, string>();
 			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int wsId = wsManager.GetWsFromStr(kv.Key);
+			int wsId = wsManager.GetWsFromStr(LanguageTags.Canonical(kv.Key));
 			return new KeyValuePair<int, string>(wsId, kv.Value);
 		}
 
@@ -136,7 +136,11 @@ namespace LfMerge.Core.LanguageForge.Model
 			HashSet<int> destWsIdsToClear = new HashSet<int>(dest.AvailableWritingSystemIds);
 			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{
-				int wsId = wsManager.GetWsFromStr(kv.Key);
+				// By the canonical tag: LF may hold a non-canonical spelling of the id LCM knows the
+				// writing system by, and GetWsFromStr matches that id literally. Without this the value
+				// is skipped as unidentified AND the clearing pass below blanks whatever LCM had for
+				// that writing system, so the data is not merely dropped but deleted.
+				int wsId = wsManager.GetWsFromStr(LanguageTags.Canonical(kv.Key));
 				if (wsId == 0) continue; // Skip any unidentified writing systems
 				string value = kv.Value.Value;
 				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(value, wsId, wsManager);
