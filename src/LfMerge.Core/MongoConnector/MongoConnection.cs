@@ -41,10 +41,10 @@ namespace LfMerge.Core.MongoConnector
 		public LfMergeSettings Settings { get { return _settings; } }
 
 		// List of LF fields which will use vernacular or pronunciation input systems. Hierarchy is config.entry.fields...
-		// We intentionally aren't setting custom example WS here, since it's a custom field with a custom name
-		private readonly List<string> _vernacularWsFieldsList = new List<string> {
-			"citationForm", "lexeme", "etymology", "senses.fields.examples.fields.sentence"
-		};
+		// The vernacular list lives in MagicStrings because ConvertMongoToLcmLexicon reads it too, to
+		// decide which writing systems become vernacular in LCM; sharing it keeps the two directions
+		// from drifting apart. (Its comment there covers why the custom example WS is not in it.)
+		private readonly IReadOnlyList<string> _vernacularWsFieldsList = MagicStrings.LfVernacularConfigFieldPaths;
 		// Pronunciation fields are special: they want the *first* vernacular WS that uses IPA (or is otherwise flagged
 		// as being a pronunciation writing system).
 		private readonly List<string> _pronunciationWsFieldsList = new List<string> {
