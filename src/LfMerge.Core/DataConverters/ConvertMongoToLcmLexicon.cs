@@ -236,36 +236,46 @@ namespace LfMerge.Core.DataConverters
 				}
 				*/
 
-				// TODO: It might be possible to rewrite this code to NOT rely on TryGet() after all, in which case we could
-				// use the ILgWritingSystemFactory interface and remove one point of FW 8-to-9 API incompatibility.
+				// GetOrSet() does the lookup and the creation in one step, and does both by the
+				// canonical form of the tag. TryGet() matched the id literally while Create()
+				// canonicalized, so a tag LCM canonicalizes -- "qaa-x-qaa-v" becomes "qaa-x-v",
+				// because the private-use section repeats the "qaa" language subtag, and "th-Thai"
+				// becomes "th", because Thai's suppress-script is dropped -- was not found, was then
+				// created under its canonical id, and collided with the writing system already there:
+				//   Unable to set writing system 'qaa-x-v' because this id already exists.
+				// GetOrSet returns true when it found an existing writing system and false when it
+				// created one (creating adds it to the manager, so no Set() call is needed here).
+				//
+				// The rest of the TODO this replaces is not achievable this way: GetOrSet lives on
+				// WritingSystemManager, not on ILgWritingSystemFactory, so the FW 8-to-9 compatibility
+				// blocks above and below have to stay.
+				bool wsAlreadyExisted = wsManager.GetOrSet(lfWs.Tag, out ws);
 
-				if (wsManager.TryGet(lfWs.Tag, out ws))
+				// The WS does check that a property has a different value before setting it
+				// (and thus setting IsChanged flag), but for Abbreviation the WS returns
+				// Language if not set, and it fails to check that.
+				if (ws.Abbreviation != lfWs.Abbreviation)
 				{
-					// The WS does check that a property has a different value before setting it
-					// (and thus setting IsChanged flag), but for Abbreviation the WS returns
-					// Language if not set, and it fails to check that.
-					if (ws.Abbreviation != lfWs.Abbreviation)
-						ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Replace(ws);
-				}
-				else
-				{
-					ws = wsManager.Create(lfWs.Tag);
 					ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Set(ws);
+				}
+				ws.RightToLeftScript = lfWs.IsRightToLeft;
+				wsManager.Replace(ws);
 
+				if (!wsAlreadyExisted)
+				{
 					// LF doesn't distinguish between vernacular/analysis WS, so we'll
 					// only assign the project language code to vernacular.
 					// All other WS assigned to analysis.
+
+					// Compared as LF spells them, both sides being LF's own strings: a project whose
+					// languageCode is itself non-canonical (e.g. "th-Thai") still matches its own
+					// input system, which is spelled the same way.
 
 					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
 					if (lfWs.Tag.Equals(vernacularLanguageCode))
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
-
 				}
 			}
 		}
