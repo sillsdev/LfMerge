@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,9 @@ namespace LfMerge.Core.LanguageForge.Model
 		public string MercurialSha { get; set; }
 		public DateTime DateCreated { get; set; }
 		public DateTime DateModified { get; set; }
+		[BsonDefaultValue(0)]
+		// CustomMongoSerializerForInt32 converts null to 0
+		[BsonSerializer(typeof(CustomMongoSerializerForInt32))]
 		public int DirtySR { get; set ; }
 
 		// Data properties
