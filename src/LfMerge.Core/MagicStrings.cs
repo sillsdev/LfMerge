@@ -109,18 +109,6 @@ namespace LfMerge.Core
 		public const string LfFieldNameForDefinition = "definition";
 		public const string LfFieldNameForExampleSentence = "definition";
 
-		// The LF config fields whose input systems are vernacular writing systems rather than
-		// analysis ones. LF has no vernacular/analysis flag on a writing system; the distinction is
-		// conventional, and this list is that convention. Both directions read it so that they
-		// agree: ConvertMongoToLcmLexicon, turning LF input systems into LCM writing systems, and
-		// MongoConnection, writing input systems back out to the config.
-		// Paths are relative to config.entry and are spelled as Mongo sees them, so each level of
-		// nesting goes through "fields". The custom example writing system is deliberately absent:
-		// it is a custom field, so its name varies from project to project.
-		public static IReadOnlyList<string> LfVernacularConfigFieldPaths { get; } = new[] {
-			"citationForm", "lexeme", "etymology", "senses.fields.examples.fields.sentence"
-		};
-
 		// Fake language codes used in storing custom GenDate and int fields in Mongo
 		public const string LanguageCodeForGenDateFields = "qaa-Qaad";
 		public const string LanguageCodeForIntFields = "qaa-Zmth";
