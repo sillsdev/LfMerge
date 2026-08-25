@@ -398,7 +398,8 @@ namespace LfMerge.Core.DataConverters
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				Logger.Warning("BestStringAndWsFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
+				// Some Language Forge fields, like scientificName on senses, have empty but
+				// non-null multitexts; those should also be empty in LCM.
 				return null;
 			}
 
