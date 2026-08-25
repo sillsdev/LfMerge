@@ -89,7 +89,9 @@ namespace LfMerge.Core.DataConverters
 			if (fieldName == null)
 				return false;
 
-			// Valid field types in LCM are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in LCM are GenDate, Integer, String, MultiUnicode, OwningAtomic,
+			// ReferenceAtomic, and ReferenceCollection, so that's all we implement. MultiUnicode is the
+			// one every text custom field created in LF has, since LF has no single-string custom field.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -356,6 +358,62 @@ namespace LfMerge.Core.DataConverters
 					return true;
 				}
 
+			case CellarPropertyType.MultiUnicode:
+				{
+					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+
+					// ConvertLcmToMongoCustomField exports every alternative LCM holds, via
+					// LfMultiText.FromMultiITsString, so an alternative missing here is one that was
+					// removed in LF rather than one LF never saw. Clearing it is therefore right, and
+					// matches what LfMultiText.WriteToLcmMultiString does for the built-in multitext
+					// fields.
+					var wsIdsToClear = new HashSet<int>();
+					ITsMultiString oldValues = data.get_MultiStringProp(hvo, flid);
+					if (oldValues != null)
+					{
+						for (int index = 0; index < oldValues.StringCount; index++)
+						{
+							int oldWsId;
+							oldValues.GetStringFromIndex(index, out oldWsId);
+							wsIdsToClear.Add(oldWsId);
+						}
+					}
+
+					bool changed = false;
+					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
+					{
+						int wsId = servLoc.WritingSystemFactory.GetWsFromStr(kv.Key);
+						if (wsId == 0)
+						{
+							logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
+								fieldName, kv.Key);
+							continue;
+						}
+						wsIdsToClear.Remove(wsId);
+						string text = (kv.Value == null) ? string.Empty : (kv.Value.Value ?? string.Empty);
+						ITsString newValue = ConvertMongoToLcmTsStrings.SpanStrToTsString(
+							text, wsId, servLoc.WritingSystemFactory);
+						ITsString oldValue = data.get_MultiStringAlt(hvo, flid, wsId);
+						// GetDiffsInTsStrings() returns null when there are no changes, so leaving the
+						// value alone keeps it out of the .fwdata XML and out of the Mercurial commit.
+						if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null)
+							continue;
+						data.SetMultiStringAlt(hvo, flid, wsId, newValue);
+						changed = true;
+					}
+
+					foreach (int wsId in wsIdsToClear)
+					{
+						ITsString oldValue = data.get_MultiStringAlt(hvo, flid, wsId);
+						if (oldValue == null || string.IsNullOrEmpty(oldValue.Text))
+							continue;
+						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.EmptyString(wsId));
+						changed = true;
+					}
+
+					return changed;
+				}
+
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
@@ -379,8 +437,11 @@ namespace LfMerge.Core.DataConverters
 				}
 
 			default:
+				logger.Warning(
+					"Custom field {0} not written to LCM: CellarPropertyType.{1} is not implemented "
+					+ "for the LF to LCM direction, so any data LF holds in it is being dropped",
+					fieldName, fieldType.ToString());
 				return false;
-				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
 		}
 
