@@ -123,5 +123,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(written["en"]["value"].AsString, Is.EqualTo("Kept"));
 			Assert.That(written.Contains("zzz-x-nonesuch"), Is.False);
 		}
+
+		[Test]
+		public void SetCustomFieldsForThisCmObject_ShouldResolveANonCanonicalTagToTheCanonicalWritingSystem()
+		{
+			// LF keeps a tag as typed, while LCM knows the writing system only by its canonical id:
+			// "fr-Latn" canonicalizes to "fr", French's suppress-script being dropped. Looked up
+			// literally the key resolves to 0, and French would then be cleared as missing from LF.
+			ILexEntry entry = TestEntry();
+
+			// Exercise
+			Converter().SetCustomFieldsForThisCmObject(entry, "entry",
+				new BsonDocument(MultiTextField, MultiText("en", "English", "fr-Latn", "Français")), null);
+
+			// Verify
+			BsonDocument written = ReadBack(entry)[MultiTextField].AsBsonDocument;
+			Assert.That(written.Contains("fr"), Is.True, "French should have been written, not cleared");
+			Assert.That(written["fr"]["value"].AsString, Is.EqualTo("Français"));
+		}
 	}
 }

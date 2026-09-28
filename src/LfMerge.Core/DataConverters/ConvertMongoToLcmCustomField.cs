@@ -382,7 +382,10 @@ namespace LfMerge.Core.DataConverters
 					bool changed = false;
 					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
 					{
-						int wsId = servLoc.WritingSystemFactory.GetWsFromStr(kv.Key);
+						// By the canonical tag, as in LfMultiText.WriteToLcmMultiString: matching LF's
+						// spelling literally would skip a non-canonical key as unidentified, and the
+						// clearing pass below would then blank that writing system's text in LCM.
+						int wsId = servLoc.WritingSystemFactory.GetWsFromStr(LanguageTags.Canonical(kv.Key));
 						if (wsId == 0)
 						{
 							logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
