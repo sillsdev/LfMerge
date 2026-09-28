@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.FieldWorks;
+using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
@@ -184,6 +185,113 @@ namespace LfMerge.Core.DataConverters
 			return Connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
 
+		// The two field groups whose vernacular/analysis role is never in doubt. Everything else is
+		// classified per project by which of these its writing systems already appear in -- a fixed
+		// list cannot be right for every project: in the 2026-07-06 corpus 741 projects configure
+		// etymology with analysis writing systems and 378 with vernacular ones.
+		private static readonly string[] VernacularAnchorFields = { "lexeme", "citationForm" };
+		private static readonly string[] AnalysisAnchorFields = { "senses.fields.definition", "senses.fields.gloss" };
+
+		/// <summary>
+		/// Work out which writing systems this project treats as vernacular, from its own config.
+		///
+		/// The lexeme and citation form fields are vernacular by definition, the sense definition and
+		/// gloss are analysis by definition. Every other field carrying input systems (etymology, the
+		/// example sentence, custom fields) is assigned by overlap: a writing system that appears in
+		/// the vernacular anchors and NOT in the analysis anchors is evidence the field is vernacular,
+		/// and vice versa. A writing system present in both anchors -- "en" very often is -- is no
+		/// evidence either way and is ignored for that purpose.
+		///
+		/// This replaces comparing each tag against ProjectRecord.LanguageCode, which named exactly one
+		/// vernacular writing system and got it wrong whenever languageCode disagreed with the lexeme
+		/// field: flh-flex has languageCode "flh-x-ortho" (used only by etymology) while its lexeme
+		/// uses "flh-x-cm", and odo has languageCode "th" which is not among its writing systems at all,
+		/// leaving its 24,460 "en" headwords classified as analysis.
+		/// </summary>
+		/// <returns>
+		/// The vernacular tags, and the subset of them that could not be resolved from the config.
+		/// Unresolved writing systems are treated as VERNACULAR: the FieldWorks fields they feed
+		/// (etymology form, example sentence) are vernacular-typed, so classifying them as analysis
+		/// would leave their data with nowhere to go, whereas a spare vernacular writing system is
+		/// inert. 11 projects in the corpus need this, e.g. grc-vie-flex, whose etymologies are in
+		/// Hebrew and Aramaic -- neither its vernacular (Greek) nor its analysis (English, Vietnamese).
+		/// </returns>
+		public static (ISet<string> Vernacular, ISet<string> Unresolved) ClassifyVernacularWritingSystems(
+			LfProjectConfig config, string languageCode)
+		{
+			var byPath = new Dictionary<string, ISet<string>>();
+			CollectInputSystems((config == null) ? null : config.Entry, "", byPath);
+
+			var vernacular = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var unresolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var vernacularAnchor = Union(byPath, VernacularAnchorFields);
+			var analysisAnchor = Union(byPath, AnalysisAnchorFields);
+			vernacular.UnionWith(vernacularAnchor);
+
+			// Only a writing system exclusive to one anchor is evidence of that anchor's role.
+			var vernacularOnly = new HashSet<string>(vernacularAnchor, StringComparer.OrdinalIgnoreCase);
+			vernacularOnly.ExceptWith(analysisAnchor);
+			var analysisOnly = new HashSet<string>(analysisAnchor, StringComparer.OrdinalIgnoreCase);
+			analysisOnly.ExceptWith(vernacularAnchor);
+
+			var anchors = new HashSet<string>(VernacularAnchorFields.Concat(AnalysisAnchorFields));
+			foreach (var field in byPath)
+			{
+				if (anchors.Contains(field.Key) || field.Value.Count == 0)
+					continue;
+				if (field.Value.Any(vernacularOnly.Contains))
+				{
+					vernacular.UnionWith(field.Value);
+				}
+				else if (!field.Value.Any(analysisOnly.Contains))
+				{
+					// Overlaps neither anchor: nothing in the config says which role this field plays.
+					vernacular.UnionWith(field.Value);
+					unresolved.UnionWith(field.Value);
+				}
+			}
+
+			// Safety net for a config LfMerge cannot read: without this such a project would get no
+			// vernacular writing system at all, which is worse than the old rule.
+			if (vernacular.Count == 0 && !string.IsNullOrEmpty(languageCode))
+				vernacular.Add(languageCode);
+
+			return (vernacular, unresolved);
+		}
+
+		private static ISet<string> Union(IDictionary<string, ISet<string>> byPath, IEnumerable<string> paths)
+		{
+			var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (var path in paths)
+			{
+				ISet<string> tags;
+				if (byPath.TryGetValue(path, out tags))
+					result.UnionWith(tags);
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Record every config field's input systems, keyed by its dotted path as Mongo spells it, so
+		/// nesting goes through "fields" ("senses.fields.examples.fields.sentence").
+		/// </summary>
+		private static void CollectInputSystems(LfConfigFieldList fieldList, string path,
+			IDictionary<string, ISet<string>> byPath)
+		{
+			if (fieldList == null || fieldList.Fields == null)
+				return;
+			foreach (var child in fieldList.Fields)
+			{
+				string childPath = string.IsNullOrEmpty(path) ? child.Key : path + "." + child.Key;
+				var multiText = child.Value as LfConfigMultiText;
+				if (multiText != null && multiText.InputSystems != null)
+					byPath[childPath] = new HashSet<string>(multiText.InputSystems, StringComparer.OrdinalIgnoreCase);
+				var nested = child.Value as LfConfigFieldList;
+				if (nested != null)
+					CollectInputSystems(nested, childPath + ".fields", byPath);
+			}
+		}
+
 		/// <summary>
 		/// Converts the list of LF input systems and adds them to Lcm writing systems
 		/// </summary>
@@ -214,7 +322,16 @@ namespace LfMerge.Core.DataConverters
 				return;
 			}
 
-			string vernacularLanguageCode = ProjectRecord.LanguageCode;
+			// Which writing systems are vernacular is derived from the project's own config rather
+			// than from languageCode alone; see ClassifyVernacularWritingSystems.
+			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config, ProjectRecord.LanguageCode);
+			ISet<string> vernacularTags = classification.Vernacular;
+			if (classification.Unresolved.Count > 0)
+			{
+				Logger.Notice("MongoToLcm: writing system(s) {0} appear only in config fields whose "
+					+ "vernacular/analysis role could not be determined; treating them as vernacular",
+					string.Join(", ", classification.Unresolved));
+			}
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
@@ -236,36 +353,42 @@ namespace LfMerge.Core.DataConverters
 				}
 				*/
 
-				// TODO: It might be possible to rewrite this code to NOT rely on TryGet() after all, in which case we could
-				// use the ILgWritingSystemFactory interface and remove one point of FW 8-to-9 API incompatibility.
+				// GetOrSet() does the lookup and the creation in one step, and does both by the
+				// canonical form of the tag. TryGet() matched the id literally while Create()
+				// canonicalized, so a tag LCM canonicalizes -- "qaa-x-qaa-v" becomes "qaa-x-v",
+				// because the private-use section repeats the "qaa" language subtag, and "th-Thai"
+				// becomes "th", because Thai's suppress-script is dropped -- was not found, was then
+				// created under its canonical id, and collided with the writing system already there:
+				//   Unable to set writing system 'qaa-x-v' because this id already exists.
+				// GetOrSet returns true when it found an existing writing system and false when it
+				// created one (creating adds it to the manager, so no Set() call is needed here).
+				//
+				// The rest of the TODO this replaces is not achievable this way: GetOrSet lives on
+				// WritingSystemManager, not on ILgWritingSystemFactory, so the FW 8-to-9 compatibility
+				// blocks above and below have to stay.
+				bool wsAlreadyExisted = wsManager.GetOrSet(lfWs.Tag, out ws);
 
-				if (wsManager.TryGet(lfWs.Tag, out ws))
+				// The WS does check that a property has a different value before setting it
+				// (and thus setting IsChanged flag), but for Abbreviation the WS returns
+				// Language if not set, and it fails to check that.
+				if (ws.Abbreviation != lfWs.Abbreviation)
 				{
-					// The WS does check that a property has a different value before setting it
-					// (and thus setting IsChanged flag), but for Abbreviation the WS returns
-					// Language if not set, and it fails to check that.
-					if (ws.Abbreviation != lfWs.Abbreviation)
-						ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Replace(ws);
-				}
-				else
-				{
-					ws = wsManager.Create(lfWs.Tag);
 					ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Set(ws);
+				}
+				ws.RightToLeftScript = lfWs.IsRightToLeft;
+				wsManager.Replace(ws);
 
-					// LF doesn't distinguish between vernacular/analysis WS, so we'll
-					// only assign the project language code to vernacular.
-					// All other WS assigned to analysis.
-
-					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
-					if (lfWs.Tag.Equals(vernacularLanguageCode))
+				if (!wsAlreadyExisted)
+				{
+					// LF doesn't distinguish between vernacular/analysis WS, so the vernacular ones
+					// are worked out per project from its config -- see
+					// ClassifyVernacularWritingSystems -- and everything else is analysis. Matching on
+					// the tag as LF spells it, both sides being LF's own strings, so a non-canonical
+					// spelling still matches itself.
+					if (vernacularTags.Contains(lfWs.Tag))
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
 					else
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
-
 				}
 			}
 		}
@@ -275,7 +398,8 @@ namespace LfMerge.Core.DataConverters
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				Logger.Warning("BestStringAndWsFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
+				// Some Language Forge fields, like scientificName on senses, have empty but
+				// non-null multitexts; those should also be empty in LCM.
 				return null;
 			}
 
