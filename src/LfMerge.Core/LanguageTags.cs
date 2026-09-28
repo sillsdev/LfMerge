@@ -1,3 +1,4 @@
+using SIL.LCModel.Core.KernelInterfaces;
 using SIL.WritingSystems;
 
 namespace LfMerge.Core
@@ -18,8 +19,9 @@ namespace LfMerge.Core
 		///                              and canonicalizing absorbs it
 		///     th-Thai     -> th        Thai's suppress-script is dropped
 		///
-		/// LfWsToLcmWs does not need this -- GetOrSet canonicalizes for it -- but the lexicon does:
-		/// its multitext keys are LF tags being looked up against LCM's canonical ids.
+		/// LfWsToLcmWs does not need this -- GetOrSet canonicalizes for it -- but every other lookup
+		/// of an LF tag does, and should go through <see cref="WsIdFromLfTag"/> rather than calling
+		/// this and GetWsFromStr itself.
 		/// </summary>
 		/// <returns>
 		/// The canonical tag, or the tag unchanged when it is empty or cannot be parsed --
@@ -33,6 +35,30 @@ namespace LfMerge.Core
 				return tag;
 			}
 			return IetfLanguageTag.Canonicalize(tag);
+		}
+
+		/// <summary>
+		/// The handle of the LCM writing system a Language Forge tag names, or 0 when there is none.
+		///
+		/// Every place that resolves a tag LF supplied -- a multitext key, a span's lang attribute,
+		/// a multi-paragraph's input system -- goes through here, so that a non-canonical spelling
+		/// resolves the same way everywhere. The canonical tag is tried first, since that is the id
+		/// LCM gives every writing system it creates; the tag as LF spells it is tried second, for a
+		/// writing system LCM somehow holds under a non-canonical id.
+		/// </summary>
+		public static int WsIdFromLfTag(ILgWritingSystemFactory wsf, string tag)
+		{
+			if (string.IsNullOrEmpty(tag))
+			{
+				return 0;
+			}
+			string canonical = Canonical(tag);
+			int wsId = wsf.GetWsFromStr(canonical);
+			if (wsId == 0 && canonical != tag)
+			{
+				wsId = wsf.GetWsFromStr(tag);
+			}
+			return wsId;
 		}
 	}
 }

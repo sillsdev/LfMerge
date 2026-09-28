@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -117,8 +117,37 @@ namespace LfMerge.Core.LanguageForge.Model
 			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
 			if (kv.Key == null) return new KeyValuePair<int, string>();
 			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int wsId = wsManager.GetWsFromStr(LanguageTags.Canonical(kv.Key));
+			int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
 			return new KeyValuePair<int, string>(wsId, kv.Value);
+		}
+
+		/// <summary>
+		/// The value for the first writing system in wsSearchOrder that has a non-empty one, falling
+		/// back to the first non-empty value in any writing system LCM knows, together with that
+		/// writing system's handle. Keys are resolved to handles before they are compared, so a key
+		/// LF spells differently from LCM's id for the writing system still matches it.
+		/// </summary>
+		/// <returns>The handle and the value, or (0, null) when no non-empty value resolves.</returns>
+		public KeyValuePair<int, string> BestStringAndWsId(IEnumerable<int> wsSearchOrder, ILgWritingSystemFactory wsManager)
+		{
+			var resolved = new List<KeyValuePair<int, string>>();
+			foreach (KeyValuePair<string, LfStringField> kv in this)
+			{
+				if (kv.Value == null || kv.Value.IsEmpty)
+					continue;
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
+				if (wsId != 0)
+					resolved.Add(new KeyValuePair<int, string>(wsId, kv.Value.Value));
+			}
+			foreach (int wsId in wsSearchOrder)
+			{
+				foreach (KeyValuePair<int, string> candidate in resolved)
+				{
+					if (candidate.Key == wsId)
+						return candidate;
+				}
+			}
+			return resolved.FirstOrDefault();
 		}
 
 		public KeyValuePair<string, string> FirstNonEmptyKeyValue()
@@ -129,28 +158,68 @@ namespace LfMerge.Core.LanguageForge.Model
 				new KeyValuePair<string, string>(result.Key, result.Value.Value);
 		}
 
-		public void WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
+		public bool WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
 		{
 			if (dest == null)
-				return;
-			HashSet<int> destWsIdsToClear = new HashSet<int>(dest.AvailableWritingSystemIds);
+				return false;
+			return WriteToLcm(dest.AvailableWritingSystemIds, dest.get_String, dest.set_String, wsManager);
+		}
+
+		/// <summary>
+		/// Writes every alternative into an LCM multistring, then clears each alternative LCM holds
+		/// that has no key here. The built-in multitext fields and the MultiUnicode custom fields
+		/// both come through here, reaching LCM through an IMultiAccessorBase and through
+		/// ISilDataAccess respectively, which is why LCM is reached through delegates.
+		///
+		/// Clearing is right because the LCM-to-Mongo direction exports every alternative LCM holds:
+		/// one missing from LF is one a user removed there, not one LF never saw.
+		///
+		/// Each key is resolved with LanguageTags.WsIdFromLfTag. Resolving it any other way would
+		/// skip a non-canonical key as unidentified, and the clearing pass would then blank that
+		/// writing system's text in LCM: the data would not merely be dropped but deleted.
+		///
+		/// An alternative whose value has not changed is left alone, so it stays out of the .fwdata
+		/// XML and out of the Mercurial commit.
+		/// </summary>
+		/// <param name="existingWsIds">The writing systems LCM currently holds alternatives for.</param>
+		/// <param name="getAlternative">Reads LCM's alternative for a writing system.</param>
+		/// <param name="setAlternative">Writes LCM's alternative for a writing system.</param>
+		/// <param name="wsManager">Resolves LF's keys to LCM writing systems.</param>
+		/// <param name="onUnidentifiedTag">Told each key that resolves to no writing system.</param>
+		/// <returns>Whether anything in LCM changed.</returns>
+		public bool WriteToLcm(IEnumerable<int> existingWsIds, Func<int, ITsString> getAlternative,
+			Action<int, ITsString> setAlternative, ILgWritingSystemFactory wsManager,
+			Action<string> onUnidentifiedTag = null)
+		{
+			var wsIdsToClear = new HashSet<int>(existingWsIds);
+			bool changed = false;
 			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{
-				// By the canonical tag: LF may hold a non-canonical spelling of the id LCM knows the
-				// writing system by, and GetWsFromStr matches that id literally. Without this the value
-				// is skipped as unidentified AND the clearing pass below blanks whatever LCM had for
-				// that writing system, so the data is not merely dropped but deleted.
-				int wsId = wsManager.GetWsFromStr(LanguageTags.Canonical(kv.Key));
-				if (wsId == 0) continue; // Skip any unidentified writing systems
-				string value = kv.Value.Value;
-				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(value, wsId, wsManager);
-				dest.set_String(wsId, tss);
-				destWsIdsToClear.Remove(wsId);
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
+				if (wsId == 0)
+				{
+					onUnidentifiedTag?.Invoke(kv.Key);
+					continue;
+				}
+				wsIdsToClear.Remove(wsId);
+				string text = (kv.Value == null) ? string.Empty : (kv.Value.Value ?? string.Empty);
+				ITsString newValue = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(text, wsId, wsManager);
+				ITsString oldValue = getAlternative(wsId);
+				// GetDiffsInTsStrings() returns null when there are no changes
+				if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null)
+					continue;
+				setAlternative(wsId, newValue);
+				changed = true;
 			}
-			foreach (int wsId in destWsIdsToClear)
+			foreach (int wsId in wsIdsToClear)
 			{
-				dest.set_String(wsId, string.Empty);
+				ITsString oldValue = getAlternative(wsId);
+				if (oldValue == null || string.IsNullOrEmpty(oldValue.Text))
+					continue;
+				setAlternative(wsId, TsStringUtils.EmptyString(wsId));
+				changed = true;
 			}
+			return changed;
 		}
 
 	}

@@ -178,7 +178,7 @@ namespace LfMerge.Core.DataConverters
 					if (multiPara.InputSystem == null)
 						wsId = lcmMetaData.GetFieldWs(flid);
 					else
-						wsId = servLoc.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
+						wsId = LanguageTags.WsIdFromLfTag(servLoc.WritingSystemFactory, multiPara.InputSystem);
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
 
 					return true;
@@ -362,12 +362,7 @@ namespace LfMerge.Core.DataConverters
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 
-					// ConvertLcmToMongoCustomField exports every alternative LCM holds, via
-					// LfMultiText.FromMultiITsString, so an alternative missing here is one that was
-					// removed in LF rather than one LF never saw. Clearing it is therefore right, and
-					// matches what LfMultiText.WriteToLcmMultiString does for the built-in multitext
-					// fields.
-					var wsIdsToClear = new HashSet<int>();
+					var existingWsIds = new List<int>();
 					ITsMultiString oldValues = data.get_MultiStringProp(hvo, flid);
 					if (oldValues != null)
 					{
@@ -375,57 +370,28 @@ namespace LfMerge.Core.DataConverters
 						{
 							int oldWsId;
 							oldValues.GetStringFromIndex(index, out oldWsId);
-							wsIdsToClear.Add(oldWsId);
+							existingWsIds.Add(oldWsId);
 						}
 					}
 
-					bool changed = false;
-					foreach (KeyValuePair<string, LfStringField> kv in valueAsMultiText)
-					{
-						// By the canonical tag, as in LfMultiText.WriteToLcmMultiString: matching LF's
-						// spelling literally would skip a non-canonical key as unidentified, and the
-						// clearing pass below would then blank that writing system's text in LCM.
-						int wsId = servLoc.WritingSystemFactory.GetWsFromStr(LanguageTags.Canonical(kv.Key));
-						if (wsId == 0)
-						{
-							logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
-								fieldName, kv.Key);
-							continue;
-						}
-						wsIdsToClear.Remove(wsId);
-						string text = (kv.Value == null) ? string.Empty : (kv.Value.Value ?? string.Empty);
-						ITsString newValue = ConvertMongoToLcmTsStrings.SpanStrToTsString(
-							text, wsId, servLoc.WritingSystemFactory);
-						ITsString oldValue = data.get_MultiStringAlt(hvo, flid, wsId);
-						// GetDiffsInTsStrings() returns null when there are no changes, so leaving the
-						// value alone keeps it out of the .fwdata XML and out of the Mercurial commit.
-						if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null)
-							continue;
-						data.SetMultiStringAlt(hvo, flid, wsId, newValue);
-						changed = true;
-					}
-
-					foreach (int wsId in wsIdsToClear)
-					{
-						ITsString oldValue = data.get_MultiStringAlt(hvo, flid, wsId);
-						if (oldValue == null || string.IsNullOrEmpty(oldValue.Text))
-							continue;
-						data.SetMultiStringAlt(hvo, flid, wsId, TsStringUtils.EmptyString(wsId));
-						changed = true;
-					}
-
-					return changed;
+					// The same writer as the built-in multitext fields, reaching LCM through
+					// ISilDataAccess because a custom field has no IMultiAccessorBase.
+					return valueAsMultiText.WriteToLcm(existingWsIds,
+						wsId => data.get_MultiStringAlt(hvo, flid, wsId),
+						(wsId, tss) => data.SetMultiStringAlt(hvo, flid, wsId, tss),
+						servLoc.WritingSystemFactory,
+						tag => logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
+							fieldName, tag));
 				}
 
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 					int wsIdForField = lcmMetaData.GetFieldWs(flid);
-					string wsStrForField = servLoc.WritingSystemFactory.GetStrFromWs(wsIdForField);
-					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
-					string foundWs = kv.Key ?? string.Empty;
+					KeyValuePair<int, string> kv = valueAsMultiText.BestStringAndWsId(
+						new[] { wsIdForField }, servLoc.WritingSystemFactory);
+					int foundWsId = kv.Key;
 					string foundData = kv.Value ?? string.Empty;
-					int foundWsId = servLoc.WritingSystemFactory.GetWsFromStr(foundWs);
 					if (foundWsId == 0)
 						return false; // Skip any unidentified writing systems
 					ITsString oldValue = data.get_StringProp(hvo, flid);

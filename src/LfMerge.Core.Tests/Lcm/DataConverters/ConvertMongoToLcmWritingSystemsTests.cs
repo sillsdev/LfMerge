@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Config;
+using LfMerge.Core.LanguageForge.Model;
 using LfMerge.Core.MongoConnector;
 using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.LCModel;
+using SIL.LCModel.Core.Text;
 
 namespace LfMerge.Core.Tests.Lcm.DataConverters
 {
@@ -129,6 +132,68 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.SensesOS[0].Definition.get_String(wsId).Text, Is.EqualTo(newDefinition),
 				"the definition should have been written to the canonical writing system {0}", RedundantPrivateUseId);
+		}
+
+		[TestCase(RedundantPrivateUseTag, RedundantPrivateUseId)]
+		[TestCase(MixedCaseTag, MixedCaseId)]
+		[TestCase("fr-Latn", "fr")]
+		public void WsIdFromLfTag_NonCanonicalTag_ResolvesToTheCanonicalWritingSystem(string lfTag, string canonicalId)
+		{
+			int expected = _cache.WritingSystemFactory.GetWsFromStr(canonicalId);
+			Assert.That(expected, Is.Not.EqualTo(0), "{0} should resolve in testlangproj", canonicalId);
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, lfTag), Is.EqualTo(expected));
+		}
+
+		[Test]
+		public void WsIdFromLfTag_UnknownOrEmptyTag_IsZero()
+		{
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "zzz-x-nonesuch"), Is.EqualTo(0));
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, ""), Is.EqualTo(0));
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, null), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void BestStringAndWsId_NonCanonicalKey_StillMatchesThePreferredWritingSystem()
+		{
+			// The lexicon's single-string fields compared LF's keys with ws.Id, so "fr-Latn" never
+			// matched French and the English value was chosen although French comes first.
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+			var multiText = new LfMultiText {
+				{ "en", LfStringField.FromString("English") },
+				{ "fr-Latn", LfStringField.FromString("Français") },
+			};
+
+			KeyValuePair<int, string> best = multiText.BestStringAndWsId(new[] { wsFr, _wsEn }, _cache.WritingSystemFactory);
+
+			Assert.That(best.Key, Is.EqualTo(wsFr));
+			Assert.That(best.Value, Is.EqualTo("Français"));
+		}
+
+		[Test]
+		public void BestStringAndWsId_FallsBackToTheFirstValueInAKnownWritingSystem()
+		{
+			// An unidentified key comes first, but a value LCM has no writing system for is no use.
+			var multiText = new LfMultiText {
+				{ "zzz-x-nonesuch", LfStringField.FromString("Unplaceable") },
+				{ "en", LfStringField.FromString("English") },
+			};
+
+			KeyValuePair<int, string> best = multiText.BestStringAndWsId(new int[0], _cache.WritingSystemFactory);
+
+			Assert.That(best.Key, Is.EqualTo(_wsEn));
+			Assert.That(best.Value, Is.EqualTo("English"));
+		}
+
+		[Test]
+		public void SpanStrToTsString_NonCanonicalSpanLang_UsesTheCanonicalWritingSystem()
+		{
+			int wsFr = _cache.WritingSystemFactory.GetWsFromStr("fr");
+
+			var tss = ConvertMongoToLcmTsStrings.SpanStrToTsString(
+				"English <span lang=\"fr-Latn\">français</span>", _wsEn, _cache.WritingSystemFactory);
+
+			Assert.That(tss.RunCount, Is.EqualTo(2));
+			Assert.That(tss.get_WritingSystem(1), Is.EqualTo(wsFr));
 		}
 
 		[Test]

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -89,7 +89,7 @@ namespace LfMerge.Core.DataConverters
 				builder.ClearProps(); // Make sure there aren't leftover properties from previous run
 				// To remove a string property, you set it to null, so we can just use StyleName directly whether or not it's null.
 				builder.SetStrPropValue((int)FwTextPropType.ktptNamedStyle, run.StyleName);
-				int runWs = (run.Lang == null) ? mainWs : wsf.GetWsFromStr(run.Lang);
+				int runWs = (run.Lang == null) ? mainWs : LanguageTags.WsIdFromLfTag(wsf, run.Lang);
 				builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, runWs);
 				// We don't care about Guids in this function, so run.Guid is ignored
 				// But we do need to set any other int or string properties that were in the original

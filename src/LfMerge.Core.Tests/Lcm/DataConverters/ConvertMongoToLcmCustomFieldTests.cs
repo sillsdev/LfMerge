@@ -20,6 +20,8 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 	public class ConvertMongoToLcmCustomFieldTests : LcmTestBase
 	{
 		private const string MultiTextField = "customField_entry_Cust_Single_Line_All";
+		// A String field, whose writing system is the magic "first analysis" selector.
+		private const string SingleStringField = "customField_entry_Cust_Single_Line";
 
 		private static BsonDocument MultiText(params string[] wsThenValue)
 		{
@@ -140,6 +142,22 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			BsonDocument written = ReadBack(entry)[MultiTextField].AsBsonDocument;
 			Assert.That(written.Contains("fr"), Is.True, "French should have been written, not cleared");
 			Assert.That(written["fr"]["value"].AsString, Is.EqualTo("Français"));
+		}
+
+		[Test]
+		public void SetCustomFieldsForThisCmObject_ShouldResolveANonCanonicalTagInAStringField()
+		{
+			// The String case resolved the key it picked with a literal GetWsFromStr too, and gave
+			// up on the whole field when that returned 0, so the LF edit never reached LCM.
+			ILexEntry entry = TestEntry();
+
+			// Exercise
+			Converter().SetCustomFieldsForThisCmObject(entry, "entry",
+				new BsonDocument(SingleStringField, MultiText("fr-Latn", "Texte")), null);
+
+			// Verify
+			BsonDocument written = ReadBack(entry)[SingleStringField].AsBsonDocument;
+			Assert.That(written["fr"]["value"].AsString, Is.EqualTo("Texte"));
 		}
 	}
 }

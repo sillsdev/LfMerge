@@ -448,15 +448,12 @@ namespace LfMerge.Core.DataConverters
 //				_analysisWsIdsAndNamesInSearchOrder :
 //				_vernacularWsIdsAndNamesInSearchOrder;
 
-			foreach (ILgWritingSystem ws in wsesToSearch)
-			{
-				LfStringField field;
-				if (input.TryGetValue(ws.Id, out field) && field != null && !field.IsEmpty)
-				{
-//					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
-					return new Tuple<string, int>(field.Value, ws.Handle);
-				}
-			}
+			// By handle, not by comparing LF's keys with ws.Id, which would miss a key LF spells
+			// differently from LCM. Falls back to the first value in any writing system LCM knows.
+			KeyValuePair<int, string> best = input.BestStringAndWsId(
+				wsesToSearch.Select(ws => ws.Handle), ServiceLocator.WritingSystemFactory);
+			if (best.Value != null)
+				return new Tuple<string, int>(best.Value, best.Key);
 
 			// Last-ditch option: just grab the first non-empty string we can find
 			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(Cache);
