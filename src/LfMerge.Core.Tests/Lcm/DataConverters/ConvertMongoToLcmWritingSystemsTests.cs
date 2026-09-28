@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.MongoConnector;
 using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
@@ -51,6 +52,21 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				IsRightToLeft = false
 			};
 			return () => record.InputSystems.Remove(tag);
+		}
+
+		/// <summary>
+		/// Adds a tag to one config field's input systems, found by its path through the entry's
+		/// field lists, and returns an action that takes it out again. Like the input systems, the
+		/// config is memoized with the record, so the change must not outlive the test.
+		/// </summary>
+		private Action AddToConfigField(string tag, params string[] path)
+		{
+			LfConfigFieldBase field = _recordFactory.Create(_lfProj).Config.Entry;
+			foreach (string key in path)
+				field = ((LfConfigFieldList)field).Fields[key];
+			var multiText = (LfConfigMultiText)field;
+			multiText.InputSystems.Add(tag);
+			return () => multiText.InputSystems.Remove(tag);
 		}
 
 		private IEnumerable<string> LcmWritingSystemIds()
@@ -113,6 +129,37 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(entry, Is.Not.Null);
 			Assert.That(entry.SensesOS[0].Definition.get_String(wsId).Text, Is.EqualTo(newDefinition),
 				"the definition should have been written to the canonical writing system {0}", RedundantPrivateUseId);
+		}
+
+		[Test]
+		public void LfWsToLcmWs_NewTagInBothAnchors_IsAddedAsBothVernacularAndAnalysis()
+		{
+			// Setup: a writing system LCM does not have yet, configured for the lexeme and for the
+			// definition, as "en" so often is. Being vernacular must not stop it being analysis too,
+			// or the definitions written in it would have no analysis writing system to go to.
+			const string tag = "qaa-x-both";
+			Assert.That(LcmWritingSystemIds(), Does.Not.Contain(tag), "testlangproj should not contain {0}", tag);
+			var restores = new[] {
+				AddLfInputSystem(tag),
+				AddToConfigField(tag, "lexeme"),
+				AddToConfigField(tag, "senses", "definition"),
+			};
+
+			try
+			{
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				ILangProject langProj = _cache.LanguageProject;
+				Assert.That(langProj.CurrentVernacularWritingSystems.Select(ws => ws.Id), Contains.Item(tag));
+				Assert.That(langProj.CurrentAnalysisWritingSystems.Select(ws => ws.Id), Contains.Item(tag));
+			}
+			finally
+			{
+				foreach (Action restore in restores)
+					restore();
+			}
 		}
 	}
 }

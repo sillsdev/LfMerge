@@ -110,6 +110,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "yog");
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "yog" }));
 			Assert.That(result.Vernacular, Does.Not.Contain("en"));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
 		}
 
 		/// <summary>The 378-project shape, e.g. test-india-sena-01.</summary>
@@ -123,20 +124,55 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "seh", "seh-fonipa-x-etic" }));
 		}
 
-		/// <summary>grc-vie-flex: etymologies in Hebrew and Aramaic, neither vernacular nor analysis.</summary>
+		/// <summary>
+		/// A vernacular field is evidence about the field, not about every writing system in it:
+		/// Portuguese is exclusive to the analysis anchors, so an etymology that also carries the
+		/// vernacular must not make it vernacular -- a new Portuguese writing system would then be
+		/// created vernacular-only, and the glosses in it would have no analysis writing system.
+		/// </summary>
 		[Test]
-		public void WritingSystemsInNeitherAnchorAreVernacularAndReported()
+		public void AVernacularFieldDoesNotMakeAnAnalysisOnlyWritingSystemVernacular()
+		{
+			var config = Config(("lexeme", Field("seh")), ("senses.fields.gloss", Field("en", "pt")),
+				("etymology", Field("seh", "pt")));
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "seh");
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "seh" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en", "pt" }));
+		}
+
+		/// <summary>
+		/// grc-vie-flex: etymologies in Hebrew and Aramaic, neither vernacular nor analysis. With no
+		/// evidence either way they are both, so neither a vernacular-typed nor an analysis-typed
+		/// field is left without them.
+		/// </summary>
+		[Test]
+		public void WritingSystemsInNeitherAnchorAreBothRolesAndReported()
 		{
 			var config = Config(("lexeme", Field("grc")), ("senses.fields.gloss", Field("en", "vi")),
 				("etymology", Field("hbo", "arc")));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "grc");
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "grc", "hbo", "arc" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en", "vi", "hbo", "arc" }));
 			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "hbo", "arc" }));
 		}
 
 		/// <summary>
+		/// A French-only notes field overlaps neither anchor. French must reach the analysis list, or
+		/// an analysis-typed FieldWorks custom field would not offer it.
+		/// </summary>
+		[Test]
+		public void AnUnresolvedCustomFieldWritingSystemIsAnalysisToo()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("senses.fields.customField_senses_note", Field("fr")));
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal");
+			Assert.That(result.Analysis, Contains.Item("fr"));
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "fr" }));
+		}
+
+		/// <summary>
 		/// With no analysis anchor there is nothing to rule a field out, so every other field's
-		/// writing systems are unresolved -- and therefore vernacular.
+		/// writing systems are unresolved -- and therefore both vernacular and analysis.
 		/// </summary>
 		[Test]
 		public void WithNoAnalysisAnchorEveryOtherFieldIsUnresolved()
@@ -144,6 +180,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var config = Config(("lexeme", Field("qaa-x-kal")), ("etymology", Field("qaa-fonipa-x-kal")));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "qaa-x-kal");
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "qaa-x-kal", "qaa-fonipa-x-kal" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "qaa-fonipa-x-kal" }));
 			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "qaa-fonipa-x-kal" }));
 		}
 
@@ -175,8 +212,22 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				("etymology", Field("en")));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "en");
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "en" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
 			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "en" }),
 				"etymology overlaps neither anchor exclusively, so its role is unresolved");
+		}
+
+		/// <summary>
+		/// The "en" in lexeme and gloss alike: it is vernacular because the lexeme uses it, and it is
+		/// analysis because the gloss does. Being one must not stop it being the other.
+		/// </summary>
+		[Test]
+		public void AWritingSystemInBothAnchorsIsBothVernacularAndAnalysis()
+		{
+			var config = Config(("lexeme", Field("kal", "en")), ("senses.fields.gloss", Field("en")));
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal");
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "kal", "en" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
 		}
 
 		/// <summary>
@@ -194,6 +245,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "kal" }));
 			Assert.That(result.Vernacular, Does.Not.Contain("en"),
 				"the example translation is not a vernacular field");
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en", "fr" }));
 			Assert.That(result.Unresolved, Is.Empty);
 		}
 
