@@ -139,9 +139,15 @@ namespace LfMerge.Core.DataConverters
 			// Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			EntryCounts.Reset();
+			// Counting the lexicon before any writing system is created, because which list a new
+			// writing system belongs in depends on what it is actually used for. This is a second
+			// streaming pass over Mongo; GetLexicon yields from a cursor, so it does not all sit in
+			// memory at once.
+			LfWritingSystemUsage wsUsage = LfWritingSystemUsage.FromLexicon(GetLexicon(LfProject));
+
 			// Update writing systems from project config input systems.  Won't commit till the end
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
-				LfWsToLcmWs(ProjectRecord.InputSystems));
+				LfWsToLcmWs(ProjectRecord.InputSystems, wsUsage));
 
 			// Set English ws handle again in case it changed
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
@@ -224,15 +230,21 @@ namespace LfMerge.Core.DataConverters
 		/// system exclusive to the analysis anchors stays analysis-only even in a field classified
 		/// vernacular, so an etymology configured as [seh, pt] does not make Portuguese vernacular.
 		///
+		/// Where the lexicon has text to show for a writing system, that text decides instead: a
+		/// writing system holding nearly all of its text in the vernacular anchors is vernacular
+		/// whatever the config offers, and vice versa. See <see cref="MinorityShare"/>.
+		///
 		/// This replaces comparing each tag against ProjectRecord.LanguageCode, which named exactly one
 		/// vernacular writing system and got it wrong whenever languageCode disagreed with the lexeme
 		/// field: flh-flex has languageCode "flh-x-ortho" (used only by etymology) while its lexeme
 		/// uses "flh-x-cm", and odo has languageCode "th" which is not among its writing systems at all,
 		/// leaving its 24,460 "en" headwords classified as analysis.
 		/// </summary>
+		/// <param name="usage">
+		/// How much text each writing system holds in each field, or null to go on the config alone.
+		/// </param>
 		/// <returns>
-		/// The vernacular tags; the analysis tags; and the tags that could not be resolved from the
-		/// config. The first two sets overlap wherever a writing system plays both roles. A tag in
+		/// The vernacular tags; the analysis tags; and the tags that could not be resolved. The first two sets overlap wherever a writing system plays both roles. A tag in
 		/// neither set -- one no config field uses -- is analysis, as it always has been.
 		///
 		/// Unresolved writing systems are treated as BOTH vernacular and analysis, since nothing says
@@ -245,7 +257,8 @@ namespace LfMerge.Core.DataConverters
 		/// neither its vernacular (Greek) nor its analysis (English, Vietnamese).
 		/// </returns>
 		public static (ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)
-			ClassifyVernacularWritingSystems(LfProjectConfig config, string languageCode)
+			ClassifyVernacularWritingSystems(LfProjectConfig config, string languageCode,
+				LfWritingSystemUsage usage = null)
 		{
 			var byPath = new Dictionary<string, ISet<string>>();
 			CollectInputSystems((config == null) ? null : config.Entry, "", byPath);
@@ -253,38 +266,50 @@ namespace LfMerge.Core.DataConverters
 			var vernacular = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			var analysis = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			var unresolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+			// Writing systems whose text has already answered for them. They keep that answer: the
+			// config below may offer them for fields nobody writes in, and must not overrule it.
+			var decidedByText = ClassifyByText(usage, byPath, vernacular, analysis);
+
 			var vernacularAnchor = Union(byPath, VernacularAnchorFields);
 			var analysisAnchor = Union(byPath, AnalysisAnchorFields);
-			vernacular.UnionWith(vernacularAnchor);
-			analysis.UnionWith(analysisAnchor);
+			vernacular.UnionWith(vernacularAnchor.Where(tag => !decidedByText.Contains(tag)));
+			analysis.UnionWith(analysisAnchor.Where(tag => !decidedByText.Contains(tag)));
 
-			// Only a writing system exclusive to one anchor is evidence of that anchor's role.
-			var vernacularOnly = new HashSet<string>(vernacularAnchor, StringComparer.OrdinalIgnoreCase);
-			vernacularOnly.ExceptWith(analysisAnchor);
-			var analysisOnly = new HashSet<string>(analysisAnchor, StringComparer.OrdinalIgnoreCase);
-			analysisOnly.ExceptWith(vernacularAnchor);
+			// Only a writing system exclusive to one role is evidence of a field's role.
+			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
+			vernacularOnly.ExceptWith(analysis);
+			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
+			analysisOnly.ExceptWith(vernacular);
 
 			var anchors = new HashSet<string>(VernacularAnchorFields.Concat(AnalysisAnchorFields));
 			foreach (var field in byPath)
 			{
 				if (anchors.Contains(field.Key) || field.Value.Count == 0)
 					continue;
+				// A writing system its own text has spoken for is still evidence of what this field
+				// is for, but nothing here may change the answer it was given.
+				var undecided = field.Value.Where(tag => !decidedByText.Contains(tag)).ToList();
+				if (undecided.Count == 0)
+					continue;
 				if (field.Value.Any(vernacularOnly.Contains))
 				{
-					vernacular.UnionWith(field.Value.Where(tag => !analysisOnly.Contains(tag)));
+					vernacular.UnionWith(undecided.Where(tag => !analysisOnly.Contains(tag)));
 				}
 				else if (field.Value.Any(analysisOnly.Contains))
 				{
-					analysis.UnionWith(field.Value);
+					analysis.UnionWith(undecided);
 				}
 				else
 				{
-					// Overlaps neither anchor: nothing in the config says which role this field plays.
-					vernacular.UnionWith(field.Value);
-					analysis.UnionWith(field.Value);
-					unresolved.UnionWith(field.Value);
+					// Overlaps neither role: nothing says which role this field plays.
+					vernacular.UnionWith(undecided);
+					analysis.UnionWith(undecided);
+					unresolved.UnionWith(undecided);
 				}
 			}
+
+			ResolveByLanguageAffinity(vernacular, analysis, unresolved);
 
 			// Safety net for a config LfMerge cannot read: without this such a project would get no
 			// vernacular writing system at all, which is worse than the old rule.
@@ -292,6 +317,140 @@ namespace LfMerge.Core.DataConverters
 				vernacular.Add(languageCode);
 
 			return (vernacular, analysis, unresolved);
+		}
+
+		/// <summary>
+		/// Settles what is left by language. A writing system plays the same role as the others
+		/// that spell the same language: a phonetic or audio spelling of the vernacular is
+		/// vernacular too, and a regional spelling of the analysis language is analysis.
+		/// </summary>
+		private static void ResolveByLanguageAffinity(ISet<string> vernacular, ISet<string> analysis,
+			ISet<string> unresolved)
+		{
+			if (unresolved.Count == 0)
+				return;
+
+			// Unresolved writing systems sit in both sets, so they are in neither of these and
+			// cannot vote for each other.
+			var vernacularLanguages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var analysisLanguages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (string tag in vernacular)
+			{
+				if (!analysis.Contains(tag))
+					vernacularLanguages.Add(LanguageOf(tag));
+			}
+			foreach (string tag in analysis)
+			{
+				if (!vernacular.Contains(tag))
+					analysisLanguages.Add(LanguageOf(tag));
+			}
+
+			foreach (string tag in unresolved.ToList())
+			{
+				string language = LanguageOf(tag);
+				bool withVernacular = vernacularLanguages.Contains(language);
+				bool withAnalysis = analysisLanguages.Contains(language);
+				if (withVernacular == withAnalysis)
+					continue; // The language is spoken for by both roles, or by neither.
+				if (withVernacular)
+					analysis.Remove(tag);
+				else
+					vernacular.Remove(tag);
+				unresolved.Remove(tag);
+			}
+		}
+
+		// Subtags that mark a variant of a language rather than a language of its own. FieldWorks
+		// also appends "dupl1", "dupl2" and so on when a project needs a second writing system for
+		// the same thing.
+		private static readonly HashSet<string> VariantMarkers = new HashSet<string>(
+			new[] { "fonipa", "etic", "emic", "audio" }, StringComparer.OrdinalIgnoreCase);
+
+		/// <summary>
+		/// The language a tag names, as far as telling one project's writing systems apart goes:
+		/// the language subtag plus any private-use subtags that name the language rather than a
+		/// variant of it. Script and region are left out, so "en" and "en-GB" are one language.
+		///
+		/// The private-use subtags have to stay, because under "qaa" -- the code for a language
+		/// with no code of its own, which Language Forge projects lean on heavily -- they ARE the
+		/// language: "qaa-x-kal" and "qaa-x-hbo" are no more the same language than "fr" and "de".
+		/// So "qaa-x-kal", "qaa-fonipa-x-kal" and "qaa-Zxxx-x-kal-audio" all come out "qaa-kal",
+		/// while "seh" and "seh-fonipa-x-etic" both come out "seh".
+		/// </summary>
+		private static string LanguageOf(string tag)
+		{
+			if (string.IsNullOrEmpty(tag))
+				return tag;
+			string[] parts = tag.Split('-');
+			var language = new List<string> { parts[0] };
+			int privateUse = Array.FindIndex(parts, 1,
+				part => part.Equals("x", StringComparison.OrdinalIgnoreCase));
+			if (privateUse >= 0)
+			{
+				for (int i = privateUse + 1; i < parts.Length; i++)
+				{
+					if (VariantMarkers.Contains(parts[i]) ||
+						parts[i].StartsWith("dupl", StringComparison.OrdinalIgnoreCase))
+						continue;
+					language.Add(parts[i]);
+				}
+			}
+			return string.Join("-", language);
+		}
+
+		/// <summary>
+		/// A writing system holding at most this share of its text in the fields of one role is
+		/// taken to belong to the other role alone; in between, it plays both.
+		///
+		/// A few strays are not evidence of a second role. In brb-flex-2022 the phonetic writing
+		/// system has 4,030 headwords and one stray string in an example reference, and FieldWorks
+		/// has it as vernacular only; in cmo-khm-flex the vernacular has 7,815 vernacular strings
+		/// against 300 in glosses, and is likewise vernacular only. The one writing system the four
+		/// FieldWorks projects on hand really do list as BOTH sits at 28%, so anything between 4%
+		/// and 28% separates the two, and 10% is the round number in the middle.
+		/// </summary>
+		public const double MinorityShare = 0.10;
+
+		/// <summary>
+		/// Classifies every writing system the lexicon has text for, by where that text sits.
+		/// Adds them to <paramref name="vernacular"/> and <paramref name="analysis"/>, and returns
+		/// the ones it answered for.
+		/// </summary>
+		private static ISet<string> ClassifyByText(LfWritingSystemUsage usage,
+			IDictionary<string, ISet<string>> byPath, ISet<string> vernacular, ISet<string> analysis)
+		{
+			var decided = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			if (usage == null || usage.EntriesCounted == 0)
+				return decided;
+
+			// Every writing system the config mentions, plus any the config forgot but the lexicon
+			// uses anyway -- those need classifying just as much.
+			var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (ISet<string> tags in byPath.Values)
+				candidates.UnionWith(tags);
+			foreach (string path in VernacularAnchorFields.Concat(AnalysisAnchorFields))
+				candidates.UnionWith(usage.TagsWithText(path));
+
+			foreach (string tag in candidates)
+			{
+				int vernacularText = usage.NonEmptyCount(VernacularAnchorFields, tag);
+				int analysisText = usage.NonEmptyCount(AnalysisAnchorFields, tag);
+				int total = vernacularText + analysisText;
+				if (total == 0)
+					continue; // No text in a field of known role, so its text says nothing.
+				double analysisShare = (double)analysisText / total;
+				if (analysisShare <= MinorityShare)
+					vernacular.Add(tag);
+				else if (analysisShare >= 1.0 - MinorityShare)
+					analysis.Add(tag);
+				else
+				{
+					vernacular.Add(tag);
+					analysis.Add(tag);
+				}
+				decided.Add(tag);
+			}
+			return decided;
 		}
 
 		private static ISet<string> Union(IDictionary<string, ISet<string>> byPath, IEnumerable<string> paths)
@@ -331,7 +490,8 @@ namespace LfMerge.Core.DataConverters
 		/// Converts the list of LF input systems and adds them to Lcm writing systems
 		/// </summary>
 		/// <param name="lfWsList">List of LF input systems.</param>
-		private void LfWsToLcmWs(Dictionary<string, LfInputSystemRecord> lfWsList)
+		private void LfWsToLcmWs(Dictionary<string, LfInputSystemRecord> lfWsList,
+			LfWritingSystemUsage usage = null)
 		{
 			// Between FW 8.2 and 9, a few classes and interfaces were renamed. The ones most relevant here are
 			// IWritingSystemManager (interface was removed and replaced with the WritingSystemManager concrete class),
@@ -359,7 +519,8 @@ namespace LfMerge.Core.DataConverters
 
 			// Which writing systems are vernacular is derived from the project's own config rather
 			// than from languageCode alone; see ClassifyVernacularWritingSystems.
-			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config, ProjectRecord.LanguageCode);
+			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config,
+				ProjectRecord.LanguageCode, usage);
 			ISet<string> vernacularTags = classification.Vernacular;
 			ISet<string> analysisTags = classification.Analysis;
 			if (classification.Unresolved.Count > 0)

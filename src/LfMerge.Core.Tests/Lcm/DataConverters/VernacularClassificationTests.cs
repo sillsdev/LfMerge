@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using LfMerge.Core.DataConverters;
 using LfMerge.Core.LanguageForge.Config;
+using LfMerge.Core.LanguageForge.Model;
 using NUnit.Framework;
 
 namespace LfMerge.Core.Tests.Lcm.DataConverters
@@ -42,6 +44,37 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			if (examples.Fields.Count > 0) senses.Fields["examples"] = examples;
 			if (senses.Fields.Count > 0) entry.Fields["senses"] = senses;
 			return new LfProjectConfig { Entry = entry };
+		}
+
+		/// <summary>
+		/// One entry holding text at the given field path, so a lexicon of them gives a writing
+		/// system a known amount of text in a field of known role.
+		/// </summary>
+		private static LfLexEntry EntryWithTextAt(string fieldPath, string tag)
+		{
+			var text = new LfMultiText { { tag, LfStringField.FromString("text") } };
+			var entry = new LfLexEntry();
+			switch (fieldPath)
+			{
+			case LfWritingSystemUsage.Lexeme: entry.Lexeme = text; break;
+			case LfWritingSystemUsage.CitationForm: entry.CitationForm = text; break;
+			case LfWritingSystemUsage.Definition:
+				entry.Senses = new List<LfSense> { new LfSense { Definition = text } }; break;
+			case LfWritingSystemUsage.Gloss:
+				entry.Senses = new List<LfSense> { new LfSense { Gloss = text } }; break;
+			case "etymology": entry.Etymology = text; break;
+			default: throw new ArgumentException("no test entry shape for " + fieldPath);
+			}
+			return entry;
+		}
+
+		private static LfWritingSystemUsage Usage(params (string Path, string Tag, int Count)[] spec)
+		{
+			var lexicon = new List<LfLexEntry>();
+			foreach ((string path, string tag, int count) in spec)
+				for (int i = 0; i < count; i++)
+					lexicon.Add(EntryWithTextAt(path, tag));
+			return LfWritingSystemUsage.FromLexicon(lexicon);
 		}
 
 		[Test]
@@ -172,16 +205,21 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 
 		/// <summary>
 		/// With no analysis anchor there is nothing to rule a field out, so every other field's
-		/// writing systems are unresolved -- and therefore both vernacular and analysis.
+		/// writing systems are unresolved -- and therefore both vernacular and analysis. Unless
+		/// their language has already been spoken for: qaa-fonipa-x-kal is a phonetic spelling of
+		/// the same language as the lexeme's qaa-x-kal, so it is vernacular like its relative,
+		/// while Hebrew keeps no such company and stays in doubt.
 		/// </summary>
 		[Test]
 		public void WithNoAnalysisAnchorEveryOtherFieldIsUnresolved()
 		{
-			var config = Config(("lexeme", Field("qaa-x-kal")), ("etymology", Field("qaa-fonipa-x-kal")));
+			var config = Config(("lexeme", Field("qaa-x-kal")),
+				("etymology", Field("qaa-fonipa-x-kal", "hbo")));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "qaa-x-kal");
-			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "qaa-x-kal", "qaa-fonipa-x-kal" }));
-			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "qaa-fonipa-x-kal" }));
-			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "qaa-fonipa-x-kal" }));
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "hbo" }));
+			Assert.That(result.Vernacular,
+				Is.EquivalentTo(new[] { "qaa-x-kal", "qaa-fonipa-x-kal", "hbo" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "hbo" }));
 		}
 
 		/// <summary>flh-flex: languageCode names a writing system only etymology uses.</summary>
@@ -273,6 +311,186 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var config = Config(("lexeme", Field()));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "fr");
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "fr" }));
+		}
+
+		/// <summary>
+		/// The case that motivates counting at all: the config offers "en" for the lexeme field, so
+		/// the config alone calls it vernacular, but no headword is written in it.
+		/// </summary>
+		[Test]
+		public void AWritingSystemConfiguredForTheLexemeButUnusedThereIsNotVernacular()
+		{
+			var config = Config(("lexeme", Field("kal", "en")), ("senses.fields.gloss", Field("en")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 100),
+				(LfWritingSystemUsage.Gloss, "en", 100));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "kal" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
+			Assert.That(result.Vernacular, Does.Not.Contain("en"),
+				"nothing is written in en in the lexeme field, so it is no evidence of vernacular");
+		}
+
+		/// <summary>
+		/// brb-flex-2022: the phonetic writing system has 4,030 headwords and one stray string in an
+		/// example reference, and FieldWorks has it as vernacular only.
+		/// </summary>
+		[Test]
+		public void AFewStrayStringsDoNotMakeAVernacularWritingSystemAnalysisAsWell()
+		{
+			var config = Config(("lexeme", Field("seh-fonipa-x-etic")), ("senses.fields.gloss", Field("en", "seh-fonipa-x-etic")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "seh-fonipa-x-etic", 4030),
+				(LfWritingSystemUsage.Gloss, "seh-fonipa-x-etic", 1),
+				(LfWritingSystemUsage.Gloss, "en", 4000));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "seh", usage);
+
+			Assert.That(result.Vernacular, Contains.Item("seh-fonipa-x-etic"));
+			Assert.That(result.Analysis, Does.Not.Contain("seh-fonipa-x-etic"));
+			Assert.That(result.Analysis, Contains.Item("en"));
+		}
+
+		/// <summary>
+		/// brb-flex-2022 again: the vernacular is also glossed in, 72/28, and FieldWorks really does
+		/// list it in both.
+		/// </summary>
+		[Test]
+		public void AWritingSystemUsedSubstantiallyForBothRolesGetsBoth()
+		{
+			var config = Config(("lexeme", Field("brb")), ("senses.fields.gloss", Field("brb", "en")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "brb", 7256),
+				(LfWritingSystemUsage.Gloss, "brb", 2801));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "brb", usage);
+
+			Assert.That(result.Vernacular, Contains.Item("brb"));
+			Assert.That(result.Analysis, Contains.Item("brb"));
+			Assert.That(result.Unresolved, Is.Empty, "28% is a real second role, not an unknown one");
+		}
+
+		[Test]
+		public void TextOutweighsTheConfigInBothDirections()
+		{
+			// Configured the wrong way round: the lexeme offers "en" and the gloss offers "kal",
+			// but every headword is in kal and every gloss in en.
+			var config = Config(("lexeme", Field("en")), ("senses.fields.gloss", Field("kal")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 50),
+				(LfWritingSystemUsage.Gloss, "en", 50));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "en", usage);
+
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "kal" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
+		}
+
+		[Test]
+		public void AWritingSystemUsedOnlyInAFieldOfUnknownRoleIsStillUnresolved()
+		{
+			// Text in the etymology says nothing: the corpus has 33 projects writing etymologies in
+			// the vernacular and 50 in an analysis language.
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("etymology", Field("hbo")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), ("etymology", "hbo", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "hbo" }));
+		}
+
+		[Test]
+		public void AWritingSystemTheConfigForgotIsClassifiedFromItsTextAnyway()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), (LfWritingSystemUsage.Lexeme, "kal-fonipa", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Vernacular, Contains.Item("kal-fonipa"));
+		}
+
+		[Test]
+		public void AnEmptyLexiconLeavesTheConfigInCharge()
+		{
+			var config = Config(("lexeme", Field("kal", "en")), ("senses.fields.gloss", Field("en")));
+
+			var withoutData = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal",
+				LfWritingSystemUsage.FromLexicon(new LfLexEntry[0]));
+			var configOnly = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal");
+
+			Assert.That(withoutData.Vernacular, Is.EquivalentTo(configOnly.Vernacular));
+			Assert.That(withoutData.Analysis, Is.EquivalentTo(configOnly.Analysis));
+			Assert.That(withoutData.Vernacular, Contains.Item("en"));
+		}
+
+		/// <summary>
+		/// A writing system with nothing written in it and no company still has a language, and the
+		/// other writing systems of that language have already been placed.
+		/// </summary>
+		[TestCase("seh", "seh-fonipa-x-etic", true, TestName = "AffinityPhoneticVariantOfTheVernacular")]
+		[TestCase("qaa-x-kal", "qaa-Zxxx-x-kal-audio", true, TestName = "AffinityAudioVariantOfTheVernacular")]
+		[TestCase("qaa-x-kal", "qaa-x-kal-dupl1", true, TestName = "AffinityDuplicateOfTheVernacular")]
+		public void AWritingSystemOfTheSameLanguageAsTheVernacularIsVernacular(
+			string vernacularTag, string relative, bool isVernacular)
+		{
+			var config = Config(("lexeme", Field(vernacularTag)), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Extra", Field(relative)));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, vernacularTag, 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, vernacularTag, usage);
+
+			Assert.That(result.Unresolved, Is.Empty);
+			Assert.That(result.Vernacular.Contains(relative), Is.EqualTo(isVernacular));
+			Assert.That(result.Analysis.Contains(relative), Is.EqualTo(!isVernacular));
+		}
+
+		[Test]
+		public void AWritingSystemOfTheSameLanguageAsTheAnalysisLanguageIsAnalysis()
+		{
+			// Script and region are not the language: "en-GB" is English.
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Extra", Field("en-GB")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Is.Empty);
+			Assert.That(result.Analysis, Contains.Item("en-GB"));
+			Assert.That(result.Vernacular, Does.Not.Contain("en-GB"));
+		}
+
+		/// <summary>
+		/// Under "qaa" the private-use subtags are the language, so two of them are two languages.
+		/// </summary>
+		[Test]
+		public void ADifferentPrivateUseLanguageIsNotTheSameLanguage()
+		{
+			var config = Config(("lexeme", Field("qaa-x-kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Extra", Field("qaa-x-hbo")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "qaa-x-kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "qaa-x-kal", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "qaa-x-hbo" }));
+		}
+
+		[Test]
+		public void ALanguageUsedForBothRolesSettlesNothing()
+		{
+			// seh is the vernacular and seh-fonipa is glossed in, so the language says nothing.
+			var config = Config(("lexeme", Field("seh")), ("senses.fields.gloss", Field("seh-fonipa")),
+				("customField_entry_Extra", Field("seh-Latn")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "seh", 10),
+				(LfWritingSystemUsage.Gloss, "seh-fonipa", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "seh", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "seh-Latn" }));
 		}
 
 		[Test]
