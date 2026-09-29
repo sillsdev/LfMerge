@@ -62,6 +62,17 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				entry.Senses = new List<LfSense> { new LfSense { Definition = text } }; break;
 			case LfWritingSystemUsage.Gloss:
 				entry.Senses = new List<LfSense> { new LfSense { Gloss = text } }; break;
+			case LfWritingSystemUsage.ExampleSentence:
+				entry.Senses = new List<LfSense> {
+					new LfSense { Examples = new List<LfExample> { new LfExample { Sentence = text } } } };
+				break;
+			case LfWritingSystemUsage.ExampleTranslation:
+				entry.Senses = new List<LfSense> {
+					new LfSense { Examples = new List<LfExample> { new LfExample { Translation = text } } } };
+				break;
+			case LfWritingSystemUsage.Note: entry.Note = text; break;
+			case LfWritingSystemUsage.LiteralMeaning: entry.LiteralMeaning = text; break;
+			case "pronunciation": entry.Pronunciation = text; break;
 			case "etymology": entry.Etymology = text; break;
 			default: throw new ArgumentException("no test entry shape for " + fieldPath);
 			}
@@ -423,6 +434,56 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(withoutData.Vernacular, Is.EquivalentTo(configOnly.Vernacular));
 			Assert.That(withoutData.Analysis, Is.EquivalentTo(configOnly.Analysis));
 			Assert.That(withoutData.Vernacular, Contains.Item("en"));
+		}
+
+		/// <summary>
+		/// FieldWorks fixes the role of these fields, and the corpus agrees: counting the projects
+		/// whose text in each is exclusively one role, the example sentence runs 332 vernacular to 5
+		/// analysis, and the translation, entry note and literal meaning run the other way.
+		/// </summary>
+		[TestCase("senses.fields.examples.fields.sentence", true)]
+		[TestCase("senses.fields.examples.fields.translation", false)]
+		[TestCase("note", false)]
+		[TestCase("literalMeaning", false)]
+		public void TheFieldsFieldWorksFixesTheRoleOfAreEvidenceToo(string fieldPath, bool isVernacular)
+		{
+			// Only the field under test carries any text for "xyz", so nothing else can decide it.
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				(fieldPath, Field("xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), (fieldPath, "xyz", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Does.Not.Contain("xyz"));
+			if (isVernacular)
+			{
+				Assert.That(result.Vernacular, Contains.Item("xyz"));
+				Assert.That(result.Analysis, Does.Not.Contain("xyz"));
+			}
+			else
+			{
+				Assert.That(result.Analysis, Contains.Item("xyz"));
+				Assert.That(result.Vernacular, Does.Not.Contain("xyz"));
+			}
+		}
+
+		/// <summary>
+		/// The pronunciation field is left out on purpose. It looks vernacular in the corpus at 114
+		/// projects to 16, but 12% is above the share a single writing system may hold in the other
+		/// role and still count as one thing, so projects evidently use it for more than one.
+		/// </summary>
+		[Test]
+		public void ThePronunciationFieldIsNotEvidenceOfAnything()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("pronunciation", Field("xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), ("pronunciation", "xyz", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Contains.Item("xyz"));
 		}
 
 		/// <summary>

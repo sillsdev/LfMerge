@@ -208,12 +208,31 @@ namespace LfMerge.Core.DataConverters
 			return Connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
 
-		// The two field groups whose vernacular/analysis role is never in doubt. Everything else is
-		// classified per project by which of these its writing systems already appear in -- a fixed
-		// list cannot be right for every project: in the 2026-07-06 corpus 741 projects configure
-		// etymology with analysis writing systems and 378 with vernacular ones.
-		private static readonly string[] VernacularAnchorFields = { "lexeme", "citationForm" };
-		private static readonly string[] AnalysisAnchorFields = { "senses.fields.definition", "senses.fields.gloss" };
+		// The field groups whose vernacular/analysis role is never in doubt, because FieldWorks fixes
+		// it: a headword and an example sentence are vernacular, a gloss and a translation are not.
+		// Everything else is classified per project by which of these its writing systems appear in
+		// -- a fixed list cannot be right for every project: in the 2026-07-06 corpus 741 projects
+		// configure etymology with analysis writing systems and 378 with vernacular ones.
+		//
+		// Counting that corpus, for each field, the projects whose text there is exclusively
+		// vernacular against exclusively analysis: the example sentence is 332 to 5, the example
+		// translation 1 to 320, the entry note 0 to 255 and the literal meaning 4 to 136.
+		//
+		// The pronunciation field is deliberately NOT here. It looks vernacular at 114 to 16, but
+		// that is 12% analysis, above the MinorityShare a single writing system would have to stay
+		// under to count as one role alone, so projects evidently use it for more than one thing.
+		private static readonly string[] VernacularAnchorFields = {
+			LfWritingSystemUsage.Lexeme,
+			LfWritingSystemUsage.CitationForm,
+			LfWritingSystemUsage.ExampleSentence,
+		};
+		private static readonly string[] AnalysisAnchorFields = {
+			LfWritingSystemUsage.Definition,
+			LfWritingSystemUsage.Gloss,
+			LfWritingSystemUsage.ExampleTranslation,
+			LfWritingSystemUsage.Note,
+			LfWritingSystemUsage.LiteralMeaning,
+		};
 
 		/// <summary>
 		/// Work out which writing systems this project treats as vernacular and which as analysis,
