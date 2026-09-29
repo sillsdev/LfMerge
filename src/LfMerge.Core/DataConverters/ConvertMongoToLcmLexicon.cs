@@ -328,6 +328,7 @@ namespace LfMerge.Core.DataConverters
 				}
 			}
 
+			ResolveByCompanions(byPath, vernacular, analysis, unresolved);
 			ResolveByLanguageAffinity(vernacular, analysis, unresolved);
 
 			// Safety net for a config LfMerge cannot read: without this such a project would get no
@@ -336,6 +337,50 @@ namespace LfMerge.Core.DataConverters
 				vernacular.Add(languageCode);
 
 			return (vernacular, analysis, unresolved);
+		}
+
+		/// <summary>
+		/// Settles what is left by the company a writing system keeps. A writing system nothing has
+		/// settled still shares its fields with others, and those may all have been settled: a
+		/// custom field holding the vernacular and one unplaced writing system is being used for
+		/// vernacular content, so the unplaced one is vernacular too.
+		///
+		/// Only unanimous company counts. A field holding writing systems of both roles says
+		/// nothing, which is the same reason a writing system in both anchors is no evidence of a
+		/// field's role.
+		/// </summary>
+		private static void ResolveByCompanions(IDictionary<string, ISet<string>> byPath,
+			ISet<string> vernacular, ISet<string> analysis, ISet<string> unresolved)
+		{
+			if (unresolved.Count == 0)
+				return;
+
+			// Unresolved writing systems sit in both sets, so they are in neither of these and
+			// cannot vote for each other.
+			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
+			vernacularOnly.ExceptWith(analysis);
+			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
+			analysisOnly.ExceptWith(vernacular);
+
+			foreach (string tag in unresolved.ToList())
+			{
+				var companions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+				foreach (var field in byPath)
+				{
+					if (field.Value.Contains(tag))
+						companions.UnionWith(field.Value);
+				}
+				companions.Remove(tag);
+				bool withVernacular = companions.Any(vernacularOnly.Contains);
+				bool withAnalysis = companions.Any(analysisOnly.Contains);
+				if (withVernacular == withAnalysis)
+					continue; // No company, or company of both roles: still nothing to go on.
+				if (withVernacular)
+					analysis.Remove(tag);
+				else
+					vernacular.Remove(tag);
+				unresolved.Remove(tag);
+			}
 		}
 
 		/// <summary>

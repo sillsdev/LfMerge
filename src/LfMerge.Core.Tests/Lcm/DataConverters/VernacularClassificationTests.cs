@@ -487,6 +487,58 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// A writing system can be settled by one custom field and then dragged back into doubt by
+		/// another: the field loop takes its evidence as it stood before the loop began, so a field
+		/// holding only writing systems it has settled since looks like evidence of nothing. The
+		/// company the writing system keeps settles it again.
+		/// </summary>
+		[TestCase("kal", true)]
+		[TestCase("en", false)]
+		public void AWritingSystemDraggedIntoDoubtIsSettledByTheCompanyItKeeps(string companion, bool isVernacular)
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Settled", Field(companion, "abc")),
+				("customField_entry_Doubtful", Field("abc", "xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Does.Not.Contain("abc"),
+				"abc shares a field with {0}, which is settled, so abc is settled too", companion);
+			Assert.That(result.Vernacular.Contains("abc"), Is.EqualTo(isVernacular));
+			Assert.That(result.Analysis.Contains("abc"), Is.EqualTo(!isVernacular));
+		}
+
+		[Test]
+		public void AWritingSystemWhoseCompanyIsItselfUnsettledStaysUnresolved()
+		{
+			// xyz keeps company only with abc, and abc was in doubt when the company was counted.
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Settled", Field("kal", "abc")),
+				("customField_entry_Doubtful", Field("abc", "xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "xyz" }));
+		}
+
+		[Test]
+		public void AWritingSystemWithNoCompanyAtAllStaysUnresolved()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Note", Field("xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "xyz" }));
+		}
+
+		/// <summary>
 		/// A writing system with nothing written in it and no company still has a language, and the
 		/// other writing systems of that language have already been placed.
 		/// </summary>
