@@ -321,10 +321,16 @@ namespace LfMerge.Core.DataConverters
 				}
 				else
 				{
-					// Overlaps neither role: nothing says which role this field plays.
-					vernacular.UnionWith(undecided);
-					analysis.UnionWith(undecided);
-					unresolved.UnionWith(undecided);
+					// Overlaps neither role: nothing says which role this field plays. That puts in
+					// doubt only the writing systems nothing else has placed. One already placed keeps
+					// its place: "en" in both the lexeme and the gloss is not made doubtful by also
+					// turning up in a note, and if it were, the passes below could strip one of its
+					// roles on the strength of the company it keeps there.
+					var unplaced = undecided
+						.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)).ToList();
+					vernacular.UnionWith(unplaced);
+					analysis.UnionWith(unplaced);
+					unresolved.UnionWith(unplaced);
 				}
 			}
 

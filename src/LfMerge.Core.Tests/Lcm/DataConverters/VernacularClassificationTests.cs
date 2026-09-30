@@ -253,17 +253,20 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "en" }));
 		}
 
-		/// <summary>A writing system in both anchors is no evidence of any other field's role.</summary>
+		/// <summary>
+		/// A writing system in both anchors is no evidence of any other field's role, so the Hebrew
+		/// sharing the etymology with it is in doubt. "en" itself is not: the anchors placed it.
+		/// </summary>
 		[Test]
 		public void AWritingSystemInBothAnchorsIsNotEvidence()
 		{
 			var config = Config(("lexeme", Field("en")), ("senses.fields.gloss", Field("en")),
-				("etymology", Field("en")));
+				("etymology", Field("en", "hbo")));
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "en");
-			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "en" }));
-			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
-			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "en" }),
-				"etymology overlaps neither anchor exclusively, so its role is unresolved");
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "en", "hbo" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en", "hbo" }));
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "hbo" }),
+				"etymology overlaps neither anchor exclusively, so the writing system it alone places is in doubt");
 		}
 
 		/// <summary>
@@ -487,18 +490,18 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
-		/// A writing system can be settled by one custom field and then dragged back into doubt by
-		/// another: the field loop takes its evidence as it stood before the loop began, so a field
-		/// holding only writing systems it has settled since looks like evidence of nothing. The
-		/// company the writing system keeps settles it again.
+		/// The field loop takes its evidence as it stood before the loop began, so a field it visits
+		/// BEFORE the one that settles a writing system sees no evidence and puts that writing system
+		/// in doubt. The company the writing system keeps settles it again. The doubtful field is
+		/// listed first on purpose: fields are visited in config order.
 		/// </summary>
 		[TestCase("kal", true)]
 		[TestCase("en", false)]
-		public void AWritingSystemDraggedIntoDoubtIsSettledByTheCompanyItKeeps(string companion, bool isVernacular)
+		public void AWritingSystemInDoubtIsSettledByTheCompanyItKeeps(string companion, bool isVernacular)
 		{
 			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
-				("customField_entry_Settled", Field(companion, "abc")),
-				("customField_entry_Doubtful", Field("abc", "xyz")));
+				("customField_entry_Doubtful", Field("abc", "xyz")),
+				("customField_entry_Settled", Field(companion, "abc")));
 			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
 				(LfWritingSystemUsage.Gloss, "en", 10));
 
@@ -511,18 +514,35 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		[Test]
-		public void AWritingSystemWhoseCompanyIsItselfUnsettledStaysUnresolved()
+		public void WritingSystemsWhoseOnlyCompanyIsEachOtherStayUnresolved()
 		{
-			// xyz keeps company only with abc, and abc was in doubt when the company was counted.
 			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
-				("customField_entry_Settled", Field("kal", "abc")),
 				("customField_entry_Doubtful", Field("abc", "xyz")));
 			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
 				(LfWritingSystemUsage.Gloss, "en", 10));
 
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
 
-			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "xyz" }));
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "abc", "xyz" }));
+		}
+
+		/// <summary>
+		/// "en" is in both anchors, so it plays both roles. Turning up alone in a note, a field
+		/// that gives no evidence, must not put it in doubt: if it did, the company it keeps in the
+		/// lexeme field (the vernacular) would then strip it of its analysis role, and a new "en"
+		/// writing system would be created vernacular only.
+		/// </summary>
+		[Test]
+		public void AWritingSystemAlreadyPlacedIsNotPutInDoubtByAFieldWithNoEvidence()
+		{
+			var config = Config(("lexeme", Field("seh", "en")), ("senses.fields.gloss", Field("en")),
+				("senses.fields.definition", Field("en")), ("senses.fields.generalNote", Field("en")));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "seh");
+
+			Assert.That(result.Unresolved, Is.Empty);
+			Assert.That(result.Vernacular, Contains.Item("en"));
+			Assert.That(result.Analysis, Contains.Item("en"));
 		}
 
 		[Test]
