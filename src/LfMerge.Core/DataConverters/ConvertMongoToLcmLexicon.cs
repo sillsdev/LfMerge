@@ -620,20 +620,27 @@ namespace LfMerge.Core.DataConverters
 				}
 				*/
 
-				// GetOrSet() does the lookup and the creation in one step, and does both by the
-				// canonical form of the tag. TryGet() matched the id literally while Create()
-				// canonicalized, so a tag LCM canonicalizes -- "qaa-x-qaa-v" becomes "qaa-x-v",
-				// because the private-use section repeats the "qaa" language subtag, and "th-Thai"
-				// becomes "th", because Thai's suppress-script is dropped -- was not found, was then
-				// created under its canonical id, and collided with the writing system already there:
-				//   Unable to set writing system 'qaa-x-v' because this id already exists.
-				// GetOrSet returns true when it found an existing writing system and false when it
-				// created one (creating adds it to the manager, so no Set() call is needed here).
-				//
-				// The rest of the TODO this replaces is not achievable this way: GetOrSet lives on
-				// WritingSystemManager, not on ILgWritingSystemFactory, so the FW 8-to-9 compatibility
-				// blocks above and below have to stay.
-				bool wsAlreadyExisted = wsManager.GetOrSet(lfWs.Tag, out ws);
+				// Find the writing system the way every other LF tag is found before creating one.
+				// LfMerge exports input systems by LanguageTag, while LCM knows a writing system by
+				// its Id, and in older projects the two differ: spt-flex's input system "hi-IN" is
+				// the writing system LCM holds as "hi-Deva-IN". GetOrSet looks a tag up only as an
+				// Id, so it did not find it, created a duplicate "hi-IN" and put it in the current
+				// lists; WsIdFromLfTag, which every multitext key goes through, then matched the
+				// duplicate exactly, and text typed in LF went to it rather than to hi-Deva-IN.
+				int existingHandle = LanguageTags.WsIdFromLfTag(wsManager, lfWs.Tag);
+				bool wsAlreadyExisted;
+				if (existingHandle != 0)
+				{
+					ws = wsManager.Get(existingHandle);
+					wsAlreadyExisted = true;
+				}
+				else
+				{
+					// Nothing to find, so create it. GetOrSet creates under the canonical form of the
+					// tag -- "qaa-x-qaa-v" becomes "qaa-x-v", "th-Thai" becomes "th" -- and adds the
+					// writing system to the manager, so no Set() call is needed here.
+					wsAlreadyExisted = wsManager.GetOrSet(lfWs.Tag, out ws);
+				}
 
 				// The WS does check that a property has a different value before setting it
 				// (and thus setting IsChanged flag), but for Abbreviation the WS returns

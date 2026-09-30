@@ -22,9 +22,9 @@ namespace LfMerge.Core
 		///                              and canonicalizing absorbs it
 		///     th-Thai     -> th        Thai's suppress-script is dropped
 		///
-		/// LfWsToLcmWs does not need this -- GetOrSet canonicalizes for it -- but every other lookup
-		/// of an LF tag does, and should go through <see cref="WsIdFromLfTag"/> rather than calling
-		/// this and GetWsFromStr itself.
+		/// Every lookup of an LF tag, LfWsToLcmWs's included, should go through
+		/// <see cref="WsIdFromLfTag"/> rather than calling this and GetWsFromStr itself. GetOrSet is
+		/// no substitute: it looks a tag up only as an Id.
 		/// </summary>
 		/// <returns>
 		/// The canonical tag, or the tag unchanged when it is empty or cannot be parsed --

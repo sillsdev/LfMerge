@@ -227,6 +227,34 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		[Test]
+		public void LfWsToLcmWs_InputSystemSpelledAsTheLanguageTag_DoesNotDuplicateTheWritingSystem()
+		{
+			// The spt-flex layout: LCM holds "hi-Deva-IN", whose LanguageTag is "hi-IN", and LF's
+			// input systems -- which LfMerge exports by LanguageTag -- call it "hi-IN". GetOrSet looks
+			// only at Ids, so it created a second writing system "hi-IN" and put it in the lists.
+			CoreWritingSystemDefinition real = AddWritingSystemWithId("pt-Latn-AO", "pt-AO");
+			Action restore = AddLfInputSystem("pt-AO");
+
+			try
+			{
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				Assert.That(LcmWritingSystemIds(), Does.Not.Contain("pt-AO"),
+					"no duplicate writing system should be created for the input system");
+				Assert.That(_cache.ServiceLocator.WritingSystemManager.WritingSystems
+					.Count(ws => ws.LanguageTag == "pt-AO"), Is.EqualTo(1));
+				Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "pt-AO"), Is.EqualTo(real.Handle),
+					"LF text keyed \"pt-AO\" should go to the existing writing system");
+			}
+			finally
+			{
+				restore();
+			}
+		}
+
+		[Test]
 		public void WsIdFromLfTag_UnknownOrEmptyTag_IsZero()
 		{
 			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "zzz-x-nonesuch"), Is.EqualTo(0));
