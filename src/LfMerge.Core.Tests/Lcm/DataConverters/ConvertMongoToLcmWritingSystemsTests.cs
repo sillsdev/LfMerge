@@ -9,6 +9,7 @@ using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.LCModel;
+using SIL.LCModel.Infrastructure;
 using SIL.LCModel.Core.Text;
 using SIL.LCModel.Core.WritingSystems;
 
@@ -293,6 +294,41 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			{
 				restore();
 			}
+		}
+
+		/// <summary>
+		/// LF's editor matches a field's input systems against an entry's keys exactly, so the two
+		/// must be spelled alike. The keys are spelled by Id; the input systems were spelled by
+		/// LanguageTag, so brb-flex-2022's Khmer text, keyed "km-Khmr-KH" under an input system
+		/// called "km-KH", showed as empty.
+		/// </summary>
+		[Test]
+		public void LcmToMongo_WritingSystemWhoseIdIsNotItsLanguageTag_IsSpelledByIdEverywhere()
+		{
+			// Setup: an analysis writing system held under a non-canonical Id, with a gloss in it.
+			const string id = "nl-Latn-BE";
+			const string gloss = "Nederlandse glos";
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId(id, "nl-BE");
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
+			{
+				_cache.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
+				var lcmEntry = (ILexEntry)_cache.ServiceLocator.GetObject(entryGuid);
+				lcmEntry.SensesOS[0].Gloss.set_String(ws.Handle, gloss);
+			});
+
+			// Exercise
+			SutLcmToMongo.Run(_lfProj);
+
+			// Verify
+			Dictionary<string, LfInputSystemRecord> inputSystems = _conn.GetInputSystems(_lfProj);
+			Assert.That(inputSystems.Keys, Contains.Item(id));
+			Assert.That(inputSystems[id].Tag, Is.EqualTo(id));
+			Assert.That(inputSystems.Keys, Does.Not.Contain("nl-BE"));
+			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(_lfProj, entryGuid);
+			Assert.That(lfEntry.Senses[0].Gloss.Keys, Contains.Item(id),
+				"the multitext key and the input system should be spelled alike");
+			Assert.That(lfEntry.Senses[0].Gloss[id].Value, Is.EqualTo(gloss));
 		}
 
 		[Test]
