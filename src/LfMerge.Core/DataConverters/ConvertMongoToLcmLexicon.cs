@@ -650,7 +650,12 @@ namespace LfMerge.Core.DataConverters
 					ws.Abbreviation = lfWs.Abbreviation;
 				}
 				ws.RightToLeftScript = lfWs.IsRightToLeft;
-				wsManager.Replace(ws);
+				// No wsManager.Replace(ws): ws is the manager's own object, so the edits above are
+				// already in place. Replace looks the writing system up by LanguageTag, and where
+				// the Id is spelled otherwise that lookup does harm. If it finds nothing, Replace
+				// re-registers ws under a fresh handle mid-sync; if it finds another writing system
+				// with that LanguageTag -- brb-flex-2022's unused "km-KH" beside "km-Khmr-KH" --
+				// Replace evicts that one and gives ws its handle.
 
 				if (!wsAlreadyExisted)
 				{

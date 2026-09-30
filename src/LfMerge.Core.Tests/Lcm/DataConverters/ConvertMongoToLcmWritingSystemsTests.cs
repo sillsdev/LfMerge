@@ -254,6 +254,47 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			}
 		}
 
+		/// <summary>
+		/// An input system spelled by Id -- as every project LfMerge set up under FieldWorks 8 has
+		/// them -- for a writing system whose Id differs from its LanguageTag. Replace looked the
+		/// writing system up by LanguageTag, which either found nothing and re-registered it under a
+		/// fresh handle, or found the unused writing system with that LanguageTag as its Id and
+		/// evicted it, the real one taking over its handle.
+		/// </summary>
+		[TestCase("es-Latn-MX", "es-MX", false)]
+		[TestCase("it-Latn-CH", "it-CH", true)]
+		public void LfWsToLcmWs_ExistingWritingSystemWhoseIdIsNotItsLanguageTag_KeepsItsHandle(
+			string id, string languageTag, bool withUnusedNamesake)
+		{
+			WritingSystemManager wsManager = _cache.ServiceLocator.WritingSystemManager;
+			CoreWritingSystemDefinition real = AddWritingSystemWithId(id, languageTag);
+			int realHandle = real.Handle;
+			CoreWritingSystemDefinition namesake = withUnusedNamesake ? wsManager.Set(languageTag) : null;
+			int namesakeHandle = withUnusedNamesake ? namesake.Handle : 0;
+			Action restore = AddLfInputSystem(id);
+
+			try
+			{
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				Assert.That(real.Handle, Is.EqualTo(realHandle), "the writing system should keep its handle");
+				Assert.That(wsManager.GetWsFromStr(id), Is.EqualTo(realHandle));
+				Assert.That(real.Abbreviation, Is.EqualTo(id),
+					"the input system's properties should still have been applied");
+				if (withUnusedNamesake)
+				{
+					Assert.That(wsManager.GetWsFromStr(languageTag), Is.EqualTo(namesakeHandle),
+						"the other writing system with that LanguageTag should be left alone");
+				}
+			}
+			finally
+			{
+				restore();
+			}
+		}
+
 		[Test]
 		public void WsIdFromLfTag_UnknownOrEmptyTag_IsZero()
 		{
