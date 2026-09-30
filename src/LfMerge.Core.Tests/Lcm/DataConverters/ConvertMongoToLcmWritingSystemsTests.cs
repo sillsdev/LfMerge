@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.LCModel;
 using SIL.LCModel.Core.Text;
+using SIL.LCModel.Core.WritingSystems;
 
 namespace LfMerge.Core.Tests.Lcm.DataConverters
 {
@@ -179,6 +180,50 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			int expected = _cache.WritingSystemFactory.GetWsFromStr(canonicalId);
 			Assert.That(expected, Is.Not.EqualTo(0), "{0} should resolve in testlangproj", canonicalId);
 			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, lfTag), Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// Adds a writing system whose Id is spelled differently from its LanguageTag, the way LCM
+		/// loads an older .ldml file: brb-flex-2022's "km-Khmr-KH.ldml" has km plus KH for its
+		/// identity, so it is held as Id "km-Khmr-KH" with LanguageTag "km-KH". The repository
+		/// keeps an Id as given whenever it is equivalent to the LanguageTag.
+		/// </summary>
+		private CoreWritingSystemDefinition AddWritingSystemWithId(string id, string languageTag)
+		{
+			WritingSystemManager wsManager = _cache.ServiceLocator.WritingSystemManager;
+			CoreWritingSystemDefinition ws = wsManager.Create(languageTag);
+			ws.Id = id;
+			wsManager.Set(ws);
+			Assert.That(ws.Id, Is.EqualTo(id), "precondition: LCM should hold the writing system as {0}", id);
+			Assert.That(ws.LanguageTag, Is.EqualTo(languageTag));
+			return ws;
+		}
+
+		[Test]
+		public void WsIdFromLfTag_ExactIdWinsOverAnotherWritingSystemWithTheCanonicalId()
+		{
+			// The brb-flex-2022 layout: the real writing system under a non-canonical Id, and an
+			// unused second one whose Id is the canonical form. Text keyed by the real one's Id is
+			// the real one's text; resolving the canonical form first sent it to the other, and the
+			// clearing pass then deleted the real writing system's text as missing from LF.
+			CoreWritingSystemDefinition real = AddWritingSystemWithId("de-Latn-AT", "de-AT");
+			CoreWritingSystemDefinition stray = _cache.ServiceLocator.WritingSystemManager.Set("de-AT");
+			Assert.That(stray.Handle, Is.Not.EqualTo(real.Handle));
+
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "de-Latn-AT"), Is.EqualTo(real.Handle));
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "de-AT"), Is.EqualTo(stray.Handle));
+		}
+
+		[Test]
+		public void WsIdFromLfTag_CanonicalTagFindsAWritingSystemWhoseIdIsSpelledOtherwise()
+		{
+			// The spt-flex layout: LCM holds "hi-Deva-IN" and LF's input systems call it "hi-IN",
+			// which is neither the Id nor its canonical form spelled as an Id.
+			CoreWritingSystemDefinition real = AddWritingSystemWithId("fr-Latn-CA", "fr-CA");
+			Assert.That(_cache.WritingSystemFactory.GetWsFromStr("fr-CA"), Is.EqualTo(0),
+				"precondition: no writing system has the Id fr-CA");
+
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "fr-CA"), Is.EqualTo(real.Handle));
 		}
 
 		[Test]

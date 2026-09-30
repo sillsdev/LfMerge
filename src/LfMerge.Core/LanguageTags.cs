@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.WritingSystems;
 using SIL.WritingSystems;
 
 namespace LfMerge.Core
@@ -42,9 +45,22 @@ namespace LfMerge.Core
 		///
 		/// Every place that resolves a tag LF supplied -- a multitext key, a span's lang attribute,
 		/// a multi-paragraph's input system -- goes through here, so that a non-canonical spelling
-		/// resolves the same way everywhere. The canonical tag is tried first, since that is the id
-		/// LCM gives every writing system it creates; the tag as LF spells it is tried second, for a
-		/// writing system LCM somehow holds under a non-canonical id.
+		/// resolves the same way everywhere.
+		///
+		/// LCM knows a writing system by its Id, which is whatever its .ldml file is named, and also
+		/// has its LanguageTag, which is always canonical. The two differ in older projects:
+		/// brb-flex-2022 holds "km-Khmr-KH.ldml", whose identity is km plus KH, so its Id is
+		/// "km-Khmr-KH" and its LanguageTag "km-KH". LfMerge writes LF's multitext keys by Id and the
+		/// project's input systems by LanguageTag, so LF can hand back either spelling. Tried in turn:
+		///
+		///   1. The tag as LF spells it, as an Id. This must come first. brb-flex-2022 also holds a
+		///      second, unused writing system whose Id is "km-KH"; trying the canonical form first
+		///      sent the text under "km-Khmr-KH" there, and WriteToLcm then cleared the real
+		///      writing system's text as missing from LF.
+		///   2. Its canonical form, as an Id: the Id LCM gives any writing system it creates.
+		///   3. Its canonical form as a LanguageTag, for an Id spelled some other way:
+		///      spt-flex's "hi-IN" is the writing system LCM holds as "hi-Deva-IN". Should several
+		///      writing systems share the LanguageTag, the one created first wins.
 		/// </summary>
 		public static int WsIdFromLfTag(ILgWritingSystemFactory wsf, string tag)
 		{
@@ -52,13 +68,30 @@ namespace LfMerge.Core
 			{
 				return 0;
 			}
-			string canonical = Canonical(tag);
-			int wsId = wsf.GetWsFromStr(canonical);
-			if (wsId == 0 && canonical != tag)
+			int wsId = wsf.GetWsFromStr(tag);
+			if (wsId != 0)
 			{
-				wsId = wsf.GetWsFromStr(tag);
+				return wsId;
 			}
-			return wsId;
+			string canonical = Canonical(tag);
+			if (!string.Equals(canonical, tag, StringComparison.OrdinalIgnoreCase))
+			{
+				wsId = wsf.GetWsFromStr(canonical);
+				if (wsId != 0)
+				{
+					return wsId;
+				}
+			}
+			var wsManager = wsf as WritingSystemManager;
+			if (wsManager == null)
+			{
+				return 0;
+			}
+			CoreWritingSystemDefinition byLanguageTag = wsManager.WritingSystems
+				.Where(ws => string.Equals(ws.LanguageTag, canonical, StringComparison.OrdinalIgnoreCase))
+				.OrderBy(ws => ws.Handle)
+				.FirstOrDefault();
+			return (byLanguageTag == null) ? 0 : byLanguageTag.Handle;
 		}
 	}
 }
