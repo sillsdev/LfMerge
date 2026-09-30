@@ -662,6 +662,11 @@ namespace LfMerge.Core.DataConverters
 			}
 		}
 
+		/// <summary>
+		/// The best string for a single-string LCM field, and the writing system it is in. Null when
+		/// LF holds no text in any writing system LCM has -- which is not the same as holding no text
+		/// at all; see <see cref="BestTsStringFromMultiText"/>.
+		/// </summary>
 		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			if (input == null) return null;
@@ -683,31 +688,50 @@ namespace LfMerge.Core.DataConverters
 			// differently from LCM. Falls back to the first value in any writing system LCM knows.
 			KeyValuePair<int, string> best = input.BestStringAndWsId(
 				wsesToSearch.Select(ws => ws.Handle), ServiceLocator.WritingSystemFactory);
-			if (best.Value != null)
-				return new Tuple<string, int>(best.Value, best.Key);
-
-			// Last-ditch option: just grab the first non-empty string we can find
-			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(Cache);
-			if (kv.Value == null) return null;
-//			Logger.Debug("Returning first non-empty TsString from {0} for writing system with ID {1}",
-//				kv.Value, kv.Key);
-			return new Tuple<string, int>(kv.Value, kv.Key);
+			if (best.Value == null)
+				return null;
+			return new Tuple<string, int>(best.Value, best.Key);
 		}
 
-		private ITsString BestTsStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
+		/// <summary>
+		/// The value to give a single-string LCM field, whose current value is
+		/// <paramref name="current"/>.
+		///
+		/// Null, clearing the field, when LF holds no text for it. But when LF holds text and every
+		/// alternative is in a writing system LCM does not have, there is nowhere to put it, and the
+		/// field keeps its current value. Neither alternative will do: building the string in
+		/// writing system 0 throws, which abandons the rest of the entry half-written, and clearing
+		/// the field would delete what LCM holds on account of text that could not be placed.
+		/// </summary>
+		private ITsString BestTsStringFromMultiText(LfMultiText input, ITsString current, bool isAnalysisField = true)
 		{
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
-			if (stringAndWsId == null)
-				return null;
-			return ConvertMongoToLcmTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
+			if (stringAndWsId != null)
+				return ConvertMongoToLcmTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
+			return NothingToPlace(input) ? null : current;
 		}
 
-		private string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
+		/// <summary>As <see cref="BestTsStringFromMultiText"/>, for a plain string field.</summary>
+		private string BestStringFromMultiText(LfMultiText input, string current, bool isAnalysisField = true)
 		{
 			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
-			if (stringAndWsId == null)
-				return null;
-			return stringAndWsId.Item1;
+			if (stringAndWsId != null)
+				return stringAndWsId.Item1;
+			return NothingToPlace(input) ? null : current;
+		}
+
+		/// <summary>
+		/// Whether LF holds no text at all here. When it does hold text that nevertheless could not
+		/// be placed, says so in the log, since that text is not reaching FieldWorks.
+		/// </summary>
+		private bool NothingToPlace(LfMultiText input)
+		{
+			if (input == null || input.IsEmpty)
+				return true;
+			Logger.Warning("MongoToLcm: text in writing system(s) {0} has nowhere to go, since LCM has none " +
+				"of them; leaving the field as it was",
+				string.Join(", ", input.Where(kv => kv.Value != null && !kv.Value.IsEmpty).Select(kv => kv.Key)));
+			return false;
 		}
 
 		// This GetOrCreate() function takes an extra out parameter so we can correctly update
@@ -1066,7 +1090,7 @@ namespace LfMerge.Core.DataConverters
 //				LcmExample.Guid,
 //				LcmExample.Hvo
 //			);
-			LcmExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
+			LcmExample.Reference = BestTsStringFromMultiText(lfExample.Reference, LcmExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, LcmExample,
 				_freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
@@ -1092,9 +1116,17 @@ namespace LfMerge.Core.DataConverters
 			string caption = "";
 			if (lfPicture.Caption != null)
 			{
-				KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(Cache);
-				captionWs = kv.Key;
-				caption = kv.Value;
+				// A caption in no writing system LCM has would come back as writing system 0, which
+				// cannot be built into a string; the picture then starts with an empty caption, and
+				// SetMultiStringFrom below fills in every alternative that can be placed.
+				KeyValuePair<int, string> kv = lfPicture.Caption.BestStringAndWsId(
+					ServiceLocator.LanguageProject.AnalysisWritingSystems.Select(ws => ws.Handle),
+					ServiceLocator.WritingSystemFactory);
+				if (kv.Value != null)
+				{
+					captionWs = kv.Key;
+					caption = kv.Value;
+				}
 			}
 
 			// Lcm expects internal pictures in a certain path.  If an external path already
@@ -1162,19 +1194,19 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(LcmSense.PhonologyNote, lfSense.PhonologyNote);
 			// LcmSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than
 			// that. Handle it correctly. Maybe.
-			LcmSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);
+			LcmSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName, LcmSense.ScientificName);
 			ListConverters[SemDomListCode].UpdatePossibilitiesFromStringArray(LcmSense.SemanticDomainsRC,
 				lfSense.SemanticDomain);
 			SetMultiStringFrom(LcmSense.SemanticsNote, lfSense.SemanticsNote);
 			SetMultiStringFrom(LcmSense.Bibliography, lfSense.SenseBibliography);
 
 			// lfSense.SenseId; // TODO: What do I do with this one?
-			LcmSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
+			LcmSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue, LcmSense.ImportResidue);
 
 			SetMultiStringFrom(LcmSense.Restrictions, lfSense.SenseRestrictions);
 			LcmSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
 			SetMultiStringFrom(LcmSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
-			LcmSense.Source = BestTsStringFromMultiText(lfSense.Source);
+			LcmSense.Source = BestTsStringFromMultiText(lfSense.Source, LcmSense.Source);
 			LcmSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
 			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(LcmSense.UsageTypesRC,
 				lfSense.Usages);
@@ -1325,7 +1357,7 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(LcmEtymology.Gloss, lfEntry.EtymologyGloss);
 			if (lfEntry.EtymologySource != null)
 #if DBVERSION_7000068
-				LcmEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource);
+				LcmEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource, LcmEtymology.Source);
 #else
 				SetMultiStringFrom(LcmEtymology.LanguageNotes, lfEntry.EtymologySource);
 #endif
@@ -1367,8 +1399,8 @@ namespace LfMerge.Core.DataConverters
 				LcmPronunciation = GetInstance<ILexPronunciationFactory>().Create();
 				LcmEntry.PronunciationsOS.Add(LcmPronunciation);
 			}
-			LcmPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
-			LcmPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
+			LcmPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern, LcmPronunciation.CVPattern);
+			LcmPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone, LcmPronunciation.Tone);
 			SetMultiStringFrom(LcmPronunciation.Form, lfEntry.Pronunciation);
 			LcmPronunciation.LocationRA =
 				(ICmLocation)ListConverters[LocationListCode].FromStringField(lfEntry.Location);

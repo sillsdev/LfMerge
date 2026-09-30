@@ -112,15 +112,6 @@ namespace LfMerge.Core.LanguageForge.Model
 			return (result == null) ? null : result.Value;
 		}
 
-		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(LcmCache cache)
-		{
-			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
-			if (kv.Key == null) return new KeyValuePair<int, string>();
-			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
-			return new KeyValuePair<int, string>(wsId, kv.Value);
-		}
-
 		/// <summary>
 		/// The value for the first writing system in wsSearchOrder that has a non-empty one, falling
 		/// back to the first non-empty value in any writing system LCM knows, together with that

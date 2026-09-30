@@ -134,6 +134,43 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				"the definition should have been written to the canonical writing system {0}", RedundantPrivateUseId);
 		}
 
+		[Test]
+		public void SingleStringField_TextInNoKnownWritingSystem_KeepsTheLcmValueAndSyncsTheRest()
+		{
+			// Setup: LCM holds a scientific name, and then LF holds one only in a writing system LCM
+			// has never heard of. Building that into a string in writing system 0 threw, abandoning
+			// the rest of the entry half-written; returning null instead would clear the field and
+			// delete what LCM holds. Neither is acceptable.
+			const string original = "Homo sapiens";
+			const string laterNote = "A note set after the scientific name";
+			var data = new SampleData();
+			BsonDocument sense = data.bsonTestData["senses"][0].AsBsonDocument;
+			sense["scientificName"] = new BsonDocument { { "en", new BsonDocument { { "value", original } } } };
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+			SutMongoToLcm.Run(_lfProj);
+
+			sense["scientificName"] = new BsonDocument {
+				{ "zzz-x-nonesuch", new BsonDocument { { "value", "Unplaceable" } } } };
+			// Converted after the scientific name, so it only arrives if the entry is not abandoned.
+			sense["sociolinguisticsNote"] = new BsonDocument {
+				{ "en", new BsonDocument { { "value", laterNote } } } };
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow.AddMinutes(1);
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+
+			// Exercise
+			SutMongoToLcm.Run(_lfProj);
+
+			// Verify
+			var entry = _cache.ServiceLocator.GetObject(Guid.Parse(data.bsonTestData["guid"].AsString)) as ILexEntry;
+			Assert.That(entry, Is.Not.Null);
+			ILexSense lcmSense = entry.SensesOS[0];
+			Assert.That(lcmSense.ScientificName.Text, Is.EqualTo(original),
+				"text that cannot be placed must not replace or clear what LCM holds");
+			Assert.That(lcmSense.SocioLinguisticsNote.get_String(_wsEn).Text, Is.EqualTo(laterNote),
+				"the rest of the entry should still have been converted");
+		}
+
 		[TestCase(RedundantPrivateUseTag, RedundantPrivateUseId)]
 		[TestCase(MixedCaseTag, MixedCaseId)]
 		[TestCase("fr-Latn", "fr")]
