@@ -381,6 +381,7 @@ namespace LfMerge.Core.Tests
 			MongoProjectRecord record;
 			if (_projectRecords.TryGetValue(project.ProjectCode, out record))
 			{
+				RefreshLastSyncedDate(record, project);
 				return record;
 			}
 			else
@@ -411,8 +412,18 @@ namespace LfMerge.Core.Tests
 					Config = sampleConfig
 				};
 				_projectRecords.Add(project.ProjectCode, record);
+				RefreshLastSyncedDate(record, project);
 				return record;
 			}
+		}
+
+		/// The real factory reads the record from Mongo every time, so it always sees the last sync's
+		/// date. Each instance of this double keeps its own records, and the connection double only
+		/// updates the most recently created instance's, so take the date from the connection instead.
+		private void RefreshLastSyncedDate(MongoProjectRecord record, ILfProject project)
+		{
+			var testDouble = Connection as MongoConnectionDouble;
+			if (testDouble != null) record.LastSyncedDate = testDouble.GetLastSyncedDate(project);
 		}
 	}
 
