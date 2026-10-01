@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,11 @@ namespace LfMerge.Core.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToLcmCustomField _convertCustomField;
+
+		// Entries where LF's copy differs from FieldWorks but no LF user has touched it since the
+		// last sync, so FieldWorks holds the newer version (see EditedInLfSinceLastSync)
+		private int _changedOnlyInFieldWorks;
+		private int _absentOnlyFromFieldWorks;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
@@ -143,6 +148,8 @@ namespace LfMerge.Core.DataConverters
 			_convertCustomField = new ConvertMongoToLcmCustomField(Cache, ServiceLocator, Logger, _wsEn);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
+			_changedOnlyInFieldWorks = 0;
+			_absentOnlyFromFieldWorks = 0;
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
 					#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
@@ -164,6 +171,16 @@ namespace LfMerge.Core.DataConverters
 						}
 					}
 				});
+			if (_changedOnlyInFieldWorks > 0 || _absentOnlyFromFieldWorks > 0)
+			{
+				// Normally zero: LfMerge's working copy is what LF last synced with, so the two copies
+				// can only differ where LF users have edited since. Anything else means the working copy
+				// has moved on without LF, as a fresh clone of a project FLEx has kept working on has.
+				Logger.Warning("MongoToLcm: {0} entries differ from FieldWorks and {1} are missing from it, though no LF user has " +
+					"edited them since the last sync ({2}); kept FieldWorks's version of all of them",
+					_changedOnlyInFieldWorks, _absentOnlyFromFieldWorks,
+					LastSyncedDate == null ? "never synced" : LastSyncedDate.Value.ToString("u"));
+			}
 			// Comment conversion gets run AFTER lexicon conversion, so that any comments on new entries are handled correctly in FW
 			var commCvtr = new ConvertMongoToLcmComments(Connection, LfProject, exceptions, Logger, Progress);
 			var commErrors = commCvtr.RunConversion(entryObjectIdToGuidMappings);
@@ -494,9 +511,66 @@ namespace LfMerge.Core.DataConverters
 			return result;
 		}
 
+		/// <summary>
+		/// The last sync's date, or null if the project has never been synced.
+		/// </summary>
+		private DateTime? LastSyncedDate
+		{
+			get
+			{
+				DateTime? lastSynced = ProjectRecord.LastSyncedDate;
+				return lastSynced == null || lastSynced.Value <= MagicValues.UnixEpoch ? null : lastSynced;
+			}
+		}
+
+		/// <summary>
+		/// Whether an LF user has edited, created or deleted this entry since the last sync, or ever,
+		/// if the project has never been synced.
+		///
+		/// Mongo holds FieldWorks as it was at the last sync plus what LF users have done since, so
+		/// those are the only entries LF has anything to say about. Comparing LF's copy with
+		/// FieldWorks's instead is only right while LfMerge's working copy is still exactly what it
+		/// last synced: on a fresh clone of a project FLEx has kept working on, every entry FLEx
+		/// changed since then would look changed in LF, and LF's older copy would be written over it.
+		///
+		/// LF stamps an entry's DateModified on every edit and deletion (MapperModel::write), and
+		/// LfMerge's own writes to Mongo all come before it records LastSyncedDate. Both dates come
+		/// from the server's clock, so a FLEx user's clock being wrong cannot affect this. Mongo keeps
+		/// them to the millisecond, and a tie counts as edited: that falls back to comparing LF's copy
+		/// with FieldWorks's, which is what LfMerge has always done.
+		///
+		/// A project that has never been synced has no date to go by, though its entries can still be
+		/// LfMerge's: the initial clone's transfer to Mongo does not always get as far as recording a
+		/// sync. LfMerge clears the user references on every entry it writes, and LF sets one on every
+		/// edit and creation; a deletion sets none, but deleting what FieldWorks lacks is harmless.
+		/// </summary>
+		private bool EditedInLfSinceLastSync(LfLexEntry lfEntry)
+		{
+			DateTime? lastSynced = LastSyncedDate;
+			if (lastSynced == null)
+				return lfEntry.IsDeleted || (lfEntry.AuthorInfo != null &&
+					(lfEntry.AuthorInfo.ModifiedByUserRef != null || lfEntry.AuthorInfo.CreatedByUserRef != null));
+			return lfEntry.DateModified >= lastSynced.Value;
+		}
+
 		private void LfLexEntryToLcmLexEntry(LfLexEntry lfEntry)
 		{
 			Guid guid = lfEntry.Guid ?? Guid.Empty;
+			if (!EditedInLfSinceLastSync(lfEntry))
+			{
+				// Nothing for FieldWorks here. Where it differs, it is the newer one, and the transfer
+				// back to Mongo after Send/Receive will bring LF up to date with it.
+				ILexEntry existing;
+				if (lfEntry.IsDeleted)
+				{
+					// An LF deletion that an earlier sync has already sent
+				}
+				else if (!GetInstance<ILexEntryRepository>().TryGetObject(guid, out existing))
+					_absentOnlyFromFieldWorks++;
+				else if (lfEntry.AuthorInfo == null || lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() != existing.DateModified)
+					_changedOnlyInFieldWorks++;
+				return;
+			}
 			bool createdEntry = false;
 			bool wantCreation = !lfEntry.IsDeleted;
 			ILexEntry LcmEntry = GetOrCreateEntryByGuid(guid, wantCreation, out createdEntry);
@@ -540,6 +614,14 @@ namespace LfMerge.Core.DataConverters
 					// No changes detected since last time, so we won't change the Lcm entry
 					return;
 				}
+			}
+			if (!createdEntry && LastSyncedDate != null && LcmEntry.DateModified.ToUniversalTime() > LastSyncedDate.Value)
+			{
+				// Only possible when the working copy has moved on without LF (or a FLEx user's clock
+				// is ahead). LF's edit still wins, as it always has; this records what it replaced.
+				Logger.Warning("MongoToLcm: entry {0} ({1}) was edited in FieldWorks on {2:u} as well as in LF since the last sync; " +
+					"LF's version replaces FieldWorks's", guid, ConvertUtilities.EntryNameForDebugging(lfEntry),
+					LcmEntry.DateModified.ToUniversalTime());
 			}
 
 			// Fields in order by lfEntry property, except for Senses and CustomFields, which are handled at the end

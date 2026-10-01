@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using LfMerge.Core.Actions.Infrastructure;
 using LfMerge.Core.DataConverters;
+using LfMerge.Core.FieldWorks;
 using LfMerge.Core.LanguageForge.Model;
 using LfMergeBridge.LfMergeModel;
 using MongoDB.Bson;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Linq;
 using SIL.LCModel;
 using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Infrastructure;
 
 namespace LfMerge.Core.Tests.Lcm
 {
@@ -637,6 +639,110 @@ namespace LfMerge.Core.Tests.Lcm
 
 			Assert.That(LfMergeBridgeServices.FormatCommitMessageForLfMerge(_counts.Added, _counts.Modified, _counts.Deleted),
 				Is.EqualTo("Language Forge S/R"));
+		}
+
+		// The tests below are what a fresh clone looks like: LfMerge's working copy already holds work
+		// FLEx users did after LF's last sync, which LF's copy in Mongo knows nothing about.
+
+		private static void EditInFieldWorks(FwProject project, ILexEntry entry, string newLexeme)
+		{
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", project.Cache.ActionHandlerAccessor, () =>
+			{
+				entry.LexemeFormOA.Form.SetVernacularDefaultWritingSystem(newLexeme);
+				entry.DateModified = DateTime.Now;
+			});
+		}
+
+		[Test]
+		public void Action_EntryEditedOnlyInFieldWorksSinceLastSync_KeepsFieldWorksVersion()
+		{
+			// Setup
+			var lfProj = _lfProj;
+			SutLcmToMongo.Run(lfProj);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			ILexEntry editedInFlex = LcmTestHelper.GetEntry(fwProject, Guid.Parse(TestEntryGuidStr));
+			EditInFieldWorks(fwProject, editedInFlex, "edited in FLEx after LF's last sync");
+
+			string vernacularWS = fwProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			LfLexEntry editedInLf = _conn.GetLfLexEntryByGuid(lfProj, Guid.Parse(KenEntryGuidStr));
+			editedInLf.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, "edited in LF after the last sync");
+			editedInLf.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(editedInLf);
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			Assert.That(editedInFlex.LexemeFormOA.Form.VernacularDefaultWritingSystem.Text,
+				Is.EqualTo("edited in FLEx after LF's last sync"));
+			ILexEntry ken = LcmTestHelper.GetEntry(fwProject, Guid.Parse(KenEntryGuidStr));
+			Assert.That(ken.LexemeFormOA.Form.VernacularDefaultWritingSystem.Text,
+				Is.EqualTo("edited in LF after the last sync"));
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(1));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_EntryDeletedInFieldWorksSinceLastSync_IsNotRecreated()
+		{
+			// Setup
+			var lfProj = _lfProj;
+			SutLcmToMongo.Run(lfProj);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
+			LcmTestHelper.DeleteEntry(fwProject, kenGuid);
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			ILexEntry ken;
+			Assert.That(fwProject.ServiceLocator.GetInstance<ILexEntryRepository>().TryGetObject(kenGuid, out ken), Is.False);
+			Assert.That(_counts.Added,    Is.EqualTo(0));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_LfDeletionOlderThanLastSync_DoesNotDeleteTheFieldWorksEntry()
+		{
+			// Setup: an entry LF deleted before the last sync, which FieldWorks has since restored
+			var lfProj = _lfProj;
+			SutLcmToMongo.Run(lfProj);
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			LfLexEntry entry = _conn.GetLfLexEntryByGuid(lfProj, entryGuid);
+			entry.IsDeleted = true;
+			entry.DateModified = _conn.GetLastSyncedDate(lfProj).Value.AddDays(-1);
+			_conn.UpdateRecord(lfProj, entry);
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			ILexEntry stillThere;
+			Assert.That(lfProj.FieldWorksProject.ServiceLocator.GetInstance<ILexEntryRepository>().TryGetObject(entryGuid, out stillThere), Is.True);
+			Assert.That(_counts.Deleted, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_NeverSyncedProjectWhoseEntriesLfMergeWrote_KeepsFieldWorksVersion()
+		{
+			// Setup: an initial clone whose transfer to Mongo never got as far as recording the sync
+			var lfProj = _lfProj;
+			SutLcmToMongo.Run(lfProj);
+			_conn.SetLastSyncedDate(lfProj, MagicValues.UnixEpoch);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			ILexEntry editedInFlex = LcmTestHelper.GetEntry(fwProject, Guid.Parse(TestEntryGuidStr));
+			EditInFieldWorks(fwProject, editedInFlex, "edited in FLEx after the initial clone");
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			Assert.That(editedInFlex.LexemeFormOA.Form.VernacularDefaultWritingSystem.Text,
+				Is.EqualTo("edited in FLEx after the initial clone"));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
 		}
 
 		// TODO: Move custom field tests to their own test class, and move these helper functions with them
