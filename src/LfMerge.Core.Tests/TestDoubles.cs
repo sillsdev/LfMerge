@@ -188,10 +188,22 @@ namespace LfMerge.Core.Tests
 			UpdateMockLfLexEntry(data);
 		}
 
+		// The user SampleData's entries were last modified by
+		private static readonly ObjectId LfUserRef = ObjectId.Parse("561b666c0f87096a35c3cf2d");
+
+		/// <summary>
+		/// Store an entry the way an LF user's edit does: LF's MapperModel::write stamps DateModified,
+		/// and LexEntryCommands::updateEntry records who made the edit. LfMerge's own writes go
+		/// through UpdateRecord, which does neither.
+		/// </summary>
 		public void UpdateMockLfLexEntry(LfLexEntry mockData)
 		{
 			Guid guid = mockData.Guid ?? Guid.Empty;
-			_storedLfLexEntries[guid] = DeepCopy(mockData);
+			var stored = DeepCopy(mockData);
+			stored.DateModified = DateTime.UtcNow;
+			if (stored.AuthorInfo != null && stored.AuthorInfo.ModifiedByUserRef == null)
+				stored.AuthorInfo.ModifiedByUserRef = LfUserRef;
+			_storedLfLexEntries[guid] = stored;
 		}
 
 		public void UpdateMockOptionList(BsonDocument mockData)
@@ -290,6 +302,9 @@ namespace LfMerge.Core.Tests
 
 		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
 		{
+			// Mongo keeps dates to the millisecond, as DeepCopy does for the entries' dates
+			if (newSyncedDate != null)
+				newSyncedDate = newSyncedDate.Value.AddTicks(-(newSyncedDate.Value.Ticks % TimeSpan.TicksPerMillisecond));
 			_storedLastSyncDate[project.ProjectCode] = newSyncedDate;
 			// Also update on the fake project record, since EnsureCloneAction looks at the project record to check its initial-clone logic
 			if (_projectRecordFactory != null)
@@ -366,6 +381,7 @@ namespace LfMerge.Core.Tests
 			MongoProjectRecord record;
 			if (_projectRecords.TryGetValue(project.ProjectCode, out record))
 			{
+				RefreshLastSyncedDate(record, project);
 				return record;
 			}
 			else
@@ -396,8 +412,18 @@ namespace LfMerge.Core.Tests
 					Config = sampleConfig
 				};
 				_projectRecords.Add(project.ProjectCode, record);
+				RefreshLastSyncedDate(record, project);
 				return record;
 			}
+		}
+
+		/// The real factory reads the record from Mongo every time, so it always sees the last sync's
+		/// date. Each instance of this double keeps its own records, and the connection double only
+		/// updates the most recently created instance's, so take the date from the connection instead.
+		private void RefreshLastSyncedDate(MongoProjectRecord record, ILfProject project)
+		{
+			var testDouble = Connection as MongoConnectionDouble;
+			if (testDouble != null) record.LastSyncedDate = testDouble.GetLastSyncedDate(project);
 		}
 	}
 
