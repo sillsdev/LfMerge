@@ -25,6 +25,9 @@ namespace LfMerge.Core.DataConverters
 		private IFwMetaDataCacheManaged lcmMetaData;
 		private ILogger logger;
 		private int wsEn;
+		// Fields already reported as not writable, so each is reported once per sync rather than
+		// once for every entry, sense or example that has it
+		private readonly HashSet<int> unwritableFieldsReported = new HashSet<int>();
 
 		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
 		{
@@ -406,10 +409,11 @@ namespace LfMerge.Core.DataConverters
 				}
 
 			default:
-				logger.Warning(
-					"Custom field {0} not written to LCM: CellarPropertyType.{1} is not implemented "
-					+ "for the LF to LCM direction, so any data LF holds in it is being dropped",
-					fieldName, fieldType.ToString());
+				if (unwritableFieldsReported.Add(flid))
+					logger.Warning(
+						"Custom field {0} not written to LCM: CellarPropertyType.{1} is not implemented "
+						+ "for the LF to LCM direction, so any data LF holds in it is being dropped",
+						fieldName, fieldType.ToString());
 				return false;
 			}
 		}

@@ -2,6 +2,7 @@
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System;
+using System.Linq;
 using LfMerge.Core.DataConverters;
 using MongoDB.Bson;
 using NUnit.Framework;
@@ -158,6 +159,26 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			// Verify
 			BsonDocument written = ReadBack(entry)[SingleStringField].AsBsonDocument;
 			Assert.That(written["fr"]["value"].AsString, Is.EqualTo("Texte"));
+		}
+
+		[Test]
+		public void SetCustomFieldData_FieldOfATypeItCannotWrite_IsReportedOncePerSyncNotOncePerObject()
+		{
+			// Setup: an owning sequence, a type the LF to LCM direction does not implement, on
+			// three entries. The test project has no custom field of that type, so a built-in
+			// field stands in for one; the writer does not tell them apart.
+			var logger = new TestLogger(TestContext.CurrentContext.Test.Name);
+			var converter = new ConvertMongoToLcmCustomField(_cache, _servLoc, logger, _wsEn);
+			var entries = _servLoc.GetInstance<ILexEntryRepository>().AllInstances().Take(3).ToList();
+			Assert.That(entries, Has.Count.EqualTo(3));
+
+			// Exercise
+			foreach (ILexEntry entry in entries)
+				Assert.That(converter.SetCustomFieldData(entry.Hvo, LexEntryTags.kflidSenses, new BsonString("LF data"), null), Is.False);
+
+			// Verify
+			int reports = logger.Messages.Split('\n').Count(line => line.Contains("not written to LCM"));
+			Assert.That(reports, Is.EqualTo(1));
 		}
 	}
 }
