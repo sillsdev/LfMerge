@@ -332,6 +332,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		[Test]
+		public void LcmToMongo_PronunciationListNamingAWritingSystemLcmDoesNotHave_LeavesItOut()
+		{
+			// Setup: a pronunciation list naming an Id LCM has no writing system for. (The same in
+			// the vernacular list would still fail, inside liblcm's own GetWritingSystemList.)
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
+				_cache.LanguageProject.CurPronunWss = "zzz-x-nonesuch");
+
+			// Exercise
+			SutLcmToMongo.Run(_lfProj);
+
+			// Verify
+			Dictionary<string, LfInputSystemRecord> inputSystems = _conn.GetInputSystems(_lfProj);
+			Assert.That(inputSystems.Keys, Contains.Item(_cache.LanguageProject.DefaultVernacularWritingSystem.Id));
+			Assert.That(inputSystems.Keys, Does.Not.Contain("zzz-x-nonesuch"));
+		}
+
+		[Test]
 		public void WsIdFromLfTag_UnknownOrEmptyTag_IsZero()
 		{
 			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, "zzz-x-nonesuch"), Is.EqualTo(0));

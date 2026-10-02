@@ -66,9 +66,9 @@ namespace LfMerge.Core.DataConverters
 
 			// Reconcile writing systems from Lcm and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = LcmWsToLfWs();
-			List<string> VernacularWss = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems.Select(LfTagOf).ToList();
-			List<string> AnalysisWss = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems.Select(LfTagOf).ToList();
-			List<string> PronunciationWss = ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems.Select(LfTagOf).ToList();
+			List<string> VernacularWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentVernacularWritingSystems, "vernacular");
+			List<string> AnalysisWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems, "analysis");
+			List<string> PronunciationWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems, "pronunciation");
 			Connection.SetInputSystems(LfProject, lfWsList, VernacularWss, AnalysisWss, PronunciationWss);
 
 			ListConverters = new Dictionary<string, ConvertLcmToMongoOptionList>();
@@ -598,6 +598,31 @@ namespace LfMerge.Core.DataConverters
 		private string LfTagOf(CoreWritingSystemDefinition ws)
 		{
 			return ServiceLocator.WritingSystemManager.GetStrFromWs(ws.Handle);
+		}
+
+		/// <summary>
+		/// The LF tags of one of the project's current writing-system lists, leaving out any Id the
+		/// list names that LCM has no writing system for, rather than ending the transfer.
+		///
+		/// The list is read with foreach on purpose. liblcm's enumerator yields null for such an
+		/// Id, but its indexer and CopyTo throw KeyNotFoundException, and LINQ's Select and ToList
+		/// use those on an IList.
+		/// </summary>
+		private List<string> LfTagsOf(IEnumerable<CoreWritingSystemDefinition> wss, string listName)
+		{
+			var tags = new List<string>();
+			int missing = 0;
+			foreach (CoreWritingSystemDefinition ws in wss)
+			{
+				if (ws == null)
+					missing++;
+				else
+					tags.Add(LfTagOf(ws));
+			}
+			if (missing > 0)
+				Logger.Warning("LcmToMongo: the current {0} writing systems list names {1} writing system(s) that LCM does not have; leaving them out",
+					listName, missing);
+			return tags;
 		}
 
 		private Dictionary<string, LfInputSystemRecord> LcmWsToLfWs()
