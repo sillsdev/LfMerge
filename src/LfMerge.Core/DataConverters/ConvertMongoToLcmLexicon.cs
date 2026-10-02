@@ -445,7 +445,8 @@ namespace LfMerge.Core.DataConverters
 		/// with no code of its own, which Language Forge projects lean on heavily -- they ARE the
 		/// language: "qaa-x-kal" and "qaa-x-hbo" are no more the same language than "fr" and "de".
 		/// So "qaa-x-kal", "qaa-fonipa-x-kal" and "qaa-Zxxx-x-kal-audio" all come out "qaa-kal",
-		/// while "seh" and "seh-fonipa-x-etic" both come out "seh".
+		/// while "seh" and "seh-fonipa-x-etic" both come out "seh". The same goes for a tag that is
+		/// private-use from the start: "x-kal" comes out "x-kal", not "x".
 		/// </summary>
 		private static string LanguageOf(string tag)
 		{
@@ -453,7 +454,7 @@ namespace LfMerge.Core.DataConverters
 				return tag;
 			string[] parts = tag.Split('-');
 			var language = new List<string> { parts[0] };
-			int privateUse = Array.FindIndex(parts, 1,
+			int privateUse = Array.FindIndex(parts,
 				part => part.Equals("x", StringComparison.OrdinalIgnoreCase));
 			if (privateUse >= 0)
 			{

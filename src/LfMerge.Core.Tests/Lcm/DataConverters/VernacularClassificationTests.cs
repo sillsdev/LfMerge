@@ -565,6 +565,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		[TestCase("seh", "seh-fonipa-x-etic", true, TestName = "AffinityPhoneticVariantOfTheVernacular")]
 		[TestCase("qaa-x-kal", "qaa-Zxxx-x-kal-audio", true, TestName = "AffinityAudioVariantOfTheVernacular")]
 		[TestCase("qaa-x-kal", "qaa-x-kal-dupl1", true, TestName = "AffinityDuplicateOfTheVernacular")]
+		[TestCase("x-kal", "x-kal-dupl1", true, TestName = "AffinityDuplicateOfAWhollyPrivateUseVernacular")]
 		public void AWritingSystemOfTheSameLanguageAsTheVernacularIsVernacular(
 			string vernacularTag, string relative, bool isVernacular)
 		{
@@ -610,6 +611,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "qaa-x-kal", usage);
 
 			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "qaa-x-hbo" }));
+		}
+
+		/// <summary>
+		/// A tag can be private-use from its first subtag (the corpus has "x-IPA" and "x-v"), and
+		/// then too the private-use subtags are the language.
+		/// </summary>
+		[Test]
+		public void AWhollyPrivateUseTagIsNotTheSameLanguageAsAnother()
+		{
+			var config = Config(("lexeme", Field("x-kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Extra", Field("x-hbo")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "x-kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "x-kal", usage);
+
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "x-hbo" }));
 		}
 
 		[Test]
