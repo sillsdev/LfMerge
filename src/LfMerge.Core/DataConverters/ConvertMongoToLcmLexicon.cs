@@ -300,7 +300,15 @@ namespace LfMerge.Core.DataConverters
 			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
 			analysisOnly.ExceptWith(vernacular);
 
+			// Every field's evidence is gathered before any writing system is placed by it, so that
+			// the answer does not depend on the order the config lists its fields in. Placing as
+			// each field came used to let a field with no evidence, listed before the one that
+			// placed a writing system, put that writing system in doubt, and the passes below could
+			// then strip one of the roles that field gave it.
 			var anchors = new HashSet<string>(VernacularAnchorFields.Concat(AnalysisAnchorFields));
+			var inVernacularField = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var inAnalysisField = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var inFieldOfNoRole = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			foreach (var field in byPath)
 			{
 				if (anchors.Contains(field.Key) || field.Value.Count == 0)
@@ -308,36 +316,35 @@ namespace LfMerge.Core.DataConverters
 				// A writing system its own text has spoken for is still evidence of what this field
 				// is for, but nothing here may change the answer it was given.
 				var undecided = field.Value.Where(tag => !decidedByText.Contains(tag)).ToList();
-				if (undecided.Count == 0)
-					continue;
 				bool withVernacular = field.Value.Any(vernacularOnly.Contains);
 				bool withAnalysis = field.Value.Any(analysisOnly.Contains);
 				if (withVernacular && !withAnalysis)
-				{
-					vernacular.UnionWith(undecided);
-				}
+					inVernacularField.UnionWith(undecided);
 				else if (withAnalysis && !withVernacular)
-				{
-					analysis.UnionWith(undecided);
-				}
+					inAnalysisField.UnionWith(undecided);
 				else
 				{
 					// Overlaps neither role, or both: nothing says which role this field plays. A field
 					// offering a vernacular-only and an analysis-only writing system side by side is
 					// no more evidence for one role than the other, just as only unanimous company
 					// counts in ResolveByCompanions.
-					//
-					// That puts in doubt only the writing systems nothing else has placed. One already
-					// placed keeps its place: "en" in both the lexeme and the gloss is not made
-					// doubtful by also turning up in a note, and if it were, the passes below could
-					// strip one of its roles on the strength of the company it keeps there.
-					var unplaced = undecided
-						.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)).ToList();
-					vernacular.UnionWith(unplaced);
-					analysis.UnionWith(unplaced);
-					unresolved.UnionWith(unplaced);
+					inFieldOfNoRole.UnionWith(undecided);
 				}
 			}
+			// A field of no role puts in doubt only the writing systems nothing else places, neither
+			// the anchors nor a field that has a role. One already placed keeps its place: "en" in
+			// both the lexeme and the gloss is not made doubtful by also turning up in a note, and if
+			// it were, the passes below could strip one of its roles on the strength of the company
+			// it keeps there.
+			var doubtful = inFieldOfNoRole
+				.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)
+					&& !inVernacularField.Contains(tag) && !inAnalysisField.Contains(tag))
+				.ToList();
+			vernacular.UnionWith(inVernacularField);
+			analysis.UnionWith(inAnalysisField);
+			vernacular.UnionWith(doubtful);
+			analysis.UnionWith(doubtful);
+			unresolved.UnionWith(doubtful);
 
 			ResolveByCompanions(byPath, vernacular, analysis, unresolved);
 			ResolveByLanguageAffinity(vernacular, analysis, unresolved);

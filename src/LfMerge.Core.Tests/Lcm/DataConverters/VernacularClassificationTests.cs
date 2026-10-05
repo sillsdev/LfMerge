@@ -547,10 +547,9 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
-		/// The field loop takes its evidence as it stood before the loop began, so a field it visits
-		/// BEFORE the one that settles a writing system sees no evidence and puts that writing system
-		/// in doubt. The company the writing system keeps settles it again. The doubtful field is
-		/// listed first on purpose: fields are visited in config order.
+		/// A writing system offered both in a field that says nothing about its role and in one
+		/// whose company settles it is settled by the latter. The field of no role is listed first
+		/// on purpose: placing as each field came, it used to put the writing system in doubt.
 		/// </summary>
 		[TestCase("kal", true)]
 		[TestCase("en", false)]
@@ -568,6 +567,32 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				"abc shares a field with {0}, which is settled, so abc is settled too", companion);
 			Assert.That(result.Vernacular.Contains("abc"), Is.EqualTo(isVernacular));
 			Assert.That(result.Analysis.Contains("abc"), Is.EqualTo(!isVernacular));
+		}
+
+		/// <summary>
+		/// The answer must not depend on the order the config lists its fields in. Here en-fonipa is
+		/// offered in a vernacular field and an analysis field, so it plays both roles. Placing as
+		/// each field came, a field of no role listed before them put it in doubt, and language
+		/// affinity with "en" then stripped its vernacular role; listed after them, it did not.
+		/// </summary>
+		[TestCase(true, TestName = "TheFieldOrderDoesNotChangeTheAnswerWithTheNoRoleFieldFirst")]
+		[TestCase(false, TestName = "TheFieldOrderDoesNotChangeTheAnswerWithTheNoRoleFieldLast")]
+		public void TheFieldOrderDoesNotChangeTheAnswer(bool noRoleFieldFirst)
+		{
+			var noRole = ("customField_entry_NoRole", (LfConfigFieldBase)Field("en-fonipa"));
+			var fields = new List<(string, LfConfigFieldBase)> {
+				("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_entry_Vernacular", Field("kal", "en-fonipa")),
+				("customField_entry_Analysis", Field("en", "en-fonipa")),
+			};
+			fields.Insert(noRoleFieldFirst ? 2 : fields.Count, noRole);
+			var config = Config(fields.ToArray());
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal");
+
+			Assert.That(result.Vernacular, Contains.Item("en-fonipa"));
+			Assert.That(result.Analysis, Contains.Item("en-fonipa"));
+			Assert.That(result.Unresolved, Does.Not.Contain("en-fonipa"));
 		}
 
 		[Test]
