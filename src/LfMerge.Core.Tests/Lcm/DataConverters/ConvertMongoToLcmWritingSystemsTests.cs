@@ -17,12 +17,15 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 {
 	/// <summary>
 	/// Language Forge stores a writing system tag exactly as it was typed, but LCM canonicalizes a
-	/// tag when it creates a writing system and thereafter knows that writing system only by the
-	/// canonical id. Every LCM lookup -- WritingSystemManager.TryGet, GetWsFromStr -- matches that id
-	/// literally, so a tag that is not already canonical is never found.
+	/// tag when it creates a writing system and thereafter knows that writing system by its Id. LCM's
+	/// own lookups -- WritingSystemManager.TryGet, GetWsFromStr -- match an Id regardless of case
+	/// but otherwise literally, so a tag differing from the Id in structure, a subtag absorbed or
+	/// dropped, is not found by them; LanguageTags.WsIdFromLfTag finds it.
 	///
 	/// testlangproj already contains "qaa-x-kal" and "qaa-Zxxx-x-kal-audio", so a non-canonical LF
-	/// spelling of either exercises the mismatch without adding anything to the shared fixture project.
+	/// spelling of either exercises the mismatch without adding to the shared fixture project. The
+	/// tests that need a writing system of their own add it under a tag no other test uses, since
+	/// what is added to the fixture's LCM stays for the rest of the run.
 	/// </summary>
 	public class ConvertMongoToLcmWritingSystemsTests : LcmTestBase
 	{

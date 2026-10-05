@@ -380,14 +380,18 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
-		/// Settles what is left by the company a writing system keeps. A writing system nothing has
-		/// settled still shares its fields with others, and those may all have been settled: a
-		/// custom field holding the vernacular and one unplaced writing system is being used for
-		/// vernacular content, so the unplaced one is vernacular too.
+		/// Settles what is left by the company a writing system keeps. What is left is offered only
+		/// in fields that said nothing of their role -- a field with a writing system of one role
+		/// alone has already placed the rest -- but the company it keeps there may since have been
+		/// placed by another field: in a custom field offering "abc" and "xyz" and nothing else of
+		/// known role, "xyz" is vernacular if another custom field, offering "abc" beside the
+		/// vernacular, has made "abc" vernacular.
 		///
 		/// Only unanimous company counts. A field holding writing systems of both roles says
 		/// nothing, which is the same reason a writing system in both anchors is no evidence of a
-		/// field's role.
+		/// field's role. One pass is made, not one until nothing changes: a writing system whose
+		/// only company is another left in doubt stays in doubt, and keeps both roles, even if that
+		/// other is settled here.
 		/// </summary>
 		private static void ResolveByCompanions(IDictionary<string, ISet<string>> byPath,
 			ISet<string> vernacular, ISet<string> analysis, ISet<string> unresolved)
