@@ -576,6 +576,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(tss.get_WritingSystem(1), Is.EqualTo(wsFr));
 		}
 
+		/// <summary>
+		/// A span whose lang names no writing system LCM has used to make the string build throw,
+		/// abandoning the entry half-written. Its text is now kept in the string's own writing
+		/// system, and the lang reported.
+		/// </summary>
+		[Test]
+		public void SpanStrToTsString_SpanLangNamingNoWritingSystem_KeepsTheTextInTheMainWritingSystem()
+		{
+			var tss = ConvertMongoToLcmTsStrings.SpanStrToTsString(
+				"English <span lang=\"zzz-x-nonesuch\">unplaceable</span>", _wsEn, _cache.WritingSystemFactory);
+
+			Assert.That(tss.Text, Is.EqualTo("English unplaceable"));
+			for (int run = 0; run < tss.RunCount; run++)
+				Assert.That(tss.get_WritingSystem(run), Is.EqualTo(_wsEn));
+			Assert.That(_env.Logger.GetMessages(), Does.Contain("span lang \"zzz-x-nonesuch\" names no writing system LCM has"));
+		}
+
 		[Test]
 		public void LfWsToLcmWs_NewTagInBothAnchors_IsAddedAsBothVernacularAndAnalysis()
 		{

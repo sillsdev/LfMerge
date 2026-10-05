@@ -90,6 +90,15 @@ namespace LfMerge.Core.DataConverters
 				// To remove a string property, you set it to null, so we can just use StyleName directly whether or not it's null.
 				builder.SetStrPropValue((int)FwTextPropType.ktptNamedStyle, run.StyleName);
 				int runWs = (run.Lang == null) ? mainWs : LanguageTags.WsIdFromLfTag(wsf, run.Lang);
+				if (runWs == 0)
+				{
+					// A lang naming no writing system LCM has cannot be built into the string, and the
+					// exception that follows abandons the whole entry half-written. The run's text is
+					// kept in the string's own writing system; only its language mark is lost.
+					MainClass.Logger?.Warning("MongoToLcm: span lang \"{0}\" names no writing system LCM has; " +
+						"keeping \"{1}\" in the field's writing system", run.Lang, run.Content);
+					runWs = mainWs;
+				}
 				builder.SetIntPropValues((int)FwTextPropType.ktptWs, (int)FwTextPropVar.ktpvDefault, runWs);
 				// We don't care about Guids in this function, so run.Guid is ignored
 				// But we do need to set any other int or string properties that were in the original
