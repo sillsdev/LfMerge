@@ -541,6 +541,41 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// An input system LF spells non-canonically, while the config's fields spell it
+		/// canonically: the lexeme field says "qaa-x-fresh" for the input system "qaa-x-qaa-fresh". The
+		/// writing system is created under the canonical form, and must still get the vernacular
+		/// role the lexeme field gives it; looked up under the input system's spelling only, it
+		/// was not found, and was made analysis.
+		/// </summary>
+		[Test]
+		public void LfWsToLcmWs_NewInputSystemSpelledOtherwiseThanInTheConfig_GetsTheConfigsRole()
+		{
+			const string inputSystemTag = "qaa-x-qaa-fresh", configTag = "qaa-x-fresh";
+			Assert.That(LcmWritingSystemIds(), Does.Not.Contain(configTag), "testlangproj should not contain {0}", configTag);
+			var restores = new[] {
+				AddLfInputSystem(inputSystemTag),
+				AddToConfigField(configTag, "lexeme"),
+			};
+
+			try
+			{
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				ILangProject langProj = _cache.LanguageProject;
+				Assert.That(LcmWritingSystemIds(), Contains.Item(configTag));
+				Assert.That(langProj.CurrentVernacularWritingSystems.Select(ws => ws.Id), Contains.Item(configTag));
+				Assert.That(langProj.CurrentAnalysisWritingSystems.Select(ws => ws.Id), Does.Not.Contain(configTag));
+			}
+			finally
+			{
+				foreach (Action restore in restores)
+					restore();
+			}
+		}
+
+		/// <summary>
 		/// Classifying a writing system counts the text in the whole lexicon, a second pass over
 		/// Mongo. Only a writing system new to LCM is classified, so with none the lexicon is read
 		/// once, for the entries themselves.

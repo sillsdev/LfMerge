@@ -703,18 +703,34 @@ namespace LfMerge.Core.DataConverters
 					// LF doesn't distinguish between vernacular/analysis WS, so the roles are worked
 					// out per project from its config -- see ClassifyVernacularWritingSystems. A
 					// writing system can play both, "en" in lexeme and gloss alike being the usual
-					// case, and one no field claims is analysis. Matching on the tag as LF spells it,
-					// both sides being LF's own strings, so a non-canonical spelling still matches
-					// itself.
+					// case, and one no field claims is analysis. The input system, the config and
+					// the lexicon need not spell the writing system alike, so the roles are looked
+					// up under any spelling of it; see HasRole.
 					if (classification == null)
 						classification = ClassifyForNewWritingSystems(countUsage);
-					bool isVernacular = classification.Value.Vernacular.Contains(lfWs.Tag);
+					bool isVernacular = HasRole(classification.Value.Vernacular, lfWs.Tag);
 					if (isVernacular)
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
-					if (!isVernacular || classification.Value.Analysis.Contains(lfWs.Tag))
+					if (!isVernacular || HasRole(classification.Value.Analysis, lfWs.Tag))
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Whether a writing system new to LCM plays this role, under any spelling of its tag. The
+		/// classification spells each writing system as the config and the lexicon do, and the
+		/// input system can spell it otherwise: an LF user who adds "qaa-x-qaa-new" may configure
+		/// fields with "qaa-x-new". Spellings sharing a canonical form can be taken for one writing
+		/// system here, because this one is new: had LCM held any writing system with that canonical
+		/// form, WsIdFromLfTag would have found it.
+		/// </summary>
+		private static bool HasRole(ISet<string> role, string tag)
+		{
+			if (role.Contains(tag))
+				return true;
+			string canonical = LanguageTags.Canonical(tag);
+			return role.Any(other => string.Equals(LanguageTags.Canonical(other), canonical, StringComparison.OrdinalIgnoreCase));
 		}
 
 		/// <summary>
