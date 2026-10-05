@@ -1399,6 +1399,11 @@ namespace LfMerge.Core.DataConverters
 				ClearMultiString(dest);
 			else
 				source.WriteToLcmMultiString(dest, ServiceLocator.WritingSystemManager, _configuredTags,
+					// Text under a key that names no writing system LCM has never reaches FieldWorks,
+					// and leaves LF too once FieldWorks next changes the entry and it is exported again
+					tag => Logger.Warning(
+						"MongoToLcm: skipping text under \"{0}\" ({1}), which names no writing system LCM has",
+						tag, source.Excerpt(tag)),
 					(notWritten, written) => Logger.Warning(
 						"MongoToLcm: keys \"{0}\" and \"{1}\" name the same writing system; wrote \"{1}\" ({2}), not \"{0}\" ({3})",
 						notWritten, written, source.Excerpt(written), source.Excerpt(notWritten)));

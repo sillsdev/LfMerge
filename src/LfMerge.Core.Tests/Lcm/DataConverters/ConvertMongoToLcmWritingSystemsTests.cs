@@ -136,6 +136,27 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				"the definition should have been written to the canonical writing system {0}", RedundantPrivateUseId);
 		}
 
+		/// <summary>
+		/// Text in a built-in multitext field under a key that names no writing system LCM has has
+		/// nowhere to go. It is skipped, as it always was, but no longer silently: the custom fields
+		/// and the single-string fields already said so, and this, the commonest path, did not.
+		/// </summary>
+		[Test]
+		public void SetMultiStringFrom_KeyNamingNoWritingSystem_IsSkippedWithAWarning()
+		{
+			const string tag = "zzz-x-nonesuch";
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, tag), Is.EqualTo(0));
+			var data = new SampleData();
+			data.bsonTestData["senses"][0]["definition"][tag] = new BsonDocument { { "value", "a definition with nowhere to go" } };
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+
+			SutMongoToLcm.Run(_lfProj);
+
+			Assert.That(_env.Logger.GetMessages(),
+				Does.Contain("MongoToLcm: skipping text under \"zzz-x-nonesuch\" (a definition with nowhere to go)"));
+		}
+
 		[Test]
 		public void SingleStringField_TextInNoKnownWritingSystem_KeepsTheLcmValueAndSyncsTheRest()
 		{
@@ -334,7 +355,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
 				multiText.WriteToLcmMultiString(gloss, _cache.WritingSystemFactory, configuredTags,
-					(notWritten, written) => reported.Add((notWritten, written))));
+					onKeyNotWritten: (notWritten, written) => reported.Add((notWritten, written))));
 
 			Assert.That(gloss.get_String(ws.Handle).Text, Is.EqualTo(expected == id ? "under the Id" : "under the LanguageTag"));
 			Assert.That(reported, Is.EqualTo(new[] { (expected == id ? languageTag : id, expected) }));

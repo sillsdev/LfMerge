@@ -150,12 +150,13 @@ namespace LfMerge.Core.LanguageForge.Model
 		}
 
 		public bool WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager,
-			ISet<string> configuredTags = null, Action<string, string> onKeyNotWritten = null)
+			ISet<string> configuredTags = null, Action<string> onUnidentifiedTag = null,
+			Action<string, string> onKeyNotWritten = null)
 		{
 			if (dest == null)
 				return false;
 			return WriteToLcm(dest.AvailableWritingSystemIds, dest.get_String, dest.set_String, wsManager,
-				configuredTags: configuredTags, onKeyNotWritten: onKeyNotWritten);
+				configuredTags, onUnidentifiedTag, onKeyNotWritten);
 		}
 
 		/// <summary>
