@@ -551,20 +551,29 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		/// field cannot put it in doubt. In the 2026-10-01 corpus every writing system in that
 		/// position is a pronunciation writing system -- a phonetic, IPA or audio one -- for which
 		/// vernacular only is the right answer.
+		///
+		/// The writing system's language is one the project has nowhere else: a phonetic spelling of
+		/// the vernacular, "kal-fonipa", would be made vernacular only by its language whether or not
+		/// it had pronunciation text, and the test would not show the rule at work.
 		/// </summary>
-		[Test]
-		public void PronunciationTextAloneMakesAWritingSystemOfferedOnlyInACustomFieldVernacularOnly()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void PronunciationTextAloneMakesAWritingSystemOfferedOnlyInACustomFieldVernacularOnly(bool hasPronunciationText)
 		{
 			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
-				("customField_senses_Phonetic", Field("kal-fonipa")));
-			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
-				(LfWritingSystemUsage.Gloss, "en", 10), (LfWritingSystemUsage.Pronunciation, "kal-fonipa", 1));
+				("customField_senses_Phonetic", Field("xyz-fonipa")));
+			var counts = new List<(string, string, int)> {
+				(LfWritingSystemUsage.Lexeme, "kal", 10), (LfWritingSystemUsage.Gloss, "en", 10) };
+			if (hasPronunciationText)
+				counts.Add((LfWritingSystemUsage.Pronunciation, "xyz-fonipa", 1));
+			var usage = Usage(counts.ToArray());
 
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
 
-			Assert.That(result.Vernacular, Contains.Item("kal-fonipa"));
-			Assert.That(result.Analysis, Does.Not.Contain("kal-fonipa"));
-			Assert.That(result.Unresolved, Does.Not.Contain("kal-fonipa"));
+			Assert.That(result.Vernacular, Contains.Item("xyz-fonipa"));
+			Assert.That(result.Analysis.Contains("xyz-fonipa"), Is.EqualTo(!hasPronunciationText),
+				"with pronunciation text, vernacular only; without, both");
+			Assert.That(result.Unresolved.Contains("xyz-fonipa"), Is.EqualTo(!hasPronunciationText));
 		}
 
 		/// <summary>
