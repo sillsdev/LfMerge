@@ -625,14 +625,32 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
+		/// The handles of the writing systems in one of the project's current lists, leaving out any
+		/// Id it names that LCM has no writing system for; see LfTagsOf.
+		/// </summary>
+		private static HashSet<int> Handles(IEnumerable<CoreWritingSystemDefinition> wss)
+		{
+			var handles = new HashSet<int>();
+			foreach (CoreWritingSystemDefinition ws in wss)
+			{
+				if (ws != null)
+					handles.Add(ws.Handle);
+			}
+			return handles;
+		}
+
+		/// <summary>
 		/// Converts Lcm writing systems to LF input systems
 		/// </summary>
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> LcmWsToLfWs()
 		{
-			// The types of these two lists changed between FW 8 and 9, which is why they are var.
-			var vernacularWSList = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
-			var analysisWSList = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
+			// By handle, from the same enumerator LfTagsOf reads the lists with. The lists' own
+			// Contains compares Ids exactly, while LCM resolves them ignoring case, so a list
+			// naming "qaa-Zxxx-x-kal-AUDIO" for the writing system "qaa-Zxxx-x-kal-audio" put it in
+			// the vernacular list LF is given but flagged it as not vernacular.
+			var vernacularHandles = Handles(ServiceLocator.LanguageProject.CurrentVernacularWritingSystems);
+			var analysisHandles = Handles(ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems);
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var LcmWs in ServiceLocator.LanguageProject.AllWritingSystems)
@@ -645,8 +663,8 @@ namespace LfMerge.Core.DataConverters
 					IsRightToLeft = LcmWs.RightToLeftScript,
 					LanguageName = LcmWs.LanguageName,
 					Tag = LfTagOf(LcmWs),
-					VernacularWS = vernacularWSList.Contains(LcmWs),
-					AnalysisWS = analysisWSList.Contains(LcmWs)
+					VernacularWS = vernacularHandles.Contains(LcmWs.Handle),
+					AnalysisWS = analysisHandles.Contains(LcmWs.Handle)
 				};
 
 				lfWsList[lfWs.Tag] = lfWs;

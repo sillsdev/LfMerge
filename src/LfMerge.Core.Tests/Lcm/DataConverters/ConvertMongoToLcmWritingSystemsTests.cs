@@ -468,6 +468,22 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(customFieldTags, Does.Not.Contain("nl-BE"));
 		}
 
+		/// <summary>
+		/// testlangproj's current vernacular list names "qaa-Zxxx-x-kal-AUDIO", and LCM holds the
+		/// writing system as "qaa-Zxxx-x-kal-audio". It is in the vernacular list LF is given, so its
+		/// input system must be flagged vernacular too; the list's own Contains compares Ids exactly.
+		/// </summary>
+		[Test]
+		public void LcmToMongo_ListSpellingAnIdInAnotherCase_FlagsTheInputSystemAsInTheList()
+		{
+			Assert.That(_cache.LanguageProject.CurVernWss, Does.Contain(MixedCaseTag), "precondition");
+
+			SutLcmToMongo.Run(_lfProj);
+
+			Assert.That(_conn.LastVernacularWss, Contains.Item(MixedCaseId));
+			Assert.That(_conn.GetInputSystems(_lfProj)[MixedCaseId].VernacularWS, Is.True);
+		}
+
 		[Test]
 		public void LcmToMongo_PronunciationListNamingAWritingSystemLcmDoesNotHave_LeavesItOut()
 		{
