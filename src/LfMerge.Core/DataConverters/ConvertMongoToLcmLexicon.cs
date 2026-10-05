@@ -796,7 +796,7 @@ namespace LfMerge.Core.DataConverters
 			// By handle, not by comparing LF's keys with ws.Id, which would miss a key LF spells
 			// differently from LCM. Falls back to the first value in any writing system LCM knows.
 			KeyValuePair<int, string> best = input.BestStringAndWsId(
-				wsesToSearch.Select(ws => ws.Handle), ServiceLocator.WritingSystemFactory);
+				wsesToSearch.Select(ws => ws.Handle), ServiceLocator.WritingSystemFactory, _configuredTags);
 			if (best.Value == null)
 				return null;
 			return new Tuple<string, int>(best.Value, best.Key);
@@ -1230,7 +1230,7 @@ namespace LfMerge.Core.DataConverters
 				// SetMultiStringFrom below fills in every alternative that can be placed.
 				KeyValuePair<int, string> kv = lfPicture.Caption.BestStringAndWsId(
 					ServiceLocator.LanguageProject.AnalysisWritingSystems.Select(ws => ws.Handle),
-					ServiceLocator.WritingSystemFactory);
+					ServiceLocator.WritingSystemFactory, _configuredTags);
 				if (kv.Value != null)
 				{
 					captionWs = kv.Key;

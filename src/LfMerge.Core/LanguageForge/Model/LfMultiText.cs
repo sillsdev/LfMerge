@@ -117,18 +117,42 @@ namespace LfMerge.Core.LanguageForge.Model
 		/// back to the first non-empty value in any writing system LCM knows, together with that
 		/// writing system's handle. Keys are resolved to handles before they are compared, so a key
 		/// LF spells differently from LCM's id for the writing system still matches it.
+		///
+		/// Where two keys name one writing system, the value is the one WriteToLcm would write: the
+		/// key spelled as the config spells it, or else the later one. That is chosen before empty
+		/// values are left out, so a value an LF user has cleared under the config's spelling is
+		/// not replaced by the export's hidden, stale one.
 		/// </summary>
+		/// <param name="configuredTags">
+		/// Every writing-system spelling the project's config uses; see WriteToLcm.
+		/// </param>
 		/// <returns>The handle and the value, or (0, null) when no non-empty value resolves.</returns>
-		public KeyValuePair<int, string> BestStringAndWsId(IEnumerable<int> wsSearchOrder, ILgWritingSystemFactory wsManager)
+		public KeyValuePair<int, string> BestStringAndWsId(IEnumerable<int> wsSearchOrder, ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null)
 		{
-			var resolved = new List<KeyValuePair<int, string>>();
-			foreach (KeyValuePair<string, LfStringField> kv in this)
+			// Each writing system's key, in the order the writing systems first appear
+			var keyFor = new Dictionary<int, string>();
+			var order = new List<int>();
+			foreach (string key in Keys)
 			{
-				if (kv.Value == null || kv.Value.IsEmpty)
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, key);
+				if (wsId == 0)
 					continue;
-				int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
-				if (wsId != 0)
-					resolved.Add(new KeyValuePair<int, string>(wsId, kv.Value.Value));
+				string other;
+				if (keyFor.TryGetValue(wsId, out other))
+					keyFor[wsId] = PreferredKey(other, key, configuredTags);
+				else
+				{
+					keyFor[wsId] = key;
+					order.Add(wsId);
+				}
+			}
+			var resolved = new List<KeyValuePair<int, string>>();
+			foreach (int wsId in order)
+			{
+				LfStringField field = this[keyFor[wsId]];
+				if (field != null && !field.IsEmpty)
+					resolved.Add(new KeyValuePair<int, string>(wsId, field.Value));
 			}
 			foreach (int wsId in wsSearchOrder)
 			{

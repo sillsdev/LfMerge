@@ -524,6 +524,46 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(best.Value, Is.EqualTo("English"));
 		}
 
+		/// <summary>
+		/// A single-string field chooses between two keys naming one writing system as a multitext
+		/// field does: the one spelled as the config spells it. Here the export's hidden value is
+		/// under the Id and the LF user's under the LanguageTag, which the config uses.
+		/// </summary>
+		[Test]
+		public void BestStringAndWsId_TwoKeysForOneWritingSystem_TakesTheConfigsSpelling()
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId("pl-Latn-PL", "pl-PL");
+			var multiText = new LfMultiText {
+				{ "pl-Latn-PL", LfStringField.FromString("the export's value") },
+				{ "pl-PL", LfStringField.FromString("the user's edit") },
+			};
+			var configuredTags = new HashSet<string>(StringComparer.Ordinal) { "pl-PL" };
+
+			KeyValuePair<int, string> best = multiText.BestStringAndWsId(new[] { ws.Handle }, _cache.WritingSystemFactory, configuredTags);
+
+			Assert.That(best.Key, Is.EqualTo(ws.Handle));
+			Assert.That(best.Value, Is.EqualTo("the user's edit"));
+		}
+
+		/// <summary>
+		/// The key is chosen before empty values are left out: a value the LF user has cleared,
+		/// under the config's spelling, is not replaced by the export's hidden one.
+		/// </summary>
+		[Test]
+		public void BestStringAndWsId_ValueClearedUnderTheConfigsSpelling_IsNotReplacedByTheHiddenOne()
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId("cs-Latn-CZ", "cs-CZ");
+			var multiText = new LfMultiText {
+				{ "cs-Latn-CZ", LfStringField.FromString("the export's value") },
+				{ "cs-CZ", LfStringField.FromString("") },
+			};
+			var configuredTags = new HashSet<string>(StringComparer.Ordinal) { "cs-CZ" };
+
+			KeyValuePair<int, string> best = multiText.BestStringAndWsId(new[] { ws.Handle }, _cache.WritingSystemFactory, configuredTags);
+
+			Assert.That(best.Value, Is.Null, "nothing should be placed for the cleared writing system");
+		}
+
 		[Test]
 		public void SpanStrToTsString_NonCanonicalSpanLang_UsesTheCanonicalWritingSystem()
 		{

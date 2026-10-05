@@ -401,7 +401,7 @@ namespace LfMerge.Core.DataConverters
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 					int wsIdForField = lcmMetaData.GetFieldWs(flid);
 					KeyValuePair<int, string> kv = valueAsMultiText.BestStringAndWsId(
-						new[] { wsIdForField }, servLoc.WritingSystemFactory);
+						new[] { wsIdForField }, servLoc.WritingSystemFactory, configuredTags);
 					int foundWsId = kv.Key;
 					string foundData = kv.Value ?? string.Empty;
 					if (foundWsId == 0)
