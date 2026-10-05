@@ -237,23 +237,29 @@ namespace LfMerge.Core.DataConverters
 
 		/// <summary>
 		/// Work out which writing systems this project treats as vernacular and which as analysis,
-		/// from its own config.
+		/// from its own config and the text in its lexicon.
 		///
-		/// The lexeme and citation form fields are vernacular by definition, the sense definition and
-		/// gloss are analysis by definition. Every other field carrying input systems (etymology, the
-		/// example sentence, custom fields) is assigned by overlap: a writing system that appears in
-		/// the vernacular anchors and NOT in the analysis anchors is evidence the field is vernacular,
-		/// and vice versa. A writing system present in both anchors -- "en" very often is -- is no
-		/// evidence either way and is ignored for that purpose; it is both vernacular and analysis.
+		/// The anchor fields have a role FieldWorks fixes: the lexeme, citation form and example
+		/// sentence are vernacular; the definition, gloss, example translation, note and literal
+		/// meaning are analysis (see VernacularAnchorFields).
 		///
-		/// Evidence decides the role of the field, not of every writing system in it, and it has to
-		/// point one way: a field offering writing systems exclusive to each role, such as an
-		/// etymology configured as [seh, pt], is evidence of neither. So it does not make Portuguese
-		/// vernacular, nor anything else it offers that the anchors have not placed.
+		/// Where the lexicon has text in the anchors for a writing system, that text decides: one
+		/// holding nearly all of it in the vernacular anchors is vernacular whatever the config
+		/// offers, and vice versa, and one whose text is split is both. See
+		/// <see cref="MinorityShare"/>. A writing system whose only text is pronunciation text is
+		/// vernacular; see <see cref="ClassifyByText"/>.
 		///
-		/// Where the lexicon has text to show for a writing system, that text decides instead: a
-		/// writing system holding nearly all of its text in the vernacular anchors is vernacular
-		/// whatever the config offers, and vice versa. See <see cref="MinorityShare"/>.
+		/// The rest go by the config. A writing system the anchors offer is placed by them, and one
+		/// in both anchor groups -- "en" very often is -- is both. Every other field carrying input
+		/// systems (etymology, custom fields) is assigned by overlap: a writing system exclusive to
+		/// the vernacular role is evidence the field is vernacular, and vice versa. Evidence decides
+		/// the role of the field, not of every writing system in it, and it has to point one way: a
+		/// field offering writing systems exclusive to each role, such as an etymology configured
+		/// as [seh, pt], is evidence of neither, so it does not make Portuguese vernacular, nor
+		/// anything else it offers that the anchors have not placed. All the fields' evidence is
+		/// weighed before any writing system is placed by it, so the order of the config's fields
+		/// does not matter. What is left is settled, where it can be, by the company a writing
+		/// system keeps and then by its language.
 		///
 		/// This replaces comparing each tag against ProjectRecord.LanguageCode, which named exactly one
 		/// vernacular writing system and got it wrong whenever languageCode disagreed with the lexeme
@@ -265,17 +271,18 @@ namespace LfMerge.Core.DataConverters
 		/// How much text each writing system holds in each field, or null to go on the config alone.
 		/// </param>
 		/// <returns>
-		/// The vernacular tags; the analysis tags; and the tags that could not be resolved. The first two sets overlap wherever a writing system plays both roles. A tag in
-		/// neither set -- one no config field uses -- is analysis, as it always has been.
+		/// The vernacular tags; the analysis tags; and the tags that could not be resolved. The first
+		/// two sets overlap wherever a writing system plays both roles. A tag in neither set -- one
+		/// no config field uses -- is analysis, as it always has been.
 		///
 		/// Unresolved writing systems are treated as BOTH vernacular and analysis, since nothing says
 		/// which they are and a writing system missing from the list a field draws on leaves that
 		/// field's data with nowhere to go. The FieldWorks fields such a writing system most often
 		/// feeds (etymology form, example sentence) are vernacular-typed, which is why being only
 		/// analysis will not do; but a custom field can be analysis-typed, as a French-only notes
-		/// field would be, which is why being only vernacular will not do either. 11 projects in the
-		/// corpus need this, e.g. grc-vie-flex, whose etymologies are in Hebrew and Aramaic --
-		/// neither its vernacular (Greek) nor its analysis (English, Vietnamese).
+		/// field would be, which is why being only vernacular will not do either. 7 projects in the
+		/// 2026-10-01 corpus need this, e.g. kam-flex, whose Spanish and French are offered only in
+		/// a wordlist field that offers its vernacular and its analysis language as well.
 		/// </returns>
 		public static (ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)
 			ClassifyVernacularWritingSystems(LfProjectConfig config, string languageCode,
@@ -668,8 +675,8 @@ namespace LfMerge.Core.DataConverters
 				*/
 
 				// Find the writing system the way every other LF tag is found before creating one.
-				// LfMerge exports input systems by LanguageTag, while LCM knows a writing system by
-				// its Id, and in older projects the two differ: spt-flex's input system "hi-IN" is
+				// LfMerge used to export input systems by LanguageTag, while LCM knows a writing
+				// system by its Id, and in older projects the two differ: spt-flex's input system "hi-IN" is
 				// the writing system LCM holds as "hi-Deva-IN". GetOrSet looks a tag up only as an
 				// Id, so it did not find it, created a duplicate "hi-IN" and put it in the current
 				// lists; WsIdFromLfTag, which every multitext key goes through, then matched the
@@ -707,7 +714,7 @@ namespace LfMerge.Core.DataConverters
 				if (!wsAlreadyExisted)
 				{
 					// LF doesn't distinguish between vernacular/analysis WS, so the roles are worked
-					// out per project from its config -- see ClassifyVernacularWritingSystems. A
+					// out per project from its config and text -- see ClassifyVernacularWritingSystems. A
 					// writing system can play both, "en" in lexeme and gloss alike being the usual
 					// case, and one no field claims is analysis. The input system, the config and
 					// the lexicon need not spell the writing system alike, so the roles are looked
@@ -729,7 +736,10 @@ namespace LfMerge.Core.DataConverters
 		/// input system can spell it otherwise: an LF user who adds "qaa-x-qaa-new" may configure
 		/// fields with "qaa-x-new". Spellings sharing a canonical form can be taken for one writing
 		/// system here, because this one is new: had LCM held any writing system with that canonical
-		/// form, WsIdFromLfTag would have found it.
+		/// form, WsIdFromLfTag would have found it. A role found under one spelling therefore counts
+		/// for all of them, even where the text decided otherwise under another: a writing system
+		/// whose text makes it vernacular only, offered by the config in the gloss under another
+		/// spelling, is both. That can only add a role, never take one away.
 		/// </summary>
 		private static bool HasRole(ISet<string> role, string tag)
 		{

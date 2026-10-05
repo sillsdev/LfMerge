@@ -50,8 +50,9 @@ namespace LfMerge.Core
 		/// LCM knows a writing system by its Id, which is whatever its .ldml file is named, and also
 		/// has its LanguageTag, which is always canonical. The two differ in older projects:
 		/// brb-flex-2022 holds "km-Khmr-KH.ldml", whose identity is km plus KH, so its Id is
-		/// "km-Khmr-KH" and its LanguageTag "km-KH". LfMerge writes LF's multitext keys by Id and the
-		/// project's input systems by LanguageTag, so LF can hand back either spelling. Tried in turn:
+		/// "km-Khmr-KH" and its LanguageTag "km-KH". LfMerge writes LF's multitext keys by Id, but it
+		/// used to write the project's input systems by LanguageTag, and LF users type under the
+		/// spelling the config gives, so LF can hand back either spelling. Tried in turn:
 		///
 		///   1. The tag as LF spells it, as an Id. This must come first. brb-flex-2022 also holds a
 		///      second, unused writing system whose Id is "km-KH"; trying the canonical form first
@@ -60,7 +61,8 @@ namespace LfMerge.Core
 		///   2. Its canonical form, as an Id: the Id LCM gives any writing system it creates.
 		///   3. Its canonical form as a LanguageTag, for an Id spelled some other way:
 		///      spt-flex's "hi-IN" is the writing system LCM holds as "hi-Deva-IN". Should several
-		///      writing systems share the LanguageTag, the one created first wins.
+		///      writing systems share the LanguageTag, the one with the lowest handle wins: LCM
+		///      numbers writing systems in the order it loads them, not the order they were made.
 		/// </summary>
 		public static int WsIdFromLfTag(ILgWritingSystemFactory wsf, string tag)
 		{

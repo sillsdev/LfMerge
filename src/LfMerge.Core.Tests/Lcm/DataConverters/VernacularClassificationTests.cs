@@ -300,11 +300,11 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
-		/// The example sentence is nested, so this covers the recursion into a field list as well as
-		/// the classification. Its sibling translation field is analysis and must stay that way.
+		/// The example sentence and translation are anchors nested in a field list, so this covers
+		/// the recursion into one: the sentence is vernacular and the translation analysis.
 		/// </summary>
 		[Test]
-		public void TheExampleSentenceIsClassifiedLikeAnyOtherField()
+		public void TheNestedExampleAnchorsAreFound()
 		{
 			var config = Config(("lexeme", Field("kal")), ("senses.fields.definition", Field("fr")),
 				("senses.fields.gloss", Field("en")),

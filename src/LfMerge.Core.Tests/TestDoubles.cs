@@ -241,7 +241,11 @@ namespace LfMerge.Core.Tests
 			return GetRecords<TDocument>(project, collectionName).Where(filter.Compile());
 		}
 
-		/// <summary>How many times the lexicon has been read, each read being a pass over Mongo.</summary>
+		/// <summary>
+		/// How many times the lexicon has been asked for, each request for the whole of it being a
+		/// pass over Mongo. A filtered request counts too, so a test counting passes should have
+		/// nothing else asking: the comment converter asks once per comment.
+		/// </summary>
 		public int LexiconReads { get; private set; }
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)

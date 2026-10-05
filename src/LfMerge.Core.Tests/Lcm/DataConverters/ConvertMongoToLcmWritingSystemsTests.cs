@@ -39,9 +39,10 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		private const string MixedCaseId = "qaa-Zxxx-x-kal-audio";
 
 		/// <summary>
-		/// Adds one input system to the memoized mock project record, and returns an action that puts
-		/// the record back as it was. The double memoizes per project code, so without the restore the
-		/// addition would leak into every later test in this fixture.
+		/// Adds one input system to the mock project record, and returns an action that puts the
+		/// record back as it was. Each test gets a fresh record, so the restore is only tidiness;
+		/// what does outlive a test is a writing system it adds to LCM, which is why the tests that
+		/// add one each use tags of their own.
 		/// </summary>
 		private Action AddLfInputSystem(string tag)
 		{
@@ -62,7 +63,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		/// <summary>
 		/// Adds a tag to one config field's input systems, found by its path through the entry's
 		/// field lists, and returns an action that takes it out again. Like the input systems, the
-		/// config is memoized with the record, so the change must not outlive the test.
+		/// config comes fresh with each test's record, so this too is only tidiness.
 		/// </summary>
 		private Action AddToConfigField(string tag, params string[] path)
 		{
@@ -111,9 +112,9 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		[Test]
 		public void SetMultiStringFrom_NonCanonicalTagInLexicon_WritesToTheCanonicalWritingSystem()
 		{
-			// Setup: a definition keyed by the non-canonical tag. LfMultiText resolves each key with
-			// GetWsFromStr and skips anything that returns 0, so an unresolved key silently drops the
-			// value -- and the clearing pass then blanks whatever LCM had for that field.
+			// Setup: a definition keyed by the non-canonical tag. LfMultiText used to resolve each key
+			// with GetWsFromStr and skip anything that returned 0, so an unresolved key dropped the
+			// value -- and the clearing pass then blanked whatever LCM had for that field.
 			const string newDefinition = "Definition stored under a non-canonical writing system tag";
 			var data = new SampleData();
 			data.bsonTestData["senses"][0]["definition"] = new BsonDocument {
@@ -252,7 +253,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		public void LfWsToLcmWs_InputSystemSpelledAsTheLanguageTag_DoesNotDuplicateTheWritingSystem()
 		{
 			// The spt-flex layout: LCM holds "hi-Deva-IN", whose LanguageTag is "hi-IN", and LF's
-			// input systems -- which LfMerge exports by LanguageTag -- call it "hi-IN". GetOrSet looks
+			// input systems -- which LfMerge used to export by LanguageTag -- call it "hi-IN". GetOrSet looks
 			// only at Ids, so it created a second writing system "hi-IN" and put it in the lists.
 			CoreWritingSystemDefinition real = AddWritingSystemWithId("pt-Latn-AO", "pt-AO");
 			Action restore = AddLfInputSystem("pt-AO");

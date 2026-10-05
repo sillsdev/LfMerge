@@ -581,10 +581,6 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
-		/// Converts Lcm writing systems to LF input systems
-		/// </summary>
-		/// <returns>The list of LF input systems.</returns>
-		/// <summary>
 		/// How Language Forge spells an LCM writing system: exactly as every multitext key LfMerge
 		/// writes is spelled, since those come from GetStrFromWs too (see LfMultiText). That is the
 		/// writing system's Id, falling back to its LanguageTag should it have no Id.
@@ -602,7 +598,10 @@ namespace LfMerge.Core.DataConverters
 
 		/// <summary>
 		/// The LF tags of one of the project's current writing-system lists, leaving out any Id the
-		/// list names that LCM has no writing system for, rather than ending the transfer.
+		/// list names that LCM has no writing system for, rather than ending the transfer. That
+		/// protects the pronunciation list. A missing Id in a current vernacular or analysis list is
+		/// almost always in the full list too, and LcmWsToLfWs, which reads the full lists through
+		/// AllWritingSystems, still fails on it first -- as FieldWorks itself would.
 		///
 		/// The list is read with foreach on purpose. liblcm's enumerator yields null for such an
 		/// Id, but its indexer and CopyTo throw KeyNotFoundException, and LINQ's Select and ToList
@@ -625,9 +624,13 @@ namespace LfMerge.Core.DataConverters
 			return tags;
 		}
 
+		/// <summary>
+		/// Converts Lcm writing systems to LF input systems
+		/// </summary>
+		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> LcmWsToLfWs()
 		{
-			// Using var here so that we'll stay compatible with both FW 8 and 9 (the type of these two lists changed between 8 and 9).
+			// The types of these two lists changed between FW 8 and 9, which is why they are var.
 			var vernacularWSList = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
 			var analysisWSList = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
 
