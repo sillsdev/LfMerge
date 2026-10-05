@@ -504,11 +504,17 @@ namespace LfMerge.Core.DataConverters
 		///
 		/// A writing system whose only text is in the pronunciation field is made vernacular,
 		/// because FieldWorks draws its pronunciation writing systems from the vernacular ones
-		/// (InitializePronunciationWritingSystems considers no others). That is not an answer, only
-		/// a role it must have, so the config can still add analysis: the field is not an anchor
-		/// (see VernacularAnchorFields), and a stray pronunciation string should not take a
-		/// writing system's analysis role away. In the 2026-10-01 corpus this gives xin-flex's
-		/// "xin", which holds 226 pronunciations and nothing else, the vernacular role it needs.
+		/// (InitializePronunciationWritingSystems considers no others). It is not returned as
+		/// answered for, so the anchor fields can still add analysis: Swedish offered for the
+		/// gloss, with a stray pronunciation string, is both. But from here on it counts as
+		/// vernacular, as any placed writing system does: a field of no role does not put it in
+		/// doubt, and a custom field it alone is offered in is taken for a vernacular field. So
+		/// a writing system offered only in custom fields, with pronunciation text and nothing
+		/// else, is vernacular only. In the 2026-10-01 corpus all 57 writing systems with
+		/// pronunciation text and no anchor text are used that way -- phonetic, IPA and audio
+		/// writing systems, and xin-flex's "xin", which holds 226 pronunciations and nothing else
+		/// -- and FLEx has as vernacular every one of them whose role LfMerge's export records.
+		/// The pronunciation field is still not an anchor; see VernacularAnchorFields.
 		/// </summary>
 		private static ISet<string> ClassifyByText(LfWritingSystemUsage usage,
 			IDictionary<string, ISet<string>> byPath, ISet<string> vernacular, ISet<string> analysis)

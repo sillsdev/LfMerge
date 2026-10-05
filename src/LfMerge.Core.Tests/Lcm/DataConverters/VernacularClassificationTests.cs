@@ -528,6 +528,29 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// A writing system offered only in a custom field, with pronunciation text and nothing
+		/// else, is vernacular only, by design. Without the pronunciation text the custom field
+		/// would say nothing about it and it would be both; with it, it counts as placed, so that
+		/// field cannot put it in doubt. In the 2026-10-01 corpus every writing system in that
+		/// position is a pronunciation writing system -- a phonetic, IPA or audio one -- for which
+		/// vernacular only is the right answer.
+		/// </summary>
+		[Test]
+		public void PronunciationTextAloneMakesAWritingSystemOfferedOnlyInACustomFieldVernacularOnly()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("customField_senses_Phonetic", Field("kal-fonipa")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), (LfWritingSystemUsage.Pronunciation, "kal-fonipa", 1));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Vernacular, Contains.Item("kal-fonipa"));
+			Assert.That(result.Analysis, Does.Not.Contain("kal-fonipa"));
+			Assert.That(result.Unresolved, Does.Not.Contain("kal-fonipa"));
+		}
+
+		/// <summary>
 		/// Pronunciation text only adds the vernacular role; it does not take away an analysis role
 		/// the config gives. In dtlat-flex a single pronunciation string in Swedish would otherwise
 		/// make Swedish, configured for the gloss, vernacular only.
