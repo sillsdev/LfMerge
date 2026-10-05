@@ -221,6 +221,7 @@ namespace LfMerge.Core.DataConverters
 		// The pronunciation field is deliberately NOT here. It looks vernacular at 114 to 16, but
 		// that is 12% analysis, above the MinorityShare a single writing system would have to stay
 		// under to count as one role alone, so projects evidently use it for more than one thing.
+		// Its text still counts for something in ClassifyByText, though: see there.
 		private static readonly string[] VernacularAnchorFields = {
 			LfWritingSystemUsage.Lexeme,
 			LfWritingSystemUsage.CitationForm,
@@ -493,6 +494,14 @@ namespace LfMerge.Core.DataConverters
 		/// Classifies every writing system the lexicon has text for, by where that text sits.
 		/// Adds them to <paramref name="vernacular"/> and <paramref name="analysis"/>, and returns
 		/// the ones it answered for.
+		///
+		/// A writing system whose only text is in the pronunciation field is made vernacular,
+		/// because FieldWorks draws its pronunciation writing systems from the vernacular ones
+		/// (InitializePronunciationWritingSystems considers no others). That is not an answer, only
+		/// a role it must have, so the config can still add analysis: the field is not an anchor
+		/// (see VernacularAnchorFields), and a stray pronunciation string should not take a
+		/// writing system's analysis role away. In the 2026-10-01 corpus this gives xin-flex's
+		/// "xin", which holds 226 pronunciations and nothing else, the vernacular role it needs.
 		/// </summary>
 		private static ISet<string> ClassifyByText(LfWritingSystemUsage usage,
 			IDictionary<string, ISet<string>> byPath, ISet<string> vernacular, ISet<string> analysis)
@@ -508,6 +517,7 @@ namespace LfMerge.Core.DataConverters
 				candidates.UnionWith(tags);
 			foreach (string path in VernacularAnchorFields.Concat(AnalysisAnchorFields))
 				candidates.UnionWith(usage.TagsWithText(path));
+			candidates.UnionWith(usage.TagsWithText(LfWritingSystemUsage.Pronunciation));
 
 			foreach (string tag in candidates)
 			{
@@ -515,7 +525,12 @@ namespace LfMerge.Core.DataConverters
 				int analysisText = usage.NonEmptyCount(AnalysisAnchorFields, tag);
 				int total = vernacularText + analysisText;
 				if (total == 0)
-					continue; // No text in a field of known role, so its text says nothing.
+				{
+					// No text in a field of known role, so its text decides nothing.
+					if (usage.NonEmptyCount(LfWritingSystemUsage.Pronunciation, tag) > 0)
+						vernacular.Add(tag);
+					continue;
+				}
 				double analysisShare = (double)analysisText / total;
 				if (analysisShare <= MinorityShare)
 					vernacular.Add(tag);

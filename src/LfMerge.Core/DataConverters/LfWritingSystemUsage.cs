@@ -31,6 +31,7 @@ namespace LfMerge.Core.DataConverters
 		public const string ExampleTranslation = "senses.fields.examples.fields.translation";
 		public const string Note = "note";
 		public const string LiteralMeaning = "literalMeaning";
+		public const string Pronunciation = "pronunciation";
 
 		private readonly Dictionary<string, Dictionary<string, int>> _countsByPath =
 			new Dictionary<string, Dictionary<string, int>>();
@@ -94,7 +95,7 @@ namespace LfMerge.Core.DataConverters
 				usage.Add("etymologyComment", entry.EtymologyComment);
 				usage.Add("etymologyGloss", entry.EtymologyGloss);
 				usage.Add("etymologySource", entry.EtymologySource);
-				usage.Add("pronunciation", entry.Pronunciation);
+				usage.Add(Pronunciation, entry.Pronunciation);
 				usage.Add("summaryDefinition", entry.SummaryDefinition);
 				usage.Add("tone", entry.Tone);
 				if (entry.Senses == null)

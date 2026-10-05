@@ -72,7 +72,7 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				break;
 			case LfWritingSystemUsage.Note: entry.Note = text; break;
 			case LfWritingSystemUsage.LiteralMeaning: entry.LiteralMeaning = text; break;
-			case "pronunciation": entry.Pronunciation = text; break;
+			case LfWritingSystemUsage.Pronunciation: entry.Pronunciation = text; break;
 			case "etymology": entry.Etymology = text; break;
 			default: throw new ArgumentException("no test entry shape for " + fieldPath);
 			}
@@ -489,21 +489,61 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
-		/// The pronunciation field is left out on purpose. It looks vernacular in the corpus at 114
+		/// The pronunciation field is not an anchor. It looks vernacular in the corpus at 114
 		/// projects to 16, but 12% is above the share a single writing system may hold in the other
-		/// role and still count as one thing, so projects evidently use it for more than one.
+		/// role and still count as one thing, so projects evidently use it for more than one. Being
+		/// offered there, with nothing written in it, therefore settles nothing.
 		/// </summary>
 		[Test]
-		public void ThePronunciationFieldIsNotEvidenceOfAnything()
+		public void ThePronunciationFieldIsNotAnAnchor()
 		{
 			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
 				("pronunciation", Field("xyz")));
 			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
-				(LfWritingSystemUsage.Gloss, "en", 10), ("pronunciation", "xyz", 10));
+				(LfWritingSystemUsage.Gloss, "en", 10));
 
 			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
 
 			Assert.That(result.Unresolved, Contains.Item("xyz"));
+		}
+
+		/// <summary>
+		/// But text in it makes a writing system vernacular, since FieldWorks draws its
+		/// pronunciation writing systems from the vernacular ones. xin-flex's "xin" holds 226
+		/// pronunciations and nothing else.
+		/// </summary>
+		[Test]
+		public void PronunciationTextMakesAWritingSystemVernacular()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en")),
+				("pronunciation", Field("xyz")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), (LfWritingSystemUsage.Pronunciation, "xyz", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Unresolved, Does.Not.Contain("xyz"));
+			Assert.That(result.Vernacular, Contains.Item("xyz"));
+			Assert.That(result.Analysis, Does.Not.Contain("xyz"));
+		}
+
+		/// <summary>
+		/// Pronunciation text only adds the vernacular role; it does not take away an analysis role
+		/// the config gives. In dtlat-flex a single pronunciation string in Swedish would otherwise
+		/// make Swedish, configured for the gloss, vernacular only.
+		/// </summary>
+		[Test]
+		public void PronunciationTextDoesNotTakeAwayAnAnalysisRole()
+		{
+			var config = Config(("lexeme", Field("kal")), ("senses.fields.gloss", Field("en", "sv")),
+				("pronunciation", Field("kal", "sv")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10),
+				(LfWritingSystemUsage.Gloss, "en", 10), (LfWritingSystemUsage.Pronunciation, "sv", 1));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Vernacular, Contains.Item("sv"));
+			Assert.That(result.Analysis, Contains.Item("sv"));
 		}
 
 		/// <summary>
