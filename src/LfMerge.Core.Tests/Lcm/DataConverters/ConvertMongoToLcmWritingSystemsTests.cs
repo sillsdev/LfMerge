@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using NUnit.Framework;
 using SIL.LCModel;
 using SIL.LCModel.Infrastructure;
+using SIL.LCModel.Core.KernelInterfaces;
 using SIL.LCModel.Core.Text;
 using SIL.LCModel.Core.WritingSystems;
 
@@ -410,6 +411,93 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 
 			Assert.That(gloss.get_String(ws.Handle).Text, Is.EqualTo(expected == id ? "under the Id" : "under the LanguageTag"));
 			Assert.That(reported, Is.EqualTo(new[] { (expected == id ? languageTag : id, expected) }));
+		}
+
+		/// <summary>
+		/// The config's spellings reach every writer that chooses between two keys naming one
+		/// writing system, through a whole sync: the built-in multitext fields, and picture captions
+		/// with them; the single-string fields; and the multitext and string custom fields. The
+		/// config's spelling comes first here, so a writer going on key order alone would write the
+		/// export's value instead.
+		/// </summary>
+		// A pair each, since writing systems a test adds stay in the fixture's project
+		[TestCase("gloss", "hu-Latn-SK", "hu-SK")]
+		[TestCase("scientificName", "sk-Latn-HU", "sk-HU")]
+		[TestCase("customMultiText", "sl-Latn-IT", "sl-IT")]
+		[TestCase("customString", "et-Latn-FI", "et-FI")]
+		public void MongoToLcm_TwoKeysForOneWritingSystem_WritesTheConfigsSpellingInEveryKindOfField(
+			string field, string id, string languageTag)
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId(id, languageTag);
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, languageTag), Is.EqualTo(ws.Handle),
+				"precondition: the LanguageTag spelling should resolve to the same writing system");
+			var twoKeys = new BsonDocument {
+				{ languageTag, new BsonDocument { { "value", "the user's edit" } } },
+				{ id, new BsonDocument { { "value", "the export's value" } } } };
+			var data = new SampleData();
+			BsonDocument sense = data.bsonTestData["senses"][0].AsBsonDocument;
+			BsonDocument customFields = data.bsonTestData["customFields"].AsBsonDocument;
+			string[] configPath;
+			switch (field)
+			{
+			case "gloss":
+				sense["gloss"] = twoKeys;
+				configPath = new[] { "senses", "gloss" };
+				break;
+			case "scientificName":
+				sense["scientificName"] = twoKeys;
+				configPath = new[] { "senses", "scientificName" };
+				break;
+			case "customMultiText":
+				customFields["customField_entry_Cust_Single_Line_All"] = twoKeys;
+				configPath = new[] { "customField_entry_Cust_Single_Line_All" };
+				break;
+			default:
+				customFields["customField_entry_Cust_Single_Line"] = twoKeys;
+				configPath = new[] { "customField_entry_Cust_Single_Line" };
+				break;
+			}
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+			Action restore = AddToConfigField(languageTag, configPath);
+
+			try
+			{
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				var entry = (ILexEntry)_cache.ServiceLocator.GetObject(Guid.Parse(data.bsonTestData["guid"].AsString));
+				ISilDataAccess sda = _cache.DomainDataByFlid;
+				string written;
+				switch (field)
+				{
+				case "gloss":
+					written = entry.SensesOS[0].Gloss.get_String(ws.Handle).Text;
+					break;
+				case "scientificName":
+					written = entry.SensesOS[0].ScientificName.Text;
+					break;
+				case "customMultiText":
+					written = sda.get_MultiStringAlt(entry.Hvo, EntryCustomFieldId("Cust Single Line All"), ws.Handle).Text;
+					break;
+				default:
+					written = sda.get_StringProp(entry.Hvo, EntryCustomFieldId("Cust Single Line")).Text;
+					break;
+				}
+				Assert.That(written, Is.EqualTo("the user's edit"));
+			}
+			finally
+			{
+				restore();
+			}
+		}
+
+		private int EntryCustomFieldId(string name)
+		{
+			int flid = _cache.MetaDataCacheAccessor.GetFieldId2(LexEntryTags.kClassId, name, false);
+			Assert.That(flid, Is.Not.EqualTo(0), "testlangproj should have the custom field {0}", name);
+			return flid;
 		}
 
 		/// <summary>
