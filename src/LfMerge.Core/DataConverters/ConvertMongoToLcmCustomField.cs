@@ -28,14 +28,18 @@ namespace LfMerge.Core.DataConverters
 		// Fields already reported as not writable, so each is reported once per sync rather than
 		// once for every entry, sense or example that has it
 		private readonly HashSet<int> unwritableFieldsReported = new HashSet<int>();
+		// Every writing-system spelling the project's config uses; see LfMultiText.WriteToLcm
+		private readonly ISet<string> configuredTags;
 
-		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
+		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn,
+			ISet<string> configuredTags = null)
 		{
 			this.cache = cache;
 			this.servLoc = serviceLocator;
 			this.lcmMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 			this.wsEn = wsEn;
+			this.configuredTags = configuredTags;
 		}
 
 		public Guid ParseGuidOrDefault(string input)
@@ -383,8 +387,13 @@ namespace LfMerge.Core.DataConverters
 						wsId => data.get_MultiStringAlt(hvo, flid, wsId),
 						(wsId, tss) => data.SetMultiStringAlt(hvo, flid, wsId, tss),
 						servLoc.WritingSystemFactory,
+						configuredTags,
 						tag => logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
-							fieldName, tag));
+							fieldName, tag),
+						(notWritten, written) => logger.Warning(
+							"Custom field {0}: keys \"{1}\" and \"{2}\" name the same writing system; wrote \"{2}\" ({3}), not \"{1}\" ({4})",
+							fieldName, notWritten, written, valueAsMultiText.Excerpt(written),
+							valueAsMultiText.Excerpt(notWritten)));
 				}
 
 			case CellarPropertyType.String:

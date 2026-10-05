@@ -297,6 +297,50 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// Two LF keys naming one writing system: the export's, spelled as its Id, and one spelled
+		/// as its LanguageTag. Only one can be written, and it is the one under the spelling LF's
+		/// config uses, wherever it comes, since that is the one LF's editor shows; with neither
+		/// spelling configured, the later one. The other is reported.
+		///
+		/// The export's key comes first in an entry, since an LF user's new key is added after it.
+		/// Before the config is re-spelled by Id, the user's edit is under the LanguageTag and the
+		/// export's value is hidden and stale; afterwards, an Id-spelled edit is made in place, and a
+		/// LanguageTag key left from before is what is stale.
+		/// </summary>
+		// A pair each, since writing systems a test adds stay in the fixture's project
+		[TestCase("languageTag", true, "sv-Latn-FI", "sv-FI", TestName = "WriteToLcm_TwoKeysForOneWritingSystem_ConfigSpelledByLanguageTag_WritesTheEdit")]
+		[TestCase("id", true, "da-Latn-DE", "da-DE", TestName = "WriteToLcm_TwoKeysForOneWritingSystem_ConfigSpelledById_WritesTheEditMadeInPlace")]
+		[TestCase("languageTag", false, "nb-Latn-NO", "nb-NO", TestName = "WriteToLcm_TwoKeysForOneWritingSystem_ConfigSpelling_WinsWhereverItComes")]
+		[TestCase("neither", true, "fi-Latn-SE", "fi-SE", TestName = "WriteToLcm_TwoKeysForOneWritingSystem_NeitherConfigured_WritesTheLaterKey")]
+		public void WriteToLcm_TwoKeysForOneWritingSystem(string configured, bool idFirst, string id, string languageTag)
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId(id, languageTag);
+			Assert.That(LanguageTags.WsIdFromLfTag(_cache.WritingSystemFactory, languageTag), Is.EqualTo(ws.Handle),
+				"precondition: the LanguageTag spelling should resolve to the same writing system");
+			var multiText = new LfMultiText();
+			if (idFirst)
+				multiText.Add(id, LfStringField.FromString("under the Id"));
+			multiText.Add(languageTag, LfStringField.FromString("under the LanguageTag"));
+			if (!idFirst)
+				multiText.Add(id, LfStringField.FromString("under the Id"));
+			var configuredTags = new HashSet<string>(StringComparer.Ordinal) { "en", "fr" };
+			if (configured == "id")
+				configuredTags.Add(id);
+			else if (configured == "languageTag")
+				configuredTags.Add(languageTag);
+			string expected = configured == "id" ? id : configured == "languageTag" ? languageTag : (idFirst ? languageTag : id);
+			var gloss = ((ILexEntry)_cache.ServiceLocator.GetObject(Guid.Parse(TestEntryGuidStr))).SensesOS[0].Gloss;
+			var reported = new List<(string NotWritten, string Written)>();
+
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
+				multiText.WriteToLcmMultiString(gloss, _cache.WritingSystemFactory, configuredTags,
+					(notWritten, written) => reported.Add((notWritten, written))));
+
+			Assert.That(gloss.get_String(ws.Handle).Text, Is.EqualTo(expected == id ? "under the Id" : "under the LanguageTag"));
+			Assert.That(reported, Is.EqualTo(new[] { (expected == id ? languageTag : id, expected) }));
+		}
+
+		/// <summary>
 		/// The xkk-flex-2022 layout, carried all the way round: one writing system whose Id is not
 		/// its LanguageTag, and a second whose Id IS that LanguageTag, each with text of its own.
 		/// LfMerge used to look the first up by LanguageTag when re-registering it, evict the second

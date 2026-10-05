@@ -40,6 +40,8 @@ namespace LfMerge.Core.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToLcmCustomField _convertCustomField;
+		// Every writing-system spelling the project's config uses; see LfMultiText.WriteToLcm
+		private ISet<string> _configuredTags;
 
 		// Entries where LF's copy differs from FieldWorks but no LF user has touched it since the
 		// last sync, so FieldWorks holds the newer version (see EditedInLfSinceLastSync)
@@ -149,7 +151,8 @@ namespace LfMerge.Core.DataConverters
 			// Set English ws handle again in case it changed
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 
-			_convertCustomField = new ConvertMongoToLcmCustomField(Cache, ServiceLocator, Logger, _wsEn);
+			_configuredTags = ConfiguredTags(ProjectRecord.Config);
+			_convertCustomField = new ConvertMongoToLcmCustomField(Cache, ServiceLocator, Logger, _wsEn, _configuredTags);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			_changedOnlyInFieldWorks = 0;
@@ -560,6 +563,20 @@ namespace LfMerge.Core.DataConverters
 					result.UnionWith(tags);
 			}
 			return result;
+		}
+
+		/// <summary>
+		/// Every writing-system spelling the config's fields use, exactly as spelled: LF's editor
+		/// matches them against an entry's keys exactly.
+		/// </summary>
+		private static ISet<string> ConfiguredTags(LfProjectConfig config)
+		{
+			var byPath = new Dictionary<string, ISet<string>>();
+			CollectInputSystems((config == null) ? null : config.Entry, "", byPath);
+			var tags = new HashSet<string>(StringComparer.Ordinal);
+			foreach (ISet<string> fieldTags in byPath.Values)
+				tags.UnionWith(fieldTags);
+			return tags;
 		}
 
 		/// <summary>
@@ -1365,7 +1382,10 @@ namespace LfMerge.Core.DataConverters
 			if (source == null)
 				ClearMultiString(dest);
 			else
-				source.WriteToLcmMultiString(dest, ServiceLocator.WritingSystemManager);
+				source.WriteToLcmMultiString(dest, ServiceLocator.WritingSystemManager, _configuredTags,
+					(notWritten, written) => Logger.Warning(
+						"MongoToLcm: keys \"{0}\" and \"{1}\" name the same writing system; wrote \"{1}\" ({2}), not \"{0}\" ({3})",
+						notWritten, written, source.Excerpt(written), source.Excerpt(notWritten)));
 		}
 
 		/// <summary>
