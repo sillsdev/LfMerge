@@ -297,6 +297,71 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// The xkk-flex-2022 layout, carried all the way round: one writing system whose Id is not
+		/// its LanguageTag, and a second whose Id IS that LanguageTag, each with text of its own.
+		/// LfMerge used to look the first up by LanguageTag when re-registering it, evict the second
+		/// and take its handle, so the two writing systems' text could end up under one of them.
+		/// Each must keep its own text, in LCM and in LF, through an export, an LF edit and an
+		/// import. The pair is one whose LanguageTag is the same under both SLDR datasets; xkk's own
+		/// is not, and the tests run on the older one.
+		/// </summary>
+		[Test]
+		public void RoundTrip_WritingSystemAndItsLanguageTagNamesake_EachKeepsItsOwnText()
+		{
+			// Setup: both writing systems in the analysis list, each with a gloss
+			const string id = "ca-Latn-AD", namesakeId = "ca-AD";
+			WritingSystemManager wsManager = _cache.ServiceLocator.WritingSystemManager;
+			CoreWritingSystemDefinition real = AddWritingSystemWithId(id, namesakeId);
+			CoreWritingSystemDefinition namesake = wsManager.Set(namesakeId);
+			int realHandle = real.Handle, namesakeHandle = namesake.Handle;
+			Assert.That(namesakeHandle, Is.Not.EqualTo(realHandle));
+			Guid entryGuid = Guid.Parse(TestEntryGuidStr);
+			var lcmEntry = (ILexEntry)_cache.ServiceLocator.GetObject(entryGuid);
+			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
+			{
+				_cache.LanguageProject.AddToCurrentAnalysisWritingSystems(real);
+				_cache.LanguageProject.AddToCurrentAnalysisWritingSystems(namesake);
+				lcmEntry.SensesOS[0].Gloss.set_String(realHandle, "glossa andorrana");
+				lcmEntry.SensesOS[0].Gloss.set_String(namesakeHandle, "glossa de l'homonima");
+			});
+
+			// Exercise: export, edit both in LF, import, export again
+			SutLcmToMongo.Run(_lfProj);
+			LfLexEntry lfEntry = _conn.GetLfLexEntryByGuid(_lfProj, entryGuid);
+			Assert.That(lfEntry.Senses[0].Gloss[id].Value, Is.EqualTo("glossa andorrana"));
+			Assert.That(lfEntry.Senses[0].Gloss[namesakeId].Value, Is.EqualTo("glossa de l'homonima"));
+			lfEntry.Senses[0].Gloss[id] = LfStringField.FromString("glossa andorrana, corregida a LF");
+			lfEntry.Senses[0].Gloss[namesakeId] = LfStringField.FromString("glossa de l'homonima, corregida a LF");
+			lfEntry.AuthorInfo.ModifiedDate = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(lfEntry);
+			var restores = new[] { AddLfInputSystem(id), AddLfInputSystem(namesakeId) };
+			try
+			{
+				SutMongoToLcm.Run(_lfProj);
+				SutLcmToMongo.Run(_lfProj);
+
+				// Verify: neither writing system took the other's place or its text
+				Assert.That(real.Handle, Is.EqualTo(realHandle));
+				Assert.That(namesake.Handle, Is.EqualTo(namesakeHandle));
+				Assert.That(wsManager.GetWsFromStr(id), Is.EqualTo(realHandle));
+				Assert.That(wsManager.GetWsFromStr(namesakeId), Is.EqualTo(namesakeHandle));
+				Assert.That(lcmEntry.SensesOS[0].Gloss.get_String(realHandle).Text,
+					Is.EqualTo("glossa andorrana, corregida a LF"));
+				Assert.That(lcmEntry.SensesOS[0].Gloss.get_String(namesakeHandle).Text,
+					Is.EqualTo("glossa de l'homonima, corregida a LF"));
+				lfEntry = _conn.GetLfLexEntryByGuid(_lfProj, entryGuid);
+				Assert.That(lfEntry.Senses[0].Gloss[id].Value, Is.EqualTo("glossa andorrana, corregida a LF"));
+				Assert.That(lfEntry.Senses[0].Gloss[namesakeId].Value, Is.EqualTo("glossa de l'homonima, corregida a LF"));
+				Assert.That(_conn.GetInputSystems(_lfProj).Keys, Is.SupersetOf(new[] { id, namesakeId }));
+			}
+			finally
+			{
+				foreach (Action restore in restores)
+					restore();
+			}
+		}
+
+		/// <summary>
 		/// LF's editor matches a field's input systems against an entry's keys exactly, so the two
 		/// must be spelled alike. The keys are spelled by Id; the input systems were spelled by
 		/// LanguageTag, so brb-flex-2022's Khmer text, keyed "km-Khmr-KH" under an input system
