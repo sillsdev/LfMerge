@@ -245,9 +245,10 @@ namespace LfMerge.Core.DataConverters
 		/// and vice versa. A writing system present in both anchors -- "en" very often is -- is no
 		/// evidence either way and is ignored for that purpose; it is both vernacular and analysis.
 		///
-		/// Evidence decides the role of the field, not of every writing system in it: a writing
-		/// system exclusive to the analysis anchors stays analysis-only even in a field classified
-		/// vernacular, so an etymology configured as [seh, pt] does not make Portuguese vernacular.
+		/// Evidence decides the role of the field, not of every writing system in it, and it has to
+		/// point one way: a field offering writing systems exclusive to each role, such as an
+		/// etymology configured as [seh, pt], is evidence of neither. So it does not make Portuguese
+		/// vernacular, nor anything else it offers that the anchors have not placed.
 		///
 		/// Where the lexicon has text to show for a writing system, that text decides instead: a
 		/// writing system holding nearly all of its text in the vernacular anchors is vernacular
@@ -311,21 +312,27 @@ namespace LfMerge.Core.DataConverters
 				var undecided = field.Value.Where(tag => !decidedByText.Contains(tag)).ToList();
 				if (undecided.Count == 0)
 					continue;
-				if (field.Value.Any(vernacularOnly.Contains))
+				bool withVernacular = field.Value.Any(vernacularOnly.Contains);
+				bool withAnalysis = field.Value.Any(analysisOnly.Contains);
+				if (withVernacular && !withAnalysis)
 				{
-					vernacular.UnionWith(undecided.Where(tag => !analysisOnly.Contains(tag)));
+					vernacular.UnionWith(undecided);
 				}
-				else if (field.Value.Any(analysisOnly.Contains))
+				else if (withAnalysis && !withVernacular)
 				{
 					analysis.UnionWith(undecided);
 				}
 				else
 				{
-					// Overlaps neither role: nothing says which role this field plays. That puts in
-					// doubt only the writing systems nothing else has placed. One already placed keeps
-					// its place: "en" in both the lexeme and the gloss is not made doubtful by also
-					// turning up in a note, and if it were, the passes below could strip one of its
-					// roles on the strength of the company it keeps there.
+					// Overlaps neither role, or both: nothing says which role this field plays. A field
+					// offering a vernacular-only and an analysis-only writing system side by side is
+					// no more evidence for one role than the other, just as only unanimous company
+					// counts in ResolveByCompanions.
+					//
+					// That puts in doubt only the writing systems nothing else has placed. One already
+					// placed keeps its place: "en" in both the lexeme and the gloss is not made
+					// doubtful by also turning up in a note, and if it were, the passes below could
+					// strip one of its roles on the strength of the company it keeps there.
 					var unplaced = undecided
 						.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)).ToList();
 					vernacular.UnionWith(unplaced);

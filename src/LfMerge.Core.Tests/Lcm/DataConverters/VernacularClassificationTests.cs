@@ -185,6 +185,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
+		/// A field offering a vernacular-only and an analysis-only writing system side by side says
+		/// nothing about the role of the others it offers. It used to count as vernacular, because
+		/// that was checked first, which made kam-flex's Spanish and French vernacular; FLEx has
+		/// both as analysis.
+		/// </summary>
+		[Test]
+		public void AFieldOfferingBothRolesIsNotEvidenceOfEither()
+		{
+			var config = Config(("lexeme", Field("seh")), ("senses.fields.gloss", Field("en")),
+				("customField_senses_Wordlist", Field("seh", "en", "fr")));
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "seh");
+			Assert.That(result.Unresolved, Is.EquivalentTo(new[] { "fr" }));
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "seh", "fr" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en", "fr" }));
+		}
+
+		/// <summary>
 		/// grc-vie-flex: etymologies in Hebrew and Aramaic, neither vernacular nor analysis. With no
 		/// evidence either way they are both, so neither a vernacular-typed nor an analysis-typed
 		/// field is left without them.
