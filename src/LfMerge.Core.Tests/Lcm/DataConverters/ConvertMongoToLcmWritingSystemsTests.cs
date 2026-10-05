@@ -196,6 +196,53 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				"text that cannot be placed must not replace or clear what LCM holds");
 			Assert.That(lcmSense.SocioLinguisticsNote.get_String(_wsEn).Text, Is.EqualTo(laterNote),
 				"the rest of the entry should still have been converted");
+			Assert.That(_env.Logger.GetMessages(), Does.Contain(
+				"MongoToLcm: skipping text under \"zzz-x-nonesuch\" (Unplaceable), which names no writing system LCM has; " +
+				"leaving the field as it was"));
+		}
+
+		/// <summary>
+		/// A single-string field whose text is all under a key passed over for an empty one naming
+		/// the same writing system -- the config's spelling, which LF's editor fills in empty --
+		/// keeps what LCM holds, and the log says so for that reason, not that LCM lacks the
+		/// writing system.
+		/// </summary>
+		[Test]
+		public void SingleStringField_TextOnlyUnderAKeyPassedOverForAnEmptyOne_KeepsTheLcmValueAndSaysWhy()
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId("ro-Latn-MD", "ro-MD");
+			const string original = "Homo sapiens";
+			var data = new SampleData();
+			BsonDocument sense = data.bsonTestData["senses"][0].AsBsonDocument;
+			sense["scientificName"] = new BsonDocument { { "en", new BsonDocument { { "value", original } } } };
+			data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow;
+			_conn.UpdateMockLfLexEntry(data.bsonTestData);
+			SutMongoToLcm.Run(_lfProj);
+
+			Action restore = AddToConfigField("ro-MD", "senses", "scientificName");
+			try
+			{
+				sense["scientificName"] = new BsonDocument {
+					{ "ro-Latn-MD", new BsonDocument { { "value", "the export's value" } } },
+					{ "ro-MD", new BsonDocument { { "value", "" } } } };
+				data.bsonTestData["authorInfo"]["modifiedDate"] = DateTime.UtcNow.AddMinutes(1);
+				_conn.UpdateMockLfLexEntry(data.bsonTestData);
+
+				// Exercise
+				SutMongoToLcm.Run(_lfProj);
+
+				// Verify
+				var entry = _cache.ServiceLocator.GetObject(Guid.Parse(data.bsonTestData["guid"].AsString)) as ILexEntry;
+				Assert.That(entry.SensesOS[0].ScientificName.Text, Is.EqualTo(original));
+				Assert.That(_env.Logger.GetMessages(), Does.Contain(
+					"MongoToLcm: keys \"ro-Latn-MD\" and \"ro-MD\" name the same writing system, and \"ro-MD\", the one to " +
+					"write, is empty; leaving the field as it was rather than write \"ro-Latn-MD\" (the export's value)"));
+				Assert.That(_env.Logger.GetMessages(), Does.Not.Contain("names no writing system LCM has"));
+			}
+			finally
+			{
+				restore();
+			}
 		}
 
 		[TestCase(RedundantPrivateUseTag, RedundantPrivateUseId)]
@@ -581,6 +628,26 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			KeyValuePair<int, string> best = multiText.BestStringAndWsId(new[] { ws.Handle }, _cache.WritingSystemFactory, configuredTags);
 
 			Assert.That(best.Value, Is.Null, "nothing should be placed for the cleared writing system");
+		}
+
+		[Test]
+		public void KeysPassedOver_NamesEachKeyWithTextLeftOutAndWhy()
+		{
+			CoreWritingSystemDefinition ws = AddWritingSystemWithId("nl-Latn-SR", "nl-SR");
+			var multiText = new LfMultiText {
+				{ "nl-Latn-SR", LfStringField.FromString("the export's value") },
+				{ "nl-SR", LfStringField.FromString("") },
+				{ "zzz-x-nonesuch", LfStringField.FromString("unplaceable") },
+				{ "en", LfStringField.FromString("placed") },
+				{ "fr", LfStringField.FromString("") },
+			};
+			var configuredTags = new HashSet<string>(StringComparer.Ordinal) { "nl-SR", "en", "fr" };
+
+			var passedOver = multiText.KeysPassedOver(_cache.WritingSystemFactory, configuredTags);
+
+			Assert.That(passedOver, Is.EquivalentTo(new[] {
+				new KeyValuePair<string, string>("nl-Latn-SR", "nl-SR"),
+				new KeyValuePair<string, string>("zzz-x-nonesuch", null) }));
 		}
 
 		[Test]

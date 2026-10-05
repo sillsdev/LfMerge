@@ -130,29 +130,12 @@ namespace LfMerge.Core.LanguageForge.Model
 		public KeyValuePair<int, string> BestStringAndWsId(IEnumerable<int> wsSearchOrder, ILgWritingSystemFactory wsManager,
 			ISet<string> configuredTags = null)
 		{
-			// Each writing system's key, in the order the writing systems first appear
-			var keyFor = new Dictionary<int, string>();
-			var order = new List<int>();
-			foreach (string key in Keys)
-			{
-				int wsId = LanguageTags.WsIdFromLfTag(wsManager, key);
-				if (wsId == 0)
-					continue;
-				string other;
-				if (keyFor.TryGetValue(wsId, out other))
-					keyFor[wsId] = PreferredKey(other, key, configuredTags);
-				else
-				{
-					keyFor[wsId] = key;
-					order.Add(wsId);
-				}
-			}
 			var resolved = new List<KeyValuePair<int, string>>();
-			foreach (int wsId in order)
+			foreach (KeyValuePair<int, string> chosen in ChooseKeys(wsManager, configuredTags))
 			{
-				LfStringField field = this[keyFor[wsId]];
+				LfStringField field = this[chosen.Value];
 				if (field != null && !field.IsEmpty)
-					resolved.Add(new KeyValuePair<int, string>(wsId, field.Value));
+					resolved.Add(new KeyValuePair<int, string>(chosen.Key, field.Value));
 			}
 			foreach (int wsId in wsSearchOrder)
 			{
@@ -232,25 +215,7 @@ namespace LfMerge.Core.LanguageForge.Model
 			Action<string, string> onKeyNotWritten = null)
 		{
 			// Each writing system's key, chosen before anything is written
-			var keyFor = new Dictionary<int, string>();
-			foreach (string key in Keys)
-			{
-				int wsId = LanguageTags.WsIdFromLfTag(wsManager, key);
-				if (wsId == 0)
-				{
-					onUnidentifiedTag?.Invoke(key);
-					continue;
-				}
-				string other;
-				if (keyFor.TryGetValue(wsId, out other))
-				{
-					string kept = PreferredKey(other, key, configuredTags);
-					onKeyNotWritten?.Invoke(kept == key ? other : key, kept);
-					keyFor[wsId] = kept;
-				}
-				else
-					keyFor[wsId] = key;
-			}
+			List<KeyValuePair<int, string>> keyFor = ChooseKeys(wsManager, configuredTags, onUnidentifiedTag, onKeyNotWritten);
 
 			var wsIdsToClear = new HashSet<int>(existingWsIds);
 			bool changed = false;
@@ -285,6 +250,62 @@ namespace LfMerge.Core.LanguageForge.Model
 			LfStringField field;
 			string text = (TryGetValue(key, out field) && field != null) ? (field.Value ?? string.Empty) : string.Empty;
 			return text.Length <= 40 ? text : text.Substring(0, 40) + "...";
+		}
+
+		/// <summary>
+		/// The keys holding text that <see cref="BestStringAndWsId"/> passes over, each with the
+		/// reason: null where the key names no writing system LCM has, or else the key naming the
+		/// same writing system that is chosen over it.
+		/// </summary>
+		public List<KeyValuePair<string, string>> KeysPassedOver(ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null)
+		{
+			var chosenFor = ChooseKeys(wsManager, configuredTags).ToDictionary(kv => kv.Key, kv => kv.Value);
+			var passedOver = new List<KeyValuePair<string, string>>();
+			foreach (KeyValuePair<string, LfStringField> kv in this)
+			{
+				if (kv.Value == null || kv.Value.IsEmpty)
+					continue;
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
+				if (wsId == 0)
+					passedOver.Add(new KeyValuePair<string, string>(kv.Key, null));
+				else if (chosenFor[wsId] != kv.Key)
+					passedOver.Add(new KeyValuePair<string, string>(kv.Key, chosenFor[wsId]));
+			}
+			return passedOver;
+		}
+
+		/// <summary>
+		/// Each writing system's key, in the order the writing systems first appear: the only key
+		/// naming it, or of two, the one <see cref="PreferredKey"/> picks.
+		/// </summary>
+		private List<KeyValuePair<int, string>> ChooseKeys(ILgWritingSystemFactory wsManager, ISet<string> configuredTags,
+			Action<string> onUnidentifiedTag = null, Action<string, string> onKeyNotWritten = null)
+		{
+			var keyFor = new Dictionary<int, string>();
+			var order = new List<int>();
+			foreach (string key in Keys)
+			{
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, key);
+				if (wsId == 0)
+				{
+					onUnidentifiedTag?.Invoke(key);
+					continue;
+				}
+				string other;
+				if (keyFor.TryGetValue(wsId, out other))
+				{
+					string kept = PreferredKey(other, key, configuredTags);
+					onKeyNotWritten?.Invoke(kept == key ? other : key, kept);
+					keyFor[wsId] = kept;
+				}
+				else
+				{
+					keyFor[wsId] = key;
+					order.Add(wsId);
+				}
+			}
+			return order.Select(wsId => new KeyValuePair<int, string>(wsId, keyFor[wsId])).ToList();
 		}
 
 		/// <summary>

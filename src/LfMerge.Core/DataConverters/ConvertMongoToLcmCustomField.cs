@@ -405,7 +405,13 @@ namespace LfMerge.Core.DataConverters
 					int foundWsId = kv.Key;
 					string foundData = kv.Value ?? string.Empty;
 					if (foundWsId == 0)
-						return false; // Skip any unidentified writing systems
+					{
+						// Nothing placeable, so the field is left as it was; if LF holds text, say why
+						if (!valueAsMultiText.IsEmpty)
+							ConvertMongoToLcmLexicon.LogTextNotPlaced(valueAsMultiText, "Custom field " + fieldName,
+								logger, servLoc.WritingSystemFactory, configuredTags);
+						return false;
+					}
 					ITsString oldValue = data.get_StringProp(hvo, flid);
 					ITsString newValue = ConvertMongoToLcmTsStrings.SpanStrToTsString(foundData, foundWsId, servLoc.WritingSystemFactory);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes

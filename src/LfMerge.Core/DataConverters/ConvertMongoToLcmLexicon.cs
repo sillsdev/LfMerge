@@ -815,6 +815,12 @@ namespace LfMerge.Core.DataConverters
 		/// field keeps its current value. Neither alternative will do: building the string in
 		/// writing system 0 throws, which abandons the rest of the entry half-written, and clearing
 		/// the field would delete what LCM holds on account of text that could not be placed.
+		///
+		/// The field also keeps its value when LF's text is all under keys passed over for an empty
+		/// key naming the same writing system. That empty key may be a clear made under the config's
+		/// spelling, or the empty value LF's editor fills in for every configured input system an
+		/// entry lacks, beside the export's value under the Id; nothing here tells the two apart, and
+		/// keeping what LCM holds loses nothing that LF can show.
 		/// </summary>
 		private ITsString BestTsStringFromMultiText(LfMultiText input, ITsString current, bool isAnalysisField = true)
 		{
@@ -835,16 +841,33 @@ namespace LfMerge.Core.DataConverters
 
 		/// <summary>
 		/// Whether LF holds no text at all here. When it does hold text that nevertheless could not
-		/// be placed, says so in the log, since that text is not reaching FieldWorks.
+		/// be placed, says why in the log, since that text is not reaching FieldWorks.
 		/// </summary>
 		private bool NothingToPlace(LfMultiText input)
 		{
 			if (input == null || input.IsEmpty)
 				return true;
-			Logger.Warning("MongoToLcm: text in writing system(s) {0} has nowhere to go, since LCM has none " +
-				"of them; leaving the field as it was",
-				string.Join(", ", input.Where(kv => kv.Value != null && !kv.Value.IsEmpty).Select(kv => kv.Key)));
+			LogTextNotPlaced(input, "MongoToLcm", Logger, ServiceLocator.WritingSystemFactory, _configuredTags);
 			return false;
+		}
+
+		/// <summary>
+		/// Logs why each key holding text in a single-string field's multitext was not written
+		/// there, when none was.
+		/// </summary>
+		internal static void LogTextNotPlaced(LfMultiText input, string context, ILogger logger,
+			ILgWritingSystemFactory wsManager, ISet<string> configuredTags)
+		{
+			foreach (KeyValuePair<string, string> passedOver in input.KeysPassedOver(wsManager, configuredTags))
+			{
+				if (passedOver.Value == null)
+					logger.Warning("{0}: skipping text under \"{1}\" ({2}), which names no writing system LCM has; " +
+						"leaving the field as it was", context, passedOver.Key, input.Excerpt(passedOver.Key));
+				else
+					logger.Warning("{0}: keys \"{1}\" and \"{2}\" name the same writing system, and \"{2}\", the one " +
+						"to write, is empty; leaving the field as it was rather than write \"{1}\" ({3})",
+						context, passedOver.Key, passedOver.Value, input.Excerpt(passedOver.Key));
+			}
 		}
 
 		// This GetOrCreate() function takes an extra out parameter so we can correctly update
