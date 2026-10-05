@@ -298,10 +298,7 @@ namespace LfMerge.Core.DataConverters
 			analysis.UnionWith(analysisAnchor.Where(tag => !decidedByText.Contains(tag)));
 
 			// Only a writing system exclusive to one role is evidence of a field's role.
-			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
-			vernacularOnly.ExceptWith(analysis);
-			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
-			analysisOnly.ExceptWith(vernacular);
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
 
 			// Every field's evidence is gathered before any writing system is placed by it, so that
 			// the answer does not depend on the order the config lists its fields in. Placing as
@@ -361,6 +358,21 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
+		/// The writing systems that play one role only: those vernacular and not analysis, and those
+		/// analysis and not vernacular. Each pass that weighs evidence recomputes them, since the
+		/// passes before it change the two sets.
+		/// </summary>
+		private static (HashSet<string> VernacularOnly, HashSet<string> AnalysisOnly) ExclusiveRoles(
+			ISet<string> vernacular, ISet<string> analysis)
+		{
+			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
+			vernacularOnly.ExceptWith(analysis);
+			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
+			analysisOnly.ExceptWith(vernacular);
+			return (vernacularOnly, analysisOnly);
+		}
+
+		/// <summary>
 		/// Settles what is left by the company a writing system keeps. A writing system nothing has
 		/// settled still shares its fields with others, and those may all have been settled: a
 		/// custom field holding the vernacular and one unplaced writing system is being used for
@@ -378,10 +390,7 @@ namespace LfMerge.Core.DataConverters
 
 			// Unresolved writing systems sit in both sets, so they are in neither of these and
 			// cannot vote for each other.
-			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
-			vernacularOnly.ExceptWith(analysis);
-			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
-			analysisOnly.ExceptWith(vernacular);
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
 
 			foreach (string tag in unresolved.ToList())
 			{
@@ -417,18 +426,9 @@ namespace LfMerge.Core.DataConverters
 
 			// Unresolved writing systems sit in both sets, so they are in neither of these and
 			// cannot vote for each other.
-			var vernacularLanguages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-			var analysisLanguages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-			foreach (string tag in vernacular)
-			{
-				if (!analysis.Contains(tag))
-					vernacularLanguages.Add(LanguageOf(tag));
-			}
-			foreach (string tag in analysis)
-			{
-				if (!vernacular.Contains(tag))
-					analysisLanguages.Add(LanguageOf(tag));
-			}
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
+			var vernacularLanguages = new HashSet<string>(vernacularOnly.Select(LanguageOf), StringComparer.OrdinalIgnoreCase);
+			var analysisLanguages = new HashSet<string>(analysisOnly.Select(LanguageOf), StringComparer.OrdinalIgnoreCase);
 
 			foreach (string tag in unresolved.ToList())
 			{
