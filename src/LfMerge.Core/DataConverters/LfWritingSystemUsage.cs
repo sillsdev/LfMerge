@@ -70,9 +70,11 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
-		/// Counts the text in every built-in multitext field of every entry. Deleted entries are
-		/// skipped: they are tombstones Language Forge keeps so the deletion can be replayed, and
-		/// their text is not evidence of anything.
+		/// Counts the text in the fields classification consults: the vernacular and analysis
+		/// anchors and the pronunciation field. Counting every other field too would only lengthen
+		/// a pass over the whole lexicon for numbers nothing reads. Deleted entries are skipped:
+		/// they are tombstones Language Forge keeps so the deletion can be replayed, and their text
+		/// is not evidence of anything.
 		/// </summary>
 		public static LfWritingSystemUsage FromLexicon(IEnumerable<LfLexEntry> lexicon)
 		{
@@ -88,16 +90,7 @@ namespace LfMerge.Core.DataConverters
 				usage.Add(CitationForm, entry.CitationForm);
 				usage.Add(Note, entry.Note);
 				usage.Add(LiteralMeaning, entry.LiteralMeaning);
-				usage.Add("cvPattern", entry.CvPattern);
-				usage.Add("entryBibliography", entry.EntryBibliography);
-				usage.Add("entryRestrictions", entry.EntryRestrictions);
-				usage.Add("etymology", entry.Etymology);
-				usage.Add("etymologyComment", entry.EtymologyComment);
-				usage.Add("etymologyGloss", entry.EtymologyGloss);
-				usage.Add("etymologySource", entry.EtymologySource);
 				usage.Add(Pronunciation, entry.Pronunciation);
-				usage.Add("summaryDefinition", entry.SummaryDefinition);
-				usage.Add("tone", entry.Tone);
 				if (entry.Senses == null)
 					continue;
 				foreach (LfSense sense in entry.Senses)
@@ -106,37 +99,14 @@ namespace LfMerge.Core.DataConverters
 						continue;
 					usage.Add(Definition, sense.Definition);
 					usage.Add(Gloss, sense.Gloss);
-					usage.Add("senses.fields.anthropologyNote", sense.AnthropologyNote);
-					usage.Add("senses.fields.discourseNote", sense.DiscourseNote);
-					usage.Add("senses.fields.encyclopedicNote", sense.EncyclopedicNote);
-					usage.Add("senses.fields.generalNote", sense.GeneralNote);
-					usage.Add("senses.fields.grammarNote", sense.GrammarNote);
-					usage.Add("senses.fields.phonologyNote", sense.PhonologyNote);
-					usage.Add("senses.fields.scientificName", sense.ScientificName);
-					usage.Add("senses.fields.semanticsNote", sense.SemanticsNote);
-					usage.Add("senses.fields.senseBibliography", sense.SenseBibliography);
-					usage.Add("senses.fields.senseImportResidue", sense.SenseImportResidue);
-					usage.Add("senses.fields.senseRestrictions", sense.SenseRestrictions);
-					usage.Add("senses.fields.sociolinguisticsNote", sense.SociolinguisticsNote);
-					usage.Add("senses.fields.source", sense.Source);
-					if (sense.Examples != null)
+					if (sense.Examples == null)
+						continue;
+					foreach (LfExample example in sense.Examples)
 					{
-						foreach (LfExample example in sense.Examples)
-						{
-							if (example == null)
-								continue;
-							usage.Add(ExampleSentence, example.Sentence);
-							usage.Add(ExampleTranslation, example.Translation);
-							usage.Add("senses.fields.examples.fields.reference", example.Reference);
-						}
-					}
-					if (sense.Pictures != null)
-					{
-						foreach (LfPicture picture in sense.Pictures)
-						{
-							if (picture != null)
-								usage.Add("senses.fields.pictures", picture.Caption);
-						}
+						if (example == null)
+							continue;
+						usage.Add(ExampleSentence, example.Sentence);
+						usage.Add(ExampleTranslation, example.Translation);
 					}
 				}
 			}

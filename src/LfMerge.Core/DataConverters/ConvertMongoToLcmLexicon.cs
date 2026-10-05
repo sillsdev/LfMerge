@@ -139,15 +139,12 @@ namespace LfMerge.Core.DataConverters
 			// Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			EntryCounts.Reset();
-			// Counting the lexicon before any writing system is created, because which list a new
-			// writing system belongs in depends on what it is actually used for. This is a second
-			// streaming pass over Mongo; GetLexicon yields from a cursor, so it does not all sit in
-			// memory at once.
-			LfWritingSystemUsage wsUsage = LfWritingSystemUsage.FromLexicon(GetLexicon(LfProject));
-
-			// Update writing systems from project config input systems.  Won't commit till the end
+			// Update writing systems from project config input systems.  Won't commit till the end.
+			// Which list a new writing system belongs in depends on what it is actually used for, so
+			// the lexicon is counted -- a second streaming pass over Mongo, which GetLexicon yields
+			// from a cursor -- but only if some input system is new to LCM.
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
-				LfWsToLcmWs(ProjectRecord.InputSystems, wsUsage));
+				LfWsToLcmWs(ProjectRecord.InputSystems, () => LfWritingSystemUsage.FromLexicon(GetLexicon(LfProject))));
 
 			// Set English ws handle again in case it changed
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
@@ -583,8 +580,12 @@ namespace LfMerge.Core.DataConverters
 		/// Converts the list of LF input systems and adds them to Lcm writing systems
 		/// </summary>
 		/// <param name="lfWsList">List of LF input systems.</param>
+		/// <param name="countUsage">
+		/// Counts the text in the lexicon, for classifying a writing system new to LCM. Called only
+		/// if there is one, since it reads the whole lexicon.
+		/// </param>
 		private void LfWsToLcmWs(Dictionary<string, LfInputSystemRecord> lfWsList,
-			LfWritingSystemUsage usage = null)
+			Func<LfWritingSystemUsage> countUsage = null)
 		{
 			// Between FW 8.2 and 9, a few classes and interfaces were renamed. The ones most relevant here are
 			// IWritingSystemManager (interface was removed and replaced with the WritingSystemManager concrete class),
@@ -610,18 +611,11 @@ namespace LfMerge.Core.DataConverters
 				return;
 			}
 
-			// Which writing systems are vernacular is derived from the project's own config rather
-			// than from languageCode alone; see ClassifyVernacularWritingSystems.
-			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config,
-				ProjectRecord.LanguageCode, usage);
-			ISet<string> vernacularTags = classification.Vernacular;
-			ISet<string> analysisTags = classification.Analysis;
-			if (classification.Unresolved.Count > 0)
-			{
-				Logger.Notice("MongoToLcm: writing system(s) {0} appear only in config fields whose "
-					+ "vernacular/analysis role could not be determined; treating them as both",
-					string.Join(", ", classification.Unresolved));
-			}
+			// Worked out when the first writing system new to LCM turns up, and not at all if none
+			// does, which after a project's first sync is nearly always: only a new writing system is
+			// put in a list, and working out which ones counts the whole lexicon. It depends only on
+			// LF's config and text, so the writing systems created before then cannot change it.
+			(ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)? classification = null;
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
@@ -688,13 +682,34 @@ namespace LfMerge.Core.DataConverters
 					// case, and one no field claims is analysis. Matching on the tag as LF spells it,
 					// both sides being LF's own strings, so a non-canonical spelling still matches
 					// itself.
-					bool isVernacular = vernacularTags.Contains(lfWs.Tag);
+					if (classification == null)
+						classification = ClassifyForNewWritingSystems(countUsage);
+					bool isVernacular = classification.Value.Vernacular.Contains(lfWs.Tag);
 					if (isVernacular)
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
-					if (!isVernacular || analysisTags.Contains(lfWs.Tag))
+					if (!isVernacular || classification.Value.Analysis.Contains(lfWs.Tag))
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Which writing systems this project treats as vernacular and which as analysis, derived
+		/// from its own config and text rather than from languageCode alone; see
+		/// ClassifyVernacularWritingSystems.
+		/// </summary>
+		private (ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)
+			ClassifyForNewWritingSystems(Func<LfWritingSystemUsage> countUsage)
+		{
+			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config,
+				ProjectRecord.LanguageCode, countUsage?.Invoke());
+			if (classification.Unresolved.Count > 0)
+			{
+				Logger.Notice("MongoToLcm: writing system(s) {0} appear only in config fields whose "
+					+ "vernacular/analysis role could not be determined; treating them as both",
+					string.Join(", ", classification.Unresolved));
+			}
+			return classification;
 		}
 
 		/// <summary>

@@ -430,5 +430,40 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 					restore();
 			}
 		}
+
+		/// <summary>
+		/// Classifying a writing system counts the text in the whole lexicon, a second pass over
+		/// Mongo. Only a writing system new to LCM is classified, so with none the lexicon is read
+		/// once, for the entries themselves.
+		/// </summary>
+		[Test]
+		public void MongoToLcm_NoInputSystemNewToLcm_ReadsTheLexiconOnce()
+		{
+			int readsBefore = _conn.LexiconReads;
+
+			SutMongoToLcm.Run(_lfProj);
+
+			Assert.That(_conn.LexiconReads - readsBefore, Is.EqualTo(1));
+		}
+
+		[Test]
+		public void MongoToLcm_InputSystemNewToLcm_CountsTheLexiconToo()
+		{
+			const string tag = "qaa-x-new";
+			Assert.That(LcmWritingSystemIds(), Does.Not.Contain(tag), "testlangproj should not contain {0}", tag);
+			Action restore = AddLfInputSystem(tag);
+			try
+			{
+				int readsBefore = _conn.LexiconReads;
+
+				SutMongoToLcm.Run(_lfProj);
+
+				Assert.That(_conn.LexiconReads - readsBefore, Is.EqualTo(2));
+			}
+			finally
+			{
+				restore();
+			}
+		}
 	}
 }

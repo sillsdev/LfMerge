@@ -241,11 +241,15 @@ namespace LfMerge.Core.Tests
 			return GetRecords<TDocument>(project, collectionName).Where(filter.Compile());
 		}
 
+		/// <summary>How many times the lexicon has been read, each read being a pass over Mongo.</summary>
+		public int LexiconReads { get; private set; }
+
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
 			switch (collectionName)
 			{
 			case MagicStrings.LfCollectionNameForLexicon:
+				LexiconReads++;
 				return (IEnumerable<TDocument>)GetLfLexEntries();
 			case MagicStrings.LfCollectionNameForOptionLists:
 				return (IEnumerable<TDocument>)GetLfOptionLists();
