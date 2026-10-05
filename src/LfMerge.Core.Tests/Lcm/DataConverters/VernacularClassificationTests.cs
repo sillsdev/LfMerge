@@ -88,6 +88,23 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			return LfWritingSystemUsage.FromLexicon(lexicon);
 		}
 
+		/// <summary>
+		/// A null or empty tag in a config field's input systems names no writing system. The
+		/// 2026-10-01 corpus has none, but a null one made counting the text throw, which would
+		/// have ended the whole transfer.
+		/// </summary>
+		[Test]
+		public void ANullOrEmptyTagInTheConfigIsIgnored()
+		{
+			var config = Config(("lexeme", Field("kal", null)), ("senses.fields.gloss", Field("en", "")));
+			var usage = Usage((LfWritingSystemUsage.Lexeme, "kal", 10), (LfWritingSystemUsage.Gloss, "en", 10));
+
+			var result = ConvertMongoToLcmLexicon.ClassifyVernacularWritingSystems(config, "kal", usage);
+
+			Assert.That(result.Vernacular, Is.EquivalentTo(new[] { "kal" }));
+			Assert.That(result.Analysis, Is.EquivalentTo(new[] { "en" }));
+		}
+
 		[Test]
 		public void LexemeAndCitationFormAreAlwaysVernacular()
 		{

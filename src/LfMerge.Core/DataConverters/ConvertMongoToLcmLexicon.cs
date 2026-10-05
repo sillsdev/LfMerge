@@ -605,8 +605,11 @@ namespace LfMerge.Core.DataConverters
 			{
 				string childPath = string.IsNullOrEmpty(path) ? child.Key : path + "." + child.Key;
 				var multiText = child.Value as LfConfigMultiText;
+				// A null or empty tag names no writing system, and a null one would make the text
+				// counts throw, ending the whole transfer
 				if (multiText != null && multiText.InputSystems != null)
-					byPath[childPath] = new HashSet<string>(multiText.InputSystems, StringComparer.OrdinalIgnoreCase);
+					byPath[childPath] = new HashSet<string>(multiText.InputSystems.Where(tag => !string.IsNullOrEmpty(tag)),
+						StringComparer.OrdinalIgnoreCase);
 				var nested = child.Value as LfConfigFieldList;
 				if (nested != null)
 					CollectInputSystems(nested, childPath + ".fields", byPath);
