@@ -154,11 +154,19 @@ namespace LfMerge.Core.Tests
 			return _storedInputSystems;
 		}
 
+		/// <summary>The current vernacular, analysis and pronunciation lists the last export gave.</summary>
+		public List<string> LastVernacularWss { get; private set; }
+		public List<string> LastAnalysisWss { get; private set; }
+		public List<string> LastPronunciationWss { get; private set; }
+
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss)
 		{
 			foreach (var ws in inputSystems.Keys)
 				_storedInputSystems[ws] = inputSystems[ws];
+			LastVernacularWss = vernacularWss;
+			LastAnalysisWss = analysisWss;
+			LastPronunciationWss = pronunciationWss;
 
 			if (project.IsInitialClone)
 			{
@@ -238,22 +246,30 @@ namespace LfMerge.Core.Tests
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter)
 		{
-			return GetRecords<TDocument>(project, collectionName).Where(filter.Compile());
+			// A filtered request finds a few records, not a pass over the collection, so it is not
+			// counted in LexiconReads
+			return Records<TDocument>(collectionName).Where(filter.Compile());
 		}
 
 		/// <summary>
-		/// How many times the lexicon has been asked for, each request for the whole of it being a
-		/// pass over Mongo. A filtered request counts too, so a test counting passes should have
-		/// nothing else asking: the comment converter asks once per comment.
+		/// How many times the whole lexicon has been asked for, each request being a pass over
+		/// Mongo. Filtered requests, such as the comment converter's one per comment, are not
+		/// counted.
 		/// </summary>
 		public int LexiconReads { get; private set; }
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
 		{
+			if (collectionName == MagicStrings.LfCollectionNameForLexicon)
+				LexiconReads++;
+			return Records<TDocument>(collectionName);
+		}
+
+		private IEnumerable<TDocument> Records<TDocument>(string collectionName)
+		{
 			switch (collectionName)
 			{
 			case MagicStrings.LfCollectionNameForLexicon:
-				LexiconReads++;
 				return (IEnumerable<TDocument>)GetLfLexEntries();
 			case MagicStrings.LfCollectionNameForOptionLists:
 				return (IEnumerable<TDocument>)GetLfOptionLists();

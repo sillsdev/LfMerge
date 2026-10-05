@@ -460,6 +460,12 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 			Assert.That(lfEntry.Senses[0].Gloss.Keys, Contains.Item(id),
 				"the multitext key and the input system should be spelled alike");
 			Assert.That(lfEntry.Senses[0].Gloss[id].Value, Is.EqualTo(gloss));
+			Assert.That(_conn.LastAnalysisWss, Contains.Item(id));
+			Assert.That(_conn.LastAnalysisWss, Does.Not.Contain("nl-BE"));
+			var customFieldTags = _conn.GetCustomFieldConfig(_lfProj).Values.OfType<LfConfigMultiText>()
+				.SelectMany(field => field.InputSystems).ToList();
+			Assert.That(customFieldTags, Contains.Item(id), "a custom field offering every analysis writing system");
+			Assert.That(customFieldTags, Does.Not.Contain("nl-BE"));
 		}
 
 		[Test]
@@ -467,16 +473,15 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		{
 			// Setup: a pronunciation list naming an Id LCM has no writing system for. (The same in
 			// the vernacular list would still fail, inside liblcm's own GetWritingSystemList.)
+			string vernacularId = _cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", _cache.ActionHandlerAccessor, () =>
-				_cache.LanguageProject.CurPronunWss = "zzz-x-nonesuch");
+				_cache.LanguageProject.CurPronunWss = vernacularId + " zzz-x-nonesuch");
 
 			// Exercise
 			SutLcmToMongo.Run(_lfProj);
 
-			// Verify
-			Dictionary<string, LfInputSystemRecord> inputSystems = _conn.GetInputSystems(_lfProj);
-			Assert.That(inputSystems.Keys, Contains.Item(_cache.LanguageProject.DefaultVernacularWritingSystem.Id));
-			Assert.That(inputSystems.Keys, Does.Not.Contain("zzz-x-nonesuch"));
+			// Verify: the list LF is given keeps the writing system LCM has and leaves out the other
+			Assert.That(_conn.LastPronunciationWss, Is.EqualTo(new[] { vernacularId }));
 		}
 
 		[Test]

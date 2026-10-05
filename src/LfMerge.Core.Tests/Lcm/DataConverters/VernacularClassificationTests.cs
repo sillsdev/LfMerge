@@ -590,6 +590,11 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 				"abc shares a field with {0}, which is settled, so abc is settled too", companion);
 			Assert.That(result.Vernacular.Contains("abc"), Is.EqualTo(isVernacular));
 			Assert.That(result.Analysis.Contains("abc"), Is.EqualTo(!isVernacular));
+			// xyz is offered only in the field of no role, so the field loop puts it in doubt; only
+			// the company it keeps there, abc, settles it
+			Assert.That(result.Unresolved, Does.Not.Contain("xyz"), "xyz is settled by the company it keeps");
+			Assert.That(result.Vernacular.Contains("xyz"), Is.EqualTo(isVernacular));
+			Assert.That(result.Analysis.Contains("xyz"), Is.EqualTo(!isVernacular));
 		}
 
 		/// <summary>
