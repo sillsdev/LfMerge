@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Linq;
@@ -112,13 +112,40 @@ namespace LfMerge.Core.LanguageForge.Model
 			return (result == null) ? null : result.Value;
 		}
 
-		public KeyValuePair<int, string> WsIdAndFirstNonEmptyString(LcmCache cache)
+		/// <summary>
+		/// The value for the first writing system in wsSearchOrder that has a non-empty one, falling
+		/// back to the first non-empty value in any writing system LCM knows, together with that
+		/// writing system's handle. Keys are resolved to handles before they are compared, so a key
+		/// LF spells differently from LCM's id for the writing system still matches it.
+		///
+		/// Where two keys name one writing system, the value is the one WriteToLcm would write: the
+		/// key spelled as the config spells it, or else the later one. That is chosen before empty
+		/// values are left out, so a value an LF user has cleared under the config's spelling is
+		/// not replaced by the export's hidden, stale one.
+		/// </summary>
+		/// <param name="configuredTags">
+		/// Every writing-system spelling the project's config uses; see WriteToLcm.
+		/// </param>
+		/// <returns>The handle and the value, or (0, null) when no non-empty value resolves.</returns>
+		public KeyValuePair<int, string> BestStringAndWsId(IEnumerable<int> wsSearchOrder, ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null)
 		{
-			KeyValuePair<string, string> kv = FirstNonEmptyKeyValue();
-			if (kv.Key == null) return new KeyValuePair<int, string>();
-			ILgWritingSystemFactory wsManager = cache.ServiceLocator.WritingSystemManager;
-			int wsId = wsManager.GetWsFromStr(kv.Key);
-			return new KeyValuePair<int, string>(wsId, kv.Value);
+			var resolved = new List<KeyValuePair<int, string>>();
+			foreach (KeyValuePair<int, string> chosen in ChooseKeys(wsManager, configuredTags))
+			{
+				LfStringField field = this[chosen.Value];
+				if (field != null && !field.IsEmpty)
+					resolved.Add(new KeyValuePair<int, string>(chosen.Key, field.Value));
+			}
+			foreach (int wsId in wsSearchOrder)
+			{
+				foreach (KeyValuePair<int, string> candidate in resolved)
+				{
+					if (candidate.Key == wsId)
+						return candidate;
+				}
+			}
+			return resolved.FirstOrDefault();
 		}
 
 		public KeyValuePair<string, string> FirstNonEmptyKeyValue()
@@ -129,24 +156,171 @@ namespace LfMerge.Core.LanguageForge.Model
 				new KeyValuePair<string, string>(result.Key, result.Value.Value);
 		}
 
-		public void WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager)
+		public bool WriteToLcmMultiString(IMultiAccessorBase dest, ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null, Action<string> onUnidentifiedTag = null,
+			Action<string, string> onKeyNotWritten = null)
 		{
 			if (dest == null)
-				return;
-			HashSet<int> destWsIdsToClear = new HashSet<int>(dest.AvailableWritingSystemIds);
+				return false;
+			return WriteToLcm(dest.AvailableWritingSystemIds, dest.get_String, dest.set_String, wsManager,
+				configuredTags, onUnidentifiedTag, onKeyNotWritten);
+		}
+
+		/// <summary>
+		/// Writes every alternative into an LCM multistring, then clears each alternative LCM holds
+		/// that has no key here. The built-in multitext fields and the MultiUnicode custom fields
+		/// both come through here, reaching LCM through an IMultiAccessorBase and through
+		/// ISilDataAccess respectively, which is why LCM is reached through delegates.
+		///
+		/// Clearing is right because the LCM-to-Mongo direction exports every alternative LCM holds:
+		/// one missing from LF is one a user removed there, not one LF never saw.
+		///
+		/// Each key is resolved with LanguageTags.WsIdFromLfTag. Resolving it any other way would
+		/// skip a non-canonical key as unidentified, and the clearing pass would then blank that
+		/// writing system's text in LCM: the data would not merely be dropped but deleted.
+		///
+		/// An alternative whose value has not changed is left alone, so it stays out of the .fwdata
+		/// XML and out of the Mercurial commit.
+		///
+		/// Two keys can name the same writing system, spelled two ways that both resolve to it, and
+		/// only one can be written. That happens when LF's config spells a writing system otherwise
+		/// than LfMerge's export: the export keys every value by the writing system's Id, an LF user
+		/// edits under the config's spelling, and the export's value stays in the entry, hidden
+		/// from the editor, until the entry is next exported -- which, the edit once written to LCM,
+		/// may be a long time. In spt-flex, whose config says "hi-IN" for the Id "hi-Deva-IN", an
+		/// edited entry holds both. The value to write is the one under the spelling the config
+		/// uses, since that is what LF's editor shows and so the one a user can have edited; the
+		/// other is the hidden export, or, after the config has been re-spelled, an edit made under
+		/// the old spelling that has already been written. Where both spellings or neither are in
+		/// the config, it is the later key, as it always was: LF adds a new key after the existing
+		/// ones.
+		/// </summary>
+		/// <param name="existingWsIds">The writing systems LCM currently holds alternatives for.</param>
+		/// <param name="getAlternative">Reads LCM's alternative for a writing system.</param>
+		/// <param name="setAlternative">Writes LCM's alternative for a writing system.</param>
+		/// <param name="wsManager">Resolves LF's keys to LCM writing systems.</param>
+		/// <param name="configuredTags">
+		/// Every writing-system spelling the project's config uses, to choose between two keys
+		/// naming one writing system; null to go on key order alone.
+		/// </param>
+		/// <param name="onUnidentifiedTag">Told each key that resolves to no writing system.</param>
+		/// <param name="onKeyNotWritten">
+		/// Told each key left unwritten because another key names the same writing system, and the
+		/// key written instead.
+		/// </param>
+		/// <returns>Whether anything in LCM changed.</returns>
+		public bool WriteToLcm(IEnumerable<int> existingWsIds, Func<int, ITsString> getAlternative,
+			Action<int, ITsString> setAlternative, ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null, Action<string> onUnidentifiedTag = null,
+			Action<string, string> onKeyNotWritten = null)
+		{
+			// Each writing system's key, chosen before anything is written
+			List<KeyValuePair<int, string>> keyFor = ChooseKeys(wsManager, configuredTags, onUnidentifiedTag, onKeyNotWritten);
+
+			var wsIdsToClear = new HashSet<int>(existingWsIds);
+			bool changed = false;
+			foreach (KeyValuePair<int, string> chosen in keyFor)
+			{
+				int wsId = chosen.Key;
+				LfStringField field = this[chosen.Value];
+				wsIdsToClear.Remove(wsId);
+				string text = (field == null) ? string.Empty : (field.Value ?? string.Empty);
+				ITsString newValue = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(text, wsId, wsManager);
+				ITsString oldValue = getAlternative(wsId);
+				// GetDiffsInTsStrings() returns null when there are no changes
+				if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null)
+					continue;
+				setAlternative(wsId, newValue);
+				changed = true;
+			}
+			foreach (int wsId in wsIdsToClear)
+			{
+				ITsString oldValue = getAlternative(wsId);
+				if (oldValue == null || string.IsNullOrEmpty(oldValue.Text))
+					continue;
+				setAlternative(wsId, TsStringUtils.EmptyString(wsId));
+				changed = true;
+			}
+			return changed;
+		}
+
+		/// <summary>The start of one key's text, enough to find the entry it is in.</summary>
+		public string Excerpt(string key)
+		{
+			LfStringField field;
+			string text = (TryGetValue(key, out field) && field != null) ? (field.Value ?? string.Empty) : string.Empty;
+			return text.Length <= 40 ? text : text.Substring(0, 40) + "...";
+		}
+
+		/// <summary>
+		/// The keys holding text that <see cref="BestStringAndWsId"/> passes over, each with the
+		/// reason: null where the key names no writing system LCM has, or else the key naming the
+		/// same writing system that is chosen over it.
+		/// </summary>
+		public List<KeyValuePair<string, string>> KeysPassedOver(ILgWritingSystemFactory wsManager,
+			ISet<string> configuredTags = null)
+		{
+			var chosenFor = ChooseKeys(wsManager, configuredTags).ToDictionary(kv => kv.Key, kv => kv.Value);
+			var passedOver = new List<KeyValuePair<string, string>>();
 			foreach (KeyValuePair<string, LfStringField> kv in this)
 			{
-				int wsId = wsManager.GetWsFromStr(kv.Key);
-				if (wsId == 0) continue; // Skip any unidentified writing systems
-				string value = kv.Value.Value;
-				ITsString tss = LfMerge.Core.DataConverters.ConvertMongoToLcmTsStrings.SpanStrToTsString(value, wsId, wsManager);
-				dest.set_String(wsId, tss);
-				destWsIdsToClear.Remove(wsId);
+				if (kv.Value == null || kv.Value.IsEmpty)
+					continue;
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, kv.Key);
+				if (wsId == 0)
+					passedOver.Add(new KeyValuePair<string, string>(kv.Key, null));
+				else if (chosenFor[wsId] != kv.Key)
+					passedOver.Add(new KeyValuePair<string, string>(kv.Key, chosenFor[wsId]));
 			}
-			foreach (int wsId in destWsIdsToClear)
+			return passedOver;
+		}
+
+		/// <summary>
+		/// Each writing system's key, in the order the writing systems first appear: the only key
+		/// naming it, or of two, the one <see cref="PreferredKey"/> picks.
+		/// </summary>
+		private List<KeyValuePair<int, string>> ChooseKeys(ILgWritingSystemFactory wsManager, ISet<string> configuredTags,
+			Action<string> onUnidentifiedTag = null, Action<string, string> onKeyNotWritten = null)
+		{
+			var keyFor = new Dictionary<int, string>();
+			var order = new List<int>();
+			foreach (string key in Keys)
 			{
-				dest.set_String(wsId, string.Empty);
+				int wsId = LanguageTags.WsIdFromLfTag(wsManager, key);
+				if (wsId == 0)
+				{
+					onUnidentifiedTag?.Invoke(key);
+					continue;
+				}
+				string other;
+				if (keyFor.TryGetValue(wsId, out other))
+				{
+					string kept = PreferredKey(other, key, configuredTags);
+					onKeyNotWritten?.Invoke(kept == key ? other : key, kept);
+					keyFor[wsId] = kept;
+				}
+				else
+				{
+					keyFor[wsId] = key;
+					order.Add(wsId);
+				}
 			}
+			return order.Select(wsId => new KeyValuePair<int, string>(wsId, keyFor[wsId])).ToList();
+		}
+
+		/// <summary>
+		/// Of two keys naming one writing system, the one to write: the one spelled as the config
+		/// spells it, or else the later one. LF's editor matches spellings exactly, so this does too.
+		/// </summary>
+		private static string PreferredKey(string earlier, string later, ISet<string> configuredTags)
+		{
+			if (configuredTags != null)
+			{
+				bool earlierConfigured = configuredTags.Contains(earlier);
+				if (earlierConfigured != configuredTags.Contains(later))
+					return earlierConfigured ? earlier : later;
+			}
+			return later;
 		}
 
 	}

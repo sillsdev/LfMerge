@@ -25,14 +25,21 @@ namespace LfMerge.Core.DataConverters
 		private IFwMetaDataCacheManaged lcmMetaData;
 		private ILogger logger;
 		private int wsEn;
+		// Fields already reported as not writable, so each is reported once per sync rather than
+		// once for every entry, sense or example that has it
+		private readonly HashSet<int> unwritableFieldsReported = new HashSet<int>();
+		// Every writing-system spelling the project's config uses; see LfMultiText.WriteToLcm
+		private readonly ISet<string> configuredTags;
 
-		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn)
+		public ConvertMongoToLcmCustomField(LcmCache cache, FwServiceLocatorCache serviceLocator, ILogger logger, int wsEn,
+			ISet<string> configuredTags = null)
 		{
 			this.cache = cache;
 			this.servLoc = serviceLocator;
 			this.lcmMetaData = (IFwMetaDataCacheManaged)cache.MetaDataCacheAccessor;
 			this.logger = logger;
 			this.wsEn = wsEn;
+			this.configuredTags = configuredTags;
 		}
 
 		public Guid ParseGuidOrDefault(string input)
@@ -89,7 +96,9 @@ namespace LfMerge.Core.DataConverters
 			if (fieldName == null)
 				return false;
 
-			// Valid field types in LCM are GenDate, Integer, String, OwningAtomic, ReferenceAtomic, and ReferenceCollection, so that's all we implement.
+			// Valid field types in LCM are GenDate, Integer, String, MultiUnicode, OwningAtomic,
+			// ReferenceAtomic, and ReferenceCollection, so that's all we implement. MultiUnicode is the
+			// one every text custom field created in LF has, since LF has no single-string custom field.
 			switch (fieldType)
 			{
 			case CellarPropertyType.GenDate:
@@ -176,7 +185,7 @@ namespace LfMerge.Core.DataConverters
 					if (multiPara.InputSystem == null)
 						wsId = lcmMetaData.GetFieldWs(flid);
 					else
-						wsId = servLoc.WritingSystemFactory.GetWsFromStr(multiPara.InputSystem);
+						wsId = LanguageTags.WsIdFromLfTag(servLoc.WritingSystemFactory, multiPara.InputSystem);
 					ConvertUtilities.SetCustomStTextValues(text, multiPara.Paragraphs, wsId);
 
 					return true;
@@ -356,17 +365,53 @@ namespace LfMerge.Core.DataConverters
 					return true;
 				}
 
+			case CellarPropertyType.MultiUnicode:
+				{
+					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
+
+					var existingWsIds = new List<int>();
+					ITsMultiString oldValues = data.get_MultiStringProp(hvo, flid);
+					if (oldValues != null)
+					{
+						for (int index = 0; index < oldValues.StringCount; index++)
+						{
+							int oldWsId;
+							oldValues.GetStringFromIndex(index, out oldWsId);
+							existingWsIds.Add(oldWsId);
+						}
+					}
+
+					// The same writer as the built-in multitext fields, reaching LCM through
+					// ISilDataAccess because a custom field has no IMultiAccessorBase.
+					return valueAsMultiText.WriteToLcm(existingWsIds,
+						wsId => data.get_MultiStringAlt(hvo, flid, wsId),
+						(wsId, tss) => data.SetMultiStringAlt(hvo, flid, wsId, tss),
+						servLoc.WritingSystemFactory,
+						configuredTags,
+						tag => logger.Warning("Custom field {0}: skipping unidentified writing system {1}",
+							fieldName, tag),
+						(notWritten, written) => logger.Warning(
+							"Custom field {0}: keys \"{1}\" and \"{2}\" name the same writing system; wrote \"{2}\" ({3}), not \"{1}\" ({4})",
+							fieldName, notWritten, written, valueAsMultiText.Excerpt(written),
+							valueAsMultiText.Excerpt(notWritten)));
+				}
+
 			case CellarPropertyType.String:
 				{
 					var valueAsMultiText = BsonSerializer.Deserialize<LfMultiText>(value.AsBsonDocument);
 					int wsIdForField = lcmMetaData.GetFieldWs(flid);
-					string wsStrForField = servLoc.WritingSystemFactory.GetStrFromWs(wsIdForField);
-					KeyValuePair<string, string> kv = valueAsMultiText.BestStringAndWs(new string[] { wsStrForField });
-					string foundWs = kv.Key ?? string.Empty;
+					KeyValuePair<int, string> kv = valueAsMultiText.BestStringAndWsId(
+						new[] { wsIdForField }, servLoc.WritingSystemFactory, configuredTags);
+					int foundWsId = kv.Key;
 					string foundData = kv.Value ?? string.Empty;
-					int foundWsId = servLoc.WritingSystemFactory.GetWsFromStr(foundWs);
 					if (foundWsId == 0)
-						return false; // Skip any unidentified writing systems
+					{
+						// Nothing placeable, so the field is left as it was; if LF holds text, say why
+						if (!valueAsMultiText.IsEmpty)
+							ConvertMongoToLcmLexicon.LogTextNotPlaced(valueAsMultiText, "Custom field " + fieldName,
+								logger, servLoc.WritingSystemFactory, configuredTags);
+						return false;
+					}
 					ITsString oldValue = data.get_StringProp(hvo, flid);
 					ITsString newValue = ConvertMongoToLcmTsStrings.SpanStrToTsString(foundData, foundWsId, servLoc.WritingSystemFactory);
 					if (oldValue != null && TsStringUtils.GetDiffsInTsStrings(oldValue, newValue) == null) // GetDiffsInTsStrings() returns null when there are no changes
@@ -379,8 +424,12 @@ namespace LfMerge.Core.DataConverters
 				}
 
 			default:
+				if (unwritableFieldsReported.Add(flid))
+					logger.Warning(
+						"Custom field {0} not written to LCM: CellarPropertyType.{1} is not implemented "
+						+ "for the LF to LCM direction, so any data LF holds in it is being dropped",
+						fieldName, fieldType.ToString());
 				return false;
-				// TODO: Maybe issue a proper warning (or error) log message for "field type not recognized"?
 			}
 		}
 

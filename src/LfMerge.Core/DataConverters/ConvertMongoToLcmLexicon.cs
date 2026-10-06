@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using LfMerge.Core.DataConverters.CanonicalSources;
 using LfMerge.Core.FieldWorks;
+using LfMerge.Core.LanguageForge.Config;
 using LfMerge.Core.LanguageForge.Model;
 using LfMergeBridge.LfMergeModel;
 using LfMerge.Core.Logging;
@@ -39,6 +40,8 @@ namespace LfMerge.Core.DataConverters
 
 		private int _wsEn;
 		private ConvertMongoToLcmCustomField _convertCustomField;
+		// Every writing-system spelling the project's config uses; see LfMultiText.WriteToLcm
+		private ISet<string> _configuredTags;
 
 		// Entries where LF's copy differs from FieldWorks but no LF user has touched it since the
 		// last sync, so FieldWorks holds the newer version (see EditedInLfSinceLastSync)
@@ -138,14 +141,18 @@ namespace LfMerge.Core.DataConverters
 			// Logger.Debug("Running \"fake\" MtFComments, should see comments show up below:");
 			var entryObjectIdToGuidMappings = Connection.GetGuidsByObjectIdForCollection(LfProject, MagicStrings.LfCollectionNameForLexicon);
 			EntryCounts.Reset();
-			// Update writing systems from project config input systems.  Won't commit till the end
+			// Update writing systems from project config input systems.  Won't commit till the end.
+			// Which list a new writing system belongs in depends on what it is actually used for, so
+			// the lexicon is counted -- a second streaming pass over Mongo, which GetLexicon yields
+			// from a cursor -- but only if some input system is new to LCM.
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
-				LfWsToLcmWs(ProjectRecord.InputSystems));
+				LfWsToLcmWs(ProjectRecord.InputSystems, () => LfWritingSystemUsage.FromLexicon(GetLexicon(LfProject))));
 
 			// Set English ws handle again in case it changed
 			_wsEn = ServiceLocator.WritingSystemFactory.GetWsFromStr("en");
 
-			_convertCustomField = new ConvertMongoToLcmCustomField(Cache, ServiceLocator, Logger, _wsEn);
+			_configuredTags = ConfiguredTags(ProjectRecord.Config);
+			_convertCustomField = new ConvertMongoToLcmCustomField(Cache, ServiceLocator, Logger, _wsEn, _configuredTags);
 
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			_changedOnlyInFieldWorks = 0;
@@ -201,45 +208,446 @@ namespace LfMerge.Core.DataConverters
 			return Connection.GetRecords<LfLexEntry>(project, MagicStrings.LfCollectionNameForLexicon);
 		}
 
+		// The field groups whose vernacular/analysis role is never in doubt, because FieldWorks fixes
+		// it: a headword and an example sentence are vernacular, a gloss and a translation are not.
+		// Everything else is classified per project by which of these its writing systems appear in
+		// -- a fixed list cannot be right for every project: in the 2026-07-06 corpus 741 projects
+		// configure etymology with analysis writing systems and 378 with vernacular ones.
+		//
+		// Counting that corpus, for each field, the projects whose text there is exclusively
+		// vernacular against exclusively analysis: the example sentence is 332 to 5, the example
+		// translation 1 to 320, the entry note 0 to 255 and the literal meaning 4 to 136.
+		//
+		// The pronunciation field is deliberately NOT here. It looks vernacular at 114 to 16, but
+		// that is 12% analysis, above the MinorityShare a single writing system would have to stay
+		// under to count as one role alone, so projects evidently use it for more than one thing.
+		// Its text still counts for something in ClassifyByText, though: see there.
+		private static readonly string[] VernacularAnchorFields = {
+			LfWritingSystemUsage.Lexeme,
+			LfWritingSystemUsage.CitationForm,
+			LfWritingSystemUsage.ExampleSentence,
+		};
+		private static readonly string[] AnalysisAnchorFields = {
+			LfWritingSystemUsage.Definition,
+			LfWritingSystemUsage.Gloss,
+			LfWritingSystemUsage.ExampleTranslation,
+			LfWritingSystemUsage.Note,
+			LfWritingSystemUsage.LiteralMeaning,
+		};
+
+		/// <summary>
+		/// Work out which writing systems this project treats as vernacular and which as analysis,
+		/// from its own config and the text in its lexicon.
+		///
+		/// The anchor fields have a role FieldWorks fixes: the lexeme, citation form and example
+		/// sentence are vernacular; the definition, gloss, example translation, note and literal
+		/// meaning are analysis (see VernacularAnchorFields).
+		///
+		/// Where the lexicon has text in the anchors for a writing system, that text decides: one
+		/// holding nearly all of it in the vernacular anchors is vernacular whatever the config
+		/// offers, and vice versa, and one whose text is split is both. See
+		/// <see cref="MinorityShare"/>. A writing system whose only text is pronunciation text is
+		/// vernacular; see <see cref="ClassifyByText"/>.
+		///
+		/// The rest go by the config. A writing system the anchors offer is placed by them, and one
+		/// in both anchor groups -- "en" very often is -- is both. Every other field carrying input
+		/// systems (etymology, custom fields) is assigned by overlap: a writing system exclusive to
+		/// the vernacular role is evidence the field is vernacular, and vice versa. Evidence decides
+		/// the role of the field, not of every writing system in it, and it has to point one way: a
+		/// field offering writing systems exclusive to each role, such as an etymology configured
+		/// as [seh, pt], is evidence of neither, so it does not make Portuguese vernacular, nor
+		/// anything else it offers that the anchors have not placed. All the fields' evidence is
+		/// weighed before any writing system is placed by it, so the order of the config's fields
+		/// does not matter. What is left is settled, where it can be, by the company a writing
+		/// system keeps and then by its language.
+		///
+		/// This replaces comparing each tag against ProjectRecord.LanguageCode, which named exactly one
+		/// vernacular writing system and got it wrong whenever languageCode disagreed with the lexeme
+		/// field: flh-flex has languageCode "flh-x-ortho" (used only by etymology) while its lexeme
+		/// uses "flh-x-cm", and odo has languageCode "th" which is not among its writing systems at all,
+		/// leaving its 24,460 "en" headwords classified as analysis.
+		/// </summary>
+		/// <param name="usage">
+		/// How much text each writing system holds in each field, or null to go on the config alone.
+		/// </param>
+		/// <returns>
+		/// The vernacular tags; the analysis tags; and the tags that could not be resolved. The first
+		/// two sets overlap wherever a writing system plays both roles. A tag in neither set -- one
+		/// no config field uses -- is analysis, as it always has been.
+		///
+		/// Unresolved writing systems are treated as BOTH vernacular and analysis, since nothing says
+		/// which they are and a writing system missing from the list a field draws on leaves that
+		/// field's data with nowhere to go. The FieldWorks fields such a writing system most often
+		/// feeds (etymology form, example sentence) are vernacular-typed, which is why being only
+		/// analysis will not do; but a custom field can be analysis-typed, as a French-only notes
+		/// field would be, which is why being only vernacular will not do either. 7 projects in the
+		/// 2026-10-01 corpus need this, e.g. kam-flex, whose Spanish and French are offered only in
+		/// a wordlist field that offers its vernacular and its analysis language as well.
+		/// </returns>
+		public static (ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)
+			ClassifyVernacularWritingSystems(LfProjectConfig config, string languageCode,
+				LfWritingSystemUsage usage = null)
+		{
+			var byPath = new Dictionary<string, ISet<string>>();
+			CollectInputSystems((config == null) ? null : config.Entry, "", byPath);
+
+			var vernacular = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var analysis = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var unresolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+			// Writing systems whose text has already answered for them. They keep that answer: the
+			// config below may offer them for fields nobody writes in, and must not overrule it.
+			var decidedByText = ClassifyByText(usage, byPath, vernacular, analysis);
+
+			var vernacularAnchor = Union(byPath, VernacularAnchorFields);
+			var analysisAnchor = Union(byPath, AnalysisAnchorFields);
+			vernacular.UnionWith(vernacularAnchor.Where(tag => !decidedByText.Contains(tag)));
+			analysis.UnionWith(analysisAnchor.Where(tag => !decidedByText.Contains(tag)));
+
+			// Only a writing system exclusive to one role is evidence of a field's role.
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
+
+			// Every field's evidence is gathered before any writing system is placed by it, so that
+			// the answer does not depend on the order the config lists its fields in. Placing as
+			// each field came used to let a field with no evidence, listed before the one that
+			// placed a writing system, put that writing system in doubt, and the passes below could
+			// then strip one of the roles that field gave it.
+			var anchors = new HashSet<string>(VernacularAnchorFields.Concat(AnalysisAnchorFields));
+			var inVernacularField = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var inAnalysisField = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			var inFieldOfNoRole = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (var field in byPath)
+			{
+				if (anchors.Contains(field.Key) || field.Value.Count == 0)
+					continue;
+				// A writing system its own text has spoken for is still evidence of what this field
+				// is for, but nothing here may change the answer it was given.
+				var undecided = field.Value.Where(tag => !decidedByText.Contains(tag)).ToList();
+				bool withVernacular = field.Value.Any(vernacularOnly.Contains);
+				bool withAnalysis = field.Value.Any(analysisOnly.Contains);
+				if (withVernacular && !withAnalysis)
+					inVernacularField.UnionWith(undecided);
+				else if (withAnalysis && !withVernacular)
+					inAnalysisField.UnionWith(undecided);
+				else
+				{
+					// Overlaps neither role, or both: nothing says which role this field plays. A field
+					// offering a vernacular-only and an analysis-only writing system side by side is
+					// no more evidence for one role than the other, just as only unanimous company
+					// counts in ResolveByCompanions.
+					inFieldOfNoRole.UnionWith(undecided);
+				}
+			}
+			// A field of no role puts in doubt only the writing systems nothing else places, neither
+			// the anchors nor a field that has a role. One already placed keeps its place: "en" in
+			// both the lexeme and the gloss is not made doubtful by also turning up in a sense's
+			// general note, and if it were, the passes below could strip one of its roles on the
+			// strength of the company it keeps there. (The entry's note is an anchor, so never comes
+			// this far.)
+			var doubtful = inFieldOfNoRole
+				.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)
+					&& !inVernacularField.Contains(tag) && !inAnalysisField.Contains(tag))
+				.ToList();
+			vernacular.UnionWith(inVernacularField);
+			analysis.UnionWith(inAnalysisField);
+			vernacular.UnionWith(doubtful);
+			analysis.UnionWith(doubtful);
+			unresolved.UnionWith(doubtful);
+
+			ResolveByCompanions(byPath, vernacular, analysis, unresolved);
+			ResolveByLanguageAffinity(vernacular, analysis, unresolved);
+
+			// Safety net for a config LfMerge cannot read: without this such a project would get no
+			// vernacular writing system at all, which is worse than the old rule.
+			if (vernacular.Count == 0 && !string.IsNullOrEmpty(languageCode))
+				vernacular.Add(languageCode);
+
+			return (vernacular, analysis, unresolved);
+		}
+
+		/// <summary>
+		/// The writing systems that play one role only: those vernacular and not analysis, and those
+		/// analysis and not vernacular. Each pass that weighs evidence recomputes them, since the
+		/// passes before it change the two sets.
+		/// </summary>
+		private static (HashSet<string> VernacularOnly, HashSet<string> AnalysisOnly) ExclusiveRoles(
+			ISet<string> vernacular, ISet<string> analysis)
+		{
+			var vernacularOnly = new HashSet<string>(vernacular, StringComparer.OrdinalIgnoreCase);
+			vernacularOnly.ExceptWith(analysis);
+			var analysisOnly = new HashSet<string>(analysis, StringComparer.OrdinalIgnoreCase);
+			analysisOnly.ExceptWith(vernacular);
+			return (vernacularOnly, analysisOnly);
+		}
+
+		/// <summary>
+		/// Settles what is left by the company a writing system keeps. What is left is offered only
+		/// in fields that said nothing of their role -- a field with a writing system of one role
+		/// alone has already placed the rest -- but the company it keeps there may since have been
+		/// placed by another field: in a custom field offering "abc" and "xyz" and nothing else of
+		/// known role, "xyz" is vernacular if another custom field, offering "abc" beside the
+		/// vernacular, has made "abc" vernacular.
+		///
+		/// Only unanimous company counts. A field holding writing systems of both roles says
+		/// nothing, which is the same reason a writing system in both anchors is no evidence of a
+		/// field's role. One pass is made, not one until nothing changes: a writing system whose
+		/// only company is another left in doubt stays in doubt, and keeps both roles, even if that
+		/// other is settled here.
+		/// </summary>
+		private static void ResolveByCompanions(IDictionary<string, ISet<string>> byPath,
+			ISet<string> vernacular, ISet<string> analysis, ISet<string> unresolved)
+		{
+			if (unresolved.Count == 0)
+				return;
+
+			// Unresolved writing systems sit in both sets, so they are in neither of these and
+			// cannot vote for each other.
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
+
+			foreach (string tag in unresolved.ToList())
+			{
+				var companions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+				foreach (var field in byPath)
+				{
+					if (field.Value.Contains(tag))
+						companions.UnionWith(field.Value);
+				}
+				companions.Remove(tag);
+				bool withVernacular = companions.Any(vernacularOnly.Contains);
+				bool withAnalysis = companions.Any(analysisOnly.Contains);
+				if (withVernacular == withAnalysis)
+					continue; // No company, or company of both roles: still nothing to go on.
+				if (withVernacular)
+					analysis.Remove(tag);
+				else
+					vernacular.Remove(tag);
+				unresolved.Remove(tag);
+			}
+		}
+
+		/// <summary>
+		/// Settles what is left by language. A writing system plays the same role as the others
+		/// that spell the same language: a phonetic or audio spelling of the vernacular is
+		/// vernacular too, and a regional spelling of the analysis language is analysis.
+		/// </summary>
+		private static void ResolveByLanguageAffinity(ISet<string> vernacular, ISet<string> analysis,
+			ISet<string> unresolved)
+		{
+			if (unresolved.Count == 0)
+				return;
+
+			// Unresolved writing systems sit in both sets, so they are in neither of these and
+			// cannot vote for each other.
+			var (vernacularOnly, analysisOnly) = ExclusiveRoles(vernacular, analysis);
+			var vernacularLanguages = new HashSet<string>(vernacularOnly.Select(LanguageOf), StringComparer.OrdinalIgnoreCase);
+			var analysisLanguages = new HashSet<string>(analysisOnly.Select(LanguageOf), StringComparer.OrdinalIgnoreCase);
+
+			foreach (string tag in unresolved.ToList())
+			{
+				string language = LanguageOf(tag);
+				bool withVernacular = vernacularLanguages.Contains(language);
+				bool withAnalysis = analysisLanguages.Contains(language);
+				if (withVernacular == withAnalysis)
+					continue; // The language is spoken for by both roles, or by neither.
+				if (withVernacular)
+					analysis.Remove(tag);
+				else
+					vernacular.Remove(tag);
+				unresolved.Remove(tag);
+			}
+		}
+
+		// Subtags that mark a variant of a language rather than a language of its own. FieldWorks
+		// also appends "dupl1", "dupl2" and so on when a project needs a second writing system for
+		// the same thing.
+		private static readonly HashSet<string> VariantMarkers = new HashSet<string>(
+			new[] { "fonipa", "etic", "emic", "audio" }, StringComparer.OrdinalIgnoreCase);
+
+		/// <summary>
+		/// The language a tag names, as far as telling one project's writing systems apart goes:
+		/// the language subtag plus any private-use subtags that name the language rather than a
+		/// variant of it. Script and region are left out, so "en" and "en-GB" are one language.
+		///
+		/// The private-use subtags have to stay, because under "qaa" -- the code for a language
+		/// with no code of its own, which Language Forge projects lean on heavily -- they ARE the
+		/// language: "qaa-x-kal" and "qaa-x-hbo" are no more the same language than "fr" and "de".
+		/// So "qaa-x-kal", "qaa-fonipa-x-kal" and "qaa-Zxxx-x-kal-audio" all come out "qaa-kal",
+		/// while "seh" and "seh-fonipa-x-etic" both come out "seh". The same goes for a tag that is
+		/// private-use from the start: "x-kal" comes out "x-kal", not "x".
+		/// </summary>
+		private static string LanguageOf(string tag)
+		{
+			if (string.IsNullOrEmpty(tag))
+				return tag;
+			string[] parts = tag.Split('-');
+			var language = new List<string> { parts[0] };
+			int privateUse = Array.FindIndex(parts,
+				part => part.Equals("x", StringComparison.OrdinalIgnoreCase));
+			if (privateUse >= 0)
+			{
+				for (int i = privateUse + 1; i < parts.Length; i++)
+				{
+					if (VariantMarkers.Contains(parts[i]) ||
+						parts[i].StartsWith("dupl", StringComparison.OrdinalIgnoreCase))
+						continue;
+					language.Add(parts[i]);
+				}
+			}
+			return string.Join("-", language);
+		}
+
+		/// <summary>
+		/// A writing system holding at most this share of its text in the fields of one role is
+		/// taken to belong to the other role alone; in between, it plays both.
+		///
+		/// A few strays are not evidence of a second role. In brb-flex-2022 the phonetic writing
+		/// system has 4,030 headwords and one stray string in an example reference, and FieldWorks
+		/// has it as vernacular only; in cmo-khm-flex the vernacular has 7,815 vernacular strings
+		/// against 300 in glosses, and is likewise vernacular only. The one writing system the four
+		/// FieldWorks projects on hand really do list as BOTH sits at 28%, so anything between 4%
+		/// and 28% separates the two, and 10% is the round number in the middle.
+		/// </summary>
+		public const double MinorityShare = 0.10;
+
+		/// <summary>
+		/// Classifies every writing system the lexicon has text for, by where that text sits.
+		/// Adds them to <paramref name="vernacular"/> and <paramref name="analysis"/>, and returns
+		/// the ones it answered for.
+		///
+		/// A writing system whose only text is in the pronunciation field is made vernacular,
+		/// because FieldWorks draws its pronunciation writing systems from the vernacular ones
+		/// (InitializePronunciationWritingSystems considers no others). It is not returned as
+		/// answered for, so the anchor fields can still add analysis: Swedish offered for the
+		/// gloss, with a stray pronunciation string, is both. But from here on it counts as
+		/// vernacular, as any placed writing system does: a field of no role does not put it in
+		/// doubt, and a custom field it alone is offered in is taken for a vernacular field. So
+		/// a writing system offered only in custom fields, with pronunciation text and nothing
+		/// else, is vernacular only. In the 2026-10-01 corpus all 57 writing systems with
+		/// pronunciation text and no anchor text are used that way -- phonetic, IPA and audio
+		/// writing systems, and xin-flex's "xin", which holds 226 pronunciations and nothing else
+		/// -- and FLEx has as vernacular every one of them whose role LfMerge's export records.
+		/// The pronunciation field is still not an anchor; see VernacularAnchorFields.
+		/// </summary>
+		private static ISet<string> ClassifyByText(LfWritingSystemUsage usage,
+			IDictionary<string, ISet<string>> byPath, ISet<string> vernacular, ISet<string> analysis)
+		{
+			var decided = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			if (usage == null || usage.EntriesCounted == 0)
+				return decided;
+
+			// Every writing system the config mentions, plus any the config forgot but the lexicon
+			// uses anyway -- those need classifying just as much.
+			var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (ISet<string> tags in byPath.Values)
+				candidates.UnionWith(tags);
+			foreach (string path in VernacularAnchorFields.Concat(AnalysisAnchorFields))
+				candidates.UnionWith(usage.TagsWithText(path));
+			candidates.UnionWith(usage.TagsWithText(LfWritingSystemUsage.Pronunciation));
+
+			foreach (string tag in candidates)
+			{
+				int vernacularText = usage.NonEmptyCount(VernacularAnchorFields, tag);
+				int analysisText = usage.NonEmptyCount(AnalysisAnchorFields, tag);
+				int total = vernacularText + analysisText;
+				if (total == 0)
+				{
+					// No text in a field of known role, so its text decides nothing.
+					if (usage.NonEmptyCount(LfWritingSystemUsage.Pronunciation, tag) > 0)
+						vernacular.Add(tag);
+					continue;
+				}
+				double analysisShare = (double)analysisText / total;
+				if (analysisShare <= MinorityShare)
+					vernacular.Add(tag);
+				else if (analysisShare >= 1.0 - MinorityShare)
+					analysis.Add(tag);
+				else
+				{
+					vernacular.Add(tag);
+					analysis.Add(tag);
+				}
+				decided.Add(tag);
+			}
+			return decided;
+		}
+
+		private static ISet<string> Union(IDictionary<string, ISet<string>> byPath, IEnumerable<string> paths)
+		{
+			var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			foreach (var path in paths)
+			{
+				ISet<string> tags;
+				if (byPath.TryGetValue(path, out tags))
+					result.UnionWith(tags);
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Every writing-system spelling the config's fields use, exactly as spelled: LF's editor
+		/// matches them against an entry's keys exactly.
+		/// </summary>
+		private static ISet<string> ConfiguredTags(LfProjectConfig config)
+		{
+			var byPath = new Dictionary<string, ISet<string>>();
+			CollectInputSystems((config == null) ? null : config.Entry, "", byPath);
+			var tags = new HashSet<string>(StringComparer.Ordinal);
+			foreach (ISet<string> fieldTags in byPath.Values)
+				tags.UnionWith(fieldTags);
+			return tags;
+		}
+
+		/// <summary>
+		/// Record every config field's input systems, keyed by its dotted path as Mongo spells it, so
+		/// nesting goes through "fields" ("senses.fields.examples.fields.sentence").
+		/// </summary>
+		private static void CollectInputSystems(LfConfigFieldList fieldList, string path,
+			IDictionary<string, ISet<string>> byPath)
+		{
+			if (fieldList == null || fieldList.Fields == null)
+				return;
+			foreach (var child in fieldList.Fields)
+			{
+				string childPath = string.IsNullOrEmpty(path) ? child.Key : path + "." + child.Key;
+				var multiText = child.Value as LfConfigMultiText;
+				// A null or empty tag names no writing system, and a null one would make the text
+				// counts throw, ending the whole transfer
+				if (multiText != null && multiText.InputSystems != null)
+					byPath[childPath] = new HashSet<string>(multiText.InputSystems.Where(tag => !string.IsNullOrEmpty(tag)),
+						StringComparer.OrdinalIgnoreCase);
+				var nested = child.Value as LfConfigFieldList;
+				if (nested != null)
+					CollectInputSystems(nested, childPath + ".fields", byPath);
+			}
+		}
+
 		/// <summary>
 		/// Converts the list of LF input systems and adds them to Lcm writing systems
 		/// </summary>
 		/// <param name="lfWsList">List of LF input systems.</param>
-		private void LfWsToLcmWs(Dictionary<string, LfInputSystemRecord> lfWsList)
+		/// <param name="countUsage">
+		/// Counts the text in the lexicon, for classifying a writing system new to LCM. Called only
+		/// if there is one, since it reads the whole lexicon.
+		/// </param>
+		private void LfWsToLcmWs(Dictionary<string, LfInputSystemRecord> lfWsList,
+			Func<LfWritingSystemUsage> countUsage = null)
 		{
-			// Between FW 8.2 and 9, a few classes and interfaces were renamed. The ones most relevant here are
-			// IWritingSystemManager (interface was removed and replaced with the WritingSystemManager concrete class),
-			// and PalasoWritingSystem which was replaced with CoreWritingSystemDefinition. Since their internals
-			// didn't change much (and the only changes were in areas we don't access), we can use a simple compiler
-			// define to choose the type of the wsm variable here (and the ws variable later) and we're fine.
-			// HOWEVER, if the code inside #if...#endif blocks starts to grow, this is not an ideal solution. A better
-			// solution if the code grows complex will be to write several classes to the same interface, each of which
-			// can deal with one particular version of FW or Lcm. Register them all with Autofac with a way to choose among them
-			// (http://docs.autofac.org/en/stable/register/registration.html#selection-of-an-implementation-by-parameter-value)
-			// and then, at runtime, we can instantiate the particular class that's needed for dealing with *this* FW project.
-			//
-			// But for now, these #if...#endif blocks are enough. - 2016-03 RM
-#if FW8_COMPAT
-			// Note that we can't use ILgWritingSystemFactory here, because it doesn't have some methods we need later on.
-			IWritingSystemManager wsManager = ServiceLocator.WritingSystemManager;
-#else
 			WritingSystemManager wsManager = ServiceLocator.WritingSystemManager;
-#endif
 			if (wsManager == null)
 			{
 				Logger.Error("Failed to find the writing system manager");
 				return;
 			}
 
-			string vernacularLanguageCode = ProjectRecord.LanguageCode;
+			// Worked out when the first writing system new to LCM turns up, and not at all if none
+			// does, which after a project's first sync is nearly always: only a new writing system is
+			// put in a list, and working out which ones counts the whole lexicon. It depends only on
+			// LF's config and text, so the writing systems created before then cannot change it.
+			(ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)? classification = null;
 			// TODO: Split the inside of this foreach() out into its own function
 			foreach (var lfWs in lfWsList.Values)
 			{
-#if FW8_COMPAT
-				IWritingSystem ws;
-#else
 				CoreWritingSystemDefinition ws;
-#endif
 
 				// It would be nice to call this to add to both analysis and vernacular WS.
 				// But we need the flexibility of bringing in LF WS properties.
@@ -253,46 +661,112 @@ namespace LfMerge.Core.DataConverters
 				}
 				*/
 
-				// TODO: It might be possible to rewrite this code to NOT rely on TryGet() after all, in which case we could
-				// use the ILgWritingSystemFactory interface and remove one point of FW 8-to-9 API incompatibility.
-
-				if (wsManager.TryGet(lfWs.Tag, out ws))
+				// Find the writing system the way every other LF tag is found before creating one.
+				// LfMerge used to export input systems by LanguageTag, while LCM knows a writing
+				// system by its Id, and in older projects the two differ: spt-flex's input system "hi-IN" is
+				// the writing system LCM holds as "hi-Deva-IN". GetOrSet looks a tag up only as an
+				// Id, so it did not find it, created a duplicate "hi-IN" and put it in the current
+				// lists; WsIdFromLfTag, which every multitext key goes through, then matched the
+				// duplicate exactly, and text typed in LF went to it rather than to hi-Deva-IN.
+				int existingHandle = LanguageTags.WsIdFromLfTag(wsManager, lfWs.Tag);
+				bool wsAlreadyExisted;
+				if (existingHandle != 0)
 				{
-					// The WS does check that a property has a different value before setting it
-					// (and thus setting IsChanged flag), but for Abbreviation the WS returns
-					// Language if not set, and it fails to check that.
-					if (ws.Abbreviation != lfWs.Abbreviation)
-						ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Replace(ws);
+					ws = wsManager.Get(existingHandle);
+					wsAlreadyExisted = true;
 				}
 				else
 				{
-					ws = wsManager.Create(lfWs.Tag);
+					// Nothing to find, so create it. GetOrSet creates under the canonical form of the
+					// tag -- "qaa-x-qaa-v" becomes "qaa-x-v", "th-Thai" becomes "th" -- and adds the
+					// writing system to the manager, so no Set() call is needed here.
+					wsAlreadyExisted = wsManager.GetOrSet(lfWs.Tag, out ws);
+				}
+
+				// The WS does check that a property has a different value before setting it
+				// (and thus setting IsChanged flag), but for Abbreviation the WS returns
+				// Language if not set, and it fails to check that.
+				if (ws.Abbreviation != lfWs.Abbreviation)
+				{
 					ws.Abbreviation = lfWs.Abbreviation;
-					ws.RightToLeftScript = lfWs.IsRightToLeft;
-					wsManager.Set(ws);
+				}
+				ws.RightToLeftScript = lfWs.IsRightToLeft;
+				// No wsManager.Replace(ws): ws is the manager's own object, so the edits above are
+				// already in place. Replace looks the writing system up by LanguageTag, and where
+				// the Id is spelled otherwise that lookup does harm. If it finds nothing, Replace
+				// re-registers ws under a fresh handle mid-sync; if it finds another writing system
+				// with that LanguageTag -- brb-flex-2022's unused "km-KH" beside "km-Khmr-KH" --
+				// Replace evicts that one and gives ws its handle.
 
-					// LF doesn't distinguish between vernacular/analysis WS, so we'll
-					// only assign the project language code to vernacular.
-					// All other WS assigned to analysis.
-
-					// TODO: What if our vernacular was Thai, but we added th-ipa? This logic needs to be a bit "fuzzier", really.
-					if (lfWs.Tag.Equals(vernacularLanguageCode))
+				if (!wsAlreadyExisted)
+				{
+					// LF doesn't distinguish between vernacular/analysis WS, so the roles are worked
+					// out per project from its config and text -- see ClassifyVernacularWritingSystems. A
+					// writing system can play both, "en" in lexeme and gloss alike being the usual
+					// case, and one no field claims is analysis. The input system, the config and
+					// the lexicon need not spell the writing system alike, so the roles are looked
+					// up under any spelling of it; see HasRole.
+					if (classification == null)
+						classification = ClassifyForNewWritingSystems(countUsage);
+					bool isVernacular = HasRole(classification.Value.Vernacular, lfWs.Tag);
+					if (isVernacular)
 						ServiceLocator.LanguageProject.AddToCurrentVernacularWritingSystems(ws);
-					else
+					if (!isVernacular || HasRole(classification.Value.Analysis, lfWs.Tag))
 						ServiceLocator.LanguageProject.AddToCurrentAnalysisWritingSystems(ws);
-
 				}
 			}
 		}
 
+		/// <summary>
+		/// Whether a writing system new to LCM plays this role, under any spelling of its tag. The
+		/// classification spells each writing system as the config and the lexicon do, and the
+		/// input system can spell it otherwise: an LF user who adds "qaa-x-qaa-new" may configure
+		/// fields with "qaa-x-new". Spellings sharing a canonical form can be taken for one writing
+		/// system here, because this one is new: had LCM held any writing system with that canonical
+		/// form, WsIdFromLfTag would have found it. A role found under one spelling therefore counts
+		/// for all of them, even where the text decided otherwise under another: a writing system
+		/// whose text makes it vernacular only, offered by the config in the gloss under another
+		/// spelling, is both. That can only add a role, never take one away.
+		/// </summary>
+		private static bool HasRole(ISet<string> role, string tag)
+		{
+			if (role.Contains(tag))
+				return true;
+			string canonical = LanguageTags.Canonical(tag);
+			return role.Any(other => string.Equals(LanguageTags.Canonical(other), canonical, StringComparison.OrdinalIgnoreCase));
+		}
+
+		/// <summary>
+		/// Which writing systems this project treats as vernacular and which as analysis, derived
+		/// from its own config and text rather than from languageCode alone; see
+		/// ClassifyVernacularWritingSystems.
+		/// </summary>
+		private (ISet<string> Vernacular, ISet<string> Analysis, ISet<string> Unresolved)
+			ClassifyForNewWritingSystems(Func<LfWritingSystemUsage> countUsage)
+		{
+			var classification = ClassifyVernacularWritingSystems(ProjectRecord.Config,
+				ProjectRecord.LanguageCode, countUsage?.Invoke());
+			if (classification.Unresolved.Count > 0)
+			{
+				Logger.Notice("MongoToLcm: writing system(s) {0} appear only in config fields whose "
+					+ "vernacular/analysis role could not be determined; treating them as both",
+					string.Join(", ", classification.Unresolved));
+			}
+			return classification;
+		}
+
+		/// <summary>
+		/// The best string for a single-string LCM field, and the writing system it is in. Null when
+		/// LF holds no text in any writing system LCM has -- which is not the same as holding no text
+		/// at all; see <see cref="BestTsStringFromMultiText"/>.
+		/// </summary>
 		private Tuple<string, int> BestStringAndWsFromMultiText(LfMultiText input, bool isAnalysisField = true)
 		{
 			if (input == null) return null;
 			if (input.Count == 0)
 			{
-				Logger.Warning("BestStringAndWsFromMultiText got a non-null multitext, but it was empty. Empty LF MultiText objects should be nulls in Mongo. Unfortunately, at this point in the code it's hard to know which multitext it was.");
+				// Some Language Forge fields, like scientificName on senses, have empty but
+				// non-null multitexts; those should also be empty in LCM.
 				return null;
 			}
 
@@ -303,38 +777,79 @@ namespace LfMerge.Core.DataConverters
 //				_analysisWsIdsAndNamesInSearchOrder :
 //				_vernacularWsIdsAndNamesInSearchOrder;
 
-			foreach (ILgWritingSystem ws in wsesToSearch)
+			// By handle, not by comparing LF's keys with ws.Id, which would miss a key LF spells
+			// differently from LCM. Falls back to the first value in any writing system LCM knows.
+			KeyValuePair<int, string> best = input.BestStringAndWsId(
+				wsesToSearch.Select(ws => ws.Handle), ServiceLocator.WritingSystemFactory, _configuredTags);
+			if (best.Value == null)
+				return null;
+			return new Tuple<string, int>(best.Value, best.Key);
+		}
+
+		/// <summary>
+		/// The value to give a single-string LCM field, whose current value is
+		/// <paramref name="current"/>.
+		///
+		/// Null, clearing the field, when LF holds no text for it. But when LF holds text and every
+		/// alternative is in a writing system LCM does not have, there is nowhere to put it, and the
+		/// field keeps its current value. Neither alternative will do: building the string in
+		/// writing system 0 throws, which abandons the rest of the entry half-written, and clearing
+		/// the field would delete what LCM holds on account of text that could not be placed.
+		///
+		/// The field also keeps its value when LF's text is all under keys passed over for an empty
+		/// key naming the same writing system. That empty key may be a clear made under the config's
+		/// spelling, or the empty value LF's editor fills in for every configured input system an
+		/// entry lacks, beside the export's value under the Id; nothing here tells the two apart, and
+		/// keeping what LCM holds loses nothing that LF can show.
+		/// </summary>
+		private ITsString BestTsStringFromMultiText(LfMultiText input, ITsString current, bool isAnalysisField = true)
+		{
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
+			if (stringAndWsId != null)
+				return ConvertMongoToLcmTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
+			return NothingToPlace(input) ? null : current;
+		}
+
+		/// <summary>As <see cref="BestTsStringFromMultiText"/>, for a plain string field.</summary>
+		private string BestStringFromMultiText(LfMultiText input, string current, bool isAnalysisField = true)
+		{
+			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
+			if (stringAndWsId != null)
+				return stringAndWsId.Item1;
+			return NothingToPlace(input) ? null : current;
+		}
+
+		/// <summary>
+		/// Whether LF holds no text at all here. When it does hold text that nevertheless could not
+		/// be placed, says why in the log, since that text is not reaching FieldWorks.
+		/// </summary>
+		private bool NothingToPlace(LfMultiText input)
+		{
+			if (input == null || input.IsEmpty)
+				return true;
+			LogTextNotPlaced(input, "MongoToLcm", Logger, ServiceLocator.WritingSystemFactory, _configuredTags);
+			return false;
+		}
+
+		/// <summary>
+		/// Logs why each key holding text in a single-string field's multitext was not written
+		/// there. Only for when nothing was: every key with text then either names no writing system
+		/// LCM has or was passed over for an empty key, and the messages say so. Called after a
+		/// value has been placed, it would call the key written empty.
+		/// </summary>
+		internal static void LogTextNotPlaced(LfMultiText input, string context, ILogger logger,
+			ILgWritingSystemFactory wsManager, ISet<string> configuredTags)
+		{
+			foreach (KeyValuePair<string, string> passedOver in input.KeysPassedOver(wsManager, configuredTags))
 			{
-				LfStringField field;
-				if (input.TryGetValue(ws.Id, out field) && field != null && !field.IsEmpty)
-				{
-//					Logger.Debug("Returning TsString from {0} for writing system {1}", field.Value, ws.Id);
-					return new Tuple<string, int>(field.Value, ws.Handle);
-				}
+				if (passedOver.Value == null)
+					logger.Warning("{0}: skipping text under \"{1}\" ({2}), which names no writing system LCM has; " +
+						"leaving the field as it was", context, passedOver.Key, input.Excerpt(passedOver.Key));
+				else
+					logger.Warning("{0}: keys \"{1}\" and \"{2}\" name the same writing system, and \"{2}\", the one " +
+						"to write, is empty; leaving the field as it was rather than write \"{1}\" ({3})",
+						context, passedOver.Key, passedOver.Value, input.Excerpt(passedOver.Key));
 			}
-
-			// Last-ditch option: just grab the first non-empty string we can find
-			KeyValuePair<int, string> kv = input.WsIdAndFirstNonEmptyString(Cache);
-			if (kv.Value == null) return null;
-//			Logger.Debug("Returning first non-empty TsString from {0} for writing system with ID {1}",
-//				kv.Value, kv.Key);
-			return new Tuple<string, int>(kv.Value, kv.Key);
-		}
-
-		private ITsString BestTsStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
-		{
-			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
-			if (stringAndWsId == null)
-				return null;
-			return ConvertMongoToLcmTsStrings.SpanStrToTsString(stringAndWsId.Item1, stringAndWsId.Item2, ServiceLocator.WritingSystemFactory);
-		}
-
-		private string BestStringFromMultiText(LfMultiText input, bool isAnalysisField = true)
-		{
-			Tuple<string, int> stringAndWsId = BestStringAndWsFromMultiText(input, isAnalysisField);
-			if (stringAndWsId == null)
-				return null;
-			return stringAndWsId.Item1;
 		}
 
 		// This GetOrCreate() function takes an extra out parameter so we can correctly update
@@ -693,7 +1208,7 @@ namespace LfMerge.Core.DataConverters
 //				LcmExample.Guid,
 //				LcmExample.Hvo
 //			);
-			LcmExample.Reference = BestTsStringFromMultiText(lfExample.Reference);
+			LcmExample.Reference = BestTsStringFromMultiText(lfExample.Reference, LcmExample.Reference);
 			ICmTranslation t = FindOrCreateTranslationByGuid(lfExample.TranslationGuid, LcmExample,
 				_freeTranslationType);
 			SetMultiStringFrom(t.Translation, lfExample.Translation);
@@ -719,9 +1234,17 @@ namespace LfMerge.Core.DataConverters
 			string caption = "";
 			if (lfPicture.Caption != null)
 			{
-				KeyValuePair<int, string> kv = lfPicture.Caption.WsIdAndFirstNonEmptyString(Cache);
-				captionWs = kv.Key;
-				caption = kv.Value;
+				// A caption in no writing system LCM has would come back as writing system 0, which
+				// cannot be built into a string; the picture then starts with an empty caption, and
+				// SetMultiStringFrom below fills in every alternative that can be placed.
+				KeyValuePair<int, string> kv = lfPicture.Caption.BestStringAndWsId(
+					ServiceLocator.LanguageProject.AnalysisWritingSystems.Select(ws => ws.Handle),
+					ServiceLocator.WritingSystemFactory, _configuredTags);
+				if (kv.Value != null)
+				{
+					captionWs = kv.Key;
+					caption = kv.Value;
+				}
 			}
 
 			// Lcm expects internal pictures in a certain path.  If an external path already
@@ -789,19 +1312,19 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(LcmSense.PhonologyNote, lfSense.PhonologyNote);
 			// LcmSense.ReversalEntriesRC = lfSense.ReversalEntries; // TODO: More complex than
 			// that. Handle it correctly. Maybe.
-			LcmSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName);
+			LcmSense.ScientificName = BestTsStringFromMultiText(lfSense.ScientificName, LcmSense.ScientificName);
 			ListConverters[SemDomListCode].UpdatePossibilitiesFromStringArray(LcmSense.SemanticDomainsRC,
 				lfSense.SemanticDomain);
 			SetMultiStringFrom(LcmSense.SemanticsNote, lfSense.SemanticsNote);
 			SetMultiStringFrom(LcmSense.Bibliography, lfSense.SenseBibliography);
 
 			// lfSense.SenseId; // TODO: What do I do with this one?
-			LcmSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue);
+			LcmSense.ImportResidue = BestTsStringFromMultiText(lfSense.SenseImportResidue, LcmSense.ImportResidue);
 
 			SetMultiStringFrom(LcmSense.Restrictions, lfSense.SenseRestrictions);
 			LcmSense.SenseTypeRA = ListConverters[SenseTypeListCode].FromStringField(lfSense.SenseType);
 			SetMultiStringFrom(LcmSense.SocioLinguisticsNote, lfSense.SociolinguisticsNote);
-			LcmSense.Source = BestTsStringFromMultiText(lfSense.Source);
+			LcmSense.Source = BestTsStringFromMultiText(lfSense.Source, LcmSense.Source);
 			LcmSense.StatusRA = ListConverters[StatusListCode].FromStringArrayFieldWithOneCase(lfSense.Status);
 			ListConverters[UsageTypeListCode].UpdatePossibilitiesFromStringArray(LcmSense.UsageTypesRC,
 				lfSense.Usages);
@@ -903,7 +1426,15 @@ namespace LfMerge.Core.DataConverters
 			if (source == null)
 				ClearMultiString(dest);
 			else
-				source.WriteToLcmMultiString(dest, ServiceLocator.WritingSystemManager);
+				source.WriteToLcmMultiString(dest, ServiceLocator.WritingSystemManager, _configuredTags,
+					// Text under a key that names no writing system LCM has never reaches FieldWorks,
+					// and leaves LF too once FieldWorks next changes the entry and it is exported again
+					tag => Logger.Warning(
+						"MongoToLcm: skipping text under \"{0}\" ({1}), which names no writing system LCM has",
+						tag, source.Excerpt(tag)),
+					(notWritten, written) => Logger.Warning(
+						"MongoToLcm: keys \"{0}\" and \"{1}\" name the same writing system; wrote \"{1}\" ({2}), not \"{0}\" ({3})",
+						notWritten, written, source.Excerpt(written), source.Excerpt(notWritten)));
 		}
 
 		/// <summary>
@@ -952,7 +1483,7 @@ namespace LfMerge.Core.DataConverters
 			SetMultiStringFrom(LcmEtymology.Gloss, lfEntry.EtymologyGloss);
 			if (lfEntry.EtymologySource != null)
 #if DBVERSION_7000068
-				LcmEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource);
+				LcmEtymology.Source = BestStringFromMultiText(lfEntry.EtymologySource, LcmEtymology.Source);
 #else
 				SetMultiStringFrom(LcmEtymology.LanguageNotes, lfEntry.EtymologySource);
 #endif
@@ -994,8 +1525,8 @@ namespace LfMerge.Core.DataConverters
 				LcmPronunciation = GetInstance<ILexPronunciationFactory>().Create();
 				LcmEntry.PronunciationsOS.Add(LcmPronunciation);
 			}
-			LcmPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern);
-			LcmPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone);
+			LcmPronunciation.CVPattern = BestTsStringFromMultiText(lfEntry.CvPattern, LcmPronunciation.CVPattern);
+			LcmPronunciation.Tone = BestTsStringFromMultiText(lfEntry.Tone, LcmPronunciation.Tone);
 			SetMultiStringFrom(LcmPronunciation.Form, lfEntry.Pronunciation);
 			LcmPronunciation.LocationRA =
 				(ICmLocation)ListConverters[LocationListCode].FromStringField(lfEntry.Location);

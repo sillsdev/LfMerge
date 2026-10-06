@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using LfMerge.Core.Reporting;
 using MongoDB.Bson;
 using SIL.LCModel;
 using SIL.LCModel.Core.KernelInterfaces;
+using SIL.LCModel.Core.WritingSystems;
 using SIL.Progress;
 
 namespace LfMerge.Core.DataConverters
@@ -65,15 +66,9 @@ namespace LfMerge.Core.DataConverters
 
 			// Reconcile writing systems from Lcm and Mongo
 			Dictionary<string, LfInputSystemRecord> lfWsList = LcmWsToLfWs();
-			#if FW8_COMPAT
-			List<string> VernacularWss = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.Id).ToList();
-			List<string> AnalysisWss = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.Id).ToList();
-			List<string> PronunciationWss = ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.Id).ToList();
-			#else
-			List<string> VernacularWss = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems.Select(ws => ws.LanguageTag).ToList();
-			List<string> AnalysisWss = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems.Select(ws => ws.LanguageTag).ToList();
-			List<string> PronunciationWss = ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems.Select(ws => ws.LanguageTag).ToList();
-			#endif
+			List<string> VernacularWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentVernacularWritingSystems, "vernacular");
+			List<string> AnalysisWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems, "analysis");
+			List<string> PronunciationWss = LfTagsOf(ServiceLocator.LanguageProject.CurrentPronunciationWritingSystems, "pronunciation");
 			Connection.SetInputSystems(LfProject, lfWsList, VernacularWss, AnalysisWss, PronunciationWss);
 
 			ListConverters = new Dictionary<string, ConvertLcmToMongoOptionList>();
@@ -586,14 +581,76 @@ namespace LfMerge.Core.DataConverters
 		}
 
 		/// <summary>
+		/// How Language Forge spells an LCM writing system: exactly as every multitext key LfMerge
+		/// writes is spelled, since those come from GetStrFromWs too (see LfMultiText). That is the
+		/// writing system's Id, falling back to its LanguageTag should it have no Id.
+		///
+		/// Input systems and the config's field lists must be spelled the same way, because LF's
+		/// editor matches a field's input systems against an entry's keys exactly and
+		/// case-sensitively. They were spelled by LanguageTag, which in older projects is not the
+		/// Id: brb-flex-2022's Khmer is Id "km-Khmr-KH" with LanguageTag "km-KH", and che-flex's
+		/// vernacular is Id "ce-la" with LanguageTag "ce-LA", so LF showed all of that text as empty.
+		/// </summary>
+		private string LfTagOf(CoreWritingSystemDefinition ws)
+		{
+			return ServiceLocator.WritingSystemManager.GetStrFromWs(ws.Handle);
+		}
+
+		/// <summary>
+		/// The LF tags of one of the project's current writing-system lists, leaving out any Id the
+		/// list names that LCM has no writing system for, rather than ending the transfer. That
+		/// protects the pronunciation list. A missing Id in a current vernacular or analysis list is
+		/// almost always in the full list too, and LcmWsToLfWs, which reads the full lists through
+		/// AllWritingSystems, still fails on it first -- as FieldWorks itself would.
+		///
+		/// The list is read with foreach on purpose. liblcm's enumerator yields null for such an
+		/// Id, but its indexer and CopyTo throw KeyNotFoundException, and LINQ's Select and ToList
+		/// use those on an IList.
+		/// </summary>
+		private List<string> LfTagsOf(IEnumerable<CoreWritingSystemDefinition> wss, string listName)
+		{
+			var tags = new List<string>();
+			int missing = 0;
+			foreach (CoreWritingSystemDefinition ws in wss)
+			{
+				if (ws == null)
+					missing++;
+				else
+					tags.Add(LfTagOf(ws));
+			}
+			if (missing > 0)
+				Logger.Warning("LcmToMongo: the current {0} writing systems list names {1} writing system(s) that LCM does not have; leaving them out",
+					listName, missing);
+			return tags;
+		}
+
+		/// <summary>
+		/// The handles of the writing systems in one of the project's current lists, leaving out any
+		/// Id it names that LCM has no writing system for; see LfTagsOf.
+		/// </summary>
+		private static HashSet<int> Handles(IEnumerable<CoreWritingSystemDefinition> wss)
+		{
+			var handles = new HashSet<int>();
+			foreach (CoreWritingSystemDefinition ws in wss)
+			{
+				if (ws != null)
+					handles.Add(ws.Handle);
+			}
+			return handles;
+		}
+
+		/// <summary>
 		/// Converts Lcm writing systems to LF input systems
 		/// </summary>
 		/// <returns>The list of LF input systems.</returns>
 		private Dictionary<string, LfInputSystemRecord> LcmWsToLfWs()
 		{
-			// Using var here so that we'll stay compatible with both FW 8 and 9 (the type of these two lists changed between 8 and 9).
-			var vernacularWSList = ServiceLocator.LanguageProject.CurrentVernacularWritingSystems;
-			var analysisWSList = ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems;
+			// By handle, from the same enumerator LfTagsOf reads the lists with. The lists' own
+			// Contains compares Ids exactly, while LCM resolves them ignoring case, so a list
+			// naming "qaa-Zxxx-x-kal-AUDIO" for the writing system "qaa-Zxxx-x-kal-audio" put it in
+			// the vernacular list LF is given but flagged it as not vernacular.
+			var vernacularHandles = Handles(ServiceLocator.LanguageProject.CurrentVernacularWritingSystems);
+			var analysisHandles = Handles(ServiceLocator.LanguageProject.CurrentAnalysisWritingSystems);
 
 			var lfWsList = new Dictionary<string, LfInputSystemRecord>();
 			foreach (var LcmWs in ServiceLocator.LanguageProject.AllWritingSystems)
@@ -605,20 +662,12 @@ namespace LfMerge.Core.DataConverters
 					Abbreviation = LcmWs.Abbreviation,
 					IsRightToLeft = LcmWs.RightToLeftScript,
 					LanguageName = LcmWs.LanguageName,
-					#if FW8_COMPAT
-					Tag = LcmWs.Id,
-					#else
-					Tag = LcmWs.LanguageTag,
-					#endif
-					VernacularWS = vernacularWSList.Contains(LcmWs),
-					AnalysisWS = analysisWSList.Contains(LcmWs)
+					Tag = LfTagOf(LcmWs),
+					VernacularWS = vernacularHandles.Contains(LcmWs.Handle),
+					AnalysisWS = analysisHandles.Contains(LcmWs.Handle)
 				};
 
-				#if FW8_COMPAT
-				lfWsList[LcmWs.Id] = lfWs;
-				#else
-				lfWsList[LcmWs.LanguageTag] = lfWs;
-				#endif
+				lfWsList[lfWs.Tag] = lfWs;
 			}
 			return lfWsList;
 		}

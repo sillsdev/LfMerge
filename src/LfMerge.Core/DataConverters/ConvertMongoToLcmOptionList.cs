@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -289,7 +289,7 @@ namespace LfMerge.Core.DataConverters
 			// Should only be called when NO canonical item can be found
 			if (wsStr == null)
 				wsStr = "en";  // TODO: Set this from LF user's writing system rather than English, once LF allows setting interface languages
-			int wsId = poss.Cache.WritingSystemFactory.GetWsFromStr(wsStr);
+			int wsId = LanguageTags.WsIdFromLfTag(poss.Cache.WritingSystemFactory, wsStr);
 			poss.Abbreviation.set_String(wsId, item.Abbreviation);
 			poss.Name.set_String(wsId, item.Value);
 		}

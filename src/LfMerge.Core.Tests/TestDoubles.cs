@@ -116,7 +116,9 @@ namespace LfMerge.Core.Tests
 		}
 
 		private readonly Dictionary<string, LfInputSystemRecord> _storedInputSystems = new Dictionary<string, LfInputSystemRecord>();
-		private readonly Dictionary<Guid, LfLexEntry> _storedLfLexEntries = new Dictionary<Guid, LfLexEntry>();
+		// Held as documents, as Mongo holds them: an entry LF wrote keeps what LfMerge's own
+		// serializer would leave out, such as a multitext holding an empty value
+		private readonly Dictionary<Guid, BsonDocument> _storedLfLexEntries = new Dictionary<Guid, BsonDocument>();
 		private readonly Dictionary<string, LfOptionList> _storedLfOptionLists = new Dictionary<string, LfOptionList>();
 		private Dictionary<string, LfConfigFieldBase> _storedCustomFieldConfig = new Dictionary<string, LfConfigFieldBase>();
 		private Dictionary<string, DateTime?> _storedLastSyncDate = new Dictionary<string, DateTime?>();
@@ -154,11 +156,19 @@ namespace LfMerge.Core.Tests
 			return _storedInputSystems;
 		}
 
+		/// <summary>The current vernacular, analysis and pronunciation lists the last export gave.</summary>
+		public List<string> LastVernacularWss { get; private set; }
+		public List<string> LastAnalysisWss { get; private set; }
+		public List<string> LastPronunciationWss { get; private set; }
+
 		public bool SetInputSystems(ILfProject project, Dictionary<string, LfInputSystemRecord> inputSystems,
 			List<string> vernacularWss, List<string> analysisWss, List<string> pronunciationWss)
 		{
 			foreach (var ws in inputSystems.Keys)
 				_storedInputSystems[ws] = inputSystems[ws];
+			LastVernacularWss = vernacularWss;
+			LastAnalysisWss = analysisWss;
+			LastPronunciationWss = pronunciationWss;
 
 			if (project.IsInitialClone)
 			{
@@ -182,28 +192,34 @@ namespace LfMerge.Core.Tests
 			return _storedCustomFieldConfig;
 		}
 
-		public void UpdateMockLfLexEntry(BsonDocument mockData)
-		{
-			LfLexEntry data = BsonSerializer.Deserialize<LfLexEntry>(mockData);
-			UpdateMockLfLexEntry(data);
-		}
-
 		// The user SampleData's entries were last modified by
 		private static readonly ObjectId LfUserRef = ObjectId.Parse("561b666c0f87096a35c3cf2d");
 
 		/// <summary>
 		/// Store an entry the way an LF user's edit does: LF's MapperModel::write stamps DateModified,
 		/// and LexEntryCommands::updateEntry records who made the edit. LfMerge's own writes go
-		/// through UpdateRecord, which does neither.
+		/// through UpdateRecord, which does neither. The document is stored as given, empty values
+		/// and all, since LF writes what its editor sends.
 		/// </summary>
+		public void UpdateMockLfLexEntry(BsonDocument mockData)
+		{
+			var stored = (BsonDocument)mockData.DeepClone();
+			Guid guid = BsonSerializer.Deserialize<LfLexEntry>(stored).Guid ?? Guid.Empty;
+			stored["dateModified"] = new BsonDateTime(DateTime.UtcNow);
+			BsonValue authorInfo;
+			if (stored.TryGetValue("authorInfo", out authorInfo) && authorInfo.IsBsonDocument)
+			{
+				BsonValue userRef;
+				if (!authorInfo.AsBsonDocument.TryGetValue("modifiedByUserRef", out userRef) || userRef.IsBsonNull)
+					authorInfo.AsBsonDocument["modifiedByUserRef"] = LfUserRef;
+			}
+			_storedLfLexEntries[guid] = stored;
+		}
+
+		/// <summary>As UpdateMockLfLexEntry(BsonDocument), for an entry built as an object.</summary>
 		public void UpdateMockLfLexEntry(LfLexEntry mockData)
 		{
-			Guid guid = mockData.Guid ?? Guid.Empty;
-			var stored = DeepCopy(mockData);
-			stored.DateModified = DateTime.UtcNow;
-			if (stored.AuthorInfo != null && stored.AuthorInfo.ModifiedByUserRef == null)
-				stored.AuthorInfo.ModifiedByUserRef = LfUserRef;
-			_storedLfLexEntries[guid] = stored;
+			UpdateMockLfLexEntry(mockData.ToBsonDocument());
 		}
 
 		public void UpdateMockOptionList(BsonDocument mockData)
@@ -220,14 +236,14 @@ namespace LfMerge.Core.Tests
 
 		public IEnumerable<LfLexEntry> GetLfLexEntries()
 		{
-			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => DeepCopy(entry)));
+			return new List<LfLexEntry>(_storedLfLexEntries.Values.Select(entry => BsonSerializer.Deserialize<LfLexEntry>(entry)));
 		}
 
 		public LfLexEntry GetLfLexEntryByGuid(ILfProject _project, Guid key)
 		{
-			LfLexEntry result;
+			BsonDocument result;
 			if (_storedLfLexEntries.TryGetValue(key, out result))
-				return result;
+				return BsonSerializer.Deserialize<LfLexEntry>(result);
 			return null;
 		}
 
@@ -238,10 +254,26 @@ namespace LfMerge.Core.Tests
 
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName, Expression<Func<TDocument, bool>> filter)
 		{
-			return GetRecords<TDocument>(project, collectionName).Where(filter.Compile());
+			// A filtered request finds a few records, not a pass over the collection, so it is not
+			// counted in LexiconReads
+			return Records<TDocument>(collectionName).Where(filter.Compile());
 		}
 
+		/// <summary>
+		/// How many times the whole lexicon has been asked for, each request being a pass over
+		/// Mongo. Filtered requests, such as the comment converter's one per comment, are not
+		/// counted.
+		/// </summary>
+		public int LexiconReads { get; private set; }
+
 		public IEnumerable<TDocument> GetRecords<TDocument>(ILfProject project, string collectionName)
+		{
+			if (collectionName == MagicStrings.LfCollectionNameForLexicon)
+				LexiconReads++;
+			return Records<TDocument>(collectionName);
+		}
+
+		private IEnumerable<TDocument> Records<TDocument>(string collectionName)
 		{
 			switch (collectionName)
 			{
@@ -257,7 +289,8 @@ namespace LfMerge.Core.Tests
 
 		public Dictionary<Guid, DateTime> GetAllModifiedDatesForEntries(ILfProject project)
 		{
-			return _storedLfLexEntries.ToDictionary(kv => kv.Key, kv => kv.Value.AuthorInfo.ModifiedDate);
+			return _storedLfLexEntries.ToDictionary(kv => kv.Key,
+				kv => BsonSerializer.Deserialize<LfLexEntry>(kv.Value).AuthorInfo.ModifiedDate);
 		}
 
 		public LfOptionList GetLfOptionListByCode(ILfProject project, string listCode)
@@ -284,7 +317,7 @@ namespace LfMerge.Core.Tests
 
 		public bool UpdateRecord(ILfProject project, LfLexEntry data)
 		{
-			_storedLfLexEntries[data.Guid ?? Guid.Empty] = DeepCopy(data);
+			_storedLfLexEntries[data.Guid ?? Guid.Empty] = data.ToBsonDocument();
 			return true;
 		}
 
@@ -302,7 +335,7 @@ namespace LfMerge.Core.Tests
 
 		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
 		{
-			// Mongo keeps dates to the millisecond, as DeepCopy does for the entries' dates
+			// Mongo keeps dates to the millisecond, as the entries' dates are kept here in BSON
 			if (newSyncedDate != null)
 				newSyncedDate = newSyncedDate.Value.AddTicks(-(newSyncedDate.Value.Ticks % TimeSpan.TicksPerMillisecond));
 			_storedLastSyncDate[project.ProjectCode] = newSyncedDate;
