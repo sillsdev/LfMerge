@@ -156,11 +156,7 @@ namespace LfMerge.Core.DataConverters
 						// Single line or MultiText fields need writing systems
 						int fieldWs = LcmMetaData.GetFieldWs(flid);
 						// That's a "magic" ws, which we need to expand into a (list of) real writing system(s).
-#if FW8_COMPAT
-						var wsesForThisField = new List<IWritingSystem>();
-#else
 						var wsesForThisField = new List<CoreWritingSystemDefinition>();
-#endif
 						// GetWritingSystemList() in FW 8.3 is buggy and doesn't properly handle the kwsAnal and kwsVern cases, so we handle them here instead.
 						switch (fieldWs) {
 						case WritingSystemServices.kwsAnal:
