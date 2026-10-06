@@ -340,9 +340,10 @@ namespace LfMerge.Core.DataConverters
 			}
 			// A field of no role puts in doubt only the writing systems nothing else places, neither
 			// the anchors nor a field that has a role. One already placed keeps its place: "en" in
-			// both the lexeme and the gloss is not made doubtful by also turning up in a note, and if
-			// it were, the passes below could strip one of its roles on the strength of the company
-			// it keeps there.
+			// both the lexeme and the gloss is not made doubtful by also turning up in a sense's
+			// general note, and if it were, the passes below could strip one of its roles on the
+			// strength of the company it keeps there. (The entry's note is an anchor, so never comes
+			// this far.)
 			var doubtful = inFieldOfNoRole
 				.Where(tag => !vernacular.Contains(tag) && !analysis.Contains(tag)
 					&& !inVernacularField.Contains(tag) && !inAnalysisField.Contains(tag))
@@ -853,7 +854,9 @@ namespace LfMerge.Core.DataConverters
 
 		/// <summary>
 		/// Logs why each key holding text in a single-string field's multitext was not written
-		/// there, when none was.
+		/// there. Only for when nothing was: every key with text then either names no writing system
+		/// LCM has or was passed over for an empty key, and the messages say so. Called after a
+		/// value has been placed, it would call the key written empty.
 		/// </summary>
 		internal static void LogTextNotPlaced(LfMultiText input, string context, ILogger logger,
 			ILgWritingSystemFactory wsManager, ISet<string> configuredTags)

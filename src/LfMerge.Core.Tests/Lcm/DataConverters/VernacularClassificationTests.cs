@@ -663,8 +663,8 @@ namespace LfMerge.Core.Tests.Lcm.DataConverters
 		}
 
 		/// <summary>
-		/// "en" is in both anchors, so it plays both roles. Turning up alone in a note, a field
-		/// that gives no evidence, must not put it in doubt: if it did, the company it keeps in the
+		/// "en" is in both anchors, so it plays both roles. Turning up alone in a sense's general
+		/// note, a field that gives no evidence, must not put it in doubt: if it did, the company it keeps in the
 		/// lexeme field (the vernacular) would then strip it of its analysis role, and a new "en"
 		/// writing system would be created vernacular only.
 		/// </summary>

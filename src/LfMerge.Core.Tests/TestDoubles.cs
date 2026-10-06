@@ -335,7 +335,7 @@ namespace LfMerge.Core.Tests
 
 		public bool SetLastSyncedDate(ILfProject project, DateTime? newSyncedDate)
 		{
-			// Mongo keeps dates to the millisecond, as DeepCopy does for the entries' dates
+			// Mongo keeps dates to the millisecond, as the entries' dates are kept here in BSON
 			if (newSyncedDate != null)
 				newSyncedDate = newSyncedDate.Value.AddTicks(-(newSyncedDate.Value.Ticks % TimeSpan.TicksPerMillisecond));
 			_storedLastSyncDate[project.ProjectCode] = newSyncedDate;
