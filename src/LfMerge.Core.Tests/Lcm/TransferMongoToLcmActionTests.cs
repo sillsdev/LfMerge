@@ -745,6 +745,39 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 		}
 
+		[Test]
+		public void Action_NeverSyncedProjectWithEntryImportedIntoLf_SendsItToFieldWorks()
+		{
+			// Setup: an LF project's first Send/Receive, as when one is migrated. A LIFT import into
+			// LF leaves no user references on its entries, the same as LfMerge's own writes do, so
+			// the entry is stored with UpdateRecord rather than as an LF user's edit.
+			var lfProj = _lfProj;
+			_conn.SetLastSyncedDate(lfProj, MagicValues.UnixEpoch);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			string vernacularWS = fwProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
+			Guid importedGuid = Guid.NewGuid();
+			var imported = new LfLexEntry();
+			imported.Guid = importedGuid;
+			imported.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, "imported into LF");
+			imported.AuthorInfo = new LfAuthorInfo();
+			imported.AuthorInfo.CreatedDate = new DateTime(2016, 4, 10, 0, 0, 0, DateTimeKind.Utc);
+			imported.AuthorInfo.ModifiedDate = imported.AuthorInfo.CreatedDate;
+			imported.DateModified = new DateTime(2016, 7, 25, 0, 0, 0, DateTimeKind.Utc);
+			_conn.UpdateRecord(lfProj, imported);
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			ILexEntry sent;
+			Assert.That(fwProject.ServiceLocator.GetInstance<ILexEntryRepository>().TryGetObject(importedGuid, out sent), Is.True,
+				"an entry only LF has must reach FieldWorks, or the transfer back to Mongo marks it deleted");
+			Assert.That(sent.LexemeFormOA.Form.VernacularDefaultWritingSystem.Text, Is.EqualTo("imported into LF"));
+			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
 		// TODO: Move custom field tests to their own test class, and move these helper functions with them
 		public void AddCustomFieldToSense(LfSense sense, string fieldName, BsonValue fieldValue)
 		{

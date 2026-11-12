@@ -43,8 +43,10 @@ namespace LfMerge.Core.DataConverters
 		// Every writing-system spelling the project's config uses; see LfMultiText.WriteToLcm
 		private ISet<string> _configuredTags;
 
-		// Entries where LF's copy differs from FieldWorks but no LF user has touched it since the
-		// last sync, so FieldWorks holds the newer version (see EditedInLfSinceLastSync)
+		// Entries where LF's copy differs from FieldWorks, or FieldWorks lacks it, but no LF user has
+		// touched it since the last sync, so FieldWorks holds the newer version (see
+		// EditedInLfSinceLastSync). An entry FieldWorks lacks in a project that has never synced is
+		// not counted: it is LF's own, and is sent (see LfLexEntryToLcmLexEntry).
 		private int _changedOnlyInFieldWorks;
 		private int _absentOnlyFromFieldWorks;
 
@@ -1058,6 +1060,9 @@ namespace LfMerge.Core.DataConverters
 		/// LfMerge's: the initial clone's transfer to Mongo does not always get as far as recording a
 		/// sync. LfMerge clears the user references on every entry it writes, and LF sets one on every
 		/// edit and creation; a deletion sets none, but deleting what FieldWorks lacks is harmless.
+		/// A LIFT import into LF sets none either, so this says "not edited" of every imported entry
+		/// in a never-synced LF project; LfLexEntryToLcmLexEntry sends such an entry anyway when
+		/// FieldWorks does not have it.
 		/// </summary>
 		private bool EditedInLfSinceLastSync(LfLexEntry lfEntry)
 		{
@@ -1079,12 +1084,25 @@ namespace LfMerge.Core.DataConverters
 				if (lfEntry.IsDeleted)
 				{
 					// An LF deletion that an earlier sync has already sent
+					return;
 				}
-				else if (!GetInstance<ILexEntryRepository>().TryGetObject(guid, out existing))
+				if (GetInstance<ILexEntryRepository>().TryGetObject(guid, out existing))
+				{
+					if (lfEntry.AuthorInfo == null || lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() != existing.DateModified)
+						_changedOnlyInFieldWorks++;
+					return;
+				}
+				if (LastSyncedDate != null)
+				{
 					_absentOnlyFromFieldWorks++;
-				else if (lfEntry.AuthorInfo == null || lfEntry.AuthorInfo.ModifiedDate.ToLocalTime() != existing.DateModified)
-					_changedOnlyInFieldWorks++;
-				return;
+					return;
+				}
+				// Never synced, and FieldWorks does not have it: an LF project's own entry, going to
+				// FieldWorks for the first time. A LIFT import into LF sets no user references either,
+				// so EditedInLfSinceLastSync cannot tell it from one LfMerge wrote; but FieldWorks
+				// cannot hold a newer version of an entry it does not have, so there is nothing to
+				// keep. Leaving it out would also lose it: the transfer back to Mongo marks every
+				// entry FieldWorks lacks as deleted.
 			}
 			bool createdEntry = false;
 			bool wantCreation = !lfEntry.IsDeleted;
