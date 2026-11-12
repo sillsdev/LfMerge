@@ -702,6 +702,8 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+			Assert.That(_env.Logger.GetMessages(), Does.Not.Contain("has never synced"),
+				"after a sync, an entry FieldWorks lacks was certainly deleted in FLEx, so it is not reported one by one");
 		}
 
 		[Test]
@@ -810,6 +812,11 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+			// The data cannot tell this from an entry imported into LF after the clone, which would be
+			// marked deleted the same way, so each one is logged where it can be found again
+			string messages = _env.Logger.GetMessages();
+			Assert.That(messages, Does.Contain($"MongoToLcm: entry {kenGuid} ("));
+			Assert.That(messages, Does.Contain("has never synced"));
 		}
 
 		// TODO: Move custom field tests to their own test class, and move these helper functions with them

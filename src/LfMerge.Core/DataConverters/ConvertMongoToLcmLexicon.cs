@@ -1101,8 +1101,21 @@ namespace LfMerge.Core.DataConverters
 				}
 				if (!_firstSyncIntoEmptyFieldWorks)
 				{
-					// FLEx deleted it, or the repository was begun afresh without it: either way
-					// FieldWorks is right not to have it.
+					// FieldWorks is taken to be right not to have it. After a sync that is certain: LF's
+					// copy is what FieldWorks had then, untouched since, so FLEx has deleted it.
+					//
+					// In a never-synced project whose FieldWorks has entries it is an assumption, which
+					// the data cannot check. Such a project's entries normally came from its FieldWorks
+					// at the initial clone, so one FieldWorks now lacks was deleted in FLEx since, or
+					// dropped when the repository was begun afresh. But an entry imported into LF from
+					// LIFT after the clone has no user references either, and looks just the same: it
+					// is deliberately treated as deleted in FLEx too, and the transfer back to Mongo
+					// marks it deleted. Marked, not removed -- it stays in Mongo, and clearing isDeleted
+					// restores it -- and logged here, so that it can be found if it was LF's own.
+					if (LastSyncedDate == null)
+						Logger.Info("MongoToLcm: entry {0} ({1}) is in LF but not in FieldWorks, and the project has never synced; " +
+							"taking it to have been deleted in FLEx, so the transfer back to Mongo will mark it deleted",
+							guid, ConvertUtilities.EntryNameForDebugging(lfEntry));
 					_absentOnlyFromFieldWorks++;
 					return;
 				}
@@ -1111,10 +1124,6 @@ namespace LfMerge.Core.DataConverters
 				// EditedInLfSinceLastSync cannot tell it from one LfMerge wrote, but an empty
 				// FieldWorks project never had any entry to delete. Leaving it out would lose it, as
 				// the transfer back to Mongo marks every entry FieldWorks lacks as deleted.
-				//
-				// A never-synced project whose FieldWorks has entries is not sent anything this way,
-				// though FieldWorks lacks some of LF's: there, LF's entries came from an earlier
-				// FieldWorks, and the ones it no longer has were deleted in FLEx since.
 			}
 			bool createdEntry = false;
 			bool wantCreation = !lfEntry.IsDeleted;
