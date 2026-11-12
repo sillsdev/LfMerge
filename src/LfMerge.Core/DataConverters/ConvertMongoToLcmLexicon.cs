@@ -45,10 +45,15 @@ namespace LfMerge.Core.DataConverters
 
 		// Entries where LF's copy differs from FieldWorks, or FieldWorks lacks it, but no LF user has
 		// touched it since the last sync, so FieldWorks holds the newer version (see
-		// EditedInLfSinceLastSync). An entry FieldWorks lacks in a project that has never synced is
-		// not counted: it is LF's own, and is sent (see LfLexEntryToLcmLexEntry).
+		// EditedInLfSinceLastSync). Not counted are the entries of a never-synced project whose
+		// FieldWorks lexicon started out empty: those are LF's own, and are sent (see
+		// LfLexEntryToLcmLexEntry).
 		private int _changedOnlyInFieldWorks;
 		private int _absentOnlyFromFieldWorks;
+
+		// Whether this is an LF project's first Send/Receive into an empty FieldWorks project, as when
+		// one is migrated: never synced, and FieldWorks had no entries before this conversion began.
+		private bool _firstSyncIntoEmptyFieldWorks;
 
 		// Shorter names to use in this class since MagicStrings.LfOptionListCodeForGrammaticalInfo
 		// (etc.) are real mouthfuls
@@ -159,6 +164,8 @@ namespace LfMerge.Core.DataConverters
 			IEnumerable<LfLexEntry> lexicon = GetLexicon(LfProject);
 			_changedOnlyInFieldWorks = 0;
 			_absentOnlyFromFieldWorks = 0;
+			// Decided once, before any entry is created: it is about where the project started.
+			_firstSyncIntoEmptyFieldWorks = LastSyncedDate == null && GetInstance<ILexEntryRepository>().Count == 0;
 			UndoableUnitOfWorkHelper.DoUsingNewOrCurrentUOW("undo", "redo", Cache.ActionHandlerAccessor, () =>
 				{
 					#if false  // Once we allow LanguageForge to create optionlist items with "canonical" values (parts of speech, semantic domains, etc.), uncomment this block
@@ -1061,8 +1068,8 @@ namespace LfMerge.Core.DataConverters
 		/// sync. LfMerge clears the user references on every entry it writes, and LF sets one on every
 		/// edit and creation; a deletion sets none, but deleting what FieldWorks lacks is harmless.
 		/// A LIFT import into LF sets none either, so this says "not edited" of every imported entry
-		/// in a never-synced LF project; LfLexEntryToLcmLexEntry sends such an entry anyway when
-		/// FieldWorks does not have it.
+		/// in a never-synced LF project; LfLexEntryToLcmLexEntry sends such entries anyway when
+		/// FieldWorks started out with no entries at all.
 		/// </summary>
 		private bool EditedInLfSinceLastSync(LfLexEntry lfEntry)
 		{
@@ -1092,17 +1099,22 @@ namespace LfMerge.Core.DataConverters
 						_changedOnlyInFieldWorks++;
 					return;
 				}
-				if (LastSyncedDate != null)
+				if (!_firstSyncIntoEmptyFieldWorks)
 				{
+					// FLEx deleted it, or the repository was begun afresh without it: either way
+					// FieldWorks is right not to have it.
 					_absentOnlyFromFieldWorks++;
 					return;
 				}
-				// Never synced, and FieldWorks does not have it: an LF project's own entry, going to
-				// FieldWorks for the first time. A LIFT import into LF sets no user references either,
-				// so EditedInLfSinceLastSync cannot tell it from one LfMerge wrote; but FieldWorks
-				// cannot hold a newer version of an entry it does not have, so there is nothing to
-				// keep. Leaving it out would also lose it: the transfer back to Mongo marks every
-				// entry FieldWorks lacks as deleted.
+				// An LF project's own entry, on its first Send/Receive into an empty FieldWorks
+				// project: a migration. A LIFT import into LF sets no user references, so
+				// EditedInLfSinceLastSync cannot tell it from one LfMerge wrote, but an empty
+				// FieldWorks project never had any entry to delete. Leaving it out would lose it, as
+				// the transfer back to Mongo marks every entry FieldWorks lacks as deleted.
+				//
+				// A never-synced project whose FieldWorks has entries is not sent anything this way,
+				// though FieldWorks lacks some of LF's: there, LF's entries came from an earlier
+				// FieldWorks, and the ones it no longer has were deleted in FLEx since.
 			}
 			bool createdEntry = false;
 			bool wantCreation = !lfEntry.IsDeleted;

@@ -745,25 +745,34 @@ namespace LfMerge.Core.Tests.Lcm
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 		}
 
-		[Test]
-		public void Action_NeverSyncedProjectWithEntryImportedIntoLf_SendsItToFieldWorks()
+		// An entry as a LIFT import into LF leaves it: no user references, the same as LfMerge's own
+		// writes, so it is stored with UpdateRecord rather than as an LF user's edit.
+		private LfLexEntry StoreImportedLfEntry(ILfProject lfProj, string lexeme)
 		{
-			// Setup: an LF project's first Send/Receive, as when one is migrated. A LIFT import into
-			// LF leaves no user references on its entries, the same as LfMerge's own writes do, so
-			// the entry is stored with UpdateRecord rather than as an LF user's edit.
-			var lfProj = _lfProj;
-			_conn.SetLastSyncedDate(lfProj, MagicValues.UnixEpoch);
-			FwProject fwProject = lfProj.FieldWorksProject;
-			string vernacularWS = fwProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
-			Guid importedGuid = Guid.NewGuid();
+			string vernacularWS = lfProj.FieldWorksProject.Cache.LanguageProject.DefaultVernacularWritingSystem.Id;
 			var imported = new LfLexEntry();
-			imported.Guid = importedGuid;
-			imported.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, "imported into LF");
+			imported.Guid = Guid.NewGuid();
+			imported.Lexeme = LfMultiText.FromSingleStringMapping(vernacularWS, lexeme);
 			imported.AuthorInfo = new LfAuthorInfo();
 			imported.AuthorInfo.CreatedDate = new DateTime(2016, 4, 10, 0, 0, 0, DateTimeKind.Utc);
 			imported.AuthorInfo.ModifiedDate = imported.AuthorInfo.CreatedDate;
 			imported.DateModified = new DateTime(2016, 7, 25, 0, 0, 0, DateTimeKind.Utc);
 			_conn.UpdateRecord(lfProj, imported);
+			return imported;
+		}
+
+		[Test]
+		public void Action_NeverSyncedProjectIntoEmptyFieldWorks_SendsEntriesImportedIntoLf()
+		{
+			// Setup: an LF project's first Send/Receive into a new, empty FieldWorks project, as when
+			// one is migrated
+			var lfProj = _lfProj;
+			_conn.SetLastSyncedDate(lfProj, MagicValues.UnixEpoch);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			foreach (Guid guid in LcmTestHelper.GetEntries(fwProject).Select(entry => entry.Guid).ToList())
+				LcmTestHelper.DeleteEntry(fwProject, guid);
+			Assert.That(LcmTestHelper.CountEntries(fwProject), Is.EqualTo(0));
+			Guid importedGuid = StoreImportedLfEntry(lfProj, "imported into LF").Guid.Value;
 
 			// Exercise
 			SutMongoToLcm.Run(lfProj);
@@ -774,6 +783,31 @@ namespace LfMerge.Core.Tests.Lcm
 				"an entry only LF has must reach FieldWorks, or the transfer back to Mongo marks it deleted");
 			Assert.That(sent.LexemeFormOA.Form.VernacularDefaultWritingSystem.Text, Is.EqualTo("imported into LF"));
 			Assert.That(_counts.Added,    Is.EqualTo(1));
+			Assert.That(_counts.Modified, Is.EqualTo(0));
+			Assert.That(_counts.Deleted,  Is.EqualTo(0));
+		}
+
+		[Test]
+		public void Action_NeverSyncedProjectWhoseFieldWorksHasEntries_DoesNotRecreateEntryDeletedInFieldWorks()
+		{
+			// Setup: an initial clone whose transfer to Mongo never got as far as recording the sync,
+			// after which FLEx deleted one of the entries LfMerge had written to Mongo
+			var lfProj = _lfProj;
+			SutLcmToMongo.Run(lfProj);
+			_conn.SetLastSyncedDate(lfProj, MagicValues.UnixEpoch);
+			FwProject fwProject = lfProj.FieldWorksProject;
+			Guid kenGuid = Guid.Parse(KenEntryGuidStr);
+			LcmTestHelper.DeleteEntry(fwProject, kenGuid);
+			Assert.That(LcmTestHelper.CountEntries(fwProject), Is.GreaterThan(0));
+
+			// Exercise
+			SutMongoToLcm.Run(lfProj);
+
+			// Verify
+			ILexEntry ken;
+			Assert.That(fwProject.ServiceLocator.GetInstance<ILexEntryRepository>().TryGetObject(kenGuid, out ken), Is.False,
+				"an entry FLEx deleted must stay deleted, though LF still has it");
+			Assert.That(_counts.Added,    Is.EqualTo(0));
 			Assert.That(_counts.Modified, Is.EqualTo(0));
 			Assert.That(_counts.Deleted,  Is.EqualTo(0));
 		}
