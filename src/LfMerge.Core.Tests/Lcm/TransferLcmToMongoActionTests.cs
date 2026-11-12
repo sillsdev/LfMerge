@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 SIL International
+// Copyright (c) 2016 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 
 using System;
@@ -58,18 +58,14 @@ namespace LfMerge.Core.Tests.Lcm
 			// Verify
 			const int expectedNumVernacularWS = 3;
 			const int expectedNumAnalysisWS = 2;
-			// TODO: Investigate why qaa-Zxxx-x-kal-audio is in CurrentVernacularWritingSystems, but somehow in
-			// UpdateMongoDbFromLcm.LcmWsToLfWs() is not contained in _cache.LangProject.CurrentVernacularWritingSystems
-			const string notVernacularWs = "qaa-Zxxx-x-kal-audio";
 
 			lfWsList = _conn.GetInputSystems(lfProject);
 			var languageProj = lfProject.FieldWorksProject.Cache.LangProject;
 
+			// Every one, qaa-Zxxx-x-kal-audio included: the list spells it qaa-Zxxx-x-kal-AUDIO,
+			// which the list's own Contains, comparing Ids exactly, did not match
 			foreach (var lcmVernacularWs in languageProj.CurrentVernacularWritingSystems)
-			{
-				if (lcmVernacularWs.Id != notVernacularWs)
-					Assert.That(lfWsList[lcmVernacularWs.Id].VernacularWS);
-			}
+				Assert.That(lfWsList[lcmVernacularWs.Id].VernacularWS, "{0} should be flagged vernacular", lcmVernacularWs.Id);
 			Assert.That(languageProj.CurrentVernacularWritingSystems.Count, Is.EqualTo(expectedNumVernacularWS));
 
 			foreach (var lcmAnalysisWs in languageProj.CurrentAnalysisWritingSystems)

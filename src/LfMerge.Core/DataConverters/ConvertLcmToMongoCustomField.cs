@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016-2018 SIL International
+// Copyright (c) 2016-2018 SIL International
 // This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
@@ -156,11 +156,7 @@ namespace LfMerge.Core.DataConverters
 						// Single line or MultiText fields need writing systems
 						int fieldWs = LcmMetaData.GetFieldWs(flid);
 						// That's a "magic" ws, which we need to expand into a (list of) real writing system(s).
-#if FW8_COMPAT
-						var wsesForThisField = new List<IWritingSystem>();
-#else
 						var wsesForThisField = new List<CoreWritingSystemDefinition>();
-#endif
 						// GetWritingSystemList() in FW 8.3 is buggy and doesn't properly handle the kwsAnal and kwsVern cases, so we handle them here instead.
 						switch (fieldWs) {
 						case WritingSystemServices.kwsAnal:
@@ -173,11 +169,10 @@ namespace LfMerge.Core.DataConverters
 							wsesForThisField = WritingSystemServices.GetWritingSystemList(cache, fieldWs, forceIncludeEnglish: false);
 							break;
 						}
-#if FW8_COMPAT
-						IEnumerable<string> inputSystems = wsesForThisField.Select(LcmWs => LcmWs.Id);
-#else
-						IEnumerable<string> inputSystems = wsesForThisField.Select(LcmWs => LcmWs.LanguageTag);
-#endif
+						// Spelled as every multitext key is, by GetStrFromWs: LF matches a field's input
+						// systems against an entry's keys exactly. See ConvertLcmToMongoLexicon.LfTagOf.
+						IEnumerable<string> inputSystems = wsesForThisField.Select(
+							LcmWs => servLoc.WritingSystemManager.GetStrFromWs(LcmWs.Handle));
 						// GetWritingSystemList returns all analysis WSes even when asked for just one, so if this
 						// is a single-line custom field, trim the WSes down to just the first one
 						if (lfCustomFieldType.StartsWith("Single"))
