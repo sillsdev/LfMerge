@@ -8,7 +8,7 @@ set -e
 export HOME=/tmp
 export XDG_CONFIG_HOME=/tmp/.config
 export BUILD=Release
-export FRAMEWORK=net8.0
+export FRAMEWORK=net10.0
 export NETSTANDARD=netstandard2.0
 
 export DatabaseVersion=${1:-7000072}
